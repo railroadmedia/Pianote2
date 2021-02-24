@@ -28,10 +28,9 @@ import { openInbox } from 'react-native-email-link';
 import { NetworkContext } from '../../context/NetworkProvider';
 
 const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width < windowDim.height ? windowDim.height : windowDim.width;
+const factorVertical = windowDim.width < windowDim.height ? height / 812 : width / 375;
 const factor = (height / 812 + width / 375) / 2;
 
 export default class ForgotPassword extends React.Component {
@@ -104,7 +103,7 @@ export default class ForgotPassword extends React.Component {
                 <View>
                   <Text
                     style={{
-                      fontSize: (onTablet ? 16 : 20) * factorRatio,
+                      fontSize: (onTablet ? 16 : 20) * factor,
                       color: 'white',
                       paddingTop: 15,
                       alignSelf: 'center',
@@ -117,7 +116,7 @@ export default class ForgotPassword extends React.Component {
                   </Text>
                   <Text
                     style={{
-                      fontSize: (onTablet ? 16 : 20) * factorRatio,
+                      fontSize: (onTablet ? 16 : 20) * factor,
                       color: 'white',
                       alignSelf: 'center',
                       textAlign: 'center',

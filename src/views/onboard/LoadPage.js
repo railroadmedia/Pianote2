@@ -32,14 +32,10 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import RNFetchBlob from 'rn-fetch-blob';
 
 const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width < windowDim.height ? windowDim.height : windowDim.width;
-const factorHorizontal =
-  windowDim.width < windowDim.height ? width / 375 : height / 812;
-const factorVertical =
-  windowDim.width < windowDim.height ? height / 812 : width / 375;
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width < windowDim.height ? windowDim.height : windowDim.width;
+const factorHorizontal = windowDim.width < windowDim.height ? width / 375 : height / 812;
+const factorVertical = windowDim.width < windowDim.height ? height / 812 : width / 375;
 
 const cache = [
   'cachePacks',

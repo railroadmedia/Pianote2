@@ -383,7 +383,7 @@ class VerticalVideoList extends React.Component {
             style={{
               flex: 1,
               paddingLeft: paddingInset,
-              paddingVertical: (onTablet ? 5 : 5) * factor,
+              paddingVertical: (onTablet ? 5 : 6) * factor,
               flexDirection: 'row',
               borderTopColor: '#ececec',
             }}
@@ -719,45 +719,60 @@ class VerticalVideoList extends React.Component {
   render = () => {
     return (
       <View>
-        <View>
-          <View style={{ height: 5 * factor }} />
+        <View style={{marginTop: paddingInset}}>
           {this.props.showFilter && (
             <View 
               style={{ 
                 flexDirection: 'row', 
                 flex: 1,
                 paddingLeft: paddingInset, 
+                paddingVertical: this.props.showLargeTitle ? 10 : 0,
               }}
             >
-              <View style={{ width: this.props.imageWidth + paddingInset/2 }}>
-                {this.props.showLargeTitle ? (
-                  <Text
-                    style={{
-                      fontSize: (onTablet ? 25 : 30) * factor,
-                      color: 'white',
-                      fontFamily: 'OpenSans-ExtraBold',
-                      justifyContent: 'flex-end'
-                    }}
-                  >
-                    <View style={{flex: 1}}/>
-                    {this.props.title}
-                  </Text>
-                ) : (
-                  <Text
-                    style={{
-                      fontSize: (onTablet ? 12 : 18) * factor,
-                      marginBottom: 5 * factor,      
-                      textAlign: 'left',
-                      fontFamily: 'RobotoCondensed-Bold',
-                      color: this.props.isMethod
-                        ? 'white'
-                        : colors.secondBackground
-                    }}
-                  >
-                    <View style={{flex: 1}}/>
-                    {this.props.title}
-                  </Text>
-                )}
+              <View 
+                style={{ 
+                  width: this.props.imageWidth + paddingInset/2,
+                  height: (onTablet ? 25 : 30) * factor,
+                }}
+              >
+                <View
+                  style={{
+                    position: 'absolute',
+                    top: 0, 
+                    left: 0,
+                    width: width,
+                    zIndex: 20,
+                    elevation: 20,
+                  }}
+                >
+                  {this.props.showLargeTitle ? (
+                    <Text
+                      numberOfLines={1}
+                      style={{
+                        fontSize: (onTablet ? 25 : 30) * factor,
+                        color: 'white',
+                        fontFamily: 'OpenSans-ExtraBold',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      {this.props.title}
+                    </Text>
+                  ) : (
+                    <Text
+                      numberOfLines={1}
+                      style={{
+                        fontSize: (onTablet ? 12 : 18) * factor,
+                        textAlign: 'left',
+                        fontFamily: 'RobotoCondensed-Bold',
+                        color: this.props.isMethod ? 'white' : colors.secondBackground,
+                        position: 'absolute',
+                      }}
+                    >
+                      <View style={{flex: 1}}/>
+                      {this.props.title}
+                    </Text>
+                  )}
+                </View>
               </View>
               <View style={{ flex: 0.85 }}>
                 {this.props.showSort && (
@@ -817,11 +832,11 @@ class VerticalVideoList extends React.Component {
                       style={[
                         styles.centerContent,
                         {
-                          borderWidth: 1.25 * factor,
+                          borderWidth: 1,
                           borderColor: colors.pianoteRed,
                           height: (onTablet ? 17.5 : 30) * factor,
                           width: (onTablet ? 17.5 : 30) * factor,
-                          borderRadius: 30 * factor,
+                          borderRadius: 100,
                         }
                       ]}
                     >
@@ -848,7 +863,7 @@ class VerticalVideoList extends React.Component {
                   <View
                     style={{
                       paddingHorizontal: paddingInset,
-                      paddingTop: 5 * factor
+                      paddingTop: 5 * factor,
                     }}
                   >
                     <Text
@@ -907,7 +922,7 @@ class VerticalVideoList extends React.Component {
               </View>
             )}
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1,}}>
           {this.renderMappedList()}
           {this.state.isPaging && !this.state.isLoading && (
             <View
@@ -930,7 +945,6 @@ class VerticalVideoList extends React.Component {
           <View style={{ flex: 1 }} />
         </View>
         <Modal
-          key={'modal'}
           isVisible={this.state.showModal}
           style={{
             margin: 0,

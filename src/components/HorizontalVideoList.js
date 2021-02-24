@@ -314,7 +314,6 @@ class HorizontalVideoList extends React.Component {
               }
             ]}
           >
-            <View style={{flex: 1}}/>
             {this.props.Title}
           </Text>
           {!this.props.hideSeeAll && (
@@ -337,7 +336,7 @@ class HorizontalVideoList extends React.Component {
                           styles.centerContent,
                           {
                             flexDirection: 'row',
-                            marginRight: 5 * factor
+                            marginRight: 5
                           }
                         ]}
                         onPress={() => {
@@ -351,7 +350,7 @@ class HorizontalVideoList extends React.Component {
                           style={[
                             localStyles.seeAllText,
                             {
-                              paddingRight: 4 * factor,
+                              paddingRight: 5,
                               fontSize: (onTablet ? 10 : 14.5) * factor
                             }
                           ]}
@@ -382,11 +381,11 @@ class HorizontalVideoList extends React.Component {
                       style={[
                         styles.centerContent,
                         {
-                          borderWidth: 1 * factor,
+                          borderWidth: 1,
                           borderColor: colors.pianoteRed,
                           height: (onTablet ? 17.5 : 30) * factor,
                           width: (onTablet ? 17.5 : 30) * factor,
-                          borderRadius: 30 * factor,
+                          borderRadius: 200,
                           marginRight: paddingInset
                         }
                       ]}
@@ -661,18 +660,14 @@ const localStyles = StyleSheet.create({
     fontSize: (DeviceInfo.isTablet() ? 10 : 14.5) * factor,
     fontWeight: DeviceInfo.isTablet() ? '500' : '300',
     color: '#fb1b2f',
-    paddingRight: 10 * factor
+    paddingRight: 10
   },
   titleContain: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical:
-      ((DeviceInfo.isTablet() ? 10 : 15) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    paddingVertical: 10
   },
   progressItem: {
     position: 'absolute',
@@ -684,11 +679,7 @@ const localStyles = StyleSheet.create({
   },
   imageIOS: {
     width: '100%',
-    borderRadius:
-      (7.5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    borderRadius: 7.5
   },
   videoTitle: {
     width: '100%',

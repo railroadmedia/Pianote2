@@ -315,9 +315,8 @@ export default class CreateAccount3 extends React.Component {
                   >
                     <Text
                       style={{
-                        fontFamily: 'OpenSans-Regular',
+                        fontFamily: 'OpenSans-Bold',
                         fontSize: 20 * factor,
-                        fontWeight: Platform.OS == 'ios' ? '700' : 'bold',
                         textAlign: 'left'
                       }}
                     >
@@ -438,7 +437,7 @@ export default class CreateAccount3 extends React.Component {
                             borderWidth: 1,
                             borderColor: '#fb1b2f'
                           }}
-                        ></View>
+                        />
                         <View
                           style={{
                             width: 10 * factor
@@ -454,7 +453,7 @@ export default class CreateAccount3 extends React.Component {
                             borderWidth: 1,
                             borderColor: '#fb1b2f'
                           }}
-                        ></View>
+                        />
                         <View
                           style={{
                             width: 10 * factor
@@ -470,7 +469,7 @@ export default class CreateAccount3 extends React.Component {
                             borderWidth: 1,
                             borderColor: '#fb1b2f'
                           }}
-                        ></View>
+                        />
                         <View
                           style={{
                             width: 10 * factor
@@ -486,7 +485,7 @@ export default class CreateAccount3 extends React.Component {
                             borderWidth: 1,
                             borderColor: '#fb1b2f'
                           }}
-                        ></View>
+                        />
                       </View>
                     </View>
                     <View style={{ flex: 1 }} />
@@ -507,9 +506,8 @@ export default class CreateAccount3 extends React.Component {
                       >
                         <Text
                           style={{
-                            fontFamily: 'OpenSans-Regular',
+                            fontFamily: 'OpenSans-Bold',
                             fontSize: 20 * factor,
-                            fontWeight: '700',
                             color: '#fb1b2f'
                           }}
                         >
@@ -613,9 +611,8 @@ export default class CreateAccount3 extends React.Component {
                   >
                     <Text
                       style={{
-                        fontFamily: 'OpenSans-Regular',
+                        fontFamily: 'OpenSans-Bold',
                         fontSize: 17.5 * factor,
-                        fontWeight: '700',
                         textAlign: 'center'
                       }}
                     >
@@ -759,7 +756,6 @@ export default class CreateAccount3 extends React.Component {
                   </View>
                   <View style={{ flex: 0.5 }} />
                   <View
-                    key={'dots'}
                     style={{
                       height: '3.5%',
                       flexDirection: 'row'
@@ -778,7 +774,7 @@ export default class CreateAccount3 extends React.Component {
                             borderWidth: 1,
                             borderColor: '#fb1b2f'
                           }}
-                        ></View>
+                        />
                         <View
                           style={{
                             width: 10 * factor
@@ -794,7 +790,7 @@ export default class CreateAccount3 extends React.Component {
                             borderWidth: 1,
                             borderColor: '#fb1b2f'
                           }}
-                        ></View>
+                        />
                         <View
                           style={{
                             width: 10 * factor
@@ -810,7 +806,7 @@ export default class CreateAccount3 extends React.Component {
                             borderWidth: 1,
                             borderColor: '#fb1b2f'
                           }}
-                        ></View>
+                        />
                         <View
                           style={{
                             width: 10 * factor
@@ -826,7 +822,7 @@ export default class CreateAccount3 extends React.Component {
                             borderWidth: 1,
                             borderColor: '#fb1b2f'
                           }}
-                        ></View>
+                        />
                       </View>
                     </View>
                     <View style={{ flex: 1 }} />
@@ -846,9 +842,8 @@ export default class CreateAccount3 extends React.Component {
                     >
                       <Text
                         style={{
-                          fontFamily: 'OpenSans-Regular',
+                          fontFamily: 'OpenSans-Bold',
                           fontSize: 20 * factor,
-                          fontWeight: '700',
                           color: '#fb1b2f'
                         }}
                       >
@@ -993,9 +988,8 @@ export default class CreateAccount3 extends React.Component {
                   <View style={{ flex: 1 }} />
                   <Text
                     style={{
-                      fontFamily: 'OpenSans-Regular',
+                      fontFamily: 'OpenSans-Bold',
                       fontSize: 22 * factor,
-                      fontWeight: Platform.OS == 'ios' ? '600' : 'bold'
                     }}
                   >
                     Learning Path
@@ -1075,14 +1069,13 @@ export default class CreateAccount3 extends React.Component {
                   <View style={{ flex: 1 }} />
                   <Text
                     style={{
-                      fontFamily: 'OpenSans-Regular',
+                      fontFamily: 'OpenSans-Bold',
                       fontSize: 22 * factor,
-                      fontWeight: Platform.OS == 'ios' ? '600' : 'bold'
                     }}
                   >
                     Courses
                   </Text>
-                  <View style={{ height: 5 * factorVertical }} />
+                  <View style={{ height: 5 }} />
                   <Text
                     style={{
                       fontFamily: 'OpenSans-Regular',
@@ -1157,14 +1150,13 @@ export default class CreateAccount3 extends React.Component {
                   <View style={{ flex: 1 }} />
                   <Text
                     style={{
-                      fontFamily: 'OpenSans-Regular',
+                      fontFamily: 'OpenSans-Bold',
                       fontSize: 22 * factor,
-                      fontWeight: Platform.OS == 'ios' ? '600' : 'bold'
                     }}
                   >
                     Songs
                   </Text>
-                  <View style={{ height: 5 * factorVertical }} />
+                  <View style={{ height: 5 }} />
                   <Text
                     style={{
                       fontFamily: 'OpenSans-Regular',
@@ -1279,7 +1271,7 @@ export default class CreateAccount3 extends React.Component {
                         borderWidth: 1,
                         borderColor: '#fb1b2f'
                       }}
-                    ></View>
+                    />
                     <View
                       style={{
                         width: 10 * factor
@@ -1295,7 +1287,7 @@ export default class CreateAccount3 extends React.Component {
                         borderWidth: 1,
                         borderColor: '#fb1b2f'
                       }}
-                    ></View>
+                    />
                     <View
                       style={{
                         width: 10 * factor
@@ -1311,7 +1303,7 @@ export default class CreateAccount3 extends React.Component {
                         borderWidth: 1,
                         borderColor: '#fb1b2f'
                       }}
-                    ></View>
+                    />
                     <View
                       style={{
                         width: 10 * factor
@@ -1327,7 +1319,7 @@ export default class CreateAccount3 extends React.Component {
                         borderWidth: 1,
                         borderColor: '#fb1b2f'
                       }}
-                    ></View>
+                    />
                   </View>
                 </View>
                 <View style={{ flex: 1 }} />
@@ -1347,9 +1339,8 @@ export default class CreateAccount3 extends React.Component {
                 >
                   <Text
                     style={{
-                      fontFamily: 'OpenSans-Regular',
+                      fontFamily: 'OpenSans-Bold',
                       fontSize: 20 * factor,
-                      fontWeight: '700',
                       color: '#fb1b2f'
                     }}
                   >
@@ -1379,7 +1370,7 @@ export default class CreateAccount3 extends React.Component {
                 style={{
                   height: '4%',
                   borderBottomColor: '#dbdbdb',
-                  borderBottomWidth: 0.75 * factor
+                  borderBottomWidth: 0.75
                 }}
               />
               <View
@@ -1399,7 +1390,7 @@ export default class CreateAccount3 extends React.Component {
                     style={{
                       height: '13.5%',
                       width: '65%',
-                      borderRadius: 10 * factor,
+                      borderRadius: 10,
                       alignSelf: 'stretch'
                     }}
                     source={require('Pianote2/src/assets/img/imgs/pianote-method-logo.png')}
@@ -1407,13 +1398,13 @@ export default class CreateAccount3 extends React.Component {
                   />
                   <View style={{ flex: 1 }} />
                 </View>
-                <View style={{ height: 10 * factorVertical }} />
+                <View style={{ height: 10 }} />
                 <View style={{ flexDirection: 'row' }}>
                   <FastImage
                     style={{
-                      height: onTablet ? height * 0.275 : height * 0.225,
+                      height: (onTablet ? 0.275 : 0.225) * height,
                       width: width * 0.85,
-                      borderRadius: 10 * factor,
+                      borderRadius: 10,
                       alignSelf: 'stretch'
                     }}
                     source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
@@ -1464,7 +1455,7 @@ export default class CreateAccount3 extends React.Component {
                         borderWidth: 1,
                         borderColor: '#fb1b2f'
                       }}
-                    ></View>
+                    />
                     <View
                       style={{
                         width: 10 * factor
@@ -1480,7 +1471,7 @@ export default class CreateAccount3 extends React.Component {
                         borderWidth: 1,
                         borderColor: '#fb1b2f'
                       }}
-                    ></View>
+                    />
                     <View
                       style={{
                         width: 10 * factor
@@ -1496,7 +1487,7 @@ export default class CreateAccount3 extends React.Component {
                         borderWidth: 1,
                         borderColor: '#fb1b2f'
                       }}
-                    ></View>
+                    />
                     <View
                       style={{
                         width: 10 * factor
@@ -1512,7 +1503,7 @@ export default class CreateAccount3 extends React.Component {
                         borderWidth: 1,
                         borderColor: '#fb1b2f'
                       }}
-                    ></View>
+                    />
                   </View>
                 </View>
                 <View style={{ flex: 1 }} />

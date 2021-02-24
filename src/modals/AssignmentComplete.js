@@ -38,7 +38,7 @@ class AssignmentComplete extends React.Component {
             <View style={[styles.centerContent]}>
               <IonIcon
                 name={'ios-trophy'}
-                size={36 * factorRatio}
+                size={(onTablet ? 28 : 36) * factor}
                 color={'#fb1b2f'}
               />
             </View>

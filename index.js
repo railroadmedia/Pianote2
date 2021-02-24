@@ -4,7 +4,6 @@
 import {
   AppRegistry,
   Dimensions,
-  StatusBar,
   Platform,
   Linking
 } from 'react-native';
@@ -23,6 +22,13 @@ import {
   showNotification
 } from './src/services/notification.service';
 import AsyncStorage from '@react-native-community/async-storage';
+
+const windowDim = Dimensions.get('window');
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 
 localNotification();
 PushNotification.configure({
@@ -88,15 +94,8 @@ PushNotification.configure({
 
 AppRegistry.registerComponent(appName, () => App);
 console.disableYellowBox = true;
-
 global.fullWidth = Dimensions.get('window').width;
 global.fullHeight = Dimensions.get('window').height;
-global.factorHorizontal = Dimensions.get('window').width / 375;
-global.factorVertical = Dimensions.get('window').height / 812;
-global.factorRatio =
-  (Dimensions.get('window').height / 812 +
-    Dimensions.get('window').width / 375) /
-  2;
 global.token = '';
 global.onTablet = DeviceInfo.isTablet();
 global.loadedFromNotification = false; 
@@ -107,7 +106,7 @@ global.isConnected = true;
 global.isPackOnly = false;
 global.paddingInset = (DeviceInfo.isTablet ? 10 : 5) 
 global.fallbackThumb = 'https://dmmior4id2ysr.cloudfront.net/assets/images/pianote_fallback_thumb.jpg';
-global.backButtonSize = (DeviceInfo.isTablet() ? 17.5 : 25) * factorRatio, 
+global.backButtonSize = (DeviceInfo.isTablet() ? 17.5 : 25) * factor, 
 global.colors = {
   mainBackground: '#00101d',
   secondBackground: '#445f73',

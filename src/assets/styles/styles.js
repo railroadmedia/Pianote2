@@ -104,6 +104,7 @@ module.exports = StyleSheet.create({
     color: '#445f73'
   },
   tabRightContainerText: {
+    // container used for my list in progress & on settings
     paddingLeft: (DeviceInfo.isTablet ? 10 : 5),
     fontSize: DeviceInfo.isTablet() ? 22 : 20 * factor,
     textAlign: 'left',
@@ -112,6 +113,7 @@ module.exports = StyleSheet.create({
     paddingVertical: 10 * factor
   },
   tabRightContainer: {
+    // container used for my list in progress & on settings
     paddingRight: (DeviceInfo.isTablet ? 10 : 5),
     width: '100%',
     borderTopWidth: 0.5 * factor,

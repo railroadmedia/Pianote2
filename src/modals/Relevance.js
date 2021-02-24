@@ -65,7 +65,7 @@ class Relevance extends React.Component {
               <View style={styles.centerContent}>
                 <EntypoIcon
                   name={'check'}
-                  size={20 * factorRatio}
+                  size={(onTablet ? 15 : 20) * factor}
                   color={
                     this.state.currentSort == 'newest'
                       ? 'white'
@@ -108,7 +108,7 @@ class Relevance extends React.Component {
               <View style={styles.centerContent}>
                 <EntypoIcon
                   name={'check'}
-                  size={20 * factorRatio}
+                  size={(onTablet ? 15 : 20) * factor}
                   color={
                     this.state.currentSort == 'oldest'
                       ? 'white'
@@ -141,7 +141,7 @@ class Relevance extends React.Component {
               <View style={styles.centerContent}>
                 <EntypoIcon
                   name={'cross'}
-                  size={25 * factorRatio}
+                  size={(onTablet ? 17.5 : 25) * factor}
                   color={'white'}
                 />
               </View>

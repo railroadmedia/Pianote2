@@ -96,31 +96,6 @@ class SoundSlice extends React.Component {
                             }, 500)
                         `}
           />
-          {/* <View style={{flex: 1}}/>
-                        <View style={{flex: 1}}>
-                            <Text
-                                style={{
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontSize: 16 * factor,
-                                    fontWeight: '700',
-                                    textAlign: 'center',
-                                    color: '#b9b9b9',
-                                }}
-                            >
-                                ASSIGNMENT #1
-                            </Text>
-                            <View style={{height: 10 * factorVertical}} />
-                            <Text
-                                style={{
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontSize: 30 * factor,
-                                    fontWeight: '700',
-                                    textAlign: 'center',
-                                }}
-                            >
-                                Learn The Song
-                            </Text>
-                        </View>*/}
         </View>
       </View>
     );

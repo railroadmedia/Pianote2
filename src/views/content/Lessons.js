@@ -93,6 +93,7 @@ class Lessons extends React.Component {
   }
 
   componentDidMount = () => {
+    console.log(paddingInset)
     Orientation.addDeviceOrientationListener(this.orientationListener);
     AsyncStorage.multiGet([
       'totalXP',
@@ -525,7 +526,7 @@ class Lessons extends React.Component {
                 </View>
               </View>
             </ImageBackground>
-            <View>
+            <View style={{marginTop: paddingInset/2}}>
               {this.state.lessonsStarted && (
                 <HorizontalVideoList
                   hideFilterButton={true}
@@ -541,7 +542,7 @@ class Lessons extends React.Component {
                   items={this.state.progressLessons}
                 />
               )}
-              <View style={{ height: 10}} />
+              <View style={{ height: paddingInset}} />
               {onTablet ? (
                   <HorizontalVideoList
                     isMethod={true}

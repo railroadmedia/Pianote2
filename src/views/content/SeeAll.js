@@ -301,7 +301,6 @@ export default class SeeAll extends React.Component {
             />
           }
         >
-          <View style={{ height: 5 * factorVertical }} />
           <VerticalVideoList
             items={this.state.allLessons}
             isLoading={this.state.isLoadingAll}

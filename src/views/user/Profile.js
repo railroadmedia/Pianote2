@@ -601,11 +601,11 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 15
+    padding: 10
   },
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
+    borderRadius: 15,
     margin: 20 * factor,
     height: 200,
     width: '80%'
@@ -682,18 +682,18 @@ const localStyles = StyleSheet.create({
     textAlign: 'center'
   },
   notificationContainer: {
-    paddingVertical: (15 * Dimensions.get('window').height) / 812,
+    paddingVertical: 10,
     elevation: 1
   },
   activityContainer: {
     flex: 1,
-    marginTop: 15 * factor
+    marginTop: 20
   },
   noNotificationText: {
     fontFamily: 'OpenSans-ExtraBold',
     fontSize: (DeviceInfo.isTablet() ? 12 : 15) * factor,
     textAlign: 'left',
-    paddingLeft: 15,
+    paddingLeft: 10,
     color: 'white'
   },
   notification: {
@@ -701,7 +701,7 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row'
   },
   innerNotificationContainer: {
-    paddingLeft: 15,
+    paddingLeft: 10,
     flex: 0.275,
     flexDirection: 'row',
     alignItems: 'center'
@@ -731,7 +731,7 @@ const localStyles = StyleSheet.create({
     fontSize: (DeviceInfo.isTablet() ? 10 : 14) * factor
   },
   notificationText: {
-    paddingLeft: 15,
+    paddingLeft: 10,
     fontSize: (DeviceInfo.isTablet() ? 14 : 18) * factor,
     fontFamily: 'OpenSans-ExtraBold',
     color: '#445f73'
