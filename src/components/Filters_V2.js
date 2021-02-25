@@ -139,10 +139,10 @@ export default class Filters_V2 extends React.Component {
     if (this.appliedFilters.level)
       filterQuery += `&required_fields[]=difficulty,${this.appliedFilters.level}`;
     this.appliedFilters.topics?.map(
-      t => (filterQuery += `&included_fields[]=topic,${t}`)
+      t => (filterQuery += `&included_fields[]=topic,${encodeURIComponent(t)}`)
     );
     this.appliedFilters.styles?.map(
-      s => (filterQuery += `&included_fields[]=style,${s}`)
+      s => (filterQuery += `&included_fields[]=style,${encodeURIComponent(s)}`)
     );
     if (this.appliedFilters.progress)
       filterQuery += `&required_user_states[]=${
