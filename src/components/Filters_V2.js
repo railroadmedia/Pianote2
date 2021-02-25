@@ -4,10 +4,8 @@ import {
   ActivityIndicator,
   Modal,
   PanResponder,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
-  Dimensions,
   Text,
   TouchableOpacity,
   View
@@ -15,12 +13,13 @@ import {
 
 import DeviceInfo from 'react-native-device-info';
 import FastImage from 'react-native-fast-image';
+import { SafeAreaView } from 'react-navigation';
 
 import ExpandableView from './ExpandableView';
 
 import { NetworkContext } from '../context/NetworkProvider';
 
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
+import ArrowLeft from '../assets/img/svgs/arrowLeft';
 import Filters from '../assets/img/svgs/filters';
 
 let alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
@@ -31,20 +30,6 @@ let alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
   styleKeys = [],
   topicKeys = [],
   difficulties;
-  const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
-const colors = {
-  mainBackground: '#00101d',
-  secondBackground: '#445f73',
-  thirdBackground: '#081826',
-  notificationColor: '#002038',
-  pianoteRed: '#fb1b2f',
-  pianoteGrey: '#6e777a'
-};
 
 export default class Filters_V2 extends React.Component {
   static contextType = NetworkContext;
@@ -184,28 +169,14 @@ export default class Filters_V2 extends React.Component {
   get filterAppliedText() {
     let appliedFilters = Object.values(this.appliedFilters);
     return appliedFilters.length ? (
-      <Text 
-        style={{
-          fontSize: (onTablet ? 10 : 12) * factor,
-          marginBottom: 5 * factor,
-          textAlign: 'left',
-          fontFamily: 'OpenSans-Regular',
-          color: this.props.isMethod
-            ? 'white'
-            : colors.secondBackground
-        }}
-      >
+      <Text style={fStyles.textAppliedFilters}>
         <Text
-          style={{
-            // fontFamily: 'RobotoCondensed-Bold',
-            fontSize: (onTablet ? 10 : 12) * factor,
-            marginBottom: 5 * factor,
-            textAlign: 'left',
-            fontFamily: 'OpenSans-Bold',
-            color: this.props.isMethod
-              ? 'white'
-              : colors.secondBackground
-          }}
+          style={[
+            fStyles.textAppliedFilters,
+            {
+              fontFamily: 'RobotoCondensed-Bold'
+            }
+          ]}
         >
           FILTERS APPLIED
         </Text>{' '}
@@ -292,13 +263,9 @@ export default class Filters_V2 extends React.Component {
           <TouchableOpacity
             disabled={disabled}
             onPress={this.toggleModal}
-            style={localStyles.touchableToggler}
+            style={fStyles.touchableToggler}
           >
-            <Filters 
-              width={(onTablet ? 9 : 14) * factor}
-              height={(onTablet ? 9 : 14) * factor}
-              fill={colors.pianoteRed} 
-            />
+            <Filters width={18} height={18} fill={'#fb1b2f'} />
           </TouchableOpacity>
         </View>
         <Modal
@@ -306,218 +273,207 @@ export default class Filters_V2 extends React.Component {
           animationType={'fade'}
           onRequestClose={this.toggleModal}
         >
-          <SafeAreaView
-            forceInset={{ bottom: 'never' }}
-            style={styles.packsContainer}
-          >
-            <View style={styles.childHeader}>
-              <View style={{ flex: 1, justifyContent: 'center',  }}>
-                <TouchableOpacity
-                  activeOpacity={1}
-                  onPress={() => {
-                    topicKeys = [];
-                    styleKeys = [];
-                    instructorNames = [];
-                    let af = JSON.stringify(this.appliedFilters);
-                    let of = JSON.stringify(this.originalFilters);
-                    if (af !== of) {
-                      this.appliedFilters = JSON.parse(of);
-                      this.apply();
-                    }
-                    this.setState({ showModal: false });
-                  }}
-                >
-                  <Back
-                    width={backButtonSize}
-                    height={backButtonSize}
-                    fill={'white'}
-                  />
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.childHeaderText}>Filters</Text>
-              <View style={{ flex: 1 }} />
-            </View>
-                      
-            {loading ? (
-              <ActivityIndicator
-                size={onTablet ? 'large' : 'small'}
-                animating={true}
-                color={colors.pianoteRed}
-                style={localStyles.container}
-              />
-            ) : (
-              <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={localStyles.container}>
-                <SkillSection
-                  onApply={this.apply}
-                  testID={'SkillSection'}
-                  appliedFilters={this.appliedFilters}
-                />
-                {!!topicKeys.length && (
-                  <View style={localStyles.filterSection}>
-                    <Text style={styles.tabRightContainerText}>
-                      WHAT DO YOU WANT TO WORK ON?
-                    </Text>
-                    <View
-                      style={{
-                        marginTop: 10,
-                        flexWrap: 'wrap',
-                        flexDirection: 'row'
-                      }}
-                    >
-                      {topicKeys.map((topic, i) => (
-                        <View key={i} style={localStyles.touchableBorderedContainer}>
-                          <TouchableFiller
-                            item={topic}
-                            filterType={'topics'}
-                            toggleItem={this.toggleItem}
-                            testID={`TouchableFiller${i}`}
-                            appliedFilters={this.appliedFilters}
-                            selected={
-                              topic === 'ALL' &&
-                              !this.appliedFilters.topics?.length
-                                ? true
-                                : undefined
-                            }
-                            touchableTextStyle={localStyles.touchableTextBordered}
-                            touchableSelectedStyle={
-                              topicHeight
-                                ? {
-                                    ...localStyles.touchableBorderedSelected,
-                                    height: topicHeight
-                                  }
-                                : localStyles.touchableBorderedSelected
-                            }
-                            touchableStyle={
-                              topicHeight
-                                ? {
-                                    ...localStyles.touchableBordered,
-                                    height: topicHeight
-                                  }
-                                : localStyles.touchableBordered
-                            }
-                            touchableTextSelectedStyle={
-                              localStyles.touchableTextBorderedSelected
-                            }
-                            onLayout={({
-                              nativeEvent: {
-                                layout: { height }
-                              }
-                            }) => {
-                              this.topicsRenders++;
-                              this.tallestTopic =
-                                this.tallestTopic < height
-                                  ? height
-                                  : this.tallestTopic;
-                              if (this.topicsRenders === topicKeys.length)
-                                this.setState({ topicHeight: this.tallestTopic });
-                            }}
-                          />
-                        </View>
-                      ))}
-                    </View>
-                  </View>
-                )}
-                {!!styleKeys.length && (
-                  <View style={localStyles.filterSection}>
-                    <Text style={styles.tabRightContainerText}>
-                      WHAT STYLE YOU WANT TO PLAY?
-                    </Text>
-                    <View
-                      style={{
-                        marginTop: 10,
-                        flexWrap: 'wrap',
-                        flexDirection: 'row'
-                      }}
-                    >
-                      {styleKeys.map((style, i) => (
-                        <View key={i} style={localStyles.touchableBorderedContainer}>
-                          <TouchableFiller
-                            item={style}
-                            filterType={'styles'}
-                            toggleItem={this.toggleItem}
-                            testID={`TouchableFiller${i}`}
-                            appliedFilters={this.appliedFilters}
-                            selected={
-                              style === 'ALL' &&
-                              !this.appliedFilters.styles?.length
-                                ? true
-                                : undefined
-                            }
-                            touchableTextStyle={localStyles.touchableTextBordered}
-                            touchableSelectedStyle={
-                              styleHeight
-                                ? {
-                                    ...localStyles.touchableBorderedSelected,
-                                    height: styleHeight
-                                  }
-                                : localStyles.touchableBorderedSelected
-                            }
-                            touchableStyle={
-                              styleHeight
-                                ? {
-                                    ...localStyles.touchableBordered,
-                                    height: styleHeight
-                                  }
-                                : localStyles.touchableBordered
-                            }
-                            touchableTextSelectedStyle={
-                              localStyles.touchableTextBorderedSelected
-                            }
-                            onLayout={({
-                              nativeEvent: {
-                                layout: { height }
-                              }
-                            }) => {
-                              this.stylesRenders++;
-                              this.tallestStyle =
-                                this.tallestStyle < height
-                                  ? height
-                                  : this.tallestStyle;
-                              if (this.stylesRenders === styleKeys.length)
-                                this.setState({ styleHeight: this.tallestStyle });
-                            }}
-                          />
-                        </View>
-                      ))}
-                    </View>
-                  </View>
-                )}
-                {content_type?.join() === 'coach-stream' && (
-                  <StatusSection appliedFilters={this.appliedFilters} />
-                )}
-                {!!instructorNames.length && (
-                  <InstructorsSection
-                    toggleItem={this.toggleItem}
-                    testID={'InstructorsSection'}
-                    appliedFilters={this.appliedFilters}
-                  />
-                )}
-                <ProgressSection
-                  testID={'ProgressSection'}
-                  appliedFilters={this.appliedFilters}
-                />
-              </ScrollView>
-            )}
-            <View style={[styles.heightButtons, {paddingHorizontal: paddingInset, flexDirection: 'row'}]}>
-              <TouchableOpacity
-                onPress={this.toggleModal}
-                testID={'TouchableDoneApply'}
-                style={[styles.centerContent, localStyles.touchableDoneAndApply]}
-              >
-                <Text style={localStyles.touchableTextDoneAndApply}>DONE & APPLY</Text>
-              </TouchableOpacity>
-              <View style={{flex: 0.05}} />
-              <TouchableOpacity
-                onPress={() => {
-                  difficulties = undefined;
-                  this.appliedFilters = {};
+          <SafeAreaView style={fStyles.safeAreaTitleContainer}>
+            <TouchableOpacity
+              activeOpacity={1}
+              style={fStyles.touchableTitleContainer}
+              onPress={() => {
+                topicKeys = [];
+                styleKeys = [];
+                instructorNames = [];
+                let af = JSON.stringify(this.appliedFilters);
+                let of = JSON.stringify(this.originalFilters);
+                if (af !== of) {
+                  this.appliedFilters = JSON.parse(of);
                   this.apply();
-                }}
-                style={localStyles.touchableReset}
-              >
-                <Text style={localStyles.touchableTextReset}>RESET</Text>
-              </TouchableOpacity>
-            </View>
+                }
+                this.setState({ showModal: false });
+              }}
+            >
+              <Text style={fStyles.textTitle}>Filter</Text>
+              <ArrowLeft width={18} height={18} fill={'white'} />
+            </TouchableOpacity>
+          </SafeAreaView>
+          {loading ? (
+            <ActivityIndicator
+              size='large'
+              animating={true}
+              color={'#fb1b2f'}
+              style={fStyles.container}
+            />
+          ) : (
+            <ScrollView style={fStyles.container}>
+              <SkillSection
+                onApply={this.apply}
+                testID={'SkillSection'}
+                appliedFilters={this.appliedFilters}
+              />
+              {!!topicKeys.length && (
+                <View style={fStyles.filterSection}>
+                  <Text style={fStyles.sectionTitleText}>
+                    WHAT DO YOU WANT TO WORK ON?
+                  </Text>
+                  <View
+                    style={{
+                      marginTop: 10,
+                      flexWrap: 'wrap',
+                      flexDirection: 'row'
+                    }}
+                  >
+                    {topicKeys.map((topic, i) => (
+                      <View key={i} style={fStyles.touchableBorderedContainer}>
+                        <TouchableFiller
+                          item={topic}
+                          filterType={'topics'}
+                          toggleItem={this.toggleItem}
+                          testID={`TouchableFiller${i}`}
+                          appliedFilters={this.appliedFilters}
+                          selected={
+                            topic === 'ALL' &&
+                            !this.appliedFilters.topics?.length
+                              ? true
+                              : undefined
+                          }
+                          touchableTextStyle={fStyles.touchableTextBordered}
+                          touchableSelectedStyle={
+                            topicHeight
+                              ? {
+                                  ...fStyles.touchableBorderedSelected,
+                                  height: topicHeight
+                                }
+                              : fStyles.touchableBorderedSelected
+                          }
+                          touchableStyle={
+                            topicHeight
+                              ? {
+                                  ...fStyles.touchableBordered,
+                                  height: topicHeight
+                                }
+                              : fStyles.touchableBordered
+                          }
+                          touchableTextSelectedStyle={
+                            fStyles.touchableTextBorderedSelected
+                          }
+                          onLayout={({
+                            nativeEvent: {
+                              layout: { height }
+                            }
+                          }) => {
+                            this.topicsRenders++;
+                            this.tallestTopic =
+                              this.tallestTopic < height
+                                ? height
+                                : this.tallestTopic;
+                            if (this.topicsRenders === topicKeys.length)
+                              this.setState({ topicHeight: this.tallestTopic });
+                          }}
+                        />
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              )}
+              {!!styleKeys.length && (
+                <View style={fStyles.filterSection}>
+                  <Text style={fStyles.sectionTitleText}>
+                    WHAT STYLE YOU WANT TO PLAY?
+                  </Text>
+                  <View
+                    style={{
+                      marginTop: 10,
+                      flexWrap: 'wrap',
+                      flexDirection: 'row'
+                    }}
+                  >
+                    {styleKeys.map((style, i) => (
+                      <View key={i} style={fStyles.touchableBorderedContainer}>
+                        <TouchableFiller
+                          item={style}
+                          filterType={'styles'}
+                          toggleItem={this.toggleItem}
+                          testID={`TouchableFiller${i}`}
+                          appliedFilters={this.appliedFilters}
+                          selected={
+                            style === 'ALL' &&
+                            !this.appliedFilters.styles?.length
+                              ? true
+                              : undefined
+                          }
+                          touchableTextStyle={fStyles.touchableTextBordered}
+                          touchableSelectedStyle={
+                            styleHeight
+                              ? {
+                                  ...fStyles.touchableBorderedSelected,
+                                  height: styleHeight
+                                }
+                              : fStyles.touchableBorderedSelected
+                          }
+                          touchableStyle={
+                            styleHeight
+                              ? {
+                                  ...fStyles.touchableBordered,
+                                  height: styleHeight
+                                }
+                              : fStyles.touchableBordered
+                          }
+                          touchableTextSelectedStyle={
+                            fStyles.touchableTextBorderedSelected
+                          }
+                          onLayout={({
+                            nativeEvent: {
+                              layout: { height }
+                            }
+                          }) => {
+                            this.stylesRenders++;
+                            this.tallestStyle =
+                              this.tallestStyle < height
+                                ? height
+                                : this.tallestStyle;
+                            if (this.stylesRenders === styleKeys.length)
+                              this.setState({ styleHeight: this.tallestStyle });
+                          }}
+                        />
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              )}
+              {content_type?.join() === 'coach-stream' && (
+                <StatusSection appliedFilters={this.appliedFilters} />
+              )}
+              {!!instructorNames.length && (
+                <InstructorsSection
+                  toggleItem={this.toggleItem}
+                  testID={'InstructorsSection'}
+                  appliedFilters={this.appliedFilters}
+                />
+              )}
+              <ProgressSection
+                testID={'ProgressSection'}
+                appliedFilters={this.appliedFilters}
+              />
+            </ScrollView>
+          )}
+          <SafeAreaView style={fStyles.safeAreaBottomContainer}>
+            <TouchableOpacity
+              onPress={this.toggleModal}
+              testID={'TouchableDoneApply'}
+              style={fStyles.touchableDoneAndApply}
+            >
+              <Text style={fStyles.touchableTextDoneAndApply}>
+                DONE & APPLY
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                difficulties = undefined;
+                this.appliedFilters = {};
+                this.apply();
+              }}
+              style={fStyles.touchableReset}
+            >
+              <Text style={fStyles.touchableTextReset}>RESET</Text>
+            </TouchableOpacity>
           </SafeAreaView>
         </Modal>
       </>
@@ -577,27 +533,27 @@ class SkillSection extends React.PureComponent {
   setDifficultyDescription = level => {
     switch (level) {
       case 'ALL':
-        return '';
+        return 'This will display all piano lessons regardless of their difficulty.';
       case 1:
-        return 'A Level 1 drummer should be able to hold the drumsticks and play a basic drum beat in time with music.';
+        return 'A level 1 pianist is just beginning and might not yet have any skills yet. A level 1 pianist will learn how to navigate the keyboard, play a C scale, chords and begin to build dexterity and control in their hands.';
       case 2:
-        return 'A Level 2 drummer should be able to read basic note values, understand the drum notation key, play basic rock, punk, and metal beats, and play basic rudiments like the single stroke roll, double stroke roll, and single paradiddle.';
+        return 'A level 2 pianist can play a C scale hands together, a chord progression in the key of C and understands basic rhythm.';
       case 3:
-        return 'A Level 3 drummer should understand the motions of drumming, be able to play triplets, flams, and drags, create a basic roadmap for a song, and play styles like country and disco.';
+        return 'A level 3 pianist can read basic notation and is gaining confidence in playing hands together and reading simple notation on the grand staff.';
       case 4:
-        return 'A Level 4 drummer should be able to use Moeller technique at a basic level, understand dotted notation, play in 3/4, 6/8, and 12/8, play basic jazz and blues patterns, and demonstrate 4-limb independence.';
+        return 'A level 4 pianist understands how to build and play both major and minor scales and the 1-5-6-4 chord progression. At level 4 you are beginning to play with dynamics and are becoming comfortable in moving your hands outside of “C position” as you play.';
       case 5:
-        return 'A Level 5 drummer should be able to apply basic groupings to the drum-set, play styles like funk, jazz, soul, reggae, and bossa nova, understand ties, dynamic markings, and other basic elements of chart reading, and be able to demonstrate basic 4-limb independence in a jazz and rock setting.';
+        return 'A level 5 pianist can play chord inversions and the G major scale as well as apply their knowledge of chord progressions to this new key. They can read notations that include accidentals and eighth notes.';
       case 6:
-        return 'A Level 6 drummer should understand odd time signatures like 5/4, 5/8, 7/4, and 7/8, be able to apply odd note groupings to the drum-set, play styles like hip-hop, R&B, cha-cha-cha, soca, and second line, and understand the basics of comping and trading solos.';
+        return 'A level 6 a pianist can play in the keys of F major and D minor and is using chord inversions while playing chord progressions.';
       case 7:
-        return 'A Level 7 drummer should be able to demonstrate 4-limb independence in styles like jazz, rock, and metal at an intermediate level, demonstrate hand-to-foot combinations, understand and demonstrate bass drum techniques like double bass playing, heel-toe, and slide technique.';
+        return 'A level 7 pianist can play with dynamics and the sustain pedal ,in 4/4 and ¾ time and is able to read and play most of the notation found within Pianote.';
       case 8:
-        return 'A Level 8 drummer should be able to navigate charts and lead sheets, play brushes at a basic level, play styles like samba and mozambique, and understand independence concepts like interpreting rhythms and interpreting stickings.';
+        return 'At level 8 a pianist understands the circle of 5th and is able to use it to help them play scales and songs in any key signature.';
       case 9:
-        return 'A Level 9 drummer should be able to play all 40 drum rudiments, play Afro-Cuban styles like mambo, nanigo, and songo, solo over a musical vamp, and demonstrate 4-limb independence in Afro-Cuban, Afro-Brazilian, and swing localStyles.';
+        return 'A level 9 pianist should be comfortable with the basics of improvisation and use a variety of left hand patterns and right hand fills as they create their own music. They also understand how to build and play 7th chords.';
       case 10:
-        return 'A Level 10 drummer should understand advanced rhythmic concepts including polyrhythms, polymeters, metric modulation, and odd note subdivisions, play advanced Afro-Cuban and jazz styles, play drum solos in a variety of different settings and styles, and demonstrate 4-limb independence at an advanced level.';
+        return 'A level 10 pianist understands the 12 bar blues, the blues scale, and the 2-5-1 Jazz progression. By level 10 you can learn to play any song in our library and improvise in pop, blues or jazz styles.';
     }
   };
 
@@ -629,12 +585,12 @@ class SkillSection extends React.PureComponent {
   render() {
     let { level } = this.state;
     return (
-      <View style={[localStyles.filterSection, {paddingHorizontal: 0}]}>
-        <Text style={styles.tabRightContainerText}>SET YOUR SKILL LEVEL</Text>
-        <Text style={localStyles.levelText}>LEVEL {level}</Text>
-        <View {...this.pResponder} style={{ justifyContent: 'center', marginHorizontal: paddingInset}}>
+      <View style={fStyles.filterSection}>
+        <Text style={fStyles.sectionTitleText}>SET YOUR SKILL LEVEL</Text>
+        <Text style={fStyles.levelText}>LEVEL {level}</Text>
+        <View {...this.pResponder} style={{ justifyContent: 'center' }}>
           <View
-            style={localStyles.skillSectionsContainer}
+            style={fStyles.skillSectionsContainer}
             testID={'SkillSectionSliderContainer'}
             onLayout={({
               nativeEvent: {
@@ -656,7 +612,7 @@ class SkillSection extends React.PureComponent {
               <View
                 key={i}
                 style={{
-                  ...localStyles.skillSection,
+                  ...fStyles.skillSection,
                   borderTopLeftRadius: i === 0 ? 2.5 : 0,
                   borderTopRightRadius: i === 8 ? 2.5 : 0,
                   borderBottomLeftRadius: i === 0 ? 2.5 : 0,
@@ -667,19 +623,19 @@ class SkillSection extends React.PureComponent {
             ))}
             <Animated.View
               style={{
-                ...localStyles.skillSectionBar,
+                ...fStyles.skillSectionBar,
                 transform: [{ translateX: this.skillLevelBarTranslateX }]
               }}
             />
           </View>
           <Animated.View
             style={{
-              ...localStyles.skillSectionDot,
+              ...fStyles.skillSectionDot,
               transform: [{ translateX: this.skillLevelDotTranslateX }]
             }}
           />
         </View>
-        <Text style={localStyles.levelDescriptionText}>
+        <Text style={fStyles.levelDescriptionText}>
           {this.setDifficultyDescription(this.state.level)}
         </Text>
         <TouchableOpacity
@@ -687,21 +643,21 @@ class SkillSection extends React.PureComponent {
           style={
             level === 'ALL'
               ? {
-                  ...localStyles.touchableAll,
-                  backgroundColor: colors.pianoteRed,
+                  ...fStyles.touchableAll,
+                  backgroundColor: '#fb1b2f',
                   borderColor: 'transparent'
                 }
-              : localStyles.touchableAll
+              : fStyles.touchableAll
           }
         >
           <Text
             style={
               level === 'ALL'
                 ? {
-                    ...localStyles.touchableTextBordered,
+                    ...fStyles.touchableTextBordered,
                     color: 'white'
                   }
-                : localStyles.touchableTextBordered
+                : fStyles.touchableTextBordered
             }
           >
             ALL
@@ -747,7 +703,6 @@ class TouchableFiller extends React.Component {
       >
         {this.props.children}
         <Text
-          numberOfLines={2}
           style={
             selected
               ? this.props.touchableTextSelectedStyle
@@ -777,35 +732,35 @@ class InstructorsSection extends React.Component {
   render() {
     let { instructorLetters } = this.state;
     return (
-      <View style={localStyles.filterSectionNoPadding}>
+      <View style={fStyles.filterSectionNoPadding}>
         <ExpandableView
           processType={'RAM'}
-          titleStyle={[styles.tabRightContainerText, {paddingLeft: 0}]}
-          expandableContStyle={{ padding: paddingInset }}
-          dropStyle={{ height: undefined,  }}
+          titleStyle={fStyles.sectionTitleText}
+          dropStyle={{ height: undefined }}
           title={'CHOOSE YOUR PIANO TEACHER'}
-          iconColor={localStyles.sectionTitleText.color}
+          iconColor={fStyles.sectionTitleText.color}
+          expandableContStyle={{ paddingVertical: 25 }}
         >
-          <Text style={localStyles.expandableDetails}>
+          <Text style={fStyles.expandableDetails}>
             Instructors will only appear here if they have Drumeo lessons that
             fit your skill and topic filters.
           </Text>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             {alphabet.map((a, i) => (
-              <View style={localStyles.touchableContainerInstructorLetter} key={i}>
+              <View style={fStyles.touchableContainerInstructorLetter} key={i}>
                 <TouchableFiller
                   item={a}
                   toggleItem={this.toggleItem}
                   filterType={'instructorLetters'}
                   testID={`TouchableFillerLetter${i}`}
                   appliedFilters={this.props.appliedFilters}
-                  touchableStyle={localStyles.touchableInstructorLetter}
-                  touchableTextStyle={localStyles.touchableTextInstructorLetter}
+                  touchableStyle={fStyles.touchableInstructorLetter}
+                  touchableTextStyle={fStyles.touchableTextInstructorLetter}
                   touchableSelectedStyle={
-                    localStyles.touchableInstructorLetterSelected
+                    fStyles.touchableInstructorLetterSelected
                   }
                   touchableTextSelectedStyle={
-                    localStyles.touchableTextInstructorLetterSelected
+                    fStyles.touchableTextInstructorLetterSelected
                   }
                 />
               </View>
@@ -819,7 +774,7 @@ class InstructorsSection extends React.Component {
                 style={
                   !instructorLetters.length ||
                   instructorLetters.some(il => il === name[0])
-                    ? localStyles.touchableContainerInstructor
+                    ? fStyles.touchableContainerInstructor
                     : { width: 0, height: 0 }
                 }
               >
@@ -828,15 +783,15 @@ class InstructorsSection extends React.Component {
                   filterType={'instructors'}
                   toggleItem={this.toggleItem}
                   appliedFilters={this.props.appliedFilters}
-                  touchableStyle={localStyles.touchableInstructor}
-                  touchableTextStyle={localStyles.touchableTextInstructor}
-                  touchableSelectedStyle={localStyles.touchableInstructorSelected}
+                  touchableStyle={fStyles.touchableInstructor}
+                  touchableTextStyle={fStyles.touchableTextInstructor}
+                  touchableSelectedStyle={fStyles.touchableInstructorSelected}
                   touchableTextSelectedStyle={
-                    localStyles.touchableTextInstructorSelected
+                    fStyles.touchableTextInstructorSelected
                   }
                 >
                   <FastImage
-                    style={localStyles.touchableInstructorPic}
+                    style={fStyles.touchableInstructorPic}
                     source={{
                       uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,ar_1,c_fill,g_face/${headShotPic}`
                     }}
@@ -874,30 +829,30 @@ class ProgressSection extends React.Component {
 
   render() {
     return (
-      <View style={localStyles.filterSectionNoPadding}>
+      <View style={fStyles.filterSectionNoPadding}>
         <ExpandableView
           processType={'RAM'}
           title={'CHOOSE YOUR PROGRESS'}
           dropStyle={{ height: undefined }}
-          titleStyle={[styles.tabRightContainerText, {paddingLeft: 0}]}
-          expandableContStyle={{ padding: paddingInset }}
-          iconColor={localStyles.sectionTitleText.color}
+          titleStyle={fStyles.sectionTitleText}
+          iconColor={fStyles.sectionTitleText.color}
+          expandableContStyle={{ paddingVertical: 25 }}
         >
           <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             {progressTypes.map((p, i) => (
-              <View key={i} style={localStyles.touchableBorderedContainerProgress}>
+              <View key={i} style={fStyles.touchableBorderedContainerProgress}>
                 <TouchableFiller
                   item={p}
                   filterType={'progress'}
                   toggleItem={this.toggleItem}
                   selected={p === this.state.selected}
                   testID={`TouchableFillerProgress${i}`}
-                  touchableStyle={localStyles.touchableBordered}
+                  touchableStyle={fStyles.touchableBordered}
                   appliedFilters={this.props.appliedFilters}
-                  touchableTextStyle={localStyles.touchableTextBordered}
-                  touchableSelectedStyle={localStyles.touchableBorderedSelected}
+                  touchableTextStyle={fStyles.touchableTextBordered}
+                  touchableSelectedStyle={fStyles.touchableBorderedSelected}
                   touchableTextSelectedStyle={
-                    localStyles.touchableTextBorderedSelected
+                    fStyles.touchableTextBorderedSelected
                   }
                 />
               </View>
@@ -936,8 +891,8 @@ class StatusSection extends React.Component {
   render() {
     let { statusHeight } = this.state;
     return (
-      <View style={localStyles.filterSection}>
-        <Text style={styles.tabRightContainerText}>CHOOSE YOUR EVENT STATUS</Text>
+      <View style={fStyles.filterSection}>
+        <Text style={fStyles.sectionTitleText}>CHOOSE YOUR EVENT STATUS</Text>
         <View
           style={{
             marginTop: 10,
@@ -946,7 +901,7 @@ class StatusSection extends React.Component {
           }}
         >
           {statusKeys.map((status, i) => (
-            <View key={i} style={localStyles.touchableBorderedContainer}>
+            <View key={i} style={fStyles.touchableBorderedContainer}>
               <TouchableFiller
                 item={status}
                 filterType={'status'}
@@ -954,25 +909,25 @@ class StatusSection extends React.Component {
                 testID={`TouchableFillerStatus${i}`}
                 appliedFilters={this.props.appliedFilters}
                 selected={status === this.state.selected}
-                touchableTextStyle={localStyles.touchableTextBordered}
+                touchableTextStyle={fStyles.touchableTextBordered}
                 touchableSelectedStyle={
                   statusHeight
                     ? {
-                        ...localStyles.touchableBorderedSelected,
+                        ...fStyles.touchableBorderedSelected,
                         height: statusHeight
                       }
-                    : localStyles.touchableBorderedSelected
+                    : fStyles.touchableBorderedSelected
                 }
                 touchableStyle={
                   statusHeight
                     ? {
-                        ...localStyles.touchableBordered,
+                        ...fStyles.touchableBordered,
                         height: statusHeight
                       }
-                    : localStyles.touchableBordered
+                    : fStyles.touchableBordered
                 }
                 touchableTextSelectedStyle={
-                  localStyles.touchableTextBorderedSelected
+                  fStyles.touchableTextBorderedSelected
                 }
                 onLayout={({
                   nativeEvent: {
@@ -996,231 +951,231 @@ class StatusSection extends React.Component {
   }
 }
 
-const localStyles = StyleSheet.create({
-    touchableToggler: {
-      alignSelf: 'center',
-      borderColor: colors.pianoteRed,
-      borderRadius: 15,
-      borderWidth: 1,
-      padding: 5
-    },
-    textAppliedFilters: {
-      color: '#445f73',
-      flex: 1,
-      fontFamily: 'RobotoCondensed-Regular',
-      paddingBottom: 5,
-      textTransform: 'uppercase'
-    },
-    safeAreaTitleContainer: {
-      backgroundColor: colors.thirdBackground
-    },
-    touchableTitleContainer: {
-      justifyContent: 'center',
-      padding: 15
-    },
-    textTitle: {
-      color: 'white',
-      fontFamily: 'OpenSans-Bold',
-      fontSize: isTablet ? 20 : 18,
-      left: 0,
-      position: 'absolute',
-      right: 0,
-      textAlign: 'center',
-      textTransform: 'capitalize',
-    },
-    container: {
-      backgroundColor: colors.mainBackground,
-      flex: 1
-    },
-    filterSection: {
-      borderBottomColor: colors.thirdBackground,
-      borderBottomWidth: 1,
-      paddingVertical: 10
-    },
-    filterSectionNoPadding: {
-      borderBottomColor: colors.thirdBackground,
-      borderBottomWidth: 1,
-      paddingVertical: 0
-    },
-    sectionTitleText: {
-      color: '#445f73',
-      fontFamily: 'RobotoCondensed-Bold',
-      fontSize: isTablet ? 22 : 20
-    },
-    skillSectionsContainer: {
-      borderRadius: 2.5,
-      flexDirection: 'row',
-      marginVertical: 15,
-      overflow: 'hidden'
-    },
-    skillSection: {
-      backgroundColor: colors.secondBackground,
-      flex: 0.2,
-      height: 5,
-      marginHorizontal: 1
-    },
-    skillSectionBar: {
-      backgroundColor: colors.pianoteRed,
-      borderRadius: 2.5,
-      height: 5,
-      position: 'absolute',
-      width: '100%'
-    },
-    skillSectionDot: {
-      backgroundColor: colors.pianoteRed,
-      borderRadius: 8,
-      height: 16,
-      position: 'absolute',
-      width: 16
-    },
-    levelText: {
-      color: 'white',
-      fontFamily: 'OpenSans-Bold',
-      fontSize: isTablet ? 32 : 18,
-      textAlign: 'center'
-    },
-    levelDescriptionText: {
-      color: 'white',
-      padding: 5,
-      marginBottom: 5,
-      textAlign: 'center'
-    },
-    touchableAll: {
-      alignSelf: 'center',
-      borderColor: '#445f73',
-      borderRadius: 50,
-      borderWidth: 1,
-      justifyContent: 'center',
-      padding: 10,
-      paddingHorizontal: 50
-    },
-    touchableBorderedContainer: {
-      padding: 3,
-      width: `${100 / (isTablet ? 6 : 3)}%`
-    },
-    touchableBorderedContainerProgress: {
-      flex: 1,
-      padding: 3
-    },
-    touchableBordered: {
-      borderColor: '#445f73',
-      borderRadius: 50,
-      borderWidth: 1,
-      justifyContent: 'center',
-      padding: 10
-    },
-    touchableBorderedSelected: {
-      backgroundColor: colors.pianoteRed,
-      borderColor: 'transparent',
-      borderRadius: 50,
-      borderWidth: 1,
-      justifyContent: 'center',
-      padding: 10
-    },
-    touchableTextBordered: {
-      color: '#445f73',
-      fontFamily: 'OpenSans-Semibold',
-      fontSize: isTablet ? 12 : 10,
-      textAlign: 'center',
-      textTransform: 'uppercase'
-    },
-    touchableTextBorderedSelected: {
-      color: 'white',
-      fontFamily: 'OpenSans-Semibold',
-      fontSize: isTablet ? 12 : 10,
-      textAlign: 'center',
-      textTransform: 'uppercase'
-    },
-    expandableDetails: {
-      color: '#445f73',
-      fontFamily: 'OpenSans',
-      fontSize: isTablet ? 14 : 12,
-      paddingVertical: 10
-    },
-    touchableContainerInstructorLetter: {
-      padding: 3,
-      width: `${Math.round(10000 / (isTablet ? 13 : 9)) / 100}%`
-    },
-    touchableInstructorLetter: {
-      aspectRatio: 1,
-      borderColor: '#445f73',
-      borderRadius: 100,
-      borderWidth: 1,
-      justifyContent: 'center'
-    },
-    touchableInstructorLetterSelected: {
-      aspectRatio: 1,
-      backgroundColor: colors.pianoteRed,
-      borderColor: colors.pianoteRed,
-      borderRadius: 100,
-      borderWidth: 1,
-      justifyContent: 'center'
-    },
-    touchableTextInstructorLetter: {
-      color: '#445f73',
-      textAlign: 'center',
-      marginTop: 2,
-      fontSize: (DeviceInfo.isTablet() ? 8 : 12) * factor,
-      marginTop: 2,
-    },
-    touchableTextInstructorLetterSelected: {
-      color: 'white',
-      textAlign: 'center',
-      fontSize: (DeviceInfo.isTablet() ? 8 : 12) * factor,
-      marginTop: 2,
-    },
-    touchableContainerInstructor: {
-      padding: 5,
-      width: `${100 / (isTablet ? 8 : 4)}%`
-    },
-    touchableInstructorPic: {
-      aspectRatio: 1,
-      borderRadius: 100,
-      width: '50%'
-    },
-    touchableInstructor: { alignItems: 'center' },
-    touchableInstructorSelected: {
-      alignItems: 'center',
-      backgroundColor: colors.pianoteRed
-    },
-    touchableTextInstructor: {
-      color: '#445f73',
-      textAlign: 'center',
-      fontSize: (DeviceInfo.isTablet() ? 8 : 12) * factor,
-      marginTop: 2,
-    },
-    touchableTextInstructorSelected: {
-      color: 'white',
-      textAlign: 'center'
-    },
-    safeAreaBottomContainer: {
-      backgroundColor: colors.mainBackground,
-      flexDirection: 'row'
-    },
-    touchableDoneAndApply: {
-      backgroundColor: colors.pianoteRed,
-      borderRadius: 50,
-      flex: 1,
-    },
-    touchableTextDoneAndApply: {
-      color: 'white',
-      fontFamily: 'RobotoCondensed-Bold',
-      textAlign: 'center',
-      fontSize: DeviceInfo.isTablet() ? 17.5 : 12.5
-    },
-    touchableReset: {
-      borderColor: 'white',
-      borderRadius: 50,
-      borderWidth: 2,
-      flex: 1,
-      justifyContent: 'center',
-      marginLeft: 0,
-      padding: 0,
-    },
-    touchableTextReset: {
-      color: 'white',
-      fontFamily: 'RobotoCondensed-Bold',
-      textAlign: 'center',
-      fontSize: DeviceInfo.isTablet() ? 17.5 : 12.5
-    }
-  });
+const fStyles = StyleSheet.create({
+  touchableToggler: {
+    alignSelf: 'center',
+    borderColor: '#fb1b2f',
+    borderRadius: 15,
+    borderWidth: 1,
+    padding: 5
+  },
+  textAppliedFilters: {
+    color: '#445f73',
+    flex: 1,
+    fontFamily: 'RobotoCondensed-Regular',
+    paddingBottom: 5,
+    textTransform: 'uppercase'
+  },
+  safeAreaTitleContainer: {
+    backgroundColor: '#081826'
+  },
+  touchableTitleContainer: {
+    justifyContent: 'center',
+    padding: 15
+  },
+  textTitle: {
+    color: 'white',
+    fontFamily: 'OpenSans-Bold',
+    fontSize: isTablet ? 20 : 18,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    textAlign: 'center',
+    textTransform: 'capitalize'
+  },
+  container: {
+    backgroundColor: '#00101d',
+    flex: 1
+  },
+  filterSection: {
+    borderBottomColor: '#081826',
+    borderBottomWidth: 1,
+    paddingHorizontal: 15,
+    paddingVertical: 25
+  },
+  filterSectionNoPadding: {
+    borderBottomColor: '#081826',
+    borderBottomWidth: 1,
+    paddingHorizontal: 15,
+    paddingVertical: 0
+  },
+  sectionTitleText: {
+    color: '#445f73',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: isTablet ? 22 : 20
+  },
+  skillSectionsContainer: {
+    borderRadius: 2.5,
+    flexDirection: 'row',
+    marginVertical: 15,
+    overflow: 'hidden'
+  },
+  skillSection: {
+    backgroundColor: '#445f73',
+    flex: 0.2,
+    height: 5,
+    marginHorizontal: 1
+  },
+  skillSectionBar: {
+    backgroundColor: '#fb1b2f',
+    borderRadius: 2.5,
+    height: 5,
+    position: 'absolute',
+    width: '100%'
+  },
+  skillSectionDot: {
+    backgroundColor: '#fb1b2f',
+    borderRadius: 8,
+    height: 16,
+    position: 'absolute',
+    width: 16
+  },
+  levelText: {
+    color: 'white',
+    fontFamily: 'OpenSans-Semibold',
+    fontSize: isTablet ? 32 : 30,
+    textAlign: 'center'
+  },
+  levelDescriptionText: {
+    color: 'white',
+    padding: 10,
+    textAlign: 'center'
+  },
+  touchableAll: {
+    alignSelf: 'center',
+    borderColor: '#445f73',
+    borderRadius: 50,
+    borderWidth: 1,
+    justifyContent: 'center',
+    padding: 10,
+    paddingHorizontal: 50
+  },
+  touchableBorderedContainer: {
+    padding: 3,
+    width: `${100 / (isTablet ? 5 : 3)}%`
+  },
+  touchableBorderedContainerProgress: {
+    flex: 1,
+    padding: 3
+  },
+  touchableBordered: {
+    borderColor: '#445f73',
+    borderRadius: 50,
+    borderWidth: 1,
+    justifyContent: 'center',
+    padding: 10
+  },
+  touchableBorderedSelected: {
+    backgroundColor: '#fb1b2f',
+    borderColor: 'transparent',
+    borderRadius: 50,
+    borderWidth: 1,
+    justifyContent: 'center',
+    padding: 10
+  },
+  touchableTextBordered: {
+    color: '#445f73',
+    fontFamily: 'OpenSans-Semibold',
+    fontSize: isTablet ? 12 : 10,
+    textAlign: 'center',
+    textTransform: 'uppercase'
+  },
+  touchableTextBorderedSelected: {
+    color: 'white',
+    fontFamily: 'OpenSans-Semibold',
+    fontSize: isTablet ? 12 : 10,
+    textAlign: 'center',
+    textTransform: 'uppercase'
+  },
+  expandableDetails: {
+    color: '#445f73',
+    fontFamily: 'OpenSans',
+    fontSize: isTablet ? 14 : 12,
+    paddingVertical: 10
+  },
+  touchableContainerInstructorLetter: {
+    padding: 3,
+    width: `${Math.round(10000 / (isTablet ? 13 : 9)) / 100}%`
+  },
+  touchableInstructorLetter: {
+    aspectRatio: 1,
+    borderColor: '#445f73',
+    borderRadius: 100,
+    borderWidth: 1,
+    justifyContent: 'center'
+  },
+  touchableInstructorLetterSelected: {
+    aspectRatio: 1,
+    backgroundColor: '#fb1b2f',
+    borderColor: '#fb1b2f',
+    borderRadius: 100,
+    borderWidth: 1,
+    justifyContent: 'center'
+  },
+  touchableTextInstructorLetter: {
+    color: '#445f73',
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Semibold'
+  },
+  touchableTextInstructorLetterSelected: {
+    color: 'white',
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Semibold'
+  },
+  touchableContainerInstructor: {
+    padding: 5,
+    width: `${100 / (isTablet ? 8 : 4)}%`
+  },
+  touchableInstructorPic: {
+    aspectRatio: 1,
+    borderRadius: 100,
+    width: '50%'
+  },
+  touchableInstructor: { alignItems: 'center' },
+  touchableInstructorSelected: {
+    alignItems: 'center',
+    backgroundColor: '#fb1b2f'
+  },
+  touchableTextInstructor: {
+    color: '#445f73',
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Semibold'
+  },
+  touchableTextInstructorSelected: {
+    color: 'white',
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Semibold'
+  },
+  safeAreaBottomContainer: {
+    backgroundColor: '#00101d',
+    flexDirection: 'row'
+  },
+  touchableDoneAndApply: {
+    backgroundColor: '#fb1b2f',
+    borderRadius: 50,
+    flex: 1,
+    margin: 20,
+    paddingVertical: 15
+  },
+  touchableTextDoneAndApply: {
+    color: 'white',
+    fontFamily: 'RobotoCondensed-Bold',
+    textAlign: 'center'
+  },
+  touchableReset: {
+    borderColor: 'white',
+    borderRadius: 50,
+    borderWidth: 2,
+    flex: 1,
+    justifyContent: 'center',
+    margin: 20,
+    marginLeft: 0,
+    padding: 0,
+    paddingVertical: 15
+  },
+  touchableTextReset: {
+    color: 'white',
+    fontFamily: 'RobotoCondensed-Bold',
+    textAlign: 'center'
+  }
+});
