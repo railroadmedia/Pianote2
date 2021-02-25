@@ -1160,10 +1160,14 @@ const localStyles = StyleSheet.create({
       color: '#445f73',
       textAlign: 'center',
       marginTop: 2,
+      fontSize: (DeviceInfo.isTablet() ? 8 : 12) * factor,
+      marginTop: 2,
     },
     touchableTextInstructorLetterSelected: {
       color: 'white',
       textAlign: 'center',
+      fontSize: (DeviceInfo.isTablet() ? 8 : 12) * factor,
+      marginTop: 2,
     },
     touchableContainerInstructor: {
       padding: 5,
@@ -1181,7 +1185,9 @@ const localStyles = StyleSheet.create({
     },
     touchableTextInstructor: {
       color: '#445f73',
-      textAlign: 'center'
+      textAlign: 'center',
+      fontSize: (DeviceInfo.isTablet() ? 8 : 12) * factor,
+      marginTop: 2,
     },
     touchableTextInstructorSelected: {
       color: 'white',
