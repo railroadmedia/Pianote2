@@ -56,30 +56,22 @@ export default class CreateAccount extends React.Component {
     if (this.state.password == this.state.confirmPassword) {
       if (this.state.password.length > 7) {
         if (this.props.navigation.state.params?.purchase) {
-          let emailEncode = encodeURIComponent(this.state.email);
-          let passwordEncode = encodeURIComponent(this.state.password);
-          let response = await signUp(
-            emailEncode,
-            passwordEncode,
-            this.props.navigation.state.params?.purchase,
-            null,
-            this.props.navigation.state.params?.purchase
-          );
+       
+          let response = await signUp(this.state.email,this.state.password,this.props.navigation.state.params?.purchase, null, this.props.navigation.state.params?.purchase);
           console.log(response);
           if (response.meta) {
             try {
               await AsyncStorage.multiSet([
                 ['loggedIn', 'true'],
-                ['email', emailEncode],
-                ['password', passwordEncode]
+                ['email', encodeURIComponent(this.state.email)],
+                ['password', encodeURIComponent(this.state.password)]
               ]);
-            } catch (e) {}
+            } catch (e) {console.log(e)}
 
             let userData = await getUserData();
-            console.log(userData);
+          
             let currentDate = new Date().getTime() / 1000;
-            let userExpDate =
-              new Date(userData.expirationDate).getTime() / 1000;
+            let userExpDate = new Date(userData.expirationDate).getTime() / 1000;
             console.log(currentDate, userExpDate);
             if (userData.isLifetime || currentDate < userExpDate) {
               this.props.navigation.navigate('CREATEACCOUNT3', {
