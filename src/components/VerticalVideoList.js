@@ -644,7 +644,8 @@ class VerticalVideoList extends React.Component {
             <View
               style={{
                 flexDirection: 'row',
-                flex: 1,
+             
+                backgroundColor: 'green',
                 paddingLeft: paddingInset, 
                 paddingVertical: this.props.showLargeTitle ? 10 : 0,
               }}
@@ -688,7 +689,7 @@ class VerticalVideoList extends React.Component {
                         position: 'absolute',
                       }}
                     >
-                      <View style={{flex: 1}}/>
+                    
                       {this.props.title}
                     </Text>
                   )}
@@ -719,7 +720,7 @@ class VerticalVideoList extends React.Component {
                         marginRight: 3.5 * factor
                       }}
                     >
-                      <View style={{ flex: 1 }} />
+                    
                       {onTablet
                         ? sortDict[this.props.currentSort].charAt(0) +
                           sortDict[this.props.currentSort]
@@ -728,7 +729,6 @@ class VerticalVideoList extends React.Component {
                         : sortDict[this.props.currentSort]}
                     </Text>
                     <View>
-                      <View style={{ flex: 1 }} />
                       <FontIcon
                         size={(onTablet ? 10 : 14) * factor}
                         name={'sort-amount-down'}
