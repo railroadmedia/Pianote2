@@ -382,7 +382,7 @@ PODS:
     - React-Core
   - RNCPushNotificationIOS (1.8.0):
     - React-Core
-  - RNDeviceInfo (7.3.1):
+  - RNDeviceInfo (7.4.0):
     - React-Core
   - RNFastImage (7.0.2):
     - React
@@ -401,7 +401,7 @@ PODS:
     - RNFBApp
   - RNFS (2.16.6):
     - React
-  - RNGestureHandler (1.9.0):
+  - RNGestureHandler (1.10.2):
     - React-Core
   - RNIap (4.6.3):
     - React-Core
@@ -687,13 +687,13 @@ SPEC CHECKSUMS:
   RNAirplay: d863b69586b2ac0270cbb349c44c37a525681329
   RNCAsyncStorage: cb9a623793918c6699586281f0b51cbc38f046f9
   RNCPushNotificationIOS: 5b1cf9ad2aaa107ecb92d5d2d7005ba521b2b97a
-  RNDeviceInfo: 57bb2806fb7bd982a1434e9f0b4e6a6ab1f6702e
+  RNDeviceInfo: febcb25b09201a312c66c36ecc1f155c5a43eecc
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
   RNFBApp: 804b98033f45c3a3e35b56de8c894f85ef5e4388
   RNFBCrashlytics: 501d01e5dd0cd6affedba60762b9b8d7d579cea8
   RNFBMessaging: 9287cbf850ed3524c9f915f5b3daaf1cfaabbf06
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
-  RNGestureHandler: 9b7e605a741412e20e13c512738a31bd1611759b
+  RNGestureHandler: e66feb0fda7da74ea6a3094656b3c1efe05f5c07
   RNIap: 091b98e143440e580e51d08b43a3196ae788e87b
   RNPDF: f9dc9bac0b82da5f250df9bdd0d59b5993828fa2
   RNScreens: b6c9607e6fe47c1b6e2f1910d2acd46dd7ecea3a
