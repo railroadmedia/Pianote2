@@ -530,7 +530,7 @@ class Lessons extends React.Component {
                   items={this.state.progressLessons}
                 />
               )}
-              <View style={{ height: paddingInset}} />
+              <View style={{ height: paddingInset/2}} />
               {onTablet ? (
                 <HorizontalVideoList
                   isMethod={true}

@@ -454,7 +454,10 @@ export default class Filters_V2 extends React.Component {
               />
             </ScrollView>
           )}
-          <SafeAreaView style={fStyles.safeAreaBottomContainer}>
+          <SafeAreaView
+            forceInset={{ bottom: 'always' }}
+            style={fStyles.safeAreaBottomContainer}
+          >
             <TouchableOpacity
               onPress={this.toggleModal}
               testID={'TouchableDoneApply'}
@@ -703,6 +706,8 @@ class TouchableFiller extends React.Component {
       >
         {this.props.children}
         <Text
+          adjustsFontSizeToFit
+          numberOfLines={2}
           style={
             selected
               ? this.props.touchableTextSelectedStyle
@@ -1155,12 +1160,16 @@ const fStyles = StyleSheet.create({
     borderRadius: 50,
     flex: 1,
     margin: 20,
-    paddingVertical: 15
+    marginVertical: 10,
+    paddingVertical: 15,
+    justifyContent: 'center'
   },
   touchableTextDoneAndApply: {
     color: 'white',
     fontFamily: 'RobotoCondensed-Bold',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontSize: isTablet ? 15 : 12.5,
+    fontFamily: 'RobotoCondensed-Bold'
   },
   touchableReset: {
     borderColor: 'white',
@@ -1169,6 +1178,7 @@ const fStyles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     margin: 20,
+    marginVertical: 10,
     marginLeft: 0,
     padding: 0,
     paddingVertical: 15
@@ -1176,6 +1186,8 @@ const fStyles = StyleSheet.create({
   touchableTextReset: {
     color: 'white',
     fontFamily: 'RobotoCondensed-Bold',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontSize: isTablet ? 15 : 12.5,
+    fontFamily: 'RobotoCondensed-Bold'
   }
 });

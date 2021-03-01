@@ -644,7 +644,6 @@ class VerticalVideoList extends React.Component {
             <View
               style={{
                 flexDirection: 'row',
-                flex: 1,
                 paddingLeft: paddingInset, 
                 paddingVertical: this.props.showLargeTitle ? 10 : 0,
               }}
@@ -653,6 +652,7 @@ class VerticalVideoList extends React.Component {
                 style={{ 
                   width: this.props.imageWidth + paddingInset/2,
                   height: (onTablet ? 25 : 30) * factor,
+                  flex: 1
                 }}
               >
                 <View
@@ -660,9 +660,11 @@ class VerticalVideoList extends React.Component {
                     position: 'absolute',
                     top: 0, 
                     left: 0,
-                    width: width,
+                    width: width * 0.6,
                     zIndex: 20,
                     elevation: 20,
+                    height: '100%',
+                    justifyContent: 'flex-end'
                   }}
                 >
                   {this.props.showLargeTitle ? (
@@ -685,10 +687,8 @@ class VerticalVideoList extends React.Component {
                         textAlign: 'left',
                         fontFamily: 'RobotoCondensed-Bold',
                         color: this.props.isMethod ? 'white' : colors.secondBackground,
-                        position: 'absolute',
                       }}
                     >
-                      <View style={{flex: 1}}/>
                       {this.props.title}
                     </Text>
                   )}
@@ -701,7 +701,9 @@ class VerticalVideoList extends React.Component {
                       styles.centerContent,
                       {
                         flexDirection: 'row',
-                        marginRight: 2 * factor
+                        flex: 1,
+                        paddingRight: 5,
+                        justifyContent: 'flex-end'
                       }
                     ]}
                     onPress={() => {
@@ -710,16 +712,15 @@ class VerticalVideoList extends React.Component {
                       });
                     }}
                   >
-                    <View style={{ flex: 1 }} />
                     <Text
                       style={{
                         color: colors.pianoteRed,
                         fontSize: (onTablet ? 10 : 14.5) * factor,
                         fontFamily: 'OpenSans-Regular',
-                        marginRight: 3.5 * factor
+                        marginRight: 5,
+                        justifyContent: 'flex-end',
                       }}
                     >
-                      <View style={{ flex: 1 }} />
                       {onTablet
                         ? sortDict[this.props.currentSort].charAt(0) +
                           sortDict[this.props.currentSort]
@@ -727,14 +728,11 @@ class VerticalVideoList extends React.Component {
                             .toLowerCase()
                         : sortDict[this.props.currentSort]}
                     </Text>
-                    <View>
-                      <View style={{ flex: 1 }} />
-                      <FontIcon
-                        size={(onTablet ? 10 : 14) * factor}
-                        name={'sort-amount-down'}
-                        color={colors.pianoteRed}
-                      />
-                    </View>
+                    <FontIcon
+                      size={(onTablet ? 10 : 15) * factor}
+                      name={'sort-amount-down'}
+                      color={colors.pianoteRed}
+                    />
                   </TouchableOpacity>
                 )}
               </View>
@@ -744,7 +742,8 @@ class VerticalVideoList extends React.Component {
                     styles.centerContent,
                     {
                       flexDirection: 'row',
-                      flex: 0.15
+                      flex: 0.15,
+                      marginHorizontal: 5,
                     }
                   ]}
                 >
