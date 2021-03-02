@@ -91,6 +91,7 @@ export default class Login extends React.Component {
         return !(await this.userHasSubscription());
       } catch (e) {
         this.iapConnectionError();
+        this.loadingRef?.toggleLoading();
       }
   };
 

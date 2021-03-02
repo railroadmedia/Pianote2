@@ -92,7 +92,7 @@ export default class LoginCredentials extends React.Component {
 
   login = async () => {
     if (!this.context.isConnected) {
-      this.context.showNoConnectionAlert();
+      return this.context.showNoConnectionAlert();
     }
 
     Keyboard.dismiss();
@@ -380,6 +380,12 @@ export default class LoginCredentials extends React.Component {
                   }}
                 >
                   Forgot your password?
+                </Text>
+                <Text
+                  style={localStyles.greyText}
+                  onPress={this.restorePurchases}
+                >
+                  Restore Purchases
                 </Text>
                 <Text
                   style={localStyles.greyText}

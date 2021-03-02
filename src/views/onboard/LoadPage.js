@@ -84,7 +84,7 @@ class LoadPage extends React.Component {
         if (loggedIn && !global.loadedFromNotification) {
           return this.props.navigation.navigate('DOWNLOADS');
         } else {
-          return this.props.navigation.navigate('LOGINCREDENTIALS');
+          return this.props.navigation.navigate('LOGIN');
         }
         // if no connection and logged in
       } else if (!loggedIn && !global.loadedFromNotification) {
