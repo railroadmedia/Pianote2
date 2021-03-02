@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import FastImage from 'react-native-fast-image';
-import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import DeviceInfo from 'react-native-device-info';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -17,13 +17,6 @@ import {
   StackActions
 } from 'react-navigation';
 import { NetworkContext } from '../context/NetworkProvider';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 class NavigationBar extends React.Component {
   static contextType = NetworkContext;
@@ -230,12 +223,12 @@ const localStyles = StyleSheet.create({
   navIconContainer: {
     borderRadius: 100,
     borderWidth: 2.25,
-    height: onTablet ? 40 : 30,
-    width: onTablet ? 40 : 30,
+    height: DeviceInfo.isTablet() ? 40 : 30,
+    width: DeviceInfo.isTablet() ? 40 : 30,
   },
   navContainer: {
     alignSelf: 'stretch',
-    paddingVertical: 15,
+    padding: 10,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignContent: 'space-around'
