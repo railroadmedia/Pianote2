@@ -31,7 +31,6 @@ const windowDim = Dimensions.get('window');
 const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 const height = windowDim.width < windowDim.height ? windowDim.height : windowDim.width;
 const factorVertical = windowDim.width < windowDim.height ? height / 812 : width / 375;
-const factor = (height / 812 + width / 375) / 2;
 
 export default class ForgotPassword extends React.Component {
   static navigationOptions = { header: null };
@@ -103,7 +102,7 @@ export default class ForgotPassword extends React.Component {
                 <View>
                   <Text
                     style={{
-                      fontSize: (onTablet ? 16 : 20) * factor,
+                      fontSize: onTablet ? 30 : 20,
                       color: 'white',
                       paddingTop: 15,
                       alignSelf: 'center',
@@ -116,7 +115,7 @@ export default class ForgotPassword extends React.Component {
                   </Text>
                   <Text
                     style={{
-                      fontSize: (onTablet ? 16 : 20) * factor,
+                      fontSize: onTablet ? 30 : 20,
                       color: 'white',
                       alignSelf: 'center',
                       textAlign: 'center',
@@ -160,7 +159,8 @@ export default class ForgotPassword extends React.Component {
                 >
                   <Text
                     style={{
-                      padding: 15,
+                      padding: 10,
+                      fontSize: onTablet ? 20 : 14,
                       fontFamily: 'RobotoCondensed-Bold',
                       color: this.state.email.length > 0 ? 'white' : '#fb1b2f'
                     }}
@@ -262,8 +262,8 @@ export default class ForgotPassword extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor,
+    borderRadius: 15,
+    margin: 20,
     height: 200,
     width: '80%'
   },
@@ -283,14 +283,14 @@ const localStyles = StyleSheet.create({
     marginVertical: 20,
     color: 'black',
     borderRadius: 100,
-    fontSize: (DeviceInfo.isTablet() ? 14 : 16) * factor,
+    fontSize: DeviceInfo.isTablet() ? 20 : 14,
     marginHorizontal: 15,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
   greyText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: 'grey',
     textAlign: 'center',
     textDecorationLine: 'underline'

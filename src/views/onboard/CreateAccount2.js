@@ -11,13 +11,12 @@ import {
   Alert,
   ScrollView,
   StyleSheet,
-  Dimensions
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import AsyncStorage from '@react-native-community/async-storage';
-import DeviceInfo from 'react-native-device-info';
 import PasswordMatch from '../../modals/PasswordMatch';
 import Back from '../../assets/img/svgs/back';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
@@ -26,13 +25,6 @@ import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import { signUp, getUserData } from '../../services/UserDataAuth';
 import { NetworkContext } from '../../context/NetworkProvider';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 export default class CreateAccount extends React.Component {
   static navigationOptions = { header: null };
@@ -153,7 +145,7 @@ export default class CreateAccount extends React.Component {
                 <Text style={localStyles.createPasswordText}>
                   Create a password
                 </Text>
-                <View style={{ height: 7.5 * factor }} />
+                <View style={{ height: 7.5 }} />
                 <View style={localStyles.passInput}>
                   <TextInput
                     autoCorrect={false}
@@ -199,11 +191,11 @@ export default class CreateAccount extends React.Component {
                     )}
                   </TouchableOpacity>
                 </View>
-                <View style={{ height: 17.5 * factor }} />
+                <View style={{ height: 27.5}} />
                 <Text style={localStyles.createPasswordText}>
                   Confirm password
                 </Text>
-                <View style={{ height: 7.5 * factor }} />
+                <View style={{ height: 7.5 }} />
                 <View style={localStyles.passInput}>
                   <TextInput
                     style={localStyles.textinput}
@@ -251,7 +243,7 @@ export default class CreateAccount extends React.Component {
                     )}
                   </TouchableOpacity>
                 </View>
-                <View style={{ height: 10 * factor }} />
+                <View style={{ height: 10  }} />
                 <Text style={localStyles.characters}>
                   Use at least 8 characters
                 </Text>
@@ -282,7 +274,7 @@ export default class CreateAccount extends React.Component {
                             ? 'white'
                             : '#fb1b2f',
                         fontFamily: 'RobotoCondensed-Bold',
-                        fontSize: 18 * factor,
+                        fontSize: onTablet ? 20 : 14,
                         textAlign: 'center',
                         padding: 10
                       }
@@ -337,14 +329,7 @@ const localStyles = StyleSheet.create({
   },
   createAccountText: {
     color: 'white',
-    fontSize: 24 * factor
-  },
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor,
-    height: 200,
-    width: '80%'
+    fontSize: DeviceInfo.isTablet() ? 36 : 24,
   },
   createPasswordContainer: {
     flex: 1,
@@ -353,7 +338,7 @@ const localStyles = StyleSheet.create({
   },
   createPasswordText: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: (DeviceInfo.isTablet() ? 17.5 : 20) * factor,
+    fontSize: DeviceInfo.isTablet() ? 24 : 16,
     textAlign: 'left',
     color: 'white',
     paddingLeft: 15
@@ -369,7 +354,7 @@ const localStyles = StyleSheet.create({
     color: 'black',
     borderRadius: 100,
     marginHorizontal: 15,
-    fontSize: (DeviceInfo.isTablet() ? 12 : 16) * factor,
+    fontSize: DeviceInfo.isTablet() ? 20 : 14,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
@@ -392,7 +377,7 @@ const localStyles = StyleSheet.create({
   characters: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'left',
-    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14,
     color: 'white',
     paddingLeft: 15,
     marginBottom: 40

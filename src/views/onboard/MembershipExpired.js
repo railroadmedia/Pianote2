@@ -7,7 +7,6 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
   ActivityIndicator
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -16,13 +15,6 @@ import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 export default class MembershipExpired extends React.Component {
   static navigationOptions = { header: null };
@@ -116,29 +108,30 @@ const localStyles = StyleSheet.create({
     height: '70%'
   },
   buttonText: {
-    fontSize: 18 * factor,
+    fontSize: DeviceInfo.isTablet() ? 24 : 16,
     textAlign: 'center',
     color: 'white',
     fontFamily: 'RobotoCondensed-Bold',
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   pianoteContainer: {
     alignSelf: 'center',
     alignItems: 'center',
-    width: DeviceInfo.isTablet() ? '30%' : '50%',
+    width: DeviceInfo.isTablet() ? '20%' : '30%',
     aspectRatio: 177 / 53 //svg's viewbox viewBox="0 0 177 53"
   },
   title: {
     fontFamily: 'OpenSans-ExtraBold',
-    fontSize: (DeviceInfo.isTablet() ? 25 : 30) * factor,
-    paddingHorizontal: 15,
+    fontSize: DeviceInfo.isTablet() ? 32 : 24,
+    padding: 10,
     textAlign: 'center',
     color: 'white'
   },
   description: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 14 : 18) * factor,
-    padding: 15 * factor,
+    fontSize: DeviceInfo.isTablet() ? 22 : 16,
+    paddingBottom: 25,
+    paddingHorizontal: 10,
     textAlign: 'center',
     color: 'white'
   },
@@ -147,7 +140,7 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#fb1b2f',
     justifyContent: 'center',
     marginHorizontal: '5%',
-    marginTop: 10 * factor
+    marginTop: 10,
   }
 });
 // borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,

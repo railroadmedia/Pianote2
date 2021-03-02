@@ -10,8 +10,7 @@ import {
   ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Dimensions,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 
 import RNIap from 'react-native-iap';
@@ -41,13 +40,6 @@ import GradientFeature from '../../components/GradientFeature';
 import CustomModal from '../../modals/CustomModal.js';
 import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
 import { NetworkContext } from '../../context/NetworkProvider';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 export default class LoginCredentials extends React.Component {
   static navigationOptions = { header: null };
@@ -239,7 +231,7 @@ export default class LoginCredentials extends React.Component {
                 <View>
                   <Text
                     style={{
-                      fontSize: 20 * factor,
+                      fontSize: onTablet ? 30 : 20,
                       color: 'white',
                       paddingTop: 15,
                       alignSelf: 'center',
@@ -252,7 +244,7 @@ export default class LoginCredentials extends React.Component {
                   </Text>
                   <Text
                     style={{
-                      fontSize: 20 * factor,
+                      fontSize: onTablet ? 30 : 20,
                       color: 'white',
                       alignSelf: 'center',
                       textAlign: 'center',
@@ -366,7 +358,7 @@ export default class LoginCredentials extends React.Component {
                 >
                   <Text
                     style={{
-                      fontSize: 18 * factor,
+                      fontSize: onTablet ? 24 : 16,
                       padding: 10,
                       fontFamily: 'RobotoCondensed-Bold',
                       color:
@@ -455,8 +447,8 @@ export default class LoginCredentials extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor,
+    borderRadius: 150,
+    margin: 20,
     height: 200,
     width: '80%'
   },
@@ -477,13 +469,13 @@ const localStyles = StyleSheet.create({
     color: 'black',
     borderRadius: 100,
     marginHorizontal: 15,
-    fontSize: (DeviceInfo.isTablet() ? 14 : 16) * factor,
+    fontSize: DeviceInfo.isTablet() ? 20 : 14,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
   greyText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: 'grey',
     textAlign: 'center',
     textDecorationLine: 'underline'
@@ -522,7 +514,7 @@ const localStyles = StyleSheet.create({
     padding: 15,
     color: 'black',
     marginRight: 45,
-    fontSize: (DeviceInfo.isTablet() ? 14 : 16) * factor,
+    fontSize: DeviceInfo.isTablet() ? 20 : 14,
     fontFamily: 'OpenSans-Regular'
   }
 });

@@ -200,7 +200,6 @@ export default class Support extends React.Component {
             </Text>
 
             <Text
-              key={'emailaddress'}
               style={{
                 fontFamily: 'OpenSans-Regular',
                 fontSize: onTablet ? 18 : 14,

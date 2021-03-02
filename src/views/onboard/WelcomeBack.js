@@ -18,10 +18,6 @@ import Orientation from 'react-native-orientation-locker';
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
-const marginBottom = 0.02 * (width < height ? height : width);
 
 export default class WelcomeBack extends React.Component {
   static navigationOptions = { header: null };
@@ -51,7 +47,7 @@ export default class WelcomeBack extends React.Component {
           <View
             key={dot}
             style={{
-              width: 10 * factor,
+              width: 10,
               margin: 5,
               aspectRatio: 1,
               borderWidth: 1,
@@ -70,12 +66,12 @@ export default class WelcomeBack extends React.Component {
 
   renderFirstPage() {
     return (
-      <View key={'welcomeBack2'} style={{ width, flex: 1 }}>
+      <View style={{ width, flex: 1 }}>
         <FastImage
           style={{
             height: '100%',
             flex: 1,
-            borderRadius: 15 * factor
+            borderRadius: 15
           }}
           source={require('Pianote2/src/assets/img/imgs/onboarding-lisa.png')}
           resizeMode={FastImage.resizeMode.contain}
@@ -88,7 +84,7 @@ export default class WelcomeBack extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: 18 * factor,
+              fontSize: onTablet ? 25 : 18,
               margin: 30,
               textAlign: 'center'
             }}
@@ -103,7 +99,7 @@ export default class WelcomeBack extends React.Component {
             paddingTop: 10
           }}
         >
-          <SwipeLeft height={65 * factor} width={100 * factor} />
+          <SwipeLeft height={65} width={100} />
         </View>
       </View>
     );
@@ -116,7 +112,7 @@ export default class WelcomeBack extends React.Component {
           style={{
             flex: 1,
             width: '100%',
-            borderRadius: 15 * factor
+            borderRadius: 15
           }}
           source={require('Pianote2/src/assets/img/imgs/onboarding-download.png')}
           resizeMode={FastImage.resizeMode.contain}
@@ -129,7 +125,7 @@ export default class WelcomeBack extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: 18 * factor,
+              fontSize: onTablet ? 25 : 18,
               margin: 30,
               textAlign: 'center'
             }}
@@ -143,12 +139,12 @@ export default class WelcomeBack extends React.Component {
 
   renderThirdPage() {
     return (
-      <View key={'cloudSync'} style={{ width, flex: 1 }}>
+      <View style={{ width, flex: 1 }}>
         <FastImage
           style={{
             flex: 1,
             width: '100%',
-            borderRadius: 15 * factor
+            borderRadius: 15 
           }}
           source={require('Pianote2/src/assets/img/imgs/onboarding-sync.png')}
           resizeMode={FastImage.resizeMode.contain}
@@ -161,7 +157,7 @@ export default class WelcomeBack extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: 18 * factor,
+              fontSize: onTablet ? 25 : 18,
               margin: 30,
               textAlign: 'center'
             }}
@@ -200,13 +196,13 @@ export default class WelcomeBack extends React.Component {
             <TouchableOpacity
               testID='skipBtn'
               onPress={() => this.props.navigation.navigate('LESSONS')}
-              style={{ marginBottom: marginBottom, padding: 15 }}
+              style={{ marginBottom: '2%', padding: 15 }}
             >
               <Text
                 style={{
                   textAlign: 'center',
                   fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: 15 * factor,
+                  fontSize: onTablet ? 18 : 14,
                   color: colors.pianoteRed
                 }}
               >
@@ -217,8 +213,8 @@ export default class WelcomeBack extends React.Component {
             <TouchableOpacity
               style={{
                 padding: 15,
-                width: '45%',
-                marginBottom: marginBottom,
+                width: onTablet ? '45%' : '80%',
+                marginBottom: '2%',
                 borderRadius: 100,
                 backgroundColor: colors.pianoteRed
               }}
@@ -228,7 +224,7 @@ export default class WelcomeBack extends React.Component {
                 style={{
                   textAlign: 'center',
                   fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: 15 * factor,
+                  fontSize: onTablet ? 24 : 16,
                   color: 'white'
                 }}
               >

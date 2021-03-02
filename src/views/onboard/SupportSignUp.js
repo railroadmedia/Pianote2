@@ -7,20 +7,12 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  Dimensions,
   Linking,
   StyleSheet
 } from 'react-native';
 import Intercom from 'react-native-intercom';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 export default class SupportSignUp extends React.Component {
   static navigationOptions = { header: null };
@@ -57,16 +49,15 @@ export default class SupportSignUp extends React.Component {
             ]}
           >
             <View
-              key={'goback'}
               style={[
                 styles.centerContent,
                 {
                   position: 'absolute',
-                  left: 0,
-                  paddingLeft: 5 * factor,
-                  bottom: 0 * factor,
-                  height: 50 * factor,
-                  width: 50 * factor
+                  left: 10,
+                  paddingLeft: 5,
+                  bottom: 10,
+                  height: 50,
+                  width: 50
                 }
               ]}
             >
@@ -89,12 +80,10 @@ export default class SupportSignUp extends React.Component {
             </View>
             <View style={{ flex: 0.66 }} />
             <Text
-              style={{
-                fontSize: 22 * factor,
-                fontWeight: 'bold',
-                fontFamily: 'OpenSans-Regular',
-                color: colors.secondBackground
-              }}
+              style={[
+                styles.childHeaderText,
+                { color: colors.secondBackground }
+              ]}
             >
               Support
             </Text>
@@ -114,7 +103,7 @@ export default class SupportSignUp extends React.Component {
               <Text
                 style={{
                   fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: 18 * factor,
+                  fontSize: onTablet ? 20 : 16,
                   color: 'white',
                   paddingVertical: 15
                 }}
@@ -130,7 +119,7 @@ export default class SupportSignUp extends React.Component {
               <Text
                 style={{
                   fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: 18 * factor,
+                  fontSize: onTablet ? 20 : 16,
                   color: 'white',
                   paddingVertical: 15
                 }}
@@ -146,7 +135,7 @@ export default class SupportSignUp extends React.Component {
               <Text
                 style={{
                   fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: 18 * factor,
+                  fontSize: onTablet ? 20 : 16,
                   color: 'white',
                   paddingVertical: 15
                 }}
@@ -156,62 +145,61 @@ export default class SupportSignUp extends React.Component {
             </TouchableOpacity>
 
             <Text
-              key={'email'}
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: 14 * factor,
+                fontSize: onTablet ? 20 : 16,
                 opacity: 0.8,
                 color: colors.secondBackground,
                 textAlign: 'center',
-                marginVertical: 5
+                padding: 10,
+                paddingTop: 20,
               }}
             >
               EMAIL
             </Text>
 
             <Text
-              key={'emailaddress'}
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: 13.5 * factor,
+                fontSize: onTablet ? 18 : 14,
                 textAlign: 'center',
-                color: 'white'
+                color: 'white',
+                padding: 5,
               }}
             >
               support@musora.com
             </Text>
 
             <Text
-              key={'phone'}
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: 14 * factor,
+                fontSize: onTablet ? 18 : 14,
                 opacity: 0.8,
                 color: colors.secondBackground,
                 textAlign: 'center',
-                marginVertical: 5
+                padding: 10,
               }}
             >
               PHONE
             </Text>
             <Text
-              key={'phoneNumber'}
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: 13.5 * factor,
+                fontSize: onTablet ? 18 : 14,
                 textAlign: 'center',
-                color: 'white'
+                color: 'white',
+                padding: 5,
               }}
             >
               1-800-439-8921
             </Text>
             <Text
-              key={'phoneNumber2'}
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: 13.5 * factor,
+                fontSize: onTablet ? 18 : 14,
                 textAlign: 'center',
-                color: 'white'
+                color: 'white',
+                padding: 5,
               }}
             >
               1-604-921-6721

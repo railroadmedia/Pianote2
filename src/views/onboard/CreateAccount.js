@@ -11,7 +11,6 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Dimensions
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
@@ -26,13 +25,6 @@ import { NetworkContext } from '../../context/NetworkProvider.js';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
 import Orientation from 'react-native-orientation-locker';
 import DeviceInfo from 'react-native-device-info';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 export default class CreateAccount extends React.Component {
   static navigationOptions = { header: null };
@@ -157,7 +149,7 @@ export default class CreateAccount extends React.Component {
                       localStyles.verifyContainer,
                       {
                         width: onTablet ? '30%' : '50%',
-                        marginTop: 15 * factor,
+                        marginTop: 15,
                         backgroundColor:
                           this.state.email.length > 0
                             ? '#fb1b2f'
@@ -172,7 +164,7 @@ export default class CreateAccount extends React.Component {
                           color:
                             this.state.email.length > 0 ? 'white' : '#fb1b2f',
                           fontFamily: 'RobotoCondensed-Bold',
-                          fontSize: 18 * factor,
+                          fontSize: onTablet ? 20 : 14,
                           textAlign: 'center',
                           padding: 10
                         }
@@ -254,38 +246,38 @@ const localStyles = StyleSheet.create({
   emailContainer: {
     flex: 1,
     justifyContent: 'space-between',
-    marginBottom: 20 * factor
+    marginBottom: 20
   },
   emailText: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: (DeviceInfo.isTablet() ? 17.5 : 20) * factor,
+    fontSize: DeviceInfo.isTablet() ? 24 : 16,
     textAlign: 'left',
     color: 'white',
     paddingLeft: 15
   },
   createAccountText: {
     color: 'white',
-    fontSize: 24 * factor
+    fontSize: DeviceInfo.isTablet() ? 36 : 24,
   },
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor,
+    borderRadius: 15,
+    margin: 20,
     height: 200,
     width: '80%'
   },
   textInput: {
     padding: 15,
-    marginTop: (DeviceInfo.isTablet() ? 12 : 16) * factor,
+    marginTop: 14,
     color: 'black',
     borderRadius: 100,
     marginHorizontal: 15,
-    fontSize: (DeviceInfo.isTablet() ? 12 : 16) * factor,
+    fontSize: DeviceInfo.isTablet() ? 20 : 14,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
   verifyContainer: {
-    marginBottom: 20 * factor,
+    marginBottom: 20,
     borderWidth: 2,
     borderRadius: 50,
     alignSelf: 'center',

@@ -14,6 +14,7 @@ import {
   Dimensions,
   StyleSheet
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -65,8 +66,8 @@ export default class CreateAccount3 extends React.Component {
       pageNum: 0,
       displayName: '',
       imageURI: '',
-      email: this.props.navigation.state.params.email,
-      password: this.props.navigation.state.params.password
+      email: '',//this.props.navigation.state.params.email,
+      password: '',//this.props.navigation.state.params.password
     };
   }
 
@@ -266,7 +267,7 @@ export default class CreateAccount3 extends React.Component {
                 <TouchableOpacity
                   onPress={() => this.changeColor(this.state.pageNum - 1)}
                   style={{
-                    paddingLeft: 12.5 * factor,
+                    paddingLeft: 10,
                     height: '100%',
                     width: '100%',
                     flex: 1,
@@ -277,7 +278,7 @@ export default class CreateAccount3 extends React.Component {
                   style={[
                     styles.modalHeaderText,
                     {
-                      fontSize: 24 * factor,
+                      fontSize: onTablet ? 36 : 24,
                       fontFamily: 'OpenSans-Bold'
                     }
                   ]}
@@ -300,19 +301,18 @@ export default class CreateAccount3 extends React.Component {
                 >
                   <View style={{ flex: 0.45 }} />
                   <View
-                    key={'displayname'}
                     style={{
-                      height: 35 * factor,
                       marginBottom: 2,
                       flexDirection: 'row',
-                      paddingLeft: 20 * factor
+                      paddingLeft: 20
                     }}
                   >
                     <Text
                       style={{
                         fontFamily: 'OpenSans-Bold',
-                        fontSize: 20 * factor,
-                        textAlign: 'left'
+                        fontSize: DeviceInfo.isTablet() ? 24 : 16,
+                        textAlign: 'left',
+                        paddingVertical: 15,
                       }}
                     >
                       Add a display name
@@ -320,10 +320,9 @@ export default class CreateAccount3 extends React.Component {
                     <View style={{ flex: 1 }} />
                   </View>
                   <View
-                    key={'input'}
                     style={{
-                      height: height * 0.07,
-                      width: width - 35 * factor,
+                      height: '7%',
+                      width: '95%',
                       borderRadius: 50 * factor,
                       backgroundColor: 'white',
                       justifyContent: 'center',

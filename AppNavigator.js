@@ -48,7 +48,7 @@ import Terms from './src/views/user/Terms';
 
 const AppNavigator = createStackNavigator(
   {
-    initialRoute: LoadPage,
+    initialRoute: CreateAccount3,
 
     // user
     NOTIFICATIONSETTINGS: { screen: NotificationSettings },

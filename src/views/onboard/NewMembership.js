@@ -16,7 +16,6 @@ import {
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
-import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
 import Orientation from 'react-native-orientation-locker';
 import { SafeAreaView } from 'react-navigation';
 import RNIap, {
@@ -43,7 +42,6 @@ const width =
 const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const fontIndex = width / 50;
-const factor = (height / 812 + width / 375) / 2;
 
 export default class NewMembership extends React.Component {
   static navigationOptions = { header: null, subscriptions: [] };
