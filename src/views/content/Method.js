@@ -196,14 +196,14 @@ export default class Method extends React.Component {
       return this.context.showNoConnectionAlert();
     }
 
-    this.setState({items: [], showRestartCourse: false,})
+    this.setState({ items: [], showRestartCourse: false });
 
     await resetProgress(this.state.id);
 
     this.setState(
       {
         methodIsStarted: false,
-        methodIsCompleted: false, 
+        methodIsCompleted: false,
         isStarted: false,
         isCompleted: false,
         isLoadingAll: true,
@@ -242,7 +242,11 @@ export default class Method extends React.Component {
   render() {
     return (
       <View style={[styles.mainContainer, { backgroundColor: 'black' }]}>
-        <NavMenuHeaders isMethod={true} currentPage={'LESSONS'} parentPage={'METHOD'} />
+        <NavMenuHeaders
+          isMethod={true}
+          currentPage={'LESSONS'}
+          parentPage={'METHOD'}
+        />
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
@@ -302,16 +306,18 @@ export default class Method extends React.Component {
               </View>
               <View
                 style={[
-                  styles.heightButtons, {
-                  marginBottom: '3%',
-                  width: '100%',
-                  flexDirection: 'row',
-                  alignItems: 'center'
-                }]}
+                  styles.heightButtons,
+                  {
+                    marginBottom: '3%',
+                    width: '100%',
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                  }
+                ]}
               >
                 <View style={{ flex: 1 }} />
                 <View style={{ width: '45%' }}>
-                  {this.state.methodIsCompleted ? ( 
+                  {this.state.methodIsCompleted ? (
                     <ResetIcon
                       isMethod={true}
                       pressed={() =>
@@ -340,32 +346,32 @@ export default class Method extends React.Component {
                 </View>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
                   <TouchableOpacity
+                    style={{
+                      flex: 0.5,
+                      alignItems: 'center'
+                    }}
+                    onPress={() => {
+                      this.setState({
+                        showInfo: !this.state.showInfo
+                      });
+                    }}
+                  >
+                    <AntIcon
+                      name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                      size={(onTablet ? 15 : 20) * factor}
+                      color={colors.pianoteRed}
+                    />
+                    <Text
                       style={{
-                        flex: 0.5,
-                        alignItems: 'center'
-                      }}
-                      onPress={() => {
-                        this.setState({
-                          showInfo: !this.state.showInfo
-                        });
+                        fontFamily: 'OpenSans-Regular',
+                        color: 'white',
+                        marginTop: 2,
+                        fontSize: (onTablet ? 8 : 12) * factor
                       }}
                     >
-                      <AntIcon
-                        name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                        size={(onTablet ? 15 : 20) * factor}
-                        color={colors.pianoteRed}
-                      />
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-Regular',
-                          color: 'white',
-                          marginTop: 2,
-                          fontSize: (onTablet ? 8 : 12) * factor
-                        }}
-                      >
-                        Info
-                      </Text>
-                    </TouchableOpacity>
+                      Info
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -403,7 +409,7 @@ export default class Method extends React.Component {
                       styles.centerContent,
                       {
                         width: 70 * factor,
-                        marginRight: 15 * factor,
+                        marginRight: 15 * factor
                       }
                     ]}
                   >
@@ -412,7 +418,7 @@ export default class Method extends React.Component {
                         fontSize: (onTablet ? 15 : 17) * factor,
                         textAlign: 'left',
                         color: 'white',
-                        fontFamily: 'OpenSans-Bold',
+                        fontFamily: 'OpenSans-Bold'
                       }}
                     >
                       {this.state.items.length}
@@ -442,7 +448,7 @@ export default class Method extends React.Component {
                         fontSize: (onTablet ? 15 : 17) * factor,
                         textAlign: 'left',
                         color: 'white',
-                        fontFamily: 'OpenSans-Bold',
+                        fontFamily: 'OpenSans-Bold'
                       }}
                     >
                       {this.state.xp}

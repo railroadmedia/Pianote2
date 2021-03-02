@@ -144,7 +144,7 @@ export default class WelcomeBack extends React.Component {
           style={{
             flex: 1,
             width: '100%',
-            borderRadius: 15 
+            borderRadius: 15
           }}
           source={require('Pianote2/src/assets/img/imgs/onboarding-sync.png')}
           resizeMode={FastImage.resizeMode.contain}

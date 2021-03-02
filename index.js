@@ -1,12 +1,7 @@
 /**
  * Index
  */
-import {
-  AppRegistry,
-  Dimensions,
-  Platform,
-  Linking
-} from 'react-native';
+import { AppRegistry, Dimensions, Platform, Linking } from 'react-native';
 import App from './App';
 import { name as appName } from './app.json';
 import { configure } from '@musora/services';
@@ -98,22 +93,23 @@ global.fullWidth = Dimensions.get('window').width;
 global.fullHeight = Dimensions.get('window').height;
 global.token = '';
 global.onTablet = DeviceInfo.isTablet();
-global.loadedFromNotification = false; 
+global.loadedFromNotification = false;
 global.isiOS = Platform.OS === 'ios';
 global.styles = require('Pianote2/src/assets/styles/styles.js');
 global.isConnected = true;
 global.isPackOnly = false;
-global.paddingInset = (DeviceInfo.isTablet ? 10 : 5) 
-global.fallbackThumb = 'https://dmmior4id2ysr.cloudfront.net/assets/images/pianote_fallback_thumb.jpg';
-global.backButtonSize = (DeviceInfo.isTablet() ? 17.5 : 25) * factor, 
-global.colors = {
-  mainBackground: '#00101d',
-  secondBackground: '#445f73',
-  thirdBackground: '#081826',
-  notificationColor: '#002038',
-  pianoteRed: '#fb1b2f',
-  pianoteGrey: '#6e777a'
-};
+global.paddingInset = DeviceInfo.isTablet ? 10 : 5;
+global.fallbackThumb =
+  'https://dmmior4id2ysr.cloudfront.net/assets/images/pianote_fallback_thumb.jpg';
+(global.backButtonSize = (DeviceInfo.isTablet() ? 17.5 : 25) * factor),
+  (global.colors = {
+    mainBackground: '#00101d',
+    secondBackground: '#445f73',
+    thirdBackground: '#081826',
+    notificationColor: '#002038',
+    pianoteRed: '#fb1b2f',
+    pianoteGrey: '#6e777a'
+  });
 
 configure({
   baseURL: 'https://www.pianote.com',

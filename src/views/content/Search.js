@@ -334,13 +334,13 @@ export default class Search extends React.Component {
           >
             <View
               style={{
-                marginTop: (onTablet ? '3%' : '4%'),
+                marginTop: onTablet ? '3%' : '4%',
                 flexDirection: 'row',
                 paddingLeft: paddingInset
               }}
             >
               <View style={styles.searchBox}>
-                <View style={[styles.centerContent, { width: 40 * factor, }]}>
+                <View style={[styles.centerContent, { width: 40 * factor }]}>
                   <EvilIcons
                     name={'search'}
                     size={(onTablet ? 22.5 : 27.5) * factor}

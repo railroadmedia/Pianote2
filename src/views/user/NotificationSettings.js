@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   ScrollView,
   StatusBar,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import DeviceInfo from 'react-native-device-info';
@@ -240,22 +240,22 @@ export default class NotificationSettings extends React.Component {
                           ? '#fb1b2f'
                           : colors.secondBackground,
                       borderRadius: 100,
-                      width: (onTablet ? 35 : 27.5),
-                      height: (onTablet ? 35 : 27.5),
+                      width: onTablet ? 35 : 27.5,
+                      height: onTablet ? 35 : 27.5
                     }
                   ]}
                 >
                   {this.state.notifications_summary_frequency_minutes == 1 && (
                     <FontIcon
                       name={'check'}
-                      size={(onTablet ? 25 : 20)}
+                      size={onTablet ? 25 : 20}
                       color={'white'}
                     />
                   )}
                   {this.state.notifications_summary_frequency_minutes !== 1 && (
                     <EntypoIcon
                       name={'cross'}
-                      size={(onTablet ? 35 : 25)}
+                      size={onTablet ? 35 : 25}
                       color={'white'}
                     />
                   )}
@@ -282,8 +282,8 @@ export default class NotificationSettings extends React.Component {
                           ? '#fb1b2f'
                           : colors.secondBackground,
                       borderRadius: 100,
-                      width: (onTablet ? 35 : 27.5),
-                      height: (onTablet ? 35 : 27.5),                      
+                      width: onTablet ? 35 : 27.5,
+                      height: onTablet ? 35 : 27.5
                     }
                   ]}
                 >
@@ -291,7 +291,7 @@ export default class NotificationSettings extends React.Component {
                     1440 && (
                     <FontIcon
                       name={'check'}
-                      size={(onTablet ? 25 : 20)}
+                      size={onTablet ? 25 : 20}
                       color={'white'}
                     />
                   )}
@@ -299,7 +299,7 @@ export default class NotificationSettings extends React.Component {
                     1440 && (
                     <EntypoIcon
                       name={'cross'}
-                      size={(onTablet ? 35 : 25)}
+                      size={onTablet ? 35 : 25}
                       color={'white'}
                     />
                   )}
@@ -328,8 +328,8 @@ export default class NotificationSettings extends React.Component {
                           ? '#fb1b2f'
                           : colors.secondBackground,
                       borderRadius: 100,
-                      width: (onTablet ? 35 : 27.5),
-                      height: (onTablet ? 35 : 27.5),
+                      width: onTablet ? 35 : 27.5,
+                      height: onTablet ? 35 : 27.5
                     }
                   ]}
                 >
@@ -338,7 +338,7 @@ export default class NotificationSettings extends React.Component {
                       null) && (
                     <FontIcon
                       name={'check'}
-                      size={(onTablet ? 25 : 20)}
+                      size={onTablet ? 25 : 20}
                       color={'white'}
                     />
                   )}
@@ -347,7 +347,7 @@ export default class NotificationSettings extends React.Component {
                       null && (
                       <EntypoIcon
                         name={'cross'}
-                        size={(onTablet ? 35 : 25)}
+                        size={onTablet ? 35 : 25}
                         color={'white'}
                       />
                     )}
@@ -360,9 +360,7 @@ export default class NotificationSettings extends React.Component {
         </SafeAreaView>
         <SafeAreaView
           forceInset={'never'}
-          style={[
-            { backgroundColor: colors.mainBackground }
-          ]}
+          style={[{ backgroundColor: colors.mainBackground }]}
         ></SafeAreaView>
       </View>
     );
@@ -392,7 +390,7 @@ const localStyles = StyleSheet.create({
     paddingLeft: 10,
     width: '100%',
     justifyContent: 'center',
-    fontSize: DeviceInfo.isTablet() ? 18 : 14,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14
   },
   noteTypeText: {
     marginTop: 10,
@@ -416,7 +414,7 @@ const localStyles = StyleSheet.create({
     paddingLeft: 10,
     paddingTop: 10,
     width: '100%',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   border: {
     height: 20,

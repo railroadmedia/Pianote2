@@ -55,8 +55,8 @@ class CustomSwitch extends React.Component {
           styles.centerContent,
           {
             borderRadius: 100,
-            width: (onTablet ? 60 : 52.5),
-            height: (onTablet ? 32.5 : 28),
+            width: onTablet ? 60 : 52.5,
+            height: onTablet ? 32.5 : 28,
             backgroundColor: this.state.clicked
               ? '#fb1b2f'
               : colors.secondBackground,
@@ -82,8 +82,8 @@ class CustomSwitch extends React.Component {
               style={[
                 styles.centerContent,
                 {
-                  width: (onTablet ? 27.5 : 22.5),
-                  height: (onTablet ? 27.5 : 22.5),
+                  width: onTablet ? 27.5 : 22.5,
+                  height: onTablet ? 27.5 : 22.5,
                   borderRadius: 100,
                   backgroundColor: 'white'
                 }
@@ -92,14 +92,14 @@ class CustomSwitch extends React.Component {
               {this.state.clicked && (
                 <FontIcon
                   name={'check'}
-                  size={(onTablet ? 20 : 17.5)}
+                  size={onTablet ? 20 : 17.5}
                   color={'#fb1b2f'}
                 />
               )}
               {!this.state.clicked && (
                 <EntypoIcon
                   name={'cross'}
-                  size={(onTablet ? 25 : 22.5)}
+                  size={onTablet ? 25 : 22.5}
                   color={colors.secondBackground}
                 />
               )}

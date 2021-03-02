@@ -8,7 +8,7 @@ import {
   Text,
   TouchableOpacity,
   StatusBar,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';

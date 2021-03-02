@@ -74,10 +74,10 @@ export default class VideoPlayerSong extends React.Component {
                   zIndex: 1
                 }}
               >
-                <AntIcon 
-                  name={'close'} 
+                <AntIcon
+                  name={'close'}
                   size={(onTablet ? 20 : 27.5) * factor}
-                  color={'#ffffff'} 
+                  color={'#ffffff'}
                 />
               </TouchableOpacity>
               <Text
@@ -87,7 +87,7 @@ export default class VideoPlayerSong extends React.Component {
                   fontFamily: 'OpenSans-Bold',
                   fontSize: (onTablet ? 12 : 16) * factor,
                   textAlign: 'center',
-                  color: colors.secondBackground,
+                  color: colors.secondBackground
                 }}
               >
                 ASSIGNMENT #{index}
@@ -196,7 +196,12 @@ export default class VideoPlayerSong extends React.Component {
           )}
         </ScrollView>
         {!this.state.hideTitles && this.context.isConnected && (
-          <View style={{ backgroundColor: colors.mainBackground, paddingVertical: 10 }}>
+          <View
+            style={{
+              backgroundColor: colors.mainBackground,
+              paddingVertical: 10
+            }}
+          >
             {slug && (
               <TouchableOpacity
                 onPress={() => this.setState({ showSoundSlice: true })}
@@ -234,7 +239,7 @@ export default class VideoPlayerSong extends React.Component {
                   backgroundColor: '#fb1b2f',
                   width: '90%',
                   alignSelf: 'center',
-                  borderRadius: 300,
+                  borderRadius: 300
                 }
               ]}
             >

@@ -112,7 +112,7 @@ const localStyles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
     fontFamily: 'RobotoCondensed-Bold',
-    paddingVertical: 10,
+    paddingVertical: 10
   },
   pianoteContainer: {
     alignSelf: 'center',
@@ -140,7 +140,7 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#fb1b2f',
     justifyContent: 'center',
     marginHorizontal: '5%',
-    marginTop: 10,
+    marginTop: 10
   }
 });
 // borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,

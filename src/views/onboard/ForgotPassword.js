@@ -28,9 +28,12 @@ import { openInbox } from 'react-native-email-link';
 import { NetworkContext } from '../../context/NetworkProvider';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width < windowDim.height ? windowDim.height : windowDim.width;
-const factorVertical = windowDim.width < windowDim.height ? height / 812 : width / 375;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width < windowDim.height ? windowDim.height : windowDim.width;
+const factorVertical =
+  windowDim.width < windowDim.height ? height / 812 : width / 375;
 
 export default class ForgotPassword extends React.Component {
   static navigationOptions = { header: null };

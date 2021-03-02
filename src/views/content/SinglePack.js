@@ -257,7 +257,7 @@ export default class SinglePack extends React.Component {
               style={{
                 width: '100%',
                 aspectRatio: this.getAspectRatio(),
-                justifyContent: 'flex-end',
+                justifyContent: 'flex-end'
               }}
               source={{
                 uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
@@ -289,27 +289,28 @@ export default class SinglePack extends React.Component {
                   resizeMode={FastImage.resizeMode.contain}
                 />
                 <View
-                  style={[styles.heightButtons, {
-                    marginBottom: 10 * factor,
-                    width: '100%',
-                    flexDirection: 'row',
-                    alignItems: 'center'
-                  }]}
+                  style={[
+                    styles.heightButtons,
+                    {
+                      marginBottom: 10 * factor,
+                      width: '100%',
+                      flexDirection: 'row',
+                      alignItems: 'center'
+                    }
+                  ]}
                 >
                   <View style={{ flex: 1, flexDirection: 'row' }}>
-                    <View style={{flex: 0.5}}/>
+                    <View style={{ flex: 0.5 }} />
                     <TouchableOpacity
                       style={{
                         flex: 0.5,
-                        alignItems: 'center',
+                        alignItems: 'center'
                       }}
                       onPress={() => {
                         this.toggleMyList();
                       }}
                     >
-                      <View
-                        style={[styles.centerContent]}
-                      >
+                      <View style={[styles.centerContent]}>
                         {!this.state.isAddedToList ? (
                           <AntIcon
                             name={'plus'}
@@ -366,39 +367,39 @@ export default class SinglePack extends React.Component {
                   </View>
                   <View style={{ flex: 1, flexDirection: 'row' }}>
                     <TouchableOpacity
+                      style={{
+                        flex: 0.5,
+                        alignItems: 'center'
+                      }}
+                      onPress={() => {
+                        this.setState({
+                          showInfo: !this.state.showInfo
+                        });
+                      }}
+                    >
+                      <View
+                        style={[styles.centerContent, { flexDirection: 'row' }]}
+                      >
+                        <AntIcon
+                          name={
+                            this.state.showInfo ? 'infocirlce' : 'infocirlceo'
+                          }
+                          size={(onTablet ? 15 : 20) * factor}
+                          color={colors.pianoteRed}
+                        />
+                      </View>
+                      <Text
                         style={{
-                          flex: 0.5,
-                          alignItems: 'center',
-                        }}
-                        onPress={() => {
-                          this.setState({
-                            showInfo: !this.state.showInfo
-                          });
+                          fontFamily: 'OpenSans-Regular',
+                          color: 'white',
+                          marginTop: 2,
+                          fontSize: (onTablet ? 8 : 12) * factor
                         }}
                       >
-                        <View
-                          style={[styles.centerContent, { flexDirection: 'row' }]}
-                        >
-                          <AntIcon
-                            name={
-                              this.state.showInfo ? 'infocirlce' : 'infocirlceo'
-                            }
-                            size={(onTablet ? 15 : 20) * factor}
-                            color={colors.pianoteRed}
-                          />
-                        </View>
-                        <Text
-                          style={{
-                            fontFamily: 'OpenSans-Regular',
-                            color: 'white',
-                            marginTop: 2,
-                            fontSize: (onTablet ? 8 : 12) * factor
-                          }}
-                        >
-                          Info
-                        </Text>
-                      </TouchableOpacity>
-                    <View style={{flex: 0.5}}/>
+                        Info
+                      </Text>
+                    </TouchableOpacity>
+                    <View style={{ flex: 0.5 }} />
                   </View>
                 </View>
               </View>
@@ -408,8 +409,10 @@ export default class SinglePack extends React.Component {
                 style={{
                   alignSelf: 'center',
                   backgroundColor: colors.mainBackground,
-                  marginHorizontal: this.state.isLandscape ? '10%' : paddingInset,
-                  marginTop: onTablet ? '2%' : '2%',
+                  marginHorizontal: this.state.isLandscape
+                    ? '10%'
+                    : paddingInset,
+                  marginTop: onTablet ? '2%' : '2%'
                 }}
               >
                 <Text
@@ -418,16 +421,21 @@ export default class SinglePack extends React.Component {
                     marginTop: onTablet ? '5%' : '5%',
                     fontSize: (onTablet ? 10 : 15) * factor,
                     paddingHorizontal: paddingInset,
-                  
+
                     color: 'white',
                     textAlign: 'center'
                   }}
                 >
                   {this.state.description}
                 </Text>
-                
-                <View style={{paddingHorizontal: '30%', }}>
-                  <View style={[styles.centerContent, { flexDirection: 'row', marginTop: '2%' }]}>
+
+                <View style={{ paddingHorizontal: '30%' }}>
+                  <View
+                    style={[
+                      styles.centerContent,
+                      { flexDirection: 'row', marginTop: '2%' }
+                    ]}
+                  >
                     <Text
                       style={{
                         flex: 1,
@@ -435,7 +443,7 @@ export default class SinglePack extends React.Component {
                         textAlign: 'center',
                         color: 'white',
                         fontFamily: 'OpenSans-Bold',
-                        marginTop: 10,
+                        marginTop: 10
                       }}
                     >
                       {this.state.videos.length}
@@ -459,7 +467,7 @@ export default class SinglePack extends React.Component {
                         textAlign: 'center',
                         color: 'white',
                         fontFamily: 'OpenSans-Bold',
-                        marginTop: 10 
+                        marginTop: 10
                       }}
                     >
                       {this.state.xp}
@@ -477,7 +485,12 @@ export default class SinglePack extends React.Component {
                       </Text>
                     </Text>
                   </View>
-                  <View style={[styles.centerContent, { flexDirection: 'row', marginTop: '10%' }]}>
+                  <View
+                    style={[
+                      styles.centerContent,
+                      { flexDirection: 'row', marginTop: '10%' }
+                    ]}
+                  >
                     {(this.state.id == 262875 ? false : true) && (
                       <Download_V2
                         entity={{
@@ -516,9 +529,9 @@ export default class SinglePack extends React.Component {
                       />
                     )}
                     <TouchableOpacity
-                      style={{ 
-                        alignItems: 'center', 
-                        flex: 1,
+                      style={{
+                        alignItems: 'center',
+                        flex: 1
                       }}
                       onPress={() => {
                         this.setState({
@@ -544,7 +557,7 @@ export default class SinglePack extends React.Component {
                       </Text>
                     </TouchableOpacity>
                   </View>
-                </View>                
+                </View>
               </View>
             )}
             <View
@@ -569,7 +582,6 @@ export default class SinglePack extends React.Component {
                 navigator={row => this.navigate(row)}
               />
             </View>
-            
           </ScrollView>
         ) : (
           <View

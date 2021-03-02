@@ -212,11 +212,13 @@ class MyList extends React.Component {
               color={colors.secondBackground}
             />
           )}
-          <Text 
+          <Text
             style={[
-              styles.contentPageHeader, {
+              styles.contentPageHeader,
+              {
                 paddingLeft: paddingInset
-            }]}
+              }
+            ]}
           >
             My List
           </Text>
@@ -224,7 +226,7 @@ class MyList extends React.Component {
             style={[
               styles.tabRightContainer,
               {
-                marginTop: 15 * factor,
+                marginTop: 15 * factor
               }
             ]}
             onPress={() => {
@@ -234,22 +236,28 @@ class MyList extends React.Component {
               });
             }}
           >
-            <View style={{ justifyContent: 'center', paddingVertical: 20, width: width * 0.26 + paddingInset/2}}>
-              <Text 
+            <View
+              style={{
+                justifyContent: 'center',
+                paddingVertical: 20,
+                width: width * 0.26 + paddingInset / 2
+              }}
+            >
+              <Text
                 style={[
                   styles.tabRightContainerText,
                   {
                     position: 'absolute',
                     paddingLeft: paddingInset,
-                    width: width * 0.56 + paddingInset/2,
+                    width: width * 0.56 + paddingInset / 2
                   }
                 ]}
               >
                 In Progress
               </Text>
             </View>
-            <View style={{flex: 0.85}}/>
-            <View style={[styles.centerContent, {flex: 0.15}]}>
+            <View style={{ flex: 0.85 }} />
+            <View style={[styles.centerContent, { flex: 0.15 }]}>
               <EntypoIcon
                 name={'chevron-thin-right'}
                 size={(onTablet ? 15 : 22.5) * factor}
@@ -266,22 +274,28 @@ class MyList extends React.Component {
               });
             }}
           >
-            <View style={{ justifyContent: 'center', paddingVertical: 20, width: width * 0.26 + paddingInset/2}}>
-              <Text 
+            <View
+              style={{
+                justifyContent: 'center',
+                paddingVertical: 20,
+                width: width * 0.26 + paddingInset / 2
+              }}
+            >
+              <Text
                 style={[
                   styles.tabRightContainerText,
                   {
                     position: 'absolute',
                     paddingLeft: paddingInset,
-                    width: width * 0.56 + paddingInset/2,
+                    width: width * 0.56 + paddingInset / 2
                   }
                 ]}
               >
                 Completed
               </Text>
             </View>
-            <View style={{flex: 0.85}}/>
-            <View style={[styles.centerContent, {flex: 0.15}]}>
+            <View style={{ flex: 0.85 }} />
+            <View style={[styles.centerContent, { flex: 0.15 }]}>
               <EntypoIcon
                 name={'chevron-thin-right'}
                 size={(onTablet ? 15 : 22.5) * factor}

@@ -82,7 +82,7 @@ class Lessons extends React.Component {
   }
 
   componentDidMount = () => {
-    console.log(paddingInset)
+    console.log(paddingInset);
     Orientation.addDeviceOrientationListener(this.orientationListener);
     AsyncStorage.multiGet([
       'totalXP',
@@ -448,12 +448,14 @@ class Lessons extends React.Component {
                   />
                 </View>
                 <View
-                  style={[ 
-                    styles.heightButtons, {
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    marginBottom: '1%'
-                  }]}
+                  style={[
+                    styles.heightButtons,
+                    {
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginBottom: '1%'
+                    }
+                  ]}
                 >
                   <View style={{ flex: 1 }} />
                   <View
@@ -514,7 +516,7 @@ class Lessons extends React.Component {
                 </View>
               </View>
             </ImageBackground>
-            <View style={{marginTop: paddingInset/2}}>
+            <View style={{ marginTop: paddingInset / 2 }}>
               {this.state.lessonsStarted && (
                 <HorizontalVideoList
                   hideFilterButton={true}
@@ -530,7 +532,7 @@ class Lessons extends React.Component {
                   items={this.state.progressLessons}
                 />
               )}
-              <View style={{ height: paddingInset/2}} />
+              <View style={{ height: paddingInset / 2 }} />
               {onTablet ? (
                 <HorizontalVideoList
                   isMethod={true}
@@ -584,11 +586,11 @@ class Lessons extends React.Component {
                   isMethod={true}
                   items={this.state.allLessons}
                   isLoading={false}
-                  title={'ALL LESSONS'} 
-                  type={'LESSONS'} 
+                  title={'ALL LESSONS'}
+                  type={'LESSONS'}
                   showFilter={true}
                   isPaging={this.state.isPaging}
-                  showType={true} 
+                  showType={true}
                   showArtist={true}
                   showSort={true}
                   showLength={false}

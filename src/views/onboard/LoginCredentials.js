@@ -10,7 +10,7 @@ import {
   ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 
 import RNIap from 'react-native-iap';
@@ -268,7 +268,7 @@ export default class LoginCredentials extends React.Component {
                   }
                   autoCorrect={false}
                   value={this.state.email}
-                  autoCapitalize={"none"}
+                  autoCapitalize={'none'}
                   keyboardAppearance={'dark'}
                   placeholderTextColor={'grey'}
                   placeholder={'Email Address'}
@@ -278,7 +278,7 @@ export default class LoginCredentials extends React.Component {
                 />
                 <View style={localStyles.textInputContainer}>
                   <TextInput
-                    autoCapitalize={"none"}
+                    autoCapitalize={'none'}
                     onBlur={() =>
                       this.setState({
                         scrollViewContentFlex: {
@@ -401,10 +401,10 @@ export default class LoginCredentials extends React.Component {
                 position: 'absolute'
               }}
             >
-              <Back 
+              <Back
                 width={backButtonSize}
                 height={backButtonSize}
-                fill={'white'} 
+                fill={'white'}
               />
             </TouchableOpacity>
           </KeyboardAvoidingView>

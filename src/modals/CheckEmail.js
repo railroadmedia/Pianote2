@@ -58,9 +58,9 @@ class CheckEmail extends React.Component {
             >
               <Text
                 style={[
-                  styles.modalCancelButtonText, 
+                  styles.modalCancelButtonText,
                   localStyles.tryAgainText,
-                  {fontSize: (onTablet ? 9 : 14) * factor}
+                  { fontSize: (onTablet ? 9 : 14) * factor }
                 ]}
               >
                 TRY AGAIN
@@ -91,7 +91,7 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#fb1b2f',
     marginHorizontal: 40,
     marginVertical: 5 * factor,
-    height: (DeviceInfo.isTablet() ? 25 : 40) * factor,
+    height: (DeviceInfo.isTablet() ? 25 : 40) * factor
   },
   loginText: {
     color: 'white',

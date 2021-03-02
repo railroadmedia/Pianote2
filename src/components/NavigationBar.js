@@ -84,13 +84,13 @@ class NavigationBar extends React.Component {
           left: 'never',
           right: 'never',
           top: 'never',
-          bottom: this.props.pad ? 'never' : 'always',
+          bottom: this.props.pad ? 'never' : 'always'
         }}
         style={{
           backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground
         }}
       >
-        <View style={{justifyContent: 'center'}}>
+        <View style={{ justifyContent: 'center' }}>
           <View style={localStyles.navContainer}>
             <TouchableOpacity
               onPress={() => {
@@ -224,7 +224,7 @@ const localStyles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 2.25,
     height: DeviceInfo.isTablet() ? 40 : 30,
-    width: DeviceInfo.isTablet() ? 40 : 30,
+    width: DeviceInfo.isTablet() ? 40 : 30
   },
   navContainer: {
     alignSelf: 'stretch',

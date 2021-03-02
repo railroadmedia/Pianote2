@@ -273,7 +273,7 @@ export default class PathOverview extends React.Component {
   renderHeader = () => {
     let { thumbnail } = this.state;
     return (
-      <View style={{marginBottom: '4%'}}>
+      <View style={{ marginBottom: '4%' }}>
         <ImageBackground
           resizeMethod='resize'
           style={{
@@ -314,7 +314,7 @@ export default class PathOverview extends React.Component {
             />
           </TouchableOpacity>
         </ImageBackground>
-        <View 
+        <View
           style={[this.state.isLandscape ? { marginHorizontal: '10%' } : {}]}
         >
           {!this.state.isMethod && (
@@ -352,11 +352,14 @@ export default class PathOverview extends React.Component {
             | {this.state.xp} XP
           </Text>
           <View
-            style={[styles.heightButtons, {
-              width: '100%',
-              flexDirection: 'row',
-              alignItems: 'center',
-            }]}
+            style={[
+              styles.heightButtons,
+              {
+                width: '100%',
+                flexDirection: 'row',
+                alignItems: 'center'
+              }
+            ]}
           >
             <View style={{ flex: 1, flexDirection: 'row' }}>
               <View style={{ flex: 0.5 }} />
@@ -461,7 +464,7 @@ export default class PathOverview extends React.Component {
           <View
             style={[
               {
-                paddingHorizontal: paddingInset*2
+                paddingHorizontal: paddingInset * 2
               },
               this.state.isLandscape
                 ? { marginHorizontal: '10%' }
@@ -481,10 +484,8 @@ export default class PathOverview extends React.Component {
                 {this.state.data.description}
               </Text>
             )}
-            <View style={{paddingHorizontal: '20%'}}>
-              <View
-                style={[styles.centerContent, { flexDirection: 'row', }]}
-              >
+            <View style={{ paddingHorizontal: '20%' }}>
+              <View style={[styles.centerContent, { flexDirection: 'row' }]}>
                 <Text
                   style={{
                     flex: 1,
@@ -492,7 +493,7 @@ export default class PathOverview extends React.Component {
                     textAlign: 'center',
                     color: 'white',
                     fontFamily: 'OpenSans-Bold',
-                    marginTop: 10,
+                    marginTop: 10
                   }}
                 >
                   {this.state.items.length}
@@ -540,7 +541,7 @@ export default class PathOverview extends React.Component {
                     textAlign: 'center',
                     color: 'white',
                     fontFamily: 'OpenSans-Bold',
-                    marginTop: 10 
+                    marginTop: 10
                   }}
                 >
                   {this.state.xp}
@@ -564,7 +565,7 @@ export default class PathOverview extends React.Component {
                   {
                     flexDirection: 'row',
                     marginTop: 20,
-                    marginBottom: onTablet ? '2%' : '4%',
+                    marginBottom: onTablet ? '2%' : '4%'
                   }
                 ]}
               >
@@ -573,7 +574,7 @@ export default class PathOverview extends React.Component {
                   style={[
                     styles.centerContent,
                     {
-                      flex: 1,
+                      flex: 1
                     }
                   ]}
                 >
@@ -639,7 +640,7 @@ export default class PathOverview extends React.Component {
                   style={[
                     styles.centerContent,
                     {
-                      flex: 1,
+                      flex: 1
                     }
                   ]}
                 >

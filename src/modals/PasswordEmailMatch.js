@@ -36,11 +36,21 @@ class PasswordEmailMatch extends React.Component {
           <View style={localStyles.container}>
             <Text
               numberOfLines={2}
-              style={[styles.modalHeaderText, localStyles.errorMessage, {marginBottom: 5}]}
+              style={[
+                styles.modalHeaderText,
+                localStyles.errorMessage,
+                { marginBottom: 5 }
+              ]}
             >
               {this.props.errorMessage}
             </Text>
-            <Text style={[styles.modalBodyText, localStyles.tryAgainText, {marginBottom: 25}]}>
+            <Text
+              style={[
+                styles.modalBodyText,
+                localStyles.tryAgainText,
+                { marginBottom: 25 }
+              ]}
+            >
               Please try again.
             </Text>
             <TouchableOpacity
@@ -68,11 +78,10 @@ const localStyles = StyleSheet.create({
   },
   errorMessage: {
     paddingHorizontal: 40,
-    marginTop: 15 * factor,
-    
+    marginTop: 15 * factor
   },
   tryAgainText: {
-    paddingHorizontal: 40,
+    paddingHorizontal: 40
   },
   tryAgain: {
     color: '#fb1b2f',

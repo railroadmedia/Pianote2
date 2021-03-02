@@ -280,12 +280,12 @@ class Course extends React.Component {
                   })
                 }
                 items={this.state.allCourses}
-                hideFilterButton={false} 
+                hideFilterButton={false}
                 isPaging={this.state.isPaging}
-                filters={this.state.filters} 
+                filters={this.state.filters}
                 currentSort={this.state.currentSort}
-                changeSort={sort => this.changeSort(sort)} 
-                filterResults={() => this.setState({ showFilters: true })} 
+                changeSort={sort => this.changeSort(sort)}
+                filterResults={() => this.setState({ showFilters: true })}
                 applyFilters={filters =>
                   new Promise(res =>
                     this.setState(
@@ -300,22 +300,21 @@ class Course extends React.Component {
                       }
                     )
                   )
-                }                
-                outVideos={this.state.outVideos} 
+                }
+                outVideos={this.state.outVideos}
                 getVideos={() => this.getVideos()}
                 callEndReached={true}
                 reachedEnd={() => {
-                    if (!this.state.isPaging && !this.state.outVideos) {
-                      this.setState(
-                        {
-                          page: this.state.page + 1,
-                          isPaging: true
-                        },
-                        () => this.getAllCourses()
-                      );
-                    }
+                  if (!this.state.isPaging && !this.state.outVideos) {
+                    this.setState(
+                      {
+                        page: this.state.page + 1,
+                        isPaging: true
+                      },
+                      () => this.getAllCourses()
+                    );
                   }
-                }
+                }}
               />
             ) : (
               <VerticalVideoList
@@ -354,8 +353,12 @@ class Course extends React.Component {
             )}
           </ScrollView>
         ) : (
-          <ActivityIndicator size='large' style={{ flex: 1 }} color={colors.secondBackground} />
-        )}        
+          <ActivityIndicator
+            size='large'
+            style={{ flex: 1 }}
+            color={colors.secondBackground}
+          />
+        )}
         <NavigationBar currentPage={''} />
       </View>
     );

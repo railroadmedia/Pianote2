@@ -180,7 +180,6 @@ class Replies extends React.Component {
                     <AntIcon
                       name={'delete'}
                       size={(onTablet ? 15 : 20) * factor}
-                      
                       color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
@@ -500,10 +499,8 @@ const localStyles = StyleSheet.create({
   },
   replyName: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (10 * factor),
-    marginTop:
-      (2 * factor),
+    fontSize: 10 * factor,
+    marginTop: 2 * factor,
     color: 'grey'
   },
   commentContainer: {
@@ -513,15 +510,13 @@ const localStyles = StyleSheet.create({
   },
   displayNameText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      ((DeviceInfo.isTablet() ? 9 : 10) * factor),
+    fontSize: (DeviceInfo.isTablet() ? 9 : 10) * factor,
     color: '#445f73',
     paddingVertical: (5 * Dimensions.get('window').height) / 812
   },
   comment: {
     paddingTop: (10 * Dimensions.get('window').height) / 812,
-    fontSize:
-      ((DeviceInfo.isTablet() ? 10 : 13) * factor),
+    fontSize: (DeviceInfo.isTablet() ? 10 : 13) * factor,
     fontFamily: 'OpenSans-Regular',
     color: 'white'
   },
@@ -566,8 +561,7 @@ const localStyles = StyleSheet.create({
   originalReply: {
     paddingTop: 5,
     paddingHorizontal: (10 * Dimensions.get('window').width) / 375,
-    marginBottom:
-      (10 * factor),
+    marginBottom: 10 * factor,
     minHeight: (30 * Dimensions.get('window').height) / 812,
     flexDirection: 'row'
   },
@@ -589,21 +583,18 @@ const localStyles = StyleSheet.create({
           (Dimensions.get('window').height / 812 +
             Dimensions.get('window').width / 375)) /
         2,
-    marginTop:
-      (5 * factor),
+    marginTop: 5 * factor,
     color: 'grey'
   },
   commentText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (13 * factor),
+    fontSize: 13 * factor,
     color: 'white',
     marginBottom: 7
   },
   userStats: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      ((DeviceInfo.isTablet() ? 9 : 10) * factor),
+    fontSize: (DeviceInfo.isTablet() ? 9 : 10) * factor,
     color: '#445f73',
     paddingTop: (5 * Dimensions.get('window').height) / 812,
     paddingBottom: (10 * Dimensions.get('window').height) / 812
@@ -631,8 +622,7 @@ const localStyles = StyleSheet.create({
   addReplyText: {
     textAlign: 'left',
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      ((DeviceInfo.isTablet() ? 10 : 13) * factor),
+    fontSize: (DeviceInfo.isTablet() ? 10 : 13) * factor,
     color: 'white',
     paddingLeft: (10 * Dimensions.get('window').width) / 375,
     paddingVertical: (25 * Dimensions.get('window').height) / 812

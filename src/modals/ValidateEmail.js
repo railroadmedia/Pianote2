@@ -41,11 +41,11 @@ class ValidateEmail extends React.Component {
               onPress={() => this.props.hideValidateEmail()}
               style={localStyles.tryAgain}
             >
-              <Text 
+              <Text
                 style={[
                   styles.modalCancelButtonText,
                   localStyles.tryAgainText,
-                  {fontSize: (onTablet ? 10 : 14) * factor}
+                  { fontSize: (onTablet ? 10 : 14) * factor }
                 ]}
               >
                 TRY AGAIN

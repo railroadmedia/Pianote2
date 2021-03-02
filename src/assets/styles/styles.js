@@ -22,7 +22,7 @@ module.exports = StyleSheet.create({
   },
   heightButtons: {
     // the height of buttons like start / more info on lessons
-    height: (DeviceInfo.isTablet() ? 25 : 40) * factor,
+    height: (DeviceInfo.isTablet() ? 25 : 40) * factor
   },
   activityIndicator: {
     // style for putting on spinners
@@ -83,7 +83,7 @@ module.exports = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#081826',
-    padding: (DeviceInfo.isTablet ? 10 : 5)
+    padding: DeviceInfo.isTablet ? 10 : 5
   },
   filterHeader: {
     fontSize: (DeviceInfo.isTablet() ? 12 : 18) * factor,
@@ -103,7 +103,7 @@ module.exports = StyleSheet.create({
     fontSize: DeviceInfo.isTablet() ? 24 : 20,
     textAlign: 'left',
     fontFamily: 'RobotoCondensed-Bold',
-    color: '#445f73',
+    color: '#445f73'
   },
   tabRightContainer: {
     // container used for my list in progress & on settings
@@ -136,7 +136,7 @@ module.exports = StyleSheet.create({
   modalButtonText: {
     textAlign: 'center',
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: (DeviceInfo.isTablet() ? 10 : 15) * factor,
+    fontSize: (DeviceInfo.isTablet() ? 10 : 15) * factor
   },
   modalBodyText: {
     textAlign: 'center',

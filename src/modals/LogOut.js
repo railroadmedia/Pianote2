@@ -60,7 +60,7 @@ class LogOut extends React.Component {
             <Text style={[styles.modalBodyText, localStyles.description]}>
               Are you sure that you want to log out?
             </Text>
-            <View style={{height: 5}}/>
+            <View style={{ height: 5 }} />
             <TouchableOpacity
               style={[styles.centerContent, localStyles.logoutText]}
               onPress={() => this.logOut()}
@@ -92,7 +92,7 @@ const localStyles = StyleSheet.create({
   },
   title: {
     marginTop: 25 * factor,
-    paddingHorizontal: 40,
+    paddingHorizontal: 40
   },
   description: {
     paddingHorizontal: 20 * factor,
@@ -105,11 +105,11 @@ const localStyles = StyleSheet.create({
     marginHorizontal: 20 * factor,
     fontFamily: 'OpenSans-Bold',
     height: (DeviceInfo.isTablet() ? 25 : 40) * factor,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   logout: {
     color: 'white',
-    fontSize: (DeviceInfo.isTablet() ? 12.5 : 17.5) * factor,
+    fontSize: (DeviceInfo.isTablet() ? 12.5 : 17.5) * factor
   },
   cancelContainter: {
     paddingHorizontal: 40,

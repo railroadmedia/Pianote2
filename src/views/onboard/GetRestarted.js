@@ -2,12 +2,7 @@
  * GetRestarted
  */
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import FastImage from 'react-native-fast-image';
 
@@ -69,7 +64,6 @@ export default class GetRestarted extends React.Component {
               >
                 <Text style={localStyles.getStarted}>GET STARTED</Text>
               </TouchableOpacity>
-              
             </View>
           </View>
         </View>
@@ -116,7 +110,7 @@ const localStyles = StyleSheet.create({
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 22 : 16,
     textAlign: 'center',
-    flex: 1,
+    flex: 1
   },
   skip: {
     width: '100%',
@@ -125,14 +119,14 @@ const localStyles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     borderRadius: 100,
-    marginBottom: 20,
+    marginBottom: 20
   },
   getStartedContainer: {
     width: '85%',
     height: '100%',
     borderRadius: 300,
     backgroundColor: '#fb1b2f',
-    zIndex: 5,
+    zIndex: 5
   },
   getStarted: {
     fontFamily: 'RobotoCondensed-Bold',

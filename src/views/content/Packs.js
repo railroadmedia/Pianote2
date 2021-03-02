@@ -229,7 +229,7 @@ class Packs extends React.Component {
                     height: greaterWDim / 15,
                     width: '100%',
                     zIndex: 6,
-                    marginBottom: onTablet ? '3%' : '4.5%',
+                    marginBottom: onTablet ? '3%' : '4.5%'
                   }}
                   source={{
                     uri: `https://cdn.musora.com/image/fetch/f_png,q_auto:eco,w_${Math.round(
@@ -239,11 +239,14 @@ class Packs extends React.Component {
                   resizeMode={FastImage.resizeMode.contain}
                 />
                 <View
-                  style={[styles.heightButtons, {
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    marginBottom: onTablet ? '5%' : '7.5%'
-                  }]}
+                  style={[
+                    styles.heightButtons,
+                    {
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginBottom: onTablet ? '5%' : '7.5%'
+                    }
+                  ]}
                 >
                   <View style={{ flex: 1 }} />
                   <View
@@ -313,7 +316,7 @@ class Packs extends React.Component {
                 style={{
                   borderRadius: 10,
                   width: '100%',
-                  aspectRatio: 0.7,
+                  aspectRatio: 0.7
                 }}
                 source={{
                   uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,c_thumb,w_${

@@ -158,7 +158,7 @@ export default class Downloads extends React.Component {
             ListEmptyComponent={() => (
               <Text
                 style={{
-                  padding: paddingInset*1.5,
+                  padding: paddingInset * 1.5,
                   color: 'white',
                   textAlign: 'center',
                   fontSize: onTablet ? 20 : 18 * factor
@@ -243,7 +243,7 @@ export default class Downloads extends React.Component {
                     <View style={{ justifyContent: 'center' }}>
                       <IconFeather
                         name={'chevron-right'}
-                        size={(onTablet ? 20 : 25) * factor} 
+                        size={(onTablet ? 20 : 25) * factor}
                         color={'white'}
                       />
                     </View>

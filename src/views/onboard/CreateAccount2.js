@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView,
   Alert,
   ScrollView,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
@@ -48,8 +48,13 @@ export default class CreateAccount extends React.Component {
     if (this.state.password == this.state.confirmPassword) {
       if (this.state.password.length > 7) {
         if (this.props.navigation.state.params?.purchase) {
-       
-          let response = await signUp(this.state.email,this.state.password,this.props.navigation.state.params?.purchase, null, this.props.navigation.state.params?.purchase);
+          let response = await signUp(
+            this.state.email,
+            this.state.password,
+            this.props.navigation.state.params?.purchase,
+            null,
+            this.props.navigation.state.params?.purchase
+          );
           console.log(response);
           if (response.meta) {
             try {
@@ -58,12 +63,15 @@ export default class CreateAccount extends React.Component {
                 ['email', encodeURIComponent(this.state.email)],
                 ['password', encodeURIComponent(this.state.password)]
               ]);
-            } catch (e) {console.log(e)}
+            } catch (e) {
+              console.log(e);
+            }
 
             let userData = await getUserData();
-          
+
             let currentDate = new Date().getTime() / 1000;
-            let userExpDate = new Date(userData.expirationDate).getTime() / 1000;
+            let userExpDate =
+              new Date(userData.expirationDate).getTime() / 1000;
             console.log(currentDate, userExpDate);
             if (userData.isLifetime || currentDate < userExpDate) {
               this.props.navigation.navigate('CREATEACCOUNT3', {
@@ -191,7 +199,7 @@ export default class CreateAccount extends React.Component {
                     )}
                   </TouchableOpacity>
                 </View>
-                <View style={{ height: 27.5}} />
+                <View style={{ height: 27.5 }} />
                 <Text style={localStyles.createPasswordText}>
                   Confirm password
                 </Text>
@@ -243,7 +251,7 @@ export default class CreateAccount extends React.Component {
                     )}
                   </TouchableOpacity>
                 </View>
-                <View style={{ height: 10  }} />
+                <View style={{ height: 10 }} />
                 <Text style={localStyles.characters}>
                   Use at least 8 characters
                 </Text>
@@ -329,7 +337,7 @@ const localStyles = StyleSheet.create({
   },
   createAccountText: {
     color: 'white',
-    fontSize: DeviceInfo.isTablet() ? 36 : 24,
+    fontSize: DeviceInfo.isTablet() ? 36 : 24
   },
   createPasswordContainer: {
     flex: 1,

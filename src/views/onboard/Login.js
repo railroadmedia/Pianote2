@@ -27,7 +27,7 @@ const isNotch = DeviceInfo.hasNotch();
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-  
+
 const skus = Platform.select({
   android: ['pianote_app_1_month_member', 'pianote_app_1_year_member'],
   ios: ['pianote_app_1_month_membership', 'pianote_app_1_year_membership']
@@ -329,7 +329,7 @@ export default class Login extends React.Component {
               fontSize: onTablet ? 32 : 24,
               padding: 10,
               textAlign: 'center',
-              color: 'white',
+              color: 'white'
             }}
           >
             {'Pianote Lessons, Songs, \n& Support'}
@@ -352,7 +352,7 @@ export default class Login extends React.Component {
             bottom: '5.5%',
             width: '100%',
             zIndex: 3,
-            elevation: 3,
+            elevation: 3
           }}
         >
           {this.renderDots()}
@@ -365,9 +365,7 @@ export default class Login extends React.Component {
 
   renderSecondPage() {
     return (
-      <View
-        style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}
-      >
+      <View style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}>
         <View
           style={{
             position: 'absolute',
@@ -408,7 +406,7 @@ export default class Login extends React.Component {
             bottom: '21.5%',
             width: '100%',
             zIndex: 3,
-            elevation: 3,
+            elevation: 3
           }}
         >
           <View style={styles.centerContent}>
@@ -449,7 +447,7 @@ export default class Login extends React.Component {
               padding: 10,
               fontSize: onTablet ? 24 : 18,
               textAlign: 'center',
-              color: 'grey',
+              color: 'grey'
             }}
           >
             Unlike "video game" learning where you only learn what keys to hit,
@@ -463,7 +461,7 @@ export default class Login extends React.Component {
             bottom: '5.5%',
             width: '100%',
             zIndex: 3,
-            elevation: 3,
+            elevation: 3
           }}
         >
           {this.renderDots()}
@@ -476,9 +474,7 @@ export default class Login extends React.Component {
 
   renderThirdpage() {
     return (
-      <View
-        style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}
-      >
+      <View style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}>
         <View
           style={{
             position: 'absolute',
@@ -519,7 +515,7 @@ export default class Login extends React.Component {
             bottom: '22%',
             width: '100%',
             zIndex: 3,
-            elevation: 3,
+            elevation: 3
           }}
         >
           <View style={styles.centerContent}>
@@ -573,7 +569,7 @@ export default class Login extends React.Component {
             bottom: '5.5%',
             width: '100%',
             zIndex: 3,
-            elevation: 3,
+            elevation: 3
           }}
         >
           {this.renderDots()}
@@ -586,9 +582,7 @@ export default class Login extends React.Component {
 
   renderFourthPage() {
     return (
-      <View
-        style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}
-      >
+      <View style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}>
         <View
           style={{
             position: 'absolute',
@@ -630,7 +624,7 @@ export default class Login extends React.Component {
             bottom: '22%',
             width: '100%',
             zIndex: 3,
-            elevation: 3,
+            elevation: 3
           }}
         >
           <View style={styles.centerContent}>
@@ -685,7 +679,7 @@ export default class Login extends React.Component {
             bottom: '5.5%',
             width: '100%',
             zIndex: 3,
-            elevation: 3,
+            elevation: 3
           }}
         >
           {this.renderDots()}
@@ -698,9 +692,7 @@ export default class Login extends React.Component {
 
   renderFifthPage() {
     return (
-      <View
-        style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}
-      >
+      <View style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}>
         <View
           style={{
             position: 'absolute',
@@ -741,7 +733,7 @@ export default class Login extends React.Component {
               {
                 width: '100%',
                 zIndex: 3,
-                elevation: 3,
+                elevation: 3
               }
             ]}
           >
@@ -771,7 +763,7 @@ export default class Login extends React.Component {
                 paddingHorizontal: 20,
                 fontSize: onTablet ? 24 : 18,
                 textAlign: 'center',
-                color: 'grey',
+                color: 'grey'
               }}
             >
               Try it for free for 7-days when you click the sign up button below
@@ -785,7 +777,7 @@ export default class Login extends React.Component {
             bottom: '5.5%',
             width: '100%',
             zIndex: 3,
-            elevation: 3,
+            elevation: 3
           }}
         >
           {this.renderDots()}

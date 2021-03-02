@@ -66,8 +66,8 @@ export default class CreateAccount3 extends React.Component {
       pageNum: 0,
       displayName: '',
       imageURI: '',
-      email: '',//this.props.navigation.state.params.email,
-      password: '',//this.props.navigation.state.params.password
+      email: '', //this.props.navigation.state.params.email,
+      password: '' //this.props.navigation.state.params.password
     };
   }
 
@@ -312,7 +312,7 @@ export default class CreateAccount3 extends React.Component {
                         fontFamily: 'OpenSans-Bold',
                         fontSize: DeviceInfo.isTablet() ? 24 : 16,
                         textAlign: 'left',
-                        paddingVertical: 15,
+                        paddingVertical: 15
                       }}
                     >
                       Add a display name
@@ -983,7 +983,7 @@ export default class CreateAccount3 extends React.Component {
                   <Text
                     style={{
                       fontFamily: 'OpenSans-Bold',
-                      fontSize: 22 * factor,
+                      fontSize: 22 * factor
                     }}
                   >
                     Learning Path
@@ -1064,7 +1064,7 @@ export default class CreateAccount3 extends React.Component {
                   <Text
                     style={{
                       fontFamily: 'OpenSans-Bold',
-                      fontSize: 22 * factor,
+                      fontSize: 22 * factor
                     }}
                   >
                     Courses
@@ -1145,7 +1145,7 @@ export default class CreateAccount3 extends React.Component {
                   <Text
                     style={{
                       fontFamily: 'OpenSans-Bold',
-                      fontSize: 22 * factor,
+                      fontSize: 22 * factor
                     }}
                   >
                     Songs

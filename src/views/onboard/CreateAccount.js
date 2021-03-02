@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
@@ -257,7 +257,7 @@ const localStyles = StyleSheet.create({
   },
   createAccountText: {
     color: 'white',
-    fontSize: DeviceInfo.isTablet() ? 36 : 24,
+    fontSize: DeviceInfo.isTablet() ? 36 : 24
   },
   container: {
     backgroundColor: 'white',

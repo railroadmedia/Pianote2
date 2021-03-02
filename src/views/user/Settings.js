@@ -242,7 +242,7 @@ class Settings extends React.Component {
             <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
               <FeatherIcon
                 name={'user'}
-                size={(onTablet ? 30 : 20)}
+                size={onTablet ? 30 : 20}
                 color={colors.pianoteRed}
               />
             </View>
@@ -250,7 +250,7 @@ class Settings extends React.Component {
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 30 : 20)}
+              size={onTablet ? 30 : 20}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -265,14 +265,14 @@ class Settings extends React.Component {
               <IonIcon
                 name={'ios-notifications-outline'}
                 color={colors.pianoteRed}
-                size={(onTablet ? 35 : 27.5)}
+                size={onTablet ? 35 : 27.5}
               />
             </View>
             <Text style={localStyles.settingsText}>Notification Settings</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 30 : 20)}
+              size={onTablet ? 30 : 20}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -283,7 +283,7 @@ class Settings extends React.Component {
             <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
               <AntIcon
                 name={'folder1'}
-                size={(onTablet ? 30 : 20)}
+                size={onTablet ? 30 : 20}
                 color={colors.pianoteRed}
               />
             </View>
@@ -291,7 +291,7 @@ class Settings extends React.Component {
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 30 : 20)}
+              size={onTablet ? 30 : 20}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -304,7 +304,7 @@ class Settings extends React.Component {
             <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
               <AntIcon
                 name={'creditcard'}
-                size={(onTablet ? 30 : 20)}
+                size={onTablet ? 30 : 20}
                 color={colors.pianoteRed}
               />
             </View>
@@ -312,7 +312,7 @@ class Settings extends React.Component {
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 30 : 20)}
+              size={onTablet ? 30 : 20}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -325,7 +325,7 @@ class Settings extends React.Component {
             <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
               <FontIcon
                 name={'support'}
-                size={(onTablet ? 30 : 20)}
+                size={onTablet ? 30 : 20}
                 color={colors.pianoteRed}
               />
             </View>
@@ -333,7 +333,7 @@ class Settings extends React.Component {
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 30 : 20)}
+              size={onTablet ? 30 : 20}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -346,7 +346,7 @@ class Settings extends React.Component {
             <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
               <AntIcon
                 name={'form'}
-                size={(onTablet ? 30 : 20)}
+                size={onTablet ? 30 : 20}
                 color={colors.pianoteRed}
               />
             </View>
@@ -354,7 +354,7 @@ class Settings extends React.Component {
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 30 : 20)}
+              size={onTablet ? 30 : 20}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -368,14 +368,14 @@ class Settings extends React.Component {
               <FontIcon
                 name={'shield'}
                 color={colors.pianoteRed}
-                size={(onTablet ? 32.5 : 22.5)}
+                size={onTablet ? 32.5 : 22.5}
               />
             </View>
             <Text style={localStyles.settingsText}>Privacy Policy</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 30 : 20)}
+              size={onTablet ? 30 : 20}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -389,14 +389,14 @@ class Settings extends React.Component {
               <AntIcon
                 name={'poweroff'}
                 color={colors.pianoteRed}
-                size={(onTablet ? 30 : 20)}
+                size={onTablet ? 30 : 20}
               />
             </View>
             <Text style={localStyles.settingsText}>Log Out</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 30 : 20)}
+              size={onTablet ? 30 : 20}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -467,7 +467,7 @@ class Settings extends React.Component {
               <Text
                 style={{
                   paddingVertical: 10,
-                  marginHorizontal: (onTablet ? 50 : 75),
+                  marginHorizontal: onTablet ? 50 : 75,
                   fontSize: 15,
                   color: '#ffffff',
                   textAlign: 'center',
@@ -488,12 +488,12 @@ class Settings extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    height: (DeviceInfo.isTablet() ? 70 : 50),
+    height: DeviceInfo.isTablet() ? 70 : 50,
     width: '100%',
     borderBottomColor: '#445f73',
     borderBottomWidth: 1,
     flexDirection: 'row',
-    paddingRight: 10,
+    paddingRight: 10
   },
   settingsText: {
     fontFamily: 'OpenSans-Regular',

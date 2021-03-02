@@ -152,7 +152,7 @@ export default class SupportSignUp extends React.Component {
                 color: colors.secondBackground,
                 textAlign: 'center',
                 padding: 10,
-                paddingTop: 20,
+                paddingTop: 20
               }}
             >
               EMAIL
@@ -164,7 +164,7 @@ export default class SupportSignUp extends React.Component {
                 fontSize: onTablet ? 18 : 14,
                 textAlign: 'center',
                 color: 'white',
-                padding: 5,
+                padding: 5
               }}
             >
               support@musora.com
@@ -177,7 +177,7 @@ export default class SupportSignUp extends React.Component {
                 opacity: 0.8,
                 color: colors.secondBackground,
                 textAlign: 'center',
-                padding: 10,
+                padding: 10
               }}
             >
               PHONE
@@ -188,7 +188,7 @@ export default class SupportSignUp extends React.Component {
                 fontSize: onTablet ? 18 : 14,
                 textAlign: 'center',
                 color: 'white',
-                padding: 5,
+                padding: 5
               }}
             >
               1-800-439-8921
@@ -199,7 +199,7 @@ export default class SupportSignUp extends React.Component {
                 fontSize: onTablet ? 18 : 14,
                 textAlign: 'center',
                 color: 'white',
-                padding: 5,
+                padding: 5
               }}
             >
               1-604-921-6721

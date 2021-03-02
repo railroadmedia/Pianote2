@@ -55,11 +55,16 @@ class RestartCourse extends React.Component {
           <View style={localStyles.container}>
             <Text style={styles.modalHeaderText}>
               Restart{' '}
-              {type == 'method' ? 'method' : 'this ' + this.changeType(type).toLocaleLowerCase()}?
+              {type == 'method'
+                ? 'method'
+                : 'this ' + this.changeType(type).toLocaleLowerCase()}
+              ?
             </Text>
             <Text style={[styles.modalBodyText, localStyles.descriptionText]}>
               Take{' '}
-              {type == 'method' ? 'method ' : 'this ' + this.changeType(type).toLocaleLowerCase()}
+              {type == 'method'
+                ? 'method '
+                : 'this ' + this.changeType(type).toLocaleLowerCase()}
               again as a refresher, or just to make sure you've got the concepts
               nailed! This will remove the XP you've earned.
             </Text>
@@ -109,7 +114,7 @@ const localStyles = StyleSheet.create({
     justifyContent: 'center'
   },
   restartText: {
-    color: 'white',
+    color: 'white'
   },
   cancelContainer: {
     marginTop: 10 * factor,

@@ -635,16 +635,16 @@ class VerticalVideoList extends React.Component {
   render = () => {
     return (
       <View>
-        <View style={{marginTop: paddingInset}}>
+        <View style={{ marginTop: paddingInset }}>
           {this.props.showFilter && (
             <View
               style={{
                 flexDirection: 'row',
-                padding: paddingInset,
+                padding: paddingInset
               }}
             >
-              <View style={{flex: 1, flexDirection: 'row',}}>
-                <View style={{flex: 1, justifyContent: 'center', }}>
+              <View style={{ flex: 1, flexDirection: 'row' }}>
+                <View style={{ flex: 1, justifyContent: 'center' }}>
                   {this.props.showLargeTitle ? (
                     <Text
                       numberOfLines={1}
@@ -652,7 +652,7 @@ class VerticalVideoList extends React.Component {
                         fontSize: (onTablet ? 25 : 30) * factor,
                         color: 'white',
                         fontFamily: 'OpenSans-ExtraBold',
-                        justifyContent: 'center',
+                        justifyContent: 'center'
                       }}
                     >
                       {this.props.title}
@@ -664,7 +664,9 @@ class VerticalVideoList extends React.Component {
                         fontSize: (onTablet ? 12 : 18) * factor,
                         textAlign: 'left',
                         fontFamily: 'RobotoCondensed-Bold',
-                        color: this.props.isMethod ? 'white' : colors.secondBackground,
+                        color: this.props.isMethod
+                          ? 'white'
+                          : colors.secondBackground
                       }}
                     >
                       {this.props.title}
@@ -673,12 +675,14 @@ class VerticalVideoList extends React.Component {
                 </View>
                 <View
                   style={[
-                    styles.centerContent, {
+                    styles.centerContent,
+                    {
                       width: onTablet ? 50 : 30,
                       position: 'relative',
                       flexDirection: 'row',
-                      right: 0,
-                  }]}
+                      right: 0
+                    }
+                  ]}
                 >
                   {this.props.showSort && (
                     <TouchableOpacity
@@ -688,7 +692,7 @@ class VerticalVideoList extends React.Component {
                           flexDirection: 'row',
                           position: 'absolute',
                           right: onTablet ? 55 : 35,
-                          height: '100%',
+                          height: '100%'
                         }
                       ]}
                       onPress={() => {
@@ -703,7 +707,7 @@ class VerticalVideoList extends React.Component {
                           fontSize: (onTablet ? 10 : 14.5) * factor,
                           fontFamily: 'OpenSans-Regular',
                           marginRight: 5,
-                          justifyContent: 'flex-end',
+                          justifyContent: 'flex-end'
                         }}
                       >
                         {onTablet
@@ -718,25 +722,26 @@ class VerticalVideoList extends React.Component {
                         name={'sort-amount-down'}
                         color={colors.pianoteRed}
                       />
-                    </TouchableOpacity>  
+                    </TouchableOpacity>
                   )}
-                  {(!this.props.hideFilterButton && !this.props.showTitleOnly) && (
-                    <Filters_V2
-                      isMethod={this.props.isMethod}
-                      disabled={!this.props.filters || this.state.isPaging}
-                      onApply={() =>
-                        this.props.applyFilters?.(this.filters?.filterQuery)
-                      }
-                      meta={this.props.filters}
-                      reference={r => (this.filters = r)}
-                    />
-                  )}
+                  {!this.props.hideFilterButton &&
+                    !this.props.showTitleOnly && (
+                      <Filters_V2
+                        isMethod={this.props.isMethod}
+                        disabled={!this.props.filters || this.state.isPaging}
+                        onApply={() =>
+                          this.props.applyFilters?.(this.filters?.filterQuery)
+                        }
+                        meta={this.props.filters}
+                        reference={r => (this.filters = r)}
+                      />
+                    )}
                 </View>
               </View>
             </View>
           )}
           <View style={{ paddingLeft: paddingInset }}>
-              {this.filters?.filterAppliedText}
+            {this.filters?.filterAppliedText}
           </View>
           {this.state.items.length == 0 &&
             this.state.outVideos &&
@@ -763,7 +768,7 @@ class VerticalVideoList extends React.Component {
               </View>
             )}
         </View>
-        <View style={{ flex: 1,}}>
+        <View style={{ flex: 1 }}>
           {this.renderMappedList()}
           {this.state.isPaging && !this.state.isLoading && (
             <View

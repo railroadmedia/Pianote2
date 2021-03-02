@@ -27,7 +27,7 @@ const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height; 
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 class NavMenuHeaders extends React.Component {
@@ -45,9 +45,7 @@ class NavMenuHeaders extends React.Component {
       <SafeAreaView
         style={{
           flexDirection: 'row',
-          backgroundColor: this.props.isMethod
-            ? 'black'
-            : colors.mainBackground,
+          backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground
         }}
         forceInset={{ top: 'always' }}
       >
@@ -80,19 +78,22 @@ class NavMenuHeaders extends React.Component {
                   );
             }}
             style={{
-              height: onTablet ? 45 : 30, 
-              width: onTablet ? 135 : 88, 
+              height: onTablet ? 45 : 30,
+              width: onTablet ? 135 : 88
             }}
           >
             <Pianote fill={'#fb1b2f'} />
           </TouchableOpacity>
-          <View style={{flex: 1}}/>
-          <View style={{flexDirection: 'row',}}>
+          <View style={{ flex: 1 }} />
+          <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity
-              style={[styles.centerContent, {
-                flexDirection: 'row',
-                paddingRight: paddingInset,
-              }]}
+              style={[
+                styles.centerContent,
+                {
+                  flexDirection: 'row',
+                  paddingRight: paddingInset
+                }
+              ]}
               onPress={() => {
                 !this.context.isConnected
                   ? this.context.showNoConnectionAlert()
@@ -142,9 +143,11 @@ class NavMenuHeaders extends React.Component {
                   : this.props.navigation.navigate('PACKS');
               }}
               style={[
-                styles.centerContent, { 
-                paddingRight: paddingInset,
-              }]}
+                styles.centerContent,
+                {
+                  paddingRight: paddingInset
+                }
+              ]}
             >
               <Text
                 numberOfLines={1}
@@ -163,31 +166,31 @@ class NavMenuHeaders extends React.Component {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-            onPress={() => {
-              !this.context.isConnected
-                ? this.context.showNoConnectionAlert()
-                : this.props.navigation.navigate('MYLIST');
-            }}
-            style={styles.centerContent}
-          >
-            <Text
-              numberOfLines={1}
-              style={{
-                fontSize: onTablet ? 20 : 14,
-                shadowOpacity: 0.3,
-                fontFamily: 'OpenSans-Regular',
-                fontFamily: 'OpenSans-ExtraBold',
-                color:
-                  this.props.currentPage == 'MYLIST'
-                    ? 'white'
-                    : this.props.isMethod
-                    ? 'white'
-                    : colors.secondBackground
+              onPress={() => {
+                !this.context.isConnected
+                  ? this.context.showNoConnectionAlert()
+                  : this.props.navigation.navigate('MYLIST');
               }}
+              style={styles.centerContent}
             >
-              MY LIST{' '}
-            </Text>
-          </TouchableOpacity>
+              <Text
+                numberOfLines={1}
+                style={{
+                  fontSize: onTablet ? 20 : 14,
+                  shadowOpacity: 0.3,
+                  fontFamily: 'OpenSans-Regular',
+                  fontFamily: 'OpenSans-ExtraBold',
+                  color:
+                    this.props.currentPage == 'MYLIST'
+                      ? 'white'
+                      : this.props.isMethod
+                      ? 'white'
+                      : colors.secondBackground
+                }}
+              >
+                MY LIST{' '}
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
         <Modal

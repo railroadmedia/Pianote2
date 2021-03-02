@@ -244,7 +244,7 @@ export default class ProfileSettings extends React.Component {
                 <View style={{ flex: 1 }} />
                 <AntIcon
                   name={'right'}
-                  size={(onTablet ? 30 : 20)}
+                  size={onTablet ? 30 : 20}
                   color={colors.secondBackground}
                 />
               </TouchableOpacity>
@@ -260,7 +260,7 @@ export default class ProfileSettings extends React.Component {
                 <View style={{ flex: 1 }} />
                 <AntIcon
                   name={'right'}
-                  size={(onTablet ? 30 : 20)}
+                  size={onTablet ? 30 : 20}
                   color={colors.secondBackground}
                 />
               </TouchableOpacity>
@@ -332,10 +332,10 @@ export default class ProfileSettings extends React.Component {
                     onPress={() => this.chooseImage()}
                     style={styles.centerContent}
                   >
-                    <AntIcon 
-                      name={'plus'} 
-                      size={onTablet ? 80 : 65} 
-                      color={'white'} 
+                    <AntIcon
+                      name={'plus'}
+                      size={onTablet ? 80 : 65}
+                      color={'white'}
                     />
                   </TouchableOpacity>
                 )}
@@ -455,7 +455,7 @@ const localStyles = StyleSheet.create({
     alignSelf: 'flex-end'
   },
   displayContainer: {
-    height: (DeviceInfo.isTablet() ? 70 : 50),
+    height: DeviceInfo.isTablet() ? 70 : 50,
     width: '100%',
     borderBottomColor: '#445f73',
     borderBottomWidth: 1,
@@ -465,7 +465,7 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: 10
   },
   profilePhoto: {
-    height: (DeviceInfo.isTablet() ? 70 : 50),
+    height: DeviceInfo.isTablet() ? 70 : 50,
     width: '100%',
     borderBottomColor: '#445f73',
     borderBottomWidth: 1,
@@ -491,7 +491,7 @@ const localStyles = StyleSheet.create({
     marginTop: 10
   },
   image: {
-    width: (DeviceInfo.isTablet() ? 200 : 150),
+    width: DeviceInfo.isTablet() ? 200 : 150,
     aspectRatio: 1,
     borderRadius: 200,
     marginTop: 25

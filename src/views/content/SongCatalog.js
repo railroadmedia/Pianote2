@@ -297,11 +297,11 @@ class SongCatalog extends React.Component {
             <VerticalVideoList
               items={this.state.allSongs}
               isLoading={false}
-              title={'ALL SONGS'} 
+              title={'ALL SONGS'}
               type={'SONGS'}
               showFilter={true}
-              showType={false} 
-              showArtist={true} 
+              showType={false}
+              showArtist={true}
               showLength={false}
               showSort={true}
               isPaging={this.state.isPaging}

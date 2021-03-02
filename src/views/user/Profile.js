@@ -319,7 +319,10 @@ export default class Profile extends React.Component {
             ListHeaderComponent={() => (
               <>
                 <View
-                  style={[styles.centerContent, { marginTop: onTablet ? 50 : 30 }]}
+                  style={[
+                    styles.centerContent,
+                    { marginTop: onTablet ? 50 : 30 }
+                  ]}
                 >
                   <View style={localStyles.imageContainer}>
                     <View
@@ -342,11 +345,12 @@ export default class Profile extends React.Component {
                     </View>
                     <FastImage
                       style={localStyles.profileImageBackground}
-                      source={{ uri: this.state.profileImage !== '' ? 
-                        this.state.profileImage
-                        :
-                        'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-                       }}
+                      source={{
+                        uri:
+                          this.state.profileImage !== ''
+                            ? this.state.profileImage
+                            : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                      }}
                       resizeMode={FastImage.resizeMode.cover}
                     />
                   </View>
@@ -617,7 +621,7 @@ const localStyles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
     marginBottom: 10,
-    paddingTop: 10,
+    paddingTop: 10
   },
   memberSinceText: {
     fontFamily: 'OpenSans-Regular',
