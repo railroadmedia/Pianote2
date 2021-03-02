@@ -123,7 +123,7 @@ module.exports = StyleSheet.create({
     alignItems: 'center'
   },
   contentPageHeader: {
-    paddingLeft: 5,
+    paddingLeft: 10,
     fontSize: (DeviceInfo.isTablet() ? 22 : 30) * factor,
     color: 'white',
     fontFamily: 'OpenSans-ExtraBold'
