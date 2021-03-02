@@ -248,22 +248,22 @@ export default class NotificationSettings extends React.Component {
                           ? '#fb1b2f'
                           : colors.secondBackground,
                       borderRadius: 100,
-                      width: (onTablet ? 22.5 : 27.5) * factor,
-                      height: (onTablet ? 22.5 : 27.5) * factor
+                      width: (onTablet ? 35 : 27.5),
+                      height: (onTablet ? 35 : 27.5),
                     }
                   ]}
                 >
                   {this.state.notifications_summary_frequency_minutes == 1 && (
                     <FontIcon
                       name={'check'}
-                      size={(onTablet ? 17.5 : 20) * factor}
+                      size={(onTablet ? 25 : 20)}
                       color={'white'}
                     />
                   )}
                   {this.state.notifications_summary_frequency_minutes !== 1 && (
                     <EntypoIcon
                       name={'cross'}
-                      size={(onTablet ? 18.5 : 22.5) * factor}
+                      size={(onTablet ? 35 : 25)}
                       color={'white'}
                     />
                   )}
@@ -290,8 +290,8 @@ export default class NotificationSettings extends React.Component {
                           ? '#fb1b2f'
                           : colors.secondBackground,
                       borderRadius: 100,
-                      width: (onTablet ? 22.5 : 27.5) * factor,
-                      height: (onTablet ? 22.5 : 27.5) * factor
+                      width: (onTablet ? 35 : 27.5),
+                      height: (onTablet ? 35 : 27.5),                      
                     }
                   ]}
                 >
@@ -299,7 +299,7 @@ export default class NotificationSettings extends React.Component {
                     1440 && (
                     <FontIcon
                       name={'check'}
-                      size={(onTablet ? 17.5 : 20) * factor}
+                      size={(onTablet ? 25 : 20)}
                       color={'white'}
                     />
                   )}
@@ -307,7 +307,7 @@ export default class NotificationSettings extends React.Component {
                     1440 && (
                     <EntypoIcon
                       name={'cross'}
-                      size={(onTablet ? 18.5 : 22.5) * factor}
+                      size={(onTablet ? 35 : 25)}
                       color={'white'}
                     />
                   )}
@@ -336,8 +336,8 @@ export default class NotificationSettings extends React.Component {
                           ? '#fb1b2f'
                           : colors.secondBackground,
                       borderRadius: 100,
-                      width: (onTablet ? 22.5 : 27.5) * factor,
-                      height: (onTablet ? 22.5 : 27.5) * factor
+                      width: (onTablet ? 35 : 27.5),
+                      height: (onTablet ? 35 : 27.5),
                     }
                   ]}
                 >
@@ -346,7 +346,7 @@ export default class NotificationSettings extends React.Component {
                       null) && (
                     <FontIcon
                       name={'check'}
-                      size={(onTablet ? 17.5 : 20) * factor}
+                      size={(onTablet ? 25 : 20)}
                       color={'white'}
                     />
                   )}
@@ -355,7 +355,7 @@ export default class NotificationSettings extends React.Component {
                       null && (
                       <EntypoIcon
                         name={'cross'}
-                        size={(onTablet ? 18.5 : 22.5) * factor}
+                        size={(onTablet ? 35 : 25)}
                         color={'white'}
                       />
                     )}
@@ -366,6 +366,12 @@ export default class NotificationSettings extends React.Component {
 
           <NavigationBar currentPage={'PROFILE'} pad={true} />
         </SafeAreaView>
+        <SafeAreaView
+          forceInset={'never'}
+          style={[
+            { backgroundColor: colors.mainBackground }
+          ]}
+        ></SafeAreaView>
       </View>
     );
   }
