@@ -6,13 +6,6 @@ import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import Icon from 'react-native-vector-icons/AntDesign';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
-
 class MoreInfoIcon extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
@@ -51,7 +44,7 @@ class MoreInfoIcon extends React.Component {
           styles.centerContent,
           {
             flex: 1,
-            borderRadius: width * 0.1,
+            borderRadius: 500,
             backgroundColor: 'transparent',
             borderColor: 'white',
             borderWidth: 2

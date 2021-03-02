@@ -7,19 +7,13 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Dimensions
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
+import DeviceInfo from 'react-native-device-info';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NetworkContext } from '../context/NetworkProvider';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 const navigationOptions = [
   {
     title: 'Home',
@@ -118,8 +112,8 @@ class NavigationMenu extends React.Component {
                     : colors.secondBackground,
                 fontSize:
                   this.props.parentPage == nav.title.toUpperCase()
-                    ? (onTablet ? 20 : 32.5) * factor
-                    : (onTablet ? 15 : 22.5) * factor
+                    ? (onTablet ? 40 : 30) 
+                    : (onTablet ? 25 : 20)
               }}
             >
               {nav.title}
@@ -138,11 +132,11 @@ class NavigationMenu extends React.Component {
           {
             backgroundColor: this.props.isMethod
               ? 'black'
-              : colors.mainBackground
+              : colors.mainBackground,
           }
         ]}
       >
-        {this.lessonNav()}
+          {this.lessonNav()}
         <View style={{ alignSelf: 'center' }}>
           <TouchableOpacity
             onPress={() => {
@@ -152,15 +146,16 @@ class NavigationMenu extends React.Component {
               styles.centerContent,
               styles.redButton,
               {
-                height: (onTablet ? 45 : 65) * factor,
-                width: (onTablet ? 45 : 65) * factor,
-                borderRadius: 500
+                height: (onTablet ? 80 : 65),
+                width: (onTablet ? 80 : 65),
+                marginBottom: 10,
+                borderRadius: 500,
               }
             ]}
           >
             <View style={{ flex: 1 }} />
             <FeatherIcon
-              size={(onTablet ? 30 : 50) * factor}
+              size={(onTablet ? 65 : 50)}
               name={'x'}
               color={'white'}
               style={{ borderRadius: 500 }}
@@ -168,7 +163,6 @@ class NavigationMenu extends React.Component {
             <View style={{ flex: 1 }} />
           </TouchableOpacity>
         </View>
-        <View style={{ height: 20 * factor }} />
       </View>
     );
   };
@@ -176,12 +170,11 @@ class NavigationMenu extends React.Component {
 
 const localStyles = StyleSheet.create({
   navContainer: {
-    width: '100%',
-    height: '100%',
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 30,
-    paddingVertical: 30 * factor
+    paddingTop:  DeviceInfo.hasNotch() ? 50 : 30,
+    paddingBottom: DeviceInfo.hasNotch() ? 30 : 10
   }
 });
 
