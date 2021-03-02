@@ -8,8 +8,6 @@ import {
   Linking,
   TouchableOpacity,
   ScrollView,
-  StatusBar,
-  Dimensions,
   StyleSheet
 } from 'react-native';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
@@ -18,13 +16,6 @@ import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 export default class Support extends React.Component {
   static navigationOptions = { header: null };
@@ -99,16 +90,15 @@ export default class Support extends React.Component {
             ]}
           >
             <View
-              key={'goback'}
               style={[
                 styles.centerContent,
                 {
                   position: 'absolute',
                   left: 0,
-                  paddingLeft: 5 * factor,
-                  bottom: 0 * factor,
-                  height: 50 * factor,
-                  width: 50 * factor
+                  paddingLeft: 10,
+                  bottom: 0,
+                  height: 50,
+                  width: 50,
                 }
               ]}
             >
@@ -154,7 +144,7 @@ export default class Support extends React.Component {
               <Text
                 style={{
                   fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: (onTablet ? 14 : 18) * factor,
+                  fontSize: onTablet ? 20 : 16,
                   color: 'white',
                   paddingVertical: 15
                 }}
@@ -170,7 +160,7 @@ export default class Support extends React.Component {
               <Text
                 style={{
                   fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: (onTablet ? 14 : 18) * factor,
+                  fontSize: onTablet ? 20 : 16,
                   color: 'white',
                   paddingVertical: 15
                 }}
@@ -186,7 +176,7 @@ export default class Support extends React.Component {
               <Text
                 style={{
                   fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: (onTablet ? 14 : 18) * factor,
+                  fontSize: onTablet ? 20 : 16,
                   color: 'white',
                   paddingVertical: 15
                 }}
@@ -196,14 +186,14 @@ export default class Support extends React.Component {
             </TouchableOpacity>
 
             <Text
-              key={'email'}
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: 14 * factor,
+                fontSize: onTablet ? 18 : 14,
                 opacity: 0.8,
                 color: colors.secondBackground,
                 textAlign: 'center',
-                marginVertical: 5
+                padding: 10,
+                paddingTop: 20,
               }}
             >
               EMAIL
@@ -213,47 +203,47 @@ export default class Support extends React.Component {
               key={'emailaddress'}
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: 13.5 * factor,
+                fontSize: onTablet ? 18 : 14,
                 textAlign: 'center',
-                color: 'white'
+                color: 'white',
+                padding: 5,
               }}
             >
               support@musora.com
             </Text>
 
             <Text
-              key={'phone'}
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: 14 * factor,
+                fontSize: onTablet ? 18 : 14,
                 opacity: 0.8,
                 color: colors.secondBackground,
                 textAlign: 'center',
-                marginVertical: 5
+                padding: 10
               }}
             >
               PHONE
             </Text>
 
             <Text
-              key={'phoneNumber'}
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: 13.5 * factor,
+                fontSize: onTablet ? 18 : 14,
                 textAlign: 'center',
-                color: 'white'
+                color: 'white',
+                padding: 5,
               }}
             >
               1-800-439-8921
             </Text>
 
             <Text
-              key={'phoneNumber2'}
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: 13.5 * factor,
+                fontSize: onTablet ? 18 : 14,
                 textAlign: 'center',
-                color: 'white'
+                color: 'white',
+                padding: 5,
               }}
             >
               1-604-921-6721

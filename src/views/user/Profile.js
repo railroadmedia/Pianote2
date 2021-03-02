@@ -303,8 +303,8 @@ export default class Profile extends React.Component {
               onPress={() => this.props.navigation.navigate('SETTINGS')}
             >
               <Settings
-                height={onTablet ? 15 * factor : 25 * factor}
-                width={onTablet ? 15 * factor : 25 * factor}
+                height={onTablet ? 25 : 17.5}
+                width={onTablet ? 25 : 17.5}
                 fill={colors.pianoteRed}
                 style={{ alignSelf: 'flex-end' }}
               />
@@ -319,7 +319,7 @@ export default class Profile extends React.Component {
             ListHeaderComponent={() => (
               <>
                 <View
-                  style={[styles.centerContent, { marginTop: 20 * factor }]}
+                  style={[styles.centerContent, { marginTop: onTablet ? 50 : 30 }]}
                 >
                   <View style={localStyles.imageContainer}>
                     <View
@@ -334,28 +334,21 @@ export default class Profile extends React.Component {
                         style={[styles.centerContent, styles.container]}
                       >
                         <IonIcon
-                          size={onTablet ? 30 : 22.5 * factor}
+                          size={onTablet ? 28 : 20}
                           name={'ios-camera'}
                           color={colors.pianoteRed}
                         />
                       </TouchableOpacity>
                     </View>
-                    {this.state.profileImage == '' && (
-                      <View style={[styles.centerContent, styles.container]}>
-                        <AntIcon
-                          name={'user'}
-                          color={colors.pianoteRed}
-                          size={85 * factor}
-                        />
-                      </View>
-                    )}
-                    {this.state.profileImage !== '' && (
-                      <FastImage
-                        style={localStyles.profileImageBackground}
-                        source={{ uri: this.state.profileImage }}
-                        resizeMode={FastImage.resizeMode.cover}
-                      />
-                    )}
+                    <FastImage
+                      style={localStyles.profileImageBackground}
+                      source={{ uri: this.state.profileImage !== '' ? 
+                        this.state.profileImage
+                        :
+                        'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                       }}
+                      resizeMode={FastImage.resizeMode.cover}
+                    />
                   </View>
                   <View style={styles.centerContent}>
                     <Text style={localStyles.usernameText}>
@@ -373,7 +366,7 @@ export default class Profile extends React.Component {
                     <Text style={localStyles.redXpRank}>XP</Text>
                     <Text style={localStyles.whiteXpRank}>{this.state.xp}</Text>
                   </TouchableOpacity>
-                  <View style={{ width: 60 * factor }} />
+                  <View style={{ width: 60 }} />
                   <TouchableOpacity
                     onPress={() => this.setState({ showXpRank: true })}
                   >
@@ -532,16 +525,8 @@ export default class Profile extends React.Component {
           />
         </View>
         <Modal
-          key={'XpRank'}
           isVisible={this.state.showXpRank}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -555,15 +540,8 @@ export default class Profile extends React.Component {
           />
         </Modal>
         <Modal
-          key={'replyNotification'}
           isVisible={this.state.showReplyNotification}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              flex: 1
-            }
-          ]}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -602,37 +580,30 @@ const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     borderRadius: 15,
-    margin: 20 * factor,
+    margin: 20,
     height: 200,
     width: '80%'
   },
   imageContainer: {
     borderRadius: 250,
-    borderWidth: 2 * factor,
+    borderWidth: 2,
     borderColor: '#fb1b2f',
-    height: DeviceInfo.isTablet()
-      ? (112 *
-          (Dimensions.get('window').height / 812 +
-            Dimensions.get('window').width / 375)) /
-        2
-      : (140 *
-          (Dimensions.get('window').height / 812 +
-            Dimensions.get('window').width / 375)) /
-        2,
+    height: DeviceInfo.isTablet() ? 200 : 150,
+    width: DeviceInfo.isTablet() ? 200 : 150,
     aspectRatio: 1,
-    marginBottom: 5 * (Dimensions.get('window').height / 812)
+    marginBottom: 5
   },
   profilePic: {
     position: 'absolute',
     zIndex: 10,
     elevation: 10,
-    top: (DeviceInfo.isTablet() ? -15 : -15) * factor,
-    right: (DeviceInfo.isTablet() ? -15 : -15) * factor,
-    height: (DeviceInfo.isTablet() ? 30 : 35) * factor,
-    width: (DeviceInfo.isTablet() ? 30 : 35) * factor,
+    top: DeviceInfo.isTablet() ? -20 : -15,
+    right: DeviceInfo.isTablet() ? -20 : -15,
+    height: DeviceInfo.isTablet() ? 40 : 30,
+    width: DeviceInfo.isTablet() ? 40 : 30,
     borderRadius: 100,
     borderColor: '#fb1b2f',
-    borderWidth: 1.5 * factor
+    borderWidth: 1
   },
   profileImageBackground: {
     height: '100%',
@@ -642,24 +613,25 @@ const localStyles = StyleSheet.create({
   },
   usernameText: {
     fontFamily: 'OpenSans-ExtraBold',
-    fontSize: (DeviceInfo.isTablet() ? 22 : 30) * factor,
+    fontSize: DeviceInfo.isTablet() ? 30 : 24,
     textAlign: 'center',
     color: 'white',
-    marginBottom: (10 * Dimensions.get('window').height) / 812
+    marginBottom: 10,
+    paddingTop: 10,
   },
   memberSinceText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 10 : 14) * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     textAlign: 'center',
     color: '#445f73'
   },
   rankText: {
-    marginTop: (20 * Dimensions.get('window').height) / 812,
+    marginTop: 20,
     borderTopColor: '#445f73',
-    borderTopWidth: 0.25,
+    borderTopWidth: 0.5,
     borderBottomColor: '#445f73',
-    borderBottomWidth: 0.25,
-    paddingVertical: 10,
+    borderBottomWidth: 0.5,
+    paddingVertical: 20,
     backgroundColor: '#00101d',
     flexDirection: 'row',
     alignItems: 'center',
@@ -667,13 +639,13 @@ const localStyles = StyleSheet.create({
   },
   redXpRank: {
     color: '#fb1b2f',
-    fontSize: (DeviceInfo.isTablet() ? 10 : 12) * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center'
   },
   whiteXpRank: {
     color: 'white',
-    fontSize: (DeviceInfo.isTablet() ? 18 : 24) * factor,
+    fontSize: DeviceInfo.isTablet() ? 30 : 22,
     fontFamily: 'OpenSans-ExtraBold',
     textAlign: 'center'
   },
@@ -687,7 +659,7 @@ const localStyles = StyleSheet.create({
   },
   noNotificationText: {
     fontFamily: 'OpenSans-ExtraBold',
-    fontSize: (DeviceInfo.isTablet() ? 12 : 15) * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     textAlign: 'left',
     paddingLeft: 10,
     color: 'white'

@@ -240,11 +240,11 @@ export default class ProfileSettings extends React.Component {
                   })
                 }
               >
-                <Text style={styles.settingsText}>Display Name</Text>
+                <Text style={localStyles.settingsText}>Display Name</Text>
                 <View style={{ flex: 1 }} />
                 <AntIcon
                   name={'right'}
-                  size={(onTablet ? 20 : 25) * factor}
+                  size={(onTablet ? 30 : 20)}
                   color={colors.secondBackground}
                 />
               </TouchableOpacity>
@@ -256,11 +256,11 @@ export default class ProfileSettings extends React.Component {
                   });
                 }}
               >
-                <Text style={styles.settingsText}>Profile Photo</Text>
+                <Text style={localStyles.settingsText}>Profile Photo</Text>
                 <View style={{ flex: 1 }} />
                 <AntIcon
                   name={'right'}
-                  size={(onTablet ? 20 : 25) * factor}
+                  size={(onTablet ? 30 : 20)}
                   color={colors.secondBackground}
                 />
               </TouchableOpacity>
@@ -304,7 +304,7 @@ export default class ProfileSettings extends React.Component {
                     <TouchableOpacity
                       style={{
                         ...localStyles.crossContainer,
-                        right: -((onTablet ? 22.5 : 27.5) * factor)
+                        right: -(onTablet ? 22.5 : 15)
                       }}
                       onPress={() =>
                         this.setState({
@@ -316,11 +316,11 @@ export default class ProfileSettings extends React.Component {
                     >
                       <EntypoIcon
                         name={'cross'}
-                        size={(onTablet ? 22.5 : 30) * factor}
+                        size={onTablet ? 30 : 22.5}
                         color={colors.secondBackground}
                         style={{
-                          width: (onTablet ? 22.5 : 30) * factor,
-                          height: (onTablet ? 22.5 : 30) * factor
+                          width: onTablet ? 30 : 22.5,
+                          height: onTablet ? 30 : 22.5
                         }}
                       />
                     </TouchableOpacity>
@@ -332,7 +332,11 @@ export default class ProfileSettings extends React.Component {
                     onPress={() => this.chooseImage()}
                     style={styles.centerContent}
                   >
-                    <AntIcon name={'plus'} size={65 * factor} color={'white'} />
+                    <AntIcon 
+                      name={'plus'} 
+                      size={onTablet ? 80 : 65} 
+                      color={'white'} 
+                    />
                   </TouchableOpacity>
                 )}
               </View>
@@ -346,10 +350,10 @@ export default class ProfileSettings extends React.Component {
                 style={[styles.centerContent, localStyles.imageContainer]}
               >
                 <IonIcon
-                  size={(onTablet ? 40 : 50) * factor}
+                  size={onTablet ? 50 : 35}
                   name={'ios-camera'}
                   color={colors.secondBackground}
-                  style={{ padding: 10 * factor }}
+                  style={{ padding: 10 }}
                 />
               </TouchableOpacity>
             </ScrollView>
@@ -416,7 +420,7 @@ export default class ProfileSettings extends React.Component {
                 ? this.props.navigation.goBack()
                 : this.setState({ currentlyView: 'Profile Settings' });
             }}
-            style={{ padding: 15 * factor }}
+            style={{ padding: 10 }}
           >
             <View style={{ flex: 1 }} />
             <Back
@@ -432,12 +436,10 @@ export default class ProfileSettings extends React.Component {
 }
 
 const localStyles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor,
-    height: 200,
-    width: '80%'
+  settingsText: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: DeviceInfo.isTablet() ? 20 : 16,
+    color: '#445f73'
   },
   myProfileSettings: {
     flexDirection: 'row',
@@ -446,42 +448,42 @@ const localStyles = StyleSheet.create({
     padding: 15
   },
   save: {
-    fontSize: DeviceInfo.isTablet() ? 20 : 15 * factor,
+    fontSize: DeviceInfo.isTablet() ? 20 : 14,
     fontFamily: 'OpenSans-Bold',
     color: '#fb1b2f',
     textAlign: 'right',
     alignSelf: 'flex-end'
   },
   displayContainer: {
-    height: (DeviceInfo.isTablet() ? 40 : 50) * factor,
+    height: (DeviceInfo.isTablet() ? 70 : 50),
     width: '100%',
     borderBottomColor: '#445f73',
     borderBottomWidth: 1,
     borderTopWidth: 1,
     borderTopColor: '#445f73',
     flexDirection: 'row',
-    paddingHorizontal: 10 * factor
+    paddingHorizontal: 10
   },
   profilePhoto: {
-    height: (DeviceInfo.isTablet() ? 40 : 50) * factor,
+    height: (DeviceInfo.isTablet() ? 70 : 50),
     width: '100%',
     borderBottomColor: '#445f73',
     borderBottomWidth: 1,
     flexDirection: 'row',
-    paddingHorizontal: 10 * factor
+    paddingHorizontal: 10
   },
   textInput: {
     fontFamily: 'OpenSans-Regular',
-    paddingHorizontal: 10 * factor,
+    paddingHorizontal: 10,
     width: '100%',
-    fontSize: (DeviceInfo.isTablet() ? 14 : 18) * factor,
+    fontSize: DeviceInfo.isTablet() ? 20 : 16,
     color: '#445f73'
   },
   text: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 14 : 16) * factor,
+    fontSize: DeviceInfo.isTablet() ? 20 : 16,
     paddingVertical: '2%',
-    paddingHorizontal: 10 * factor,
+    paddingHorizontal: 10,
     color: '#445f73'
   },
   scrollContainer: {
@@ -489,32 +491,32 @@ const localStyles = StyleSheet.create({
     marginTop: 10
   },
   image: {
-    width: (DeviceInfo.isTablet() ? 150 : 200) * factor,
+    width: (DeviceInfo.isTablet() ? 200 : 150),
     aspectRatio: 1,
     borderRadius: 200,
-    marginTop: 15 * factor
+    marginTop: 25
   },
   crossContainer: {
     position: 'absolute',
-    padding: 3.5 * factor,
+    padding: 5,
     borderColor: '#445f73',
     borderWidth: 2,
     borderRadius: 100
   },
   imageText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 14 : 16) * factor,
-    padding: 30,
-    paddingHorizontal: 20 * factor,
+    fontSize: DeviceInfo.isTablet() ? 20 : 16,
+    paddingVertical: 30,
+    paddingHorizontal: 20,
     color: '#445f73',
     textAlign: 'center'
   },
   imageContainer: {
     alignSelf: 'center',
-    height: (DeviceInfo.isTablet() ? 75 : 90) * factor,
-    width: (DeviceInfo.isTablet() ? 75 : 90) * factor,
-    borderRadius: 200 * factor,
+    height: DeviceInfo.isTablet() ? 90 : 70,
+    width: DeviceInfo.isTablet() ? 90 : 70,
+    borderRadius: 500,
     borderColor: '#445f73',
-    borderWidth: 2 * factor
+    borderWidth: 2
   }
 });

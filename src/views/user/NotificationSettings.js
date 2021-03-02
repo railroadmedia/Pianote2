@@ -10,7 +10,6 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  Dimensions
 } from 'react-native';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import DeviceInfo from 'react-native-device-info';
@@ -22,13 +21,6 @@ import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import commonService from '../../services/common.service';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { SafeAreaView } from 'react-navigation';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 export default class NotificationSettings extends React.Component {
   static navigationOptions = { header: null };
@@ -380,8 +372,8 @@ export default class NotificationSettings extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor,
+    borderRadius: 15,
+    margin: 20,
     height: 200,
     width: '80%'
   },
@@ -390,46 +382,44 @@ const localStyles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#081826',
-    padding: (DeviceInfo.isTablet() ? 15 : 20) * factor
+    padding: DeviceInfo.isTablet() ? 22.5 : 15
   },
   title: {
     textAlign: 'center',
     color: '#445f73'
   },
   noteTypeContainer: {
-    paddingLeft: 10 * factor,
+    paddingLeft: 10,
     width: '100%',
     justifyContent: 'center',
-    fontSize: 18 * factor
+    fontSize: DeviceInfo.isTablet() ? 18 : 14,
   },
   noteTypeText: {
-    marginTop: 10 * factor,
+    marginTop: 10,
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 14 : 20) * factor,
+    fontSize: DeviceInfo.isTablet() ? 22 : 16,
     color: '#445f73',
     paddingVertical: 5
   },
   textContainer: {
-    paddingHorizontal: 10 * factor,
-    paddingVertical: 10,
+    padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between'
   },
   text: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 12 : 16) * factor,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14,
     color: '#445f73'
   },
   emailNotificationFrequency: {
-    paddingLeft: 10 * factor,
-    paddingTop: 10 * factor,
+    paddingLeft: 10,
+    paddingTop: 10,
     width: '100%',
     justifyContent: 'center',
-    fontSize: (DeviceInfo.isTablet() ? 14 : 20) * factor
   },
   border: {
-    height: (DeviceInfo.isTablet() ? 15 : 25) * factor,
+    height: 20,
     borderBottomColor: '#445f73',
     borderBottomWidth: 1
   }

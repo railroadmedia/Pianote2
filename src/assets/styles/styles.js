@@ -97,11 +97,6 @@ module.exports = StyleSheet.create({
     flex: 1,
     alignSelf: 'stretch'
   },
-  settingsText: {
-    fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 14 * factor : 18 * factor,
-    color: '#445f73'
-  },
   tabRightContainerText: {
     // container used for my list in progress & on settings
     paddingLeft: DeviceInfo.isTablet() ? 10 : 5,
