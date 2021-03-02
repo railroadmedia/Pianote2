@@ -64,7 +64,7 @@ class NavigationBar extends React.Component {
               ? 'white'
               : this.state.secondaryColor
           }
-          size={onTablet ? 20 * factor : 27.5 * factor}
+          size={onTablet ? 40 : 30}
         />
       );
     } else {
@@ -91,133 +91,135 @@ class NavigationBar extends React.Component {
           left: 'never',
           right: 'never',
           top: 'never',
-          bottom: this.props.pad ? 'never' : 'always'
+          bottom: this.props.pad ? 'never' : 'always',
         }}
         style={{
           backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground
         }}
       >
-        <View style={localStyles.navContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              !this.context.isConnected
-                ? this.context.showNoConnectionAlert()
-                : this.state.onMain
-                ? this.props.navigation.dispatch(
-                    StackActions.reset({
-                      index: 0,
-                      actions: [
-                        NavigationActions.navigate({
-                          routeName: isPackOnly ? 'PACKS' : 'LESSONS'
-                        })
-                      ]
-                    })
-                  )
-                : this.props.navigation.navigate(
-                    isPackOnly ? 'PACKS' : 'LESSONS'
-                  );
-            }}
-          >
-            <SimpleLineIcon
-              name={'home'}
-              size={onTablet ? 18.5 * factor : 30 * factor}
-              color={
-                this.props.currentPage == 'LESSONS'
-                  ? this.state.primaryColor
-                  : this.state.secondaryColor
-              }
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              !this.context.isConnected
-                ? this.context.showNoConnectionAlert()
-                : this.state.onMain
-                ? this.props.navigation.dispatch(
-                    StackActions.reset({
-                      index: 0,
-                      actions: [
-                        NavigationActions.navigate({
-                          routeName: 'SEARCH'
-                        })
-                      ]
-                    })
-                  )
-                : this.props.navigation.navigate('SEARCH');
-            }}
-          >
-            <EvilIcons
-              name={'search'}
-              size={onTablet ? 26 * factor : 40 * factor}
-              color={
-                this.props.currentPage == 'SEARCH'
-                  ? this.state.primaryColor
-                  : this.state.secondaryColor
-              }
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              this.state.onMain
-                ? this.props.navigation.dispatch(
-                    StackActions.reset({
-                      index: 0,
-                      actions: [
-                        NavigationActions.navigate({
-                          routeName: 'DOWNLOADS'
-                        })
-                      ]
-                    })
-                  )
-                : this.props.navigation.navigate('DOWNLOADS');
-            }}
-          >
-            <MaterialIcon
-              name={'arrow-collapse-down'}
-              size={onTablet ? 20 * factor : 30 * factor}
-              color={
-                this.props.currentPage == 'DOWNLOAD'
-                  ? this.state.primaryColor
-                  : this.state.secondaryColor
-              }
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              !this.context.isConnected
-                ? this.context.showNoConnectionAlert()
-                : this.state.onMain
-                ? this.props.navigation.dispatch(
-                    StackActions.reset({
-                      index: 0,
-                      actions: [
-                        NavigationActions.navigate({
-                          routeName: 'PROFILE'
-                        })
-                      ]
-                    })
-                  )
-                : this.props.navigation.navigate('PROFILE');
-            }}
-          >
-            <View
-              style={[
-                localStyles.navIconContainer,
-                this.state.profileImage.length > 0
-                  ? null
-                  : styles.centerContent,
-                {
-                  borderColor:
-                    this.props.currentPage == 'PROFILE' &&
-                    this.state.profileImage.length > 0
-                      ? 'white'
-                      : 'transparent'
-                }
-              ]}
+        <View style={{justifyContent: 'center'}}>
+          <View style={localStyles.navContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                !this.context.isConnected
+                  ? this.context.showNoConnectionAlert()
+                  : this.state.onMain
+                  ? this.props.navigation.dispatch(
+                      StackActions.reset({
+                        index: 0,
+                        actions: [
+                          NavigationActions.navigate({
+                            routeName: isPackOnly ? 'PACKS' : 'LESSONS'
+                          })
+                        ]
+                      })
+                    )
+                  : this.props.navigation.navigate(
+                      isPackOnly ? 'PACKS' : 'LESSONS'
+                    );
+              }}
             >
-              {this.profile()}
-            </View>
-          </TouchableOpacity>
+              <SimpleLineIcon
+                name={'home'}
+                size={onTablet ? 35 : 27.5}
+                color={
+                  this.props.currentPage == 'LESSONS'
+                    ? this.state.primaryColor
+                    : this.state.secondaryColor
+                }
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                !this.context.isConnected
+                  ? this.context.showNoConnectionAlert()
+                  : this.state.onMain
+                  ? this.props.navigation.dispatch(
+                      StackActions.reset({
+                        index: 0,
+                        actions: [
+                          NavigationActions.navigate({
+                            routeName: 'SEARCH'
+                          })
+                        ]
+                      })
+                    )
+                  : this.props.navigation.navigate('SEARCH');
+              }}
+            >
+              <EvilIcons
+                name={'search'}
+                size={onTablet ? 55 : 40}
+                color={
+                  this.props.currentPage == 'SEARCH'
+                    ? this.state.primaryColor
+                    : this.state.secondaryColor
+                }
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                this.state.onMain
+                  ? this.props.navigation.dispatch(
+                      StackActions.reset({
+                        index: 0,
+                        actions: [
+                          NavigationActions.navigate({
+                            routeName: 'DOWNLOADS'
+                          })
+                        ]
+                      })
+                    )
+                  : this.props.navigation.navigate('DOWNLOADS');
+              }}
+            >
+              <MaterialIcon
+                name={'arrow-collapse-down'}
+                size={onTablet ? 40 : 30}
+                color={
+                  this.props.currentPage == 'DOWNLOAD'
+                    ? this.state.primaryColor
+                    : this.state.secondaryColor
+                }
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                !this.context.isConnected
+                  ? this.context.showNoConnectionAlert()
+                  : this.state.onMain
+                  ? this.props.navigation.dispatch(
+                      StackActions.reset({
+                        index: 0,
+                        actions: [
+                          NavigationActions.navigate({
+                            routeName: 'PROFILE'
+                          })
+                        ]
+                      })
+                    )
+                  : this.props.navigation.navigate('PROFILE');
+              }}
+            >
+              <View
+                style={[
+                  localStyles.navIconContainer,
+                  this.state.profileImage.length > 0
+                    ? null
+                    : styles.centerContent,
+                  {
+                    borderColor:
+                      this.props.currentPage == 'PROFILE' &&
+                      this.state.profileImage.length > 0
+                        ? 'white'
+                        : 'transparent'
+                  }
+                ]}
+              >
+                {this.profile()}
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
       </SafeAreaView>
     );
@@ -227,27 +229,14 @@ class NavigationBar extends React.Component {
 const localStyles = StyleSheet.create({
   navIconContainer: {
     borderRadius: 100,
-    width:
-      ((DeviceInfo.isTablet() ? 24.125 : 37.5) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    height:
-      ((DeviceInfo.isTablet() ? 24.125 : 37.5) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    borderWidth:
-      (2.25 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    marginBottom: DeviceInfo.hasNotch() ? 0 : 5
+    borderWidth: 2.25,
+    height: onTablet ? 40 : 30,
+    width: onTablet ? 40 : 30,
   },
   navContainer: {
     alignSelf: 'stretch',
+    paddingVertical: 15,
     flexDirection: 'row',
-    paddingTop: 10 * (Dimensions.get('window').height / 812),
     justifyContent: 'space-around',
     alignContent: 'space-around'
   }

@@ -36,7 +36,7 @@ module.exports = StyleSheet.create({
   searchContainer: {
     marginTop: height * 0.04,
     flexDirection: 'row',
-    paddingLeft: (DeviceInfo.isTablet ? 10 : 5)
+    paddingLeft: 5
   },
   searchBox: {
     flex: 1,
@@ -91,7 +91,7 @@ module.exports = StyleSheet.create({
     textAlign: 'left',
     fontFamily: 'RobotoCondensed-Bold',
     color: '#445f73',
-    paddingLeft: width * 0.035
+    paddingLeft: 5
   },
   container: {
     flex: 1,
@@ -104,17 +104,17 @@ module.exports = StyleSheet.create({
   },
   tabRightContainerText: {
     // container used for my list in progress & on settings
-    paddingLeft: (DeviceInfo.isTablet ? 10 : 5),
-    fontSize: DeviceInfo.isTablet() ? 22 : 20 * factor,
+    paddingLeft: DeviceInfo.isTablet() ? 10 : 5,
+    fontSize: DeviceInfo.isTablet() ? 24 : 20,
     textAlign: 'left',
     fontFamily: 'RobotoCondensed-Bold',
     color: '#445f73',
-    paddingVertical: 10 * factor
   },
   tabRightContainer: {
     // container used for my list in progress & on settings
     width: '100%',
     borderTopWidth: 0.5,
+    paddingVertical: 10,
     borderTopColor: '#445f73',
     borderBottomWidth: 0.5,
     borderBottomColor: '#445f73',
@@ -123,7 +123,7 @@ module.exports = StyleSheet.create({
     alignItems: 'center'
   },
   contentPageHeader: {
-    paddingLeft: (DeviceInfo.isTablet ? 10 : 5),
+    paddingLeft: 5,
     fontSize: (DeviceInfo.isTablet() ? 22 : 30) * factor,
     color: 'white',
     fontFamily: 'OpenSans-ExtraBold'

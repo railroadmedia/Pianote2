@@ -15,7 +15,6 @@ import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
-import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
 
@@ -302,8 +301,7 @@ class VerticalVideoList extends React.Component {
           <View
             style={{
               flex: 1,
-              paddingLeft: paddingInset,
-              paddingVertical: (onTablet ? 5 : 6) * factor,
+              padding: paddingInset,
               flexDirection: 'row',
               borderTopColor: '#ececec'
             }}
@@ -474,7 +472,6 @@ class VerticalVideoList extends React.Component {
                 <Text
                   style={{
                     fontSize: (onTablet ? 8 : 16) * factor,
-                    marginBottom: 1 * factor,
                     textAlign: 'left',
                     fontWeight: 'bold',
                     fontFamily: 'OpenSans-Regular',
@@ -513,7 +510,6 @@ class VerticalVideoList extends React.Component {
                   {row.description}
                 </Text>
               )}
-              <View style={{ height: 2 * factor }} />
               <View style={{ flexDirection: 'row' }}>
                 {this.props.showLength && (
                   <Text
@@ -644,29 +640,11 @@ class VerticalVideoList extends React.Component {
             <View
               style={{
                 flexDirection: 'row',
-                paddingLeft: paddingInset, 
-                paddingVertical: this.props.showLargeTitle ? 10 : 0,
+                padding: paddingInset,
               }}
             >
-              <View 
-                style={{ 
-                  width: this.props.imageWidth + paddingInset/2,
-                  height: (onTablet ? 25 : 30) * factor,
-                  flex: 1
-                }}
-              >
-                <View
-                  style={{
-                    position: 'absolute',
-                    top: 0, 
-                    left: 0,
-                    width: width * 0.6,
-                    zIndex: 20,
-                    elevation: 20,
-                    height: '100%',
-                    justifyContent: 'flex-end'
-                  }}
-                >
+              <View style={{flex: 1, flexDirection: 'row',}}>
+                <View style={{flex: 1, justifyContent: 'center', }}>
                   {this.props.showLargeTitle ? (
                     <Text
                       numberOfLines={1}
@@ -693,61 +671,56 @@ class VerticalVideoList extends React.Component {
                     </Text>
                   )}
                 </View>
-              </View>
-              <View style={{ flex: 0.85 }}>
-                {this.props.showSort && (
-                  <TouchableOpacity
-                    style={[
-                      styles.centerContent,
-                      {
-                        flexDirection: 'row',
-                        flex: 1,
-                        paddingRight: 5,
-                        justifyContent: 'flex-end'
-                      }
-                    ]}
-                    onPress={() => {
-                      this.setState({
-                        showRelevance: !this.state.showRelevance
-                      });
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: colors.pianoteRed,
-                        fontSize: (onTablet ? 10 : 14.5) * factor,
-                        fontFamily: 'OpenSans-Regular',
-                        marginRight: 5,
-                        justifyContent: 'flex-end',
-                      }}
-                    >
-                      {onTablet
-                        ? sortDict[this.props.currentSort].charAt(0) +
-                          sortDict[this.props.currentSort]
-                            .substring(1)
-                            .toLowerCase()
-                        : sortDict[this.props.currentSort]}
-                    </Text>
-                    <FontIcon
-                      size={(onTablet ? 10 : 15) * factor}
-                      name={'sort-amount-down'}
-                      color={colors.pianoteRed}
-                    />
-                  </TouchableOpacity>
-                )}
-              </View>
-              {!this.props.showTitleOnly && (
                 <View
                   style={[
-                    styles.centerContent,
-                    {
+                    styles.centerContent, {
+                      width: onTablet ? 50 : 30,
+                      position: 'relative',
                       flexDirection: 'row',
-                      flex: 0.15,
-                      marginHorizontal: 5,
-                    }
-                  ]}
+                      right: 0,
+                  }]}
                 >
-                  {!this.props.hideFilterButton && (
+                  {this.props.showSort && (
+                    <TouchableOpacity
+                      style={[
+                        styles.centerContent,
+                        {
+                          flexDirection: 'row',
+                          position: 'absolute',
+                          right: onTablet ? 55 : 35,
+                          height: '100%',
+                        }
+                      ]}
+                      onPress={() => {
+                        this.setState({
+                          showRelevance: !this.state.showRelevance
+                        });
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: colors.pianoteRed,
+                          fontSize: (onTablet ? 10 : 14.5) * factor,
+                          fontFamily: 'OpenSans-Regular',
+                          marginRight: 5,
+                          justifyContent: 'flex-end',
+                        }}
+                      >
+                        {onTablet
+                          ? sortDict[this.props.currentSort].charAt(0) +
+                            sortDict[this.props.currentSort]
+                              .substring(1)
+                              .toLowerCase()
+                          : sortDict[this.props.currentSort]}
+                      </Text>
+                      <FontIcon
+                        size={(onTablet ? 10 : 15) * factor}
+                        name={'sort-amount-down'}
+                        color={colors.pianoteRed}
+                      />
+                    </TouchableOpacity>  
+                  )}
+                  {(!this.props.hideFilterButton && !this.props.showTitleOnly) && (
                     <Filters_V2
                       isMethod={this.props.isMethod}
                       disabled={!this.props.filters || this.state.isPaging}
@@ -759,7 +732,7 @@ class VerticalVideoList extends React.Component {
                     />
                   )}
                 </View>
-              )}
+              </View>
             </View>
           )}
           <View style={{ paddingLeft: paddingInset }}>
@@ -814,11 +787,7 @@ class VerticalVideoList extends React.Component {
         </View>
         <Modal
           isVisible={this.state.showModal}
-          style={{
-            margin: 0,
-            height: '100%',
-            width: '100%'
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -834,13 +803,8 @@ class VerticalVideoList extends React.Component {
           />
         </Modal>
         <Modal
-          key={'modalRelevance'}
           isVisible={this.state.showRelevance}
-          style={{
-            margin: 0,
-            height: '100%',
-            width: '100%'
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -861,13 +825,8 @@ class VerticalVideoList extends React.Component {
           />
         </Modal>
         <Modal
-          key={'calendarModal'}
           isVisible={this.state.addToCalendarModal}
-          style={{
-            margin: 0,
-            height: '100%',
-            width: '100%'
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

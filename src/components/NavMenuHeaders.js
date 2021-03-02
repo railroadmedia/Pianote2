@@ -73,7 +73,7 @@ class NavMenuHeaders extends React.Component {
               : 4,
             paddingBottom: (onTablet ? 5 : 10) * factor,
             paddingRight: paddingInset,
-            paddingLeft: 2 * factor,
+            paddingLeft: 2,
           }}
         >
           <TouchableOpacity

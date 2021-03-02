@@ -212,7 +212,14 @@ class MyList extends React.Component {
               color={colors.secondBackground}
             />
           )}
-          <Text style={styles.contentPageHeader}>My List</Text>
+          <Text 
+            style={[
+              styles.contentPageHeader, {
+                paddingLeft: paddingInset
+            }]}
+          >
+            My List
+          </Text>
           <TouchableOpacity
             style={[
               styles.tabRightContainer,
@@ -227,8 +234,19 @@ class MyList extends React.Component {
               });
             }}
           >
-            <View style={{width: width * 0.26 + paddingInset/2}}>
-              <Text style={styles.tabRightContainerText}>In Progress</Text>
+            <View style={{ justifyContent: 'center', paddingVertical: 20, width: width * 0.26 + paddingInset/2}}>
+              <Text 
+                style={[
+                  styles.tabRightContainerText,
+                  {
+                    position: 'absolute',
+                    paddingLeft: paddingInset,
+                    width: width * 0.56 + paddingInset/2,
+                  }
+                ]}
+              >
+                In Progress
+              </Text>
             </View>
             <View style={{flex: 0.85}}/>
             <View style={[styles.centerContent, {flex: 0.15}]}>
@@ -248,8 +266,19 @@ class MyList extends React.Component {
               });
             }}
           >
-            <View style={{width: width * 0.26 + paddingInset/2}}>
-              <Text style={styles.tabRightContainerText}>Completed</Text>
+            <View style={{ justifyContent: 'center', paddingVertical: 20, width: width * 0.26 + paddingInset/2}}>
+              <Text 
+                style={[
+                  styles.tabRightContainerText,
+                  {
+                    position: 'absolute',
+                    paddingLeft: paddingInset,
+                    width: width * 0.56 + paddingInset/2,
+                  }
+                ]}
+              >
+                Completed
+              </Text>
             </View>
             <View style={{flex: 0.85}}/>
             <View style={[styles.centerContent, {flex: 0.15}]}>
