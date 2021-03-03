@@ -173,16 +173,17 @@ class LoadPage extends React.Component {
               );
             } else if (userData.isLifetime || userData.isMember) {
               // is logged in with valid membership go to lessons
-              await this.props.navigation.dispatch(
-                StackActions.reset({
-                  index: 0,
-                  actions: [
-                    NavigationActions.navigate({
-                      routeName: 'LESSONS'
-                    })
-                  ]
-                })
-              );
+              if (!global.notifNavigation)
+                await this.props.navigation.dispatch(
+                  StackActions.reset({
+                    index: 0,
+                    actions: [
+                      NavigationActions.navigate({
+                        routeName: 'LESSONS'
+                      })
+                    ]
+                  })
+                );
             } else {
               // membership expired, go to membership expired
               this.props.navigation.navigate('MEMBERSHIPEXPIRED', {
