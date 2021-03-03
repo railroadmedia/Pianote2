@@ -13,12 +13,6 @@ import DeviceInfo from 'react-native-device-info';
 import { withNavigation } from 'react-navigation';
 import ProgressCircle from 'react-native-progress-circle';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 const ranks = [
   0,
   100,
@@ -89,7 +83,7 @@ class XpRank extends React.Component {
               >
                 <ProgressCircle
                   percent={this.state.rankProgress}
-                  radius={(DeviceInfo.isTablet() ? 0.2 : 0.27) * width}
+                  radius={(DeviceInfo.isTablet() ? 0.2 : 0.27) * Dimensions.get('window').width}
                   borderWidth={5}
                   shadowColor={'pink'}
                   color={'red'}
@@ -116,18 +110,18 @@ class XpRank extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    borderRadius: 15 * factor,
+    borderRadius: 15,
     backgroundColor: 'white',
     elevation: 10
   },
   title: {
     paddingHorizontal: 30,
-    marginTop: 15 * factor
+    marginTop: 15
   },
   description: {
-    paddingHorizontal: 20 * factor,
-    marginVertical: 10 * factor,
-    fontSize: (DeviceInfo.isTablet() ? 12 : 16) * factor
+    paddingHorizontal: 20,
+    marginVertical: 10,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14
   },
   ProgressCircleContainer: {
     transform: [{ rotate: '315deg' }]
@@ -135,18 +129,18 @@ const localStyles = StyleSheet.create({
   XPtext: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: (DeviceInfo.isTablet() ? 26 : 34) * factor
+    fontSize: DeviceInfo.isTablet() ? 34 : 26
   },
   rankText: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: (DeviceInfo.isTablet() ? 18 : 24) * factor
+    fontSize: DeviceInfo.isTablet() ? 24 : 18
   },
   nextRank: {
     color: 'grey',
     paddingHorizontal: 40,
-    marginVertical: 10 * factor,
-    fontSize: (DeviceInfo.isTablet() ? 12 : 16) * factor
+    marginVertical: 10,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14
   }
 });
 

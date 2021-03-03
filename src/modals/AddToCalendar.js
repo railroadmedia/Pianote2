@@ -8,17 +8,10 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
-  Dimensions
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import { withNavigation } from 'react-navigation';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 class AddToCalendar extends React.Component {
   static navigationOptions = { header: null };
@@ -41,7 +34,7 @@ class AddToCalendar extends React.Component {
               style={[
                 styles.modalHeaderText,
                 localStyles.addToCalendar,
-                { marginTop: 10 * factor }
+                { marginTop: 10 }
               ]}
             >
               ADD TO CALENDAR
@@ -51,20 +44,19 @@ class AddToCalendar extends React.Component {
               available
             </Text>
             <FontIcon
-              size={(onTablet ? 45 : 60) * factor}
+              size={onTablet ? 70 : 50}
               name={'calendar-plus'}
               color={colors.pianoteRed}
               style={localStyles.calendarIcon}
             />
             <TouchableOpacity
-              style={localStyles.confirmAddition}
+              style={[localStyles.confirmAddition, {justifyContent: 'center'}]}
               onPress={() => this.props.addEventToCalendar()}
             >
               <Text
                 style={[
                   styles.modalButtonText,
                   localStyles.confirmAdditionText,
-                  { height: (onTablet ? 25 : 40) * factor }
                 ]}
               >
                 CONFIRM ADDITION
@@ -80,30 +72,31 @@ class AddToCalendar extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    paddingBottom: 12.5 * factor,
-    borderRadius: 15 * factor,
-    margin: 20 * factor,
-    paddingVertical: 3.5 * factor
+    paddingBottom: 15,
+    borderRadius: 15,
+    margin: 20,
+    paddingVertical: 5
   },
   addToCalendar: {
-    marginTop: 5 * factor,
-    paddingHorizontal: 25 * factor
+    marginTop: 5,
+    paddingHorizontal: 20
   },
   calendarIcon: {
-    paddingTop: 7.5 * factor,
+    paddingTop: 7.5,
     alignSelf: 'center',
     paddingHorizontal: 40,
-    marginTop: 10 * factor
+    marginTop: 10
   },
   confirmAddition: {
-    marginTop: 12.5 * factor,
-    borderRadius: 100 * factor,
+    marginTop: 15,
+    borderRadius: 100,
     backgroundColor: '#fb1b2f',
-    marginHorizontal: 40
+    marginHorizontal: 40,
+    justifyContent: 'center',
+    height: DeviceInfo.isTablet() ? 40 : 30
   },
   confirmAdditionText: {
     color: 'white',
-    paddingVertical: 10
   }
 });
 

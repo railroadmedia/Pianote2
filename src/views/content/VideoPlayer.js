@@ -1801,7 +1801,6 @@ export default class VideoPlayer extends React.Component {
         {!this.state.isLoadingAll && (
           <>
             <Modal
-              key={'lessonComplete'}
               isVisible={this.state.showLessonComplete}
               style={{ margin: 0, height: '100%', width: '100%' }}
               animation={'slideInUp'}
@@ -1831,7 +1830,6 @@ export default class VideoPlayer extends React.Component {
               />
             </Modal>
             <Modal
-              key={'restartCourse'}
               isVisible={this.state.showRestartCourse}
               style={{
                 margin: 0,
@@ -1854,7 +1852,6 @@ export default class VideoPlayer extends React.Component {
               />
             </Modal>
             <Modal
-              key={'overviewComplete'}
               isVisible={this.state.showOverviewComplete}
               style={{ margin: 0, height: '100%', width: '100%' }}
               animation={'slideInUp'}
@@ -1883,7 +1880,6 @@ export default class VideoPlayer extends React.Component {
         )}
 
         <Modal
-          key={'modalCommentSort'}
           isVisible={this.state.showCommentSort}
           style={[
             styles.centerContent,
@@ -1911,7 +1907,6 @@ export default class VideoPlayer extends React.Component {
           />
         </Modal>
         <Modal
-          key={'soundSlice'}
           isVisible={this.state.showSoundSlice}
           style={[
             styles.centerContent,

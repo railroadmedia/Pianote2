@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
-  Dimensions
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { withNavigation } from 'react-navigation';
@@ -17,12 +16,6 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import Intercom from 'react-native-intercom';
 import { logOut } from '../services/UserDataAuth';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 const resetAction = StackActions.reset({
   index: 0,
   actions: [NavigationActions.navigate({ routeName: 'LOGIN' })]
@@ -87,38 +80,38 @@ class LogOut extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor
+    borderRadius: 15,
+    margin: 20
   },
   title: {
-    marginTop: 25 * factor,
-    paddingHorizontal: 40
+    marginTop: 20,
+    paddingHorizontal: 20
   },
   description: {
-    paddingHorizontal: 20 * factor,
-    marginVertical: 10 * factor,
-    fontSize: (DeviceInfo.isTablet() ? 12 : 16) * factor
+    paddingHorizontal:30,
+    marginTop: 10,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14
   },
   logoutText: {
     backgroundColor: '#fb1b2f',
     borderRadius: 40,
-    marginHorizontal: 20 * factor,
+    marginVertical: 15,
+    marginHorizontal: 30,
     fontFamily: 'OpenSans-Bold',
-    height: (DeviceInfo.isTablet() ? 25 : 40) * factor,
+    height: DeviceInfo.isTablet() ? 40 : 30,
     textAlign: 'center'
   },
   logout: {
     color: 'white',
-    fontSize: (DeviceInfo.isTablet() ? 12.5 : 17.5) * factor
+    fontSize: DeviceInfo.isTablet() ? 18 : 14
   },
   cancelContainter: {
-    paddingHorizontal: 40,
-    marginVertical: 15 * factor
+    paddingHorizontal: 20,
+    marginBottom: 15
   },
   cancel: {
     color: 'grey',
-    fontSize: (DeviceInfo.isTablet() ? 10 : 15) * factor,
-    marginBottom: 10
+    fontSize: DeviceInfo.isTablet() ? 16: 12,
   }
 });
 

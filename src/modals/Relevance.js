@@ -7,18 +7,10 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Dimensions
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { withNavigation } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 class Relevance extends React.Component {
   static navigationOptions = { header: null };
@@ -65,7 +57,7 @@ class Relevance extends React.Component {
               <View style={styles.centerContent}>
                 <EntypoIcon
                   name={'check'}
-                  size={(onTablet ? 15 : 20) * factor}
+                  size={onTablet ? 24 : 18}
                   color={
                     this.state.currentSort == 'newest'
                       ? 'white'
@@ -108,7 +100,7 @@ class Relevance extends React.Component {
               <View style={styles.centerContent}>
                 <EntypoIcon
                   name={'check'}
-                  size={(onTablet ? 15 : 20) * factor}
+                  size={onTablet ? 24 : 18}
                   color={
                     this.state.currentSort == 'oldest'
                       ? 'white'
@@ -141,7 +133,7 @@ class Relevance extends React.Component {
               <View style={styles.centerContent}>
                 <EntypoIcon
                   name={'cross'}
-                  size={(onTablet ? 17.5 : 25) * factor}
+                  size={onTablet ? 30 : 25}
                   color={'white'}
                 />
               </View>
@@ -159,22 +151,22 @@ class Relevance extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    minHeight: (DeviceInfo.isTablet() ? 0.175 : 0.25) * height,
+    minHeight: DeviceInfo.isTablet() ? '20%' : '25%',
     flexDirection: 'row'
   },
   word: {
-    marginLeft: 15 * factor,
-    fontSize: (DeviceInfo.isTablet() ? 10 : 16) * factor,
+    marginLeft: 10,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14,
     fontFamily: 'OpenSans-Regular'
   },
   button: {
     flex: 0.4,
-    paddingLeft: width * 0.05,
+    paddingLeft: '5%',
     flexDirection: 'row'
   },
   cancel: {
-    marginLeft: 10 * factor,
-    fontSize: (DeviceInfo.isTablet() ? 10 : 16) * factor,
+    marginLeft: 10,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14,
     fontFamily: 'OpenSans-Regular',
     color: 'white'
   }

@@ -2,18 +2,11 @@
  * SoundSlice
  */
 import React from 'react';
-import { View, Dimensions, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { withNavigation } from 'react-navigation';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import IdleTimerManager from 'react-native-idle-timer';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 class SoundSlice extends React.Component {
   static navigationOptions = { header: null };
@@ -34,7 +27,6 @@ class SoundSlice extends React.Component {
     return (
       <View style={styles.container}>
         <View
-          key={'contentContainer'}
           style={{
             height: '100%',
             width: '100%',
@@ -45,8 +37,8 @@ class SoundSlice extends React.Component {
             <View
               style={{
                 position: 'absolute',
-                top: 50 * factor,
-                left: 20 * factor,
+                top: 50,
+                left: 20,
                 zIndex: 10
               }}
             >
@@ -61,7 +53,11 @@ class SoundSlice extends React.Component {
                   zIndex: 10
                 }}
               >
-                <FeatherIcon size={40 * factor} name={'x'} color={'black'} />
+                <FeatherIcon 
+                  size={onTablet ? 50 : 35}
+                  name={'x'} 
+                  color={'black'} 
+                />
               </TouchableOpacity>
             </View>
           </View>

@@ -6,8 +6,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Dimensions,
-  Platform,
   StatusBar
 } from 'react-native';
 import {
@@ -15,20 +13,12 @@ import {
   withNavigation,
   NavigationActions
 } from 'react-navigation';
-import DeviceInfo from 'react-native-device-info';
 import Modal from 'react-native-modal';
 import { SafeAreaView } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import { NetworkContext } from '../context/NetworkProvider';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 class NavMenuHeaders extends React.Component {
   static contextType = NetworkContext;
@@ -131,7 +121,7 @@ class NavMenuHeaders extends React.Component {
                       ? 'white'
                       : colors.secondBackground
                   }
-                  size={(onTablet ? 12 : 16) * factor}
+                  size={onTablet ? 26 : 18}
                   style={{ marginLeft: -2.5 }}
                 />
               </View>
