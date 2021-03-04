@@ -44,9 +44,9 @@ export const localNotification = () => {
 };
 
 export async function getnotifications(page) {
-  return commonService.tryCall(
-    `${commonService.rootUrl}/api/railnotifications/notifications?limit=10&page=${page}`
-  );
+  let x = await commonService.tryCall(`${commonService.rootUrl}/api/railnotifications/notifications?limit=10&page=${page}`)
+  console.log(await commonService.tryCall(`${commonService.rootUrl}/api/railnotifications/notifications?limit=10&page=${page}`))
+  return x
 }
 
 export async function removeNotification(id) {

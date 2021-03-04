@@ -141,13 +141,16 @@ export default class Profile extends React.Component {
   }
 
   async getNotifications(loadMore) {
+    console.log('Load more: ', loadMore)
+    
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-
+    
     if (loadMore) this.page++;
     else this.page = 1;
     let notifications = await getnotifications(this.page);
+    console.log('Notes: ', notifications)
 
     for (i in notifications.data) {
       let timeCreated =

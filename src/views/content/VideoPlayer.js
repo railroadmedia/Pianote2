@@ -493,24 +493,23 @@ export default class VideoPlayer extends React.Component {
           flex: 1,
           borderTopWidth: 0.25,
           flexDirection: 'row',
-          paddingTop: 10 * factor,
-          paddingBottom: 0 * factor,
-          paddingHorizontal: 10 * factor
+          paddingTop: 10,
+          paddingHorizontal: 10
         }}
       >
         <View
           style={{
             alignItems: 'center',
             justifyContent: 'flex-start',
-            paddingBottom: 10 * factor
+            paddingBottom: 10
           }}
         >
           <FastImage
             style={{
-              height: (onTablet ? 30 : 40) * factor,
-              width: (onTablet ? 30 : 40) * factor,
+              height: (onTablet ? 55 : 40),
+              width: (onTablet ? 55 : 40),
               borderRadius: 100,
-              marginTop: 10 * factor
+              marginTop: 10
             }}
             source={{
               uri: item.user['fields.profile_picture_image_url']
@@ -520,8 +519,8 @@ export default class VideoPlayer extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: onTablet ? 15 : 10 * factor,
-              marginTop: 5 * factor,
+              fontSize: onTablet ? 15 : 12,
+              paddingTop: 5,
               fontWeight: 'bold',
               color: colors.pianoteGrey
             }}

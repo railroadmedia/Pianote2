@@ -111,7 +111,7 @@ export default class ForgotPassword extends React.Component {
                       alignSelf: 'center',
                       textAlign: 'center',
                       fontFamily: 'OpenSans-Regular',
-                      width: '50%'
+                      width: '100%'
                     }}
                   >
                     The Ultimate Online
@@ -123,7 +123,7 @@ export default class ForgotPassword extends React.Component {
                       alignSelf: 'center',
                       textAlign: 'center',
                       fontFamily: 'OpenSans-Regular',
-                      width: `${(25 * (onTablet ? 50 : 50)) / 19}%` //25=second row chars, 50=width % of first row (same as pianote svg), 19=first row chars
+                      width: `100%`,
                     }}
                   >
                     Piano Lessons Experience.
