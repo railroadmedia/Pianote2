@@ -245,7 +245,7 @@ export default class Support extends React.Component {
                 padding: 5
               }}
             >
-              1-604-921-6721
+              1-604-855-7605
             </Text>
           </ScrollView>
         </View>
