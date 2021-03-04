@@ -161,7 +161,7 @@ export default class Downloads extends React.Component {
                   padding: paddingInset * 1.5,
                   color: 'white',
                   textAlign: 'center',
-                  fontSize: onTablet ? 20 : 18 * factor
+                  fontSize: onTablet ? 20 : 12
                 }}
               >
                 Any lessons you download will be available here.

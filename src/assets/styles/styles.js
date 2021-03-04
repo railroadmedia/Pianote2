@@ -22,7 +22,7 @@ module.exports = StyleSheet.create({
   },
   heightButtons: {
     // the height of buttons like start / more info on lessons
-    height: (DeviceInfo.isTablet() ? 25 : 40) * factor
+    height: DeviceInfo.isTablet() ? 45 : 35
   },
   activityIndicator: {
     // style for putting on spinners

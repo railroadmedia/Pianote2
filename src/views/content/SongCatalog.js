@@ -27,7 +27,6 @@ const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
@@ -305,10 +304,10 @@ class SongCatalog extends React.Component {
               showLength={false}
               showSort={true}
               isPaging={this.state.isPaging}
-              filters={this.metaFilters} // show filter list
-              imageRadius={5 * factor} // radius of image shown
-              containerBorderWidth={0} // border of box
-              containerWidth={width} // width of list
+              filters={this.metaFilters}
+              imageRadius={5}
+              containerBorderWidth={0}
+              containerWidth={width}
               currentSort={this.state.currentSort}
               changeSort={sort => this.changeSort(sort)} // change sort and reload videos
               outVideos={this.state.outVideos} // if paging and out of videos

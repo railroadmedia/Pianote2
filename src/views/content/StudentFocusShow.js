@@ -340,7 +340,7 @@ class StudentFocusShow extends React.Component {
               />
             </View>
           </View>
-          <View style={{ height: 25 * factor }} />
+          <View style={{ height: 25 }} />
           <VerticalVideoList
             items={this.state.allLessons}
             title={'EPISODES'}
