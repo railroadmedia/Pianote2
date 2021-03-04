@@ -140,13 +140,13 @@ class NextVideo extends React.Component {
               <View style={{ flex: 1 }} />
               <EntypoIcon
                 name={'controller-play'}
-                size={(onTablet ? 25 : 30) * factor}
+                size={onTablet ? 35 : 25}
                 color={colors.pianoteRed}
               />
             </View>
           </View>
         </View>
-        <View style={{ height: 10 * factor }} />
+        <View style={{ height: 10 }} />
       </TouchableOpacity>
     );
   };
