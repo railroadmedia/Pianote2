@@ -80,7 +80,7 @@ class VerticalVideoList extends React.Component {
     };
   }
 
-  UNSAFE_componentWillReceiveProps = props => {
+  componentWillReceiveProps = props => {
     if (props.isPaging !== this.state.isPaging) {
       if (!this.state.isLoading) {
         this.setState({ isPaging: props.isPaging });

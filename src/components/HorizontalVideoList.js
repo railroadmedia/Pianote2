@@ -63,7 +63,7 @@ class HorizontalVideoList extends React.Component {
     Orientation.addOrientationListener(this._onOrientationDidChange);
   }
 
-  UNSAFE_componentWillReceiveProps = props => {
+  componentWillReceiveProps = props => {
     if (props.isPaging !== this.state.isPaging) {
       if (!this.state.isLoading) {
         this.setState({ isPaging: props.isPaging });
