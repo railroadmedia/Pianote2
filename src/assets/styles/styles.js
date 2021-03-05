@@ -10,7 +10,6 @@ const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 var { StyleSheet } = React;
 
@@ -31,32 +30,24 @@ module.exports = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: DeviceInfo.isTablet() ? 12 * factor : 14 * factor
+    fontSize: DeviceInfo.isTablet() ? 16 : 12
   },
   searchContainer: {
-    marginTop: height * 0.04,
+    marginTop: '4%',
     flexDirection: 'row',
     paddingLeft: 5
   },
   searchBox: {
     flex: 1,
     backgroundColor: '#f3f6f6',
-    borderRadius: 60 * factor,
+    borderRadius: 100,
     flexDirection: 'row'
   },
   recentSearches: {
-    marginTop: height * 0.02,
+    marginTop: '2%',
     flexDirection: 'row',
-    marginBottom: 10 * factor,
+    marginBottom: 10,
     justifyContent: 'space-between'
-  },
-  searchText: {
-    flex: 0.9,
-    color: 'grey',
-    paddingVertical: 12.5 * factor,
-    justifyContent: 'center',
-    fontFamily: 'OpenSans-Regular',
-    fontSize: 16 * factor
   },
   mainContainer: {
     backgroundColor: '#00101d',
@@ -85,14 +76,6 @@ module.exports = StyleSheet.create({
     backgroundColor: '#081826',
     padding: 10
   },
-  filterHeader: {
-    fontSize: (DeviceInfo.isTablet() ? 12 : 18) * factor,
-    marginVertical: 12.5 * factor,
-    textAlign: 'left',
-    fontFamily: 'RobotoCondensed-Bold',
-    color: '#445f73',
-    paddingLeft: 5
-  },
   container: {
     flex: 1,
     alignSelf: 'stretch'
@@ -119,29 +102,29 @@ module.exports = StyleSheet.create({
   },
   contentPageHeader: {
     paddingLeft: 10,
-    fontSize: (DeviceInfo.isTablet() ? 22 : 30) * factor,
+    fontSize: DeviceInfo.isTablet() ? 34 : 26,
     color: 'white',
     fontFamily: 'OpenSans-ExtraBold'
   },
   modalHeaderText: {
-    fontFamily: 'OpenSans-ExtraBold',
+    fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: (DeviceInfo.isTablet() ? 12.5 : 18) * factor
+    fontSize: DeviceInfo.isTablet() ? 24 : 18
   },
   modalCancelButtonText: {
     textAlign: 'center',
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: 12 * factor
+    fontSize: DeviceInfo.isTablet() ? 16 : 12
   },
   modalButtonText: {
     textAlign: 'center',
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: (DeviceInfo.isTablet() ? 10 : 15) * factor
+    fontSize: DeviceInfo.isTablet() ? 16 : 12
   },
   modalBodyText: {
     textAlign: 'center',
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 12 : 16) * factor
+    fontSize: DeviceInfo.isTablet() ? 16 : 12
   },
   centerContent: {
     justifyContent: 'center',

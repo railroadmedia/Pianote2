@@ -410,12 +410,8 @@ export default class LoginCredentials extends React.Component {
           }}
         />
         <Modal
-          key={'passwords'}
           isVisible={this.state.showPasswordEmailMatch}
-          style={{
-            margin: 0,
-            flex: 1
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

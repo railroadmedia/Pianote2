@@ -252,7 +252,6 @@ class LoadPage extends React.Component {
         ]}
       >
         <View
-          key={'loadPage'}
           style={[
             styles.centerContent,
             {
@@ -284,16 +283,8 @@ class LoadPage extends React.Component {
           />
         </View>
         <Modal
-          key={'NoConnection'}
           isVisible={this.state.showNoConnection}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
+          style={[ styles.centerContent, styles.modalContainer ]}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

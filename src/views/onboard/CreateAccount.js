@@ -178,17 +178,11 @@ export default class CreateAccount extends React.Component {
               </View>
             </ScrollView>
             <Modal
-              key={'checkEmailModal'}
               isVisible={this.state.showCheckEmail}
               style={[
                 styles.centerContent,
-                {
-                  margin: 0,
-                  height: '100%',
-                  width: '100%'
-                }
+                styles.modalContainer
               ]}
-              d
               animation={'slideInUp'}
               animationInTiming={350}
               animationOutTiming={350}
@@ -204,17 +198,11 @@ export default class CreateAccount extends React.Component {
               />
             </Modal>
             <Modal
-              key={'entervalid'}
               isVisible={this.state.showValidateEmail}
               style={[
                 styles.centerContent,
-                {
-                  margin: 0,
-                  height: '100%',
-                  width: '100%'
-                }
+                styles.modalContainer
               ]}
-              d
               animation={'slideInUp'}
               animationInTiming={350}
               animationOutTiming={350}

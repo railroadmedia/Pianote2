@@ -513,15 +513,10 @@ export default class CreateAccount3 extends React.Component {
                 </KeyboardAvoidingView>
               </View>
               <Modal
-                key={'checkUserTakenModal'}
                 isVisible={this.state.showDisplayName}
                 style={[
                   styles.centerContent,
-                  {
-                    margin: 0,
-                    height: '100%',
-                    width: '100%'
-                  }
+                  styles.modalContainer
                 ]}
                 animation={'slideInUp'}
                 animationInTiming={350}
@@ -874,11 +869,7 @@ export default class CreateAccount3 extends React.Component {
                 isVisible={this.state.showDisplayName}
                 style={[
                   styles.centerContent,
-                  {
-                    margin: 0,
-                    height: '100%',
-                    width: '100%'
-                  }
+                  styles.modalContainer
                 ]}
                 animation={'slideInUp'}
                 animationInTiming={350}

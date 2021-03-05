@@ -1705,9 +1705,8 @@ export default class VideoPlayer extends React.Component {
 
         {this.state.selectedAssignment && (
           <Modal
-            key={'assignmentComplete'}
             isVisible={this.state.showAssignmentComplete}
-            style={{ margin: 0, height: '100%', width: '100%' }}
+            style={styles.modalContainer}
             animation={'slideInUp'}
             animationInTiming={250}
             animationOutTiming={250}
@@ -1724,14 +1723,10 @@ export default class VideoPlayer extends React.Component {
           </Modal>
         )}
         <Modal
-          key={'resourceDownload'}
           isVisible={this.state.showResDownload}
           onDismiss={() => this.modalDismissed}
-          style={[
+          style={[styles.modalContainer,
             {
-              margin: 0,
-              height: '100%',
-              width: '100%',
               justifyContent: 'flex-end'
             }
           ]}
@@ -1773,7 +1768,7 @@ export default class VideoPlayer extends React.Component {
           <>
             <Modal
               isVisible={this.state.showLessonComplete}
-              style={{ margin: 0, height: '100%', width: '100%' }}
+              style={styles.modalContainer}
               animation={'slideInUp'}
               animationInTiming={250}
               animationOutTiming={250}
@@ -1802,10 +1797,7 @@ export default class VideoPlayer extends React.Component {
             </Modal>
             <Modal
               isVisible={this.state.showRestartCourse}
-              style={{
-                margin: 0,
-                flex: 1
-              }}
+              style={styles.modalContainer}
               animation={'slideInUp'}
               animationInTiming={250}
               animationOutTiming={250}
@@ -1824,7 +1816,7 @@ export default class VideoPlayer extends React.Component {
             </Modal>
             <Modal
               isVisible={this.state.showOverviewComplete}
-              style={{ margin: 0, height: '100%', width: '100%' }}
+              style={styles.modalContainer}
               animation={'slideInUp'}
               animationInTiming={250}
               animationOutTiming={250}
@@ -1852,10 +1844,7 @@ export default class VideoPlayer extends React.Component {
 
         <Modal
           isVisible={this.state.showCommentSort}
-          style={[
-            styles.centerContent,
-            { margin: 0, height: '100%', width: '100%' }
-          ]}
+          style={[ styles.centerContent, styles.modalContainer ]}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -1879,10 +1868,7 @@ export default class VideoPlayer extends React.Component {
         </Modal>
         <Modal
           isVisible={this.state.showSoundSlice}
-          style={[
-            styles.centerContent,
-            { margin: 0, height: '100%', width: '100%' }
-          ]}
+          style={[ styles.centerContent, styles.modalContainer ]}
           animation={'slideInUp'}
           animationInTiming={350}
           animationOutTiming={350}
@@ -1931,7 +1917,7 @@ export default class VideoPlayer extends React.Component {
         {this.state.showMakeComment && (
           <Modal
             isVisible={this.state.showMakeComment}
-            style={{ margin: 0 }}
+            style={styles.modalContainer}
             backdropColor={'transparent'}
             animation={'slideInUp'}
             animationInTiming={350}

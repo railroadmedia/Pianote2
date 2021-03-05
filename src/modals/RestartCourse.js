@@ -8,17 +8,9 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
-  Dimensions
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import DeviceInfo from 'react-native-device-info';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 class RestartCourse extends React.Component {
   static navigationOptions = { header: null };
@@ -93,23 +85,23 @@ class RestartCourse extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    borderRadius: 10 * factor,
-    margin: 20 * factor,
+    borderRadius: 10,
+    margin: 50,
     backgroundColor: 'white',
     elevation: 2,
-    paddingTop: 15 * factor
+    paddingTop: 10,
   },
   descriptionText: {
-    marginTop: 10 * factor,
+    marginTop: 10,
     textAlign: 'center',
     paddingHorizontal: 20
   },
   restartContainer: {
     backgroundColor: '#fb1b2f',
-    marginTop: 10 * factor,
-    borderRadius: 40 * factor,
-    paddingHorizontal: 30 * factor,
-    height: (DeviceInfo.isTablet() ? 25 : 40) * factor,
+    marginTop: 10,
+    borderRadius: 40,
+    paddingHorizontal: 20,
+    height: DeviceInfo.isTablet() ? 45 : 35,
     alignSelf: 'center',
     justifyContent: 'center'
   },
@@ -117,12 +109,12 @@ const localStyles = StyleSheet.create({
     color: 'white'
   },
   cancelContainer: {
-    marginTop: 10 * factor,
+    marginTop: 10,
     paddingHorizontal: 20
   },
   cancelText: {
     color: 'grey',
-    marginBottom: 10 * factor
+    marginBottom: 10
   }
 });
 

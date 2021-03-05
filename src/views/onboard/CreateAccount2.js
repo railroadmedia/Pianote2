@@ -36,7 +36,7 @@ export default class CreateAccount extends React.Component {
       showPassword: true,
       password: '',
       confirmPassword: '',
-      email: this.props.navigation.state.params.email,
+      email: '',//this.props.navigation.state.params.email,
       scrollViewContentFlex: { flex: 1 }
     };
   }
@@ -297,15 +297,10 @@ export default class CreateAccount extends React.Component {
               </View>
             </ScrollView>
             <Modal
-              key={'passwordMatch'}
               isVisible={this.state.showPasswordMatch}
               style={[
                 styles.centerContent,
-                {
-                  margin: 0,
-                  height: '100%',
-                  width: '100%'
-                }
+                styles.modalContainer
               ]}
               animation={'slideInUp'}
               animationInTiming={450}

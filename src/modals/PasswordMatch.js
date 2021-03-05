@@ -48,7 +48,6 @@ class PasswordMatch extends React.Component {
                 style={[
                   styles.modalButtonText,
                   localStyles.tryAgainText,
-                  { fontSize: (onTablet ? 9 : 14) * factor }
                 ]}
               >
                 TRY AGAIN
@@ -64,20 +63,20 @@ class PasswordMatch extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor
+    borderRadius: 15,
+    margin: 20
   },
   text: {
     paddingHorizontal: 40,
-    marginTop: 10 * factor
+    marginTop: 10
   },
   tryAgainContainer: {
     paddingHorizontal: 40,
-    marginVertical: 10 * factor
+    marginVertical: 10
   },
   tryAgainText: {
     color: '#fb1b2f',
-    marginBottom: 7.5 * factor
+    marginBottom: 10
   }
 });
 
