@@ -357,11 +357,11 @@ class Replies extends React.Component {
                                 color={colors.pianoteRed}
                                 style={{ marginRight: 10 }}
                               />
-                              {comment.replies.length > 0 && (
+                              {comment.replies?.length > 0 && (
                                 <View style={localStyles.likeCountContainer}>
                                   <Text style={localStyles.likeCount}>
-                                    {comment.replies.length}{' '}
-                                    {comment.replies.length == 1
+                                    {comment.replies?.length}{' '}
+                                    {comment.replies?.length == 1
                                       ? 'REPLY'
                                       : 'REPLIES'}
                                   </Text>

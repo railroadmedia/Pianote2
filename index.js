@@ -55,6 +55,7 @@ PushNotification.configure({
           global.loadedFromNotification = true;
           await NavigationService.navigate('PROFILE');
         } else {
+          global.notifNavigation = true;
           NavigationService.navigate('VIDEOPLAYER', {
             commentId,
             url: mobile_app_url
