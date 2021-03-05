@@ -62,7 +62,7 @@
                                             initialProperties:nil];
 
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
-  [Intercom setApiKey:@"ios_sdk-0e9598840ab9fbb085fe155be38c4161693e7ff9" forAppId:@"x2x1waf3"];
+  [Intercom setApiKey:@"ios_sdk-d1fb51d50c6c5bb5b0660caf26ffd2346bcc2c1a" forAppId:@"utp2z7ew"];
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [HomeIndicatorViewController new];
   rootViewController.view = rootView;
