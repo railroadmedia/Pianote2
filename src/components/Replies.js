@@ -53,7 +53,7 @@ class Replies extends React.Component {
     );
 
   mapReplies = () => {
-    return this.props.comment.replies.map((reply, index) => {
+    return this.props.comment.replies?.map((reply, index) => {
       return (
         <View
           key={index}
@@ -357,7 +357,7 @@ class Replies extends React.Component {
                                 color={colors.pianoteRed}
                                 style={{ marginRight: 10 }}
                               />
-                              {comment.replies.length > 0 && (
+                              {comment.replies && comment.replies.length > 0 && (
                                 <View style={localStyles.likeCountContainer}>
                                   <Text style={localStyles.likeCount}>
                                     {comment.replies.length}{' '}
