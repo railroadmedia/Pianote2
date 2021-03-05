@@ -200,7 +200,7 @@ export default class VideoPlayerSong extends React.Component {
               paddingVertical: 10
             }}
           >
-            {true && ( //slug
+            {slug && (
               <TouchableOpacity
                 onPress={() => this.setState({ showSoundSlice: true })}
                 style={[

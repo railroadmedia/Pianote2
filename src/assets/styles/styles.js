@@ -72,7 +72,7 @@ module.exports = StyleSheet.create({
   },
   childHeaderText: {
     // used on search, see all, downloads,
-    fontSize: 22 * factor,
+    fontSize: DeviceInfo.isTablet() ? 28 : 20,
     color: 'white',
     fontFamily: 'OpenSans-ExtraBold',
     alignSelf: 'center',
@@ -83,7 +83,7 @@ module.exports = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#081826',
-    padding: DeviceInfo.isTablet ? 10 : 5
+    padding: 10
   },
   filterHeader: {
     fontSize: (DeviceInfo.isTablet() ? 12 : 18) * factor,

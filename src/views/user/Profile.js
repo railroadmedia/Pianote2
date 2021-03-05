@@ -11,7 +11,6 @@ import {
   Linking,
   StatusBar,
   StyleSheet,
-  Dimensions
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -74,13 +73,6 @@ const messageDict = {
     'new content release notifications'
   ] // notify_weekly_update: this.state.notify_weekly_update,
 };
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 export default class Profile extends React.Component {
   static navigationOptions = { header: null };
@@ -340,7 +332,7 @@ export default class Profile extends React.Component {
                         style={[styles.centerContent, styles.container]}
                       >
                         <IonIcon
-                          size={onTablet ? 28 : 20}
+                          size={onTablet ? 24 : 18}
                           name={'ios-camera'}
                           color={colors.pianoteRed}
                         />
@@ -384,7 +376,18 @@ export default class Profile extends React.Component {
                   </TouchableOpacity>
                 </View>
                 <View style={localStyles.notificationContainer}>
-                  <Text style={localStyles.notificationText}>
+                  <Text 
+                    style={[
+                      localStyles.notificationText, 
+                      {
+                        fontSize: sizing.verticalListTitleSmall,
+                        paddingVertical: 20,
+                        paddingLeft: 10,
+                        fontFamily: 'OpenSans-ExtraBold',
+                        color: 'white',
+                      }
+                    ]}
+                  >
                     NOTIFICATIONS
                   </Text>
                 </View>
@@ -409,7 +412,7 @@ export default class Profile extends React.Component {
             }
             ListFooterComponent={() => (
               <ActivityIndicator
-                style={{ marginVertical: 10 }}
+                style={{ marginVertical: 20 }}
                 size='small'
                 color={colors.secondBackground}
                 animating={this.state.animateLoadMore}
@@ -440,7 +443,7 @@ export default class Profile extends React.Component {
                         ]}
                       >
                         <FontAwesome
-                          size={width * 0.045 * factor}
+                          size={sizing.infoButtonSize}
                           color={'white'}
                           name={'video-camera'}
                         />
@@ -455,8 +458,8 @@ export default class Profile extends React.Component {
                         ]}
                       >
                         <Chat
-                          height={width * 0.05}
-                          width={width * 0.05}
+                          height={sizing.infoButtonSize}
+                          width={sizing.infoButtonSize}
                           fill={'white'}
                         />
                       </View>
@@ -470,41 +473,49 @@ export default class Profile extends React.Component {
                         ]}
                       >
                         <AntIcon
-                          size={width * 0.045}
+                          size={sizing.infoButtonSize}
                           color={'white'}
                           name={'like1'}
                         />
                       </View>
                     )}
                     <FastImage
-                      style={{ flex: 1, borderRadius: 100 }}
+                      style={{ 
+                        height: onTablet ? 60 : 40,
+                        width: onTablet ? 60 : 40,
+                        paddingVertical: 10,
+                        borderRadius: 100,
+                        marginRight: 10
+                      }}
                       source={{
                         uri:
                           item.type == 'new content releases'
                             ? item.content.thumbnail_url
-                            : item.sender?.profile_image_url
+                            : 
+                            (
+                              item.sender ?
+                                item.sender.profile_image_url
+                              :
+                              'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                            )
                       }}
                       resizeMode={FastImage.resizeMode.stretch}
                     />
                   </View>
                 </View>
-                <View style={{ flex: 0.675 }}>
+                <View style={{ flex: 0.975, paddingLeft: 20, }}>
                   <View style={{ flex: 1, justifyContent: 'center' }}>
-                    <Text style={localStyles.notitificationText}>
-                      <Text style={localStyles.boldNotificationText}>
-                        {messageDict[item.type][1] ? '' : 'NEW - '}
-                      </Text>
-                      {item.type == 'new content releases'
-                        ? item.content.display_name
-                        : item.sender?.display_name}
-                      <Text style={localStyles.messageTypeText}>
-                        {' '}
-                        {messageDict[item.type][0]}
-                      </Text>
+                    <Text
+                      style={{
+                        fontFamily: 'OpenSans-ExtraBold',
+                        color: 'white',
+                      }}
+                    >
+                      <Text style={localStyles.boldNotificationText}>{messageDict[item.type][1] ? '' : 'NEW - '}</Text>
+                      {item.type == 'new content releases' ? item.content.display_name : item.sender?.display_name}
+                      <Text style={localStyles.messageTypeText}>{' '}{messageDict[item.type][0]}</Text>
                     </Text>
-                    <Text style={localStyles.createdAtText}>
-                      {item.created_at}
-                    </Text>
+                    <Text style={localStyles.createdAtText}>{item.created_at}</Text>
                   </View>
                 </View>
                 <View>
@@ -520,7 +531,7 @@ export default class Profile extends React.Component {
                       }}
                     >
                       <EntypoIcon
-                        size={20 * factor}
+                        size={sizing.infoButtonSize}
                         name={'dots-three-horizontal'}
                         color={colors.secondBackground}
                       />
@@ -598,7 +609,8 @@ const localStyles = StyleSheet.create({
     height: DeviceInfo.isTablet() ? 200 : 150,
     width: DeviceInfo.isTablet() ? 200 : 150,
     aspectRatio: 1,
-    marginBottom: 5
+    marginBottom: 20,
+    marginTop: 10
   },
   profilePic: {
     position: 'absolute',
@@ -616,15 +628,14 @@ const localStyles = StyleSheet.create({
     height: '100%',
     width: '100%',
     borderRadius: 250,
-    backgroundColor: '#445f73'
+    backgroundColor: '#445f73',
   },
   usernameText: {
     fontFamily: 'OpenSans-ExtraBold',
     fontSize: DeviceInfo.isTablet() ? 30 : 24,
     textAlign: 'center',
     color: 'white',
-    marginBottom: 10,
-    paddingTop: 10
+    paddingBottom: 5,
   },
   memberSinceText: {
     fontFamily: 'OpenSans-Regular',
@@ -652,12 +663,11 @@ const localStyles = StyleSheet.create({
   },
   whiteXpRank: {
     color: 'white',
-    fontSize: DeviceInfo.isTablet() ? 30 : 22,
+    fontSize: DeviceInfo.isTablet() ? 26 : 20,
     fontFamily: 'OpenSans-ExtraBold',
     textAlign: 'center'
   },
   notificationContainer: {
-    paddingVertical: 10,
     elevation: 1
   },
   activityContainer: {
@@ -672,53 +682,40 @@ const localStyles = StyleSheet.create({
     color: 'white'
   },
   notification: {
-    height: 90 * factor,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    paddingVertical: 20,
   },
   innerNotificationContainer: {
     paddingLeft: 10,
-    flex: 0.275,
     flexDirection: 'row',
     alignItems: 'center'
   },
-  messageContainer: {
-    height: width * 0.175 * factor,
-    width: width * 0.175 * factor,
-    borderRadius: 150 * factor,
-    backgroundColor: '#ececec'
-  },
   iconContainer: {
     position: 'absolute',
-    bottom: 0,
-    right: 0,
-    height: width * 0.075 * factor,
-    width: width * 0.075 * factor,
-    borderRadius: 100 * factor,
+    bottom: -5,
+    right: -5,
+    height: DeviceInfo.isTablet() ? 35 : 25,
+    width: DeviceInfo.isTablet() ? 35 : 25,
+    borderRadius: 100,
     zIndex: 5
   },
   boldNotificationText: {
     fontFamily: 'OpenSans-ExtraBold',
-    fontSize: (DeviceInfo.isTablet() ? 11.5 : 15) * factor,
-    color: 'white'
+    fontSize: DeviceInfo.isTablet() ? 16 : 14,
+    color: 'white',
   },
   messageTypeText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 10 : 14) * factor
-  },
-  notificationText: {
-    paddingLeft: 10,
-    fontSize: (DeviceInfo.isTablet() ? 14 : 18) * factor,
-    fontFamily: 'OpenSans-ExtraBold',
-    color: '#445f73'
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    color: 'white',
   },
   createdAtText: {
-    marginTop: (5 * Dimensions.get('window').height) / 812,
+    marginTop: 5,
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 8 : 13) * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: '#445f73'
   },
   threeDotsContainer: {
-    height: 35 * factor,
     justifyContent: 'center'
   }
 });
