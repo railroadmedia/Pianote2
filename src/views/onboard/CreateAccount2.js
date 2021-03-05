@@ -36,7 +36,7 @@ export default class CreateAccount extends React.Component {
       showPassword: true,
       password: '',
       confirmPassword: '',
-      email: '',//this.props.navigation.state.params.email,
+      email: this.props.navigation.state.params.email,
       scrollViewContentFlex: { flex: 1 }
     };
   }
