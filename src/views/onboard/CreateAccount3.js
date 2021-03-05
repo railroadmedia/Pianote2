@@ -288,7 +288,6 @@ export default class CreateAccount3 extends React.Component {
                 <View style={{ flex: 1 }} />
               </View>
               <View
-                key={'items'}
                 style={{
                   height: '90%',
                   width: width,
@@ -353,7 +352,6 @@ export default class CreateAccount3 extends React.Component {
                   </View>
                   <View style={{ height: 10 * factor }} />
                   <View
-                    key={'appearsOnProfile'}
                     style={{
                       width: width,
                       height: 20 * factor,
@@ -372,7 +370,6 @@ export default class CreateAccount3 extends React.Component {
                   </View>
                   <View style={{ height: 35 * factor }} />
                   <View
-                    key={'next'}
                     style={{
                       height: height * 0.06,
                       width: '40%',
@@ -412,7 +409,6 @@ export default class CreateAccount3 extends React.Component {
                   </View>
                   <View style={{ height: 20 * factor }} />
                   <View
-                    key={'dots'}
                     style={{
                       height: '3.5%',
                       flexDirection: 'row'
@@ -486,7 +482,6 @@ export default class CreateAccount3 extends React.Component {
                   </View>
                   <View style={{ height: 30 * factor }} />
                   <View
-                    key={'skip'}
                     style={{
                       width: width,
                       alignItems: 'center'
@@ -573,7 +568,6 @@ export default class CreateAccount3 extends React.Component {
               </View>
 
               <View
-                key={'items'}
                 style={{
                   bottom: 0,
                   height: '90%',
@@ -583,7 +577,6 @@ export default class CreateAccount3 extends React.Component {
                 }}
               >
                 <View
-                  key={'container'}
                   style={{
                     height: '100%',
                     width: '100%',
@@ -592,7 +585,6 @@ export default class CreateAccount3 extends React.Component {
                 >
                   <View style={{ flex: 0.2 }} />
                   <View
-                    key={'addPicture'}
                     style={{
                       height: (onTablet ? 27.5 : 35) * factor,
                       flexDirection: 'row'
@@ -610,7 +602,6 @@ export default class CreateAccount3 extends React.Component {
                   </View>
                   <View style={{ height: 10 * factor }} />
                   <View
-                    key={'profilePicture'}
                     style={{
                       height: '22%',
                       width: '100%',
@@ -676,7 +667,6 @@ export default class CreateAccount3 extends React.Component {
                   </View>
                   <View style={{ height: 10 * factor }} />
                   <View
-                    key={'appearsOnProfile'}
                     style={{
                       width: width,
                       paddingLeft: 20 * factor
@@ -694,7 +684,6 @@ export default class CreateAccount3 extends React.Component {
                   </View>
                   <View style={{ height: 40 * factor }} />
                   <View
-                    key={'next'}
                     style={{
                       height: '6%',
                       width: '40%',
@@ -818,7 +807,6 @@ export default class CreateAccount3 extends React.Component {
                   </View>
                   <View style={{ height: 30 * factor }} />
                   <View
-                    key={'skip'}
                     style={{
                       width: width,
                       alignItems: 'center'
@@ -846,10 +834,7 @@ export default class CreateAccount3 extends React.Component {
                 isVisible={this.state.showProfileImage}
                 style={[
                   styles.centerContent,
-                  {
-                    margin: 0,
-                    flex: 1
-                  }
+                  styles.modalContainer
                 ]}
                 animation={'slideInUp'}
                 animationInTiming={350}
@@ -887,7 +872,6 @@ export default class CreateAccount3 extends React.Component {
               </Modal>
             </View>
             <View
-              key={'pianote1'}
               style={{
                 height: height,
                 width: width,
@@ -911,7 +895,6 @@ export default class CreateAccount3 extends React.Component {
                 }}
               />
               <View
-                key={'learningPathLine'}
                 style={{
                   height: '15%',
                   width: '100%',
@@ -992,7 +975,6 @@ export default class CreateAccount3 extends React.Component {
                 </View>
               </View>
               <View
-                key={'coursesLine'}
                 style={{
                   height: '15%',
                   width: width,
@@ -1073,7 +1055,6 @@ export default class CreateAccount3 extends React.Component {
                 </View>
               </View>
               <View
-                key={'songsLine'}
                 style={{
                   height: '15%',
                   width: width,
@@ -1154,7 +1135,6 @@ export default class CreateAccount3 extends React.Component {
                 </View>
               </View>
               <View
-                key={'supportLine'}
                 style={{
                   height: '15%',
                   width: width,
@@ -1237,7 +1217,6 @@ export default class CreateAccount3 extends React.Component {
               </View>
               <View style={{ height: '5%' }} />
               <View
-                key={'dots'}
                 style={{
                   height: '3.5%',
                   flexDirection: 'row'
@@ -1311,7 +1290,6 @@ export default class CreateAccount3 extends React.Component {
               </View>
               <View style={{ height: 30 * factor }} />
               <View
-                key={'skip'}
                 style={{
                   width: width,
                   alignItems: 'center'
@@ -1335,7 +1313,6 @@ export default class CreateAccount3 extends React.Component {
               </View>
             </View>
             <View
-              key={'pianote1'}
               style={{
                 height: height,
                 width: width,
@@ -1421,7 +1398,6 @@ export default class CreateAccount3 extends React.Component {
               </View>
               <View style={{ height: '3%' }} />
               <View
-                key={'dots'}
                 style={{
                   height: '3.5%',
                   flexDirection: 'row'
@@ -1495,7 +1471,6 @@ export default class CreateAccount3 extends React.Component {
               </View>
               <View style={{ height: 15 * factor }} />
               <View
-                key={'skip'}
                 style={{
                   width: width,
                   height: '6.25%',

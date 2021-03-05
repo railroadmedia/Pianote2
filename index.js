@@ -1,7 +1,7 @@
 /**
  * Index
  */
-import { AppRegistry, Dimensions, Platform, Linking } from 'react-native';
+import { AppRegistry, Dimensions, Platform, Linking, LogBox } from 'react-native';
 import App from './App';
 import { name as appName } from './app.json';
 import { configure } from '@musora/services';
@@ -17,13 +17,6 @@ import {
   showNotification
 } from './src/services/notification.service';
 import AsyncStorage from '@react-native-community/async-storage';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 localNotification();
 PushNotification.configure({
@@ -88,7 +81,7 @@ PushNotification.configure({
 });
 
 AppRegistry.registerComponent(appName, () => App);
-console.disableYellowBox = true;
+LogBox.ignoreAllLogs(true)
 global.fullWidth = Dimensions.get('window').width;
 global.fullHeight = Dimensions.get('window').height;
 global.token = '';
@@ -98,10 +91,10 @@ global.isiOS = Platform.OS === 'ios';
 global.styles = require('Pianote2/src/assets/styles/styles.js');
 global.isConnected = true;
 global.isPackOnly = false;
-global.paddingInset = DeviceInfo.isTablet ? 10 : 5;
+global.paddingInset = 10
 global.fallbackThumb =
   'https://dmmior4id2ysr.cloudfront.net/assets/images/pianote_fallback_thumb.jpg';
-(global.backButtonSize = (DeviceInfo.isTablet() ? 17.5 : 25) * factor),
+(global.backButtonSize = DeviceInfo.isTablet() ? 17.5 : 25),
   (global.colors = {
     mainBackground: '#00101d',
     secondBackground: '#445f73',

@@ -32,7 +32,7 @@ const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 const height =
   windowDim.width < windowDim.height ? windowDim.height : windowDim.width;
-const factorVertical =
+const verticalRatio =
   windowDim.width < windowDim.height ? height / 812 : width / 375;
 
 export default class ForgotPassword extends React.Component {
@@ -88,7 +88,7 @@ export default class ForgotPassword extends React.Component {
             style={{ flex: 1 }}
             behavior={`${isiOS ? 'padding' : ''}`}
             keyboardVerticalOffset={Platform.select({
-              ios: () => (onTablet ? 0 : -75 * factorVertical),
+              ios: () => (onTablet ? 0 : -75 * verticalRatio),
               android: () => 0
             })()}
           >

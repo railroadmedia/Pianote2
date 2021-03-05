@@ -35,9 +35,6 @@ let greaterWDim;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 const sortDict = {
   newest: 'NEWEST',
   oldest: 'OLDEST',
@@ -320,7 +317,6 @@ class HorizontalVideoList extends React.Component {
             <>
               {(!onTablet || (onTablet && this.props.hideFilterButton)) && (
                 <TouchableOpacity
-                  key={'seeAll'}
                   onPress={() => this.props.seeAll()}
                 >
                   <Text style={localStyles.seeAllText}>See All</Text>
@@ -364,7 +360,7 @@ class HorizontalVideoList extends React.Component {
                         </Text>
                         <View>
                           <FontIcon
-                            size={(onTablet ? 10 : 14) * factor}
+                            size={onTablet ? 18 : 14}
                             name={'sort-amount-down'}
                             color={colors.pianoteRed}
                           />
@@ -392,7 +388,6 @@ class HorizontalVideoList extends React.Component {
         </View>
         {this.filters?.filterAppliedText}
         <FlatList
-          key={'videos'}
           numColumns={this.props.isTile ? 3 : 1}
           data={this.state.items}
           extraData={this.state}
@@ -423,13 +418,13 @@ class HorizontalVideoList extends React.Component {
             >
               <View style={{ width: '100%' }}>
                 <View style={[styles.centerContent, localStyles.progressItem]}>
-                  {!item.isStarted ? (
+                  {item.isStarted ? (
                     <Progress
                       height={onTablet ? 55 : 45}
                       width={onTablet ? 55 : 45}
                       fill={'white'}
                     />
-                  ) : !item.isCompleted ? (
+                  ) : item.isCompleted ? (
                     <ApprovedTeacher
                       height={onTablet ? 70 : 55}
                       width={onTablet ? 70 : 55}
@@ -551,7 +546,6 @@ class HorizontalVideoList extends React.Component {
           )}
         />
         <Modal
-          key={'modal'}
           isVisible={this.state.showModal}
           style={styles.modalContainer}
           animation={'slideInUp'}
@@ -569,7 +563,6 @@ class HorizontalVideoList extends React.Component {
           />
         </Modal>
         <Modal
-          key={'calendarModal'}
           isVisible={this.state.addToCalendarModal}
           style={{
             margin: 0,
@@ -592,13 +585,8 @@ class HorizontalVideoList extends React.Component {
           />
         </Modal>
         <Modal
-          key={'modalRelevance'}
           isVisible={this.state.showRelevance}
-          style={{
-            margin: 0,
-            height: '100%',
-            width: '100%'
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
