@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Dimensions
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import Modal from 'react-native-modal';
 import SoundSlice from '../../components/SoundSlice.js';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -76,16 +77,15 @@ export default class VideoPlayerSong extends React.Component {
               >
                 <AntIcon
                   name={'close'}
-                  size={(onTablet ? 20 : 27.5) * factor}
+                  size={sizing.myListButtonSize}
                   color={'#ffffff'}
                 />
               </TouchableOpacity>
               <Text
-                key={'assignmentNumber'}
                 style={{
                   padding: paddingInset,
                   fontFamily: 'OpenSans-Bold',
-                  fontSize: (onTablet ? 12 : 16) * factor,
+                  fontSize: sizing.verticalListTitleSmall,
                   textAlign: 'center',
                   color: colors.secondBackground
                 }}
@@ -93,9 +93,8 @@ export default class VideoPlayerSong extends React.Component {
                 ASSIGNMENT #{index}
               </Text>
               <Text
-                key={'assignmentName'}
                 style={{
-                  fontSize: (onTablet ? 12 : 20) * factor,
+                  fontSize: sizing.titleVideoPlayer,
                   fontFamily: 'OpenSans-Bold',
                   textAlign: 'center',
                   color: 'white',
@@ -104,10 +103,9 @@ export default class VideoPlayerSong extends React.Component {
               >
                 {title}
               </Text>
-              <View style={{ height: 10 * factor }} />
+              <View style={{ height: 10 }} />
               {timeCodes?.map(tc => (
                 <View
-                  key={'skipTo'}
                   style={[
                     styles.centerContent,
                     {
@@ -122,7 +120,7 @@ export default class VideoPlayerSong extends React.Component {
                       {
                         width: '40%',
                         height: '100%',
-                        borderRadius: 30 * factor,
+                        borderRadius: 30,
                         backgroundColor: '#ececec',
                         alignSelf: 'center'
                       }
@@ -144,7 +142,7 @@ export default class VideoPlayerSong extends React.Component {
                           fontFamily: 'OpenSans-Regular',
                           fontWeight: '700',
                           color: 'grey',
-                          fontSize: (onTablet ? 9 : 12) * factor,
+                          fontSize: sizing.descriptionText,
                           alignSelf: 'center'
                         }}
                       >
@@ -157,9 +155,9 @@ export default class VideoPlayerSong extends React.Component {
 
               <View
                 style={{
-                  height: 1 * factor,
+                  height: 1,
                   borderBottomColor: colors.secondBackground,
-                  borderBottomWidth: 1 * factor
+                  borderBottomWidth: 1
                 }}
               />
               {description !== 'TBD' && (
@@ -169,7 +167,7 @@ export default class VideoPlayerSong extends React.Component {
                       paddingVertical: '2%',
                       paddingHorizontal: '5%',
                       textAlign: 'center',
-                      fontSize: (onTablet ? 10 : 16) * factor,
+                      fontSize: sizing.descriptionText,
                       fontFamily: 'OpenSans-Regular',
                       color: '#ffffff'
                     }}
@@ -207,14 +205,15 @@ export default class VideoPlayerSong extends React.Component {
                 onPress={() => this.setState({ showSoundSlice: true })}
                 style={[
                   styles.centerContent,
+                  styles.heightButtons,
                   {
-                    minHeight: (onTablet ? 30 : 50) * factor,
-                    borderWidth: 2 * factor,
+                    borderWidth: 2,
                     borderColor: '#fb1b2f',
                     width: '90%',
                     alignSelf: 'center',
                     borderRadius: 300,
-                    marginBottom: onTablet ? 10 : 5
+                    paddingHorizontal: 10,
+                    marginBottom: 7.5,
                   }
                 ]}
               >
@@ -222,8 +221,7 @@ export default class VideoPlayerSong extends React.Component {
                   style={{
                     color: '#fb1b2f',
                     fontFamily: 'RobotoCondensed-Bold',
-                    fontSize: (onTablet ? 14 : 17.5) * factor,
-                    paddingVertical: 10
+                    fontSize: sizing.verticalListTitleSmall,
                   }}
                 >
                   PRACTICE
@@ -235,7 +233,7 @@ export default class VideoPlayerSong extends React.Component {
               style={[
                 styles.centerContent,
                 {
-                  minHeight: (onTablet ? 30 : 50) * factor,
+                  marginBottom: DeviceInfo.hasNotch() ? 20 : 0,
                   backgroundColor: '#fb1b2f',
                   width: '90%',
                   alignSelf: 'center',
@@ -247,7 +245,7 @@ export default class VideoPlayerSong extends React.Component {
                 style={{
                   color: 'white',
                   fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: (onTablet ? 14 : 17.5) * factor,
+                  fontSize: sizing.verticalListTitleSmall,
                   paddingVertical: 10
                 }}
               >
@@ -259,16 +257,8 @@ export default class VideoPlayerSong extends React.Component {
           </View>
         )}
         <Modal
-          key={'soundSlice'}
           isVisible={this.state.showSoundSlice}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={350}
           animationOutTiming={350}

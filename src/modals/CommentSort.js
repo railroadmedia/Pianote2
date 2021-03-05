@@ -6,19 +6,10 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  Dimensions
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { withNavigation } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 const sortOptions = [
   { title: 'Most Liked', option: 'Popular' },
@@ -44,19 +35,22 @@ class CommentSort extends React.Component {
             onPress={() => this.props.hideCommentSort()}
           />
         </View>
-        <View style={localStyles.commentContainer}>
+        <View 
+          style={{
+            width: '100%',
+            backgroundColor: '#00101d',
+            paddingBottom: DeviceInfo.hasNotch() ? 30 : 0
+          }}
+        >
           {sortOptions.map((sortOption, index) => (
             <TouchableOpacity
-              key={index}
-              style={[
-                localStyles.sortCommentContainer,
-                index == 0
-                  ? {
-                      borderTopWidth: 0.5 * factor,
-                      borderTopColor: '#445f73'
-                    }
-                  : {}
-              ]}
+              style={{
+                padding: 10,
+                flexDirection: 'row',
+                borderBottomColor: '#445f73',
+                borderBottomWidth: 0.5,
+                alignItems: 'center',
+              }}
               onPress={() => {
                 this.props.hideCommentSort();
                 this.props.changeSort(sortOption.option);
@@ -64,7 +58,7 @@ class CommentSort extends React.Component {
             >
               <EntypoIcon
                 name={'check'}
-                size={(onTablet ? 15 : 20) * factor}
+                size={onTablet ? 24 : 18}
                 color={
                   this.state.currentSort == sortOption.option
                     ? 'white'
@@ -72,65 +66,48 @@ class CommentSort extends React.Component {
                 }
               />
               <Text
-                style={[
-                  localStyles.sortText,
-                  {
-                    color:
-                      this.state.currentSort == sortOption.option
-                        ? 'white'
-                        : colors.secondBackground
-                  }
-                ]}
+                style={{
+                  padding: 10,
+                  fontSize: onTablet ? 16 : 12,
+                  fontFamily: 'OpenSans-Regular',
+                  color:
+                    this.state.currentSort == sortOption.option
+                      ? 'white'
+                      : colors.secondBackground
+                }}
               >
                 {sortOption.title}
               </Text>
             </TouchableOpacity>
           ))}
           <TouchableOpacity
-            style={localStyles.cancelContainer}
             onPress={() => this.props.hideCommentSort()}
+            style={{
+              padding: 5,
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
           >
             <EntypoIcon
               name={'cross'}
-              size={(onTablet ? 17.5 : 25) * factor}
+              size={onTablet ? 30 : 25}
               color={'white'}
             />
-            <Text style={localStyles.cancel}>Cancel</Text>
-          </TouchableOpacity>
+            <Text
+              style={{
+                padding: 10,
+                fontSize: onTablet ? 16 : 12,
+                fontFamily: 'OpenSans-Regular',
+                color: 'white'
+              }}
+            >
+              Cancel
+            </Text>
+          </TouchableOpacity>       
         </View>
       </View>
     );
   };
 }
-
-const localStyles = StyleSheet.create({
-  commentContainer: {
-    width: '100%',
-    backgroundColor: '#00101d'
-  },
-  sortCommentContainer: {
-    paddingLeft: 15,
-    flexDirection: 'row',
-    borderBottomColor: '#445f73',
-    borderBottomWidth: 0.5,
-    alignItems: 'center'
-  },
-  sortText: {
-    padding: 15,
-    fontSize: (DeviceInfo.isTablet() ? 10 : 16) * factor,
-    fontFamily: 'OpenSans-Regular'
-  },
-  cancelContainer: {
-    paddingLeft: 15,
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  cancel: {
-    fontSize: (DeviceInfo.isTablet() ? 10 : 16) * factor,
-    fontFamily: 'OpenSans-Regular',
-    color: 'white',
-    padding: 15
-  }
-});
 
 export default withNavigation(CommentSort);

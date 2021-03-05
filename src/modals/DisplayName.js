@@ -8,17 +8,9 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
-  Dimensions
 } from 'react-native';
 
 import { withNavigation } from 'react-navigation';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 class DisplayName extends React.Component {
   static navigationOptions = { header: null };
@@ -75,20 +67,20 @@ const localStyles = StyleSheet.create({
   },
   titleContainer: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor
+    borderRadius: 15,
+    margin: 20
   },
   displayText: {
-    paddingHorizontal: 20 * factor,
-    marginTop: 10 * factor
+    paddingHorizontal: 20,
+    marginTop: 10
   },
   pleaseTryAgain: {
     paddingHorizontal: 20,
-    marginVertical: 5 * factor
+    marginVertical: 5
   },
   tryAgainContainer: {
     paddingHorizontal: 20,
-    marginVertical: 20 * factor
+    marginVertical: 20
   }
 });
 

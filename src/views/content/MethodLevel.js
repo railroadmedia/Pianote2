@@ -39,9 +39,6 @@ let greaterWDim;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 export default class MethodLevel extends React.Component {
   static navigationOptions = { header: null };
@@ -221,12 +218,11 @@ export default class MethodLevel extends React.Component {
               styles.centerContent,
               {
                 position: 'absolute',
-                height: 35 * factor,
-                width: 35 * factor,
+                height: 40,
+                width: 40,
                 borderRadius: 100,
-                position: 'absolute',
-                left: 7.5 * factor,
-                top: 10 * factor,
+                left: 10,
+                top: 10,
                 zIndex: 4
               }
             ]}
@@ -275,9 +271,9 @@ export default class MethodLevel extends React.Component {
                 <FastImage
                   style={{
                     width: '75%',
-                    height: 65 * factor,
+                    height: onTablet ? 100 : 65,
                     alignSelf: 'center',
-                    marginBottom: onTablet ? '3%' : '5%'
+                    marginBottom: onTablet ? '2%' : '4%'
                   }}
                   source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
                   resizeMode={FastImage.resizeMode.contain}
@@ -287,7 +283,7 @@ export default class MethodLevel extends React.Component {
                 style={[
                   styles.heightButtons,
                   {
-                    marginBottom: 10 * factor,
+                    marginBottom: 10,
                     width: '100%',
                     flexDirection: 'row',
                     alignItems: 'center'
@@ -309,13 +305,13 @@ export default class MethodLevel extends React.Component {
                       {!this.state.isAddedToList ? (
                         <AntIcon
                           name={'plus'}
-                          size={(onTablet ? 18 : 25) * factor}
+                          size={sizing.myListButtonSize}
                           color={colors.pianoteRed}
                         />
                       ) : (
                         <AntIcon
                           name={'close'}
-                          size={(onTablet ? 18 : 25) * factor}
+                          size={sizing.myListButtonSize}
                           color={colors.pianoteRed}
                         />
                       )}
@@ -324,14 +320,14 @@ export default class MethodLevel extends React.Component {
                       style={{
                         fontFamily: 'OpenSans-Regular',
                         color: 'white',
-                        fontSize: (onTablet ? 8 : 12) * factor
+                        fontSize: sizing.descriptionText
                       }}
                     >
                       {this.state.isAddedToList ? 'Added' : 'My List'}
                     </Text>
                   </TouchableOpacity>
                 </View>
-                <View style={{ width: '45%' }}>
+                <View style={{ width: '50%' }}>
                   {this.state.isCompleted ? (
                     <ResetIcon
                       isMethod={true}
@@ -376,7 +372,7 @@ export default class MethodLevel extends React.Component {
                         name={
                           this.state.showInfo ? 'infocirlce' : 'infocirlceo'
                         }
-                        size={(onTablet ? 15 : 20) * factor}
+                        size={sizing.infoButtonSize}
                         color={colors.pianoteRed}
                       />
                     </View>
@@ -385,7 +381,7 @@ export default class MethodLevel extends React.Component {
                         fontFamily: 'OpenSans-Regular',
                         color: 'white',
                         marginTop: 2,
-                        fontSize: (onTablet ? 8 : 12) * factor
+                        fontSize: sizing.descriptionText
                       }}
                     >
                       Info
@@ -407,7 +403,7 @@ export default class MethodLevel extends React.Component {
                 style={{
                   fontFamily: 'OpenSans-Regular',
                   marginTop: onTablet ? 40 : 30,
-                  fontSize: (onTablet ? 10 : 15) * factor,
+                  fontSize: sizing.descriptionText,
                   paddingHorizontal: paddingInset,
                   color: 'white',
                   textAlign: 'center'

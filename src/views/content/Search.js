@@ -23,11 +23,8 @@ import { searchContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
 const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+  
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
   return (
@@ -42,7 +39,6 @@ export default class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      filterSize: new Animated.Value(height * 0.225),
       recentSearchResults: [],
 
       searchResults: [],
@@ -88,13 +84,13 @@ export default class Search extends React.Component {
             onPress={() => this.clickSearchRecent(row[0])}
             style={{
               justifyContent: 'center',
-              paddingLeft: 15 * factor
+              paddingLeft: 10
             }}
           >
             <Text
               style={{
                 color: 'white',
-                fontSize: (onTablet ? 12 : 18) * factor,
+                fontSize: onTablet ? 20 : 14,
                 fontFamily: 'OpenSans-Bold',
                 paddingVertical: 10
               }}
@@ -107,7 +103,6 @@ export default class Search extends React.Component {
     } else {
       return (
         <View
-          key={'noResults'}
           style={{
             justifyContent: 'center',
             paddingLeft: paddingInset,
@@ -117,7 +112,7 @@ export default class Search extends React.Component {
         >
           <Text
             style={{
-              fontSize: (onTablet ? 14 : 18) * factor,
+              fontSize: onTablet ? 20 : 14,
               fontFamily: 'OpenSans-Regular',
               fontWeight: 'bold',
               color: 'white',
@@ -340,10 +335,10 @@ export default class Search extends React.Component {
               }}
             >
               <View style={styles.searchBox}>
-                <View style={[styles.centerContent, { width: 40 * factor }]}>
+                <View style={[styles.centerContent, { width: onTablet ? 60 : 40 }]}>
                   <EvilIcons
                     name={'search'}
-                    size={(onTablet ? 22.5 : 27.5) * factor}
+                    size={onTablet ? 35 : 25}
                     color={
                       this.props.currentPage == 'SEARCH' ? '#fb1b2f' : 'grey'
                     }
@@ -361,7 +356,7 @@ export default class Search extends React.Component {
                     paddingVertical: paddingInset,
                     justifyContent: 'center',
                     fontFamily: 'OpenSans-Regular',
-                    fontSize: (onTablet ? 12 : 16) * factor
+                    fontSize: onTablet ? 20 : 16
                   }}
                   onSubmitEditing={() => {
                     this.setState({
@@ -406,7 +401,7 @@ export default class Search extends React.Component {
                     <Text
                       style={{
                         textAlign: 'center',
-                        fontSize: (onTablet ? 10 : 12) * factor,
+                        fontSize: onTablet ? 16 : 12,
                         color: '#fb1b2f',
                         fontFamily: 'OpenSans-Bold'
                       }}
@@ -425,7 +420,7 @@ export default class Search extends React.Component {
                     style={{
                       paddingLeft: paddingInset,
                       fontFamily: 'OpenSans-Bold',
-                      fontSize: (onTablet ? 14 : 18) * factor,
+                      fontSize: onTablet ? 22 : 16,
                       color: colors.secondBackground
                     }}
                   >
@@ -447,7 +442,7 @@ export default class Search extends React.Component {
                     {!this.state.filtering && (
                       <Text
                         style={{
-                          fontSize: (onTablet ? 12 : 14) * factor,
+                          fontSize: onTablet ? 18 : 14,
                           color: colors.pianoteRed,
                           textAlign: 'right',
                           fontFamily: 'OpenSans-Regular'
@@ -487,7 +482,7 @@ export default class Search extends React.Component {
                       filters={this.metaFilters}
                       currentSort={this.state.currentSort}
                       changeSort={sort => this.changeSort(sort)}
-                      imageWidth={onTablet ? width * 0.225 : width * 0.3}
+                      imageWidth={(onTablet ? 0.225 : 0.3) * width}
                       outVideos={this.state.outVideos} // if paging and out of videos
                       applyFilters={filters =>
                         new Promise(res =>
@@ -536,7 +531,7 @@ export default class Search extends React.Component {
                   <Text
                     style={{
                       marginTop: 5,
-                      fontSize: (onTablet ? 14 : 18) * factor,
+                      fontSize: onTablet ? 20 : 16,
                       fontFamily: 'OpenSans-Bold',
                       color: 'white',
                       paddingLeft: paddingInset

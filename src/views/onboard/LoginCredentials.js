@@ -161,6 +161,7 @@ export default class LoginCredentials extends React.Component {
     this.loadingRef?.toggleLoading();
     try {
       const purchases = await RNIap.getAvailablePurchases();
+      console.log(purchases)
       if (!purchases.length) {
         this.loadingRef?.toggleLoading();
         return this.customModal.toggle(
@@ -237,22 +238,10 @@ export default class LoginCredentials extends React.Component {
                       alignSelf: 'center',
                       textAlign: 'center',
                       fontFamily: 'OpenSans-Regular',
-                      width: '50%'
+                      width: '100%'
                     }}
                   >
-                    The Ultimate Online
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: onTablet ? 30 : 20,
-                      color: 'white',
-                      alignSelf: 'center',
-                      textAlign: 'center',
-                      fontFamily: 'OpenSans-Regular',
-                      width: `${(25 * (onTablet ? 50 : 50)) / 19}%` //25=second row chars, 50=width % of first row (same as pianote svg), 19=first row chars
-                    }}
-                  >
-                    Piano Lessons Experience.
+                    The Ultimate Online{'\n'}Piano Lessons Experience.
                   </Text>
                 </View>
                 <TextInput
@@ -421,12 +410,8 @@ export default class LoginCredentials extends React.Component {
           }}
         />
         <Modal
-          key={'passwords'}
           isVisible={this.state.showPasswordEmailMatch}
-          style={{
-            margin: 0,
-            flex: 1
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -466,7 +451,7 @@ const localStyles = StyleSheet.create({
   pianoteInnerContainer: {
     alignSelf: 'center',
     alignItems: 'center',
-    width: DeviceInfo.isTablet() ? '30%' : '50%',
+    width: DeviceInfo.isTablet() ? '30%' : '45%',
     aspectRatio: 177 / 53
   },
   email: {

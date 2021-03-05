@@ -8,17 +8,9 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
-  Dimensions
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { withNavigation } from 'react-navigation';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 class CheckEmail extends React.Component {
   static navigationOptions = { header: null };
@@ -60,7 +52,6 @@ class CheckEmail extends React.Component {
                 style={[
                   styles.modalCancelButtonText,
                   localStyles.tryAgainText,
-                  { fontSize: (onTablet ? 9 : 14) * factor }
                 ]}
               >
                 TRY AGAIN
@@ -76,22 +67,22 @@ class CheckEmail extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor,
-    paddingBottom: 5 * factor,
-    paddingTop: 20 * factor,
+    borderRadius: 15,
+    margin: 20,
+    paddingBottom: 5,
+    paddingTop: 20,
     backgroundColor: 'white'
   },
   title: {
     paddingHorizontal: 40,
-    marginBottom: 10 * factor
+    marginBottom: 10
   },
   loginContainer: {
-    borderRadius: 45 * factor,
+    borderRadius: 45,
     backgroundColor: '#fb1b2f',
     marginHorizontal: 40,
-    marginVertical: 5 * factor,
-    height: (DeviceInfo.isTablet() ? 25 : 40) * factor
+    marginVertical: 5,
+    height: DeviceInfo.isTablet() ? 45 : 35
   },
   loginText: {
     color: 'white',
@@ -99,7 +90,7 @@ const localStyles = StyleSheet.create({
   },
   tryAgain: {
     paddingHorizontal: 40,
-    marginVertical: 10 * factor
+    marginVertical: 10
   },
   tryAgainText: {
     color: '#fb1b2f'

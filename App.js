@@ -53,7 +53,7 @@ export default class App extends React.Component {
   }
 
   handleOpenURL = async ({ url }) => {
-    if (url?.includes('pianote.com/reset-password')) {
+    if (url?.includes('/reset-password')) {
       let resetKey = url.substring(
         url.indexOf('token=') + 6,
         url.indexOf('&email')

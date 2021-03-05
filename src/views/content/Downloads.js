@@ -161,7 +161,7 @@ export default class Downloads extends React.Component {
                   padding: paddingInset * 1.5,
                   color: 'white',
                   textAlign: 'center',
-                  fontSize: onTablet ? 20 : 18 * factor
+                  fontSize: onTablet ? 20 : 12
                 }}
               >
                 Any lessons you download will be available here.
@@ -209,7 +209,7 @@ export default class Downloads extends React.Component {
                   >
                     <Text
                       style={{
-                        fontSize: (onTablet ? 10 : 16) * factor,
+                        fontSize: sizing.videoTitleText,
                         marginBottom: 2,
                         color: 'white',
                         fontFamily: 'OpenSans-Bold'
@@ -220,7 +220,7 @@ export default class Downloads extends React.Component {
                     <Text
                       style={{
                         color: 'white',
-                        fontSize: (onTablet ? 8 : 12) * factor
+                        fontSize: sizing.descriptionText
                       }}
                     >
                       {item[type]?.type?.replace('-', ' ').replace('-', ' ')} |{' '}
@@ -243,7 +243,7 @@ export default class Downloads extends React.Component {
                     <View style={{ justifyContent: 'center' }}>
                       <IconFeather
                         name={'chevron-right'}
-                        size={(onTablet ? 20 : 25) * factor}
+                        size={onTablet ? 25 : 20}
                         color={'white'}
                       />
                     </View>

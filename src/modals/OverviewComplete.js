@@ -55,11 +55,11 @@ class OverviewComplete extends React.Component {
             <View style={[styles.centerContent]}>
               <IonIcon
                 name={'ios-trophy'}
-                size={36 * factor}
+                size={onTablet ? 45 : 35}
                 color={'#fb1b2f'}
               />
             </View>
-            <View style={[styles.centerContent, { padding: 5 * factor }]}>
+            <View style={[styles.centerContent, { padding: 5 }]}>
               <Text style={[styles.modalHeaderText]}>
                 {this.changeType(this.props.type).toUpperCase()}
                 {'\n'}Complete
@@ -84,18 +84,18 @@ class OverviewComplete extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 10 * factor,
+    borderRadius: 10,
     marginHorizontal: 30,
     paddingVertical: 30
   },
   congrats: {
     textAlign: 'center',
-    marginVertical: 5 * factor,
-    marginHorizontal: 20 * factor
+    marginVertical: 5,
+    marginHorizontal: 20
   },
   title: {
-    marginHorizontal: 20 * factor,
-    marginBottom: 15 * factor,
+    marginHorizontal: 20,
+    marginBottom: 15,
     fontWeight: 'bold'
   },
   xp: {

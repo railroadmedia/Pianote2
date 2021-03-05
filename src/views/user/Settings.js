@@ -411,14 +411,10 @@ class Settings extends React.Component {
         </ScrollView>
 
         <Modal
-          key={'logout'}
           isVisible={this.state.showLogOut}
           style={[
             styles.centerContent,
-            {
-              margin: 0,
-              flex: 1
-            }
+            styles.modalContainer
           ]}
           animation={'slideInUp'}
           animationInTiming={250}

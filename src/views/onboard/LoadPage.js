@@ -173,16 +173,18 @@ class LoadPage extends React.Component {
               );
             } else if (userData.isLifetime || userData.isMember) {
               // is logged in with valid membership go to lessons
-              await this.props.navigation.dispatch(
-                StackActions.reset({
-                  index: 0,
-                  actions: [
-                    NavigationActions.navigate({
-                      routeName: 'LESSONS'
-                    })
-                  ]
-                })
-              );
+              if (!global.notifNavigation) {
+                await this.props.navigation.dispatch(
+                  StackActions.reset({
+                    index: 0,
+                    actions: [
+                      NavigationActions.navigate({
+                        routeName: 'LESSONS'
+                      })
+                    ]
+                  })
+                );
+              }
             } else {
               // membership expired, go to membership expired
               this.props.navigation.navigate('MEMBERSHIPEXPIRED', {
@@ -252,7 +254,6 @@ class LoadPage extends React.Component {
         ]}
       >
         <View
-          key={'loadPage'}
           style={[
             styles.centerContent,
             {
@@ -284,16 +285,8 @@ class LoadPage extends React.Component {
           />
         </View>
         <Modal
-          key={'NoConnection'}
           isVisible={this.state.showNoConnection}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
+          style={[ styles.centerContent, styles.modalContainer ]}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

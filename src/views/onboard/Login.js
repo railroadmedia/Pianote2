@@ -317,7 +317,7 @@ export default class Login extends React.Component {
           <View style={styles.centerContent}>
             <FastImage
               style={{
-                height: onTablet ? 200 : 125,
+                height: onTablet ? 200 : 100,
                 width: '100%'
               }}
               source={require('Pianote2/src/assets/img/imgs/devices.png')}
@@ -328,7 +328,7 @@ export default class Login extends React.Component {
             style={{
               fontFamily: 'OpenSans-Bold',
               fontSize: onTablet ? 32 : 24,
-              padding: 10,
+              padding: 5,
               textAlign: 'center',
               color: 'white'
             }}
@@ -338,7 +338,7 @@ export default class Login extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: onTablet ? 24 : 18,
+              fontSize: onTablet ? 24 : 16,
               textAlign: 'center',
               color: 'grey',
               marginTop: 10
@@ -424,7 +424,7 @@ export default class Login extends React.Component {
             style={{
               fontFamily: 'OpenSans-Regular',
               fontSize: onTablet ? 32 : 24,
-              padding: 10,
+              padding: 5,
               textAlign: 'center',
               color: 'white'
             }}
@@ -433,20 +433,20 @@ export default class Login extends React.Component {
             <Text
               style={{
                 fontFamily: 'OpenSans-Bold',
-                padding: 10,
+                padding: 5,
                 textAlign: 'center',
                 color: 'white'
               }}
             >
               {' exactly '}
             </Text>
-            what to {'\n'}practice.
+            what to practice.
           </Text>
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              padding: 10,
-              fontSize: onTablet ? 24 : 18,
+              padding: 5,
+              fontSize: onTablet ? 24 : 16,
               textAlign: 'center',
               color: 'grey'
             }}
@@ -522,7 +522,7 @@ export default class Login extends React.Component {
           <View style={styles.centerContent}>
             <FastImage
               style={{
-                height: onTablet ? 200 : 125,
+                height: onTablet ? 200 : 100,
                 width: '100%'
               }}
               source={require('Pianote2/src/assets/img/imgs/favorite-songs.png')}
@@ -533,7 +533,7 @@ export default class Login extends React.Component {
             style={{
               fontFamily: 'OpenSans-Regular',
               fontSize: onTablet ? 32 : 24,
-              padding: 10,
+              padding: 5,
               textAlign: 'center',
               color: 'white'
             }}
@@ -542,7 +542,7 @@ export default class Login extends React.Component {
             <Text
               style={{
                 fontFamily: 'OpenSans-Bold',
-                padding: 10,
+                padding: 5,
                 textAlign: 'center',
                 color: 'white'
               }}
@@ -553,8 +553,8 @@ export default class Login extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              padding: 10,
-              fontSize: onTablet ? 24 : 18,
+              padding: 5,
+              fontSize: onTablet ? 24 : 16,
               textAlign: 'center',
               color: 'grey'
             }}
@@ -631,7 +631,7 @@ export default class Login extends React.Component {
           <View style={styles.centerContent}>
             <FastImage
               style={{
-                height: onTablet ? 200 : 125,
+                height: onTablet ? 200 : 100,
                 width: '100%'
               }}
               source={require('Pianote2/src/assets/img/imgs/support.png')}
@@ -642,16 +642,16 @@ export default class Login extends React.Component {
             style={{
               fontFamily: 'OpenSans-Regular',
               fontSize: onTablet ? 32 : 24,
-              padding: 10,
+              padding: 5,
               textAlign: 'center',
               color: 'white'
             }}
           >
-            Personalized {'\n'}
+            Personalized
             <Text
               style={{
                 fontFamily: 'OpenSans-Bold',
-                padding: 10,
+                padding: 5,
                 textAlign: 'center',
                 color: 'white'
               }}
@@ -662,11 +662,11 @@ export default class Login extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              padding: 10,
-              fontSize: onTablet ? 24 : 18,
+              padding: 5,
+              fontSize: onTablet ? 24 : 16,
               textAlign: 'center',
               color: 'grey',
-              marginTop: '2.5%'
+              marginTop: '1%'
             }}
           >
             Get direct acces to real teachers any time you have a question,
@@ -742,7 +742,7 @@ export default class Login extends React.Component {
               style={{
                 fontFamily: 'OpenSans-Regular',
                 fontSize: onTablet ? 32 : 24,
-                padding: 10,
+                padding: 5,
                 textAlign: 'center',
                 color: 'white'
               }}
@@ -750,7 +750,7 @@ export default class Login extends React.Component {
               <Text
                 style={{
                   fontFamily: 'OpenSans-Bold',
-                  padding: 10,
+                  padding: 5,
                   textAlign: 'center',
                   color: 'white'
                 }}
@@ -762,7 +762,7 @@ export default class Login extends React.Component {
               style={{
                 fontFamily: 'OpenSans-Regular',
                 paddingHorizontal: 20,
-                fontSize: onTablet ? 24 : 18,
+                fontSize: onTablet ? 24 : 16,
                 textAlign: 'center',
                 color: 'grey'
               }}

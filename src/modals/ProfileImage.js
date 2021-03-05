@@ -61,20 +61,20 @@ class ProfileImage extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor
+    borderRadius: 15,
+    margin: 20
   },
   title: {
     paddingHorizontal: 40,
-    marginTop: 10 * factor
+    marginTop: 10
   },
   tryAgain: {
     paddingHorizontal: 40,
-    marginTop: 5 * factor
+    marginTop: 5
   },
   tryAgainTextContainer: {
     paddingHorizontal: 20,
-    marginVertical: 17.5 * factor
+    marginVertical: 15
   },
   tryAgainText: {
     color: '#fb1b2f',

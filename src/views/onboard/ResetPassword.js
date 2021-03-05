@@ -359,15 +359,10 @@ export default class ResetPassword extends React.Component {
             </ScrollView>
           </KeyboardAvoidingView>
           <Modal
-            key={'passwordMatch'}
             isVisible={this.state.showPasswordMatch}
             style={[
               styles.centerContent,
-              {
-                margin: 0,
-                height: '100%',
-                width: '100%'
-              }
+              styles.modalContainer
             ]}
             animation={'slideInUp'}
             animationInTiming={450}

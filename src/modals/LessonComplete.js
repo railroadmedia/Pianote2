@@ -18,9 +18,6 @@ import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 class LessonComplete extends React.Component {
   static navigationOptions = { header: null };
@@ -61,11 +58,11 @@ class LessonComplete extends React.Component {
         style={styles.container}
       >
         <View style={[styles.centerContent, styles.container]}>
-          <View style={[localStyles.container, { width: width * 0.8 }]}>
+          <View style={localStyles.container}>
             <View style={styles.centerContent}>
               <IonIcon
                 name={'ios-trophy'}
-                size={32.5 * factor}
+                size={onTablet ? 45 : 35}
                 color={'#fb1b2f'}
               />
             </View>
@@ -90,8 +87,8 @@ class LessonComplete extends React.Component {
                   ]}
                 />
                 <ApprovedTeacher
-                  height={47 * factor}
-                  width={47 * factor}
+                  height={onTablet ? 70 : 45}
+                  width={onTablet ? 70 : 45}
                   fill={'white'}
                 />
               </FastImage>
@@ -136,25 +133,27 @@ class LessonComplete extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    borderRadius: 10 * factor,
-    margin: 20 * factor,
+    borderRadius: 10,
+    margin: 20,
+    marginTop: 0,
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center'
   },
   headerText: {
-    marginVertical: 10 * factor
+    marginVertical: 10
   },
   imageContainer: {
     height: '20%',
     width: '100%',
+    backgroundColor: 'green',
     alignSelf: 'center',
-    borderRadius: 10 * factor
+    borderRadius: 10
   },
   image: {
     height: '100%',
     aspectRatio: 16 / 9,
-    borderRadius: 10 * factor,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -164,43 +163,42 @@ const localStyles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: '100%',
-    borderRadius: 10 * factor,
+    borderRadius: 10,
     opacity: 0.2,
     backgroundColor: 'red'
   },
   youEarnedText: {
     fontWeight: 'bold',
-    marginTop: 10 * factor,
+    marginTop: 10,
     color: '#fb1b2f'
   },
   congratsText: {
-    marginHorizontal: 20 * factor,
+    marginHorizontal: 20,
     marginTop: 10
   },
   completeLesson: {
     fontWeight: 'bold',
-    marginHorizontal: 20 * factor
+    marginHorizontal: 20
   },
   upNextText: {
-    marginTop: 5 * factor,
-    marginBottom: 10 * factor,
-    color: '#a8a8a8',
+    marginTop: 5,
+    marginBottom: 10,
     paddingHorizontal: 20
   },
   image2Container: {
     height: '20%',
     width: '100%',
     alignSelf: 'center',
-    borderRadius: 10 * factor
+    borderRadius: 10
   },
   image2: {
     height: '100%',
     aspectRatio: 16 / 9,
-    borderRadius: 10 * factor
+    borderRadius: 10
   },
   videoTitle: {
     paddingHorizontal: 20,
-    marginTop: 10
+    marginTop: 10,
   }
 });
 

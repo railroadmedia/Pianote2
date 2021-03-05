@@ -264,7 +264,7 @@ class HorizontalVideoList extends React.Component {
             styles.centerContent,
             {
               flex: 1,
-              marginHorizontal: 40 * factor,
+              marginHorizontal: 40,
               flexDirection: 'row'
             }
           ]}
@@ -351,7 +351,7 @@ class HorizontalVideoList extends React.Component {
                             localStyles.seeAllText,
                             {
                               paddingRight: 5,
-                              fontSize: (onTablet ? 10 : 14.5) * factor
+                              fontSize: sizing.descriptionText
                             }
                           ]}
                         >
@@ -374,7 +374,7 @@ class HorizontalVideoList extends React.Component {
                     </>
                   )}
                   {!this.props.hideFilterButton && (
-                    <View style={{ marginRight: 10 * factor }}>
+                    <View style={{ marginRight: 10 }}>
                       <Filters_V2
                         disabled={this.state.isPaging}
                         onApply={() =>
@@ -423,16 +423,16 @@ class HorizontalVideoList extends React.Component {
             >
               <View style={{ width: '100%' }}>
                 <View style={[styles.centerContent, localStyles.progressItem]}>
-                  {item.isStarted ? (
+                  {!item.isStarted ? (
                     <Progress
-                      height={onTablet ? 50 : 50 * factor}
-                      width={onTablet ? 50 : 50 * factor}
+                      height={onTablet ? 55 : 45}
+                      width={onTablet ? 55 : 45}
                       fill={'white'}
                     />
-                  ) : item.isCompleted ? (
+                  ) : !item.isCompleted ? (
                     <ApprovedTeacher
-                      height={onTablet ? 62.5 : 50 * factor}
-                      width={onTablet ? 62.5 : 50 * factor}
+                      height={onTablet ? 70 : 55}
+                      width={onTablet ? 70 : 55}
                       fill={'white'}
                     />
                   ) : null}
@@ -499,8 +499,7 @@ class HorizontalVideoList extends React.Component {
                           ? colors.pianoteGrey
                           : colors.secondBackground,
 
-                        fontSize: (onTablet ? 8 : 12) * factor,
-                        marginTop: 1.5
+                        fontSize: sizing.descriptionText,
                       }}
                     >
                       {this.props.showType && this.changeType(item.type)}
@@ -511,6 +510,7 @@ class HorizontalVideoList extends React.Component {
                 </View>
                 {new Date(item.publishedOn) > new Date() ? (
                   <TouchableOpacity
+                    style={{ paddingRight: 5 }}
                     onPress={() => {
                       this.addToCalendarLessonTitle = item.title;
                       this.addToCalendatLessonPublishDate = item.publishedOn;
@@ -518,7 +518,7 @@ class HorizontalVideoList extends React.Component {
                     }}
                   >
                     <FontIcon
-                      size={onTablet ? 12.5 * factor : 27.5 * factor}
+                      size={sizing.infoButtonSize}
                       name={'calendar-plus'}
                       color={colors.pianoteRed}
                     />
@@ -526,22 +526,22 @@ class HorizontalVideoList extends React.Component {
                 ) : !item.isAddedToList ? (
                   <TouchableOpacity
                     onPress={() => this.addToMyList(item.id)}
-                    style={{ paddingRight: 5 }}
+                    style={{ paddingRight: 2.5 }}
                   >
                     <AntIcon
                       name={'plus'}
-                      size={onTablet ? 17.5 * factor : 25 * factor}
+                      size={sizing.myListButtonSize}
                       color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
                 ) : (
                   <TouchableOpacity
-                    style={{ paddingRight: 5 }}
+                    style={{ paddingRight: 2.5 }}
                     onPress={() => this.removeFromMyList(item.id)}
                   >
                     <AntIcon
                       name={'close'}
-                      size={onTablet ? 17.5 * factor : 25 * factor}
+                      size={sizing.myListButtonSize}
                       color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
@@ -624,22 +624,14 @@ class HorizontalVideoList extends React.Component {
 }
 
 const localStyles = StyleSheet.create({
-  artist: {
-    fontSize:
-      ((DeviceInfo.isTablet() ? 12 : 16) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    fontFamily: 'OpenSans-Regular'
-  },
   title: {
-    fontSize: (DeviceInfo.isTablet() ? 12 : 18) * factor,
-    fontFamily: 'RobotoCondensed-Bold'
+    fontSize: DeviceInfo.isTablet() ? 20 : 16,
+    fontFamily: 'RobotoCondensed-Bold',
+    paddingVertical: 5,
   },
   seeAllText: {
     textAlign: 'right',
-    fontSize: (DeviceInfo.isTablet() ? 10 : 14.5) * factor,
-    fontWeight: DeviceInfo.isTablet() ? '500' : '300',
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: '#fb1b2f',
     paddingRight: 10
   },
@@ -664,23 +656,13 @@ const localStyles = StyleSheet.create({
   },
   videoTitle: {
     width: '100%',
+    paddingVertical: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center'
   },
   videoTitleText: {
-    fontSize: DeviceInfo.isTablet()
-      ? 16
-      : (14 *
-          (Dimensions.get('window').height / 812 +
-            Dimensions.get('window').width / 375)) /
-        2,
-    marginTop: DeviceInfo.isTablet()
-      ? 5
-      : (7.5 *
-          (Dimensions.get('window').height / 812 +
-            Dimensions.get('window').width / 375)) /
-        2,
+    fontSize: DeviceInfo.isTablet() ? 16 : 14,
     fontFamily: 'OpenSans-Bold',
     color: 'white'
   },

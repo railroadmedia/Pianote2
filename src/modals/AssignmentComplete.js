@@ -38,7 +38,7 @@ class AssignmentComplete extends React.Component {
             <View style={[styles.centerContent]}>
               <IonIcon
                 name={'ios-trophy'}
-                size={(onTablet ? 28 : 36) * factor}
+                size={onTablet ? 45 : 35}
                 color={'#fb1b2f'}
               />
             </View>
@@ -71,24 +71,24 @@ class AssignmentComplete extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 10 * factor,
+    borderRadius: 10,
     padding: 30
   },
   assignmentCompleteContainer: {
-    padding: 5 * factor,
-    marginBottom: 7.5 * factor
+    padding: 5,
+    marginBottom: 0
   },
   xpText: {
     color: '#fb1b2f',
-    marginTop: 15 * factor,
-    marginBottom: 10 * factor
+    marginTop: 15,
+    marginBottom: 10
   },
   assignmentTitle: {
-    marginHorizontal: 20 * factor,
+    marginHorizontal: 20,
     fontWeight: 'bold'
   },
   congratsText: {
-    marginHorizontal: 20 * factor
+    marginHorizontal: 20
   }
 });
 

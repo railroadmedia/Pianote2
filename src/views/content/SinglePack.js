@@ -41,9 +41,6 @@ import { NetworkContext } from '../../context/NetworkProvider';
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 let greaterWDim;
 export default class SinglePack extends React.Component {
@@ -292,7 +289,7 @@ export default class SinglePack extends React.Component {
                   style={[
                     styles.heightButtons,
                     {
-                      marginBottom: 10 * factor,
+                      marginBottom: 10,
                       width: '100%',
                       flexDirection: 'row',
                       alignItems: 'center'
@@ -314,13 +311,13 @@ export default class SinglePack extends React.Component {
                         {!this.state.isAddedToList ? (
                           <AntIcon
                             name={'plus'}
-                            size={(onTablet ? 18 : 25) * factor}
+                            size={sizing.myListButtonSize}
                             color={colors.pianoteRed}
                           />
                         ) : (
                           <AntIcon
                             name={'close'}
-                            size={(onTablet ? 18 : 25) * factor}
+                            size={sizing.myListButtonSize}
                             color={colors.pianoteRed}
                           />
                         )}
@@ -329,14 +326,14 @@ export default class SinglePack extends React.Component {
                         style={{
                           fontFamily: 'OpenSans-Regular',
                           color: 'white',
-                          fontSize: (onTablet ? 8 : 12) * factor
+                          fontSize: sizing.descriptionText,
                         }}
                       >
                         {this.state.isAddedToList ? 'Added' : 'My List'}
                       </Text>
                     </TouchableOpacity>
                   </View>
-                  <View style={{ width: '45%' }}>
+                  <View style={{ width: '50%' }}>
                     {this.state.isCompleted ? (
                       <ResetIcon
                         pressed={() =>
@@ -384,7 +381,7 @@ export default class SinglePack extends React.Component {
                           name={
                             this.state.showInfo ? 'infocirlce' : 'infocirlceo'
                           }
-                          size={(onTablet ? 15 : 20) * factor}
+                          size={sizing.infoButtonSize}
                           color={colors.pianoteRed}
                         />
                       </View>
@@ -393,7 +390,7 @@ export default class SinglePack extends React.Component {
                           fontFamily: 'OpenSans-Regular',
                           color: 'white',
                           marginTop: 2,
-                          fontSize: (onTablet ? 8 : 12) * factor
+                          fontSize: sizing.descriptionText
                         }}
                       >
                         Info
@@ -412,14 +409,14 @@ export default class SinglePack extends React.Component {
                   marginHorizontal: this.state.isLandscape
                     ? '10%'
                     : paddingInset,
-                  marginTop: onTablet ? '2%' : '2%'
+                  marginTop: '2%'
                 }}
               >
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Regular',
-                    marginTop: onTablet ? '5%' : '5%',
-                    fontSize: (onTablet ? 10 : 15) * factor,
+                    marginTop: '5%',
+                    fontSize: sizing.descriptionText,
                     paddingHorizontal: paddingInset,
 
                     color: 'white',
@@ -439,7 +436,7 @@ export default class SinglePack extends React.Component {
                     <Text
                       style={{
                         flex: 1,
-                        fontSize: (onTablet ? 15 : 17) * factor,
+                        fontSize: onTablet ? 25 : 17.5,
                         textAlign: 'center',
                         color: 'white',
                         fontFamily: 'OpenSans-Bold',
@@ -450,7 +447,7 @@ export default class SinglePack extends React.Component {
                       {`\n`}
                       <Text
                         style={{
-                          fontSize: (onTablet ? 10 : 13) * factor,
+                          fontSize: sizing.descriptionText,
                           textAlign: 'center',
                           color: 'white',
                           fontFamily: 'OpenSans-Regular',
@@ -463,7 +460,7 @@ export default class SinglePack extends React.Component {
                     <Text
                       style={{
                         flex: 1,
-                        fontSize: (onTablet ? 15 : 17) * factor,
+                        fontSize: onTablet ? 25 : 17.5,
                         textAlign: 'center',
                         color: 'white',
                         fontFamily: 'OpenSans-Bold',
@@ -474,7 +471,7 @@ export default class SinglePack extends React.Component {
                       {`\n`}
                       <Text
                         style={{
-                          fontSize: (onTablet ? 10 : 13) * factor,
+                          fontSize: sizing.descriptionText,
                           textAlign: 'center',
                           color: 'white',
                           fontFamily: 'OpenSans-Regular',
@@ -501,15 +498,15 @@ export default class SinglePack extends React.Component {
                           flex: this.state.id == 262875 ? 1 : 0,
                           touchable: { flex: 1 },
                           iconSize: {
-                            width: (onTablet ? 20 : 27.5) * factor,
-                            height: (onTablet ? 20 : 27.5) * factor
+                            width: sizing.myListButtonSize,
+                            height: sizing.myListButtonSize
                           },
                           iconDownloadColor: colors.pianoteRed,
                           activityIndicatorColor: colors.pianoteRed,
                           animatedProgressBackground: colors.pianoteRed,
                           textStatus: {
                             color: '#ffffff',
-                            fontSize: (onTablet ? 10 : 13) * factor,
+                            fontSize: sizing.descriptionText,
                             fontFamily: 'OpenSans-Regular',
                             marginTop: 5
                           },
@@ -540,13 +537,13 @@ export default class SinglePack extends React.Component {
                       }}
                     >
                       <MaterialIcon
-                        size={(onTablet ? 20 : 27.5) * factor}
+                        size={sizing.myListButtonSize}
                         name={'replay'}
                         color={colors.pianoteRed}
                       />
                       <Text
                         style={{
-                          fontSize: (onTablet ? 10 : 13) * factor,
+                          fontSize: sizing.descriptionText,
                           textAlign: 'center',
                           color: 'white',
                           fontFamily: 'OpenSans-Regular',

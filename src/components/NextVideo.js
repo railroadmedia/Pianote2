@@ -40,7 +40,7 @@ class NextVideo extends React.Component {
           borderBottomColor: this.props.isMethod
             ? colors.pianoteGrey
             : colors.secondBackground,
-          borderBottomWidth: 0.25 * factor
+          borderBottomWidth: 0.5
         }}
       >
         <View style={{ width: '100%' }}>
@@ -63,8 +63,8 @@ class NextVideo extends React.Component {
           <View style={localStyles.nextLesson}>
             <Text
               style={{
-                fontSize: onTablet ? 16 : 16 * factor,
-                marginBottom: 5 * factor,
+                fontSize: sizing.verticalListTitleSmall,
+                marginBottom: 5,
                 textAlign: 'left',
                 fontFamily: 'RobotoCondensed-Bold',
                 color: this.props.isMethod
@@ -78,7 +78,7 @@ class NextVideo extends React.Component {
               style={[
                 localStyles.typeText,
                 {
-                  fontSize: onTablet ? 14 : 14 * factor,
+                  fontSize: sizing.descriptionText,
                   color: this.props.isMethod
                     ? colors.pianoteGrey
                     : colors.secondBackground
@@ -106,7 +106,7 @@ class NextVideo extends React.Component {
               />
             </View>
             <View style={localStyles.titleTextContainer}>
-              <Text style={localStyles.videoTitle}>
+              <Text style={[localStyles.videoTitle, {fontSize: sizing.videoTitleText}]}>
                 {this.props.item.getField('title')}
               </Text>
               <Text
@@ -114,11 +114,13 @@ class NextVideo extends React.Component {
                 style={[
                   localStyles.videoTitleText,
                   {
+                    fontSize: sizing.descriptionText,
+                    fontFamily: 'OpenSans-Regular',
+                    textAlign: 'left',
                     color: this.props.isMethod
                       ? colors.pianoteGrey
                       : colors.secondBackground
-                  },
-                  onTablet ? { fontSize: 13, marginTop: 2 } : {}
+                  }
                 ]}
               >
                 {this.props.item.post.fields?.find(f => f.key === 'video')
@@ -138,13 +140,13 @@ class NextVideo extends React.Component {
               <View style={{ flex: 1 }} />
               <EntypoIcon
                 name={'controller-play'}
-                size={(onTablet ? 25 : 30) * factor}
+                size={onTablet ? 35 : 25}
                 color={colors.pianoteRed}
               />
             </View>
           </View>
         </View>
-        <View style={{ height: 10 * factor }} />
+        <View style={{ height: 10 }} />
       </TouchableOpacity>
     );
   };
@@ -175,22 +177,14 @@ const localStyles = StyleSheet.create({
   },
   videoContainer: {
     flexDirection: 'row',
-    paddingHorizontal:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    paddingHorizontal: 10
   },
   image: {
     width: DeviceInfo.isTablet()
       ? Dimensions.get('window').width * 0.15
       : Dimensions.get('window').width * 0.225,
     aspectRatio: 16 / 9,
-    borderRadius:
-      (7 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    borderRadius: 5
   },
   videoTitle: {
     fontSize: DeviceInfo.isTablet()
@@ -199,7 +193,6 @@ const localStyles = StyleSheet.create({
           (Dimensions.get('window').height / 812 +
             Dimensions.get('window').width / 375)) /
         2,
-    marginBottom: 2,
     textAlign: 'left',
     fontWeight: 'bold',
     fontFamily: 'OpenSans-Regular',
@@ -209,22 +202,8 @@ const localStyles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row'
   },
-  videoTitleText: {
-    fontSize: DeviceInfo.isTablet()
-      ? 16
-      : (12 *
-          (Dimensions.get('window').height / 812 +
-            Dimensions.get('window').width / 375)) /
-        2,
-    fontFamily: 'OpenSans-Regular',
-    textAlign: 'left'
-  },
   titleTextContainer: {
-    paddingHorizontal:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    paddingHorizontal: 10,
     alignSelf: 'center'
   }
 });

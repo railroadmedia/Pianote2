@@ -226,7 +226,7 @@ class MyList extends React.Component {
             style={[
               styles.tabRightContainer,
               {
-                marginTop: 15 * factor
+                marginTop: 10
               }
             ]}
             onPress={() => {
@@ -260,7 +260,7 @@ class MyList extends React.Component {
             <View style={[styles.centerContent, { flex: 0.15 }]}>
               <EntypoIcon
                 name={'chevron-thin-right'}
-                size={(onTablet ? 15 : 22.5) * factor}
+                size={onTablet ? 30 : 20}
                 color={colors.secondBackground}
               />
             </View>
@@ -297,8 +297,8 @@ class MyList extends React.Component {
             <View style={{ flex: 0.85 }} />
             <View style={[styles.centerContent, { flex: 0.15 }]}>
               <EntypoIcon
-                name={'chevron-thin-right'}
-                size={(onTablet ? 15 : 22.5) * factor}
+                name={'chevron-thin-right'}s
+                size={onTablet ? 30 : 20}
                 color={colors.secondBackground}
               />
             </View>

@@ -438,8 +438,8 @@ class Lessons extends React.Component {
                 <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                   <FastImage
                     style={{
-                      width: width * 0.75,
-                      height: 65 * factor,
+                      width: '85%',
+                      height: onTablet ? 100 : 65,
                       alignSelf: 'center',
                       marginBottom: onTablet ? '2%' : '4%'
                     }}

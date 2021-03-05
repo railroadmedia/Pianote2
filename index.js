@@ -62,6 +62,7 @@ PushNotification.configure({
           global.loadedFromNotification = true;
           await NavigationService.navigate('PROFILE');
         } else {
+          global.notifNavigation = true;
           NavigationService.navigate('VIDEOPLAYER', {
             commentId,
             url: mobile_app_url
@@ -110,6 +111,14 @@ global.fallbackThumb =
     pianoteRed: '#fb1b2f',
     pianoteGrey: '#6e777a'
   });
+global.sizing = {
+  descriptionText: onTablet ? 16 : 12,
+  infoButtonSize: onTablet ? 22.5 : 17.5,
+  myListButtonSize: onTablet ? 28 : 22,
+  titleVideoPlayer: onTablet ? 24 : 18,
+  videoTitleText: onTablet ? 16 : 14,
+  verticalListTitleSmall: onTablet ? 18 : 14
+};
 
 configure({
   baseURL: 'https://www.pianote.com',
