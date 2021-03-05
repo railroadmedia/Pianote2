@@ -428,7 +428,7 @@ export default class Method extends React.Component {
                         marginTop: 5
                       }}
                     >
-                      LEVELS
+                      Levels
                     </Text>
                   </View>
                   <View

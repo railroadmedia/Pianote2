@@ -146,7 +146,6 @@ const localStyles = StyleSheet.create({
   imageContainer: {
     height: '20%',
     width: '100%',
-    backgroundColor: 'green',
     alignSelf: 'center',
     borderRadius: 10
   },

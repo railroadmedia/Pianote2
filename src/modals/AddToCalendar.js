@@ -37,7 +37,7 @@ class AddToCalendar extends React.Component {
                 { marginTop: 10 }
               ]}
             >
-              ADD TO CALENDAR
+              Add To Calendar
             </Text>
             <Text style={[styles.modalBodyText, localStyles.addToCalendar]}>
               Add this lesson to your calendar to{'\n'} be notified when it's

@@ -63,8 +63,9 @@ class NextVideo extends React.Component {
           <View style={localStyles.nextLesson}>
             <Text
               style={{
-                fontSize: sizing.verticalListTitleSmall,
+                fontSize: sizing.descriptionText,
                 marginBottom: 5,
+                paddingVertical: 2.5,
                 textAlign: 'left',
                 fontFamily: 'RobotoCondensed-Bold',
                 color: this.props.isMethod
@@ -85,7 +86,7 @@ class NextVideo extends React.Component {
                 }
               ]}
             >
-              {this.props.type} - {this.props.progress}% COMPLETE
+              {this.props.type.charAt(0) + this.props.type.slice(1).toLowerCase()} - {this.props.progress}% Complete
             </Text>
           </View>
           <View style={localStyles.videoContainer}>
@@ -106,7 +107,7 @@ class NextVideo extends React.Component {
               />
             </View>
             <View style={localStyles.titleTextContainer}>
-              <Text style={[localStyles.videoTitle, {fontSize: sizing.videoTitleText}]}>
+              <Text style={[localStyles.videoTitle, {fontSize: sizing.descriptionText}]}>
                 {this.props.item.getField('title')}
               </Text>
               <Text
@@ -130,7 +131,7 @@ class NextVideo extends React.Component {
                       )?.getField('length_in_seconds') / 60
                     )
                   : 0}{' '}
-                MINS
+                Mins
               </Text>
             </View>
             <View
@@ -140,13 +141,13 @@ class NextVideo extends React.Component {
               <View style={{ flex: 1 }} />
               <EntypoIcon
                 name={'controller-play'}
-                size={onTablet ? 35 : 25}
+                size={onTablet ? 35 : 22.5}
                 color={colors.pianoteRed}
               />
             </View>
           </View>
         </View>
-        <View style={{ height: 10 }} />
+        <View style={{ height: 7.5 }} />
       </TouchableOpacity>
     );
   };
@@ -155,21 +156,13 @@ class NextVideo extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    height:
-      (1.25 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    height: 1.5
   },
   nextLesson: {
-    marginTop: (10 * Dimensions.get('window').height) / 812,
+    marginTop: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    paddingHorizontal: 10
   },
   typeText: {
     fontFamily: 'OpenSans-Regular',
@@ -187,12 +180,6 @@ const localStyles = StyleSheet.create({
     borderRadius: 5
   },
   videoTitle: {
-    fontSize: DeviceInfo.isTablet()
-      ? 16
-      : (15 *
-          (Dimensions.get('window').height / 812 +
-            Dimensions.get('window').width / 375)) /
-        2,
     textAlign: 'left',
     fontWeight: 'bold',
     fontFamily: 'OpenSans-Regular',

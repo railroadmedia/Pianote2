@@ -478,7 +478,7 @@ const localStyles = StyleSheet.create({
   },
   text: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 20 : 16,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14,
     paddingVertical: '2%',
     paddingHorizontal: 10,
     color: '#445f73'
@@ -502,7 +502,7 @@ const localStyles = StyleSheet.create({
   },
   imageText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 20 : 16,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14,
     paddingVertical: 30,
     paddingHorizontal: 20,
     color: '#445f73',

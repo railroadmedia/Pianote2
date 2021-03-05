@@ -505,7 +505,7 @@ export default class PathOverview extends React.Component {
                       marginTop: 5
                     }}
                   >
-                    LESSONS
+                   Lessons  
                   </Text>
                 </Text>
                 <Text
@@ -529,7 +529,7 @@ export default class PathOverview extends React.Component {
                       marginTop: 10
                     }}
                   >
-                    MINS
+                    Mins
                   </Text>
                 </Text>
                 <Text

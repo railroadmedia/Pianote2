@@ -454,7 +454,7 @@ export default class SinglePack extends React.Component {
                           marginTop: 5
                         }}
                       >
-                        LESSONS
+                        Lessons
                       </Text>
                     </Text>
                     <Text
