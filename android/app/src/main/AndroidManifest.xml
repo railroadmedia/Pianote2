@@ -35,7 +35,31 @@
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
             <data android:scheme="https" android:host="www.pianote.com" android:pathPrefix="/reset-password"/>
+            <data android:scheme="https" android:host="www.pianote.com" android:pathPrefix="/members/packs"/>
+            <data android:scheme="https" android:host="www.pianote.com" android:pathPrefix="/members/learning-paths/pianote-method"/>
+            <data android:scheme="https" android:host="www.pianote.com" android:pathPrefix="/members/courses"/>
+            <data android:scheme="https" android:host="www.pianote.com" android:pathPrefix="/members/songs"/>
+            <data android:scheme="https" android:host="www.pianote.com" android:pathPrefix="/members/quick-tips"/>
+            <data android:scheme="https" android:host="www.pianote.com" android:pathPrefix="/members/student-focus"/>
+            <data android:scheme="https" android:host="www.pianote.com" android:pathPrefix="/members/live"/>
+            <data android:scheme="https" android:host="www.pianote.com" android:pathPrefix="/members/podcasts"/>
+            <data android:scheme="https" android:host="www.pianote.com" android:pathPrefix="/members/boot-camps"/>
+            <data android:scheme="https" android:host="www.pianote.com" android:pathPrefix="/members/profile"/>
+            <data android:scheme="https" android:host="www.pianote.com" android:pathPrefix="/members/search"/>
+
             <data android:scheme="https" android:host="staging.pianote.com" android:pathPrefix="/reset-password"/>
+            <data android:scheme="https" android:host="staging.pianote.com" android:pathPrefix="/members/packs"/>
+            <data android:scheme="https" android:host="staging.pianote.com" android:pathPrefix="/members/learning-paths/pianote-method"/>
+            <data android:scheme="https" android:host="staging.pianote.com" android:pathPrefix="/members/courses"/>
+            <data android:scheme="https" android:host="staging.pianote.com" android:pathPrefix="/members/songs"/>
+            <data android:scheme="https" android:host="staging.pianote.com" android:pathPrefix="/members/quick-tips"/>
+            <data android:scheme="https" android:host="staging.pianote.com" android:pathPrefix="/members/student-focus"/>
+            <data android:scheme="https" android:host="staging.pianote.com" android:pathPrefix="/members/live"/>
+            <data android:scheme="https" android:host="staging.pianote.com" android:pathPrefix="/members/podcasts"/>
+            <data android:scheme="https" android:host="staging.pianote.com" android:pathPrefix="/members/boot-camps"/>
+            <data android:scheme="https" android:host="staging.pianote.com" android:pathPrefix="/members/profile"/>
+            <data android:scheme="https" android:host="staging.pianote.com" android:pathPrefix="/members/search"/>
+
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
