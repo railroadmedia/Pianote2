@@ -10,7 +10,7 @@ import {
   FlatList,
   Linking,
   StatusBar,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -133,16 +133,16 @@ export default class Profile extends React.Component {
   }
 
   async getNotifications(loadMore) {
-    console.log('Load more: ', loadMore)
-    
+    console.log('Load more: ', loadMore);
+
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    
+
     if (loadMore) this.page++;
     else this.page = 1;
     let notifications = await getnotifications(this.page);
-    console.log('Notes: ', notifications)
+    console.log('Notes: ', notifications);
 
     for (i in notifications.data) {
       let timeCreated =
@@ -178,7 +178,7 @@ export default class Profile extends React.Component {
         ? state.notifications.concat(notifications.data)
         : notifications.data,
       isLoading: false,
-      animateLoadMore: notifications.data.length == 0 ? false : true
+      animateLoadMore: notifications.data?.length == 0 ? false : true
     }));
   }
 
@@ -376,15 +376,15 @@ export default class Profile extends React.Component {
                   </TouchableOpacity>
                 </View>
                 <View style={localStyles.notificationContainer}>
-                  <Text 
+                  <Text
                     style={[
-                      localStyles.notificationText, 
+                      localStyles.notificationText,
                       {
                         fontSize: sizing.verticalListTitleSmall,
                         paddingVertical: 20,
                         paddingLeft: 10,
                         fontFamily: 'OpenSans-ExtraBold',
-                        color: 'white',
+                        color: 'white'
                       }
                     ]}
                   >
@@ -480,7 +480,7 @@ export default class Profile extends React.Component {
                       </View>
                     )}
                     <FastImage
-                      style={{ 
+                      style={{
                         height: onTablet ? 60 : 40,
                         width: onTablet ? 60 : 40,
                         paddingVertical: 10,
@@ -491,31 +491,36 @@ export default class Profile extends React.Component {
                         uri:
                           item.type == 'new content releases'
                             ? item.content.thumbnail_url
-                            : 
-                            (
-                              item.sender ?
-                                item.sender.profile_image_url
-                              :
-                              'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-                            )
+                            : item.sender
+                            ? item.sender.profile_image_url
+                            : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
                       }}
                       resizeMode={FastImage.resizeMode.stretch}
                     />
                   </View>
                 </View>
-                <View style={{ flex: 0.975, paddingLeft: 20, }}>
+                <View style={{ flex: 0.975, paddingLeft: 20 }}>
                   <View style={{ flex: 1, justifyContent: 'center' }}>
                     <Text
                       style={{
                         fontFamily: 'OpenSans-ExtraBold',
-                        color: 'white',
+                        color: 'white'
                       }}
                     >
-                      <Text style={localStyles.boldNotificationText}>{messageDict[item.type][1] ? '' : 'NEW - '}</Text>
-                      {item.type == 'new content releases' ? item.content.display_name : item.sender?.display_name}
-                      <Text style={localStyles.messageTypeText}>{' '}{messageDict[item.type][0]}</Text>
+                      <Text style={localStyles.boldNotificationText}>
+                        {messageDict[item.type][1] ? '' : 'NEW - '}
+                      </Text>
+                      {item.type == 'new content releases'
+                        ? item.content.display_name
+                        : item.sender?.display_name}
+                      <Text style={localStyles.messageTypeText}>
+                        {' '}
+                        {messageDict[item.type][0]}
+                      </Text>
                     </Text>
-                    <Text style={localStyles.createdAtText}>{item.created_at}</Text>
+                    <Text style={localStyles.createdAtText}>
+                      {item.created_at}
+                    </Text>
                   </View>
                 </View>
                 <View>
@@ -628,14 +633,14 @@ const localStyles = StyleSheet.create({
     height: '100%',
     width: '100%',
     borderRadius: 250,
-    backgroundColor: '#445f73',
+    backgroundColor: '#445f73'
   },
   usernameText: {
     fontFamily: 'OpenSans-ExtraBold',
     fontSize: DeviceInfo.isTablet() ? 30 : 24,
     textAlign: 'center',
     color: 'white',
-    paddingBottom: 5,
+    paddingBottom: 5
   },
   memberSinceText: {
     fontFamily: 'OpenSans-Regular',
@@ -683,7 +688,7 @@ const localStyles = StyleSheet.create({
   },
   notification: {
     flexDirection: 'row',
-    paddingVertical: 20,
+    paddingVertical: 20
   },
   innerNotificationContainer: {
     paddingLeft: 10,
@@ -702,12 +707,12 @@ const localStyles = StyleSheet.create({
   boldNotificationText: {
     fontFamily: 'OpenSans-ExtraBold',
     fontSize: DeviceInfo.isTablet() ? 16 : 14,
-    color: 'white',
+    color: 'white'
   },
   messageTypeText: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
-    color: 'white',
+    color: 'white'
   },
   createdAtText: {
     marginTop: 5,
