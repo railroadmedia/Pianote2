@@ -669,7 +669,7 @@ export default class Login extends React.Component {
               marginTop: '1%'
             }}
           >
-            Get direct acces to real teachers any time you have a question,
+            Get direct access to real teachers any time you have a question,
             access weekly live-streaming video lessons, and connect with
             teachers and students in the community forums!
           </Text>
