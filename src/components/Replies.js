@@ -481,8 +481,8 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row'
   },
   profileImage: {
-    height: onTablet ? 60 : 40,
-    width: onTablet ? 60 : 40,
+    height: DeviceInfo.isTablet() ? 60 : 40,
+    width: DeviceInfo.isTablet() ? 60 : 40,
     paddingVertical: 10,
     borderRadius: 100,
     marginRight: 10,

@@ -58,8 +58,11 @@
 	<string>Allow Pianote access to bluetooth for chrome casting</string>
 	<key>NSBonjourServices</key>
 	<array>
-		<string></string>
-	</array>
+		<string>_googlecast._tcp</string>
+		<string>_CC1AD845._googlecast._tcp</string>
+	</array>	
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Pianote uses the local network to discover Cast-enabled devices on your WiFi network.</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Allow Pianote access to your calendar to schedule reminders for new videos.</string>
 	<key>NSCameraUsageDescription</key>
