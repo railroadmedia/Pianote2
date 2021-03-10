@@ -12,7 +12,6 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   StyleSheet,
-  Dimensions
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
@@ -24,13 +23,6 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { NetworkContext } from '../context/NetworkProvider';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 class Replies extends React.Component {
   static contextType = NetworkContext;
@@ -63,24 +55,23 @@ class Replies extends React.Component {
             flex: 1,
             borderTopWidth: 0.25,
             flexDirection: 'row',
-            paddingTop: 10 * factor,
-            paddingBottom: 0 * factor,
-            paddingHorizontal: 10 * factor
+            paddingTop: 10,
+            paddingHorizontal: 10
           }}
         >
           <View
             style={{
               alignItems: 'center',
               justifyContent: 'flex-start',
-              paddingBottom: 10 * factor
+              paddingBottom: 10,
             }}
           >
             <FastImage
               style={{
-                height: (onTablet ? 30 : 40) * factor,
-                width: (onTablet ? 30 : 40) * factor,
+                height: onTablet ? 60 : 40,
+                width: onTablet ? 60 : 40,
                 borderRadius: 100,
-                marginTop: 10 * factor
+                marginTop: 10
               }}
               source={{ uri: reply.user['fields.profile_picture_image_url'] }}
               resizeMode={FastImage.resizeMode.stretch}
@@ -88,22 +79,22 @@ class Replies extends React.Component {
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: onTablet ? 15 : 10 * factor,
-                marginTop: 5 * factor,
+                fontSize: sizing.descriptionText,
+                marginTop: 5,
                 fontWeight: 'bold',
                 color: colors.pianoteGrey
               }}
             >
-              {reply.user.display_name}
+              {reply.user.xp}
             </Text>
           </View>
-          <View style={{ flex: 1, paddingLeft: 10 * factor }}>
+          <View style={{ flex: 1, paddingLeft: 10, }}>
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: (onTablet ? 10 : 13) * factor,
+                fontSize: sizing.descriptionText,
                 color: 'white',
-                paddingTop: 10 * factor
+                paddingTop: 10
               }}
             >
               {reply.comment}
@@ -111,10 +102,10 @@ class Replies extends React.Component {
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: (onTablet ? 9 : 10) * factor,
+                fontSize: sizing.descriptionText,
                 color: colors.secondBackground,
-                paddingTop: 5 * factor,
-                paddingBottom: 10 * factor
+                paddingTop: 5,
+                paddingBottom: 10
               }}
             >
               {reply.user['display_name']} | {reply.user.rank} |{' '}
@@ -122,8 +113,8 @@ class Replies extends React.Component {
             </Text>
             <View
               style={{
-                paddingBottom: 15 * factor,
-                paddingTop: 5 * factor
+                paddingBottom: 15,
+                paddingTop: 5
               }}
             >
               <View style={{ flexDirection: 'row' }}>
@@ -141,7 +132,7 @@ class Replies extends React.Component {
                   >
                     <AntIcon
                       name={reply.is_liked ? 'like1' : 'like2'}
-                      size={(onTablet ? 15 : 22.5) * factor}
+                      size={sizing.infoButtonSize}
                       color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
@@ -157,9 +148,9 @@ class Replies extends React.Component {
                       <Text
                         style={{
                           fontFamily: 'OpenSans-Regular',
-                          fontSize: (onTablet ? 8 : 10) * factor,
+                          fontSize: sizing.descriptionText,
                           color: colors.pianoteRed,
-                          paddingHorizontal: 5 * factor
+                          paddingHorizontal: 5
                         }}
                       >
                         {reply.like_count}{' '}
@@ -179,7 +170,7 @@ class Replies extends React.Component {
                   >
                     <AntIcon
                       name={'delete'}
-                      size={(onTablet ? 15 : 20) * factor}
+                      size={sizing.infoButtonSize}
                       color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
@@ -225,7 +216,7 @@ class Replies extends React.Component {
                       <Text style={localStyles.replyText}>REPLIES</Text>
                       <TouchableOpacity onPress={this.props.close}>
                         <EntypoIcon
-                          size={(onTablet ? 22.5 : 27.5) * factor}
+                          size={onTablet ? 27.5 : 22.5}
                           name={'cross'}
                           color={'#c2c2c2'}
                         />
@@ -236,23 +227,23 @@ class Replies extends React.Component {
                         backgroundColor: colors.mainBackground,
                         flex: 1,
                         flexDirection: 'row',
-                        paddingTop: 10 * factor,
-                        paddingHorizontal: 10 * factor
+                        paddingTop: 10,
+                        paddingHorizontal: 10
                       }}
                     >
                       <View
                         style={{
                           alignItems: 'center',
                           justifyContent: 'flex-start',
-                          paddingBottom: 10 * factor
+                          paddingBottom: 10,
                         }}
                       >
                         <FastImage
                           style={{
-                            height: (onTablet ? 30 : 40) * factor,
-                            width: (onTablet ? 30 : 40) * factor,
+                            height: onTablet ? 60 : 40,
+                            width: onTablet ? 60 : 40,
                             borderRadius: 100,
-                            marginTop: 10 * factor
+                            marginTop: 10
                           }}
                           source={{
                             uri: user['fields.profile_picture_image_url']
@@ -262,8 +253,8 @@ class Replies extends React.Component {
                         <Text
                           style={{
                             fontFamily: 'OpenSans-Regular',
-                            fontSize: onTablet ? 15 : 10 * factor,
-                            marginTop: 5 * factor,
+                            fontSize: sizing.descriptionText,
+                            marginTop: 5,
                             fontWeight: 'bold',
                             color: colors.pianoteGrey
                           }}
@@ -272,13 +263,13 @@ class Replies extends React.Component {
                         </Text>
                       </View>
 
-                      <View style={{ flex: 1, paddingLeft: 10 * factor }}>
+                      <View style={{ flex: 1, paddingLeft: 10 }}>
                         <Text
                           style={{
                             fontFamily: 'OpenSans-Regular',
-                            fontSize: (onTablet ? 10 : 13) * factor,
+                            fontSize: sizing.descriptionText,
                             color: 'white',
-                            paddingTop: 10 * factor
+                            paddingTop: 10
                           }}
                         >
                           {comment.comment}
@@ -286,10 +277,10 @@ class Replies extends React.Component {
                         <Text
                           style={{
                             fontFamily: 'OpenSans-Regular',
-                            fontSize: (onTablet ? 9 : 10) * factor,
+                            fontSize: sizing.descriptionText,
                             color: colors.secondBackground,
-                            paddingTop: 5 * factor,
-                            paddingBottom: 10 * factor
+                            paddingTop: 5,
+                            paddingBottom: 10
                           }}
                         >
                           {user.display_name} | {user.rank} |{' '}
@@ -297,8 +288,8 @@ class Replies extends React.Component {
                         </Text>
                         <View
                           style={{
-                            paddingBottom: 15 * factor,
-                            paddingTop: 5 * factor
+                            paddingBottom: 15,
+                            paddingTop: 5
                           }}
                         >
                           <View style={{ flexDirection: 'row' }}>
@@ -320,7 +311,7 @@ class Replies extends React.Component {
                               >
                                 <AntIcon
                                   name={comment.is_liked ? 'like1' : 'like2'}
-                                  size={(onTablet ? 15 : 22.5) * factor}
+                                  size={sizing.infoButtonSize}
                                   color={colors.pianoteRed}
                                 />
                               </TouchableOpacity>
@@ -336,9 +327,9 @@ class Replies extends React.Component {
                                   <Text
                                     style={{
                                       fontFamily: 'OpenSans-Regular',
-                                      fontSize: (onTablet ? 8 : 10) * factor,
+                                      fontSize: sizing.descriptionText,
                                       color: colors.pianoteRed,
-                                      paddingHorizontal: 5 * factor
+                                      paddingHorizontal: 5
                                     }}
                                   >
                                     {comment.like_count}{' '}
@@ -353,13 +344,13 @@ class Replies extends React.Component {
                             <View style={{ flexDirection: 'row' }}>
                               <MaterialIcon
                                 name={'comment-text-outline'}
-                                size={(onTablet ? 15 : 22.5) * factor}
+                                size={sizing.infoButtonSize}
                                 color={colors.pianoteRed}
-                                style={{ marginRight: 10 }}
+                                style={{marginRight: 10,}}
                               />
                               {comment.replies && comment.replies.length > 0 && (
                                 <View style={localStyles.likeCountContainer}>
-                                  <Text style={localStyles.likeCount}>
+                                  <Text style={[localStyles.likeCount, {fontSize: sizing.descriptionText}]}>
                                     {comment.replies.length}{' '}
                                     {comment.replies.length == 1
                                       ? 'REPLY'
@@ -379,7 +370,7 @@ class Replies extends React.Component {
                               >
                                 <AntIcon
                                   name={'delete'}
-                                  size={(onTablet ? 12.5 : 20) * factor}
+                                  size={sizing.infoButtonSize}
                                   color={colors.pianoteRed}
                                 />
                               </TouchableOpacity>
@@ -431,7 +422,6 @@ class Replies extends React.Component {
                   }
                 >
                   <KeyboardAvoidingView
-                    key={'makeComment'}
                     behavior={`${isiOS ? 'padding' : ''}`}
                     style={{ flex: 1, justifyContent: 'flex-end' }}
                   >
@@ -439,7 +429,6 @@ class Replies extends React.Component {
                       <FastImage
                         style={[
                           localStyles.profileImage,
-                          { marginRight: 10 * factor }
                         ]}
                         source={{
                           uri:
@@ -460,12 +449,12 @@ class Replies extends React.Component {
                         onPress={() => this.sendReply(this.state.reply)}
                         style={{
                           marginBottom:
-                            Platform.OS == 'android' ? 10 * factor : 0
+                            Platform.OS == 'android' ? 10 : 0
                         }}
                       >
                         <IonIcon
                           name={'md-send'}
-                          size={(onTablet ? 15 : 25) * factor}
+                          size={onTablet ? 25 : 17.5}
                           color={colors.pianoteRed}
                         />
                       </TouchableOpacity>
@@ -487,36 +476,37 @@ class Replies extends React.Component {
 
 const localStyles = StyleSheet.create({
   replyContainer: {
-    paddingHorizontal: (10 * Dimensions.get('window').width) / 375,
-    minHeight: (30 * Dimensions.get('window').height) / 812,
+    paddingHorizontal: 10,
+    minHeight: 30,
     flexDirection: 'row'
   },
   profileImage: {
-    height: (DeviceInfo.isTablet() ? 30 : 40) * factor,
-    width: (DeviceInfo.isTablet() ? 30 : 40) * factor,
-    paddingVertical: (10 * Dimensions.get('window').height) / 812,
-    borderRadius: 100
+    height: DeviceInfo.isTablet() ? 60 : 40,
+    width: DeviceInfo.isTablet() ? 60 : 40,
+    paddingVertical: 10,
+    borderRadius: 100,
+    marginRight: 10,
   },
   replyName: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 10 * factor,
-    marginTop: 2 * factor,
+    fontSize: 10,
+    marginTop: 2,
     color: 'grey'
   },
   commentContainer: {
     flex: 1,
-    paddingLeft: (10 * Dimensions.get('window').width) / 375,
+    paddingLeft: 10,
     marginTop: 3
   },
   displayNameText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 9 : 10) * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: '#445f73',
-    paddingVertical: (5 * Dimensions.get('window').height) / 812
+    paddingVertical: 5
   },
   comment: {
-    paddingTop: (10 * Dimensions.get('window').height) / 812,
-    fontSize: (DeviceInfo.isTablet() ? 10 : 13) * factor,
+    paddingTop: 10,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     fontFamily: 'OpenSans-Regular',
     color: 'white'
   },
@@ -533,9 +523,9 @@ const localStyles = StyleSheet.create({
   },
   likeCount: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 9 : 10) * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: '#fb1b2f',
-    paddingHorizontal: (7.5 * Dimensions.get('window').width) / 375
+    paddingHorizontal: 10
   },
   componentContainer: {
     zIndex: 2,
@@ -548,56 +538,47 @@ const localStyles = StyleSheet.create({
   commentHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 10 * factor,
+    paddingHorizontal: 10,
     marginTop: 10
   },
   replyText: {
-    fontSize: (DeviceInfo.isTablet() ? 12 : 18) * factor,
-    marginVertical: (5 * Dimensions.get('window').height) / 812,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    marginVertical: 5,
     textAlign: 'left',
     fontFamily: 'RobotoCondensed-Bold',
     color: '#445f73'
   },
   originalReply: {
     paddingTop: 5,
-    paddingHorizontal: (10 * Dimensions.get('window').width) / 375,
-    marginBottom: 10 * factor,
-    minHeight: (30 * Dimensions.get('window').height) / 812,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+    minHeight: 30,
     flexDirection: 'row'
   },
   replierImage: {
-    height:
-      ((DeviceInfo.isTablet() ? 30 : 40) * Dimensions.get('window').width) /
-      375,
-    width:
-      ((DeviceInfo.isTablet() ? 30 : 40) * Dimensions.get('window').width) /
-      375,
-    paddingVertical: (10 * Dimensions.get('window').height) / 812,
-    borderRadius: 100
+    height: DeviceInfo.isTablet() ? 60 : 40,
+    width: DeviceInfo.isTablet() ? 60 : 40,
+    borderRadius: 100,
+    marginTop: 10
   },
   opXP: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: DeviceInfo.isTablet()
-      ? 15
-      : (10 *
-          (Dimensions.get('window').height / 812 +
-            Dimensions.get('window').width / 375)) /
-        2,
-    marginTop: 5 * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    marginTop: 5,
     color: 'grey'
   },
   commentText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 13 * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: 'white',
     marginBottom: 7
   },
   userStats: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 9 : 10) * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: '#445f73',
-    paddingTop: (5 * Dimensions.get('window').height) / 812,
-    paddingBottom: (10 * Dimensions.get('window').height) / 812
+    paddingTop: 5,
+    paddingBottom: 10
   },
   iconContainer: {
     flexDirection: 'row',
@@ -607,7 +588,7 @@ const localStyles = StyleSheet.create({
   addComment: {
     width: '100%',
     flexDirection: 'row',
-    paddingLeft: (10 * Dimensions.get('window').width) / 375,
+    paddingLeft: 10,
     borderTopWidth: 0.5,
     borderBottomWidth: 0.5,
     borderBottomColor: '#445f73',
@@ -616,19 +597,18 @@ const localStyles = StyleSheet.create({
   },
   makeReplyContainer: {
     width: '80%',
-    paddingVertical: (5 * Dimensions.get('window').height) / 812,
+    paddingVertical: 5,
     justifyContent: 'center'
   },
   addReplyText: {
     textAlign: 'left',
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 10 : 13) * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: 'white',
-    paddingLeft: (10 * Dimensions.get('window').width) / 375,
-    paddingVertical: (25 * Dimensions.get('window').height) / 812
+    paddingVertical: 20
   },
   replierContainer: {
-    padding: (10 * Dimensions.get('window').width) / 375,
+    padding: 10,
     alignItems: 'center',
     flexDirection: 'row',
     borderTopWidth: 0.5,
@@ -637,10 +617,10 @@ const localStyles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
-    fontSize: (DeviceInfo.isTablet() ? 10 : 14) * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: '#445f73',
     fontFamily: 'OpenSans-Regular',
-    paddingVertical: (10 * Dimensions.get('window').height) / 812,
+    paddingVertical: 10,
     backgroundColor: '#00101d'
   }
 });

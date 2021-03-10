@@ -8,7 +8,6 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Platform,
-  Dimensions,
   Image
 } from 'react-native';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
@@ -28,37 +27,12 @@ import { NetworkContext } from '../context/NetworkProvider';
 import AddToCalendar from '../modals/AddToCalendar';
 import Filters_V2 from './Filters_V2';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
-
 const sortDict = {
   newest: 'NEWEST',
   oldest: 'OLDEST',
   popularity: 'POPULAR',
   trending: 'TRENDING',
   relevance: 'RELEVANCE'
-};
-
-const instructorDict = {
-  197077: 'Brett',
-  197087: 'Cassi',
-  197106: 'Colin',
-  266932: 'Dave',
-  247373: 'Sean',
-  279887: 'Eleny',
-  218895: 'Gabriel',
-  202588: 'Jay',
-  197048: 'Jonny',
-  196994: 'Jordan',
-  221245: 'Josh',
-  203416: 'Kenny',
-  196999: 'Lisa',
-  197084: 'Nate',
-  243082: 'Sam'
 };
 
 let greaterWDim;
@@ -207,7 +181,6 @@ class VerticalVideoList extends React.Component {
     ) {
       return;
     }
-
     if (this.props.navigator) return this.props.navigator(content, index);
     switch (content.type) {
       case 'course':
@@ -236,6 +209,12 @@ class VerticalVideoList extends React.Component {
       case 'learning-path-course':
         return this.props.navigation.push('PATHOVERVIEW', {
           data: content,
+          isMethod: true
+        });
+      case 'unit':
+        return this.props.navigation.push('PATHOVERVIEW', {
+          data: content,
+          isFoundations: true,
           isMethod: true
         });
       case 'learning-path-lesson':
@@ -289,7 +268,7 @@ class VerticalVideoList extends React.Component {
         <TouchableOpacity
           key={index}
           onLongPress={() => {
-            row.type == 'learning-path-level'
+            row.type == 'learning-path-level' || row.type == 'unit'
               ? null
               : this.setState({
                   showModal: true,
@@ -301,177 +280,170 @@ class VerticalVideoList extends React.Component {
           <View
             style={{
               flex: 1,
-              padding: paddingInset,
               flexDirection: 'row',
-              borderTopColor: '#ececec'
+              marginLeft: 10,
+              paddingVertical: onTablet ? 10 : 5,
             }}
           >
-            <View style={{ justifyContent: 'center' }}>
-              <View
-                style={{
-                  width: this.props.imageWidth,
-                  aspectRatio: this.props.isSquare ? 1 : 16 / 9,
-                  borderRadius: 5 * factor
-                }}
-              >
-                {row.isCompleted && (
-                  <View
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      aspectRatio: this.props.isSquare ? 1 : 16 / 9,
-                      borderRadius: 5 * factor,
-                      zIndex: 1,
-                      opacity: 0.2,
-                      backgroundColor: colors.pianoteRed
-                    }}
-                  />
-                )}
+            <View
+              style={{
+                width: this.props.imageWidth,
+                aspectRatio: this.props.isSquare ? 1 : 16 / 9,
+                borderRadius: 5,
+              }}
+            >
+              {row.isCompleted && (
                 <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      position: 'absolute',
-                      width: '100%',
-                      aspectRatio: this.props.isSquare ? 1 : 16 / 9,
-                      zIndex: 20
-                    }
-                  ]}
-                >
-                  {row.isStarted ? (
-                    <Progress
-                      height={onTablet ? 40 : 32.5 * factor}
-                      width={onTablet ? 40 : 32.5 * factor}
-                      fill={'white'}
-                    />
-                  ) : row.isCompleted ? (
-                    <ApprovedTeacher
-                      height={onTablet ? 50 : 40 * factor}
-                      width={onTablet ? 50 : 40 * factor}
-                      fill={'white'}
-                    />
-                  ) : null}
-                </View>
-                {this.props.showLines && (
-                  <>
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          top: -3.5 * factor,
-                          height: 5 * factor,
-                          left: 0,
-                          zIndex: 9,
-                          width: '100%',
-                          position: 'absolute'
-                        }
-                      ]}
-                    >
-                      <View
-                        style={{
-                          backgroundColor: 'red',
-                          width: '95%',
-                          height: '100%',
-                          borderRadius: 20
-                        }}
-                      />
-                    </View>
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          position: 'absolute',
-                          top: -7.5 * factor,
-                          left: 0,
-                          width: '100%',
-                          height: 7.5 * factor,
-                          zIndex: 8
-                        }
-                      ]}
-                    >
-                      <View
-                        style={{
-                          backgroundColor: '#7c1526',
-                          width: '90%',
-                          height: '100%',
-                          borderRadius: 20
-                        }}
-                      />
-                    </View>
-                  </>
-                )}
-                {this.props.isMethodLevel && (
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    aspectRatio: this.props.isSquare ? 1 : 16 / 9,
+                    borderRadius: 5,
+                    zIndex: 1,
+                    opacity: 0.2,
+                    backgroundColor: colors.pianoteRed
+                  }}
+                />
+              )}
+              <View
+                style={[
+                  styles.centerContent,
+                  {
+                    position: 'absolute',
+                    width: '100%',
+                    paddingBottom: this.props.isMethodLevel ? 10 : 0,
+                    aspectRatio: this.props.isSquare ? 1 : 16 / 9,
+                    zIndex: 20,
+                  }
+                ]}
+              >
+                {row.isStarted ? (
+                  <Progress
+                    height={onTablet ? 60 : 35}
+                    width={onTablet ? 60 : 35}
+                    fill={'white'}
+                  />
+                ) : row.isCompleted ? (
+                  <ApprovedTeacher
+                    height={onTablet ? 70 : 45}
+                    width={onTablet ? 70 : 45}
+                    fill={'white'}
+                  />
+                ) : null}
+              </View>
+              {this.props.showLines && (
+                <>
                   <View
+                    style={[
+                      styles.centerContent,
+                      {
+                        top: -3,
+                        height: 3,
+                        left: 0,
+                        zIndex: 9,
+                        width: '100%',
+                        position: 'absolute'
+                      }
+                    ]}
+                  >
+                    <View
+                      style={{
+                        backgroundColor: 'red',
+                        width: '95%',
+                        height: '100%',
+                        borderRadius: 20
+                      }}
+                    />
+                  </View>
+                  <View
+                    style={[
+                      styles.centerContent,
+                      {
+                        position: 'absolute',
+                        top: -6,
+                        left: 0,
+                        width: '100%',
+                        height: 6,
+                        zIndex: 8
+                      }
+                    ]}
+                  >
+                    <View
+                      style={{
+                        backgroundColor: '#7c1526',
+                        width: '90%',
+                        height: '100%',
+                        borderRadius: 20
+                      }}
+                    />
+                  </View>
+                </>
+              )}
+              {this.props.isMethodLevel && (
+                <View
+                  style={{
+                    height: '100%',
+                    width: '100%',
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    zIndex: 15,
+                    elevation: 15
+                  }}
+                >
+                  <GradientFeature
+                    color={'red'}
+                    opacity={1}
+                    height={'100%'}
+                    borderRadius={5}
+                  />
+                  <View style={{ flex: 2.5 }} />
+                  <Text
                     style={{
-                      height: '100%',
-                      width: '100%',
-                      position: 'absolute',
-                      left: 0,
-                      top: 0,
-                      zIndex: 15,
-                      elevation: 15
+                      zIndex: 20,
+                      elevation: 20,
+                      textAlign: 'center',
+                      marginBottom: 5,
+                      color: 'white',
+                      fontFamily: 'RobotoCondensed-Bold',
+                      fontSize: sizing.titleVideoPlayer
                     }}
                   >
-                    <GradientFeature
-                      color={'red'}
-                      opacity={1}
-                      height={'100%'}
-                      borderRadius={5 * factor}
-                    />
-                    <View style={{ flex: 1.5 }} />
-                    <View
-                      style={{
-                        flex: 1
-                      }}
-                    />
-                    <Text
-                      style={{
-                        zIndex: 20,
-                        elevation: 20,
-                        textAlign: 'center',
-                        color: 'white',
-                        fontFamily: 'RobotoCondensed-Bold',
-                        fontSize: (onTablet ? 16 : 21) * factor
-                      }}
-                    >
-                      LEVEL {index + 1}
-                    </Text>
-                    <View style={{ height: 5 * factor }} />
-                  </View>
-                )}
-                {Platform.OS === 'ios' ? (
-                  <FastImage
-                    style={{
-                      flex: 1,
-                      borderRadius: 5 * factor
-                    }}
-                    source={{
-                      uri: this.getImageUrl(row.thumbnail, row.publishedOn)
-                    }}
-                    resizeMode={FastImage.resizeMode.cover}
-                  />
-                ) : (
-                  <Image
-                    style={{
-                      flex: 1,
-                      borderRadius: 5 * factor
-                    }}
-                    source={{
-                      uri: this.getImageUrl(row.thumbnail, row.publishedOn)
-                    }}
-                    resizeMode='cover'
-                  />
-                )}
-              </View>
+                    LEVEL {index + 1}
+                  </Text>
+                </View>
+              )}
+              {Platform.OS === 'ios' ? (
+                <FastImage
+                  style={{
+                    flex: 1,
+                    borderRadius: 5
+                  }}
+                  source={{
+                    uri: this.getImageUrl(row.thumbnail, row.publishedOn)
+                  }}
+                  resizeMode={FastImage.resizeMode.cover}
+                />
+              ) : (
+                <Image
+                  style={{
+                    flex: 1,
+                    borderRadius: 5
+                  }}
+                  source={{
+                    uri: this.getImageUrl(row.thumbnail, row.publishedOn)
+                  }}
+                  resizeMode='cover'
+                />
+              )}
             </View>
-            <View style={{ width: paddingInset / 2 }} />
-            <View style={{ flex: 0.85, justifyContent: 'center' }}>
+            <View style={{ flex: 1, paddingLeft: onTablet ? 10 : 5, justifyContent: 'center' }}>
               {this.props.isMethodLevel && (
                 <Text
                   style={{
-                    fontSize: (onTablet ? 8 : 16) * factor,
+                    fontSize: sizing.descriptionText,
                     textAlign: 'left',
                     fontWeight: 'bold',
                     fontFamily: 'OpenSans-Regular',
@@ -484,7 +456,7 @@ class VerticalVideoList extends React.Component {
               <Text
                 numberOfLines={2}
                 style={{
-                  fontSize: (onTablet ? 10 : 16) * factor,
+                  fontSize: sizing.descriptionText,
                   textAlign: 'left',
                   fontWeight: 'bold',
                   fontFamily: 'OpenSans-Regular',
@@ -497,8 +469,8 @@ class VerticalVideoList extends React.Component {
                 <Text
                   numberOfLines={2}
                   style={{
-                    marginTop: 2 * factor,
-                    fontSize: (onTablet ? 8 : 12) * factor,
+                    marginTop: 2,
+                    fontSize: sizing.descriptionText,
                     color: this.props.isMethod
                       ? colors.pianoteGrey
                       : colors.secondBackground,
@@ -515,7 +487,7 @@ class VerticalVideoList extends React.Component {
                   <Text
                     numberOfLines={2}
                     style={{
-                      fontSize: (onTablet ? 10 : 12) * factor,
+                      fontSize: sizing.descriptionText,
                       color:
                         this.props.isMethod || this.props.methodLevel
                           ? colors.pianoteGrey
@@ -532,7 +504,7 @@ class VerticalVideoList extends React.Component {
                   <Text
                     numberOfLines={1}
                     style={{
-                      fontSize: (onTablet ? 8 : 12) * factor,
+                      fontSize: sizing.descriptionText,
                       color:
                         this.props.isMethod || this.props.methodLevel
                           ? colors.pianoteGrey
@@ -546,9 +518,9 @@ class VerticalVideoList extends React.Component {
                 )}
                 {this.props.showType && (
                   <Text
-                    numberOfLines={2}
-                    style={{
-                      fontSize: (onTablet ? 10 : 12) * factor,
+                    numberOfLines={1}
+                    style={{                      
+                      fontSize: sizing.descriptionText,
                       color: this.props.isMethod
                         ? colors.pianoteGrey
                         : colors.secondBackground,
@@ -561,9 +533,9 @@ class VerticalVideoList extends React.Component {
                 )}
                 {this.props.showArtist && (
                   <Text
-                    numberOfLines={2}
+                    numberOfLines={1}
                     style={{
-                      fontSize: (onTablet ? 9 : 12) * factor,
+                      fontSize: sizing.descriptionText,
                       color: this.props.isMethod
                         ? colors.pianoteGrey
                         : colors.secondBackground,
@@ -577,13 +549,10 @@ class VerticalVideoList extends React.Component {
               </View>
             </View>
             {!this.props.isMethodLevel && (
-              <View style={{ flex: 0.15 }}>
+              <View style={{ width: 45 }}>
                 <View style={[styles.centerContent, { flex: 1 }]}>
                   {new Date(row.publishedOn) > new Date() ? (
                     <TouchableOpacity
-                      style={{
-                        paddingTop: 5 * factor
-                      }}
                       onPress={() => {
                         this.addToCalendarLessonTitle = row.title;
                         this.addToCalendatLessonPublishDate = row.publishedOn;
@@ -591,34 +560,28 @@ class VerticalVideoList extends React.Component {
                       }}
                     >
                       <FontIcon
-                        size={onTablet ? 17.5 * factor : 27.5 * factor}
+                        size={sizing.myListButtonSize}
                         name={'calendar-plus'}
                         color={colors.pianoteRed}
                       />
                     </TouchableOpacity>
                   ) : !row.isAddedToList ? (
                     <TouchableOpacity
-                      style={{
-                        paddingTop: 5 * factor
-                      }}
                       onPress={() => this.addToMyList(row.id)}
                     >
                       <AntIcon
                         name={'plus'}
-                        size={(onTablet ? 20 : 28.5) * factor}
+                        size={sizing.myListButtonSize}
                         color={colors.pianoteRed}
                       />
                     </TouchableOpacity>
                   ) : row.isAddedToList ? (
                     <TouchableOpacity
-                      style={{
-                        paddingTop: 5 * factor
-                      }}
                       onPress={() => this.removeFromMyList(row.id)}
                     >
                       <AntIcon
                         name={'close'}
-                        size={(onTablet ? 20 : 28.5) * factor}
+                        size={sizing.myListButtonSize}
                         color={colors.pianoteRed}
                       />
                     </TouchableOpacity>
@@ -635,12 +598,14 @@ class VerticalVideoList extends React.Component {
   render = () => {
     return (
       <View>
-        <View style={{ marginTop: paddingInset }}>
+        <>
           {this.props.showFilter && (
             <View
               style={{
                 flexDirection: 'row',
-                padding: paddingInset
+                marginLeft: 10,
+                marginTop: 5,
+                marginBottom: 2.5,
               }}
             >
               <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -649,10 +614,9 @@ class VerticalVideoList extends React.Component {
                     <Text
                       numberOfLines={1}
                       style={{
-                        fontSize: (onTablet ? 25 : 30) * factor,
+                        fontSize: onTablet ? 28 : 20,
                         color: 'white',
                         fontFamily: 'OpenSans-ExtraBold',
-                        justifyContent: 'center'
                       }}
                     >
                       {this.props.title}
@@ -661,7 +625,7 @@ class VerticalVideoList extends React.Component {
                     <Text
                       numberOfLines={1}
                       style={{
-                        fontSize: (onTablet ? 12 : 18) * factor,
+                        fontSize: sizing.verticalListTitleSmall,
                         textAlign: 'left',
                         fontFamily: 'RobotoCondensed-Bold',
                         color: this.props.isMethod
@@ -677,10 +641,8 @@ class VerticalVideoList extends React.Component {
                   style={[
                     styles.centerContent,
                     {
-                      width: onTablet ? 50 : 30,
-                      position: 'relative',
+                      width: 45,
                       flexDirection: 'row',
-                      right: 0
                     }
                   ]}
                 >
@@ -691,8 +653,8 @@ class VerticalVideoList extends React.Component {
                         {
                           flexDirection: 'row',
                           position: 'absolute',
-                          right: onTablet ? 55 : 35,
-                          height: '100%'
+                          right: 45,
+                          height: '100%',
                         }
                       ]}
                       onPress={() => {
@@ -704,21 +666,16 @@ class VerticalVideoList extends React.Component {
                       <Text
                         style={{
                           color: colors.pianoteRed,
-                          fontSize: (onTablet ? 10 : 14.5) * factor,
+                          fontSize: sizing.videoTitleText,
                           fontFamily: 'OpenSans-Regular',
-                          marginRight: 5,
+                          paddingRight: 5,
                           justifyContent: 'flex-end'
                         }}
                       >
-                        {onTablet
-                          ? sortDict[this.props.currentSort].charAt(0) +
-                            sortDict[this.props.currentSort]
-                              .substring(1)
-                              .toLowerCase()
-                          : sortDict[this.props.currentSort]}
+                          {sortDict[this.props.currentSort]}
                       </Text>
                       <FontIcon
-                        size={(onTablet ? 10 : 15) * factor}
+                        size={onTablet ? 20 : 15}
                         name={'sort-amount-down'}
                         color={colors.pianoteRed}
                       />
@@ -740,20 +697,16 @@ class VerticalVideoList extends React.Component {
               </View>
             </View>
           )}
-          <View style={{ paddingLeft: paddingInset }}>
+          <View style={{ marginHorizontal: 10 }}>
             {this.filters?.filterAppliedText}
           </View>
           {this.state.items.length == 0 &&
             this.state.outVideos &&
             !this.state.isLoading && (
-              <View
-                style={{
-                  paddingHorizontal: paddingInset
-                }}
-              >
+              <>
                 <Text
                   style={{
-                    fontSize: (onTablet ? 10 : 14) * factor,
+                    fontSize: sizing.descriptionText,
                     color: this.props.isMethod
                       ? 'white'
                       : colors.secondBackground,
@@ -765,16 +718,16 @@ class VerticalVideoList extends React.Component {
                     ? ''
                     : 'There are no results for this content type.'}
                 </Text>
-              </View>
+              </>
             )}
-        </View>
+        </>
         <View style={{ flex: 1 }}>
           {this.renderMappedList()}
           {this.state.isPaging && !this.state.isLoading && (
             <View
               style={[
                 styles.centerContent,
-                { minHeight: 20, marginTop: 15 * factor }
+                { minHeight: 20, marginTop: 20 }
               ]}
             >
               <ActivityIndicator

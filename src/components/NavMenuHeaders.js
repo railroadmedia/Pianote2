@@ -14,11 +14,11 @@ import {
   NavigationActions
 } from 'react-navigation';
 import Modal from 'react-native-modal';
-import { SafeAreaView } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import { NetworkContext } from '../context/NetworkProvider';
+import { SafeAreaView } from 'react-navigation';
 
 class NavMenuHeaders extends React.Component {
   static contextType = NetworkContext;

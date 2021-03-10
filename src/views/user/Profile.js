@@ -316,7 +316,7 @@ export default class Profile extends React.Component {
                 <View
                   style={[
                     styles.centerContent,
-                    { marginTop: onTablet ? 50 : 30 }
+                    { marginTop: onTablet ? 40 : 20 }
                   ]}
                 >
                   <View style={localStyles.imageContainer}>
@@ -350,7 +350,7 @@ export default class Profile extends React.Component {
                     />
                   </View>
                   <View style={styles.centerContent}>
-                    <Text style={localStyles.usernameText}>
+                    <Text style={[localStyles.usernameText, styles.childHeaderText]}>
                       {this.state.username}
                     </Text>
                     <Text style={localStyles.memberSinceText}>
@@ -381,7 +381,7 @@ export default class Profile extends React.Component {
                       localStyles.notificationText,
                       {
                         fontSize: sizing.verticalListTitleSmall,
-                        paddingVertical: 20,
+                        paddingVertical: 15,
                         paddingLeft: 10,
                         fontFamily: 'OpenSans-ExtraBold',
                         color: 'white'
@@ -637,7 +637,6 @@ const localStyles = StyleSheet.create({
   },
   usernameText: {
     fontFamily: 'OpenSans-ExtraBold',
-    fontSize: DeviceInfo.isTablet() ? 30 : 24,
     textAlign: 'center',
     color: 'white',
     paddingBottom: 5
@@ -715,7 +714,7 @@ const localStyles = StyleSheet.create({
     color: 'white'
   },
   createdAtText: {
-    marginTop: 5,
+    marginTop: 1,
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: '#445f73'

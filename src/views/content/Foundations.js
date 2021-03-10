@@ -1,5 +1,5 @@
 /**
- * Method
+ * Foundations
  */
 import React from 'react';
 import {
@@ -35,13 +35,13 @@ import {
   resetProgress
 } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
-import methodService from '../../services/method.service';
+import foundationsService from '../../services/foundations.service';
 
 let greaterWDim;
 const windowDim = Dimensions.get('window');
 const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
-export default class Method extends React.Component {
+export default class Foundations extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
@@ -49,8 +49,6 @@ export default class Method extends React.Component {
 
     this.state = {
       items: [],
-      methodIsStarted: this.props.navigation.state.params.methodIsStarted,
-      methodIsCompleted: this.props.navigation.state.params.methodIsCompleted,
       showRestartCourse: false,
       bannerNextLessonUrl: '',
       id: null,
@@ -68,8 +66,7 @@ export default class Method extends React.Component {
       nextLesson: null,
       progress: 0,
       refreshing: false,
-      isLandscape:
-        Dimensions.get('window').height < Dimensions.get('window').width
+      isLandscape: Dimensions.get('window').height < Dimensions.get('window').width,
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
@@ -106,9 +103,10 @@ export default class Method extends React.Component {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    const response = new ContentModel(await methodService.getMethod());
-    const newContent = response.post.levels.map(data => {
-      return new ContentModel(data);
+    const response = new ContentModel(await foundationsService.getFoundation('foundations-2019'),);
+
+    const newContent = response.post.units.map((data) => {
+        return new ContentModel(data);
     });
 
     let items = [];
@@ -198,8 +196,6 @@ export default class Method extends React.Component {
 
     this.setState(
       {
-        methodIsStarted: false,
-        methodIsCompleted: false,
         isStarted: false,
         isCompleted: false,
         isLoadingAll: true,
@@ -241,7 +237,7 @@ export default class Method extends React.Component {
         <NavMenuHeaders
           isMethod={true}
           currentPage={'LESSONS'}
-          parentPage={'METHOD'}
+          parentPage={'FOUNDATIONS'}
         />
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -296,7 +292,7 @@ export default class Method extends React.Component {
                     alignSelf: 'center',
                     marginBottom: onTablet ? '2%' : '4%'
                   }}
-                  source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
+                  source={require('Pianote2/src/assets/img/imgs/foundations-logo.png')}
                   resizeMode={FastImage.resizeMode.contain}
                 />
               </View>
@@ -313,7 +309,7 @@ export default class Method extends React.Component {
               >
                 <View style={{ flex: 1 }} />
                 <View style={{ width: '50%' }}>
-                  {this.state.methodIsCompleted ? (
+                  {this.state.isCompleted ? (
                     <ResetIcon
                       isMethod={true}
                       pressed={() =>
@@ -322,7 +318,7 @@ export default class Method extends React.Component {
                         })
                       }
                     />
-                  ) : this.state.methodIsStarted ? (
+                  ) : this.state.isStarted ? (
                     <ContinueIcon
                       isMethod={true}
                       pressed={() =>
@@ -330,7 +326,7 @@ export default class Method extends React.Component {
                       }
                     />
                   ) : (
-                    !this.state.methodIsStarted && (
+                    !this.state.isStarted && (
                       <StartIcon
                         isMethod={true}
                         pressed={() =>
@@ -381,6 +377,7 @@ export default class Method extends React.Component {
             >
               <Text
                 style={{
+                marginVertical: 15,
                   fontFamily: 'OpenSans-Regular',
                   fontSize: sizing.descriptionText,
                   color: 'white',
@@ -405,7 +402,8 @@ export default class Method extends React.Component {
                       styles.centerContent,
                       {
                         width: onTablet ? 100 : 70,
-                        marginRight: 15
+                        marginRight: 15,
+                        marginVertical: 15,
                       }
                     ]}
                   >
@@ -444,7 +442,8 @@ export default class Method extends React.Component {
                         fontSize: onTablet ? 25 : 17.5,
                         textAlign: 'left',
                         color: 'white',
-                        fontFamily: 'OpenSans-Bold'
+                        fontFamily: 'OpenSans-Bold',
+                        marginVertical: 15,
                       }}
                     >
                       {this.state.xp}
@@ -520,7 +519,7 @@ export default class Method extends React.Component {
               isMethod={true}
               items={this.state.items}
               isLoading={this.state.isLoadingAll}
-              title={'METHOD'}
+              title={'FOUNDATIONS'}
               type={'LESSONS'}
               showFilter={false}
               showType={false}
@@ -557,7 +556,7 @@ export default class Method extends React.Component {
             item={this.state.nextLesson}
             isMethod={true}
             progress={this.state.progress}
-            type='METHOD'
+            type='FOUNDATIONS'
             onNextLesson={() =>
               this.goToLesson(this.state.nextLesson.post.mobile_app_url)
             }

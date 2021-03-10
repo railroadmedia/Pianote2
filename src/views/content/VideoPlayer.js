@@ -903,14 +903,18 @@ export default class VideoPlayer extends React.Component {
 
   renderTagsDependingOnContentType = () => {
     let { artist, xp, type, publishedOn, instructor, style } = this.state;
+    if(typeof instructor[0] == 'object') {
+      instructor = [instructor[0]?.fields?.[0]?.value]
+    }
+
     let releaseDate = this.transformDate(publishedOn);
     let releaseDateTag = releaseDate ? `${releaseDate} | ` : '';
-
     let artistTag = artist ? `${artist.toUpperCase()} | ` : '';
     let xpTag = `${xp || 0} XP`;
     let instructorTag = instructor
-      ? `${instructor.join(', ').toUpperCase()} | `
+      ? `${instructor.join(',').toUpperCase()} | `
       : '';
+
     switch (type) {
       case 'song-part':
         return artistTag + style + xpTag;

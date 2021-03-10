@@ -82,7 +82,6 @@ class Lessons extends React.Component {
   }
 
   componentDidMount = () => {
-    console.log(paddingInset);
     Orientation.addDeviceOrientationListener(this.orientationListener);
     AsyncStorage.multiGet([
       'totalXP',
@@ -439,7 +438,7 @@ class Lessons extends React.Component {
                   <FastImage
                     style={{
                       width: '85%',
-                      height: onTablet ? 100 : 65,
+                      height: onTablet ? 100 : 60,
                       alignSelf: 'center',
                       marginBottom: onTablet ? '2%' : '4%'
                     }}

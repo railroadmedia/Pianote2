@@ -477,7 +477,7 @@ class HorizontalVideoList extends React.Component {
               </View>
 
               <View style={localStyles.videoTitle}>
-                <View style={{ width: '80%' }}>
+                <View style={{ width: '85%' }}>
                   <Text
                     numberOfLines={1}
                     ellipsizeMode='tail'

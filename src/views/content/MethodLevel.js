@@ -271,7 +271,7 @@ export default class MethodLevel extends React.Component {
                 <FastImage
                   style={{
                     width: '75%',
-                    height: onTablet ? 100 : 65,
+                    height: onTablet ? 100 : 60,
                     alignSelf: 'center',
                     marginBottom: onTablet ? '2%' : '4%'
                   }}

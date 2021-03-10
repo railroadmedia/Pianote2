@@ -19,6 +19,10 @@ const navigationOptions = [
     navigator: 'METHOD'
   },
   {
+    title: 'Foundations',
+    navigator: 'FOUNDATIONS'
+  },
+  {
     title: 'Courses',
     navigator: 'COURSE'
   },
