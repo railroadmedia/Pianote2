@@ -903,7 +903,6 @@ export default class VideoPlayer extends React.Component {
 
   renderTagsDependingOnContentType = () => {
     let { artist, xp, type, publishedOn, instructor, style } = this.state;
-    console.log(instructor)
     if(typeof instructor[0] == 'object') {
       instructor = [instructor[0]?.fields?.[0]?.value]
     }

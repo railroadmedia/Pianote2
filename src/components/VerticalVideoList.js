@@ -181,7 +181,6 @@ class VerticalVideoList extends React.Component {
     ) {
       return;
     }
-    console.log(content)
     if (this.props.navigator) return this.props.navigator(content, index);
     switch (content.type) {
       case 'course':
@@ -213,7 +212,6 @@ class VerticalVideoList extends React.Component {
           isMethod: true
         });
       case 'unit':
-        console.log('content : ', content)
         return this.props.navigation.push('PATHOVERVIEW', {
           data: content,
           isFoundations: true,

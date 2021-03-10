@@ -12,14 +12,11 @@ export async function likeContent(contentID) {
 
 export async function unlikeContent(contentID) {
   try {
-    let x = await commonService.tryCall(
+    return await commonService.tryCall(
       `${commonService.rootUrl}/api/railcontent/content-like?content_id=${contentID}`,
       'DELETE'
     );
-    console.log(x);
-    return x;
   } catch (error) {
-    console.log('ERROR DISLIKING CONTENT: ', error);
     return new Error(error);
   }
 }
@@ -63,7 +60,6 @@ export async function markComplete(contentID) {
     ]);
     return response;
   } catch (error) {
-    console.log('ERROR MARKING AS COMPLETE: ', error);
     return new Error(error);
   }
 }
@@ -79,7 +75,6 @@ export async function markStarted(contentID) {
       'PUT'
     );
   } catch (error) {
-    console.log('ERROR MARKING AS STARTED: ', error);
     return new Error(error);
   }
 }
