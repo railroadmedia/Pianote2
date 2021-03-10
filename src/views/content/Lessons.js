@@ -82,7 +82,6 @@ class Lessons extends React.Component {
   }
 
   componentDidMount = () => {
-    console.log(paddingInset);
     Orientation.addDeviceOrientationListener(this.orientationListener);
     AsyncStorage.multiGet([
       'totalXP',

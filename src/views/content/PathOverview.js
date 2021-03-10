@@ -38,6 +38,7 @@ import {
   unlikeContent
 } from '../../services/UserActions';
 import methodService from '../../services/method.service';
+import foundationsService from '../../services/foundations.service';
 import NextVideo from '../../components/NextVideo';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -56,23 +57,24 @@ export default class PathOverview extends React.Component {
       items: this.props.navigation.state.params.items || [],
       isAddedToList: this.props.navigation.state.params.data?.isAddedToList,
       thumbnail: this.props.navigation.state.params.data?.thumbnail,
-      artist: this.props.navigation.state.params.data?.artist,
+      artist: typeof this.props.navigation.state.params.data?.artist == 'object' ? this.props.navigation.state.params.data?.artist.join(', ') : this.props.navigation.state.params.data?.artist,
       isMethod: this.props.navigation.state.params.isMethod,
+      isFoundations: this.props.navigation.state.params.isFoundations,
       xp: this.props.navigation.state.params.data.total_xp,
+      started: this.props.navigation.state.params.data.started,
+      completed: this.props.navigation.state.params.data.completed,
+      nextLesson: this.props.navigation.state.params.data.next_lesson,
+      difficulty: this.props.navigation.state.params.data.difficulty,
       type: '',
       showInfo: false,
       totalLength: 0,
       isLiked: false,
       likeCount: 0,
-      started: this.props.navigation.state.params.data.started,
-      completed: this.props.navigation.state.params.data.completed,
       showRestartCourse: false,
-      nextLesson: this.props.navigation.state.params.data.next_lesson,
       progress: 0,
       isLoadingAll: this.props.navigation.state.params.items?.length
         ? false
         : true,
-      difficulty: this.props.navigation.state.params.data.difficulty,
       refreshing: false,
       levelNum: 0,
       bannerNextLessonUrl: '',
@@ -105,7 +107,11 @@ export default class PathOverview extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     let res;
-    if (this.state.isMethod) {
+    if(this.state.foundations) {
+      res = await foundationsService.getUnit(
+        this.state.data.mobile_app_url
+      );
+    } else if (this.state.isMethod) {
       res = await methodService.getMethodContent(
         this.state.data.mobile_app_url
       );
@@ -283,7 +289,7 @@ export default class PathOverview extends React.Component {
               ? `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
                   width
                 )},ar_${this.getAspectRatio()},${
-                  this.state.isMethod ? 'c_pad,g_south' : 'c_fill,g_face'
+                  this.state.isMethod && !this.state.isFoundations ? 'c_pad,g_south' : 'c_fill,g_face'
                 }/${this.state.thumbnail}`
               : thumbnail
           }}
@@ -344,7 +350,7 @@ export default class PathOverview extends React.Component {
             ]}
           >
             {this.state.artist?.toUpperCase()} |{' '}
-            {this.state.isMethod
+            {this.state.isMethod && !this.state.isFoundations
               ? 'LEVEL ' + this.state.levelNum
               : this.formatDifficulty()}{' '}
             | {this.state.xp} XP
@@ -699,7 +705,7 @@ export default class PathOverview extends React.Component {
           <FlatList
             style={{
               flex: 1,
-              marginLeft: isLandscape ? '10%' : '2%',
+              marginLeft: onTablet ? (isLandscape ? '10%' : '2%') : 0,
               backgroundColor: isMethod ? 'black' : colors.mainBackground,
               marginBottom: 10,
               alignSelf: 'center',
@@ -849,7 +855,7 @@ export default class PathOverview extends React.Component {
           <NextVideo
             item={nextLesson}
             progress={this.state.progress}
-            type={isMethod ? 'COURSE' : this.state.type.toUpperCase()}
+            type={this.state.isFoundations ? 'Lesson' : isMethod ? 'COURSE' : this.state.type.toUpperCase()}
             onNextLesson={() =>
               this.goToLesson(
                 this.state.isMethod

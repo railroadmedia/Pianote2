@@ -22,6 +22,7 @@ import Search from './src/views/content/Search';
 import Packs from './src/views/content/Packs';
 import Method from './src/views/content/Method';
 import MethodLevel from './src/views/content/MethodLevel';
+import Foundations from './src/views/content/Foundations';
 
 // onboard
 import MembershipExpired from './src/views/onboard/MembershipExpired';
@@ -70,6 +71,7 @@ const AppNavigator = createStackNavigator(
     VIDEOPLAYERSONG: { screen: VideoPlayerSong },
     METHODLEVEL: { screen: MethodLevel },
     METHOD: { screen: Method },
+    FOUNDATIONS: { screen: Foundations },
     PATHOVERVIEW: { screen: PathOverview },
     SONGCATALOG: { screen: SongCatalog },
     VIDEOPLAYER: {

@@ -181,7 +181,7 @@ class VerticalVideoList extends React.Component {
     ) {
       return;
     }
-
+    console.log(content)
     if (this.props.navigator) return this.props.navigator(content, index);
     switch (content.type) {
       case 'course':
@@ -210,6 +210,13 @@ class VerticalVideoList extends React.Component {
       case 'learning-path-course':
         return this.props.navigation.push('PATHOVERVIEW', {
           data: content,
+          isMethod: true
+        });
+      case 'unit':
+        console.log('content : ', content)
+        return this.props.navigation.push('PATHOVERVIEW', {
+          data: content,
+          isFoundations: true,
           isMethod: true
         });
       case 'learning-path-lesson':
@@ -263,7 +270,7 @@ class VerticalVideoList extends React.Component {
         <TouchableOpacity
           key={index}
           onLongPress={() => {
-            row.type == 'learning-path-level'
+            row.type == 'learning-path-level' || row.type == 'unit'
               ? null
               : this.setState({
                   showModal: true,
