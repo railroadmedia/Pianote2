@@ -292,7 +292,7 @@ export default class Foundations extends React.Component {
                     alignSelf: 'center',
                     marginBottom: onTablet ? '2%' : '4%'
                   }}
-                  source={require('Pianote2/src/assets/img/imgs/foundations-logo.png')}
+                  source={require('Pianote2/src/assets/img/imgs/foundations-logo-white.png')}
                   resizeMode={FastImage.resizeMode.contain}
                 />
               </View>
