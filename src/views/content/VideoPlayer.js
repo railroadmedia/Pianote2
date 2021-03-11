@@ -160,7 +160,7 @@ export default class VideoPlayer extends React.Component {
     }
     content = new ContentModel(content);
 
-    let chapters = content.post.chapters.map(chapter => {
+    let chapters = content.post.chapters?.map(chapter => {
       return [chapter.chapter_timecode, chapter.chapter_description];
     });
 
@@ -1303,24 +1303,26 @@ export default class VideoPlayer extends React.Component {
                   </View>
                   <View>
                     {this.state.showInfo && (
-                      <Text
-                        style={{
-                          paddingHorizontal: '5%',
-                          paddingTop: 20,
-                          fontFamily: 'OpenSans-Regular',
-                          fontSize: sizing.descriptionText,
-                          textAlign: 'left',
-                          color: 'white'
-                        }}
-                      >
-                        {this.state.description}
-                        {'\n\n'}
+                      <>
+                        <Text
+                          style={{
+                            paddingHorizontal: 10,
+                            paddingTop: 20,
+                            fontFamily: 'OpenSans-Regular',
+                            fontSize: sizing.descriptionText,
+                            textAlign: 'left',
+                            color: 'white'
+                          }}
+                        >
+                          {this.state.description}
+                        </Text>
                         {this.state.chapters && (
-                          <>
+                          <View style={{paddingTop: 10,}}>
                             {this.state.chapters.map((item, index) => (
                               <Text
                                 style={{
-                                  marginTop: 20,
+                                  paddingHorizontal: 10,
+                                  marginTop: 5,
                                   fontFamily: 'OpenSans-Regular',
                                   fontSize: sizing.descriptionText,
                                   textAlign: 'left',
@@ -1337,21 +1339,20 @@ export default class VideoPlayer extends React.Component {
                                   }}
                                 >
                                   {this.secondsToTime(item[0])}
-                                </Text> - {item[1]}{'\n'}
+                                </Text> - {item[1]}
                               </Text>
                             ))}
-                          </>
+                          </View>
                         )}
-                      </Text>
+                      </>
                     )}
                   </View>
                   {this.state.assignmentList?.length > 0 && (
-                    <>
+                    <View style={{marginTop: 20, marginBottom: 10}}>
                       <View
                         style={{
                           paddingLeft: paddingInset,
                           paddingBottom: 10,
-                          paddingTop: 20,
                         }}
                       >
                         <Text
@@ -1374,9 +1375,9 @@ export default class VideoPlayer extends React.Component {
                       >
                         {this.renderAssignments()}
                       </View>
-                    </>
+                    </View>
                   )}
-                  <View style={{ height: 5 }} />
+                  <View style={{ height: 10 }} />
                   {this.state.relatedLessons.length > 0 && (
                     <VerticalVideoList
                       title={'RELATED LESSONS'}
