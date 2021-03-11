@@ -1329,7 +1329,7 @@ export default class VideoPlayer extends React.Component {
                               >
                                 <Text
                                   onPress={() => {
-                                    
+
                                   }}
                                   style={{
                                     textDecorationLine: 'underline',
@@ -1345,13 +1345,13 @@ export default class VideoPlayer extends React.Component {
                       </Text>
                     )}
                   </View>
-                  <View style={{ height: 10 }} />
                   {this.state.assignmentList?.length > 0 && (
                     <>
                       <View
                         style={{
                           paddingLeft: paddingInset,
-                          paddingVertical: 15
+                          paddingBottom: 10,
+                          paddingTop: 20,
                         }}
                       >
                         <Text
