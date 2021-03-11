@@ -160,12 +160,6 @@ export default class VideoPlayer extends React.Component {
     }
     content = new ContentModel(content);
 
-    let chapters = content.post.chapters?.map(chapter => {
-      return [chapter.chapter_timecode, chapter.chapter_description];
-    });
-
-    console.log('this: ', chapters)
-
     let relatedLessons = content.post.related_lessons?.map(rl => {
       return new ContentModel(rl);
     });
@@ -273,7 +267,7 @@ export default class VideoPlayer extends React.Component {
                 .replace(/&quot;/g, '"')
                 .replace(/&gt;/g, '>')
                 .replace(/&lt;/g, '<'),
-        chapters, 
+        chapters: content.post.chapters,
         xp: content.post.total_xp,
         artist:
           content.post.type === 'song-part' && content.post.parent
@@ -912,8 +906,8 @@ export default class VideoPlayer extends React.Component {
 
   renderTagsDependingOnContentType = () => {
     let { artist, xp, type, publishedOn, instructor, style } = this.state;
-    if(typeof instructor[0] == 'object') {
-      instructor = [instructor[0]?.fields?.[0]?.value]
+    if (typeof instructor[0] == 'object') {
+      instructor = [instructor[0]?.fields?.[0]?.value];
     }
 
     let releaseDate = this.transformDate(publishedOn);
@@ -940,19 +934,16 @@ export default class VideoPlayer extends React.Component {
     }
   };
 
-  secondsToTime = (secs) => {
-    var hours = Math.floor(secs / (60 * 60));
-    var divisor_for_minutes = secs % (60 * 60);
-    var minutes = Math.floor(divisor_for_minutes / 60);
-    var divisor_for_seconds = divisor_for_minutes % 60;
-    var seconds = Math.ceil(divisor_for_seconds);
-    
-    if (hours   < 10) {hours   = "0"+hours;}
-    if (minutes < 10) {minutes = "0"+minutes;}
-    if (seconds < 10) {seconds = "0"+seconds;}
-    
-    return `${hours}:${minutes}:${seconds}`
-  }
+  secondsToTime = seconds => {
+    if (seconds < 1) return '0:00';
+    let h = parseInt(seconds / 3600);
+    let m = parseInt((seconds - h * 3600) / 60);
+    let s = parseInt(seconds - m * 60 - h * 3600);
+
+    s = `${s < 10 ? 0 : ''}${s}`;
+    m = `${h && m < 10 ? 0 : ''}${m}`;
+    return h ? `${h}:${m}:${s}` : `${m}:${s}`;
+  };
 
   render() {
     let { id, comments, youtubeId } = this.state;
@@ -1316,43 +1307,47 @@ export default class VideoPlayer extends React.Component {
                         >
                           {this.state.description}
                         </Text>
-                        {this.state.chapters && (
-                          <View style={{paddingTop: 10,}}>
-                            {this.state.chapters.map((item, index) => (
+                        {this.state.chapters?.map(item => (
+                          <TouchableOpacity
+                            style={{
+                              alignSelf: 'flex-start',
+                              paddingVertical: 5
+                            }}
+                            onPress={() =>
+                              this.video?.onSeek?.(item.chapter_timecode)
+                            }
+                          >
+                            <Text
+                              style={{
+                                color: 'white',
+                                fontFamily: 'OpenSans-Regular',
+                                fontSize: sizing.descriptionText,
+                                marginTop: 5,
+                                paddingHorizontal: 10,
+                                textAlign: 'left'
+                              }}
+                            >
                               <Text
                                 style={{
-                                  paddingHorizontal: 10,
-                                  marginTop: 5,
-                                  fontFamily: 'OpenSans-Regular',
-                                  fontSize: sizing.descriptionText,
-                                  textAlign: 'left',
-                                  color: 'white',
+                                  color: '#007AFF',
+                                  textDecorationLine: 'underline'
                                 }}
                               >
-                                <Text
-                                  onPress={() => {
-
-                                  }}
-                                  style={{
-                                    textDecorationLine: 'underline',
-                                    color: '#007AFF',
-                                  }}
-                                >
-                                  {this.secondsToTime(item[0])}
-                                </Text> - {item[1]}
-                              </Text>
-                            ))}
-                          </View>
-                        )}
+                                {this.secondsToTime(item.chapter_timecode)}
+                              </Text>{' '}
+                              - {item.chapter_description}
+                            </Text>
+                          </TouchableOpacity>
+                        ))}
                       </>
                     )}
                   </View>
                   {this.state.assignmentList?.length > 0 && (
-                    <View style={{marginTop: 20, marginBottom: 10}}>
+                    <View style={{ marginTop: 20, marginBottom: 10 }}>
                       <View
                         style={{
                           paddingLeft: paddingInset,
-                          paddingBottom: 10,
+                          paddingBottom: 10
                         }}
                       >
                         <Text
