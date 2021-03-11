@@ -93,6 +93,7 @@ export default class VideoPlayer extends React.Component {
       showResDownload: false,
       showVideo: true,
       comments: [],
+      chapters: [],
       relatedLessons: [],
       likes: 0,
       videoId: 0,
@@ -158,6 +159,13 @@ export default class VideoPlayer extends React.Component {
       this.allCommentsNum = result.total_comments;
     }
     content = new ContentModel(content);
+
+    let chapters = content.post.chapters.map(chapter => {
+      return [chapter.chapter_timecode, chapter.chapter_description];
+    });
+
+    console.log('this: ', chapters)
+
     let relatedLessons = content.post.related_lessons?.map(rl => {
       return new ContentModel(rl);
     });
@@ -265,6 +273,7 @@ export default class VideoPlayer extends React.Component {
                 .replace(/&quot;/g, '"')
                 .replace(/&gt;/g, '>')
                 .replace(/&lt;/g, '<'),
+        chapters, 
         xp: content.post.total_xp,
         artist:
           content.post.type === 'song-part' && content.post.parent
@@ -931,6 +940,20 @@ export default class VideoPlayer extends React.Component {
     }
   };
 
+  secondsToTime = (secs) => {
+    var hours = Math.floor(secs / (60 * 60));
+    var divisor_for_minutes = secs % (60 * 60);
+    var minutes = Math.floor(divisor_for_minutes / 60);
+    var divisor_for_seconds = divisor_for_minutes % 60;
+    var seconds = Math.ceil(divisor_for_seconds);
+    
+    if (hours   < 10) {hours   = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    if (seconds < 10) {seconds = "0"+seconds;}
+    
+    return `${hours}:${minutes}:${seconds}`
+  }
+
   render() {
     let { id, comments, youtubeId } = this.state;
     return (
@@ -1286,11 +1309,39 @@ export default class VideoPlayer extends React.Component {
                           paddingTop: 20,
                           fontFamily: 'OpenSans-Regular',
                           fontSize: sizing.descriptionText,
-                          textAlign: 'center',
+                          textAlign: 'left',
                           color: 'white'
                         }}
                       >
                         {this.state.description}
+                        {'\n\n'}
+                        {this.state.chapters && (
+                          <>
+                            {this.state.chapters.map((item, index) => (
+                              <Text
+                                style={{
+                                  marginTop: 20,
+                                  fontFamily: 'OpenSans-Regular',
+                                  fontSize: sizing.descriptionText,
+                                  textAlign: 'left',
+                                  color: 'white',
+                                }}
+                              >
+                                <Text
+                                  onPress={() => {
+                                    
+                                  }}
+                                  style={{
+                                    textDecorationLine: 'underline',
+                                    color: '#007AFF',
+                                  }}
+                                >
+                                  {this.secondsToTime(item[0])}
+                                </Text> - {item[1]}{'\n'}
+                              </Text>
+                            ))}
+                          </>
+                        )}
                       </Text>
                     )}
                   </View>
