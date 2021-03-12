@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { withNavigation } from 'react-navigation';
@@ -50,13 +50,16 @@ class AddToCalendar extends React.Component {
               style={localStyles.calendarIcon}
             />
             <TouchableOpacity
-              style={[localStyles.confirmAddition, {justifyContent: 'center'}]}
+              style={[
+                localStyles.confirmAddition,
+                { justifyContent: 'center' }
+              ]}
               onPress={() => this.props.addEventToCalendar()}
             >
               <Text
                 style={[
                   styles.modalButtonText,
-                  localStyles.confirmAdditionText,
+                  localStyles.confirmAdditionText
                 ]}
               >
                 CONFIRM ADDITION
@@ -96,7 +99,7 @@ const localStyles = StyleSheet.create({
     height: DeviceInfo.isTablet() ? 40 : 30
   },
   confirmAdditionText: {
-    color: 'white',
+    color: 'white'
   }
 });
 

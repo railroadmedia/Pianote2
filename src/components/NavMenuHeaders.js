@@ -2,12 +2,7 @@
  * NavMenuHeaders
  */
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StatusBar
-} from 'react-native';
+import { View, Text, TouchableOpacity, StatusBar } from 'react-native';
 import {
   StackActions,
   withNavigation,

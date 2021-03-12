@@ -197,7 +197,7 @@ const localStyles = StyleSheet.create({
   },
   videoTitle: {
     paddingHorizontal: 20,
-    marginTop: 10,
+    marginTop: 10
   }
 });
 

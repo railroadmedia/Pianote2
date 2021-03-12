@@ -316,9 +316,7 @@ class HorizontalVideoList extends React.Component {
           {!this.props.hideSeeAll && (
             <>
               {(!onTablet || (onTablet && this.props.hideFilterButton)) && (
-                <TouchableOpacity
-                  onPress={() => this.props.seeAll()}
-                >
+                <TouchableOpacity onPress={() => this.props.seeAll()}>
                   <Text style={localStyles.seeAllText}>See All</Text>
                 </TouchableOpacity>
               )}
@@ -494,7 +492,7 @@ class HorizontalVideoList extends React.Component {
                           ? colors.pianoteGrey
                           : colors.secondBackground,
 
-                        fontSize: sizing.descriptionText,
+                        fontSize: sizing.descriptionText
                       }}
                     >
                       {this.props.showType && this.changeType(item.type)}
@@ -615,7 +613,7 @@ const localStyles = StyleSheet.create({
   title: {
     fontSize: DeviceInfo.isTablet() ? 20 : 16,
     fontFamily: 'RobotoCondensed-Bold',
-    paddingVertical: 5,
+    paddingVertical: 5
   },
   seeAllText: {
     textAlign: 'right',

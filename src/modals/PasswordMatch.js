@@ -44,12 +44,7 @@ class PasswordMatch extends React.Component {
               style={localStyles.tryAgainContainer}
               onPress={() => this.props.hidePasswordMatch()}
             >
-              <Text
-                style={[
-                  styles.modalButtonText,
-                  localStyles.tryAgainText,
-                ]}
-              >
+              <Text style={[styles.modalButtonText, localStyles.tryAgainText]}>
                 TRY AGAIN
               </Text>
             </TouchableOpacity>

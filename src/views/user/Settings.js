@@ -412,10 +412,7 @@ class Settings extends React.Component {
 
         <Modal
           isVisible={this.state.showLogOut}
-          style={[
-            styles.centerContent,
-            styles.modalContainer
-          ]}
+          style={[styles.centerContent, styles.modalContainer]}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

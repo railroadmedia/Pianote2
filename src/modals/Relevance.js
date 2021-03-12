@@ -2,12 +2,7 @@
  * Relevance
  */
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { withNavigation } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';

@@ -297,7 +297,8 @@ class MyList extends React.Component {
             <View style={{ flex: 0.85 }} />
             <View style={[styles.centerContent, { flex: 0.15 }]}>
               <EntypoIcon
-                name={'chevron-thin-right'}s
+                name={'chevron-thin-right'}
+                s
                 size={onTablet ? 30 : 20}
                 color={colors.secondBackground}
               />

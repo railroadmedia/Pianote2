@@ -350,7 +350,9 @@ export default class Profile extends React.Component {
                     />
                   </View>
                   <View style={styles.centerContent}>
-                    <Text style={[localStyles.usernameText, styles.childHeaderText]}>
+                    <Text
+                      style={[localStyles.usernameText, styles.childHeaderText]}
+                    >
                       {this.state.username}
                     </Text>
                     <Text style={localStyles.memberSinceText}>

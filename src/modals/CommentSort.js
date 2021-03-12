@@ -2,11 +2,7 @@
  * CommentSort
  */
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { withNavigation } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -35,7 +31,7 @@ class CommentSort extends React.Component {
             onPress={() => this.props.hideCommentSort()}
           />
         </View>
-        <View 
+        <View
           style={{
             width: '100%',
             backgroundColor: '#00101d',
@@ -49,7 +45,7 @@ class CommentSort extends React.Component {
                 flexDirection: 'row',
                 borderBottomColor: '#445f73',
                 borderBottomWidth: 0.5,
-                alignItems: 'center',
+                alignItems: 'center'
               }}
               onPress={() => {
                 this.props.hideCommentSort();
@@ -85,7 +81,7 @@ class CommentSort extends React.Component {
             style={{
               padding: 5,
               flexDirection: 'row',
-              alignItems: 'center',
+              alignItems: 'center'
             }}
           >
             <EntypoIcon
@@ -103,7 +99,7 @@ class CommentSort extends React.Component {
             >
               Cancel
             </Text>
-          </TouchableOpacity>       
+          </TouchableOpacity>
         </View>
       </View>
     );

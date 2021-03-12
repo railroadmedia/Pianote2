@@ -83,7 +83,10 @@ class XpRank extends React.Component {
               >
                 <ProgressCircle
                   percent={this.state.rankProgress}
-                  radius={(DeviceInfo.isTablet() ? 0.2 : 0.27) * Dimensions.get('window').width}
+                  radius={
+                    (DeviceInfo.isTablet() ? 0.2 : 0.27) *
+                    Dimensions.get('window').width
+                  }
                   borderWidth={5}
                   shadowColor={'pink'}
                   color={'red'}

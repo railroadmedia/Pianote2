@@ -1,7 +1,13 @@
 /**
  * Index
  */
-import { AppRegistry, Dimensions, Platform, Linking, LogBox } from 'react-native';
+import {
+  AppRegistry,
+  Dimensions,
+  Platform,
+  Linking,
+  LogBox
+} from 'react-native';
 import App from './App';
 import { name as appName } from './app.json';
 import { configure } from '@musora/services';
@@ -82,7 +88,7 @@ PushNotification.configure({
 });
 
 AppRegistry.registerComponent(appName, () => App);
-LogBox.ignoreAllLogs(true)
+LogBox.ignoreAllLogs(true);
 global.fullWidth = Dimensions.get('window').width;
 global.fullHeight = Dimensions.get('window').height;
 global.token = '';
@@ -92,26 +98,26 @@ global.isiOS = Platform.OS === 'ios';
 global.styles = require('Pianote2/src/assets/styles/styles.js');
 global.isConnected = true;
 global.isPackOnly = false;
-global.paddingInset = 10
+global.paddingInset = 10;
 global.fallbackThumb =
   'https://dmmior4id2ysr.cloudfront.net/assets/images/pianote_fallback_thumb.jpg';
-global.backButtonSize = DeviceInfo.isTablet() ? 30 : 22.5,
-(global.colors = {
+(global.backButtonSize = DeviceInfo.isTablet() ? 30 : 22.5),
+  (global.colors = {
     mainBackground: '#00101d',
     secondBackground: '#445f73',
     thirdBackground: '#081826',
     notificationColor: '#002038',
     pianoteRed: '#fb1b2f',
     pianoteGrey: '#6e777a'
-});
-  global.sizing = {
-    descriptionText: onTablet ? 16 : 12,
-    infoButtonSize: onTablet ? 22.5 : 17.5, 
-    myListButtonSize: onTablet ? 28 : 22, 
-    titleVideoPlayer: onTablet ? 24 : 18,
-    videoTitleText: onTablet ? 16 : 14,
-    verticalListTitleSmall: onTablet ? 18 : 14,
-  }
+  });
+global.sizing = {
+  descriptionText: onTablet ? 16 : 12,
+  infoButtonSize: onTablet ? 22.5 : 17.5,
+  myListButtonSize: onTablet ? 28 : 22,
+  titleVideoPlayer: onTablet ? 24 : 18,
+  videoTitleText: onTablet ? 16 : 14,
+  verticalListTitleSmall: onTablet ? 18 : 14
+};
 
 configure({
   baseURL: 'https://www.pianote.com',

@@ -86,7 +86,9 @@ class NextVideo extends React.Component {
                 }
               ]}
             >
-              {this.props.type.charAt(0) + this.props.type.slice(1).toLowerCase()} - {this.props.progress}% Complete
+              {this.props.type.charAt(0) +
+                this.props.type.slice(1).toLowerCase()}{' '}
+              - {this.props.progress}% Complete
             </Text>
           </View>
           <View style={localStyles.videoContainer}>
@@ -107,7 +109,12 @@ class NextVideo extends React.Component {
               />
             </View>
             <View style={localStyles.titleTextContainer}>
-              <Text style={[localStyles.videoTitle, {fontSize: sizing.descriptionText}]}>
+              <Text
+                style={[
+                  localStyles.videoTitle,
+                  { fontSize: sizing.descriptionText }
+                ]}
+              >
                 {this.props.item.getField('title')}
               </Text>
               <Text

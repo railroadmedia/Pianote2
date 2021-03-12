@@ -2,12 +2,7 @@
  * ReplyNotification
  */
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
 import DeviceInfo from 'react-native-device-info';
@@ -173,10 +168,11 @@ class ReplyNotification extends React.Component {
                   )}
                   <FastImage
                     style={localStyles.image}
-                    source={{ 
-                      uri: this.state.profileImage !== ''
-                            ? this.state.profileImage
-                            : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                    source={{
+                      uri:
+                        this.state.profileImage !== ''
+                          ? this.state.profileImage
+                          : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
                     }}
                     resizeMode={FastImage.resizeMode.cover}
                   />
@@ -197,10 +193,15 @@ class ReplyNotification extends React.Component {
                 <View style={localStyles.crossContainer}>
                   <EntypoIcon
                     name={'cross'}
-                    size={sizing.myListButtonSize*1.2}
+                    size={sizing.myListButtonSize * 1.2}
                     color={colors.pianoteRed}
                   />
-                  <Text style={[localStyles.removeText, {fontSize: sizing.descriptionText}]}>
+                  <Text
+                    style={[
+                      localStyles.removeText,
+                      { fontSize: sizing.descriptionText }
+                    ]}
+                  >
                     Remove this notification
                   </Text>
                 </View>
@@ -221,7 +222,12 @@ class ReplyNotification extends React.Component {
                     size={sizing.myListButtonSize}
                     color={colors.pianoteRed}
                   />
-                  <Text style={[localStyles.removeText, {fontSize: sizing.descriptionText}]}>
+                  <Text
+                    style={[
+                      localStyles.removeText,
+                      { fontSize: sizing.descriptionText }
+                    ]}
+                  >
                     Turn {this.state.notificationStatus ? 'off' : 'on'}{' '}
                     {messageDict[this.props.data.type][3]}
                   </Text>
@@ -239,7 +245,7 @@ class ReplyNotification extends React.Component {
 const localStyles = StyleSheet.create({
   profileContainer: {
     flexDirection: 'row',
-    paddingVertical: 30,
+    paddingVertical: 30
   },
   container: {
     width: '100%',
@@ -291,23 +297,23 @@ const localStyles = StyleSheet.create({
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
     paddingBottom: 20,
     textAlign: 'center',
-    color: '#445f73',
+    color: '#445f73'
   },
   user: {
     fontFamily: 'OpenSans-Bold',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   removeText: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: '#445f73',
-    paddingLeft: 10,
+    paddingLeft: 10
   },
   crossContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '100%',
+    width: '100%'
   },
   removeContainer: {
     height: DeviceInfo.isTablet() ? 70 : 50,

@@ -7,7 +7,7 @@ import {
   Text,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import {
   likeContent,
@@ -184,7 +184,7 @@ class ContentModal extends React.Component {
                   style={[
                     styles.centerContent,
                     {
-                      flex: 1,
+                      flex: 1
                     }
                   ]}
                 >
@@ -203,7 +203,7 @@ class ContentModal extends React.Component {
                 style={[
                   styles.centerContent,
                   {
-                    flex: 1,
+                    flex: 1
                   }
                 ]}
               >
@@ -223,7 +223,7 @@ class ContentModal extends React.Component {
               >
                 <AntIcon
                   name={this.state.isLiked ? 'like1' : 'like2'}
-                  size={sizing.myListButtonSize*0.9}
+                  size={sizing.myListButtonSize * 0.9}
                 />
                 <Text style={localStyles.likeCount}>
                   {this.state.like_count}
@@ -260,7 +260,7 @@ class ContentModal extends React.Component {
                   textStatus: {
                     color: 'black',
                     fontSize: sizing.descriptionText,
-                    fontFamily: 'OpenSans-Regular',
+                    fontFamily: 'OpenSans-Regular'
                   },
                   alert: {
                     alertTextMessageFontFamily: 'OpenSans-Regular',
@@ -333,12 +333,12 @@ const localStyles = StyleSheet.create({
   myList: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
-    textAlign: 'left',
+    textAlign: 'left'
   },
   likeCount: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
-    textAlign: 'left',
+    textAlign: 'left'
   },
   likeContainer: {
     flex: 1,

@@ -326,7 +326,7 @@ export default class SinglePack extends React.Component {
                         style={{
                           fontFamily: 'OpenSans-Regular',
                           color: 'white',
-                          fontSize: sizing.descriptionText,
+                          fontSize: sizing.descriptionText
                         }}
                       >
                         {this.state.isAddedToList ? 'Added' : 'My List'}

@@ -388,10 +388,7 @@ export default class ProfileSettings extends React.Component {
           </Modal>
           <Modal
             isVisible={this.state.showProfileImage}
-            style={[
-              styles.centerContent,
-              styles.modalContainer
-            ]}
+            style={[styles.centerContent, styles.modalContainer]}
             animation={'slideInUp'}
             animationInTiming={350}
             animationOutTiming={350}

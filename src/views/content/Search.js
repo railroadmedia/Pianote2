@@ -23,8 +23,9 @@ import { searchContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-  
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
   return (
@@ -335,7 +336,9 @@ export default class Search extends React.Component {
               }}
             >
               <View style={styles.searchBox}>
-                <View style={[styles.centerContent, { width: onTablet ? 60 : 40 }]}>
+                <View
+                  style={[styles.centerContent, { width: onTablet ? 60 : 40 }]}
+                >
                   <EvilIcons
                     name={'search'}
                     size={onTablet ? 35 : 25}

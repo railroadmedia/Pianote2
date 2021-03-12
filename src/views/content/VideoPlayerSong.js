@@ -213,7 +213,7 @@ export default class VideoPlayerSong extends React.Component {
                     alignSelf: 'center',
                     borderRadius: 300,
                     paddingHorizontal: 10,
-                    marginBottom: 7.5,
+                    marginBottom: 7.5
                   }
                 ]}
               >
@@ -221,7 +221,7 @@ export default class VideoPlayerSong extends React.Component {
                   style={{
                     color: '#fb1b2f',
                     fontFamily: 'RobotoCondensed-Bold',
-                    fontSize: sizing.verticalListTitleSmall,
+                    fontSize: sizing.verticalListTitleSmall
                   }}
                 >
                   PRACTICE
