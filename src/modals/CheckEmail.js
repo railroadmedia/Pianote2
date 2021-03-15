@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { withNavigation } from 'react-navigation';
@@ -49,10 +49,7 @@ class CheckEmail extends React.Component {
               style={localStyles.tryAgain}
             >
               <Text
-                style={[
-                  styles.modalCancelButtonText,
-                  localStyles.tryAgainText,
-                ]}
+                style={[styles.modalCancelButtonText, localStyles.tryAgainText]}
               >
                 TRY AGAIN
               </Text>

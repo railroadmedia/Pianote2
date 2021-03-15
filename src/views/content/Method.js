@@ -39,7 +39,8 @@ import methodService from '../../services/method.service';
 
 let greaterWDim;
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
 export default class Method extends React.Component {
   static navigationOptions = { header: null };
@@ -435,7 +436,7 @@ export default class Method extends React.Component {
                     style={[
                       styles.centerContent,
                       {
-                        width: onTablet ? 100 : 70,
+                        width: onTablet ? 100 : 70
                       }
                     ]}
                   >
@@ -484,14 +485,14 @@ export default class Method extends React.Component {
                       {
                         marginLeft: 10,
                         marginBottom: 10,
-                        width: onTablet ? 100 : 70,
+                        width: onTablet ? 100 : 70
                       }
                     ]}
                   >
                     <View style={{ flex: 1 }} />
                     <MaterialIcon
                       name={'replay'}
-                       size={onTablet ? 28 : 20}
+                      size={onTablet ? 28 : 20}
                       color={colors.pianoteRed}
                     />
                     <Text

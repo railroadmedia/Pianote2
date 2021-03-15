@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   KeyboardAvoidingView,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
@@ -63,7 +63,7 @@ class Replies extends React.Component {
             style={{
               alignItems: 'center',
               justifyContent: 'flex-start',
-              paddingBottom: 10,
+              paddingBottom: 10
             }}
           >
             <FastImage
@@ -88,7 +88,7 @@ class Replies extends React.Component {
               {reply.user.xp}
             </Text>
           </View>
-          <View style={{ flex: 1, paddingLeft: 10, }}>
+          <View style={{ flex: 1, paddingLeft: 10 }}>
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
@@ -235,7 +235,7 @@ class Replies extends React.Component {
                         style={{
                           alignItems: 'center',
                           justifyContent: 'flex-start',
-                          paddingBottom: 10,
+                          paddingBottom: 10
                         }}
                       >
                         <FastImage
@@ -346,11 +346,16 @@ class Replies extends React.Component {
                                 name={'comment-text-outline'}
                                 size={sizing.infoButtonSize}
                                 color={colors.pianoteRed}
-                                style={{marginRight: 10,}}
+                                style={{ marginRight: 10 }}
                               />
                               {comment.replies && comment.replies.length > 0 && (
                                 <View style={localStyles.likeCountContainer}>
-                                  <Text style={[localStyles.likeCount, {fontSize: sizing.descriptionText}]}>
+                                  <Text
+                                    style={[
+                                      localStyles.likeCount,
+                                      { fontSize: sizing.descriptionText }
+                                    ]}
+                                  >
                                     {comment.replies.length}{' '}
                                     {comment.replies.length == 1
                                       ? 'REPLY'
@@ -427,9 +432,7 @@ class Replies extends React.Component {
                   >
                     <View style={localStyles.replierContainer}>
                       <FastImage
-                        style={[
-                          localStyles.profileImage,
-                        ]}
+                        style={[localStyles.profileImage]}
                         source={{
                           uri:
                             me.profileImage ||
@@ -448,8 +451,7 @@ class Replies extends React.Component {
                       <TouchableOpacity
                         onPress={() => this.sendReply(this.state.reply)}
                         style={{
-                          marginBottom:
-                            Platform.OS == 'android' ? 10 : 0
+                          marginBottom: Platform.OS == 'android' ? 10 : 0
                         }}
                       >
                         <IonIcon
@@ -485,7 +487,7 @@ const localStyles = StyleSheet.create({
     width: DeviceInfo.isTablet() ? 60 : 40,
     paddingVertical: 10,
     borderRadius: 100,
-    marginRight: 10,
+    marginRight: 10
   },
   replyName: {
     fontFamily: 'OpenSans-Regular',

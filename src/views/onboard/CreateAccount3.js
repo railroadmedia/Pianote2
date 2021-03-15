@@ -477,15 +477,12 @@ export default class CreateAccount3 extends React.Component {
                     </View>
                     <View style={{ flex: 1 }} />
                   </View>
-                  <View style={{ height: 30}} />
+                  <View style={{ height: 30 }} />
                 </KeyboardAvoidingView>
               </View>
               <Modal
                 isVisible={this.state.showDisplayName}
-                style={[
-                  styles.centerContent,
-                  styles.modalContainer
-                ]}
+                style={[styles.centerContent, styles.modalContainer]}
                 animation={'slideInUp'}
                 animationInTiming={350}
                 animationOutTiming={350}
@@ -505,8 +502,8 @@ export default class CreateAccount3 extends React.Component {
               <View
                 style={[
                   styles.centerContent,
-                  { 
-                    flexDirection: 'row' 
+                  {
+                    flexDirection: 'row'
                   }
                 ]}
               >
@@ -564,7 +561,7 @@ export default class CreateAccount3 extends React.Component {
                   <View
                     style={{
                       flexDirection: 'row',
-                      paddingVertical: 10,
+                      paddingVertical: 10
                     }}
                   >
                     <Text
@@ -808,10 +805,7 @@ export default class CreateAccount3 extends React.Component {
               </View>
               <Modal
                 isVisible={this.state.showProfileImage}
-                style={[
-                  styles.centerContent,
-                  styles.modalContainer
-                ]}
+                style={[styles.centerContent, styles.modalContainer]}
                 animation={'slideInUp'}
                 animationInTiming={350}
                 animationOutTiming={350}
@@ -828,10 +822,7 @@ export default class CreateAccount3 extends React.Component {
               </Modal>
               <Modal
                 isVisible={this.state.showDisplayName}
-                style={[
-                  styles.centerContent,
-                  styles.modalContainer
-                ]}
+                style={[styles.centerContent, styles.modalContainer]}
                 animation={'slideInUp'}
                 animationInTiming={350}
                 animationOutTiming={350}

@@ -39,7 +39,8 @@ import foundationsService from '../../services/foundations.service';
 
 let greaterWDim;
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
 export default class Foundations extends React.Component {
   static navigationOptions = { header: null };
@@ -66,7 +67,8 @@ export default class Foundations extends React.Component {
       nextLesson: null,
       progress: 0,
       refreshing: false,
-      isLandscape: Dimensions.get('window').height < Dimensions.get('window').width,
+      isLandscape:
+        Dimensions.get('window').height < Dimensions.get('window').width
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
@@ -103,10 +105,12 @@ export default class Foundations extends React.Component {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    const response = new ContentModel(await foundationsService.getFoundation('foundations-2019'),);
+    const response = new ContentModel(
+      await foundationsService.getFoundation('foundations-2019')
+    );
 
-    const newContent = response.post.units.map((data) => {
-        return new ContentModel(data);
+    const newContent = response.post.units.map(data => {
+      return new ContentModel(data);
     });
 
     let items = [];
@@ -377,7 +381,7 @@ export default class Foundations extends React.Component {
             >
               <Text
                 style={{
-                marginVertical: 15,
+                  marginVertical: 15,
                   fontFamily: 'OpenSans-Regular',
                   fontSize: sizing.descriptionText,
                   color: 'white',
@@ -403,7 +407,7 @@ export default class Foundations extends React.Component {
                       {
                         width: onTablet ? 100 : 70,
                         marginRight: 15,
-                        marginVertical: 15,
+                        marginVertical: 15
                       }
                     ]}
                   >
@@ -433,7 +437,7 @@ export default class Foundations extends React.Component {
                     style={[
                       styles.centerContent,
                       {
-                        width: onTablet ? 100 : 70,
+                        width: onTablet ? 100 : 70
                       }
                     ]}
                   >
@@ -443,7 +447,7 @@ export default class Foundations extends React.Component {
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Bold',
-                        marginVertical: 15,
+                        marginVertical: 15
                       }}
                     >
                       {this.state.xp}
@@ -483,14 +487,14 @@ export default class Foundations extends React.Component {
                       {
                         marginLeft: 10,
                         marginBottom: 10,
-                        width: onTablet ? 100 : 70,
+                        width: onTablet ? 100 : 70
                       }
                     ]}
                   >
                     <View style={{ flex: 1 }} />
                     <MaterialIcon
                       name={'replay'}
-                       size={onTablet ? 28 : 20}
+                      size={onTablet ? 28 : 20}
                       color={colors.pianoteRed}
                     />
                     <Text

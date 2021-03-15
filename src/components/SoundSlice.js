@@ -60,10 +60,10 @@ class SoundSlice extends React.Component {
                     zIndex: 10
                   }}
                 >
-                  <FeatherIcon 
+                  <FeatherIcon
                     size={onTablet ? 50 : 35}
-                    name={'x'} 
-                    color={'black'} 
+                    name={'x'}
+                    color={'black'}
                   />
                 </TouchableOpacity>
               </View>

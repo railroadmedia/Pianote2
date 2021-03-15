@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
@@ -34,10 +34,7 @@ class ValidateEmail extends React.Component {
               style={localStyles.tryAgain}
             >
               <Text
-                style={[
-                  styles.modalCancelButtonText,
-                  localStyles.tryAgainText,
-                ]}
+                style={[styles.modalCancelButtonText, localStyles.tryAgainText]}
               >
                 TRY AGAIN
               </Text>

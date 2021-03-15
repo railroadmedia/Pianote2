@@ -282,14 +282,14 @@ class VerticalVideoList extends React.Component {
               flex: 1,
               flexDirection: 'row',
               marginLeft: 10,
-              paddingVertical: onTablet ? 10 : 5,
+              paddingVertical: onTablet ? 10 : 5
             }}
           >
             <View
               style={{
                 width: this.props.imageWidth,
                 aspectRatio: this.props.isSquare ? 1 : 16 / 9,
-                borderRadius: 5,
+                borderRadius: 5
               }}
             >
               {row.isCompleted && (
@@ -315,7 +315,7 @@ class VerticalVideoList extends React.Component {
                     width: '100%',
                     paddingBottom: this.props.isMethodLevel ? 10 : 0,
                     aspectRatio: this.props.isSquare ? 1 : 16 / 9,
-                    zIndex: 20,
+                    zIndex: 20
                   }
                 ]}
               >
@@ -439,7 +439,13 @@ class VerticalVideoList extends React.Component {
                 />
               )}
             </View>
-            <View style={{ flex: 1, paddingLeft: onTablet ? 10 : 5, justifyContent: 'center' }}>
+            <View
+              style={{
+                flex: 1,
+                paddingLeft: onTablet ? 10 : 5,
+                justifyContent: 'center'
+              }}
+            >
               {this.props.isMethodLevel && (
                 <Text
                   style={{
@@ -519,7 +525,7 @@ class VerticalVideoList extends React.Component {
                 {this.props.showType && (
                   <Text
                     numberOfLines={1}
-                    style={{                      
+                    style={{
                       fontSize: sizing.descriptionText,
                       color: this.props.isMethod
                         ? colors.pianoteGrey
@@ -566,9 +572,7 @@ class VerticalVideoList extends React.Component {
                       />
                     </TouchableOpacity>
                   ) : !row.isAddedToList ? (
-                    <TouchableOpacity
-                      onPress={() => this.addToMyList(row.id)}
-                    >
+                    <TouchableOpacity onPress={() => this.addToMyList(row.id)}>
                       <AntIcon
                         name={'plus'}
                         size={sizing.myListButtonSize}
@@ -605,7 +609,7 @@ class VerticalVideoList extends React.Component {
                 flexDirection: 'row',
                 marginLeft: 10,
                 marginTop: 5,
-                marginBottom: 2.5,
+                marginBottom: 2.5
               }}
             >
               <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -616,7 +620,7 @@ class VerticalVideoList extends React.Component {
                       style={{
                         fontSize: onTablet ? 28 : 20,
                         color: 'white',
-                        fontFamily: 'OpenSans-ExtraBold',
+                        fontFamily: 'OpenSans-ExtraBold'
                       }}
                     >
                       {this.props.title}
@@ -642,7 +646,7 @@ class VerticalVideoList extends React.Component {
                     styles.centerContent,
                     {
                       width: 45,
-                      flexDirection: 'row',
+                      flexDirection: 'row'
                     }
                   ]}
                 >
@@ -654,7 +658,7 @@ class VerticalVideoList extends React.Component {
                           flexDirection: 'row',
                           position: 'absolute',
                           right: 45,
-                          height: '100%',
+                          height: '100%'
                         }
                       ]}
                       onPress={() => {
@@ -672,7 +676,7 @@ class VerticalVideoList extends React.Component {
                           justifyContent: 'flex-end'
                         }}
                       >
-                          {sortDict[this.props.currentSort]}
+                        {sortDict[this.props.currentSort]}
                       </Text>
                       <FontIcon
                         size={onTablet ? 20 : 15}
@@ -725,10 +729,7 @@ class VerticalVideoList extends React.Component {
           {this.renderMappedList()}
           {this.state.isPaging && !this.state.isLoading && (
             <View
-              style={[
-                styles.centerContent,
-                { minHeight: 20, marginTop: 20 }
-              ]}
+              style={[styles.centerContent, { minHeight: 20, marginTop: 20 }]}
             >
               <ActivityIndicator
                 size={onTablet ? 'large' : 'small'}

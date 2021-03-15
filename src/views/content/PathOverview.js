@@ -57,7 +57,10 @@ export default class PathOverview extends React.Component {
       items: this.props.navigation.state.params.items || [],
       isAddedToList: this.props.navigation.state.params.data?.isAddedToList,
       thumbnail: this.props.navigation.state.params.data?.thumbnail,
-      artist: typeof this.props.navigation.state.params.data?.artist == 'object' ? this.props.navigation.state.params.data?.artist.join(', ') : this.props.navigation.state.params.data?.artist,
+      artist:
+        typeof this.props.navigation.state.params.data?.artist == 'object'
+          ? this.props.navigation.state.params.data?.artist.join(', ')
+          : this.props.navigation.state.params.data?.artist,
       isMethod: this.props.navigation.state.params.isMethod,
       isFoundations: this.props.navigation.state.params.isFoundations,
       xp: this.props.navigation.state.params.data.total_xp,
@@ -107,10 +110,8 @@ export default class PathOverview extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     let res;
-    if(this.state.foundations) {
-      res = await foundationsService.getUnit(
-        this.state.data.mobile_app_url
-      );
+    if (this.state.foundations) {
+      res = await foundationsService.getUnit(this.state.data.mobile_app_url);
     } else if (this.state.isMethod) {
       res = await methodService.getMethodContent(
         this.state.data.mobile_app_url
@@ -289,7 +290,9 @@ export default class PathOverview extends React.Component {
               ? `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
                   width
                 )},ar_${this.getAspectRatio()},${
-                  this.state.isMethod && !this.state.isFoundations ? 'c_pad,g_south' : 'c_fill,g_face'
+                  this.state.isMethod && !this.state.isFoundations
+                    ? 'c_pad,g_south'
+                    : 'c_fill,g_face'
                 }/${this.state.thumbnail}`
               : thumbnail
           }}
@@ -345,7 +348,7 @@ export default class PathOverview extends React.Component {
                   : colors.secondBackground,
                 textAlign: 'center',
                 fontSize: sizing.descriptionText,
-                paddingVertical: (onTablet ? 20 : 10)
+                paddingVertical: onTablet ? 20 : 10
               }
             ]}
           >
@@ -511,7 +514,7 @@ export default class PathOverview extends React.Component {
                       marginTop: 5
                     }}
                   >
-                   Lessons  
+                    Lessons
                   </Text>
                 </Text>
                 <Text
@@ -789,8 +792,8 @@ export default class PathOverview extends React.Component {
                       />
                     ) : item.isCompleted ? (
                       <ApprovedTeacher
-                      height={onTablet ? 70 : 45}
-                      width={onTablet ? 70 : 45}
+                        height={onTablet ? 70 : 45}
+                        width={onTablet ? 70 : 45}
                         fill={'white'}
                       />
                     ) : null}
@@ -855,7 +858,13 @@ export default class PathOverview extends React.Component {
           <NextVideo
             item={nextLesson}
             progress={this.state.progress}
-            type={this.state.isFoundations ? 'Lesson' : isMethod ? 'COURSE' : this.state.type.toUpperCase()}
+            type={
+              this.state.isFoundations
+                ? 'Lesson'
+                : isMethod
+                ? 'COURSE'
+                : this.state.type.toUpperCase()
+            }
             onNextLesson={() =>
               this.goToLesson(
                 this.state.isMethod

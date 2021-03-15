@@ -1,5 +1,5 @@
 import { Image, Platform } from 'react-native';
-import RNFS from 'react-native-fs';
+import RNFetchBlob from 'rn-fetch-blob';
 export default {
   quality: 'Auto',
   manageOfflinePath: function (path) {
@@ -9,8 +9,8 @@ export default {
       isiOSPath = !isOnline && !isDataImg && !isAndroidPath;
     const offPath =
       Platform.OS === 'ios'
-        ? RNFS.LibraryDirectoryPath
-        : RNFS.DocumentDirectoryPath;
+        ? RNFetchBlob.fs.dirs.LibraryDir
+        : RNFetchBlob.fs.dirs.DocumentDir;
     if (!isOnline) {
       if (isiOSPath) {
         path = `${offPath}/${path}`;
@@ -24,12 +24,13 @@ export default {
     return path;
   },
   getAssignWHRatio: async function (assignments) {
-    let assignPromises = [];
+    let assignPromises = [],
+      pdfs = [];
     assignments.map(a => {
       let svgs = [],
         nsvgs = [];
       a.sheets.map(s => {
-        if (s.value.includes('.pdf')) return;
+        if (s.value.includes('.pdf')) return pdfs.push({ ...s });
         if (s.value.includes('.svg')) return svgs.push({ ...s });
         if (!s.value.includes('.svg')) return nsvgs.push({ ...s });
       });
@@ -58,6 +59,27 @@ export default {
           })
         );
       }
+      if (pdfs.length) {
+        assignPromises.push(
+          new Promise(async res => {
+            let pagesNo = [];
+            pdfs.map(p =>
+              pagesNo.push(
+                RNFetchBlob.fetch(
+                  'GET',
+                  'https://www.anre.ro/files/furnizori/oferta%20Hidroelectrica.pdf'
+                )
+              )
+            );
+            (await Promise.all(pagesNo)).map(async (pagesNoResp, i) => {
+              pdfs[i].numberOfPages = pagesNoResp
+                .text()
+                .match(/\/Type[\s]*\/Page[^s]/g).length;
+              i === pdfs.length - 1 && res(pdfs);
+            });
+          })
+        );
+      }
       if (nsvgs.length) {
         nsvgs.map((ns, i) => {
           assignPromises.push(
@@ -78,6 +100,6 @@ export default {
         });
       }
     });
-    return (await Promise.all(assignPromises))[0];
+    return (await Promise.all(assignPromises)).flat();
   }
 };

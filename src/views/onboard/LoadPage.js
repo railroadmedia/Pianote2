@@ -286,7 +286,7 @@ class LoadPage extends React.Component {
         </View>
         <Modal
           isVisible={this.state.showNoConnection}
-          style={[ styles.centerContent, styles.modalContainer ]}
+          style={[styles.centerContent, styles.modalContainer]}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

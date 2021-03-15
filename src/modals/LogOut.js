@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { withNavigation } from 'react-navigation';
@@ -88,7 +88,7 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: 20
   },
   description: {
-    paddingHorizontal:30,
+    paddingHorizontal: 30,
     marginTop: 10,
     fontSize: DeviceInfo.isTablet() ? 18 : 14
   },
@@ -111,7 +111,7 @@ const localStyles = StyleSheet.create({
   },
   cancel: {
     color: 'grey',
-    fontSize: DeviceInfo.isTablet() ? 16: 12,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12
   }
 });
 

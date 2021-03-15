@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import DeviceInfo from 'react-native-device-info';
@@ -89,7 +89,7 @@ const localStyles = StyleSheet.create({
     margin: 50,
     backgroundColor: 'white',
     elevation: 2,
-    paddingTop: 10,
+    paddingTop: 10
   },
   descriptionText: {
     marginTop: 10,

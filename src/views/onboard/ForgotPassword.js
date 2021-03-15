@@ -123,7 +123,7 @@ export default class ForgotPassword extends React.Component {
                       alignSelf: 'center',
                       textAlign: 'center',
                       fontFamily: 'OpenSans-Regular',
-                      width: `100%`,
+                      width: `100%`
                     }}
                   >
                     Piano Lessons Experience.

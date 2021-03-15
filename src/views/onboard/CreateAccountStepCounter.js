@@ -16,17 +16,10 @@ export default class CreateAccountStepCounter extends React.Component {
             justifyContent: 'center'
           }}
         >
-          <Text
-            style={[styles.text, { fontSize: onTablet ? 16 : 10 }]}
-          >
+          <Text style={[styles.text, { fontSize: onTablet ? 16 : 10 }]}>
             Step 1:
           </Text>
-          <Text
-            style={[
-              styles.boldText,
-              { fontSize: onTablet ? 18 : 12 }
-            ]}
-          >
+          <Text style={[styles.boldText, { fontSize: onTablet ? 18 : 12 }]}>
             EMAIL ADDRESS
           </Text>
         </View>
@@ -44,17 +37,10 @@ export default class CreateAccountStepCounter extends React.Component {
             }
           ]}
         >
-          <Text
-            style={[styles.text, { fontSize: onTablet ? 16 : 10 }]}
-          >
+          <Text style={[styles.text, { fontSize: onTablet ? 16 : 10 }]}>
             Step 2:
           </Text>
-          <Text
-            style={[
-              styles.boldText,
-              { fontSize: onTablet ? 18 : 12 }
-            ]}
-          >
+          <Text style={[styles.boldText, { fontSize: onTablet ? 18 : 12 }]}>
             SET A PASSWORD
           </Text>
         </View>
@@ -71,17 +57,10 @@ export default class CreateAccountStepCounter extends React.Component {
             }
           ]}
         >
-          <Text
-            style={[styles.text, { fontSize: onTablet ? 16 : 10}]}
-          >
+          <Text style={[styles.text, { fontSize: onTablet ? 16 : 10 }]}>
             Step 3:
           </Text>
-          <Text
-            style={[
-              styles.boldText,
-              { fontSize: onTablet ? 18 : 12 }
-            ]}
-          >
+          <Text style={[styles.boldText, { fontSize: onTablet ? 18 : 12 }]}>
             CHOOSE A PLAN
           </Text>
         </View>
