@@ -60,8 +60,12 @@ PushNotification.configure({
         if (type.includes('aggregated')) {
           global.loadedFromNotification = true;
           await NavigationService.navigate('PROFILE');
-        } else {
+        } else if (type === 'deeplink') {
           global.notifNavigation = true;
+          NavigationService.reset('LESSONS');
+          if (uri.includes('members/learning-paths/pianote-method'))
+            NavigationService.navigate('METHOD', {});
+        } else if (commentId || mobile_app_url) {
           NavigationService.navigate('VIDEOPLAYER', {
             commentId,
             url: mobile_app_url
