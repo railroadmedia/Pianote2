@@ -1,6 +1,6 @@
 // NavigationService.js
 
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 
 let _navigator;
 
@@ -22,9 +22,28 @@ function navigate(routeName, params) {
   }
 }
 
+function reset(routeName, params) {
+  try {
+    _navigator.dispatch(
+      StackActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({
+            routeName: routeName,
+            params
+          })
+        ]
+      })
+    );
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 // add other navigation functions that you need and export them
 
 export default {
   navigate,
+  reset,
   setTopLevelNavigator
 };
