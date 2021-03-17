@@ -22,7 +22,7 @@ import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Orientation from 'react-native-orientation-locker';
-
+import { DownloadResources } from 'RNDownload';
 import StartIcon from '../../components/StartIcon';
 import ResetIcon from '../../components/ResetIcon';
 import ContinueIcon from '../../components/ContinueIcon';
@@ -37,6 +37,7 @@ import {
   resetProgress
 } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
+import Resources from 'Pianote2/src/assets/img/svgs/resources';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -53,6 +54,7 @@ export default class SinglePack extends React.Component {
       isDisplayingLessons: true,
       videos: [],
       id: '',
+      title: '',
       url: this.props.navigation.state.params.url,
       isAddedToList: false,
       description: '',
@@ -64,6 +66,8 @@ export default class SinglePack extends React.Component {
       nextLessonUrl: '',
       isLoadingAll: true,
       refreshing: false,
+      resources: null,
+      showResDownload: false,
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width
     };
@@ -121,21 +125,77 @@ export default class SinglePack extends React.Component {
     } catch (error) {
       console.log(error);
     }
-    this.setState({
-      id: newContent.id,
-      isAddedToList: newContent.isAddedToList,
-      thumbnail:
-        newContent.post.thumbnail_url || newContent.getData('thumbnail_url'),
-      logo: newContent.post.pack_logo,
-      description: newContent.getData('description'),
-      isStarted: newContent.isStarted,
-      isCompleted: newContent.isCompleted,
-      xp: newContent.xp,
-      videos: items,
-      nextLessonUrl: newContent.post.next_lesson_mobile_app_url,
-      isLoadingAll: false,
-      refreshing: false
+    this.setState(
+      {
+        id: newContent.id,
+        isAddedToList: newContent.isAddedToList,
+        thumbnail:
+          newContent.post.thumbnail_url || newContent.getData('thumbnail_url'),
+        title: newContent.getField('title'),
+        logo: newContent.post.pack_logo,
+        description: newContent.getData('description'),
+        isStarted: newContent.isStarted,
+        isCompleted: newContent.isCompleted,
+        xp: newContent.xp,
+        videos: items,
+        nextLessonUrl: newContent.post.next_lesson_mobile_app_url,
+        isLoadingAll: false,
+        refreshing: false,
+        resources: newContent.post.resources
+      },
+      () => {
+        if (this.state.resources) this.createResourcesArr();
+      }
+    );
+  };
+
+  createResourcesArr() {
+    const { resources } = this.state;
+    const extensions = ['mp3', 'pdf', 'zip'];
+
+    resources.forEach(resource => {
+      let extension = this.decideExtension(resource.resource_url);
+      resource.extension = extension;
+      if (!extensions.includes(extension)) {
+        fetch(resource.resource_url)
+          .then(res => {
+            extension = this.getExtensionByType(
+              res?.headers?.map['content-type']
+            );
+            this.setState({
+              resources: this.state.resources.map(r =>
+                r.resource_id === resource.resource_id
+                  ? {
+                      ...r,
+                      extension,
+                      wasWithoutExtension: true
+                    }
+                  : r
+              )
+            });
+          })
+          .catch(e => {});
+      } else {
+        this.setState({
+          resources: this.state.resources.map(r =>
+            r.resource_id === resource.resource_id ? { ...r, extension } : r
+          )
+        });
+      }
     });
+  }
+
+  decideExtension = url => {
+    const lastDot = url.lastIndexOf('.');
+    const extension = url.substr(lastDot + 1).toLowerCase();
+
+    return extension;
+  };
+
+  getExtensionByType = path => {
+    if (path === 'audio/mp3') return 'mp3';
+    if (path === 'application/pdf') return 'pdf';
+    if (path === 'application/zip') return 'zip';
   };
 
   async resetProgress() {
@@ -426,7 +486,7 @@ export default class SinglePack extends React.Component {
                   {this.state.description}
                 </Text>
 
-                <View style={{ paddingHorizontal: '30%' }}>
+                <View style={{ paddingHorizontal: '25%' }}>
                   <View
                     style={[
                       styles.centerContent,
@@ -485,7 +545,10 @@ export default class SinglePack extends React.Component {
                   <View
                     style={[
                       styles.centerContent,
-                      { flexDirection: 'row', marginTop: '10%' }
+                      {
+                        flexDirection: 'row',
+                        marginTop: '10%'
+                      }
                     ]}
                   >
                     {(this.state.id == 262875 ? false : true) && (
@@ -553,6 +616,36 @@ export default class SinglePack extends React.Component {
                         Restart
                       </Text>
                     </TouchableOpacity>
+                    {this.state.resources && (
+                      <TouchableOpacity
+                        onPress={() =>
+                          this.setState({
+                            showResDownload: true
+                          })
+                        }
+                        style={{
+                          flex: 1,
+                          alignItems: 'center'
+                        }}
+                      >
+                        <Resources
+                          height={sizing.myListButtonSize}
+                          width={sizing.myListButtonSize}
+                          fill={colors.pianoteRed}
+                        />
+                        <Text
+                          style={{
+                            fontSize: sizing.descriptionText,
+                            textAlign: 'center',
+                            color: 'white',
+                            fontFamily: 'OpenSans-Regular',
+                            marginTop: 5
+                          }}
+                        >
+                          Resources
+                        </Text>
+                      </TouchableOpacity>
+                    )}
                   </View>
                 </View>
               </View>
@@ -599,6 +692,48 @@ export default class SinglePack extends React.Component {
         )}
 
         <NavigationBar currentPage={'SINGLEPACK'} />
+        <Modal
+          isVisible={this.state.showResDownload}
+          onDismiss={() => this.modalDismissed}
+          style={[
+            styles.modalContainer,
+            {
+              justifyContent: 'flex-end'
+            }
+          ]}
+          animation={'slideInUp'}
+          animationInTiming={350}
+          animationOutTiming={350}
+          coverScreen={true}
+          hasBackdrop={true}
+        >
+          <DownloadResources
+            styles={{
+              container: {
+                backgroundColor: colors.mainBackground,
+                width: '100%'
+              },
+              touchableTextResourceNameFontFamily: 'OpenSans',
+              touchableTextResourceExtensionFontFamily: 'OpenSans',
+              touchableTextResourceCancelFontFamily: 'OpenSans',
+              borderColor: colors.secondBackground,
+              color: '#ffffff'
+            }}
+            resources={this.state.resources}
+            lessonTitle={this.state.title}
+            onClose={() => {
+              new Promise(res =>
+                this.setState(
+                  {
+                    showResDownload: false
+                  },
+                  () =>
+                    Platform.OS === 'ios' ? (this.modalDismissed = res) : res()
+                )
+              );
+            }}
+          />
+        </Modal>
 
         <Modal
           key={'restartCourse'}
