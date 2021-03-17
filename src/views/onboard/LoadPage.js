@@ -173,7 +173,7 @@ class LoadPage extends React.Component {
               );
             } else if (userData.isLifetime || userData.isMember) {
               // is logged in with valid membership go to lessons
-              if (!global.notifNavigation) {
+              if (!global.notifNavigation)
                 await this.props.navigation.dispatch(
                   StackActions.reset({
                     index: 0,
@@ -184,7 +184,6 @@ class LoadPage extends React.Component {
                     ]
                   })
                 );
-              }
             } else {
               // membership expired, go to membership expired
               this.props.navigation.navigate('MEMBERSHIPEXPIRED', {
