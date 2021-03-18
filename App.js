@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { combineReducers } from 'redux';
-import { Text, Linking, StatusBar, Dimensions, Platform } from 'react-native';
+import { Text, Linking, StatusBar, } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Orientation from 'react-native-orientation-locker';
 import DeviceInfo from 'react-native-device-info';
@@ -34,6 +34,7 @@ const store = createStore(
     ...studentFocusReducer
   })
 );
+
 export default class App extends React.Component {
   constructor(props) {
     Text.defaultProps = {};

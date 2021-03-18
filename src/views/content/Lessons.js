@@ -9,7 +9,7 @@ import {
   RefreshControl,
   ActivityIndicator,
   Dimensions,
-  ImageBackground
+  ImageBackground,
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -34,6 +34,7 @@ import { getStartedContent, getAllContent } from '../../services/GetContent';
 import RestartCourse from '../../modals/RestartCourse';
 import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 import { NetworkContext } from '../../context/NetworkProvider';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const windowDim = Dimensions.get('window');
 const width =
