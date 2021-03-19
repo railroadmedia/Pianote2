@@ -12,7 +12,7 @@ import App from './App';
 import { name as appName } from './app.json';
 import { configure } from '@musora/services';
 import DeviceInfo from 'react-native-device-info';
-
+import database from '@react-native-firebase/database';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 var PushNotification = require('react-native-push-notification');
 
@@ -86,6 +86,9 @@ PushNotification.configure({
     }
   }
 });
+
+database().setPersistenceEnabled(true);
+database().goOffline();
 
 AppRegistry.registerComponent(appName, () => App);
 LogBox.ignoreAllLogs(true);

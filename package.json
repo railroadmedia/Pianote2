@@ -22,6 +22,7 @@
     "@react-native-community/viewpager": "^3.3.0",
     "@react-native-firebase/app": "^8.4.7",
     "@react-native-firebase/crashlytics": "^8.4.12",
+    "@react-native-firebase/database": "^11.1.2",
     "@react-native-firebase/messaging": "^7.9.2",
     "RNDownload": "git+https://github.com/railroadmedia/RNDownload.git",
     "RNVideoEnhanced": "git+https://github.com/railroadmedia/RNVideoEnhanced.git",

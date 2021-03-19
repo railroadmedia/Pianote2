@@ -11,11 +11,12 @@ const listItemStructure = item => {
     artist: structure.artist,
     description: structure.description,
     id: item.id,
-    isAddedToList: item.is_added_to_primary_playlist,
-    isCompleted: item.completed,
-    isLiked: item.is_liked_by_current_user,
-    isStarted: item.started,
+    isAddedToList: !!item.is_added_to_primary_playlist,
+    isCompleted: !!item.completed,
+    isLiked: !!item.is_liked_by_current_user,
+    isStarted: !!item.started,
     like_count: item.like_count,
+    lesson_count: item.lesson_count,
     progress_percent: item.progress_percent,
     publishedOn: item.published_on,
     thumbnail: structure.thumbnail,
@@ -46,7 +47,7 @@ class Structurer {
     let thumb = this.getByKey('data', 'thumbnail_url');
     if (!thumb?.includes('http')) return thumb;
     return thumb
-      ? `https://cdn.musora.com/image/fetch/w_250,ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${thumb}`
+      ? `https://cdn.musora.com/image/fetch/w_750,ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${thumb}`
       : 'https://dmmior4id2ysr.cloudfront.net/assets/images/pianote_fallback_thumb.jpg';
   }
   get title() {

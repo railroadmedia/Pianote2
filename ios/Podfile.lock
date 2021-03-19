@@ -21,6 +21,9 @@ PODS:
   - Firebase/Crashlytics (6.34.0):
     - Firebase/CoreOnly
     - FirebaseCrashlytics (~> 4.6.2)
+  - Firebase/Database (6.34.0):
+    - Firebase/CoreOnly
+    - FirebaseDatabase (~> 6.6.0)
   - Firebase/Messaging (6.34.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 4.7.1)
@@ -48,6 +51,9 @@ PODS:
     - GoogleDataTransport (~> 7.2)
     - nanopb (~> 1.30906.0)
     - PromisesObjC (~> 1.2)
+  - FirebaseDatabase (6.6.0):
+    - FirebaseCore (~> 6.10)
+    - leveldb-library (~> 1.22)
   - FirebaseInstallations (1.7.0):
     - FirebaseCore (~> 6.10)
     - GoogleUtilities/Environment (~> 6.7)
@@ -112,15 +118,16 @@ PODS:
     - GoogleUtilities/Logger
   - GTMSessionFetcher/Core (1.5.0)
   - Intercom (5.5.2)
-  - libwebp (1.1.0):
-    - libwebp/demux (= 1.1.0)
-    - libwebp/mux (= 1.1.0)
-    - libwebp/webp (= 1.1.0)
-  - libwebp/demux (1.1.0):
+  - leveldb-library (1.22.1)
+  - libwebp (1.2.0):
+    - libwebp/demux (= 1.2.0)
+    - libwebp/mux (= 1.2.0)
+    - libwebp/webp (= 1.2.0)
+  - libwebp/demux (1.2.0):
     - libwebp/webp
-  - libwebp/mux (1.1.0):
+  - libwebp/mux (1.2.0):
     - libwebp/demux
-  - libwebp/webp (1.1.0)
+  - libwebp/webp (1.2.0)
   - nanopb (1.30906.0):
     - nanopb/decode (= 1.30906.0)
     - nanopb/encode (= 1.30906.0)
@@ -417,6 +424,10 @@ PODS:
     - Firebase/Crashlytics (~> 6.34.0)
     - React-Core
     - RNFBApp
+  - RNFBDatabase (11.1.2):
+    - Firebase/Database (~> 6.34.0)
+    - React-Core
+    - RNFBApp
   - RNFBMessaging (7.9.2):
     - Firebase/Messaging (~> 6.34.0)
     - React-Core
@@ -435,9 +446,9 @@ PODS:
     - React
   - RNVectorIcons (7.1.0):
     - React
-  - SDWebImage (5.10.2):
-    - SDWebImage/Core (= 5.10.2)
-  - SDWebImage/Core (5.10.2)
+  - SDWebImage (5.10.4):
+    - SDWebImage/Core (= 5.10.4)
+  - SDWebImage/Core (5.10.4)
   - SDWebImageWebPCoder (0.2.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.0)
@@ -497,6 +508,7 @@ DEPENDENCIES:
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBCrashlytics (from `../node_modules/@react-native-firebase/crashlytics`)"
+  - "RNFBDatabase (from `../node_modules/@react-native-firebase/database`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -515,6 +527,7 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseCoreDiagnostics
     - FirebaseCrashlytics
+    - FirebaseDatabase
     - FirebaseInstallations
     - FirebaseInstanceID
     - FirebaseMessaging
@@ -524,6 +537,7 @@ SPEC REPOS:
     - GoogleUtilities
     - GTMSessionFetcher
     - Intercom
+    - leveldb-library
     - libwebp
     - nanopb
     - PromisesObjC
@@ -630,6 +644,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBCrashlytics:
     :path: "../node_modules/@react-native-firebase/crashlytics"
+  RNFBDatabase:
+    :path: "../node_modules/@react-native-firebase/database"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNFS:
@@ -660,6 +676,7 @@ SPEC CHECKSUMS:
   FirebaseCore: d3a978a3cfa3240bf7e4ba7d137fdf5b22b628ec
   FirebaseCoreDiagnostics: 770ac5958e1372ce67959ae4b4f31d8e127c3ac1
   FirebaseCrashlytics: 1a747c9cc084a24dc6d9511c991db1cd078154eb
+  FirebaseDatabase: 13a865a4b85897462b930eb683bda8f52583713f
   FirebaseInstallations: 466c7b4d1f58fe16707693091da253726a731ed2
   FirebaseInstanceID: bd3ffc24367f901a43c063b36c640b345a4a5dd1
   FirebaseMessaging: 5eca4ef173de76253352511aafef774caa1cba2a
@@ -671,7 +688,8 @@ SPEC CHECKSUMS:
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
   Intercom: 1151a15e5e7931d8e401671a4357239d44325159
-  libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
+  leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
+  libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   Protobuf: 0cde852566359049847168e51bd1c690e0f70056
@@ -718,6 +736,7 @@ SPEC CHECKSUMS:
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
   RNFBApp: 804b98033f45c3a3e35b56de8c894f85ef5e4388
   RNFBCrashlytics: 501d01e5dd0cd6affedba60762b9b8d7d579cea8
+  RNFBDatabase: b6e44e748aee146d37239d1a0c9f173e48b3592c
   RNFBMessaging: 9287cbf850ed3524c9f915f5b3daaf1cfaabbf06
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: e66feb0fda7da74ea6a3094656b3c1efe05f5c07
@@ -726,7 +745,7 @@ SPEC CHECKSUMS:
   RNScreens: b6c9607e6fe47c1b6e2f1910d2acd46dd7ecea3a
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
-  SDWebImage: b969dcfc02c40a5da71eac0b03b8f1a0c794a86f
+  SDWebImage: c666b97e1fa9c64b4909816a903322018f0a9c84
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
 
