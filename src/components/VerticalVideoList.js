@@ -715,7 +715,8 @@ class VerticalVideoList extends React.Component {
                       ? 'white'
                       : colors.secondBackground,
                     fontFamily: 'OpenSans-Regular',
-                    textAlign: 'left'
+                    textAlign: 'left',
+                    marginLeft: 10,
                   }}
                 >
                   {this.props.title.includes('SEARCH RESULTS')

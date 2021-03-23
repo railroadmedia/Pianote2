@@ -163,10 +163,14 @@ class MyList extends React.Component {
         }
       }
     } else {
-      if (newContent.getField('instructor') !== 'TBD') {
-        return newContent.getField('instructor').fields[0].value;
-      } else {
-        return newContent.getField('instructor').name;
+      try {
+        if (newContent.getField('instructor') !== 'TBD') {
+          return newContent.getField('instructor').fields[0].value;
+        } else {
+          return newContent.getField('instructor').name;
+        }  
+      } catch (error) {
+        return '' 
       }
     }
   };
