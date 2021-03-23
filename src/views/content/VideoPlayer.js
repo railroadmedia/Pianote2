@@ -998,18 +998,20 @@ export default class VideoPlayer extends React.Component {
                 onBack={this.onBack}
                 showControls={true}
                 paused={true}
-                goToNextLesson={() =>
-                  this.switchLesson(
-                    this.state.nextLesson.id,
-                    this.state.nextLesson.post.mobile_app_url
-                  )
-                }
-                goToPreviousLesson={() =>
-                  this.switchLesson(
-                    this.state.previousLesson.id,
-                    this.state.previousLesson.post.mobile_app_url
-                  )
-                }
+                goToNextLesson={() => {
+                  if (this.state.nextLesson)
+                    this.switchLesson(
+                      this.state.nextLesson.id,
+                      this.state.nextLesson.post.mobile_app_url
+                    );
+                }}
+                goToPreviousLesson={() => {
+                  if (this.state.previousLesson)
+                    this.switchLesson(
+                      this.state.previousLesson.id,
+                      this.state.previousLesson.post.mobile_app_url
+                    );
+                }}
                 onUpdateVideoProgress={async (
                   videoId,
                   id,

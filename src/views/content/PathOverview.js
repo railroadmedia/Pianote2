@@ -262,16 +262,18 @@ export default class PathOverview extends React.Component {
   }
 
   goToLesson(lesson) {
-    if (this.state.isMethod) {
+    if (lesson) {
+      if (this.state.isMethod) {
+        return this.props.navigation.navigate('VIDEOPLAYER', {
+          url: lesson,
+          parentId: this.state.data?.id
+        });
+      }
       return this.props.navigation.navigate('VIDEOPLAYER', {
-        url: lesson,
+        id: lesson,
         parentId: this.state.data?.id
       });
     }
-    return this.props.navigation.navigate('VIDEOPLAYER', {
-      id: lesson,
-      parentId: this.state.data?.id
-    });
   }
 
   renderHeader = () => {
@@ -416,7 +418,7 @@ export default class PathOverview extends React.Component {
                     this.goToLesson(
                       this.state.isMethod
                         ? this.state.bannerNextLessonUrl
-                        : this.state.nextLesson.id
+                        : this.state.nextLesson?.id
                     )
                   }
                 />
@@ -427,7 +429,7 @@ export default class PathOverview extends React.Component {
                     this.goToLesson(
                       this.state.isMethod
                         ? this.state.bannerNextLessonUrl
-                        : this.state.nextLesson.id
+                        : this.state.nextLesson?.id
                     )
                   }
                 />
@@ -868,7 +870,7 @@ export default class PathOverview extends React.Component {
             onNextLesson={() =>
               this.goToLesson(
                 this.state.isMethod
-                  ? nextLesson.post.mobile_app_url
+                  ? nextLesson.post?.mobile_app_url
                   : nextLesson.id
               )
             }

@@ -115,14 +115,14 @@ class LessonComplete extends React.Component {
                 source={{
                   uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
                     width * 0.55 * 2
-                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${nextLesson.getData(
+                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${nextLesson?.getData(
                     'thumbnail_url'
                   )}`
                 }}
               />
             </TouchableOpacity>
             <Text style={[styles.modalHeaderText, localStyles.videoTitle]}>
-              {nextLesson.getField('title')}
+              {nextLesson?.getField('title')}
             </Text>
           </View>
         </View>
