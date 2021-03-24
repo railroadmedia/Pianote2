@@ -13,6 +13,7 @@ import NavigationService from './src/services/navigation.service';
 
 import NetworkProvider from './src/context/NetworkProvider';
 
+import cards from './src/redux/CardsReducer';
 import packsReducer from './src/redux/PacksCacheReducer';
 import songsReducer from './src/redux/SongsCacheReducer';
 import myListReducer from './src/redux/MyListCacheReducer';
@@ -24,6 +25,7 @@ import studentFocusReducer from './src/redux/StudentFocusCacheReducer';
 
 const store = createStore(
   combineReducers({
+    ...cards,
     ...packsReducer,
     ...songsReducer,
     ...myListReducer,

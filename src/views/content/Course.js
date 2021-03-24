@@ -12,12 +12,13 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-import database from '@react-native-firebase/database';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import Filters_V2 from '../../components/Filters_V2';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
-import { RowCard } from '../../components/Cards';
+import RowCard from '../../components/Cards';
 import Sort from '../../components/Sort';
 
 import { getStartedContent, getAllContent } from '../../services/GetContent';
@@ -25,29 +26,28 @@ import structuredState from '../../services/structuredState.service';
 
 import { NetworkContext } from '../../context/NetworkProvider';
 
-let cacheDB = database().ref('/courses');
-export default class Course extends React.PureComponent {
+import { cacheAndWriteCourses } from '../../redux/CoursesCacheActions';
+
+class Course extends React.PureComponent {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
 
   page = 1;
-  state = {
-    all: [],
-    inProgress: [],
-    refreshControl: true,
-    loading: true,
-    loadingMore: false
-  };
+  all = [];
+  inProgress = [];
+  constructor(props) {
+    super(props);
+    let { all, inProgress } = props.coursesCache;
+    this.all = all;
+    this.inProgress = inProgress;
+    this.state = {
+      refreshControl: true,
+      loading: !this.all?.length,
+      loadingMore: false
+    };
+  }
 
   componentDidMount() {
-    cacheDB.once('value', snapshot => {
-      let { all, inProgress } = snapshot.val() || {};
-      this.setState({
-        loading: false,
-        all: all || [],
-        inProgress: inProgress || []
-      });
-    });
     this.getContent();
     this.willFocusSubscription = this.props.navigation.addListener(
       'willFocus',
@@ -76,13 +76,13 @@ export default class Course extends React.PureComponent {
       all: content[0],
       inProgress: content[1]
     });
-    cacheDB.set({ all, inProgress });
-    this.setState({
-      loading: false,
-      refreshControl: false,
-      all: all || [],
-      inProgress: inProgress || []
+    this.all = all;
+    this.inProgress = inProgress;
+    this.props.cacheAndWriteCourses({
+      all: this.all,
+      inProgress: this.inProgress
     });
+    this.setState({ loading: false, refreshControl: false });
   };
 
   getAll = async loadMore => {
@@ -95,55 +95,13 @@ export default class Course extends React.PureComponent {
     );
     this.metaFilters = response?.meta?.filterOptions;
     let { all } = structuredState({ all: response });
-    this.setState({
-      loadingMore: false,
-      refreshControl: false,
-      all: loadMore ? this.state.all.concat(all || []) : all
-    });
+    this.all = loadMore ? this.all.concat(all || []) : all;
+    this.setState({ loadingMore: false, refreshControl: false });
   };
 
   refresh = () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     this.setState({ refreshControl: true }, this.getContent);
-  };
-
-  toggleMyList = id =>
-    this.setState(
-      ({ all, inProgress }) => ({
-        all: all.map(a =>
-          a.id === id ? { ...a, isAddedToList: !a.isAddedToList } : a
-        ),
-        inProgress: inProgress.map(ip =>
-          ip.id === id ? { ...ip, isAddedToList: !ip.isAddedToList } : ip
-        )
-      }),
-      () => cacheDB.update(this.state)
-    );
-
-  toggleLike = id => {
-    this.setState(
-      ({ all, inProgress }) => ({
-        all: all.map(a =>
-          a.id === id
-            ? {
-                ...a,
-                isLiked: !a.isLiked,
-                like_count: a.like_count + (a.isLiked ? -1 : 1)
-              }
-            : a
-        ),
-        inProgress: inProgress.map(ip =>
-          ip.id === id
-            ? {
-                ...ip,
-                isLiked: !ip.isLiked,
-                like_count: ip.like_count + (ip.isLiked ? -1 : 1)
-              }
-            : ip
-        )
-      }),
-      () => cacheDB.update(this.state)
-    );
   };
 
   navigate = data =>
@@ -162,10 +120,10 @@ export default class Course extends React.PureComponent {
   };
 
   renderFLHeader = () => {
-    let { refreshControl, inProgress } = this.state;
+    let { refreshControl } = this.state;
     return (
       <>
-        {!!inProgress?.length && (
+        {!!this.inProgress?.length && (
           <>
             <View style={lStyle.continueHeaderContainer}>
               <Text style={lStyle.continueText}>CONTINUE</Text>
@@ -187,7 +145,7 @@ export default class Course extends React.PureComponent {
             </View>
             <FlatList
               windowSize={10}
-              data={inProgress}
+              data={this.inProgress}
               horizontal={true}
               initialNumToRender={5}
               maxToRenderPerBatch={10}
@@ -195,23 +153,18 @@ export default class Course extends React.PureComponent {
               removeClippedSubviews={true}
               keyboardShouldPersistTaps='handled'
               contentContainerStyle={{
-                width: `${(onTablet ? 33 : 80) * inProgress?.length}%`
+                width: `${(onTablet ? 33 : 80) * this.inProgress?.length}%`
               }}
               renderItem={({ item, index }) => (
-                <View style={{ width: `${100 / inProgress?.length}%` }}>
+                <View style={{ width: `${100 / this.inProgress?.length}%` }}>
                   <View
                     style={{
-                      width: `${100 * inProgress?.length}%`,
-                      paddingRight: index === inProgress?.length - 1 ? 10 : 0
+                      width: `${100 * this.inProgress?.length}%`,
+                      paddingRight:
+                        index === this.inProgress?.length - 1 ? 10 : 0
                     }}
                   >
-                    <RowCard
-                      item={item}
-                      compact
-                      onNavigate={this.navigate}
-                      onToggleLike={this.toggleLike}
-                      onToggleMyList={this.toggleMyList}
-                    />
+                    <RowCard {...item} compact onNavigate={this.navigate} />
                   </View>
                 </View>
               )}
@@ -242,6 +195,7 @@ export default class Course extends React.PureComponent {
   };
 
   render() {
+    console.log('rend course');
     let { loading, loadingMore, refreshControl } = this.state;
     return (
       <View style={{ backgroundColor: '#00101d', flex: 1 }}>
@@ -256,7 +210,7 @@ export default class Course extends React.PureComponent {
           <FlatList
             windowSize={10}
             testID='flatList'
-            data={this.state.all}
+            data={this.all}
             style={{ flex: 1 }}
             initialNumToRender={5}
             maxToRenderPerBatch={10}
@@ -266,7 +220,7 @@ export default class Course extends React.PureComponent {
             columnWrapperStyle={onTablet ? { width: '33%' } : null}
             renderItem={({ item }) => (
               <RowCard
-                item={item}
+                {...item}
                 compact={onTablet}
                 onNavigate={this.navigate}
                 onToggleLike={this.toggleLike}
@@ -335,3 +289,9 @@ let lStyle = StyleSheet.create({
   },
   noResultsText: { color: 'white', textAlign: 'center', padding: 20 }
 });
+
+const mapStateToProps = state => ({ coursesCache: state.coursesCache });
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ cacheAndWriteCourses }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Course);

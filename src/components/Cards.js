@@ -1,6 +1,9 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, Image, Modal } from 'react-native';
 
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import { Download_V2 } from 'RNDownload';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -15,7 +18,9 @@ import contentService from '../services/content.service';
 
 import { NetworkContext } from '../context/NetworkProvider';
 
-export class RowCard extends React.Component {
+import { toggleMyList, toggleLike } from '../redux/CardsActions';
+
+class RowCard extends React.Component {
   static contextType = NetworkContext;
 
   constructor(props) {
@@ -28,7 +33,7 @@ export class RowCard extends React.Component {
 
   addToCalendar = () => {
     this.setState({ calendarModalVisible: false });
-    let { title, publishedOn } = this.props.item;
+    let { title, publishedOn } = this.props;
     AddCalendarEvent.presentEventCreatingDialog({
       endDate: new Date(publishedOn),
       startDate: new Date(publishedOn),
@@ -38,12 +43,12 @@ export class RowCard extends React.Component {
 
   toggleMyList = () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    let { id, isAddedToList } = this.props.item;
+    let { id, isAddedToList } = this.props;
     isAddedToList ? removeFromMyList(id) : addToMyList(id);
-    this.props.onToggleMyList?.(id);
+    this.props.toggleMyList(this.props);
   };
 
-  navigate = () => this.props.onNavigate?.(this.props.item);
+  navigate = () => this.props.onNavigate?.(this.props);
 
   toggleDetails = () =>
     this.setState(({ detailsModalVisible }) => ({
@@ -59,24 +64,25 @@ export class RowCard extends React.Component {
 
   toggleLike = () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    let { id, isLiked } = this.props.item;
+    let { id, isLiked } = this.props;
     isLiked ? unlikeContent(id) : likeContent(id);
-    this.props.onToggleLike?.(id);
+    this.props.toggleLike(this.props);
   };
 
   render() {
+    console.log('rend card', this.props);
     let {
-      state: { detailsModalVisible, calendarModalVisible },
-      props: { item, compact }
+      props,
+      state: { detailsModalVisible, calendarModalVisible }
     } = this;
     return (
       <>
         <TouchableOpacity
-          disabled={new Date(item.publishedOn) > new Date()}
+          disabled={new Date(props.publishedOn) > new Date()}
           onLongPress={this.toggleDetails}
           onPress={this.navigate}
           style={{
-            flexDirection: compact ? 'column' : 'row',
+            flexDirection: props.compact ? 'column' : 'row',
             padding: 10,
             paddingBottom: 0,
             paddingRight: 0,
@@ -87,13 +93,15 @@ export class RowCard extends React.Component {
             style={{
               aspectRatio: 16 / 9,
               borderRadius: 7.5,
-              width: compact ? '100%' : '30%'
+              width: props.compact ? '100%' : '30%'
             }}
             resizeMode='cover'
-            source={{ uri: item.thumbnail }}
+            source={{ uri: props.thumbnail }}
           />
           <View style={{ flexDirection: 'row', flex: 1 }}>
-            <View style={{ paddingHorizontal: compact ? 0 : 10, flex: 1 }}>
+            <View
+              style={{ paddingHorizontal: props.compact ? 0 : 10, flex: 1 }}
+            >
               <Text
                 numberOfLines={1}
                 ellipsizeMode='tail'
@@ -104,7 +112,7 @@ export class RowCard extends React.Component {
                   flexDirection: 'column'
                 }}
               >
-                {item.title}
+                {props.title}
               </Text>
               <Text
                 numberOfLines={1}
@@ -114,14 +122,14 @@ export class RowCard extends React.Component {
                   fontSize: onTablet ? 18 : 14
                 }}
               >
-                {`Course / ${item.artist}`}
+                {`Course / ${props.artist}`}
               </Text>
             </View>
             <TouchableOpacity
-              style={{ padding: 10, paddingRight: compact ? 0 : 10 }}
+              style={{ padding: 10, paddingRight: props.compact ? 0 : 10 }}
               onPress={
                 this[
-                  new Date(item.publishedOn) > new Date()
+                  new Date(props.publishedOn) > new Date()
                     ? 'toggleAddToCalendar'
                     : 'toggleMyList'
                 ]
@@ -135,9 +143,9 @@ export class RowCard extends React.Component {
                 }}
                 size={onTablet ? 28 : 22}
                 name={
-                  new Date(item.publishedOn) > new Date()
+                  new Date(props.publishedOn) > new Date()
                     ? 'calendar'
-                    : item.isAddedToList
+                    : props.isAddedToList
                     ? 'close'
                     : 'plus'
                 }
@@ -178,7 +186,7 @@ export class RowCard extends React.Component {
                   width: '100%'
                 }}
                 resizeMode='cover'
-                source={{ uri: item.thumbnail }}
+                source={{ uri: props.thumbnail }}
               />
               <Text
                 style={{
@@ -188,7 +196,7 @@ export class RowCard extends React.Component {
                   textAlign: 'center'
                 }}
               >
-                {item.title}
+                {props.title}
               </Text>
               <Text
                 style={{
@@ -199,7 +207,7 @@ export class RowCard extends React.Component {
                   textTransform: 'capitalize'
                 }}
               >
-                {item.type} / {item.artist}
+                {props.type} / {props.artist}
               </Text>
               <Text
                 style={{
@@ -208,7 +216,7 @@ export class RowCard extends React.Component {
                   textAlign: 'center'
                 }}
               >
-                {item.description}
+                {props.description}
               </Text>
               <View
                 style={{
@@ -224,7 +232,7 @@ export class RowCard extends React.Component {
                     textAlign: 'center'
                   }}
                 >
-                  {item.lesson_count}
+                  {props.lesson_count}
                   {`\n`}
                   <Text
                     style={{
@@ -242,7 +250,7 @@ export class RowCard extends React.Component {
                     textAlign: 'center'
                   }}
                 >
-                  {item.xp}
+                  {props.xp}
                   {`\n`}
                   <Text
                     style={{
@@ -271,15 +279,15 @@ export class RowCard extends React.Component {
                       height: onTablet ? 28 : 22
                     }}
                     size={onTablet ? 28 : 22}
-                    name={item.isLiked ? 'like1' : 'like2'}
+                    name={props.isLiked ? 'like1' : 'like2'}
                   />
-                  <Text>{item.like_count}</Text>
+                  <Text>{props.like_count}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={{ alignItems: 'center', flex: 1 }}
                   onPress={
                     this[
-                      new Date(item.publishedOn) > new Date()
+                      new Date(props.publishedOn) > new Date()
                         ? 'toggleAddToCalendar'
                         : 'toggleMyList'
                     ]
@@ -293,9 +301,9 @@ export class RowCard extends React.Component {
                     }}
                     size={onTablet ? 28 : 22}
                     name={
-                      new Date(item.publishedOn) > new Date()
+                      new Date(props.publishedOn) > new Date()
                         ? 'calendar'
-                        : item.isAddedToList
+                        : props.isAddedToList
                         ? 'close'
                         : 'plus'
                     }
@@ -304,8 +312,8 @@ export class RowCard extends React.Component {
                 </TouchableOpacity>
                 <Download_V2
                   entity={{
-                    id: item.id,
-                    content: contentService.getContent(item.id, true)
+                    id: props.id,
+                    content: contentService.getContent(props.id, true)
                   }}
                   styles={{
                     iconSize: {
@@ -418,3 +426,11 @@ export class RowCard extends React.Component {
     );
   }
 }
+
+const mapStateToProps = ({ cards }, props) => {
+  return { ...props, ...cards?.[props.id] };
+};
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ toggleMyList, toggleLike }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(RowCard);
