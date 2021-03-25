@@ -196,7 +196,6 @@ class StudentFocusCatalog extends React.Component {
                           parent: 'Student Focus'
                         })
                       }
-                      hideSeeAll={false}
                       showType={true}
                       items={this.state.progressStudentFocus}
                     />

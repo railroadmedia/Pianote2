@@ -286,7 +286,6 @@ class SongCatalog extends React.Component {
                       parent: 'Songs'
                     })
                   }
-                  hideSeeAll={false}
                   isSquare={true}
                   items={this.state.progressSongs}
                 />
