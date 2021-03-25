@@ -31,9 +31,6 @@ import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
@@ -55,9 +52,9 @@ class StudentFocusShow extends React.Component {
       page: 1,
       outVideos: false,
       refreshing: false,
-      isLoadingAll: true, // all lessons
-      isPaging: false, // scrolling more
-      filtering: false, // filtering
+      isLoadingAll: true, 
+      isPaging: false, 
+      filtering: false, 
       ...this.initialValidData(
         props.navigation.state.params.type == 'quick-tips'
           ? props.quickTipsCache

@@ -22,7 +22,6 @@ import {
 } from '../../services/GetContent';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
-import NavigationMenu from '../../components/NavigationMenu';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
 import { NetworkContext } from '../../context/NetworkProvider';
 
@@ -125,6 +124,7 @@ class StudentFocusCatalog extends React.Component {
       <TouchableOpacity
         key={index}
         onPress={() => {
+          console.log(item.type)
           this.props.navigation.navigate('STUDENTFOCUSSHOW', {
             type: item.type,
             thumbnailUrl: item.thumbnailUrl

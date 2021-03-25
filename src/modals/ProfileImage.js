@@ -8,16 +8,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
-  Dimensions
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 class ProfileImage extends React.Component {
   static navigationOptions = { header: null };
