@@ -35,7 +35,6 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 };
 
 export default class Search extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -246,9 +245,9 @@ export default class Search extends React.Component {
           return newContent.getField('instructor').fields[0].value;
         } else {
           return newContent.getField('instructor').name;
-        }  
+        }
       } catch (error) {
-        return '' 
+        return '';
       }
     }
   };

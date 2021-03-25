@@ -27,6 +27,7 @@ import HorizontalVideoList from '../../components/HorizontalVideoList';
 import { NetworkContext } from '../../context/NetworkProvider';
 
 import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
+import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -36,7 +37,6 @@ const height =
 const factor = (height / 812 + width / 375) / 2;
 
 class StudentFocusCatalog extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -53,15 +53,11 @@ class StudentFocusCatalog extends React.Component {
 
   componentDidMount() {
     this.getData();
-    this.willFocusSubscription = this.props.navigation.addListener(
-      'willFocus',
-      () =>
-        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
-    );
+    this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   }
 
   componentWillUnmount() {
-    this.willFocusSubscription.remove();
+    this.refreshOnFocusListener?.();
   }
 
   async getData() {
@@ -125,7 +121,7 @@ class StudentFocusCatalog extends React.Component {
       <TouchableOpacity
         key={index}
         onPress={() => {
-          this.props.navigation.navigate('STUDENTFOCUSSHOW', {
+          navigate('STUDENTFOCUSSHOW', {
             type: item.type,
             thumbnailUrl: item.thumbnailUrl
           });
@@ -191,7 +187,7 @@ class StudentFocusCatalog extends React.Component {
                       hideFilterButton={true}
                       Title={'CONTINUE'}
                       seeAll={() =>
-                        this.props.navigation.navigate('SEEALL', {
+                        navigate('SEEALL', {
                           title: 'Continue',
                           parent: 'Student Focus'
                         })

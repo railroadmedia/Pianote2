@@ -4,7 +4,6 @@
 import React from 'react';
 import { View, Platform } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { withNavigation } from 'react-navigation';
 
 const colorDict = {
   blue: ['rgba(0, 16, 29, 0)', 'rgba(0, 16, 29, 1)'],
@@ -15,8 +14,7 @@ const colorDict = {
   brown: ['rgba(65, 11, 17, 0)', 'rgba(65, 11, 17, 0.7)', 'rgba(65, 11, 17, 1)']
 };
 
-class GradientFeature extends React.Component {
-  static navigationOptions = { header: null };
+export default class GradientFeature extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -56,5 +54,3 @@ class GradientFeature extends React.Component {
     );
   };
 }
-
-export default withNavigation(GradientFeature);

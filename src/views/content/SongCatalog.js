@@ -21,6 +21,7 @@ import { getStartedContent, getAllContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
 import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
+import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -37,7 +38,6 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 };
 
 class SongCatalog extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -59,15 +59,11 @@ class SongCatalog extends React.Component {
 
   componentDidMount() {
     this.getContent();
-    this.willFocusSubscription = this.props.navigation.addListener(
-      'willFocus',
-      () =>
-        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
-    );
+    this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   }
 
   componentWillUnmount() {
-    this.willFocusSubscription.remove();
+    this.refreshOnFocusListener?.();
   }
 
   async getContent() {
@@ -281,7 +277,7 @@ class SongCatalog extends React.Component {
                   hideFilterButton={true}
                   Title={'CONTINUE'}
                   seeAll={() =>
-                    this.props.navigation.navigate('SEEALL', {
+                    navigate('SEEALL', {
                       title: 'Continue',
                       parent: 'Songs'
                     })

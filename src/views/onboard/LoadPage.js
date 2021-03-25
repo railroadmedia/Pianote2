@@ -10,7 +10,6 @@ import { Download_V2 } from 'RNDownload';
 import { bindActionCreators } from 'redux';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-community/async-storage';
-import { NavigationActions, StackActions } from 'react-navigation';
 import { getToken, getUserData } from '../../services/UserDataAuth';
 import { notif, updateFcmToken } from '../../services/notification.service';
 
@@ -29,6 +28,9 @@ import NoConnection from '../../modals/NoConnection';
 
 import { NetworkContext } from '../../context/NetworkProvider';
 import RNFetchBlob from 'rn-fetch-blob';
+import commonService from '../../services/common.service';
+import navigationService from '../../services/navigation.service';
+import { navigate, reset } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -52,7 +54,7 @@ const cache = [
 ];
 class LoadPage extends React.Component {
   static contextType = NetworkContext;
-  static navigationOptions = { header: null };
+
   constructor(props) {
     super(props);
     this.state = {};
@@ -81,23 +83,14 @@ class LoadPage extends React.Component {
 
       if (!this.context.isConnected) {
         if (loggedIn && !global.loadedFromNotification) {
-          return this.props.navigation.navigate('DOWNLOADS');
+          return navigate('DOWNLOADS');
         } else {
-          return this.props.navigation.navigate('LOGIN');
+          return navigate('LOGIN');
         }
         // if no connection and logged in
       } else if (!loggedIn && !global.loadedFromNotification) {
         // if not logged in
-        return this.props.navigation.dispatch(
-          StackActions.reset({
-            index: 0,
-            actions: [
-              NavigationActions.navigate({
-                routeName: 'LOGIN'
-              })
-            ]
-          })
-        );
+        return reset('LOGIN');
       } else {
         // get token
         const res = await getToken(email, password);
@@ -108,47 +101,17 @@ class LoadPage extends React.Component {
           await AsyncStorage.multiSet([['loggedIn', 'true']]);
           let userData = await getUserData();
           let { lessonUrl, commentId } = notif;
-
-          if (lessonUrl && commentId) {
+          if (commonService.urlToOpen) {
+            return navigationService.decideWhereToRedirect();
+          } else if (lessonUrl && commentId) {
             // if lesson or comment notification go to video
-            this.props.navigation.dispatch(
-              StackActions.reset({
-                index: 0,
-                actions: [
-                  NavigationActions.navigate({
-                    routeName: 'VIDEOPLAYER',
-                    params: {
-                      url: lessonUrl,
-                      commentId
-                    }
-                  })
-                ]
-              })
-            );
+            reset('VIDEOPLAYER', { url: lessonUrl, commentId });
           } else if (global.loadedFromNotification) {
             // if going to profile page
-            await this.props.navigation.dispatch(
-              StackActions.reset({
-                index: 0,
-                actions: [
-                  NavigationActions.navigate({
-                    routeName: 'PROFILE'
-                  })
-                ]
-              })
-            );
+            reset('PROFILE');
           } else if (resetKey) {
             // go to reset pass
-            this.props.navigation.dispatch(
-              StackActions.reset({
-                index: 0,
-                actions: [
-                  NavigationActions.navigate({
-                    routeName: 'RESETPASSWORD'
-                  })
-                ]
-              })
-            );
+            reset('RESETPASSWORD');
           } else {
             if (forumUrl) {
               // if user got a forum related notification
@@ -160,32 +123,15 @@ class LoadPage extends React.Component {
               // if pack only, set global variable to true & go to packs
               global.isPackOnly = userData.isPackOlyOwner;
               global.expirationDate = userData.expirationDate;
-              await this.props.navigation.dispatch(
-                StackActions.reset({
-                  index: 0,
-                  actions: [
-                    NavigationActions.navigate({
-                      routeName: 'PACKS'
-                    })
-                  ]
-                })
-              );
+              reset('PACKS');
             } else if (userData.isLifetime || userData.isMember) {
               // is logged in with valid membership go to lessons
-              if (!global.notifNavigation)
-                await this.props.navigation.dispatch(
-                  StackActions.reset({
-                    index: 0,
-                    actions: [
-                      NavigationActions.navigate({
-                        routeName: 'LESSONS'
-                      })
-                    ]
-                  })
-                );
+              if (!global.notifNavigation) {
+                reset('LESSONS');
+              }
             } else {
               // membership expired, go to membership expired
-              this.props.navigation.navigate('MEMBERSHIPEXPIRED', {
+              navigate('MEMBERSHIPEXPIRED', {
                 email: this.state.email,
                 password: this.state.password,
                 token: res.token
@@ -194,16 +140,7 @@ class LoadPage extends React.Component {
           }
         } else if (!res.success || loggedIn == false || loggedIn == 'false') {
           // is not logged in
-          this.props.navigation.dispatch(
-            StackActions.reset({
-              index: 0,
-              actions: [
-                NavigationActions.navigate({
-                  routeName: 'LOGIN'
-                })
-              ]
-            })
-          );
+          reset('LOGIN');
         }
       }
     });
@@ -222,21 +159,9 @@ class LoadPage extends React.Component {
   async handleNoConnection() {
     let isLoggedIn = await AsyncStorage.getItem('loggedIn');
     if (isLoggedIn == 'true') {
-      return this.props.navigation.dispatch(
-        StackActions.reset({
-          index: 0,
-          actions: [NavigationActions.navigate({ routeName: 'DOWNLOADS' })]
-        })
-      );
+      return reset('DOWNLOADS');
     } else {
-      return this.props.navigation.dispatch(
-        StackActions.reset({
-          index: 0,
-          actions: [
-            NavigationActions.navigate({ routeName: 'LOGINCREDENTIALS' })
-          ]
-        })
-      );
+      reset('LOGINCREDENTIALS');
     }
   }
 

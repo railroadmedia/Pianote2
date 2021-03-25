@@ -9,10 +9,8 @@ import {
   TouchableWithoutFeedback,
   StyleSheet
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
 
-class NoConnection extends React.Component {
-  static navigationOptions = { header: null };
+export default class NoConnection extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -68,5 +66,3 @@ const localStyles = StyleSheet.create({
     margin: 10
   }
 });
-
-export default withNavigation(NoConnection);

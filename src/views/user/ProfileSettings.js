@@ -21,17 +21,14 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
-import {
-  NavigationActions,
-  SafeAreaView,
-  StackActions
-} from 'react-navigation';
+import { SafeAreaView } from 'react-navigation';
 import DisplayName from '../../modals/DisplayName.js';
 import ProfileImage from '../../modals/ProfileImage.js';
 import NavigationBar from '../../components/NavigationBar.js';
 import commonService from '../../services/common.service.js';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import Loading from '../../components/Loading.js';
+import { goBack, reset } from '../../../AppNavigator.js';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -40,13 +37,7 @@ const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
-const resetAction = StackActions.reset({
-  index: 0,
-  actions: [NavigationActions.navigate({ routeName: 'PROFILE' })]
-});
-
 export default class ProfileSettings extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -73,7 +64,7 @@ export default class ProfileSettings extends React.Component {
     this.setState({
       imageURI: imageURI || '',
       currentlyView:
-        this.props.navigation.state.params?.data == 'Profile Photo'
+        this.props.route?.params?.data == 'Profile Photo'
           ? 'Profile Photo'
           : 'Profile Settings'
     });
@@ -123,7 +114,7 @@ export default class ProfileSettings extends React.Component {
         }
       );
       await AsyncStorage.setItem('displayName', this.state.displayName);
-      this.props.navigation.dispatch(resetAction);
+      reset('PROFILE');
     } else {
       this.setState({ showDisplayName: true });
     }
@@ -167,7 +158,7 @@ export default class ProfileSettings extends React.Component {
             'profileURI',
             url == '' ? url : url.data[0].url
           );
-          this.props.navigation.dispatch(resetAction);
+          reset('PROFILE');
         }
       }
     } catch (error) {}
@@ -411,7 +402,7 @@ export default class ProfileSettings extends React.Component {
               this.state.isLoading
                 ? null
                 : this.state.currentlyView == 'Profile Settings'
-                ? this.props.navigation.goBack()
+                ? goBack()
                 : this.setState({ currentlyView: 'Profile Settings' });
             }}
             style={{ padding: 10 }}

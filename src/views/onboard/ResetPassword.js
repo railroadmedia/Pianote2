@@ -22,9 +22,9 @@ import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import CustomModal from '../../modals/CustomModal';
 import { changePassword } from '../../services/UserDataAuth';
 import { NetworkContext } from '../../context/NetworkProvider';
+import { navigate } from '../../../AppNavigator';
 
 export default class ResetPassword extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -91,7 +91,7 @@ export default class ResetPassword extends React.Component {
             behavior={`${isiOS ? 'padding' : ''}`}
           >
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('LOGINCREDENTIALS')}
+              onPress={() => navigate('LOGINCREDENTIALS')}
               style={{
                 padding: 15,
                 flexDirection: 'row',
@@ -391,7 +391,7 @@ export default class ResetPassword extends React.Component {
                 }}
                 onPress={() => {
                   this.alert.toggle();
-                  this.props.navigation.navigate({
+                  navigate({
                     routeName: 'LOGINCREDENTIALS'
                   });
                 }}

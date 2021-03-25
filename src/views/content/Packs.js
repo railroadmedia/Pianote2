@@ -32,6 +32,7 @@ import Orientation from 'react-native-orientation-locker';
 
 import { cacheAndWritePacks } from '../../redux/PacksCacheActions';
 import ResetIcon from '../../components/ResetIcon';
+import { navigate } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -42,7 +43,6 @@ const factor = (height / 812 + width / 375) / 2;
 
 let greaterWDim;
 class Packs extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -265,7 +265,7 @@ class Packs extends React.Component {
                     ) : !this.state.headerPackStarted ? (
                       <StartIcon
                         pressed={() =>
-                          this.props.navigation.navigate('VIDEOPLAYER', {
+                          navigate('VIDEOPLAYER', {
                             url: this.state.headerPackNextLessonUrl
                           })
                         }
@@ -273,7 +273,7 @@ class Packs extends React.Component {
                     ) : (
                       <ContinueIcon
                         pressed={() =>
-                          this.props.navigation.navigate('VIDEOPLAYER', {
+                          navigate('VIDEOPLAYER', {
                             url: this.state.headerPackNextLessonUrl
                           })
                         }
@@ -288,7 +288,7 @@ class Packs extends React.Component {
                   >
                     <MoreInfoIcon
                       pressed={() => {
-                        this.props.navigation.push('SINGLEPACK', {
+                        navigate('SINGLEPACK', {
                           url: this.state.headerPackUrl
                         });
                       }}
@@ -302,7 +302,7 @@ class Packs extends React.Component {
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => {
-                this.props.navigation.push('SINGLEPACK', {
+                navigate('SINGLEPACK', {
                   url: item.mobile_app_url
                 });
               }}

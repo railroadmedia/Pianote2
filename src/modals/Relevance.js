@@ -4,11 +4,9 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { withNavigation } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
-class Relevance extends React.Component {
-  static navigationOptions = { header: null };
+export default class Relevance extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -166,5 +164,3 @@ const localStyles = StyleSheet.create({
     color: 'white'
   }
 });
-
-export default withNavigation(Relevance);

@@ -38,6 +38,7 @@ import {
 } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 import Resources from 'Pianote2/src/assets/img/svgs/resources';
+import { goBack, navigate } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -45,7 +46,6 @@ const width =
 
 let greaterWDim;
 export default class SinglePack extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -55,7 +55,7 @@ export default class SinglePack extends React.Component {
       videos: [],
       id: '',
       title: '',
-      url: this.props.navigation.state.params.url,
+      url: this.props.route?.params?.url,
       isAddedToList: false,
       description: '',
       thumbnail: '',
@@ -224,11 +224,11 @@ export default class SinglePack extends React.Component {
 
   navigate = row => {
     if (this.state.isDisplayingLessons) {
-      this.props.navigation.navigate('VIDEOPLAYER', {
+      navigate('VIDEOPLAYER', {
         url: row.mobile_app_url
       });
     } else {
-      this.props.navigation.push('SINGLEPACK', {
+      navigate('SINGLEPACK', {
         url: row.mobile_app_url
       });
     }
@@ -286,9 +286,7 @@ export default class SinglePack extends React.Component {
             }
           >
             <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.goBack();
-              }}
+              onPress={() => goBack()}
               style={[
                 styles.centerContent,
                 {
@@ -405,7 +403,7 @@ export default class SinglePack extends React.Component {
                     ) : !this.state.isStarted ? (
                       <StartIcon
                         pressed={() => {
-                          this.props.navigation.navigate('VIDEOPLAYER', {
+                          navigate('VIDEOPLAYER', {
                             url: this.state.nextLessonUrl
                           });
                         }}
@@ -414,7 +412,7 @@ export default class SinglePack extends React.Component {
                       this.state.isStarted && (
                         <ContinueIcon
                           pressed={() =>
-                            this.props.navigation.navigate('VIDEOPLAYER', {
+                            navigate('VIDEOPLAYER', {
                               url: this.state.nextLessonUrl
                             })
                           }

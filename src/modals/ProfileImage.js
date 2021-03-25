@@ -10,7 +10,6 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -19,8 +18,7 @@ const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
-class ProfileImage extends React.Component {
-  static navigationOptions = { header: null };
+export default class ProfileImage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -81,5 +79,3 @@ const localStyles = StyleSheet.create({
     marginTop: 10
   }
 });
-
-export default withNavigation(ProfileImage);

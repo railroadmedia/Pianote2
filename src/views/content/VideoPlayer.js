@@ -61,6 +61,7 @@ import VideoPlayerSong from './VideoPlayerSong';
 
 import { NetworkContext } from '../../context/NetworkProvider';
 import methodService from '../../services/method.service';
+import { goBack, navigate } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -68,14 +69,14 @@ const width =
 
 export default class VideoPlayer extends React.Component {
   static contextType = NetworkContext;
-  static navigationOptions = { header: null };
+
   constructor(props) {
     super(props);
     this.limit = 10;
     this.allCommentsNum = 0;
     this.state = {
-      id: this.props.navigation.state.params.id,
-      url: this.props.navigation.state.params.url,
+      id: this.props.route?.params?.id,
+      url: this.props.route?.params?.url,
       commentId: '',
       commentSort: 'Popular',
       profileImage: '',
@@ -141,13 +142,13 @@ export default class VideoPlayer extends React.Component {
       content =
         offlineContent[this.state.id]?.lesson ||
         offlineContent[
-          this.props.navigation.state.params.parentId
+          this.props.route?.params?.parentId
         ]?.overview.lessons.find(l => l.id === this.state.id);
       comments = content.comments;
       this.allCommentsNum = comments.length;
     } else {
       let result;
-      if (this.props.navigation.state.params.url) {
+      if (this.props.route?.params?.url) {
         result = await methodService.getMethodContent(this.state.url);
       } else {
         result = await contentService.getContent(this.state.id);
@@ -319,7 +320,7 @@ export default class VideoPlayer extends React.Component {
             `If the problem persists please contact support.`
           );
         }
-        const { comment, commentId } = this.props.navigation.state.params;
+        const { comment, commentId } = this.props.route?.params;
         if (comment)
           this.replies.toggle(() =>
             this.setState({ selectedComment: comment })
@@ -386,11 +387,11 @@ export default class VideoPlayer extends React.Component {
   };
 
   onBack = () => {
-    const { commentId } = this.props.navigation.state.params;
+    const { commentId } = this.props.route?.params;
     if (commentId) {
-      this.props.navigation.navigate('LESSONS');
+      navigate('LESSONS');
     } else {
-      this.props.navigation.goBack();
+      goBack();
     }
     return true;
   };
@@ -442,7 +443,7 @@ export default class VideoPlayer extends React.Component {
       if (
         offlineContent[id]?.lesson ||
         offlineContent[
-          this.props.navigation.state.params.parentId
+          this.props.route?.params?.parentId
         ]?.overview.lessons.find(l => l.id === id)
       )
         this.resetState(id, url);
@@ -1230,7 +1231,7 @@ export default class VideoPlayer extends React.Component {
                         entity={{
                           id,
                           comments,
-                          content: this.props.navigation.state.params.url
+                          content: this.props.route?.params?.url
                             ? methodService.getMethodContent(this.state.url)
                             : contentService.getContent(this.state.id)
                         }}

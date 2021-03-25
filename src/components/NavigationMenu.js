@@ -3,11 +3,11 @@
  */
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { withNavigation } from 'react-navigation';
 import DeviceInfo from 'react-native-device-info';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NetworkContext } from '../context/NetworkProvider';
+import { navigate } from '../../AppNavigator';
 
 const navigationOptions = [
   {
@@ -52,9 +52,9 @@ const navigationOptions = [
   }
 ];
 
-class NavigationMenu extends React.Component {
+export default class NavigationMenu extends React.Component {
   static contextType = NetworkContext;
-  static navigationOptions = { header: null };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -85,30 +85,30 @@ class NavigationMenu extends React.Component {
                 return this.context.showNoConnectionAlert();
               this.props.onClose(false);
               if (nav.title === 'Method') {
-                this.props.navigation.navigate('METHOD', {
+                navigate('METHOD', {
                   methodIsStarted: this.state.methodIsStarted,
                   methodIsCompleted: this.state.methodIsCompleted
                 });
               } else if (nav.title === 'Quick Tips') {
-                this.props.navigation.navigate(nav.navigator, {
+                navigate(nav.navigator, {
                   type: 'quick-tips'
                 });
               } else if (nav.title === 'Podcasts') {
-                this.props.navigation.navigate(nav.navigator, {
+                navigate(nav.navigator, {
                   type: 'podcasts'
                 });
               } else if (nav.title === 'Live') {
-                this.props.navigation.navigate(nav.navigator, {
+                navigate(nav.navigator, {
                   title: nav.title,
                   parent: 'Lessons'
                 });
               } else if (nav.title === 'Schedule') {
-                this.props.navigation.navigate(nav.navigator, {
+                navigate(nav.navigator, {
                   title: nav.title,
                   parent: 'Lessons'
                 });
               } else {
-                this.props.navigation.navigate(nav.navigator);
+                navigate(nav.navigator);
               }
             }}
             style={{ flex: 1, alignSelf: 'center' }}
@@ -198,5 +198,3 @@ const localStyles = StyleSheet.create({
     paddingBottom: DeviceInfo.hasNotch() ? 30 : 10
   }
 });
-
-export default withNavigation(NavigationMenu);

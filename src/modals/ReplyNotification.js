@@ -4,7 +4,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { withNavigation } from 'react-navigation';
 import DeviceInfo from 'react-native-device-info';
 import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
 import IonIcon from 'react-native-vector-icons/Ionicons';
@@ -47,8 +46,7 @@ const messageDict = {
   'new content releases': ['', false, 'red', 'new release notifications'] // notify_weekly_update: this.state.notify_weekly_update,
 };
 
-class ReplyNotification extends React.Component {
-  static navigationOptions = { header: null };
+export default class ReplyNotification extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -77,15 +75,15 @@ class ReplyNotification extends React.Component {
     let statusChange = null;
 
     this.setState({
-      notify_on_lesson_comment_reply: userData.notify_on_lesson_comment_reply,
-      notify_on_lesson_comment_like: userData.notify_on_lesson_comment_like,
-      notify_on_forum_post_reply: userData.notify_on_forum_post_reply,
-      notify_on_forum_post_like: userData.notify_on_forum_post_like,
+      notify_on_lesson_comment_reply: userData?.notify_on_lesson_comment_reply,
+      notify_on_lesson_comment_like: userData?.notify_on_lesson_comment_like,
+      notify_on_forum_post_reply: userData?.notify_on_forum_post_reply,
+      notify_on_forum_post_like: userData?.notify_on_forum_post_like,
       notifications_summary_frequency_minutes:
-        userData.notifications_summary_frequency_minutes,
+        userData?.notifications_summary_frequency_minutes,
       notify_on_forum_followed_thread_reply:
-        userData.notify_on_forum_followed_thread_reply,
-      notify_weekly_update: userData.notify_weekly_update
+        userData?.notify_on_forum_followed_thread_reply,
+      notify_weekly_update: userData?.notify_weekly_update
     });
 
     if (this.state.type == 'replied to your comment.') {
@@ -335,5 +333,3 @@ const localStyles = StyleSheet.create({
     paddingLeft: 10
   }
 });
-
-export default withNavigation(ReplyNotification);

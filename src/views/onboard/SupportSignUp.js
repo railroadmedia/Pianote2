@@ -13,9 +13,9 @@ import {
 import Intercom from 'react-native-intercom';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
+import { goBack } from '../../../AppNavigator';
 
 export default class SupportSignUp extends React.Component {
-  static navigationOptions = { header: null };
   constructor(props) {
     super(props);
     this.state = {};
@@ -62,7 +62,7 @@ export default class SupportSignUp extends React.Component {
               ]}
             >
               <TouchableOpacity
-                onPress={() => this.props.navigation.goBack()}
+                onPress={() => goBack()}
                 style={[
                   styles.centerContent,
                   {

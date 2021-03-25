@@ -1,9 +1,10 @@
 /**
  *  Router
  */
+import React from 'react';
 import { Animated, Dimensions, Easing } from 'react-native';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
 // content
 import StudentFocusCatalog from './src/views/content/StudentFocusCatalog';
@@ -46,106 +47,156 @@ import Settings from './src/views/user/Settings';
 import Profile from './src/views/user/Profile';
 import Support from './src/views/user/Support';
 import Terms from './src/views/user/Terms';
+import NetworkProvider from './src/context/NetworkProvider';
 
-const AppNavigator = createStackNavigator(
-  {
-    initialRoute: LoadPage,
+const Stack = createStackNavigator();
 
-    // user
-    NOTIFICATIONSETTINGS: { screen: NotificationSettings },
-    PROFILESETTINGS: {
-      screen: ProfileSettings,
-      navigationOptions: {
-        gesturesEnabled: false
-      }
-    },
-    PRIVACYPOLICY: { screen: PrivacyPolicy },
-    SETTINGS: { screen: Settings },
-    PROFILE: { screen: Profile },
-    SUPPORT: { screen: Support },
-    TERMS: { screen: Terms },
+const navigationRef = React.createRef();
 
-    // content
-    STUDENTFOCUSCATALOG: { screen: StudentFocusCatalog },
-    STUDENTFOCUSSHOW: { screen: StudentFocusShow },
-    VIDEOPLAYERSONG: { screen: VideoPlayerSong },
-    METHODLEVEL: { screen: MethodLevel },
-    METHOD: { screen: Method },
-    FOUNDATIONS: { screen: Foundations },
-    PATHOVERVIEW: { screen: PathOverview },
-    SONGCATALOG: { screen: SongCatalog },
-    VIDEOPLAYER: {
-      screen: VideoPlayer,
-      navigationOptions: {
-        gesturesEnabled: false
-      }
-    },
-    SINGLEPACK: { screen: SinglePack },
-    DOWNLOADS: { screen: Downloads },
-    LESSONS: { screen: Lessons },
-    SEEALL: { screen: SeeAll },
-    COURSE: { screen: Course },
-    MYLIST: { screen: MyList },
-    SEARCH: { screen: Search },
-    PACKS: { screen: Packs },
+export function navigate(name, params = {}) {
+  navigationRef.current?.navigate(name, params);
+}
 
-    // onboard
-    MEMBERSHIPEXPIRED: { screen: MembershipExpired },
-    LOGINCREDENTIALS: { screen: LoginCredentials },
-    SUPPORTSIGNUP: { screen: SupportSignUp },
-    FORGOTPASSWORD: { screen: ForgotPassword },
-    CREATEACCOUNT2: { screen: CreateAccount2 },
-    CREATEACCOUNT3: {
-      screen: CreateAccount3,
-      navigationOptions: {
-        gesturesEnabled: false
-      }
-    },
-    NEWMEMBERSHIP: { screen: NewMembership },
-    CREATEACCOUNT: { screen: CreateAccount },
-    GETRESTARTED: { screen: GetRestarted },
-    WELCOMEBACK: { screen: WelcomeBack },
-    LOADPAGE: { screen: LoadPage },
-    LOGIN: { screen: Login },
-    RESETPASSWORD: { screen: ResetPassword }
-  },
-  {
-    headerMode: 'screen',
-    mode: 'card',
-    defaultNavigationOptions: {
-      gesturesEnabled: true,
-      // if you want to change the back swipe width
-      //just put the number, e.g. 100 would be fine to get the iOS effect
-      gestureResponseDistance: {
-        horizontal: Dimensions.get('window').width
-      }
-    },
-    transitionConfig: () => ({
-      transitionSpec: {
-        duration: 300,
-        easing: Easing.out(Easing.poly(4)),
-        timing: Animated.timing,
-        useNativeDriver: true
-      },
-      screenInterpolator: sceneProps => {
-        const { layout, position, scene } = sceneProps;
-        const { index } = scene;
+export function reset(name, params) {
+  navigationRef.current?.reset({
+    index: 0,
+    routes: [{ name, params }]
+  });
+}
 
-        const width = layout.initWidth;
-        const translateX = position.interpolate({
-          inputRange: [index - 1, index, index + 1],
-          outputRange: [width, 0, 0]
-        });
+export function currentScene() {
+  return navigationRef.current?.getCurrentRoute().name;
+}
 
-        const opacity = position.interpolate({
-          inputRange: [index - 1, index - 0.99, index],
-          outputRange: [0, 1, 1]
-        });
+export function currentParams() {
+  return navigationRef.current?.getCurrentRoute().params;
+}
 
-        return { opacity, transform: [{ translateX }] };
-      }
-    })
-  }
+export function goBack() {
+  navigationRef.current?.goBack();
+}
+
+export function refreshOnFocusListener() {
+  let reFocused;
+  return this.props.navigation?.addListener('focus', () =>
+    reFocused ? this.refresh?.() : (reFocused = true)
+  );
+}
+
+const timingAnim = {
+  animation: 'timing',
+  config: { duration: 250, easing: Easing.out(Easing.circle) }
+};
+
+export default () => (
+  <NetworkProvider>
+    <NavigationContainer ref={navigationRef}>
+      <Stack.Navigator
+        // initialRouteName={LoadPage}
+        headerMode={'screen'}
+        mode={'card'}
+        keyboardHandlingEnabled={false}
+        screenOptions={{
+          headerShown: false,
+          gestureEnabled: true,
+          gestureResponseDistance: {
+            horizontal: Dimensions.get('window').width
+          },
+
+          // cardShadowEnabled: false,
+          // cardOverlayEnabled: false,
+          // cardStyle: { backgroundColor: 'transparent' },
+          // transitionSpec: {
+          //   duration: 300,
+          //   easing: Easing.out(Easing.poly(4)),
+          //   timing: Animated.timing,
+          //   useNativeDriver: true
+          // },
+          transitionSpec: { open: timingAnim, close: timingAnim }
+          // screenInterpolator: sceneProps => {
+          //   const { layout, position, scene } = sceneProps;
+          //   const { index } = scene;
+
+          //   const width = layout.initWidth;
+          //   const translateX = position.interpolate({
+          //     inputRange: [index - 1, index, index + 1],
+          //     outputRange: [width, 0, 0]
+          //   });
+
+          //   const opacity = position.interpolate({
+          //     inputRange: [index - 1, index - 0.99, index],
+          //     outputRange: [0, 1, 1]
+          //   });
+
+          //   return { opacity, transform: [{ translateX }] };
+          // }
+        }}
+      >
+        {/* onboard */}
+        <Stack.Screen name='LOADPAGE' component={LoadPage} />
+        <Stack.Screen name='LOGIN' component={Login} />
+        <Stack.Screen name='MEMBERSHIPEXPIRED' component={MembershipExpired} />
+        <Stack.Screen name='LOGINCREDENTIALS' component={LoginCredentials} />
+        <Stack.Screen name='SUPPORTSIGNUP' component={SupportSignUp} />
+        <Stack.Screen name='FORGOTPASSWORD' component={ForgotPassword} />
+        <Stack.Screen name='CREATEACCOUNT2' component={CreateAccount2} />
+        <Stack.Screen
+          name='CREATEACCOUNT3'
+          component={CreateAccount3}
+          options={{
+            gestureEnabled: false
+          }}
+        />
+        <Stack.Screen name='CREATEACCOUNT' component={CreateAccount} />
+        <Stack.Screen name='NEWMEMBERSHIP' component={NewMembership} />
+        <Stack.Screen name='GETRESTARTED' component={GetRestarted} />
+        <Stack.Screen name='WELCOMEBACK' component={WelcomeBack} />
+        <Stack.Screen name='RESETPASSWORD' component={ResetPassword} />
+        {/* user */}
+        <Stack.Screen
+          name='NOTIFICATIONSETTINGS'
+          component={NotificationSettings}
+        />
+        <Stack.Screen
+          name='PROFILESETTINGS'
+          component={ProfileSettings}
+          options={{
+            gestureEnabled: false
+          }}
+        />
+        <Stack.Screen name='PRIVACYPOLICY' component={PrivacyPolicy} />
+        <Stack.Screen name='SETTINGS' component={Settings} />
+        <Stack.Screen name='PROFILE' component={Profile} />
+        <Stack.Screen name='SUPPORT' component={Support} />
+        <Stack.Screen name='TERMS' component={Terms} />
+        {/* content */}
+        <Stack.Screen
+          name='STUDENTFOCUSCATALOG'
+          component={StudentFocusCatalog}
+        />
+        <Stack.Screen name='STUDENTFOCUSSHOW' component={StudentFocusShow} />
+        <Stack.Screen name='VIDEOPLAYERSONG' component={VideoPlayerSong} />
+        <Stack.Screen name='METHODLEVEL' component={MethodLevel} />
+        <Stack.Screen name='METHOD' component={Method} />
+        <Stack.Screen name='FOUNDATIONS' component={Foundations} />
+        <Stack.Screen name='PATHOVERVIEW' component={PathOverview} />
+        <Stack.Screen name='SONGCATALOG' component={SongCatalog} />
+        <Stack.Screen
+          name='VIDEOPLAYER'
+          component={VideoPlayer}
+          options={{
+            gestureEnabled: false
+          }}
+        />
+        <Stack.Screen name='SINGLEPACK' component={SinglePack} />
+        <Stack.Screen name='DOWNLOADS' component={Downloads} />
+        <Stack.Screen name='LESSONS' component={Lessons} />
+        <Stack.Screen name='SEEALL' component={SeeAll} />
+        <Stack.Screen name='COURSE' component={Course} />
+        <Stack.Screen name='MYLIST' component={MyList} />
+        <Stack.Screen name='SEARCH' component={Search} />
+        <Stack.Screen name='PACKS' component={Packs} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  </NetworkProvider>
 );
-
-export default createAppContainer(AppNavigator);

@@ -25,9 +25,9 @@ import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import { signUp, getUserData } from '../../services/UserDataAuth';
 import { NetworkContext } from '../../context/NetworkProvider';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
+import { goBack, navigate } from '../../../AppNavigator';
 
 export default class CreateAccount extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -36,7 +36,7 @@ export default class CreateAccount extends React.Component {
       showPassword: true,
       password: '',
       confirmPassword: '',
-      email: this.props.navigation.state.params.email,
+      email: this.props.route?.params?.email,
       scrollViewContentFlex: { flex: 1 }
     };
   }
@@ -47,13 +47,13 @@ export default class CreateAccount extends React.Component {
     }
     if (this.state.password == this.state.confirmPassword) {
       if (this.state.password.length > 7) {
-        if (this.props.navigation.state.params?.purchase) {
+        if (this.props.route?.params?.purchase) {
           let response = await signUp(
             this.state.email,
             this.state.password,
-            this.props.navigation.state.params?.purchase,
+            this.props.route?.params?.purchase,
             null,
-            this.props.navigation.state.params?.purchase
+            this.props.route?.params?.purchase
           );
           console.log(response);
           if (response.meta) {
@@ -74,14 +74,14 @@ export default class CreateAccount extends React.Component {
               new Date(userData.expirationDate).getTime() / 1000;
             console.log(currentDate, userExpDate);
             if (userData.isLifetime || currentDate < userExpDate) {
-              this.props.navigation.navigate('CREATEACCOUNT3', {
+              navigate('CREATEACCOUNT3', {
                 data: {
                   email: this.state.email,
                   password: this.state.password
                 }
               });
             } else {
-              this.props.navigation.navigate('MEMBERSHIPEXPIRED', {
+              navigate('MEMBERSHIPEXPIRED', {
                 email: this.state.email,
                 password: this.state.password
               });
@@ -93,7 +93,7 @@ export default class CreateAccount extends React.Component {
             });
           }
         } else {
-          this.props.navigation.navigate('NEWMEMBERSHIP', {
+          navigate('NEWMEMBERSHIP', {
             data: {
               type: 'SIGNUP',
               email: this.state.email,
@@ -128,7 +128,7 @@ export default class CreateAccount extends React.Component {
             behavior={`${isiOS ? 'padding' : ''}`}
           >
             <TouchableOpacity
-              onPress={() => this.props.navigation.goBack()}
+              onPress={() => goBack()}
               style={localStyles.createAccountContainer}
             >
               <Back

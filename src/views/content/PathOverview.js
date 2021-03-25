@@ -41,6 +41,7 @@ import methodService from '../../services/method.service';
 import foundationsService from '../../services/foundations.service';
 import NextVideo from '../../components/NextVideo';
 import { ScrollView } from 'react-native-gesture-handler';
+import { goBack, navigate } from '../../../AppNavigator';
 
 let greaterWDim;
 const windowDim = Dimensions.get('window');
@@ -49,25 +50,25 @@ const width =
 
 export default class PathOverview extends React.Component {
   static contextType = NetworkContext;
-  static navigationOptions = { header: null };
+
   constructor(props) {
     super(props);
     this.state = {
-      data: this.props.navigation.state.params.data,
-      items: this.props.navigation.state.params.items || [],
-      isAddedToList: this.props.navigation.state.params.data?.isAddedToList,
-      thumbnail: this.props.navigation.state.params.data?.thumbnail,
+      data: this.props.route?.params?.data,
+      items: this.props.route?.params?.items || [],
+      isAddedToList: this.props.route?.params?.data?.isAddedToList,
+      thumbnail: this.props.route?.params?.data?.thumbnail,
       artist:
-        typeof this.props.navigation.state.params.data?.artist == 'object'
-          ? this.props.navigation.state.params.data?.artist.join(', ')
-          : this.props.navigation.state.params.data?.artist,
-      isMethod: this.props.navigation.state.params.isMethod,
-      isFoundations: this.props.navigation.state.params.isFoundations,
-      xp: this.props.navigation.state.params.data.total_xp,
-      started: this.props.navigation.state.params.data.started,
-      completed: this.props.navigation.state.params.data.completed,
-      nextLesson: this.props.navigation.state.params.data.next_lesson,
-      difficulty: this.props.navigation.state.params.data.difficulty,
+        typeof this.props.route?.params?.data?.artist == 'object'
+          ? this.props.route?.params?.data?.artist.join(', ')
+          : this.props.route?.params?.data?.artist,
+      isMethod: this.props.route?.params?.isMethod,
+      isFoundations: this.props.route?.params?.isFoundations,
+      xp: this.props.route?.params?.data.total_xp,
+      started: this.props.route?.params?.data.started,
+      completed: this.props.route?.params?.data.completed,
+      nextLesson: this.props.route?.params?.data.next_lesson,
+      difficulty: this.props.route?.params?.data.difficulty,
       type: '',
       showInfo: false,
       totalLength: 0,
@@ -75,9 +76,7 @@ export default class PathOverview extends React.Component {
       likeCount: 0,
       showRestartCourse: false,
       progress: 0,
-      isLoadingAll: this.props.navigation.state.params.items?.length
-        ? false
-        : true,
+      isLoadingAll: this.props.route?.params?.items?.length ? false : true,
       refreshing: false,
       levelNum: 0,
       bannerNextLessonUrl: '',
@@ -264,12 +263,12 @@ export default class PathOverview extends React.Component {
   goToLesson(lesson) {
     if (lesson) {
       if (this.state.isMethod) {
-        return this.props.navigation.navigate('VIDEOPLAYER', {
+        return navigate('VIDEOPLAYER', {
           url: lesson,
           parentId: this.state.data?.id
         });
       }
-      return this.props.navigation.navigate('VIDEOPLAYER', {
+      return navigate('VIDEOPLAYER', {
         id: lesson,
         parentId: this.state.data?.id
       });
@@ -300,9 +299,7 @@ export default class PathOverview extends React.Component {
           }}
         >
           <TouchableOpacity
-            onPress={() => {
-              this.props.navigation.goBack();
-            }}
+            onPress={() => goBack()}
             style={[
               styles.centerContent,
               {

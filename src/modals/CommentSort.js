@@ -4,7 +4,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { withNavigation } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 const sortOptions = [
@@ -13,8 +12,8 @@ const sortOptions = [
   { title: 'Newest First', option: 'Newest' },
   { title: 'Oldest First', option: 'Oldest' }
 ];
-class CommentSort extends React.Component {
-  static navigationOptions = { header: null };
+
+export default class CommentSort extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -105,5 +104,3 @@ class CommentSort extends React.Component {
     );
   };
 }
-
-export default withNavigation(CommentSort);

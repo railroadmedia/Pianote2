@@ -22,6 +22,7 @@ import { validateSignUp, restorePurchase } from '../../services/UserDataAuth';
 import CustomModal from '../../modals/CustomModal';
 import Loading from '../../components/Loading';
 import Orientation from 'react-native-orientation-locker';
+import { navigate } from '../../../AppNavigator.js';
 
 const isNotch = DeviceInfo.hasNotch();
 const windowDim = Dimensions.get('window');
@@ -35,7 +36,6 @@ const skus = Platform.select({
 let purchases = [];
 
 export default class Login extends React.Component {
-  static navigationOptions = { header: null };
   constructor(props) {
     super(props);
     Orientation.lockToPortrait();
@@ -61,7 +61,7 @@ export default class Login extends React.Component {
   }
 
   onLogin = () => {
-    this.props.navigation.navigate('LOGINCREDENTIALS');
+    navigate('LOGINCREDENTIALS');
   };
 
   iapInitialized = async () => {
@@ -143,7 +143,7 @@ export default class Login extends React.Component {
           restoreResponse.message
         );
       if (restoreResponse.email)
-        return this.props.navigation.navigate('LOGINCREDENTIALS', {
+        return navigate('LOGINCREDENTIALS', {
           email: restoreResponse.email
         });
       if (
@@ -157,7 +157,7 @@ export default class Login extends React.Component {
         ]);
         purchase.price = product[0].price;
         purchase.currency = product[0].currency;
-        return this.props.navigation.navigate('CREATEACCOUNT', {
+        return navigate('CREATEACCOUNT', {
           purchase
         });
       }
@@ -213,8 +213,7 @@ export default class Login extends React.Component {
 
       <TouchableOpacity
         onPress={async () => {
-          if (await this.userCanSignUp())
-            return this.props.navigation.navigate('CREATEACCOUNT');
+          if (await this.userCanSignUp()) return navigate('CREATEACCOUNT');
         }}
         style={{
           flex: 1,

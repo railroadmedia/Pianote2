@@ -3,11 +3,10 @@
  */
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { withNavigation } from 'react-navigation';
+
 import Icon from 'react-native-vector-icons/Entypo';
 
-class StartIcon extends React.Component {
-  static navigationOptions = { header: null };
+export default class StartIcon extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -80,5 +79,3 @@ class StartIcon extends React.Component {
     );
   };
 }
-
-export default withNavigation(StartIcon);

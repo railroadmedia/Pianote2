@@ -9,7 +9,7 @@ import {
   RefreshControl,
   ActivityIndicator,
   Dimensions,
-  ImageBackground,
+  ImageBackground
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -34,7 +34,7 @@ import { getStartedContent, getAllContent } from '../../services/GetContent';
 import RestartCourse from '../../modals/RestartCourse';
 import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 import { NetworkContext } from '../../context/NetworkProvider';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -51,7 +51,6 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 };
 
 class Lessons extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -104,15 +103,12 @@ class Lessons extends React.Component {
 
     this.getContent();
     messaging().requestPermission();
-    this.willFocusSubscription = this.props.navigation.addListener(
-      'willFocus',
-      () =>
-        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
-    );
+    this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   };
 
   componentWillUnmount() {
-    this.willFocusSubscription.remove();
+    this.refreshOnFocusListener?.();
+
     Orientation.removeDeviceOrientationListener(this.orientationListener);
   }
 
@@ -302,9 +298,9 @@ class Lessons extends React.Component {
           return newContent.getField('instructor').fields[0].value;
         } else {
           return newContent.getField('instructor').name;
-        }  
+        }
       } catch (error) {
-        return '' 
+        return '';
       }
     }
   };
@@ -482,7 +478,7 @@ class Lessons extends React.Component {
                             return this.context.showNoConnectionAlert();
                           }
                           if (this.state.methodNextLessonUrl)
-                            this.props.navigation.navigate('VIDEOPLAYER', {
+                            navigate('VIDEOPLAYER', {
                               url: this.state.methodNextLessonUrl
                             });
                         }}
@@ -494,7 +490,7 @@ class Lessons extends React.Component {
                             return this.context.showNoConnectionAlert();
                           }
                           if (this.state.methodNextLessonUrl)
-                            this.props.navigation.navigate('VIDEOPLAYER', {
+                            navigate('VIDEOPLAYER', {
                               url: this.state.methodNextLessonUrl
                             });
                         }}
@@ -509,7 +505,7 @@ class Lessons extends React.Component {
                   >
                     <MoreInfoIcon
                       pressed={() => {
-                        this.props.navigation.navigate('METHOD', {
+                        navigate('METHOD', {
                           methodIsStarted: this.state.methodIsStarted,
                           methodIsCompleted: this.state.methodIsCompleted
                         });
@@ -527,7 +523,7 @@ class Lessons extends React.Component {
                   isMethod={true}
                   Title={'IN PROGRESS'}
                   seeAll={() =>
-                    this.props.navigation.navigate('SEEALL', {
+                    navigate('SEEALL', {
                       title: 'Continue',
                       parent: 'Lessons'
                     })
@@ -544,7 +540,7 @@ class Lessons extends React.Component {
                   Title={'ALL LESSONS'}
                   showType={true}
                   seeAll={() =>
-                    this.props.navigation.navigate('SEEALL', {
+                    navigate('SEEALL', {
                       title: 'All Lessons',
                       parent: 'Lessons'
                     })

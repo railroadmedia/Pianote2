@@ -10,19 +10,12 @@ import {
   StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { withNavigation } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
-import { NavigationActions, StackActions } from 'react-navigation';
 import Intercom from 'react-native-intercom';
 import { logOut } from '../services/UserDataAuth';
+import { reset } from '../../AppNavigator';
 
-const resetAction = StackActions.reset({
-  index: 0,
-  actions: [NavigationActions.navigate({ routeName: 'LOGIN' })]
-});
-
-class LogOut extends React.Component {
-  static navigationOptions = { header: null };
+export default class LogOut extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -35,7 +28,7 @@ class LogOut extends React.Component {
     Intercom.logout();
     await AsyncStorage.clear();
     await AsyncStorage.setItem('loggedIn', 'false');
-    await this.props.navigation.dispatch(resetAction);
+    reset('LOGIN');
     this.props.onLogout?.();
   };
 
@@ -114,5 +107,3 @@ const localStyles = StyleSheet.create({
     fontSize: DeviceInfo.isTablet() ? 16 : 12
   }
 });
-
-export default withNavigation(LogOut);

@@ -20,7 +20,6 @@ import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import ImagePicker from 'react-native-image-picker';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import { NavigationActions, StackActions } from 'react-navigation';
 
 import X from 'Pianote2/src/assets/img/svgs/X.svg';
 import Back from '../../assets/img/svgs/back';
@@ -35,13 +34,9 @@ import commonService from '../../services/common.service.js';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import Orientation from 'react-native-orientation-locker';
 import Loading from '../../components/Loading';
+import { reset } from '../../../AppNavigator';
 
 var data = new FormData();
-
-const resetAction = StackActions.reset({
-  index: 0,
-  actions: [NavigationActions.navigate({ routeName: 'LOADPAGE' })]
-});
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -50,7 +45,6 @@ const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 
 export default class CreateAccount3 extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -65,8 +59,8 @@ export default class CreateAccount3 extends React.Component {
       pageNum: 0,
       displayName: '',
       imageURI: '',
-      email: this.props.navigation.state.params.email,
-      password: this.props.navigation.state.params.password
+      email: this.props.route?.params?.email,
+      password: this.props.route?.params?.password
     };
   }
 
@@ -221,7 +215,7 @@ export default class CreateAccount3 extends React.Component {
             );
 
             // send to loadpage to update asyncstorage with new data
-            await this.props.navigation.dispatch(resetAction);
+            reset('LOADPAGE');
           } catch (e) {}
         } else {
           await commonService.tryCall(
@@ -234,7 +228,7 @@ export default class CreateAccount3 extends React.Component {
           );
 
           // send to loadpage to update asyncstorage with new data
-          await this.props.navigation.dispatch(resetAction);
+          reset('LOADPAGE');
         }
         this.loadingRef?.toggleLoading();
       } catch (e) {

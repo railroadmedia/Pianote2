@@ -9,7 +9,7 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
+
 import { BlurView } from '@react-native-community/blur';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 
@@ -20,8 +20,7 @@ const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
-class AssignmentComplete extends React.Component {
-  static navigationOptions = { header: null };
+export default class AssignmentComplete extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -91,5 +90,3 @@ const localStyles = StyleSheet.create({
     marginHorizontal: 20
   }
 });
-
-export default withNavigation(AssignmentComplete);
