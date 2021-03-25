@@ -41,6 +41,14 @@ const navigationOptions = [
   {
     title: 'Quick Tips',
     navigator: 'STUDENTFOCUSSHOW'
+  },
+  {
+    title: 'Live',
+    navigator: 'SEEALL'
+  },
+  {
+    title: 'Schedule',
+    navigator: 'SEEALL'
   }
 ];
 
@@ -88,6 +96,16 @@ class NavigationMenu extends React.Component {
               } else if (nav.title === 'Podcasts') {
                 this.props.navigation.navigate(nav.navigator, {
                   type: 'podcasts'
+                });
+              } else if (nav.title === 'Live') {
+                this.props.navigation.navigate(nav.navigator, {
+                  title: nav.title,
+                  parent: 'Lessons'
+                });
+              } else if (nav.title === 'Schedule') {
+                this.props.navigation.navigate(nav.navigator, {
+                  title: nav.title,
+                  parent: 'Lessons'
                 });
               } else {
                 this.props.navigation.navigate(nav.navigator);
