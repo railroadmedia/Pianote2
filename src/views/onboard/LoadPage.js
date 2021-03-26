@@ -30,7 +30,7 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import RNFetchBlob from 'rn-fetch-blob';
 import commonService from '../../services/common.service';
 import navigationService from '../../services/navigation.service';
-import { navigate, reset } from '../../../AppNavigator';
+import { currentScene, navigate, reset } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -61,10 +61,10 @@ class LoadPage extends React.Component {
   }
 
   async componentDidMount() {
-    Download_V2.resumeAll().then(async () => {
+    Download_V2.resumeAll()?.then(async () => {
       this.loadCache();
       await SplashScreen.hide();
-
+      console.log('current', currentScene());
       let data = (
         await AsyncStorage.multiGet([
           'loggedIn',
@@ -148,12 +148,14 @@ class LoadPage extends React.Component {
 
   loadCache = () => {
     let { dirs } = RNFetchBlob.fs;
-    cache.map(c =>
-      RNFetchBlob.fs
-        .readFile(`${dirs.LibraryDir || dirs.DocumentDir}/${c}`, 'utf8')
-        .then(stream => this.props[c]?.(JSON.parse(stream)))
-        .catch(() => {})
-    );
+    cache.map(c => {
+      try {
+        RNFetchBlob.fs
+          .readFile(`${dirs.LibraryDir || dirs.DocumentDir}/${c}`, 'utf8')
+          .then(stream => this.props[c]?.(JSON.parse(stream)))
+          .catch(() => {});
+      } catch (e) {}
+    });
   };
 
   async handleNoConnection() {

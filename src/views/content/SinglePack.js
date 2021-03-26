@@ -38,7 +38,7 @@ import {
 } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 import Resources from 'Pianote2/src/assets/img/svgs/resources';
-import { goBack, navigate } from '../../../AppNavigator';
+import { goBack, navigate, push } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -142,6 +142,10 @@ export default class SinglePack extends React.Component {
         isLoadingAll: false,
         refreshing: false,
         resources: newContent.post.resources
+          ? Object.keys(newContent.post.resources).map(key => {
+              return newContent.post.resources[key];
+            })
+          : null
       },
       () => {
         if (this.state.resources) this.createResourcesArr();
@@ -153,7 +157,7 @@ export default class SinglePack extends React.Component {
     const { resources } = this.state;
     const extensions = ['mp3', 'pdf', 'zip'];
 
-    resources.forEach(resource => {
+    resources?.forEach(resource => {
       let extension = this.decideExtension(resource.resource_url);
       resource.extension = extension;
       if (!extensions.includes(extension)) {
@@ -228,7 +232,7 @@ export default class SinglePack extends React.Component {
         url: row.mobile_app_url
       });
     } else {
-      navigate('SINGLEPACK', {
+      push('SINGLEPACK', {
         url: row.mobile_app_url
       });
     }

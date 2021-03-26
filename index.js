@@ -13,7 +13,7 @@ import { name as appName } from './app.json';
 import DeviceInfo from 'react-native-device-info';
 
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
-var PushNotification = require('react-native-push-notification');
+import PushNotification from 'react-native-push-notification';
 
 import {
   localNotification,
@@ -23,14 +23,8 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import { navigate, reset } from './AppNavigator';
 
-localNotification();
 PushNotification.configure({
-  onRegister: function () {
-    PushNotification.createChannel({
-      channelId: 'pianote-app-chanel',
-      channelName: 'pianote-app-chanel'
-    });
-  },
+  onRegister: () => {},
   requestPermissions: false,
   popInitialNotification: true,
   permissions: { alert: true, sound: true },
@@ -65,6 +59,8 @@ PushNotification.configure({
           if (uri.includes('members/learning-paths/pianote-method'))
             navigate('METHOD', {});
         } else if (commentId || mobile_app_url) {
+          // global.notifNavigation = true;
+
           navigate('VIDEOPLAYER', {
             commentId,
             url: mobile_app_url
@@ -89,9 +85,15 @@ PushNotification.configure({
     }
   }
 });
+PushNotification.createChannel({
+  channelId: 'pianote-app-channel',
+  channelName: 'pianote-app-channel',
+  channelDescription: 'Pianote app channel'
+});
+localNotification();
 
 AppRegistry.registerComponent(appName, () => App);
-LogBox.ignoreAllLogs(true);
+LogBox.ignoreLogs(['Require cycle:', 'Remote debugger']);
 global.fullWidth = Dimensions.get('window').width;
 global.fullHeight = Dimensions.get('window').height;
 global.token = '';

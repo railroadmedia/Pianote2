@@ -49,7 +49,7 @@ class StudentFocusShow extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      thumbnailUrl: props.navigation.state.params.thumbnailUrl,
+      thumbnailUrl: props.route?.params?.thumbnailUrl,
       allLessons: [],
       currentSort: 'newest',
       page: 1,
@@ -59,7 +59,7 @@ class StudentFocusShow extends React.Component {
       isPaging: false, // scrolling more
       filtering: false, // filtering
       ...this.initialValidData(
-        props.navigation.state.params.type == 'quick-tips'
+        props.route?.params?.type == 'quick-tips'
           ? props.quickTipsCache
           : props.podcastsCache,
         true

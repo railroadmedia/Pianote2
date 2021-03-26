@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { Animated, Dimensions, Easing } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 // content
@@ -62,6 +62,10 @@ export function reset(name, params) {
     index: 0,
     routes: [{ name, params }]
   });
+}
+
+export function push(...args) {
+  navigationRef.current?.dispatch(StackActions.push(...args));
 }
 
 export function currentScene() {

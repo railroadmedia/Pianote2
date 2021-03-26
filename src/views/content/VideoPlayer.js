@@ -154,7 +154,7 @@ export default class VideoPlayer extends React.Component {
         result = await contentService.getContent(this.state.id);
       }
       if (result.title && result.message) {
-        return this.alert.toggle(result.title, result.message);
+        return this.alert?.toggle(result.title, result.message);
       }
       content = result;
       this.allCommentsNum = result.total_comments;
@@ -315,14 +315,14 @@ export default class VideoPlayer extends React.Component {
       async () => {
         if (this.state.resources) this.createResourcesArr();
         if (!this.state.video_playback_endpoints && !this.state.youtubeId) {
-          this.alert.toggle(
+          this.alert?.toggle(
             `We're sorry, there was an issue loading this video, try reloading the lesson.`,
             `If the problem persists please contact support.`
           );
         }
         const { comment, commentId } = this.props.route?.params;
         if (comment)
-          this.replies.toggle(() =>
+          this.replies?.toggle(() =>
             this.setState({ selectedComment: comment })
           );
         else if (commentId) {
@@ -331,7 +331,7 @@ export default class VideoPlayer extends React.Component {
           ).data;
           const selectedComment = comments?.find(f => f.id == commentId);
           if (selectedComment)
-            this.replies.toggle(() => this.setState({ selectedComment }));
+            this.replies?.toggle(() => this.setState({ selectedComment }));
         }
       }
     );
@@ -615,7 +615,7 @@ export default class VideoPlayer extends React.Component {
                     marginLeft: -2.5
                   }}
                   onPress={() =>
-                    this.replies.toggle(() =>
+                    this.replies?.toggle(() =>
                       this.setState({ selectedComment: item })
                     )
                   }
@@ -666,7 +666,7 @@ export default class VideoPlayer extends React.Component {
           {item.replies?.length !== 0 && (
             <TouchableOpacity
               onPress={() =>
-                this.replies.toggle(() =>
+                this.replies?.toggle(() =>
                   this.setState({ selectedComment: item })
                 )
               }
@@ -1554,7 +1554,7 @@ export default class VideoPlayer extends React.Component {
                     comments: comments.filter(c => c.id !== id)
                   }),
                   () =>
-                    this.replies.toggle(() =>
+                    this.replies?.toggle(() =>
                       this.setState({ selectedComment: undefined })
                     )
                 );
@@ -1620,7 +1620,7 @@ export default class VideoPlayer extends React.Component {
                   this.setState({ selectedComment: undefined })
                 )
               }
-              onRef={r => (this.replies = r)}
+              ref={r => (this.replies = r)}
               comment={this.state.selectedComment}
               me={{
                 userId: this.userId,
@@ -1960,7 +1960,7 @@ export default class VideoPlayer extends React.Component {
             <TouchableOpacity
               onPress={() => {
                 this.refresh();
-                this.alert.toggle();
+                this.alert?.toggle();
               }}
               style={{
                 marginTop: 10,
