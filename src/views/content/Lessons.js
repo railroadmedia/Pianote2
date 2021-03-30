@@ -81,7 +81,6 @@ class Lessons extends React.Component {
   }
 
   componentDidMount = () => {
-    console.log('hermes: ', global.HermesInternal)
     Orientation.addDeviceOrientationListener(this.orientationListener);
     AsyncStorage.multiGet([
       'totalXP',
