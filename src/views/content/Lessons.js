@@ -39,9 +39,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
+
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
   return (
@@ -73,7 +71,7 @@ class Lessons extends React.Component {
       methodIsCompleted: false,
       methodNextLessonUrl: null,
       showRestartCourse: false,
-      lessonsStarted: true, // for showing continue lessons horizontal list
+      lessonsStarted: true,
       refreshing: !lessonsCache,
       refreshControl: true,
       isLandscape:
@@ -83,6 +81,7 @@ class Lessons extends React.Component {
   }
 
   componentDidMount = () => {
+    console.log('hermes: ', global.HermesInternal)
     Orientation.addDeviceOrientationListener(this.orientationListener);
     AsyncStorage.multiGet([
       'totalXP',
