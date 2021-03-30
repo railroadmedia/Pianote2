@@ -26,7 +26,6 @@ export default class Support extends React.Component {
 
   componentDidMount = async () => {
     const userData = await getUserData();
-    console.log(userData);
     await Intercom.registerIdentifiedUser({
       userId: 'musora_' + userData.id.toString()
     });

@@ -54,21 +54,21 @@ export default class PathOverview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: this.props.route?.params?.data,
-      items: this.props.route?.params?.items || [],
-      isAddedToList: this.props.route?.params?.data?.isAddedToList,
-      thumbnail: this.props.route?.params?.data?.thumbnail,
+      data: props.route?.params?.data,
+      items: props.route?.params?.items || [],
+      isAddedToList: props.route?.params?.data?.isAddedToList,
+      thumbnail: props.route?.params?.data?.thumbnail,
       artist:
-        typeof this.props.route?.params?.data?.artist == 'object'
-          ? this.props.route?.params?.data?.artist.join(', ')
-          : this.props.route?.params?.data?.artist,
-      isMethod: this.props.route?.params?.isMethod,
-      isFoundations: this.props.route?.params?.isFoundations,
-      xp: this.props.route?.params?.data.total_xp,
-      started: this.props.route?.params?.data.started,
-      completed: this.props.route?.params?.data.completed,
-      nextLesson: this.props.route?.params?.data.next_lesson,
-      difficulty: this.props.route?.params?.data.difficulty,
+        typeof props.route?.params?.data?.artist == 'object'
+          ? props.route?.params?.data?.artist.join(', ')
+          : props.route?.params?.data?.artist,
+      isMethod: props.route?.params?.isMethod,
+      isFoundations: props.route?.params?.isFoundations,
+      xp: props.route?.params?.data?.total_xp,
+      started: props.route?.params?.data?.started,
+      completed: props.route?.params?.data?.completed,
+      nextLesson: props.route?.params?.data?.next_lesson,
+      difficulty: props.route?.params?.data?.difficulty,
       type: '',
       showInfo: false,
       totalLength: 0,
@@ -76,7 +76,7 @@ export default class PathOverview extends React.Component {
       likeCount: 0,
       showRestartCourse: false,
       progress: 0,
-      isLoadingAll: this.props.route?.params?.items?.length ? false : true,
+      isLoadingAll: props.route?.params?.items?.length ? false : true,
       refreshing: false,
       levelNum: 0,
       bannerNextLessonUrl: '',
@@ -109,7 +109,7 @@ export default class PathOverview extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     let res;
-    if (this.state.foundations) {
+    if (this.state.isFoundations) {
       res = await foundationsService.getUnit(this.state.data.mobile_app_url);
     } else if (this.state.isMethod) {
       res = await methodService.getMethodContent(
@@ -287,7 +287,7 @@ export default class PathOverview extends React.Component {
             resizeMode: 'cover'
           }}
           source={{
-            uri: thumbnail.includes('https')
+            uri: thumbnail?.includes('https')
               ? `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
                   width
                 )},ar_${this.getAspectRatio()},${
@@ -744,7 +744,7 @@ export default class PathOverview extends React.Component {
                     aspectRatio: 16 / 9
                   }}
                   source={{
-                    uri: item.thumbnail.includes('https')
+                    uri: item.thumbnail?.includes('https')
                       ? `https://cdn.musora.com/image/fetch/w_${Math.round(
                           width
                         )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${

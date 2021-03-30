@@ -22,8 +22,8 @@ export default class MembershipExpired extends React.Component {
     super(props);
 
     this.state = {
-      email: this.props.route?.params?.email,
-      password: this.props.route?.params?.password
+      email: props.route?.params?.email,
+      password: props.route?.params?.password
     };
   }
 

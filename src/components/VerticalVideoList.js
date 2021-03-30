@@ -213,8 +213,7 @@ export default class VerticalVideoList extends React.Component {
       case 'unit':
         return navigate('PATHOVERVIEW', {
           data: content,
-          isFoundations: true,
-          isMethod: true
+          isFoundations: true
         });
       case 'learning-path-lesson':
         return navigate('VIDEOPLAYER', {

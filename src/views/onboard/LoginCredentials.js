@@ -39,8 +39,6 @@ import GradientFeature from '../../components/GradientFeature';
 import CustomModal from '../../modals/CustomModal.js';
 import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
 import { NetworkContext } from '../../context/NetworkProvider';
-import commonService from '../../services/common.service';
-import navigationService from '../../services/navigation.service';
 import { goBack, navigate, reset } from '../../../AppNavigator';
 
 export default class LoginCredentials extends React.Component {
@@ -50,7 +48,7 @@ export default class LoginCredentials extends React.Component {
     if (onTablet) Orientation.unlockAllOrientations();
     else Orientation.lockToPortrait();
     this.state = {
-      email: props?.navigation?.state?.params?.email || '',
+      email: props.route?.params?.email || '',
       password: '',
       secureTextEntry: true,
       showPasswordEmailMatch: false,
@@ -125,7 +123,6 @@ export default class LoginCredentials extends React.Component {
         reset('PACKS');
       } else if (userData.isLifetime || userData.isMember) {
         // is logged in with valid membership
-        console.log('navigate to lesson LOGINCRED');
         reset('LESSONS');
       } else {
         // membership expired

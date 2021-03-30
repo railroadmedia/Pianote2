@@ -75,8 +75,8 @@ export default class VideoPlayer extends React.Component {
     this.limit = 10;
     this.allCommentsNum = 0;
     this.state = {
-      id: this.props.route?.params?.id,
-      url: this.props.route?.params?.url,
+      id: props.route?.params?.id,
+      url: props.route?.params?.url,
       commentId: '',
       commentSort: 'Popular',
       profileImage: '',

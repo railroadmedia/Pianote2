@@ -64,7 +64,7 @@ class LoadPage extends React.Component {
     Download_V2.resumeAll()?.then(async () => {
       this.loadCache();
       await SplashScreen.hide();
-      console.log('current', currentScene());
+
       let data = (
         await AsyncStorage.multiGet([
           'loggedIn',

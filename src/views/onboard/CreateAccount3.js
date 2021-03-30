@@ -59,8 +59,8 @@ export default class CreateAccount3 extends React.Component {
       pageNum: 0,
       displayName: '',
       imageURI: '',
-      email: this.props.route?.params?.email,
-      password: this.props.route?.params?.password
+      email: props.route?.params?.email,
+      password: props.route?.params?.password
     };
   }
 

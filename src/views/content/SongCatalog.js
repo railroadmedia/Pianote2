@@ -58,6 +58,10 @@ class SongCatalog extends React.Component {
   }
 
   componentDidMount() {
+    let deepFilters = decodeURIComponent(this.props.route?.params?.url).split(
+      '?'
+    )[1];
+    this.filterQuery = deepFilters && `&${deepFilters}`;
     this.getContent();
     this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   }

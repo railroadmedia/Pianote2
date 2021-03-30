@@ -50,8 +50,8 @@ export default class Method extends React.Component {
 
     this.state = {
       items: [],
-      methodIsStarted: this.props.route?.params.methodIsStarted,
-      methodIsCompleted: this.props.route?.params.methodIsCompleted,
+      methodIsStarted: props.route?.params.methodIsStarted,
+      methodIsCompleted: props.route?.params.methodIsCompleted,
       showRestartCourse: false,
       bannerNextLessonUrl: '',
       id: null,

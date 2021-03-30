@@ -6,7 +6,7 @@ import { Text, Linking, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Orientation from 'react-native-orientation-locker';
 import DeviceInfo from 'react-native-device-info';
-import AppNavigator from './AppNavigator';
+import AppNavigator, { reset } from './AppNavigator';
 
 import NavigationService from './src/services/navigation.service';
 

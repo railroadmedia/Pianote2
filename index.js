@@ -22,6 +22,8 @@ import {
 } from './src/services/notification.service';
 import AsyncStorage from '@react-native-community/async-storage';
 import { navigate, reset } from './AppNavigator';
+import navigationService from './src/services/navigation.service';
+import commonService from './src/services/common.service';
 
 PushNotification.configure({
   onRegister: () => {},
@@ -54,12 +56,10 @@ PushNotification.configure({
           global.loadedFromNotification = true;
           navigate('PROFILE');
         } else if (type === 'deeplink') {
-          global.notifNavigation = true;
-          reset('LESSONS');
-          if (uri.includes('members/learning-paths/pianote-method'))
-            navigate('METHOD', {});
+          commonService.urlToOpen = uri;
+          navigationService.decideWhereToRedirect();
         } else if (commentId || mobile_app_url) {
-          // global.notifNavigation = true;
+          global.notifNavigation = true;
 
           navigate('VIDEOPLAYER', {
             commentId,

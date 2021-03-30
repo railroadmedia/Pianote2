@@ -49,10 +49,10 @@ export default class NewMembership extends React.Component {
     super(props);
     Orientation.lockToPortrait();
     this.state = {
-      newUser: this.props.route?.params?.data.type,
-      email: this.props.route?.params?.data.email,
-      password: this.props.route?.params?.data.password,
-      token: this.props.route?.params?.data.token,
+      newUser: props.route?.params?.data.type,
+      email: props.route?.params?.data.email,
+      password: props.route?.params?.data.password,
+      token: props.route?.params?.data.token,
       isExpired: false,
       benefits: [
         'Pay nothing for 7 days.',

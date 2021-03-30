@@ -55,8 +55,8 @@ export default class SeeAll extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: this.props.route?.params?.title, // In Progress, Completed, Continue
-      parent: this.props.route?.params?.parent, // My List, Packs, Student Focus, Foundations, Courses
+      title: props.route?.params?.title, // In Progress, Completed, Continue
+      parent: props.route?.params?.parent, // My List, Packs, Student Focus, Foundations, Courses
       allLessons: [],
       currentSort: 'newest',
       page: 1,
@@ -69,6 +69,10 @@ export default class SeeAll extends React.Component {
   }
 
   componentDidMount() {
+    let deepFilters = decodeURIComponent(this.props.route?.params?.url).split(
+      '?'
+    )[1];
+    this.filterQuery = deepFilters && `&${deepFilters}`;
     this.getAllLessons();
   }
 

@@ -55,7 +55,7 @@ export default class SinglePack extends React.Component {
       videos: [],
       id: '',
       title: '',
-      url: this.props.route?.params?.url,
+      url: props.route?.params?.url,
       isAddedToList: false,
       description: '',
       thumbnail: '',

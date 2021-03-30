@@ -47,7 +47,7 @@ export default class MethodLevel extends React.Component {
     super(props);
     this.state = {
       items: [],
-      level: this.props.route?.params.level,
+      level: props.route?.params.level,
       id: null,
       isStarted: false,
       isCompleted: false,

@@ -54,6 +54,13 @@ export default class Search extends React.Component {
       numSearchResults: null,
       searchTerm: ''
     };
+    const url = props.route?.params?.url;
+    if (url && url.includes('term=')) {
+      let searchedText = url.substring(url.indexOf('term=') + 5, url.length);
+      searchedText = searchedText.split('+').join(' ');
+      this.state.searchTerm = searchedText;
+      this.search();
+    }
   }
 
   async componentDidMount() {
@@ -127,10 +134,11 @@ export default class Search extends React.Component {
   }
 
   search = async () => {
-    this.setState({ filtering: true });
-    if (!this.context.isConnected) {
+    if (this.context && !this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
+    this.setState({ filtering: true });
+
     let term = this.state.searchTerm;
     if (term.length > 0) {
       var isNewTerm = true;
