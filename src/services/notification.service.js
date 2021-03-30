@@ -38,7 +38,7 @@ export const localNotification = () => {
   messaging().onMessage(notification => {
     showNotification(notification);
   });
-  messaging().setBackgroundMessageHandler(notification => {
+  messaging().setBackgroundMessageHandler(async (notification) => {
     showNotification(notification);
   });
 };
