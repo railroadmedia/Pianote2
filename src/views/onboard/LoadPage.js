@@ -90,7 +90,7 @@ class LoadPage extends React.Component {
         // if no connection and logged in
       } else if (!loggedIn && !global.loadedFromNotification) {
         // if not logged in
-        if (resetKey) return reset('RESETPASSWORD');
+        if (resetKey) return reset('RESETPASSWORD', { resetKey, email });
         return reset('LOGIN');
       } else {
         // get token
@@ -112,7 +112,7 @@ class LoadPage extends React.Component {
             reset('PROFILE');
           } else if (resetKey) {
             // go to reset pass
-            reset('RESETPASSWORD');
+            reset('RESETPASSWORD', { resetKey, email });
           } else {
             if (forumUrl) {
               // if user got a forum related notification
@@ -141,7 +141,7 @@ class LoadPage extends React.Component {
           }
         } else if (!res.success || loggedIn == false || loggedIn == 'false') {
           // is not logged in
-          if (resetKey) return reset('RESETPASSWORD');
+          if (resetKey) return reset('RESETPASSWORD', { resetKey, email });
           return reset('LOGIN');
         }
       }

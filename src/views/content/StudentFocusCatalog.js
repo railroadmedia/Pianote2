@@ -22,7 +22,6 @@ import {
 } from '../../services/GetContent';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
-import NavigationMenu from '../../components/NavigationMenu';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
 import { NetworkContext } from '../../context/NetworkProvider';
 
@@ -192,7 +191,6 @@ class StudentFocusCatalog extends React.Component {
                           parent: 'Student Focus'
                         })
                       }
-                      hideSeeAll={false}
                       showType={true}
                       items={this.state.progressStudentFocus}
                     />

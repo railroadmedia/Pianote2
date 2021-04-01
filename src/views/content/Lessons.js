@@ -39,9 +39,7 @@ import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
+
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
   return (
@@ -72,7 +70,7 @@ class Lessons extends React.Component {
       methodIsCompleted: false,
       methodNextLessonUrl: null,
       showRestartCourse: false,
-      lessonsStarted: true, // for showing continue lessons horizontal list
+      lessonsStarted: true,
       refreshing: !lessonsCache,
       refreshControl: true,
       isLandscape:
@@ -521,6 +519,7 @@ class Lessons extends React.Component {
               </View>
             </ImageBackground>
             <View style={{ marginTop: paddingInset / 2 }}>
+
               {this.state.lessonsStarted && (
                 <HorizontalVideoList
                   hideFilterButton={true}
@@ -536,6 +535,24 @@ class Lessons extends React.Component {
                   items={this.state.progressLessons}
                 />
               )}
+              <View style={{ height: paddingInset / 2 }} />
+              {false && this.state.lessonsStarted && (
+                <HorizontalVideoList
+                  hideFilterButton={true}
+                  isLive={true}
+                  isMethod={true}
+                  Title={'LIVE'}
+                  seeAll={() =>
+                    this.props.navigation.navigate('SEEALL', {
+                      title: 'Continue',
+                      parent: 'Lessons'
+                    })
+                  }
+                  showType={false}
+                  hideSeeAll={true}
+                  items={this.state.progressLessons}
+                />
+              )}              
               <View style={{ height: paddingInset / 2 }} />
               {onTablet ? (
                 <HorizontalVideoList

@@ -43,9 +43,7 @@ export default class ResetPassword extends React.Component {
     }
     if (this.state.password == this.state.confirmPassword) {
       if (this.state.password.length > 7) {
-        let email = await AsyncStorage.getItem('email');
-        let resetKey = await AsyncStorage.getItem('resetKey');
-        console.log(email.replace('%40', '@'), this.state.password, resetKey);
+        const { email, resetKey } = this.props.route?.params;
         let res = await changePassword(
           email.replace('%40', '@'),
           this.state.password,

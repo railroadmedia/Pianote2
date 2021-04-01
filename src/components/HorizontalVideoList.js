@@ -13,6 +13,7 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import DeviceInfo from 'react-native-device-info';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
@@ -58,6 +59,7 @@ export default class HorizontalVideoList extends React.Component {
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
+
   componentDidMount() {
     Orientation.addOrientationListener(this._onOrientationDidChange);
   }
@@ -105,7 +107,9 @@ export default class HorizontalVideoList extends React.Component {
   };
 
   decideWidth() {
-    if (onTablet) {
+    if (this.props.isLive) {
+      return Dimensions.get('window').width - 20
+    } else if (onTablet) {
       if (this.props.isSquare) return 125;
       else return (Dimensions.get('window').width - 4 * paddingInset) / 3;
     } else {
@@ -298,6 +302,19 @@ export default class HorizontalVideoList extends React.Component {
     }
   };
 
+  secondsToHms(d) {
+    d = Number(d);
+    var h = Math.floor(d / 3600);
+    var m = Math.floor(d % 3600 / 60);
+    var s = Math.floor(d % 3600 % 60);
+
+    var hDisplay = h !== 0 && h + ' hour';
+    var mDisplay = m !== 0 && m + ' min';
+    var sDisplay = s !== 0 && s + ' sec';
+
+    return [hDisplay, mDisplay, sDisplay].filter(Boolean).join(" ");
+  }
+
   render = () => {
     return (
       <View style={{ marginLeft: paddingInset }}>
@@ -386,6 +403,7 @@ export default class HorizontalVideoList extends React.Component {
         {this.filters?.filterAppliedText}
         <FlatList
           numColumns={this.props.isTile ? 3 : 1}
+          scrollEnabled={!this.props.isLive}
           data={this.state.items}
           extraData={this.state}
           horizontal={this.props.isTile ? false : true}
@@ -415,7 +433,152 @@ export default class HorizontalVideoList extends React.Component {
             >
               <View style={{ width: '100%' }}>
                 <View style={[styles.centerContent, localStyles.progressItem]}>
-                  {item.isStarted ? (
+                  {this.props.isLive ? (
+                    <View 
+                      style={[
+                        styles.centerContent, {
+                        height: '100%',
+                        width: '100%',
+                        borderRadius: 10,
+                      }]}
+                    >
+                       <LinearGradient
+                        colors={[
+                          'transparent',
+                          'rgba(20, 20, 20, 0.7)',
+                          'rgba(0, 0, 0, 1)'
+                        ]}
+                        style={{
+                          borderRadius: 0,
+                          width: '100%',
+                          height: '100%',
+                          position: 'absolute',
+                          left: 0,
+                          bottom: 0
+                        }}
+                      />
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontFamily: 'OpenSans-Bold',
+                          position: 'absolute',
+                          fontSize: onTablet ? 16 : 12,
+                          left: 5,
+                          top: 10,
+                        }}
+                      >
+                        UPCOMING EVENT
+                      </Text>
+                      <Text>
+                        <View>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontFamily: 'OpenSans-Bold',
+                              fontSize: onTablet ? 60 : 40,
+                              textAlign: 'center',
+                            }}
+                          >
+                            02
+                          </Text>
+                          <Text
+                              style={{
+                                color: 'white',
+                                fontFamily: 'OpenSans-Bold',
+                                top: 0,
+                                textAlign: 'center'
+                              }}
+                            >
+                              HOURS
+                          </Text>
+                        </View>
+                        <View>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontFamily: 'OpenSans-Bold',
+                              fontSize: onTablet ? 60 : 40,
+                            }}
+                          > : </Text>
+                          <Text
+                              style={{
+                                color: 'white',
+                                fontFamily: 'OpenSans-Bold',
+                                top: 0,
+                                textAlign: 'center',
+                                color: 'transparent'
+                              }}
+                            >
+                              h
+                          </Text>
+                        </View>
+                        <View>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontFamily: 'OpenSans-Bold',
+                              fontSize: onTablet ? 60 : 40,
+                              textAlign: 'center',
+                            }}
+                          >
+                            42
+                          </Text>
+                          <Text
+                              style={{
+                                color: 'white',
+                                fontFamily: 'OpenSans-Bold',
+                                top: 0,
+                                textAlign: 'center'
+                              }}
+                            >
+                              MINUTES
+                          </Text>
+                        </View>
+                        <View>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontFamily: 'OpenSans-Bold',
+                              fontSize: onTablet ? 60 : 40,
+                            }}
+                          > : </Text>
+                          <Text
+                              style={{
+                                color: 'white',
+                                fontFamily: 'OpenSans-Bold',
+                                top: 0,
+                                textAlign: 'center',
+                                color: 'transparent',
+                              }}
+                            >
+                              h
+                          </Text>
+                        </View>
+                        <View>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontFamily: 'OpenSans-Bold',
+                              fontSize: onTablet ? 60 : 40,
+                              textAlign: 'center',
+                            }}
+                          >
+                            02
+                          </Text>
+                          <Text
+                              style={{
+                                color: 'white',
+                                fontFamily: 'OpenSans-Bold',
+                                top: 0,
+                                textAlign: 'center',
+                              }}
+                            >
+                              SECONDS
+                          </Text>
+                        </View>
+                      </Text>
+                    </View>
+                  ) : item.isStarted ? (
                     <Progress
                       height={onTablet ? 55 : 45}
                       width={onTablet ? 55 : 45}
@@ -480,7 +643,7 @@ export default class HorizontalVideoList extends React.Component {
                     ellipsizeMode='tail'
                     style={localStyles.videoTitleText}
                   >
-                    {item.title}
+                    {(this.props.isLive) ? 'Pianote Live Stream' : item.title}
                   </Text>
                   <View style={localStyles.typeContainer}>
                     <Text
@@ -500,7 +663,31 @@ export default class HorizontalVideoList extends React.Component {
                     </Text>
                   </View>
                 </View>
-                {new Date(item.publishedOn) > new Date() ? (
+                {this.props.isLive && (
+                  !item.isAddedToList ? (
+                  <TouchableOpacity
+                    onPress={() => this.addToMyList(item.id)}
+                    style={{ paddingRight: 2.5 }}
+                  >
+                    <AntIcon
+                      name={'plus'}
+                      size={sizing.myListButtonSize}
+                      color={colors.pianoteRed}
+                    />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={{ paddingRight: 2.5 }}
+                    onPress={() => this.removeFromMyList(item.id)}
+                  >
+                    <AntIcon
+                      name={'close'}
+                      size={sizing.myListButtonSize}
+                      color={colors.pianoteRed}
+                    />
+                  </TouchableOpacity>
+                ))}                
+                {(new Date(item.publishedOn) > new Date() || this.props.isLive) ? (
                   <TouchableOpacity
                     style={{ paddingRight: 5 }}
                     onPress={() => {

@@ -2,12 +2,23 @@
  * BlurredList
  */
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+  ScrollView
+} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NetworkContext } from '../context/NetworkProvider';
 import { navigate } from '../../AppNavigator';
+
+const windowDim = Dimensions.get('window');
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 
 const navigationOptions = [
   {
@@ -31,24 +42,28 @@ const navigationOptions = [
     navigator: 'SONGCATALOG'
   },
   {
+    title: 'Quick Tips',
+    navigator: 'STUDENTFOCUSSHOW'
+  },
+  {
     title: 'Student Focus',
     navigator: 'STUDENTFOCUSCATALOG'
   },
+  // {
+  //title: 'Live',
+  //navigator: 'SEEALL'
+  //},
+  //{
+  //    title: 'Schedule',
+  //  navigator: 'SEEALL'
+  //},
   {
     title: 'Podcasts',
     navigator: 'STUDENTFOCUSSHOW'
   },
   {
-    title: 'Quick Tips',
+    title: 'Bootcamps',
     navigator: 'STUDENTFOCUSSHOW'
-  },
-  {
-    title: 'Live',
-    navigator: 'SEEALL'
-  },
-  {
-    title: 'Schedule',
-    navigator: 'SEEALL'
   }
 ];
 
@@ -76,7 +91,7 @@ export default class NavigationMenu extends React.Component {
 
   lessonNav() {
     return (
-      <View style={{ flex: 1 }}>
+      <>
         {navigationOptions.map((nav, index) => (
           <TouchableOpacity
             key={index}
@@ -97,6 +112,10 @@ export default class NavigationMenu extends React.Component {
                 navigate(nav.navigator, {
                   type: 'podcasts'
                 });
+              } else if (nav.title === 'Bootcamps') {
+                this.props.navigation.navigate(nav.navigator, {
+                  type: 'boot-camps'
+                });
               } else if (nav.title === 'Live') {
                 navigate(nav.navigator, {
                   title: nav.title,
@@ -111,7 +130,12 @@ export default class NavigationMenu extends React.Component {
                 navigate(nav.navigator);
               }
             }}
-            style={{ flex: 1, alignSelf: 'center' }}
+            style={[
+              styles.centerContent,
+              {
+                height: height / 10
+              }
+            ]}
           >
             <Text
               style={{
@@ -141,7 +165,7 @@ export default class NavigationMenu extends React.Component {
             </Text>
           </TouchableOpacity>
         ))}
-      </View>
+      </>
     );
   }
 
@@ -157,7 +181,14 @@ export default class NavigationMenu extends React.Component {
           }
         ]}
       >
-        {this.lessonNav()}
+        <ScrollView
+          style={{
+            flex: 1,
+            maxHeight: (height / 10) * 7
+          }}
+        >
+          {this.lessonNav()}
+        </ScrollView>
         <View style={{ alignSelf: 'center' }}>
           <TouchableOpacity
             onPress={() => {
@@ -169,7 +200,7 @@ export default class NavigationMenu extends React.Component {
               {
                 height: onTablet ? 80 : 65,
                 width: onTablet ? 80 : 65,
-                marginBottom: 10,
+                marginTop: 10,
                 borderRadius: 500
               }
             ]}
