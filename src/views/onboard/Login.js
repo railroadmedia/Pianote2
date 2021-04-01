@@ -30,7 +30,7 @@ const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
 const skus = Platform.select({
-  android: ['pianote_app_1_month_member', 'pianote_app_1_year_member'],
+  android: ['pianote_app_1_year_2021', 'pianote_app_1_month_2021'],
   ios: ['pianote_app_1_month_membership', 'pianote_app_1_year_membership']
 });
 let purchases = [];
