@@ -42,7 +42,7 @@ const navigationOptions = [
     title: 'Student Focus',
     navigator: 'STUDENTFOCUSCATALOG'
   },
-   {
+  {
     title: 'Live',
     navigator: 'SEEALL'
   },
