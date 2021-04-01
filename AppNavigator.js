@@ -2,7 +2,7 @@
  *  Router
  */
 import React from 'react';
-import { Animated, Dimensions, Easing } from 'react-native';
+import { Dimensions, Easing } from 'react-native';
 import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
