@@ -536,7 +536,7 @@ class Lessons extends React.Component {
                 />
               )}
               <View style={{ height: paddingInset / 2 }} />
-              {this.state.lessonsStarted && (
+              {false && this.state.lessonsStarted && (
                 <HorizontalVideoList
                   hideFilterButton={true}
                   isLive={true}
