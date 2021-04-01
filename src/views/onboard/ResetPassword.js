@@ -235,7 +235,7 @@ export default class ResetPassword extends React.Component {
                   Confirm password
                 </Text>
                 <View
-                  key={'pass'}
+                  key={'confirm_pass'}
                   style={{
                     borderRadius: 100,
                     marginVertical: 10,

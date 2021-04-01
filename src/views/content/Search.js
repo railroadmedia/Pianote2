@@ -56,7 +56,7 @@ export default class Search extends React.Component {
     };
     const url = props.route?.params?.url;
     if (url && url.includes('term=')) {
-      let searchedText = url.substring(url.indexOf('term=') + 5, url.length);
+      let searchedText = url.split('term=')[1];
       searchedText = searchedText.split('+').join(' ');
       this.state.searchTerm = searchedText;
       this.search();

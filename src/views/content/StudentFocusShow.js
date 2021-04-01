@@ -131,7 +131,7 @@ class StudentFocusShow extends React.Component {
 
       return {
         thumbnailUrl:
-          content.thumbnail[this.props.route?.params?.type].thumbnailUrl,
+          content.thumbnail[this.props.route?.params?.type]?.thumbnailUrl,
         allLessons: items,
         outVideos:
           items.length == 0 || content.all.data.length < 20 ? true : false,

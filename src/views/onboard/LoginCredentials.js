@@ -40,6 +40,8 @@ import CustomModal from '../../modals/CustomModal.js';
 import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { goBack, navigate, reset } from '../../../AppNavigator';
+import commonService from '../../services/common.service';
+import navigationService from '../../services/navigation.service';
 
 export default class LoginCredentials extends React.Component {
   static contextType = NetworkContext;
@@ -113,9 +115,9 @@ export default class LoginCredentials extends React.Component {
 
       // checkmembership status
       let userData = await getUserData();
-      // if (commonService.urlToOpen !== '') {
-      //   return navigationService.decideWhereToRedirect();
-      // } else
+      if (commonService.urlToOpen !== '') {
+        return navigationService.decideWhereToRedirect();
+      }
       if (userData.isPackOlyOwner) {
         // if pack only, make global & go to packs
         global.isPackOnly = userData.isPackOlyOwner;

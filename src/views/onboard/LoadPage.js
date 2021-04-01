@@ -78,7 +78,7 @@ class LoadPage extends React.Component {
         i[j[0]] = j[1] === 'undefined' ? undefined : j[1];
         return i;
       }, {});
-
+      await AsyncStorage.removeItem('resetKey');
       const { email, resetKey, password, loggedIn, forumUrl } = data;
 
       if (!this.context.isConnected) {
@@ -90,6 +90,7 @@ class LoadPage extends React.Component {
         // if no connection and logged in
       } else if (!loggedIn && !global.loadedFromNotification) {
         // if not logged in
+        if (resetKey) return reset('RESETPASSWORD');
         return reset('LOGIN');
       } else {
         // get token
@@ -140,7 +141,8 @@ class LoadPage extends React.Component {
           }
         } else if (!res.success || loggedIn == false || loggedIn == 'false') {
           // is not logged in
-          reset('LOGIN');
+          if (resetKey) return reset('RESETPASSWORD');
+          return reset('LOGIN');
         }
       }
     });
@@ -149,12 +151,10 @@ class LoadPage extends React.Component {
   loadCache = () => {
     let { dirs } = RNFetchBlob.fs;
     cache.map(c => {
-      try {
-        RNFetchBlob.fs
-          .readFile(`${dirs.LibraryDir || dirs.DocumentDir}/${c}`, 'utf8')
-          .then(stream => this.props[c]?.(JSON.parse(stream)))
-          .catch(() => {});
-      } catch (e) {}
+      RNFetchBlob.fs
+        .readFile(`${dirs.LibraryDir || dirs.DocumentDir}/${c}`, 'utf8')
+        .then(stream => this.props[c]?.(JSON.parse(stream)))
+        .catch(() => {});
     });
   };
 

@@ -54,19 +54,16 @@ export default class App extends React.Component {
   handleOpenURL = async ({ url }) => {
     if (url) {
       if (url.includes('/reset-password')) {
-        let resetKey = url.substring(
-          url.indexOf('token=') + 6,
-          url.indexOf('&email')
-        );
-        let email = url.substring(url.indexOf('email=') + 6, url.length);
+        let resetKey = url.split('token=')[1].split('&email')[0];
+        let email = url.split('email=')[1];
         await AsyncStorage.multiSet([
           ['resetKey', resetKey],
           ['email', email]
         ]);
       } else {
         commonService.urlToOpen = url;
-        reset('LOADPAGE');
       }
+      reset('LOADPAGE');
     }
   };
 

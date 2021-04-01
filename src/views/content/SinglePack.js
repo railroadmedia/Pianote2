@@ -89,6 +89,7 @@ export default class SinglePack extends React.Component {
     }
     // get bundles
     const response = await packsService.getPack(this.state.url);
+    console.log(response);
     const newContent = new ContentModel(response);
     const lessons = newContent.post.lessons.map(rl => {
       return new ContentModel(rl);
