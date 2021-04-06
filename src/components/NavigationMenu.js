@@ -49,14 +49,14 @@ const navigationOptions = [
     title: 'Student Focus',
     navigator: 'STUDENTFOCUSCATALOG'
   },
-  // {
-  //title: 'Live',
-  //navigator: 'SEEALL'
-  //},
-  //{
-  //    title: 'Schedule',
-  //  navigator: 'SEEALL'
-  //},
+  {
+    title: 'Live',
+    navigator: 'SEEALL'
+  },
+  {
+      title: 'Schedule',
+    navigator: 'SEEALL'
+  },
   {
     title: 'Podcasts',
     navigator: 'STUDENTFOCUSSHOW'

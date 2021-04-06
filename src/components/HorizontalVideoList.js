@@ -107,9 +107,7 @@ export default class HorizontalVideoList extends React.Component {
   };
 
   decideWidth() {
-    if (this.props.isLive) {
-      return Dimensions.get('window').width - 20
-    } else if (onTablet) {
+    if (onTablet) {
       if (this.props.isSquare) return 125;
       else return (Dimensions.get('window').width - 4 * paddingInset) / 3;
     } else {
