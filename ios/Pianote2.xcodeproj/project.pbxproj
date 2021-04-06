@@ -511,7 +511,7 @@
 				DEVELOPMENT_TEAM = 7RM4D35J2P;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Pianote2/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.1.3;
 				OTHER_LDFLAGS = (
@@ -547,7 +547,7 @@
 				ENABLE_BITCODE = NO;
 				"GCC_WARN_64_TO_32_BIT_CONVERSION[arch=*64]" = YES;
 				INFOPLIST_FILE = Pianote2/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[arch=*]" = "$(inherited)";
 				MARKETING_VERSION = 1.1.3;
