@@ -7,21 +7,10 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
-  Dimensions
+  StyleSheet
 } from 'react-native';
 
-import { withNavigation } from 'react-navigation';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
-
-class DisplayName extends React.Component {
-  static navigationOptions = { header: null };
+export default class DisplayName extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -36,7 +25,7 @@ class DisplayName extends React.Component {
         <View style={[styles.container, styles.centerContent]}>
           <View style={localStyles.titleContainer}>
             <Text style={[styles.modalHeaderText, localStyles.displayText]}>
-              This display name {'\n'} is already in use.
+              This display name is already {'\n'} in use.
             </Text>
             <Text style={[styles.modalBodyText, localStyles.pleaseTryAgain]}>
               Please try again.
@@ -75,21 +64,19 @@ const localStyles = StyleSheet.create({
   },
   titleContainer: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor
+    borderRadius: 15,
+    margin: 20
   },
   displayText: {
-    paddingHorizontal: 40,
-    marginTop: 10 * factor
+    paddingHorizontal: 20,
+    marginTop: 10
   },
   pleaseTryAgain: {
     paddingHorizontal: 20,
-    marginTop: 10 * factor
+    marginVertical: 5
   },
   tryAgainContainer: {
     paddingHorizontal: 20,
-    marginVertical: 20 * factor
+    marginVertical: 20
   }
 });
-
-export default withNavigation(DisplayName);

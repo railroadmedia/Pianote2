@@ -1,48 +1,17 @@
 import commonService from './common.service';
 
-export async function getAllContent(type, sort, page, filtersDict) {
-  let filters = ''; // instructor, topic, level
-  let required_user_states = ''; // progress
+export async function getAllContent(type, sort, page, filters = '') {
   let included_types = '';
 
-  if (type == '') {
+  if (type == '')
     included_types = `included_types[]=learning-path-course&included_types[]=course&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson&included_types[]=podcasts&`;
-  } else {
-    included_types = `included_types[]=${type}&`;
-  }
+  else included_types = `included_types[]=${type}&`;
 
-  for (i in filtersDict.topics) {
-    filters = filters + `required_fields[]=${filtersDict.topics[i]}&`;
-  }
-  for (i in filtersDict.instructors) {
-    filters =
-      filters + `required_fields[]=instructor,${filtersDict.instructors[i]}&`;
-  }
-  for (i in filtersDict.level) {
-    if (typeof filtersDict.level[i] == 'number') {
-      filters =
-        filters + `required_fields[]=difficulty,${filtersDict.level[i]}&`;
-    }
-  }
-  for (i in filtersDict.progress) {
-    if (filtersDict.progress[i] !== 'all') {
-      required_user_states =
-        required_user_states +
-        `required_user_states[]=${filtersDict.progress[i]}`;
-    }
-  }
-
-  if (sort == 'newest') {
-    sort = '-published_on';
-  } else if (sort == 'oldest') {
-    sort = 'published_on';
-  }
+  if (sort == 'newest') sort = '-published_on';
+  else if (sort == 'oldest') sort = 'published_on';
 
   try {
-    let url =
-      `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${included_types}` +
-      filters +
-      required_user_states;
+    let url = `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${included_types}${filters}`;
     let response = await commonService.tryCall(url);
     // if there is no filters available, then dont just show a blank array, maintain data structure
 
@@ -76,7 +45,19 @@ export async function getAllContent(type, sort, page, filtersDict) {
     }
     return response;
   } catch (error) {
-    console.log('Error: ', error);
+    return new Error(error);
+  }
+}
+
+export async function getLiveContent() {
+  try {
+    let response = await commonService.tryCall(
+      `${commonService.rootUrl}//musora-api/live-event?forced-content-id=275886`,
+      'GET'
+    );
+    console.log('live : ', response)
+    return response;
+  } catch (error) {
     return new Error(error);
   }
 }
@@ -96,7 +77,6 @@ export async function getNewContent(type) {
 
     return response;
   } catch (error) {
-    console.log('Error', error);
     return new Error(error);
   }
 }
@@ -111,41 +91,20 @@ export async function getStartedContent(type) {
       `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=-progress&statuses[]=published&limit=40&page=1&included_types[]=${type}&required_user_states[]=started`
     );
   } catch (error) {
-    console.log('Error', error);
     return new Error(error);
   }
 }
 
-export async function searchContent(term, page, filtersDict) {
-  let included_types = ''; // types
-  if (isPackOnly == true) {
-    included_types =
-      included_types +
-      '&included_types[]=unit&included_types[]=pack-bundle-lesson';
-  } else if (filtersDict.content_type.length > 0) {
-    for (i in filtersDict.content_type) {
-      included_types =
-        included_types + `&included_types[]=${filtersDict.content_type[i]}`;
-    }
-  } else {
-    included_types =
-      included_types +
-      '&included_types[]=learning-path&included_types[]=course&included_types[]=learning-path-level&included_types[]=course-part&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson';
-  }
-
+export async function searchContent(term, page, filters = '') {
   try {
-    let url =
-      `${commonService.rootUrl}/api/railcontent/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&page=${page}` +
-      included_types;
+    let url = `${commonService.rootUrl}/api/railcontent/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&page=${page}${filters}`;
     return commonService.tryCall(url);
   } catch (error) {
-    console.log('Error: ', error);
     return new Error(error);
   }
 }
 
-export async function getMyListContent(page, filtersDict, progressState) {
-  let included_types = '';
+export async function getMyListContent(page, filters = '', progressState) {
   let progress_types = ''; // completed || started
   let sort = '-published_on';
 
@@ -154,65 +113,29 @@ export async function getMyListContent(page, filtersDict, progressState) {
     sort = '-progress';
   }
 
-  if (filtersDict.content_type.length > 0) {
-    for (i in filtersDict.content_type) {
-      included_types =
-        included_types + `&included_types[]=${filtersDict.content_type[i]}`;
-    }
-  } else {
-    included_types =
-      included_types +
-      '&included_types[]=learning-path&included_types[]=learning-path-level&included_types[]=learning-path-course&included_types[]=learning-path-lesson&included_types[]=course&included_types[]=course-part&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson&included_types[]=podcasts';
-  }
-
   try {
     var url =
-      `${commonService.rootUrl}/api/railcontent/my-list?brand=pianote&limit=20&statuses[]=published&sort=${sort}&page=${page}` +
-      included_types +
+      `${commonService.rootUrl}/api/railcontent/my-list?brand=pianote&limit=20&statuses[]=published&sort=${sort}&page=${page}${filters}` +
       progress_types;
-
-    let x = await commonService.tryCall(url);
-    console.log(x);
-    return x;
+    return await commonService.tryCall(url);
   } catch (error) {
-    console.log('Error: ', error);
     return new Error(error);
   }
 }
 
-export async function seeAllContent(contentType, type, page, filtersDict) {
-  let url = `${commonService.rootUrl}/api/railcontent/content?brand=pianote&limit=20&statuses[]=published&page=${page}`;
-
-  if (contentType == 'lessons') {
-    // add types
-    if (filtersDict.content_type.length > 0) {
-      // if user filtered for types
-      for (i in filtersDict.content_type) {
-        url = url + `&included_types[]=${filtersDict.content_type[i]}`;
-      }
-    } else {
-      // if user did not filter for types use all types except 2
-      url =
-        url +
-        '&included_types[]=learning-path-lesson&included_types[]=course&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chords-and-scales&included_types[]=podcasts&included_types[]=pack-bundle-lesson';
-    }
-    // if user clicked see all on started videos
-  } else if (contentType == 'courses') {
-    // add types
-    url = url + `&included_types[]=course`;
-  } else if (contentType == 'song') {
-    url = url + `&included_types[]=song`;
-  }
-  if (type == 'continue') {
-    url = url + `&required_user_states[]=started&sort=-progress`;
-  } else {
-    url = url + `&sort=-published_on`;
-  }
+export async function seeAllContent(contentType, type, page, filters = '') {
+  let url = `${commonService.rootUrl}/api/railcontent/content?brand=pianote&limit=20&statuses[]=published&page=${page}${filters}`;
+  if (contentType == 'lessons')
+    url +=
+      '&included_types[]=learning-path-lesson&included_types[]=course&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chords-and-scales&included_types[]=podcasts&included_types[]=pack-bundle-lesson';
+  else if (contentType == 'courses') url += `&included_types[]=course`;
+  else if (contentType == 'song') url += `&included_types[]=song`;
+  if (type == 'continue')
+    url += `&required_user_states[]=started&sort=-progress`;
+  else url += `&sort=-published_on`;
   try {
-    let x = await commonService.tryCall(url);
-    return x;
+    return await commonService.tryCall(url);
   } catch (error) {
-    console.log('Error: ', error);
     return new Error(error);
   }
 }
@@ -223,7 +146,6 @@ export async function getContentById(contentID) {
       `${commonService.rootUrl}/railcontent/content/${contentID}`
     );
   } catch (error) {
-    console.log('Get content by ID error: ', error);
     return new Error(error);
   }
 }

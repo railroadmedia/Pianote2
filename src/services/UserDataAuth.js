@@ -89,9 +89,7 @@ export async function getUserData() {
     }
 
     return userData;
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 }
 
 export async function forgotPass(emailAddress) {
@@ -102,7 +100,6 @@ export async function forgotPass(emailAddress) {
 }
 
 export async function changePassword(email, pass, token) {
-  console.log(email, pass, token);
   return commonService.tryCall(
     `${commonService.rootUrl}/api/change-password`,
     'PUT',
@@ -122,7 +119,6 @@ export async function logOut() {
       'PUT'
     );
   } catch (error) {
-    console.log(error);
     return new Error(error);
   }
 }
@@ -134,7 +130,6 @@ export async function signUp(
   oldToken,
   selectedPlan
 ) {
-  console.log('signup', email, password, purchase);
   let platform = '';
   let receiptType = '';
   let attributes;
@@ -189,7 +184,6 @@ export async function signUp(
     token = response?.meta?.auth_code;
     return response;
   } catch (error) {
-    console.log('err', error);
     return new Error(error);
   }
 }
@@ -216,14 +210,12 @@ export async function restorePurchase(purchases) {
     token = response?.token;
     return response;
   } catch (error) {
-    console.log(error);
     return new Error(error);
   }
 }
 
 export async function validateSignUp(purchases) {
   let platform = Platform.OS === 'ios' ? 'apple' : 'google';
-  console.log(purchases);
   try {
     let response = await fetch(
       `${commonService.rootUrl}/mobile-app/${platform}/signup`,
@@ -241,7 +233,6 @@ export async function validateSignUp(purchases) {
     );
     return await response.json();
   } catch (error) {
-    console.log(error);
     return new Error(error);
   }
 }

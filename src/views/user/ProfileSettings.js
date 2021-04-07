@@ -21,17 +21,14 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
-import {
-  NavigationActions,
-  SafeAreaView,
-  StackActions
-} from 'react-navigation';
+import { SafeAreaView } from 'react-navigation';
 import DisplayName from '../../modals/DisplayName.js';
 import ProfileImage from '../../modals/ProfileImage.js';
 import NavigationBar from '../../components/NavigationBar.js';
 import commonService from '../../services/common.service.js';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import Loading from '../../components/Loading.js';
+import { goBack, reset } from '../../../AppNavigator.js';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -40,13 +37,7 @@ const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
-const resetAction = StackActions.reset({
-  index: 0,
-  actions: [NavigationActions.navigate({ routeName: 'PROFILE' })]
-});
-
 export default class ProfileSettings extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -73,7 +64,7 @@ export default class ProfileSettings extends React.Component {
     this.setState({
       imageURI: imageURI || '',
       currentlyView:
-        this.props.navigation.state.params?.data == 'Profile Photo'
+        this.props.route?.params?.data == 'Profile Photo'
           ? 'Profile Photo'
           : 'Profile Settings'
     });
@@ -123,7 +114,7 @@ export default class ProfileSettings extends React.Component {
         }
       );
       await AsyncStorage.setItem('displayName', this.state.displayName);
-      this.props.navigation.dispatch(resetAction);
+      reset('PROFILE');
     } else {
       this.setState({ showDisplayName: true });
     }
@@ -167,7 +158,7 @@ export default class ProfileSettings extends React.Component {
             'profileURI',
             url == '' ? url : url.data[0].url
           );
-          this.props.navigation.dispatch(resetAction);
+          reset('PROFILE');
         }
       }
     } catch (error) {}
@@ -240,11 +231,11 @@ export default class ProfileSettings extends React.Component {
                   })
                 }
               >
-                <Text style={styles.settingsText}>Display Name</Text>
+                <Text style={localStyles.settingsText}>Display Name</Text>
                 <View style={{ flex: 1 }} />
                 <AntIcon
                   name={'right'}
-                  size={(onTablet ? 20 : 25) * factor}
+                  size={onTablet ? 30 : 20}
                   color={colors.secondBackground}
                 />
               </TouchableOpacity>
@@ -256,11 +247,11 @@ export default class ProfileSettings extends React.Component {
                   });
                 }}
               >
-                <Text style={styles.settingsText}>Profile Photo</Text>
+                <Text style={localStyles.settingsText}>Profile Photo</Text>
                 <View style={{ flex: 1 }} />
                 <AntIcon
                   name={'right'}
-                  size={(onTablet ? 20 : 25) * factor}
+                  size={onTablet ? 30 : 20}
                   color={colors.secondBackground}
                 />
               </TouchableOpacity>
@@ -269,6 +260,7 @@ export default class ProfileSettings extends React.Component {
           {this.state.currentlyView == 'Display Name' && (
             <ScrollView style={styles.mainContainer}>
               <TextInput
+                autoCapitalize={'none'}
                 ref={txt => {
                   this.txt = txt;
                 }}
@@ -303,7 +295,7 @@ export default class ProfileSettings extends React.Component {
                     <TouchableOpacity
                       style={{
                         ...localStyles.crossContainer,
-                        right: -((onTablet ? 22.5 : 27.5) * factor)
+                        right: -(onTablet ? 22.5 : 15)
                       }}
                       onPress={() =>
                         this.setState({
@@ -315,11 +307,11 @@ export default class ProfileSettings extends React.Component {
                     >
                       <EntypoIcon
                         name={'cross'}
-                        size={(onTablet ? 22.5 : 30) * factor}
+                        size={onTablet ? 30 : 22.5}
                         color={colors.secondBackground}
                         style={{
-                          width: (onTablet ? 22.5 : 30) * factor,
-                          height: (onTablet ? 22.5 : 30) * factor
+                          width: onTablet ? 30 : 22.5,
+                          height: onTablet ? 30 : 22.5
                         }}
                       />
                     </TouchableOpacity>
@@ -331,7 +323,11 @@ export default class ProfileSettings extends React.Component {
                     onPress={() => this.chooseImage()}
                     style={styles.centerContent}
                   >
-                    <AntIcon name={'plus'} size={65 * factor} color={'white'} />
+                    <AntIcon
+                      name={'plus'}
+                      size={onTablet ? 80 : 65}
+                      color={'white'}
+                    />
                   </TouchableOpacity>
                 )}
               </View>
@@ -345,10 +341,10 @@ export default class ProfileSettings extends React.Component {
                 style={[styles.centerContent, localStyles.imageContainer]}
               >
                 <IonIcon
-                  size={(onTablet ? 40 : 50) * factor}
+                  size={onTablet ? 50 : 35}
                   name={'ios-camera'}
                   color={colors.secondBackground}
-                  style={{ padding: 10 * factor }}
+                  style={{ padding: 10 }}
                 />
               </TouchableOpacity>
             </ScrollView>
@@ -383,13 +379,7 @@ export default class ProfileSettings extends React.Component {
           </Modal>
           <Modal
             isVisible={this.state.showProfileImage}
-            style={[
-              styles.centerContent,
-              {
-                margin: 0,
-                flex: 1
-              }
-            ]}
+            style={[styles.centerContent, styles.modalContainer]}
             animation={'slideInUp'}
             animationInTiming={350}
             animationOutTiming={350}
@@ -412,14 +402,15 @@ export default class ProfileSettings extends React.Component {
               this.state.isLoading
                 ? null
                 : this.state.currentlyView == 'Profile Settings'
-                ? this.props.navigation.goBack()
+                ? goBack()
                 : this.setState({ currentlyView: 'Profile Settings' });
             }}
-            style={{ padding: 15 }}
+            style={{ padding: 10 }}
           >
+            <View style={{ flex: 1 }} />
             <Back
-              width={(onTablet ? 17.5 : 25) * factor}
-              height={(onTablet ? 17.5 : 25) * factor}
+              width={backButtonSize}
+              height={backButtonSize}
               fill={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -430,12 +421,10 @@ export default class ProfileSettings extends React.Component {
 }
 
 const localStyles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor,
-    height: 200,
-    width: '80%'
+  settingsText: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: DeviceInfo.isTablet() ? 20 : 16,
+    color: '#445f73'
   },
   myProfileSettings: {
     flexDirection: 'row',
@@ -444,42 +433,42 @@ const localStyles = StyleSheet.create({
     padding: 15
   },
   save: {
-    fontSize: DeviceInfo.isTablet() ? 20 : 15 * factor,
+    fontSize: DeviceInfo.isTablet() ? 20 : 14,
     fontFamily: 'OpenSans-Bold',
     color: '#fb1b2f',
     textAlign: 'right',
     alignSelf: 'flex-end'
   },
   displayContainer: {
-    height: (DeviceInfo.isTablet() ? 40 : 50) * factor,
+    height: DeviceInfo.isTablet() ? 70 : 50,
     width: '100%',
     borderBottomColor: '#445f73',
     borderBottomWidth: 1,
     borderTopWidth: 1,
     borderTopColor: '#445f73',
     flexDirection: 'row',
-    paddingHorizontal: 15 * factor
+    paddingHorizontal: 10
   },
   profilePhoto: {
-    height: (DeviceInfo.isTablet() ? 40 : 50) * factor,
+    height: DeviceInfo.isTablet() ? 70 : 50,
     width: '100%',
     borderBottomColor: '#445f73',
     borderBottomWidth: 1,
     flexDirection: 'row',
-    paddingHorizontal: 15 * factor
+    paddingHorizontal: 10
   },
   textInput: {
     fontFamily: 'OpenSans-Regular',
-    paddingHorizontal: 10 * factor,
+    paddingHorizontal: 10,
     width: '100%',
-    fontSize: (DeviceInfo.isTablet() ? 14 : 18) * factor,
+    fontSize: DeviceInfo.isTablet() ? 20 : 16,
     color: '#445f73'
   },
   text: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 14 : 16) * factor,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14,
     paddingVertical: '2%',
-    paddingHorizontal: 10 * factor,
+    paddingHorizontal: 10,
     color: '#445f73'
   },
   scrollContainer: {
@@ -487,32 +476,32 @@ const localStyles = StyleSheet.create({
     marginTop: 10
   },
   image: {
-    width: (DeviceInfo.isTablet() ? 150 : 200) * factor,
+    width: DeviceInfo.isTablet() ? 200 : 150,
     aspectRatio: 1,
     borderRadius: 200,
-    marginTop: 15 * factor
+    marginTop: 25
   },
   crossContainer: {
     position: 'absolute',
-    padding: 3.5 * factor,
+    padding: 5,
     borderColor: '#445f73',
     borderWidth: 2,
     borderRadius: 100
   },
   imageText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 14 : 16) * factor,
-    padding: 30,
-    paddingHorizontal: 20 * factor,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14,
+    paddingVertical: 30,
+    paddingHorizontal: 20,
     color: '#445f73',
     textAlign: 'center'
   },
   imageContainer: {
     alignSelf: 'center',
-    height: (DeviceInfo.isTablet() ? 75 : 90) * factor,
-    width: (DeviceInfo.isTablet() ? 75 : 90) * factor,
-    borderRadius: 200 * factor,
+    height: DeviceInfo.isTablet() ? 90 : 70,
+    width: DeviceInfo.isTablet() ? 90 : 70,
+    borderRadius: 500,
     borderColor: '#445f73',
-    borderWidth: 2 * factor
+    borderWidth: 2
   }
 });

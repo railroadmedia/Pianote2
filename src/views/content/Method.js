@@ -24,7 +24,6 @@ import Orientation from 'react-native-orientation-locker';
 import ResetIcon from '../../components/ResetIcon';
 import NextVideo from '../../components/NextVideo';
 import StartIcon from '../../components/StartIcon';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import RestartCourse from '../../modals/RestartCourse';
 import ContinueIcon from '../../components/ContinueIcon';
 import NavigationBar from '../../components/NavigationBar';
@@ -37,25 +36,22 @@ import {
 } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 import methodService from '../../services/method.service';
+import { navigate } from '../../../AppNavigator';
 
 let greaterWDim;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 export default class Method extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
 
     this.state = {
       items: [],
-      methodIsStarted: this.props.navigation.state.params.methodIsStarted,
-      methodIsCompleted: this.props.navigation.state.params.methodIsCompleted,
+      methodIsStarted: props.route?.params.methodIsStarted,
+      methodIsCompleted: props.route?.params.methodIsCompleted,
       showRestartCourse: false,
       bannerNextLessonUrl: '',
       id: null,
@@ -197,14 +193,16 @@ export default class Method extends React.Component {
       return this.context.showNoConnectionAlert();
     }
 
-    resetProgress(this.state.id);
+    this.setState({ items: [], showRestartCourse: false });
+
+    await resetProgress(this.state.id);
 
     this.setState(
       {
         methodIsStarted: false,
+        methodIsCompleted: false,
         isStarted: false,
         isCompleted: false,
-        showRestartCourse: false,
         isLoadingAll: true,
         refreshing: true
       },
@@ -227,7 +225,7 @@ export default class Method extends React.Component {
   }
 
   goToLesson(url) {
-    return this.props.navigation.navigate('VIDEOPLAYER', { url });
+    return navigate('VIDEOPLAYER', { url });
   }
 
   getSquareHeight = () => {
@@ -246,7 +244,6 @@ export default class Method extends React.Component {
           currentPage={'LESSONS'}
           parentPage={'METHOD'}
         />
-
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
@@ -295,149 +292,109 @@ export default class Method extends React.Component {
               <View style={styles.centerContent}>
                 <FastImage
                   style={{
-                    width: width * 0.75,
-                    height: 65 * factor,
+                    width: '70%',
+                    height: onTablet ? 100 : 65,
                     alignSelf: 'center',
-                    marginBottom: 12.5 * factor
+                    marginBottom: onTablet ? '2%' : '4%'
                   }}
                   source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
                   resizeMode={FastImage.resizeMode.contain}
                 />
               </View>
               <View
-                style={{
-                  marginBottom: 10 * factor,
-                  marginTop: 0 * factor,
-                  height: 40 * factor,
-                  justifyContent: 'space-evenly',
-                  flexDirection: 'row',
-                  alignItems: 'center'
-                }}
+                style={[
+                  styles.heightButtons,
+                  {
+                    marginBottom: '3%',
+                    width: '100%',
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                  }
+                ]}
               >
-                <View style={{ flex: 0.5 }} />
-                {this.state.methodIsCompleted ? (
-                  <ResetIcon
-                    isMethod={true}
-                    pressed={() =>
-                      this.setState({
-                        showRestartCourse: true
-                      })
-                    }
-                  />
-                ) : this.state.methodIsStarted ? (
-                  <ContinueIcon
-                    isMethod={true}
-                    pressed={() =>
-                      this.goToLesson(this.state.bannerNextLessonUrl)
-                    }
-                  />
-                ) : (
-                  !this.state.methodIsStarted && (
-                    <StartIcon
+                <View style={{ flex: 1 }} />
+                <View style={{ width: '50%' }}>
+                  {this.state.methodIsCompleted ? (
+                    <ResetIcon
+                      isMethod={true}
+                      pressed={() =>
+                        this.setState({
+                          showRestartCourse: true
+                        })
+                      }
+                    />
+                  ) : this.state.methodIsStarted ? (
+                    <ContinueIcon
                       isMethod={true}
                       pressed={() =>
                         this.goToLesson(this.state.bannerNextLessonUrl)
                       }
                     />
-                  )
-                )}
-
-                <TouchableOpacity
-                  style={[styles.centerContent, { flex: 0.5 }]}
-                  onPress={() => {
-                    this.setState({
-                      showInfo: !this.state.showInfo
-                    });
-                  }}
-                >
-                  <AntIcon
-                    name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                    size={22 * factor}
-                    color={colors.pianoteRed}
-                  />
-                  <Text
+                  ) : (
+                    !this.state.methodIsStarted && (
+                      <StartIcon
+                        isMethod={true}
+                        pressed={() =>
+                          this.goToLesson(this.state.bannerNextLessonUrl)
+                        }
+                      />
+                    )
+                  )}
+                </View>
+                <View style={{ flex: 1, flexDirection: 'row' }}>
+                  <TouchableOpacity
                     style={{
-                      fontFamily: 'OpenSans-Regular',
-                      color: 'white',
-                      marginTop: 3 * factor,
-                      fontSize: 12 * factor
+                      flex: 0.5,
+                      alignItems: 'center'
+                    }}
+                    onPress={() => {
+                      this.setState({
+                        showInfo: !this.state.showInfo
+                      });
                     }}
                   >
-                    Info
-                  </Text>
-                </TouchableOpacity>
+                    <AntIcon
+                      name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                      size={onTablet ? 20 : 15}
+                      color={colors.pianoteRed}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: 'OpenSans-Regular',
+                        color: 'white',
+                        marginTop: 2,
+                        fontSize: sizing.descriptionText
+                      }}
+                    >
+                      Info
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           </ImageBackground>
-          {this.state.methodIsStarted && (
-            <View
-              key={'profile'}
-              style={{
-                backgroundColor: 'black',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingTop: 20 * factor
-              }}
-            >
-              <FastImage
-                style={{
-                  height: 50 * factor,
-                  aspectRatio: 1,
-                  borderRadius: 100,
-                  backgroundColor: 'white',
-                  borderWidth: 3 * factor,
-                  borderColor: 'white',
-                  marginRight: 5
-                }}
-                source={{
-                  uri:
-                    this.state.profileImage ||
-                    'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-                }}
-                resizeMode={FastImage.resizeMode.cover}
-              />
-
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 35 * factor,
-                  fontFamily: 'OpenSans-ExtraBold',
-                  textAlign: 'center',
-                  marginLeft: 5
-                }}
-              >
-                LEVEL {this.state.level}
-              </Text>
-            </View>
-          )}
           {this.state.showInfo && (
             <View
-              key={'info'}
               style={{
                 width: '100%',
-                paddingVertical: 15,
-                paddingHorizontal: this.state.isLandscape ? '10%' : 15
+                paddingHorizontal: this.state.isLandscape ? '10%' : 10
               }}
             >
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  marginTop: 5 * factor,
-                  fontSize: 15 * factor,
+                  fontSize: sizing.descriptionText,
                   color: 'white',
                   textAlign: 'center'
                 }}
               >
                 {this.state.description !== 'TBD' ? this.state.description : ''}
               </Text>
-              <View key={'containStats'}>
+              <View>
                 <View
-                  key={'stats'}
                   style={[
                     styles.centerContent,
                     {
-                      marginTop: 10 * factor,
                       flex: 0.22,
                       flexDirection: 'row'
                     }
@@ -448,61 +405,58 @@ export default class Method extends React.Component {
                     style={[
                       styles.centerContent,
                       {
-                        width: 70 * factor,
-                        marginRight: 15 * factor
+                        width: onTablet ? 100 : 70,
+                        marginRight: 15
                       }
                     ]}
                   >
                     <Text
                       style={{
-                        fontSize: 17 * factor,
+                        fontSize: onTablet ? 25 : 17.5,
                         textAlign: 'left',
                         color: 'white',
-                        fontFamily: 'OpenSans-Bold',
-                        marginTop: 10 * factor
+                        fontFamily: 'OpenSans-Bold'
                       }}
                     >
                       {this.state.items.length}
                     </Text>
                     <Text
                       style={{
-                        fontSize: 13 * factor,
+                        fontSize: sizing.descriptionText,
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factor
+                        marginTop: 5
                       }}
                     >
-                      LEVELS
+                      Levels
                     </Text>
                   </View>
                   <View
                     style={[
                       styles.centerContent,
                       {
-                        width: 70 * factor
+                        width: onTablet ? 100 : 70
                       }
                     ]}
                   >
                     <Text
                       style={{
-                        fontWeight: '700',
-                        fontSize: 17 * factor,
+                        fontSize: onTablet ? 25 : 17.5,
                         textAlign: 'left',
                         color: 'white',
-                        fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factor
+                        fontFamily: 'OpenSans-Bold'
                       }}
                     >
                       {this.state.xp}
                     </Text>
                     <Text
                       style={{
-                        fontSize: 13 * factor,
+                        fontSize: sizing.descriptionText,
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factor
+                        marginTop: 5
                       }}
                     >
                       XP
@@ -510,18 +464,16 @@ export default class Method extends React.Component {
                   </View>
                   <View style={{ flex: 1 }} />
                 </View>
-                <View style={{ height: 15 * factor }} />
                 <View
-                  key={'buttons'}
                   style={[
                     styles.centerContent,
                     {
                       flex: 0.25,
-                      flexDirection: 'row'
+                      flexDirection: 'row',
+                      marginTop: 15
                     }
                   ]}
                 >
-                  <View style={{ flex: 1 }} />
                   <TouchableOpacity
                     onPress={() => {
                       this.setState({
@@ -531,31 +483,30 @@ export default class Method extends React.Component {
                     style={[
                       styles.centerContent,
                       {
-                        marginLeft: 15 * factor,
-                        marginBottom: 30 * factor,
-                        width: 70 * factor
+                        marginLeft: 10,
+                        marginBottom: 10,
+                        width: onTablet ? 100 : 70
                       }
                     ]}
                   >
                     <View style={{ flex: 1 }} />
                     <MaterialIcon
                       name={'replay'}
-                      size={27.5 * factor}
+                      size={onTablet ? 28 : 20}
                       color={colors.pianoteRed}
                     />
                     <Text
                       style={{
-                        fontSize: 13 * factor,
+                        fontSize: sizing.descriptionText,
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factor
+                        marginTop: 5
                       }}
                     >
                       Restart
                     </Text>
                   </TouchableOpacity>
-                  <View style={{ flex: 1 }} />
                 </View>
               </View>
             </View>
@@ -563,7 +514,7 @@ export default class Method extends React.Component {
           <View
             style={{
               paddingHorizontal: this.state.isLandscape ? '10%' : 0,
-              marginBottom: 10 * factor
+              marginBottom: 10
             }}
           >
             <VerticalVideoList
@@ -584,12 +535,8 @@ export default class Method extends React.Component {
           </View>
         </ScrollView>
         <Modal
-          key={'restartCourse'}
           isVisible={this.state.showRestartCourse}
-          style={{
-            margin: 0,
-            flex: 1
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

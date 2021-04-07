@@ -18,6 +18,7 @@ export const showNotification = ({
   messageId
 }) => {
   PushNotification.localNotification({
+    channelId: 'pianote-app-channel',
     title,
     id: messageId,
     message: body,
@@ -25,7 +26,6 @@ export const showNotification = ({
     color: colors.pianoteRed,
     bigPictureUrl: data.image,
     smallIcon: 'notifications_logo',
-    channelId: 'pianote-app-chanel',
     userInfo: {
       commentId: data.commentId,
       mobile_app_url: data.mobile_app_url,
@@ -38,13 +38,13 @@ export const localNotification = () => {
   messaging().onMessage(notification => {
     showNotification(notification);
   });
-  messaging().setBackgroundMessageHandler(notification => {
+  messaging().setBackgroundMessageHandler(async (notification) => {
     showNotification(notification);
   });
 };
 
 export async function getnotifications(page) {
-  return commonService.tryCall(
+  return await commonService.tryCall(
     `${commonService.rootUrl}/api/railnotifications/notifications?limit=10&page=${page}`
   );
 }

@@ -14,11 +14,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import Modal from 'react-native-modal';
-import Filters from '../../components/FIlters.js';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
-import NavigationMenu from '../../components/NavigationMenu';
 import VerticalVideoList from '../../components/VerticalVideoList';
 
 import { getMyListContent } from '../../services/GetContent';
@@ -26,6 +23,7 @@ import { NetworkContext } from '../../context/NetworkProvider';
 
 import { cacheAndWriteMyList } from '../../redux/MyListCacheActions';
 import { ActivityIndicator } from 'react-native';
+import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -42,7 +40,6 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 };
 
 class MyList extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -53,18 +50,8 @@ class MyList extends React.Component {
       page: 1,
       outVideos: false,
       isLoadingAll: true,
-      filtersAvailable: null,
-      showFilters: false,
       isPaging: false,
       filtering: false,
-      filters: {
-        displayTopics: [],
-        topics: [],
-        content_type: [],
-        level: [],
-        progress: [],
-        instructors: []
-      },
       showModalMenu: false,
       refreshing: false,
       ...this.initialValidData(myListCache, false, true)
@@ -73,15 +60,11 @@ class MyList extends React.Component {
 
   componentDidMount() {
     this.getMyList();
-    this.willFocusSubscription = this.props.navigation.addListener(
-      'willFocus',
-      () =>
-        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
-    );
+    this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   }
 
   componentWillUnmount() {
-    this.willFocusSubscription.remove();
+    this.refreshOnFocusListener?.();
   }
 
   getMyList = async loadMore => {
@@ -89,9 +72,10 @@ class MyList extends React.Component {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = await getMyListContent(
       this.state.page,
-      this.state.filters,
+      this.filterQuery,
       ''
     );
+    this.metaFilters = response?.meta?.filterOptions;
     this.props.cacheAndWriteMyList(response);
     this.setState(this.initialValidData(response, loadMore));
   };
@@ -139,7 +123,6 @@ class MyList extends React.Component {
       }
       return {
         allLessons: loadMore ? this.state?.allLessons?.concat(items) : items,
-        filtersAvailable: content.meta.filterOptions,
         outVideos: items.length == 0 || content.data.length < 20 ? true : false,
         page: this.state?.page + 1 || 1,
         isLoadingAll: false,
@@ -176,10 +159,14 @@ class MyList extends React.Component {
         }
       }
     } else {
-      if (newContent.getField('instructor') !== 'TBD') {
-        return newContent.getField('instructor').fields[0].value;
-      } else {
-        return newContent.getField('instructor').name;
+      try {
+        if (newContent.getField('instructor') !== 'TBD') {
+          return newContent.getField('instructor').fields[0].value;
+        } else {
+          return newContent.getField('instructor').name;
+        }
+      } catch (error) {
+        return '';
       }
     }
   };
@@ -221,48 +208,101 @@ class MyList extends React.Component {
           {isiOS && this.state.refreshing && (
             <ActivityIndicator
               size='small'
-              style={{ padding: 10 }}
+              style={styles.activityIndicator}
               color={colors.secondBackground}
             />
           )}
-          <Text style={styles.contentPageHeader}>My List</Text>
+          <Text
+            style={[
+              styles.contentPageHeader,
+              {
+                paddingLeft: paddingInset
+              }
+            ]}
+          >
+            My List
+          </Text>
           <TouchableOpacity
             style={[
               styles.tabRightContainer,
               {
-                borderBottomWidth: 0,
-                marginTop: 20 * factor
+                marginTop: 10
               }
             ]}
             onPress={() => {
-              this.props.navigation.navigate('SEEALL', {
+              navigate('SEEALL', {
                 title: 'In Progress',
                 parent: 'My List'
               });
             }}
           >
-            <Text style={styles.tabRightContainerText}>In Progress</Text>
-            <EntypoIcon
-              name={'chevron-thin-right'}
-              size={22.5 * factor}
-              color={colors.secondBackground}
-            />
+            <View
+              style={{
+                justifyContent: 'center',
+                paddingVertical: 20,
+                width: width * 0.26 + paddingInset / 2
+              }}
+            >
+              <Text
+                style={[
+                  styles.tabRightContainerText,
+                  {
+                    position: 'absolute',
+                    paddingLeft: paddingInset,
+                    width: width * 0.56 + paddingInset / 2
+                  }
+                ]}
+              >
+                In Progress
+              </Text>
+            </View>
+            <View style={{ flex: 0.85 }} />
+            <View style={[styles.centerContent, { flex: 0.15 }]}>
+              <EntypoIcon
+                name={'chevron-thin-right'}
+                size={onTablet ? 30 : 20}
+                color={colors.secondBackground}
+              />
+            </View>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.tabRightContainer, { marginBottom: 10 * factor }]}
+            style={styles.tabRightContainer}
             onPress={() => {
-              this.props.navigation.navigate('SEEALL', {
+              navigate('SEEALL', {
                 title: 'Completed',
                 parent: 'My List'
               });
             }}
           >
-            <Text style={styles.tabRightContainerText}>Completed</Text>
-            <EntypoIcon
-              name={'chevron-thin-right'}
-              size={22.5 * factor}
-              color={colors.secondBackground}
-            />
+            <View
+              style={{
+                justifyContent: 'center',
+                paddingVertical: 20,
+                width: width * 0.26 + paddingInset / 2
+              }}
+            >
+              <Text
+                style={[
+                  styles.tabRightContainerText,
+                  {
+                    position: 'absolute',
+                    paddingLeft: paddingInset,
+                    width: width * 0.56 + paddingInset / 2
+                  }
+                ]}
+              >
+                Completed
+              </Text>
+            </View>
+            <View style={{ flex: 0.85 }} />
+            <View style={[styles.centerContent, { flex: 0.15 }]}>
+              <EntypoIcon
+                name={'chevron-thin-right'}
+                s
+                size={onTablet ? 30 : 20}
+                color={colors.secondBackground}
+              />
+            </View>
           </TouchableOpacity>
           <VerticalVideoList
             title={'ADDED TO MY LIST'}
@@ -275,60 +315,27 @@ class MyList extends React.Component {
             showArtist={true}
             showLength={false}
             showSort={false}
-            filters={this.state.filters}
-            filterResults={() => this.setState({ showFilters: true })}
-            removeItem={contentID => this.removeFromMyList(contentID)}
-            outVideos={this.state.outVideos}
-            imageWidth={onTablet ? width * 0.225 : width * 0.3}
-          />
-        </ScrollView>
-        {this.state.showFilters && (
-          <Modal
-            isVisible={this.state.showFilters}
-            style={[
-              styles.centerContent,
-              {
-                margin: 0,
-                height: '100%',
-                width: '100%'
-              }
-            ]}
-            animation={'slideInUp'}
-            animationInTiming={1}
-            animationOutTiming={1}
-            coverScreen={true}
-            hasBackdrop={true}
-          >
-            <Filters
-              hideFilters={() => this.setState({ showFilters: false })}
-              filtersAvailable={this.state.filtersAvailable}
-              filters={this.state.filters}
-              filtering={this.state.filtering}
-              type={'My List'}
-              reset={filters => {
-                this.setState(
-                  {
-                    allLessons: [],
-                    filters,
-                    page: 1
-                  },
-                  () => this.getMyList()
-                );
-              }}
-              filterVideos={filters => {
+            filters={this.metaFilters}
+            applyFilters={filters =>
+              new Promise(res =>
                 this.setState(
                   {
                     allLessons: [],
                     outVideos: false,
-                    page: 1,
-                    filters
+                    page: 1
                   },
-                  () => this.getMyList()
-                );
-              }}
-            />
-          </Modal>
-        )}
+                  () => {
+                    this.filterQuery = filters;
+                    this.getMyList().then(res);
+                  }
+                )
+              )
+            }
+            removeItem={contentID => this.removeFromMyList(contentID)}
+            outVideos={this.state.outVideos}
+            imageWidth={(onTablet ? 0.225 : 0.3) * width}
+          />
+        </ScrollView>
         <NavigationBar currentPage={'MyList'} />
       </View>
     );

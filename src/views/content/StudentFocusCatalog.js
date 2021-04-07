@@ -22,11 +22,11 @@ import {
 } from '../../services/GetContent';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
-import NavigationMenu from '../../components/NavigationMenu';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
 import { NetworkContext } from '../../context/NetworkProvider';
 
 import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
+import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -36,7 +36,6 @@ const height =
 const factor = (height / 812 + width / 375) / 2;
 
 class StudentFocusCatalog extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -53,15 +52,11 @@ class StudentFocusCatalog extends React.Component {
 
   componentDidMount() {
     this.getData();
-    this.willFocusSubscription = this.props.navigation.addListener(
-      'willFocus',
-      () =>
-        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
-    );
+    this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   }
 
   componentWillUnmount() {
-    this.willFocusSubscription.remove();
+    this.refreshOnFocusListener?.();
   }
 
   async getData() {
@@ -72,7 +67,6 @@ class StudentFocusCatalog extends React.Component {
       ),
       getStudentFocusTypes()
     ]);
-    console.log(content);
     this.props.cacheAndWriteStudentFocus({
       types: content[1],
       inProgress: content[0]
@@ -126,7 +120,7 @@ class StudentFocusCatalog extends React.Component {
       <TouchableOpacity
         key={index}
         onPress={() => {
-          this.props.navigation.navigate('STUDENTFOCUSSHOW', {
+          navigate('STUDENTFOCUSSHOW', {
             type: item.type,
             thumbnailUrl: item.thumbnailUrl
           });
@@ -134,8 +128,8 @@ class StudentFocusCatalog extends React.Component {
         style={{
           width: '50%',
           marginTop: '3%',
-          paddingLeft: index % 2 == 0 ? 12 * factor : '1%', //(12 * factor) / (index % 2 === 0 ? 1 : 2),
-          paddingRight: index % 2 == 0 ? '1%' : 12 * factor //(12 * factor) / (index % 2 === 0 ? 2 : 1)
+          paddingLeft: index % 2 == 0 ? 10 : '1%',
+          paddingRight: index % 2 == 0 ? '1%' : 10
         }}
       >
         <FastImage
@@ -143,7 +137,7 @@ class StudentFocusCatalog extends React.Component {
             aspectRatio: 1,
             borderWidth: 0.3,
             borderColor: colors.pianoteRed,
-            borderRadius: 10 * factor
+            borderRadius: 10
           }}
           source={{ uri: item.thumbnailUrl }}
           resizeMode={FastImage.resizeMode.cover}
@@ -181,24 +175,22 @@ class StudentFocusCatalog extends React.Component {
                 {isiOS && this.state.refreshControl && (
                   <ActivityIndicator
                     size='small'
-                    style={{ padding: 10 }}
+                    style={styles.activityIndicator}
                     color={colors.secondBackground}
                   />
                 )}
                 <Text style={styles.contentPageHeader}>Student Focus</Text>
-
                 {this.state.started && (
                   <View style={styles.mainContainer}>
                     <HorizontalVideoList
                       hideFilterButton={true}
                       Title={'CONTINUE'}
                       seeAll={() =>
-                        this.props.navigation.navigate('SEEALL', {
+                        navigate('SEEALL', {
                           title: 'Continue',
                           parent: 'Student Focus'
                         })
                       }
-                      hideSeeAll={false}
                       showType={true}
                       items={this.state.progressStudentFocus}
                     />

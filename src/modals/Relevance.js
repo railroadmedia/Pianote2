@@ -2,26 +2,11 @@
  * Relevance
  */
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { withNavigation } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
-
-class Relevance extends React.Component {
-  static navigationOptions = { header: null };
+export default class Relevance extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -65,7 +50,7 @@ class Relevance extends React.Component {
               <View style={styles.centerContent}>
                 <EntypoIcon
                   name={'check'}
-                  size={20 * factorRatio}
+                  size={onTablet ? 24 : 18}
                   color={
                     this.state.currentSort == 'newest'
                       ? 'white'
@@ -108,7 +93,7 @@ class Relevance extends React.Component {
               <View style={styles.centerContent}>
                 <EntypoIcon
                   name={'check'}
-                  size={20 * factorRatio}
+                  size={onTablet ? 24 : 18}
                   color={
                     this.state.currentSort == 'oldest'
                       ? 'white'
@@ -141,7 +126,7 @@ class Relevance extends React.Component {
               <View style={styles.centerContent}>
                 <EntypoIcon
                   name={'cross'}
-                  size={25 * factorRatio}
+                  size={onTablet ? 30 : 25}
                   color={'white'}
                 />
               </View>
@@ -149,7 +134,7 @@ class Relevance extends React.Component {
                 <Text style={localStyles.cancel}>Cancel</Text>
               </View>
             </TouchableOpacity>
-            <View style={{ flex: isNotch ? 0.25 : 0.025 }} />
+            <View style={{ height: '5%' }} />
           </View>
         </View>
       </View>
@@ -159,25 +144,23 @@ class Relevance extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    minHeight: height * 0.25,
+    minHeight: DeviceInfo.isTablet() ? '20%' : '25%',
     flexDirection: 'row'
   },
   word: {
-    marginLeft: 15 * factor,
-    fontSize: 16 * factor,
+    marginLeft: 10,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14,
     fontFamily: 'OpenSans-Regular'
   },
   button: {
     flex: 0.4,
-    paddingLeft: width * 0.05,
+    paddingLeft: '5%',
     flexDirection: 'row'
   },
   cancel: {
-    marginLeft: 10 * factor,
-    fontSize: 16 * factor,
+    marginLeft: 10,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14,
     fontFamily: 'OpenSans-Regular',
     color: 'white'
   }
 });
-
-export default withNavigation(Relevance);

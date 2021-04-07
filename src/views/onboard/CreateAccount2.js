@@ -10,14 +10,13 @@ import {
   KeyboardAvoidingView,
   Alert,
   ScrollView,
-  StyleSheet,
-  Dimensions
+  StyleSheet
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import AsyncStorage from '@react-native-community/async-storage';
-import DeviceInfo from 'react-native-device-info';
 import PasswordMatch from '../../modals/PasswordMatch';
 import Back from '../../assets/img/svgs/back';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
@@ -26,16 +25,9 @@ import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import { signUp, getUserData } from '../../services/UserDataAuth';
 import { NetworkContext } from '../../context/NetworkProvider';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
+import { goBack, navigate } from '../../../AppNavigator';
 
 export default class CreateAccount extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -44,7 +36,7 @@ export default class CreateAccount extends React.Component {
       showPassword: true,
       password: '',
       confirmPassword: '',
-      email: this.props.navigation.state.params.email,
+      email: props.route?.params?.email,
       scrollViewContentFlex: { flex: 1 }
     };
   }
@@ -55,39 +47,41 @@ export default class CreateAccount extends React.Component {
     }
     if (this.state.password == this.state.confirmPassword) {
       if (this.state.password.length > 7) {
-        if (this.props.navigation.state.params?.purchase) {
+        if (this.props.route?.params?.purchase) {
           let response = await signUp(
-            encodeURIComponent(this.state.email),
-            encodeURIComponent(this.state.password),
-            this.props.navigation.state.params?.purchase,
+            this.state.email,
+            this.state.password,
+            this.props.route?.params?.purchase,
             null,
-            this.props.navigation.state.params?.purchase
+            this.props.route?.params?.purchase
           );
           console.log(response);
           if (response.meta) {
             try {
               await AsyncStorage.multiSet([
                 ['loggedIn', 'true'],
-                ['email', this.state.email],
-                ['password', this.state.password]
+                ['email', encodeURIComponent(this.state.email)],
+                ['password', encodeURIComponent(this.state.password)]
               ]);
-            } catch (e) {}
+            } catch (e) {
+              console.log(e);
+            }
 
             let userData = await getUserData();
-            console.log(userData);
+
             let currentDate = new Date().getTime() / 1000;
             let userExpDate =
               new Date(userData.expirationDate).getTime() / 1000;
             console.log(currentDate, userExpDate);
             if (userData.isLifetime || currentDate < userExpDate) {
-              this.props.navigation.navigate('CREATEACCOUNT3', {
+              navigate('CREATEACCOUNT3', {
                 data: {
                   email: this.state.email,
                   password: this.state.password
                 }
               });
             } else {
-              this.props.navigation.navigate('MEMBERSHIPEXPIRED', {
+              navigate('MEMBERSHIPEXPIRED', {
                 email: this.state.email,
                 password: this.state.password
               });
@@ -99,7 +93,7 @@ export default class CreateAccount extends React.Component {
             });
           }
         } else {
-          this.props.navigation.navigate('NEWMEMBERSHIP', {
+          navigate('NEWMEMBERSHIP', {
             data: {
               type: 'SIGNUP',
               email: this.state.email,
@@ -134,12 +128,12 @@ export default class CreateAccount extends React.Component {
             behavior={`${isiOS ? 'padding' : ''}`}
           >
             <TouchableOpacity
-              onPress={() => this.props.navigation.goBack()}
+              onPress={() => goBack()}
               style={localStyles.createAccountContainer}
             >
               <Back
-                width={(onTablet ? 17.5 : 25) * factor}
-                height={(onTablet ? 17.5 : 25) * factor}
+                width={backButtonSize}
+                height={backButtonSize}
                 fill={'white'}
               />
               <Text
@@ -159,7 +153,7 @@ export default class CreateAccount extends React.Component {
                 <Text style={localStyles.createPasswordText}>
                   Create a password
                 </Text>
-                <View style={{ height: 7.5 * factor }} />
+                <View style={{ height: 7.5 }} />
                 <View style={localStyles.passInput}>
                   <TextInput
                     autoCorrect={false}
@@ -180,16 +174,12 @@ export default class CreateAccount extends React.Component {
                   />
                   {!this.state.showPassword && (
                     <TouchableOpacity
+                      style={localStyles.showPassword}
                       onPress={() =>
                         this.setState({
                           showPassword: true
                         })
                       }
-                      style={{
-                        width: onTablet ? '30%' : '50%',
-                        marginTop: 15 * factor,
-                        backgroundColor: '#fb1b2f'
-                      }}
                     >
                       <Text>{this.state.password}</Text>
                     </TouchableOpacity>
@@ -209,11 +199,11 @@ export default class CreateAccount extends React.Component {
                     )}
                   </TouchableOpacity>
                 </View>
-                <View style={{ height: 17.5 * factor }} />
+                <View style={{ height: 27.5 }} />
                 <Text style={localStyles.createPasswordText}>
                   Confirm password
                 </Text>
-                <View style={{ height: 7.5 * factor }} />
+                <View style={{ height: 7.5 }} />
                 <View style={localStyles.passInput}>
                   <TextInput
                     style={localStyles.textinput}
@@ -261,7 +251,7 @@ export default class CreateAccount extends React.Component {
                     )}
                   </TouchableOpacity>
                 </View>
-                <View style={{ height: 10 * factor }} />
+                <View style={{ height: 10 }} />
                 <Text style={localStyles.characters}>
                   Use at least 8 characters
                 </Text>
@@ -292,7 +282,7 @@ export default class CreateAccount extends React.Component {
                             ? 'white'
                             : '#fb1b2f',
                         fontFamily: 'RobotoCondensed-Bold',
-                        fontSize: 18 * factor,
+                        fontSize: onTablet ? 20 : 14,
                         textAlign: 'center',
                         padding: 10
                       }
@@ -307,16 +297,8 @@ export default class CreateAccount extends React.Component {
               </View>
             </ScrollView>
             <Modal
-              key={'passwordMatch'}
               isVisible={this.state.showPasswordMatch}
-              style={[
-                styles.centerContent,
-                {
-                  margin: 0,
-                  height: '100%',
-                  width: '100%'
-                }
-              ]}
+              style={[styles.centerContent, styles.modalContainer]}
               animation={'slideInUp'}
               animationInTiming={450}
               animationOutTiming={450}
@@ -347,14 +329,7 @@ const localStyles = StyleSheet.create({
   },
   createAccountText: {
     color: 'white',
-    fontSize: 24 * factor
-  },
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor,
-    height: 200,
-    width: '80%'
+    fontSize: DeviceInfo.isTablet() ? 36 : 24
   },
   createPasswordContainer: {
     flex: 1,
@@ -363,7 +338,7 @@ const localStyles = StyleSheet.create({
   },
   createPasswordText: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: (DeviceInfo.isTablet() ? 17.5 : 20) * factor,
+    fontSize: DeviceInfo.isTablet() ? 24 : 16,
     textAlign: 'left',
     color: 'white',
     paddingLeft: 15
@@ -379,7 +354,7 @@ const localStyles = StyleSheet.create({
     color: 'black',
     borderRadius: 100,
     marginHorizontal: 15,
-    fontSize: (DeviceInfo.isTablet() ? 12 : 16) * factor,
+    fontSize: DeviceInfo.isTablet() ? 20 : 14,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
@@ -402,7 +377,7 @@ const localStyles = StyleSheet.create({
   characters: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'left',
-    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14,
     color: 'white',
     paddingLeft: 15,
     marginBottom: 40

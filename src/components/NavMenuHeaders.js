@@ -2,37 +2,18 @@
  * NavMenuHeaders
  */
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-  Platform,
-  StatusBar
-} from 'react-native';
-import {
-  StackActions,
-  withNavigation,
-  NavigationActions
-} from 'react-navigation';
-import DeviceInfo from 'react-native-device-info';
+import { View, Text, TouchableOpacity, StatusBar } from 'react-native';
 import Modal from 'react-native-modal';
-import { SafeAreaView } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import { NetworkContext } from '../context/NetworkProvider';
+import { SafeAreaView } from 'react-navigation';
+import { navigate, reset } from '../../AppNavigator';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
-
-class NavMenuHeaders extends React.Component {
+export default class NavMenuHeaders extends React.Component {
   static contextType = NetworkContext;
-  static navigationOptions = { header: null };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -45,10 +26,7 @@ class NavMenuHeaders extends React.Component {
       <SafeAreaView
         style={{
           flexDirection: 'row',
-          backgroundColor: this.props.isMethod
-            ? 'black'
-            : colors.mainBackground,
-          paddingTop: DeviceInfo.hasNotch() ? 0 : 5
+          backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground
         }}
         forceInset={{ top: 'always' }}
       >
@@ -61,169 +39,135 @@ class NavMenuHeaders extends React.Component {
         <View
           style={{
             flexDirection: 'row',
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingTop: isNotch
-              ? 5 * factor
-              : Platform.OS == 'android'
-              ? 0
-              : onTablet
-              ? 0
-              : 4,
-            paddingBottom: 10 * factor,
-            paddingRight: 10 * factor,
-            paddingLeft: 5 * factor
+            width: '100%',
+            padding: paddingInset
           }}
         >
           <TouchableOpacity
             onPress={() => {
               !this.context.isConnected
                 ? this.context.showNoConnectionAlert()
-                : this.props.navigation.dispatch(
-                    StackActions.reset({
-                      index: 0,
-                      actions: [
-                        NavigationActions.navigate({
-                          routeName: isPackOnly ? 'PACKS' : 'LESSONS'
-                        })
-                      ]
-                    })
-                  );
+                : reset(isPackOnly ? 'PACKS' : 'LESSONS');
             }}
             style={{
-              height:
-                Platform.OS == 'ios'
-                  ? onTablet
-                    ? height * 0.045
-                    : height * 0.035
-                  : onTablet
-                  ? height * 0.1
-                  : height * 0.04,
-              width: onTablet ? 0.14 * width : 0.25 * width,
-              flexDirection: 'row',
-              marginRight: 5 * factor,
-              paddingLeft: onTablet ? 10 : 0
+              height: onTablet ? 45 : 30,
+              width: onTablet ? 135 : 88
             }}
           >
             <Pianote fill={'#fb1b2f'} />
-            <View style={{ flex: 1 }} />
           </TouchableOpacity>
           <View style={{ flex: 1 }} />
-          <TouchableOpacity
-            key={'lessons'}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-            onPress={() => {
-              !this.context.isConnected
-                ? this.context.showNoConnectionAlert()
-                : isPackOnly
-                ? this.props.navigation.navigate('NEWMEMBERSHIP', {
-                    data: {
-                      type: 'PACKONLY',
-                      email: null,
-                      password: null
-                    }
-                  })
-                : this.setState({ showModalMenu: true });
-            }}
-          >
-            <Text
-              numberOfLines={1}
-              style={{
-                fontSize: onTablet ? 22 : 14 * factor,
-                fontFamily: 'OpenSans-ExtraBold',
-                color:
-                  this.props.currentPage == 'LESSONS'
-                    ? 'white'
-                    : this.props.isMethod
-                    ? 'white'
-                    : colors.secondBackground
-              }}
-            >
-              LESSONS{' '}
-            </Text>
-            <View>
-              <EntypoIcon
-                name={'chevron-down'}
-                color={
-                  this.props.currentPage == 'LESSONS'
-                    ? 'white'
-                    : this.props.isMethod
-                    ? 'white'
-                    : colors.secondBackground
+          <View style={{ flexDirection: 'row' }}>
+            <TouchableOpacity
+              style={[
+                styles.centerContent,
+                {
+                  flexDirection: 'row',
+                  paddingRight: paddingInset
                 }
-                size={16 * factor}
-                style={{ marginLeft: -2.5 }}
-              />
-            </View>
-          </TouchableOpacity>
-          <View style={{ width: 7.5 * factor }} />
-          <TouchableOpacity
-            key={'packs'}
-            onPress={() => {
-              !this.context.isConnected
-                ? this.context.showNoConnectionAlert()
-                : this.props.navigation.navigate('PACKS');
-            }}
-            style={{ alignItems: 'center', justifyContent: 'center' }}
-          >
-            <Text
-              numberOfLines={1}
-              style={{
-                fontSize: onTablet ? 22 : 14 * factor,
-                fontFamily: 'OpenSans-ExtraBold',
-                color:
-                  this.props.currentPage == 'PACKS'
-                    ? 'white'
-                    : this.props.isMethod
-                    ? 'white'
-                    : colors.secondBackground
+              ]}
+              onPress={() => {
+                !this.context.isConnected
+                  ? this.context.showNoConnectionAlert()
+                  : isPackOnly
+                  ? expirationDate
+                    ? navigate('MEMBERSHIPEXPIRED')
+                    : navigate('NEWMEMBERSHIP', {
+                        data: { type: 'PACKONLY' }
+                      })
+                  : this.setState({ showModalMenu: true });
               }}
             >
-              PACKS{' '}
-            </Text>
-          </TouchableOpacity>
-          <View style={{ width: 7.5 * factor }} />
-          <TouchableOpacity
-            key={'mylist'}
-            onPress={() => {
-              !this.context.isConnected
-                ? this.context.showNoConnectionAlert()
-                : this.props.navigation.navigate('MYLIST');
-            }}
-            style={{ alignItems: 'center', justifyContent: 'center' }}
-          >
-            <Text
-              numberOfLines={1}
-              style={{
-                fontSize: onTablet ? 22 : 14 * factor,
-                shadowOpacity: 0.3,
-                fontFamily: 'OpenSans-Regular',
-                fontFamily: 'OpenSans-ExtraBold',
-                color:
-                  this.props.currentPage == 'MYLIST'
-                    ? 'white'
-                    : this.props.isMethod
-                    ? 'white'
-                    : colors.secondBackground
+              <Text
+                numberOfLines={1}
+                style={{
+                  fontSize: onTablet ? 20 : 14,
+                  fontFamily: 'OpenSans-ExtraBold',
+                  color:
+                    this.props.currentPage == 'LESSONS'
+                      ? 'white'
+                      : this.props.isMethod
+                      ? 'white'
+                      : colors.secondBackground
+                }}
+              >
+                LESSONS{' '}
+              </Text>
+              <View>
+                <EntypoIcon
+                  name={'chevron-down'}
+                  color={
+                    this.props.currentPage == 'LESSONS'
+                      ? 'white'
+                      : this.props.isMethod
+                      ? 'white'
+                      : colors.secondBackground
+                  }
+                  size={onTablet ? 26 : 18}
+                  style={{ marginLeft: -2.5 }}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                !this.context.isConnected
+                  ? this.context.showNoConnectionAlert()
+                  : navigate('PACKS');
               }}
+              style={[
+                styles.centerContent,
+                {
+                  paddingRight: paddingInset
+                }
+              ]}
             >
-              MY LIST{' '}
-            </Text>
-          </TouchableOpacity>
+              <Text
+                numberOfLines={1}
+                style={{
+                  fontSize: onTablet ? 20 : 14,
+                  fontFamily: 'OpenSans-ExtraBold',
+                  color:
+                    this.props.currentPage == 'PACKS'
+                      ? 'white'
+                      : this.props.isMethod
+                      ? 'white'
+                      : colors.secondBackground
+                }}
+              >
+                PACKS{' '}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                !this.context.isConnected
+                  ? this.context.showNoConnectionAlert()
+                  : navigate('MYLIST');
+              }}
+              style={styles.centerContent}
+            >
+              <Text
+                numberOfLines={1}
+                style={{
+                  fontSize: onTablet ? 20 : 14,
+                  shadowOpacity: 0.3,
+                  fontFamily: 'OpenSans-Regular',
+                  fontFamily: 'OpenSans-ExtraBold',
+                  color:
+                    this.props.currentPage == 'MYLIST'
+                      ? 'white'
+                      : this.props.isMethod
+                      ? 'white'
+                      : colors.secondBackground
+                }}
+              >
+                MY LIST{' '}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-
         <Modal
-          key={'navMenu'}
           isVisible={this.state.showModalMenu}
-          style={{
-            margin: 0,
-            flex: 1
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -241,5 +185,3 @@ class NavMenuHeaders extends React.Component {
     );
   };
 }
-
-export default withNavigation(NavMenuHeaders);

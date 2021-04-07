@@ -2,15 +2,8 @@
  * ReplyNotification
  */
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { withNavigation } from 'react-navigation';
 import DeviceInfo from 'react-native-device-info';
 import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
 import IonIcon from 'react-native-vector-icons/Ionicons';
@@ -19,12 +12,6 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 const messageDict = {
   'lesson comment reply': [
     'replied to your comment.',
@@ -59,8 +46,7 @@ const messageDict = {
   'new content releases': ['', false, 'red', 'new release notifications'] // notify_weekly_update: this.state.notify_weekly_update,
 };
 
-class ReplyNotification extends React.Component {
-  static navigationOptions = { header: null };
+export default class ReplyNotification extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -89,15 +75,15 @@ class ReplyNotification extends React.Component {
     let statusChange = null;
 
     this.setState({
-      notify_on_lesson_comment_reply: userData.notify_on_lesson_comment_reply,
-      notify_on_lesson_comment_like: userData.notify_on_lesson_comment_like,
-      notify_on_forum_post_reply: userData.notify_on_forum_post_reply,
-      notify_on_forum_post_like: userData.notify_on_forum_post_like,
+      notify_on_lesson_comment_reply: userData?.notify_on_lesson_comment_reply,
+      notify_on_lesson_comment_like: userData?.notify_on_lesson_comment_like,
+      notify_on_forum_post_reply: userData?.notify_on_forum_post_reply,
+      notify_on_forum_post_like: userData?.notify_on_forum_post_like,
       notifications_summary_frequency_minutes:
-        userData.notifications_summary_frequency_minutes,
+        userData?.notifications_summary_frequency_minutes,
       notify_on_forum_followed_thread_reply:
-        userData.notify_on_forum_followed_thread_reply,
-      notify_weekly_update: userData.notify_weekly_update
+        userData?.notify_on_forum_followed_thread_reply,
+      notify_weekly_update: userData?.notify_weekly_update
     });
 
     if (this.state.type == 'replied to your comment.') {
@@ -150,7 +136,7 @@ class ReplyNotification extends React.Component {
                       style={[styles.centerContent, localStyles.videoContainer]}
                     >
                       <FontAwesome
-                        size={fullWidth * 0.045}
+                        size={sizing.infoButtonSize}
                         color={'white'}
                         name={'video-camera'}
                       />
@@ -161,8 +147,8 @@ class ReplyNotification extends React.Component {
                       style={[styles.centerContent, localStyles.chatContainer]}
                     >
                       <Chat
-                        height={fullWidth * 0.05}
-                        width={fullWidth * 0.05}
+                        height={sizing.infoButtonSize}
+                        width={sizing.infoButtonSize}
                         fill={'white'}
                       />
                     </View>
@@ -172,7 +158,7 @@ class ReplyNotification extends React.Component {
                       style={[styles.centerContent, localStyles.likeContainer]}
                     >
                       <AntIcon
-                        size={fullWidth * 0.045}
+                        size={sizing.infoButtonSize}
                         color={'white'}
                         name={'like1'}
                       />
@@ -180,7 +166,12 @@ class ReplyNotification extends React.Component {
                   )}
                   <FastImage
                     style={localStyles.image}
-                    source={{ uri: this.state.profileImage }}
+                    source={{
+                      uri:
+                        this.state.profileImage !== ''
+                          ? this.state.profileImage
+                          : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                    }}
                     resizeMode={FastImage.resizeMode.cover}
                   />
                 </View>
@@ -200,10 +191,15 @@ class ReplyNotification extends React.Component {
                 <View style={localStyles.crossContainer}>
                   <EntypoIcon
                     name={'cross'}
-                    size={26 * factor}
+                    size={sizing.myListButtonSize * 1.2}
                     color={colors.pianoteRed}
                   />
-                  <Text style={localStyles.removeText}>
+                  <Text
+                    style={[
+                      localStyles.removeText,
+                      { fontSize: sizing.descriptionText }
+                    ]}
+                  >
                     Remove this notification
                   </Text>
                 </View>
@@ -221,11 +217,15 @@ class ReplyNotification extends React.Component {
                 <View style={localStyles.notificationContainer}>
                   <IonIcon
                     name={'ios-notifications-outline'}
-                    size={26 * factor}
+                    size={sizing.myListButtonSize}
                     color={colors.pianoteRed}
                   />
-                  <View style={{ width: 5 * factor }} />
-                  <Text style={localStyles.removeText}>
+                  <Text
+                    style={[
+                      localStyles.removeText,
+                      { fontSize: sizing.descriptionText }
+                    ]}
+                  >
                     Turn {this.state.notificationStatus ? 'off' : 'on'}{' '}
                     {messageDict[this.props.data.type][3]}
                   </Text>
@@ -242,96 +242,94 @@ class ReplyNotification extends React.Component {
 
 const localStyles = StyleSheet.create({
   profileContainer: {
-    marginTop: height * 0.0175,
     flexDirection: 'row',
-    height: '30%',
-    marginBottom: 7.5 * factor
+    paddingVertical: 30
   },
   container: {
-    height: DeviceInfo.isTablet() ? height * 0.45 : height * 0.35,
     width: '100%',
     flexDirection: 'row',
     backgroundColor: '#00101d'
   },
   profileContainer2: {
-    height: width * 0.165,
-    width: width * 0.165,
-    borderRadius: 100 * factor,
+    height: DeviceInfo.isTablet() ? 120 : 80,
+    width: DeviceInfo.isTablet() ? 120 : 80,
+    borderRadius: 100,
     backgroundColor: '#445f73'
   },
   videoContainer: {
     position: 'absolute',
-    bottom: 0,
-    right: 0,
-    height: width * 0.075,
-    width: width * 0.075,
+    bottom: -5,
+    right: -5,
+    height: DeviceInfo.isTablet() ? 40 : 30,
+    width: DeviceInfo.isTablet() ? 40 : 30,
     backgroundColor: 'red',
-    borderRadius: 100 * factor,
+    borderRadius: 100,
     zIndex: 5
   },
   chatContainer: {
     position: 'absolute',
-    bottom: 0,
-    right: 0,
-    height: width * 0.075,
-    width: width * 0.075,
+    bottom: -5,
+    right: -5,
+    height: DeviceInfo.isTablet() ? 40 : 30,
+    width: DeviceInfo.isTablet() ? 40 : 30,
     backgroundColor: 'orange',
-    borderRadius: 100 * factor,
+    borderRadius: 100,
     zIndex: 5
   },
   likeContainer: {
     position: 'absolute',
-    bottom: 0,
-    right: 0,
-    height: width * 0.075,
-    width: width * 0.075,
+    bottom: -5,
+    right: -5,
+    height: DeviceInfo.isTablet() ? 40 : 30,
+    width: DeviceInfo.isTablet() ? 40 : 30,
     backgroundColor: 'blue',
-    borderRadius: 100 * factor,
+    borderRadius: 100,
     zIndex: 5
   },
   image: {
     flex: 1,
-    borderRadius: 100 * factor
+    borderRadius: 100
   },
   replyUser: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 14 * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    paddingBottom: 20,
     textAlign: 'center',
     color: '#445f73'
   },
   user: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: 15 * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     textAlign: 'center'
   },
-  removeContainer: {
-    height: '18.5%',
-    width: '100%',
-    borderTopWidth: 0.5 * factor,
-    borderTopColor: '#445f73'
+  removeText: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    color: '#445f73',
+    paddingLeft: 10
   },
   crossContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: width * 0.035
+    width: '100%'
   },
-  removeText: {
-    fontFamily: 'OpenSans-Regular',
-    fontSize: 17 * factor,
-    color: '#445f73'
+  removeContainer: {
+    height: DeviceInfo.isTablet() ? 70 : 50,
+    width: '100%',
+    borderTopWidth: 0.5,
+    paddingLeft: 10,
+    borderTopColor: '#445f73'
   },
   muteContainer: {
-    height: '18.5%',
+    height: DeviceInfo.isTablet() ? 70 : 50,
     width: '100%',
-    marginBottom: '10%',
-    borderTopWidth: 0.5 * factor,
+    marginBottom: DeviceInfo.hasNotch() ? 20 : 0,
+    borderTopWidth: 0.5,
     borderTopColor: '#445f73'
   },
   notificationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: width * 0.035
+    paddingLeft: 10
   }
 });
-
-export default withNavigation(ReplyNotification);

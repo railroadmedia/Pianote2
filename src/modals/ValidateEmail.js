@@ -7,20 +7,10 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
-  Dimensions
+  StyleSheet
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
-
-class ValidateEmail extends React.Component {
-  static navigationOptions = { header: null };
+export default class ValidateEmail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -42,11 +32,7 @@ class ValidateEmail extends React.Component {
               style={localStyles.tryAgain}
             >
               <Text
-                style={[
-                  styles.modalCancelButtonText,
-                  localStyles.tryAgainText,
-                  { fontSize: 17.5 * factorRatio }
-                ]}
+                style={[styles.modalCancelButtonText, localStyles.tryAgainText]}
               >
                 TRY AGAIN
               </Text>
@@ -61,33 +47,30 @@ class ValidateEmail extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor,
-    paddingBottom: 5 * factor,
-    paddingTop: 20 * factor,
+    borderRadius: 15,
+    paddingBottom: 5,
+    paddingTop: 20,
     backgroundColor: 'white'
   },
   title: {
-    paddingHorizontal: 40,
-    marginBottom: 10 * factor
+    paddingHorizontal: 20,
+    marginBottom: 10
   },
   loginContainer: {
-    borderRadius: 45 * factor,
+    borderRadius: 45,
     backgroundColor: '#fb1b2f',
-    marginHorizontal: 40,
-    marginVertical: 5 * factor
+    marginHorizontal: 20,
+    marginVertical: 5
   },
   loginText: {
     color: 'white',
     paddingVertical: 10
   },
   tryAgain: {
-    paddingHorizontal: 40,
-    marginVertical: 10 * factor
+    paddingHorizontal: 20,
+    marginVertical: 10
   },
   tryAgainText: {
     color: '#fb1b2f'
   }
 });
-
-export default withNavigation(ValidateEmail);

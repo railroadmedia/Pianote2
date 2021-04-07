@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Dimensions
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import Modal from 'react-native-modal';
 import SoundSlice from '../../components/SoundSlice.js';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -26,7 +27,7 @@ const factor = (height / 812 + width / 375) / 2;
 
 export default class VideoPlayerSong extends React.Component {
   static contextType = NetworkContext;
-  static navigationOptions = { header: null };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -63,49 +64,48 @@ export default class VideoPlayerSong extends React.Component {
             backgroundColor: colors.mainBackground
           }}
         >
-          <View style={{ height: 25 * factor }} />
           {!this.state.hideTitles && (
             <>
               <TouchableOpacity
                 onPress={this.props.onX}
                 style={{
                   position: 'absolute',
-                  left: 20,
-                  top: 20,
+                  right: paddingInset,
+                  top: paddingInset,
                   zIndex: 1
                 }}
               >
-                <AntIcon name={'close'} size={30 * factor} color={'#ffffff'} />
+                <AntIcon
+                  name={'close'}
+                  size={sizing.myListButtonSize}
+                  color={'#ffffff'}
+                />
               </TouchableOpacity>
               <Text
-                key={'assignmentNumber'}
                 style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 16 * factor,
-                  fontWeight: '700',
+                  padding: paddingInset,
+                  fontFamily: 'OpenSans-Bold',
+                  fontSize: sizing.verticalListTitleSmall,
                   textAlign: 'center',
                   color: colors.secondBackground
                 }}
               >
                 ASSIGNMENT #{index}
               </Text>
-              <View style={{ height: 10 * factor }} />
               <Text
-                key={'assignmentName'}
                 style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 28 * factor,
-                  fontWeight: '700',
+                  fontSize: sizing.titleVideoPlayer,
+                  fontFamily: 'OpenSans-Bold',
                   textAlign: 'center',
-                  color: '#ffffff'
+                  color: 'white',
+                  paddingHorizontal: paddingInset
                 }}
               >
                 {title}
               </Text>
-              <View style={{ height: 10 * factor }} />
+              <View style={{ height: 10 }} />
               {timeCodes?.map(tc => (
                 <View
-                  key={'skipTo'}
                   style={[
                     styles.centerContent,
                     {
@@ -120,7 +120,7 @@ export default class VideoPlayerSong extends React.Component {
                       {
                         width: '40%',
                         height: '100%',
-                        borderRadius: 30 * factor,
+                        borderRadius: 30,
                         backgroundColor: '#ececec',
                         alignSelf: 'center'
                       }
@@ -142,7 +142,7 @@ export default class VideoPlayerSong extends React.Component {
                           fontFamily: 'OpenSans-Regular',
                           fontWeight: '700',
                           color: 'grey',
-                          fontSize: 12 * factor,
+                          fontSize: sizing.descriptionText,
                           alignSelf: 'center'
                         }}
                       >
@@ -155,20 +155,19 @@ export default class VideoPlayerSong extends React.Component {
 
               <View
                 style={{
-                  height: 25 * factor,
+                  height: 1,
                   borderBottomColor: colors.secondBackground,
-                  borderBottomWidth: 1 * factor
+                  borderBottomWidth: 1
                 }}
               />
               {description !== 'TBD' && (
                 <View key={'blurb'} style={{ width: '100%' }}>
                   <Text
                     style={{
-                      paddingTop: '5%',
-                      paddingBottom: '5%',
-                      paddingLeft: '5%',
-                      paddingRight: '5%',
-                      fontSize: 16 * factor,
+                      paddingVertical: '2%',
+                      paddingHorizontal: '5%',
+                      textAlign: 'center',
+                      fontSize: sizing.descriptionText,
                       fontFamily: 'OpenSans-Regular',
                       color: '#ffffff'
                     }}
@@ -195,30 +194,34 @@ export default class VideoPlayerSong extends React.Component {
           )}
         </ScrollView>
         {!this.state.hideTitles && this.context.isConnected && (
-          <View style={{ backgroundColor: colors.mainBackground }}>
+          <View
+            style={{
+              backgroundColor: colors.mainBackground,
+              paddingVertical: 10
+            }}
+          >
             {slug && (
               <TouchableOpacity
                 onPress={() => this.setState({ showSoundSlice: true })}
                 style={[
                   styles.centerContent,
+                  styles.heightButtons,
                   {
-                    borderWidth: 2.5 * factor,
+                    borderWidth: 2,
                     borderColor: '#fb1b2f',
                     width: '90%',
                     alignSelf: 'center',
-                    borderRadius: 100 * factor,
-                    marginTop: 10 * factor,
-                    marginBottom: 5 * factor
+                    borderRadius: 300,
+                    paddingHorizontal: 10,
+                    marginBottom: 7.5
                   }
                 ]}
               >
                 <Text
                   style={{
-                    fontSize: 16 * factor,
-                    fontFamily: 'OpenSans-Regular',
-                    fontWeight: '800',
                     color: '#fb1b2f',
-                    paddingVertical: 10
+                    fontFamily: 'RobotoCondensed-Bold',
+                    fontSize: sizing.verticalListTitleSmall
                   }}
                 >
                   PRACTICE
@@ -230,23 +233,19 @@ export default class VideoPlayerSong extends React.Component {
               style={[
                 styles.centerContent,
                 {
-                  borderWidth: 2.5 * factor,
-                  borderColor: '#fb1b2f',
+                  marginBottom: DeviceInfo.hasNotch() ? 20 : 0,
                   backgroundColor: '#fb1b2f',
                   width: '90%',
                   alignSelf: 'center',
-                  borderRadius: 100 * factor,
-                  marginTop: 5 * factor,
-                  marginBottom: 10 * factor
+                  borderRadius: 300
                 }
               ]}
             >
               <Text
                 style={{
-                  fontSize: 16 * factor,
-                  fontFamily: 'OpenSans-Regular',
-                  fontWeight: '800',
                   color: 'white',
+                  fontFamily: 'RobotoCondensed-Bold',
+                  fontSize: sizing.verticalListTitleSmall,
                   paddingVertical: 10
                 }}
               >
@@ -258,16 +257,8 @@ export default class VideoPlayerSong extends React.Component {
           </View>
         )}
         <Modal
-          key={'soundSlice'}
           isVisible={this.state.showSoundSlice}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={350}
           animationOutTiming={350}

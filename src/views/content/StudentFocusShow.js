@@ -11,8 +11,6 @@ import {
   RefreshControl,
   ActivityIndicator
 } from 'react-native';
-import Modal from 'react-native-modal';
-import Filters from '../../components/FIlters.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
@@ -29,13 +27,11 @@ import { getAllContent, getStudentFocusTypes } from '../../services/GetContent';
 
 import { cacheAndWritePodcasts } from '../../redux/PodcastsCacheActions';
 import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
+import { goBack, refreshOnFocusListener } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
@@ -46,32 +42,21 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 };
 
 class StudentFocusShow extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
     this.state = {
-      thumbnailUrl: props.navigation.state.params.thumbnailUrl,
+      thumbnailUrl: props.route?.params?.thumbnailUrl,
       allLessons: [],
       currentSort: 'newest',
       page: 1,
       outVideos: false,
       refreshing: false,
-      filtersAvailable: null,
-      showFilters: false,
-      isLoadingAll: true, // all lessons
-      isPaging: false, // scrolling more
-      filtering: false, // filtering
-      filters: {
-        displayTopics: [],
-        topics: [],
-        content_type: [],
-        level: [],
-        progress: [],
-        instructors: []
-      },
+      isLoadingAll: true, 
+      isPaging: false, 
+      filtering: false, 
       ...this.initialValidData(
-        props.navigation.state.params.type == 'quick-tips'
+        props.route?.params?.type == 'quick-tips'
           ? props.quickTipsCache
           : props.podcastsCache,
         true
@@ -81,15 +66,11 @@ class StudentFocusShow extends React.Component {
 
   componentDidMount() {
     this.getData();
-    this.willFocusSubscription = this.props.navigation.addListener(
-      'willFocus',
-      () =>
-        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
-    );
+    this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   }
 
   componentWillUnmount() {
-    this.willFocusSubscription.remove();
+    this.refreshOnFocusListener?.();
   }
 
   getData = async () => {
@@ -97,14 +78,15 @@ class StudentFocusShow extends React.Component {
     let content = await Promise.all([
       getStudentFocusTypes(),
       getAllContent(
-        this.props.navigation.state.params.type,
+        this.props.route?.params?.type,
         this.state.currentSort,
         this.state.page,
-        this.state.filters
+        this.filterQuery
       )
     ]);
+    this.metaFilters = content?.[1]?.meta?.filterOptions;
     this.props[
-      this.props.navigation.state.params.type == 'quick-tips'
+      this.props.route?.params?.type == 'quick-tips'
         ? 'cacheAndWriteQuickTips'
         : 'cacheAndWritePodcasts'
     ]({
@@ -145,10 +127,8 @@ class StudentFocusShow extends React.Component {
       }
 
       return {
-        filtersAvailable: content.all.meta.filterOptions,
         thumbnailUrl:
-          content.thumbnail[this.props.navigation.state.params.type]
-            .thumbnailUrl,
+          content.thumbnail[this.props.route?.params?.type]?.thumbnailUrl,
         allLessons: items,
         outVideos:
           items.length == 0 || content.all.data.length < 20 ? true : false,
@@ -166,8 +146,7 @@ class StudentFocusShow extends React.Component {
   async getStudentFocus() {
     let studentFocus = await getStudentFocusTypes();
     this.setState({
-      thumbnailUrl:
-        studentFocus[this.props.navigation.state.params.type].thumbnailUrl
+      thumbnailUrl: studentFocus[this.props.route?.params?.type].thumbnailUrl
     });
   }
 
@@ -177,11 +156,12 @@ class StudentFocusShow extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     let response = await getAllContent(
-      this.props.navigation.state.params.type,
+      this.props.route?.params?.type,
       this.state.currentSort,
       this.state.page,
-      this.state.filters
+      this.filterQuery
     );
+    this.metaFilters = response?.meta?.filterOptions;
     const newContent = await response.data.map(data => {
       return new ContentModel(data);
     });
@@ -204,9 +184,7 @@ class StudentFocusShow extends React.Component {
         progress_percent: newContent[i].post.progress_percent
       });
     }
-    console.log('response', response);
     this.setState(state => ({
-      filtersAvailable: response.meta.filterOptions,
       allLessons: isLoadingMore ? state.allLessons.concat(items) : items,
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
       page: this.state.page + 1,
@@ -251,10 +229,14 @@ class StudentFocusShow extends React.Component {
         }
       }
     } else {
-      if (newContent.getField('instructor') !== 'TBD') {
-        return newContent.getField('instructor').fields[0].value;
-      } else {
-        return newContent.getField('instructor').name;
+      try {
+        if (newContent.getField('instructor') !== 'TBD') {
+          return newContent.getField('instructor').fields[0].value;
+        } else {
+          return newContent.getField('instructor').name;
+        }
+      } catch (error) {
+        return '';
       }
     }
   };
@@ -317,16 +299,14 @@ class StudentFocusShow extends React.Component {
           )}
           <View key={'imageContainer'} style={{ width: '100%' }}>
             <TouchableOpacity
-              onPress={() => this.props.navigation.goBack()}
+              onPress={() => goBack()}
               style={{
                 padding: 15
-                // position: 'absolute',
-                // top: 0
               }}
             >
               <Back
-                width={(onTablet ? 17.5 : 25) * factor}
-                height={(onTablet ? 17.5 : 25) * factor}
+                width={backButtonSize}
+                height={backButtonSize}
                 fill={'white'}
               />
             </TouchableOpacity>
@@ -346,7 +326,7 @@ class StudentFocusShow extends React.Component {
                   maxWidth: 400,
                   maxHeight: 400,
                   aspectRatio: 1,
-                  borderRadius: 10 * factor,
+                  borderRadius: 10,
                   borderColor: colors.thirdBackground,
                   borderWidth: 5
                 }}
@@ -355,7 +335,7 @@ class StudentFocusShow extends React.Component {
               />
             </View>
           </View>
-          <View style={{ height: 25 * factor }} />
+          <View style={{ height: 25 }} />
           <VerticalVideoList
             items={this.state.allLessons}
             title={'EPISODES'}
@@ -366,58 +346,19 @@ class StudentFocusShow extends React.Component {
             showArtist={true}
             showLength={false}
             showFilter={
-              this.props.navigation.state.params.type == 'quick-tips'
-                ? true
-                : false
+              this.props.route?.params?.type == 'quick-tips' ? true : false
             }
             showSort={
-              this.props.navigation.state.params.type == 'quick-tips'
-                ? true
-                : false
+              this.props.route?.params?.type == 'quick-tips' ? true : false
             }
-            filters={this.state.filters}
+            filters={this.metaFilters}
             currentSort={this.state.currentSort}
             changeSort={sort => this.changeSort(sort)}
-            filterResults={() => this.setState({ showFilters: true })} // apply from filters page
-            imageWidth={onTablet ? width * 0.225 : width * 0.3}
+            imageWidth={(onTablet ? 0.225 : 0.3) * width}
             outVideos={this.state.outVideos}
             getVideos={() => this.getVideos()}
-          />
-        </ScrollView>
-        {this.state.showFilters && (
-          <Modal
-            isVisible={this.state.showFilters}
-            style={[
-              styles.centerContent,
-              {
-                margin: 0,
-                height: '100%',
-                width: '100%'
-              }
-            ]}
-            animation={'slideInUp'}
-            animationInTiming={10}
-            animationOutTiming={10}
-            coverScreen={true}
-            hasBackdrop={true}
-          >
-            <Filters
-              hideFilters={() => this.setState({ showFilters: false })}
-              filtersAvailable={this.state.filtersAvailable}
-              filters={this.state.filters}
-              filtering={this.state.filtering}
-              type={'Quick Tips'}
-              reset={filters => {
-                this.setState(
-                  {
-                    allLessons: [],
-                    filters,
-                    page: 1
-                  },
-                  () => this.getAllLessons()
-                );
-              }}
-              filterVideos={filters => {
+            applyFilters={filters =>
+              new Promise(res =>
                 this.setState(
                   {
                     allLessons: [],
@@ -425,12 +366,15 @@ class StudentFocusShow extends React.Component {
                     page: 1,
                     filters
                   },
-                  () => this.getAllLessons()
-                );
-              }}
-            />
-          </Modal>
-        )}
+                  () => {
+                    this.filterQuery = filters;
+                    this.getAllLessons().then(res);
+                  }
+                )
+              )
+            }
+          />
+        </ScrollView>
         <NavigationBar currentPage={'NONE'} />
       </SafeAreaView>
     );

@@ -9,10 +9,8 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
 
-class Loading extends React.Component {
-  static navigationOptions = { header: null };
+export default class Loading extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -53,5 +51,3 @@ const localStyles = StyleSheet.create({
     width: '100%'
   }
 });
-
-export default withNavigation(Loading);

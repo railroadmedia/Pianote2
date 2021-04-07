@@ -9,8 +9,7 @@ import {
   ActivityIndicator,
   ScrollView,
   StatusBar,
-  StyleSheet,
-  Dimensions
+  StyleSheet
 } from 'react-native';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import DeviceInfo from 'react-native-device-info';
@@ -22,16 +21,9 @@ import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import commonService from '../../services/common.service';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { SafeAreaView } from 'react-navigation';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
+import { goBack } from '../../../AppNavigator';
 
 export default class NotificationSettings extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -47,27 +39,23 @@ export default class NotificationSettings extends React.Component {
     };
   }
 
-  UNSAFE_componentWillMount = async () => {
-    let userData = await getUserData();
-
-    console.log(
-      'original user data : ',
-      userData.notifications_summary_frequency_minutes
+  componentDidMount() {
+    getUserData().then(userData =>
+      this.setState({
+        notifications_summary_frequency_minutes:
+          userData?.notifications_summary_frequency_minutes,
+        notify_on_forum_followed_thread_reply:
+          userData?.notify_on_forum_followed_thread_reply,
+        notify_on_forum_post_like: userData?.notify_on_forum_post_like,
+        notify_on_forum_post_reply: userData?.notify_on_forum_post_reply,
+        notify_on_lesson_comment_like: userData?.notify_on_lesson_comment_like,
+        notify_on_lesson_comment_reply:
+          userData?.notify_on_lesson_comment_reply,
+        notify_weekly_update: userData?.notify_weekly_update,
+        isLoading: false
+      })
     );
-
-    this.setState({
-      notifications_summary_frequency_minutes:
-        userData.notifications_summary_frequency_minutes,
-      notify_on_forum_followed_thread_reply:
-        userData.notify_on_forum_followed_thread_reply,
-      notify_on_forum_post_like: userData.notify_on_forum_post_like,
-      notify_on_forum_post_reply: userData.notify_on_forum_post_reply,
-      notify_on_lesson_comment_like: userData.notify_on_lesson_comment_like,
-      notify_on_lesson_comment_reply: userData.notify_on_lesson_comment_reply,
-      notify_weekly_update: userData.notify_weekly_update,
-      isLoading: false
-    });
-  };
+  }
 
   changeNotificationStatus = async () => {
     if (!this.context.isConnected) {
@@ -123,15 +111,15 @@ export default class NotificationSettings extends React.Component {
               style={{ flex: 1 }}
               onPress={() => {
                 this.state.currentlyView == 'Profile Settings'
-                  ? this.props.navigation.goBack()
+                  ? goBack()
                   : this.setState({
                       currentlyView: 'Profile Settings'
                     });
               }}
             >
               <Back
-                width={(onTablet ? 17.5 : 25) * factor}
-                height={(onTablet ? 17.5 : 25) * factor}
+                width={backButtonSize}
+                height={backButtonSize}
                 fill={colors.secondBackground}
               />
             </TouchableOpacity>
@@ -253,22 +241,22 @@ export default class NotificationSettings extends React.Component {
                           ? '#fb1b2f'
                           : colors.secondBackground,
                       borderRadius: 100,
-                      width: (onTablet ? 22.5 : 27.5) * factor,
-                      height: (onTablet ? 22.5 : 27.5) * factor
+                      width: onTablet ? 35 : 27.5,
+                      height: onTablet ? 35 : 27.5
                     }
                   ]}
                 >
                   {this.state.notifications_summary_frequency_minutes == 1 && (
                     <FontIcon
                       name={'check'}
-                      size={(onTablet ? 17.5 : 20) * factor}
+                      size={onTablet ? 25 : 20}
                       color={'white'}
                     />
                   )}
                   {this.state.notifications_summary_frequency_minutes !== 1 && (
                     <EntypoIcon
                       name={'cross'}
-                      size={(onTablet ? 18.5 : 22.5) * factor}
+                      size={onTablet ? 35 : 25}
                       color={'white'}
                     />
                   )}
@@ -295,8 +283,8 @@ export default class NotificationSettings extends React.Component {
                           ? '#fb1b2f'
                           : colors.secondBackground,
                       borderRadius: 100,
-                      width: (onTablet ? 22.5 : 27.5) * factor,
-                      height: (onTablet ? 22.5 : 27.5) * factor
+                      width: onTablet ? 35 : 27.5,
+                      height: onTablet ? 35 : 27.5
                     }
                   ]}
                 >
@@ -304,7 +292,7 @@ export default class NotificationSettings extends React.Component {
                     1440 && (
                     <FontIcon
                       name={'check'}
-                      size={(onTablet ? 17.5 : 20) * factor}
+                      size={onTablet ? 25 : 20}
                       color={'white'}
                     />
                   )}
@@ -312,7 +300,7 @@ export default class NotificationSettings extends React.Component {
                     1440 && (
                     <EntypoIcon
                       name={'cross'}
-                      size={(onTablet ? 18.5 : 22.5) * factor}
+                      size={onTablet ? 35 : 25}
                       color={'white'}
                     />
                   )}
@@ -341,8 +329,8 @@ export default class NotificationSettings extends React.Component {
                           ? '#fb1b2f'
                           : colors.secondBackground,
                       borderRadius: 100,
-                      width: (onTablet ? 22.5 : 27.5) * factor,
-                      height: (onTablet ? 22.5 : 27.5) * factor
+                      width: onTablet ? 35 : 27.5,
+                      height: onTablet ? 35 : 27.5
                     }
                   ]}
                 >
@@ -351,7 +339,7 @@ export default class NotificationSettings extends React.Component {
                       null) && (
                     <FontIcon
                       name={'check'}
-                      size={(onTablet ? 17.5 : 20) * factor}
+                      size={onTablet ? 25 : 20}
                       color={'white'}
                     />
                   )}
@@ -360,7 +348,7 @@ export default class NotificationSettings extends React.Component {
                       null && (
                       <EntypoIcon
                         name={'cross'}
-                        size={(onTablet ? 18.5 : 22.5) * factor}
+                        size={onTablet ? 35 : 25}
                         color={'white'}
                       />
                     )}
@@ -371,6 +359,10 @@ export default class NotificationSettings extends React.Component {
 
           <NavigationBar currentPage={'PROFILE'} pad={true} />
         </SafeAreaView>
+        <SafeAreaView
+          forceInset={'never'}
+          style={[{ backgroundColor: colors.mainBackground }]}
+        ></SafeAreaView>
       </View>
     );
   }
@@ -379,8 +371,8 @@ export default class NotificationSettings extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor,
+    borderRadius: 15,
+    margin: 20,
     height: 200,
     width: '80%'
   },
@@ -389,46 +381,44 @@ const localStyles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#081826',
-    padding: (DeviceInfo.isTablet() ? 15 : 20) * factor
+    padding: DeviceInfo.isTablet() ? 22.5 : 15
   },
   title: {
     textAlign: 'center',
     color: '#445f73'
   },
   noteTypeContainer: {
-    paddingLeft: 10 * factor,
+    paddingLeft: 10,
     width: '100%',
     justifyContent: 'center',
-    fontSize: 18 * factor
+    fontSize: DeviceInfo.isTablet() ? 18 : 14
   },
   noteTypeText: {
-    marginTop: 10 * factor,
+    marginTop: 10,
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 14 : 20) * factor,
+    fontSize: DeviceInfo.isTablet() ? 22 : 16,
     color: '#445f73',
     paddingVertical: 5
   },
   textContainer: {
-    paddingHorizontal: 10 * factor,
-    paddingVertical: 10,
+    padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between'
   },
   text: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 14 : 16) * factor,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14,
     color: '#445f73'
   },
   emailNotificationFrequency: {
-    paddingLeft: 10 * factor,
-    paddingTop: 10 * factor,
+    paddingLeft: 10,
+    paddingTop: 10,
     width: '100%',
-    justifyContent: 'center',
-    fontSize: (DeviceInfo.isTablet() ? 14 : 20) * factor
+    justifyContent: 'center'
   },
   border: {
-    height: (DeviceInfo.isTablet() ? 15 : 25) * factor,
+    height: 20,
     borderBottomColor: '#445f73',
     borderBottomWidth: 1
   }

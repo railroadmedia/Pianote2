@@ -10,8 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  StyleSheet,
-  Dimensions
+  StyleSheet
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
@@ -26,16 +25,9 @@ import { NetworkContext } from '../../context/NetworkProvider.js';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
 import Orientation from 'react-native-orientation-locker';
 import DeviceInfo from 'react-native-device-info';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
+import { navigate } from '../../../AppNavigator';
 
 export default class CreateAccount extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -54,9 +46,8 @@ export default class CreateAccount extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     if (this.state.email.length > 0) {
-      fetch(
-        `${commonService.rootUrl}/usora/api/is-email-unique?email=${this.state.email}`
-      )
+      let email = encodeURIComponent(this.state.email);
+      fetch(`${commonService.rootUrl}/usora/api/is-email-unique?email=${email}`)
         .then(response => response.json())
         .then(response => {
           console.log(response);
@@ -68,9 +59,9 @@ export default class CreateAccount extends React.Component {
           ) {
             this.setState({ showValidateEmail: true });
           } else {
-            this.props.navigation.navigate('CREATEACCOUNT2', {
+            navigate('CREATEACCOUNT2', {
               email: this.state.email,
-              purchase: this.props.navigation.state.params?.purchase
+              purchase: this.props.route?.params?.purchase
             });
           }
         })
@@ -101,12 +92,12 @@ export default class CreateAccount extends React.Component {
             behavior={`${isiOS ? 'padding' : ''}`}
           >
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('LOGINCREDENTIALS')}
+              onPress={() => navigate('LOGINCREDENTIALS')}
               style={localStyles.createAccountContainer}
             >
               <Back
-                width={(onTablet ? 17.5 : 25) * factor}
-                height={(onTablet ? 17.5 : 25) * factor}
+                width={backButtonSize}
+                height={backButtonSize}
                 fill={'white'}
               />
               <Text
@@ -128,6 +119,7 @@ export default class CreateAccount extends React.Component {
                   <Text style={localStyles.emailText}>What's your email?</Text>
                   <TextInput
                     autoCorrect={false}
+                    autoCapitalize={'none'}
                     onBlur={() =>
                       this.setState({
                         scrollViewContentFlex: { flex: 1 }
@@ -157,7 +149,7 @@ export default class CreateAccount extends React.Component {
                       localStyles.verifyContainer,
                       {
                         width: onTablet ? '30%' : '50%',
-                        marginTop: 15 * factor,
+                        marginTop: 15,
                         backgroundColor:
                           this.state.email.length > 0
                             ? '#fb1b2f'
@@ -172,7 +164,7 @@ export default class CreateAccount extends React.Component {
                           color:
                             this.state.email.length > 0 ? 'white' : '#fb1b2f',
                           fontFamily: 'RobotoCondensed-Bold',
-                          fontSize: 18 * factor,
+                          fontSize: onTablet ? 20 : 14,
                           textAlign: 'center',
                           padding: 10
                         }
@@ -186,17 +178,8 @@ export default class CreateAccount extends React.Component {
               </View>
             </ScrollView>
             <Modal
-              key={'checkEmailModal'}
               isVisible={this.state.showCheckEmail}
-              style={[
-                styles.centerContent,
-                {
-                  margin: 0,
-                  height: '100%',
-                  width: '100%'
-                }
-              ]}
-              d
+              style={[styles.centerContent, styles.modalContainer]}
               animation={'slideInUp'}
               animationInTiming={350}
               animationOutTiming={350}
@@ -212,17 +195,8 @@ export default class CreateAccount extends React.Component {
               />
             </Modal>
             <Modal
-              key={'entervalid'}
               isVisible={this.state.showValidateEmail}
-              style={[
-                styles.centerContent,
-                {
-                  margin: 0,
-                  height: '100%',
-                  width: '100%'
-                }
-              ]}
-              d
+              style={[styles.centerContent, styles.modalContainer]}
               animation={'slideInUp'}
               animationInTiming={350}
               animationOutTiming={350}
@@ -254,38 +228,38 @@ const localStyles = StyleSheet.create({
   emailContainer: {
     flex: 1,
     justifyContent: 'space-between',
-    marginBottom: 20 * factor
+    marginBottom: 20
   },
   emailText: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: (DeviceInfo.isTablet() ? 17.5 : 20) * factor,
+    fontSize: DeviceInfo.isTablet() ? 24 : 16,
     textAlign: 'left',
     color: 'white',
     paddingLeft: 15
   },
   createAccountText: {
     color: 'white',
-    fontSize: 24 * factor
+    fontSize: DeviceInfo.isTablet() ? 36 : 24
   },
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor,
+    borderRadius: 15,
+    margin: 20,
     height: 200,
     width: '80%'
   },
   textInput: {
     padding: 15,
-    marginTop: (DeviceInfo.isTablet() ? 12 : 16) * factor,
+    marginTop: 14,
     color: 'black',
     borderRadius: 100,
     marginHorizontal: 15,
-    fontSize: (DeviceInfo.isTablet() ? 12 : 16) * factor,
+    fontSize: DeviceInfo.isTablet() ? 20 : 14,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
   verifyContainer: {
-    marginBottom: 20 * factor,
+    marginBottom: 20,
     borderWidth: 2,
     borderRadius: 50,
     alignSelf: 'center',

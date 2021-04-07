@@ -9,15 +9,9 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
+import DeviceInfo from 'react-native-device-info';
 import ProgressCircle from 'react-native-progress-circle';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 const ranks = [
   0,
   100,
@@ -41,8 +35,7 @@ const ranks = [
   100000000
 ];
 
-class XpRank extends React.Component {
-  static navigationOptions = { header: null };
+export default class XpRank extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -53,7 +46,7 @@ class XpRank extends React.Component {
     };
   }
 
-  UNSAFE_componentWillMount = () => {
+  componentDidMount() {
     for (i in ranks) {
       if (this.state.XP >= ranks[i] && this.state.XP < ranks[Number(i) + 1]) {
         this.setState({
@@ -62,7 +55,7 @@ class XpRank extends React.Component {
         });
       }
     }
-  };
+  }
 
   render = () => {
     return (
@@ -88,8 +81,11 @@ class XpRank extends React.Component {
               >
                 <ProgressCircle
                   percent={this.state.rankProgress}
-                  radius={width * 0.27}
-                  borderWidth={4 * factorRatio}
+                  radius={
+                    (DeviceInfo.isTablet() ? 0.2 : 0.27) *
+                    Dimensions.get('window').width
+                  }
+                  borderWidth={5}
                   shadowColor={'pink'}
                   color={'red'}
                   bgColor={'white'}
@@ -115,17 +111,18 @@ class XpRank extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    borderRadius: 15 * factor,
+    borderRadius: 15,
     backgroundColor: 'white',
     elevation: 10
   },
   title: {
-    paddingHorizontal: 40,
-    marginTop: 15 * factor
+    paddingHorizontal: 30,
+    marginTop: 15
   },
   description: {
-    paddingHorizontal: 40,
-    marginVertical: 10 * factor
+    paddingHorizontal: 20,
+    marginVertical: 10,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14
   },
   ProgressCircleContainer: {
     transform: [{ rotate: '315deg' }]
@@ -133,18 +130,17 @@ const localStyles = StyleSheet.create({
   XPtext: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: 34 * factor
+    fontSize: DeviceInfo.isTablet() ? 34 : 26
   },
   rankText: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: 24 * factor
+    fontSize: DeviceInfo.isTablet() ? 24 : 18
   },
   nextRank: {
     color: 'grey',
     paddingHorizontal: 40,
-    marginVertical: 10 * factor
+    marginVertical: 10,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14
   }
 });
-
-export default withNavigation(XpRank);

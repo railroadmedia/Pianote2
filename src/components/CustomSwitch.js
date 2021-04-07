@@ -2,20 +2,11 @@
  * CustomSwitch
  */
 import React from 'react';
-import { View, TouchableOpacity, Animated, Dimensions } from 'react-native';
-import { withNavigation } from 'react-navigation';
+import { View, TouchableOpacity, Animated } from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
-
-class CustomSwitch extends React.Component {
-  static navigationOptions = { header: null };
+export default class CustomSwitch extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -62,8 +53,8 @@ class CustomSwitch extends React.Component {
           styles.centerContent,
           {
             borderRadius: 100,
-            width: (onTablet ? 40 : 52.5) * factor,
-            height: (onTablet ? 18.5 : 28) * factor,
+            width: onTablet ? 60 : 52.5,
+            height: onTablet ? 32.5 : 28,
             backgroundColor: this.state.clicked
               ? '#fb1b2f'
               : colors.secondBackground,
@@ -89,8 +80,8 @@ class CustomSwitch extends React.Component {
               style={[
                 styles.centerContent,
                 {
-                  width: (onTablet ? 15 : 22.5) * factor,
-                  height: (onTablet ? 15 : 22.5) * factor,
+                  width: onTablet ? 27.5 : 22.5,
+                  height: onTablet ? 27.5 : 22.5,
                   borderRadius: 100,
                   backgroundColor: 'white'
                 }
@@ -99,14 +90,14 @@ class CustomSwitch extends React.Component {
               {this.state.clicked && (
                 <FontIcon
                   name={'check'}
-                  size={(onTablet ? 12.5 : 17.5) * factor}
+                  size={onTablet ? 20 : 17.5}
                   color={'#fb1b2f'}
                 />
               )}
               {!this.state.clicked && (
                 <EntypoIcon
                   name={'cross'}
-                  size={(onTablet ? 15 : 22.5) * factor}
+                  size={onTablet ? 25 : 22.5}
                   color={colors.secondBackground}
                 />
               )}
@@ -119,5 +110,3 @@ class CustomSwitch extends React.Component {
     );
   };
 }
-
-export default withNavigation(CustomSwitch);

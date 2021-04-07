@@ -9,21 +9,14 @@ import {
   TouchableOpacity,
   StatusBar,
   StyleSheet,
-  Dimensions,
   Linking
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
+import { goBack } from '../../../AppNavigator';
 
 export default class PrivacyPolicy extends React.Component {
-  static navigationOptions = { header: null };
   constructor(props) {
     super(props);
     this.state = {};
@@ -34,13 +27,10 @@ export default class PrivacyPolicy extends React.Component {
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar backgroundColor={'#ffffff'} barStyle={'dark-content'} />
         <View style={localStyles.header}>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.goBack()}
-            style={{ flex: 1 }}
-          >
+          <TouchableOpacity onPress={() => goBack()} style={{ flex: 1 }}>
             <Back
-              width={(onTablet ? 17.5 : 25) * factor}
-              height={(onTablet ? 17.5 : 25) * factor}
+              width={backButtonSize}
+              height={backButtonSize}
               fill={'black'}
             />
           </TouchableOpacity>
@@ -871,7 +861,7 @@ export default class PrivacyPolicy extends React.Component {
               support@pianote.com.
             </Text>
           </Text>
-          <View style={{ height: 25 * factor }} />
+          <View style={{ height: 25 }} />
         </ScrollView>
       </SafeAreaView>
     );
@@ -880,7 +870,7 @@ export default class PrivacyPolicy extends React.Component {
 
 const localStyles = StyleSheet.create({
   mainSub: {
-    fontSize: 18 * factor,
+    fontSize: 18,
     fontStyle: 'italic'
   },
   header: {
@@ -890,8 +880,8 @@ const localStyles = StyleSheet.create({
     padding: 15
   },
   title: {
-    fontWeight: Platform.OS == 'android' ? 'bold' : '800',
-    fontSize: 20 * factor,
+    fontWeight: 'bold',
+    fontSize: DeviceInfo.isTablet() ? 28 : 20,
     alignSelf: 'center',
     textAlign: 'center'
   },
@@ -900,15 +890,14 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: 15
   },
   subtitle: {
-    paddingBottom: 5 * factor,
-    marginTop: 25 * factor,
+    paddingBottom: 5,
+    marginTop: 25,
     fontWeight: 'bold',
     marginBottom: 0
   },
   contact: {
     marginTop: 20,
-    paddingLeft: 10 * factor,
-    paddingRight: 10 * factor,
+    paddingHorizontal: 10,
     textAlign: 'center'
   }
 });

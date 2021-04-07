@@ -22,7 +22,7 @@ import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Orientation from 'react-native-orientation-locker';
-
+import { DownloadResources } from 'RNDownload';
 import StartIcon from '../../components/StartIcon';
 import ResetIcon from '../../components/ResetIcon';
 import ContinueIcon from '../../components/ContinueIcon';
@@ -37,17 +37,15 @@ import {
   resetProgress
 } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
+import Resources from 'Pianote2/src/assets/img/svgs/resources';
+import { goBack, navigate, push } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 let greaterWDim;
 export default class SinglePack extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -56,7 +54,8 @@ export default class SinglePack extends React.Component {
       isDisplayingLessons: true,
       videos: [],
       id: '',
-      url: this.props.navigation.state.params.url,
+      title: '',
+      url: props.route?.params?.url,
       isAddedToList: false,
       description: '',
       thumbnail: '',
@@ -67,6 +66,8 @@ export default class SinglePack extends React.Component {
       nextLessonUrl: '',
       isLoadingAll: true,
       refreshing: false,
+      resources: null,
+      showResDownload: false,
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width
     };
@@ -88,6 +89,7 @@ export default class SinglePack extends React.Component {
     }
     // get bundles
     const response = await packsService.getPack(this.state.url);
+    console.log(response);
     const newContent = new ContentModel(response);
     const lessons = newContent.post.lessons.map(rl => {
       return new ContentModel(rl);
@@ -124,21 +126,81 @@ export default class SinglePack extends React.Component {
     } catch (error) {
       console.log(error);
     }
-    this.setState({
-      id: newContent.id,
-      isAddedToList: newContent.isAddedToList,
-      thumbnail:
-        newContent.post.thumbnail_url || newContent.getData('thumbnail_url'),
-      logo: newContent.post.pack_logo,
-      description: newContent.getData('description'),
-      isStarted: newContent.isStarted,
-      isCompleted: newContent.isCompleted,
-      xp: newContent.xp,
-      videos: items,
-      nextLessonUrl: newContent.post.next_lesson_mobile_app_url,
-      isLoadingAll: false,
-      refreshing: false
+    this.setState(
+      {
+        id: newContent.id,
+        isAddedToList: newContent.isAddedToList,
+        thumbnail:
+          newContent.post.thumbnail_url || newContent.getData('thumbnail_url'),
+        title: newContent.getField('title'),
+        logo: newContent.post.pack_logo,
+        description: newContent.getData('description'),
+        isStarted: newContent.isStarted,
+        isCompleted: newContent.isCompleted,
+        xp: newContent.xp,
+        videos: items,
+        nextLessonUrl: newContent.post.next_lesson_mobile_app_url,
+        isLoadingAll: false,
+        refreshing: false,
+        resources: newContent.post.resources
+          ? Object.keys(newContent.post.resources).map(key => {
+              return newContent.post.resources[key];
+            })
+          : null
+      },
+      () => {
+        if (this.state.resources) this.createResourcesArr();
+      }
+    );
+  };
+
+  createResourcesArr() {
+    const { resources } = this.state;
+    const extensions = ['mp3', 'pdf', 'zip'];
+
+    resources?.forEach(resource => {
+      let extension = this.decideExtension(resource.resource_url);
+      resource.extension = extension;
+      if (!extensions.includes(extension)) {
+        fetch(resource.resource_url)
+          .then(res => {
+            extension = this.getExtensionByType(
+              res?.headers?.map['content-type']
+            );
+            this.setState({
+              resources: this.state.resources.map(r =>
+                r.resource_id === resource.resource_id
+                  ? {
+                      ...r,
+                      extension,
+                      wasWithoutExtension: true
+                    }
+                  : r
+              )
+            });
+          })
+          .catch(e => {});
+      } else {
+        this.setState({
+          resources: this.state.resources.map(r =>
+            r.resource_id === resource.resource_id ? { ...r, extension } : r
+          )
+        });
+      }
     });
+  }
+
+  decideExtension = url => {
+    const lastDot = url.lastIndexOf('.');
+    const extension = url.substr(lastDot + 1).toLowerCase();
+
+    return extension;
+  };
+
+  getExtensionByType = path => {
+    if (path === 'audio/mp3') return 'mp3';
+    if (path === 'application/pdf') return 'pdf';
+    if (path === 'application/zip') return 'zip';
   };
 
   async resetProgress() {
@@ -167,11 +229,11 @@ export default class SinglePack extends React.Component {
 
   navigate = row => {
     if (this.state.isDisplayingLessons) {
-      this.props.navigation.navigate('VIDEOPLAYER', {
+      navigate('VIDEOPLAYER', {
         url: row.mobile_app_url
       });
     } else {
-      this.props.navigation.push('SINGLEPACK', {
+      push('SINGLEPACK', {
         url: row.mobile_app_url
       });
     }
@@ -229,30 +291,27 @@ export default class SinglePack extends React.Component {
             }
           >
             <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.goBack();
-              }}
+              onPress={() => goBack()}
               style={[
                 styles.centerContent,
                 {
                   position: 'absolute',
-                  height: 35 * factor,
-                  width: 35 * factor,
+                  height: 35,
+                  width: 35,
                   borderRadius: 100,
                   position: 'absolute',
-                  left: 7.5 * factor,
-                  top: 10 * factor,
+                  left: paddingInset,
+                  top: paddingInset,
                   zIndex: 4
                 }
               ]}
             >
               <Back
-                width={(onTablet ? 17.5 : 25) * factor}
-                height={(onTablet ? 17.5 : 25) * factor}
+                width={backButtonSize}
+                height={backButtonSize}
                 fill={'white'}
               />
             </TouchableOpacity>
-
             <ImageBackground
               resizeMode={'cover'}
               style={{
@@ -283,194 +342,217 @@ export default class SinglePack extends React.Component {
                   style={{
                     height: greaterWDim / 15,
                     width: '100%',
-                    zIndex: 1
+                    zIndex: 1,
+                    marginBottom: onTablet ? '2%' : '4%'
                   }}
                   source={{ uri: this.state.logo }}
                   resizeMode={FastImage.resizeMode.contain}
                 />
-
                 <View
-                  key={'buttonRow'}
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-evenly',
-                    paddingVertical: 15 * factor
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.toggleMyList();
-                    }}
-                    style={{
-                      flex: 0.5,
+                  style={[
+                    styles.heightButtons,
+                    {
+                      marginBottom: 10,
+                      width: '100%',
+                      flexDirection: 'row',
                       alignItems: 'center'
-                    }}
-                  >
-                    <AntIcon
-                      name={this.state.isAddedToList ? 'close' : 'plus'}
-                      size={22 * factor}
-                      color={colors.pianoteRed}
-                    />
-                    <Text
+                    }
+                  ]}
+                >
+                  <View style={{ flex: 1, flexDirection: 'row' }}>
+                    <View style={{ flex: 0.5 }} />
+                    <TouchableOpacity
                       style={{
-                        fontFamily: 'OpenSans-Regular',
-                        color: 'white',
-                        marginTop: 3 * factor,
-                        fontSize: 13 * factor
+                        flex: 0.5,
+                        alignItems: 'center'
+                      }}
+                      onPress={() => {
+                        this.toggleMyList();
                       }}
                     >
-                      {this.state.isAddedToList ? 'Added' : 'My List'}
-                    </Text>
-                  </TouchableOpacity>
-
-                  {this.state.isCompleted ? (
-                    <ResetIcon
-                      pressed={() =>
-                        this.setState({
-                          showRestartCourse: true
-                        })
-                      }
-                    />
-                  ) : !this.state.isStarted ? (
-                    <StartIcon
-                      pressed={() => {
-                        this.props.navigation.navigate('VIDEOPLAYER', {
-                          url: this.state.nextLessonUrl
-                        });
-                      }}
-                    />
-                  ) : (
-                    this.state.isStarted && (
-                      <ContinueIcon
+                      <View style={[styles.centerContent]}>
+                        {!this.state.isAddedToList ? (
+                          <AntIcon
+                            name={'plus'}
+                            size={sizing.myListButtonSize}
+                            color={colors.pianoteRed}
+                          />
+                        ) : (
+                          <AntIcon
+                            name={'close'}
+                            size={sizing.myListButtonSize}
+                            color={colors.pianoteRed}
+                          />
+                        )}
+                      </View>
+                      <Text
+                        style={{
+                          fontFamily: 'OpenSans-Regular',
+                          color: 'white',
+                          fontSize: sizing.descriptionText
+                        }}
+                      >
+                        {this.state.isAddedToList ? 'Added' : 'My List'}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ width: '50%' }}>
+                    {this.state.isCompleted ? (
+                      <ResetIcon
                         pressed={() =>
-                          this.props.navigation.navigate('VIDEOPLAYER', {
-                            url: this.state.nextLessonUrl
+                          this.setState({
+                            showRestartCourse: true
                           })
                         }
                       />
-                    )
-                  )}
-
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.setState({
-                        showInfo: !this.state.showInfo
-                      });
-                    }}
-                    style={{
-                      flex: 0.5,
-                      alignItems: 'center'
-                    }}
-                  >
-                    <AntIcon
-                      name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                      size={22 * factor}
-                      color={colors.pianoteRed}
-                    />
-                    <Text
+                    ) : !this.state.isStarted ? (
+                      <StartIcon
+                        pressed={() => {
+                          navigate('VIDEOPLAYER', {
+                            url: this.state.nextLessonUrl
+                          });
+                        }}
+                      />
+                    ) : (
+                      this.state.isStarted && (
+                        <ContinueIcon
+                          pressed={() =>
+                            navigate('VIDEOPLAYER', {
+                              url: this.state.nextLessonUrl
+                            })
+                          }
+                        />
+                      )
+                    )}
+                  </View>
+                  <View style={{ flex: 1, flexDirection: 'row' }}>
+                    <TouchableOpacity
                       style={{
-                        fontFamily: 'OpenSans-Regular',
-                        color: 'white',
-                        marginTop: 3 * factor,
-                        fontSize: 13 * factor
+                        flex: 0.5,
+                        alignItems: 'center'
+                      }}
+                      onPress={() => {
+                        this.setState({
+                          showInfo: !this.state.showInfo
+                        });
                       }}
                     >
-                      Info
-                    </Text>
-                  </TouchableOpacity>
+                      <View
+                        style={[styles.centerContent, { flexDirection: 'row' }]}
+                      >
+                        <AntIcon
+                          name={
+                            this.state.showInfo ? 'infocirlce' : 'infocirlceo'
+                          }
+                          size={sizing.infoButtonSize}
+                          color={colors.pianoteRed}
+                        />
+                      </View>
+                      <Text
+                        style={{
+                          fontFamily: 'OpenSans-Regular',
+                          color: 'white',
+                          marginTop: 2,
+                          fontSize: sizing.descriptionText
+                        }}
+                      >
+                        Info
+                      </Text>
+                    </TouchableOpacity>
+                    <View style={{ flex: 0.5 }} />
+                  </View>
                 </View>
               </View>
             </ImageBackground>
-
             {this.state.showInfo && (
               <View
-                key={'info'}
                 style={{
                   alignSelf: 'center',
                   backgroundColor: colors.mainBackground,
-                  marginHorizontal: this.state.isLandscape ? '10%' : 15
+                  marginHorizontal: this.state.isLandscape
+                    ? '10%'
+                    : paddingInset,
+                  marginTop: '2%'
                 }}
               >
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Regular',
-                    marginTop: 5 * factor,
-                    fontSize: 15 * factor,
+                    marginTop: '5%',
+                    fontSize: sizing.descriptionText,
+                    paddingHorizontal: paddingInset,
+
                     color: 'white',
                     textAlign: 'center'
                   }}
                 >
                   {this.state.description}
                 </Text>
-                <View key='row1' style={{ flexDirection: 'row' }}>
+
+                <View style={{ paddingHorizontal: '25%' }}>
                   <View
-                    style={{
-                      flex: 1,
-                      padding: 10,
-                      paddingRight: 20,
-                      alignItems: 'flex-end'
-                    }}
+                    style={[
+                      styles.centerContent,
+                      { flexDirection: 'row', marginTop: '2%' }
+                    ]}
                   >
-                    <View style={{ alignItems: 'center' }}>
+                    <Text
+                      style={{
+                        flex: 1,
+                        fontSize: onTablet ? 25 : 17.5,
+                        textAlign: 'center',
+                        color: 'white',
+                        fontFamily: 'OpenSans-Bold',
+                        marginTop: 10
+                      }}
+                    >
+                      {this.state.videos.length}
+                      {`\n`}
                       <Text
                         style={{
+                          fontSize: sizing.descriptionText,
+                          textAlign: 'center',
                           color: 'white',
-                          fontSize: 17 * factor,
-                          fontFamily: 'OpenSans-Bold'
+                          fontFamily: 'OpenSans-Regular',
+                          marginTop: 5
                         }}
                       >
-                        {this.state.videos.length}
+                        Lessons
                       </Text>
+                    </Text>
+                    <Text
+                      style={{
+                        flex: 1,
+                        fontSize: onTablet ? 25 : 17.5,
+                        textAlign: 'center',
+                        color: 'white',
+                        fontFamily: 'OpenSans-Bold',
+                        marginTop: 10
+                      }}
+                    >
+                      {this.state.xp}
+                      {`\n`}
                       <Text
                         style={{
+                          fontSize: sizing.descriptionText,
+                          textAlign: 'center',
                           color: 'white',
-                          fontSize: 13 * factor,
-                          fontFamily: 'OpenSans-Regular'
-                        }}
-                      >
-                        LESSONS
-                      </Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      flex: 1,
-                      padding: 10,
-                      paddingLeft: 20,
-                      alignItems: 'flex-start'
-                    }}
-                  >
-                    <View style={{ alignItems: 'center' }}>
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontSize: 17 * factor,
-                          fontFamily: 'OpenSans-Bold'
-                        }}
-                      >
-                        {this.state.xp}
-                      </Text>
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontSize: 13 * factor,
-                          fontFamily: 'OpenSans-Regular'
+                          fontFamily: 'OpenSans-Regular',
+                          marginTop: 5
                         }}
                       >
                         XP
                       </Text>
-                    </View>
+                    </Text>
                   </View>
-                </View>
-                <View key='row2' style={{ flexDirection: 'row' }}>
                   <View
-                    style={{
-                      flex: this.state.id == 262875 ? 0.5 : 1,
-                      padding: 10,
-                      paddingRight: 20,
-                      alignItems: 'flex-end'
-                    }}
+                    style={[
+                      styles.centerContent,
+                      {
+                        flexDirection: 'row',
+                        marginTop: '10%'
+                      }
+                    ]}
                   >
                     {(this.state.id == 262875 ? false : true) && (
                       <Download_V2
@@ -479,17 +561,18 @@ export default class SinglePack extends React.Component {
                           content: packsService.getPack(this.state.url, true)
                         }}
                         styles={{
+                          flex: this.state.id == 262875 ? 1 : 0,
                           touchable: { flex: 1 },
                           iconSize: {
-                            width: 27.5 * factor,
-                            height: 27.5 * factor
+                            width: sizing.myListButtonSize,
+                            height: sizing.myListButtonSize
                           },
                           iconDownloadColor: colors.pianoteRed,
                           activityIndicatorColor: colors.pianoteRed,
                           animatedProgressBackground: colors.pianoteRed,
                           textStatus: {
                             color: '#ffffff',
-                            fontSize: 13 * factor,
+                            fontSize: sizing.descriptionText,
                             fontFamily: 'OpenSans-Regular',
                             marginTop: 5
                           },
@@ -508,17 +591,11 @@ export default class SinglePack extends React.Component {
                         }}
                       />
                     )}
-                  </View>
-                  <View
-                    style={{
-                      flex: 1,
-                      padding: 10,
-                      paddingLeft: 20,
-                      alignItems: 'flex-start'
-                    }}
-                  >
                     <TouchableOpacity
-                      style={{ alignItems: 'center' }}
+                      style={{
+                        alignItems: 'center',
+                        flex: 1
+                      }}
                       onPress={() => {
                         this.setState({
                           showRestartCourse: true
@@ -526,14 +603,15 @@ export default class SinglePack extends React.Component {
                       }}
                     >
                       <MaterialIcon
-                        size={27.5 * factor}
+                        size={sizing.myListButtonSize}
                         name={'replay'}
                         color={colors.pianoteRed}
                       />
                       <Text
                         style={{
+                          fontSize: sizing.descriptionText,
+                          textAlign: 'center',
                           color: 'white',
-                          fontSize: 13 * factor,
                           fontFamily: 'OpenSans-Regular',
                           marginTop: 5
                         }}
@@ -541,14 +619,46 @@ export default class SinglePack extends React.Component {
                         Restart
                       </Text>
                     </TouchableOpacity>
+                    {this.state.resources && (
+                      <TouchableOpacity
+                        onPress={() =>
+                          this.setState({
+                            showResDownload: true
+                          })
+                        }
+                        style={{
+                          flex: 1,
+                          alignItems: 'center'
+                        }}
+                      >
+                        <Resources
+                          height={sizing.myListButtonSize}
+                          width={sizing.myListButtonSize}
+                          fill={colors.pianoteRed}
+                        />
+                        <Text
+                          style={{
+                            fontSize: sizing.descriptionText,
+                            textAlign: 'center',
+                            color: 'white',
+                            fontFamily: 'OpenSans-Regular',
+                            marginTop: 5
+                          }}
+                        >
+                          Resources
+                        </Text>
+                      </TouchableOpacity>
+                    )}
                   </View>
                 </View>
               </View>
             )}
-            <View style={{ height: 5 * factor }} />
             <View
-              key={'verticalVideoList'}
-              style={this.state.isLandscape ? { marginHorizontal: '10%' } : {}}
+              style={{
+                paddingHorizontal: this.state.isLandscape ? '10%' : 0,
+                marginBottom: 10,
+                marginTop: onTablet ? '4%' : '8%'
+              }}
             >
               <VerticalVideoList
                 items={this.state.videos}
@@ -565,7 +675,6 @@ export default class SinglePack extends React.Component {
                 navigator={row => this.navigate(row)}
               />
             </View>
-            <View style={{ height: 15 * factor }} />
           </ScrollView>
         ) : (
           <View
@@ -586,6 +695,48 @@ export default class SinglePack extends React.Component {
         )}
 
         <NavigationBar currentPage={'SINGLEPACK'} />
+        <Modal
+          isVisible={this.state.showResDownload}
+          onDismiss={() => this.modalDismissed}
+          style={[
+            styles.modalContainer,
+            {
+              justifyContent: 'flex-end'
+            }
+          ]}
+          animation={'slideInUp'}
+          animationInTiming={350}
+          animationOutTiming={350}
+          coverScreen={true}
+          hasBackdrop={true}
+        >
+          <DownloadResources
+            styles={{
+              container: {
+                backgroundColor: colors.mainBackground,
+                width: '100%'
+              },
+              touchableTextResourceNameFontFamily: 'OpenSans',
+              touchableTextResourceExtensionFontFamily: 'OpenSans',
+              touchableTextResourceCancelFontFamily: 'OpenSans',
+              borderColor: colors.secondBackground,
+              color: '#ffffff'
+            }}
+            resources={this.state.resources}
+            lessonTitle={this.state.title}
+            onClose={() => {
+              new Promise(res =>
+                this.setState(
+                  {
+                    showResDownload: false
+                  },
+                  () =>
+                    Platform.OS === 'ios' ? (this.modalDismissed = res) : res()
+                )
+              );
+            }}
+          />
+        </Modal>
 
         <Modal
           key={'restartCourse'}

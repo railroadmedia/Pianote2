@@ -13,29 +13,29 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import DeviceInfo from 'react-native-device-info';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import AddToCalendar from '../modals/AddToCalendar';
-import { withNavigation } from 'react-navigation';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import IonIcon from 'react-native-vector-icons/Ionicons';
 
 import Relevance from '../modals/Relevance';
 import { addToMyList, removeFromMyList } from '../services/UserActions';
 import ContentModal from '../modals/ContentModal';
 import { NetworkContext } from '../context/NetworkProvider';
+import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
+import Filters_V2 from './Filters_V2';
+import Orientation from 'react-native-orientation-locker';
+import { navigate } from '../../AppNavigator';
 
 let greaterWDim;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 const sortDict = {
   newest: 'NEWEST',
   oldest: 'OLDEST',
@@ -44,11 +44,11 @@ const sortDict = {
   relevance: 'RELEVANCE'
 };
 
-class HorizontalVideoList extends React.Component {
-  static navigationOptions = { header: null };
+export default class HorizontalVideoList extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
+    this._onOrientationDidChange = this._onOrientationDidChange.bind(this);
     this.state = {
       showModal: false,
       addToCalendarModal: false,
@@ -60,7 +60,11 @@ class HorizontalVideoList extends React.Component {
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
 
-  UNSAFE_componentWillReceiveProps = props => {
+  componentDidMount() {
+    Orientation.addOrientationListener(this._onOrientationDidChange);
+  }
+
+  componentWillReceiveProps = props => {
     if (props.isPaging !== this.state.isPaging) {
       if (!this.state.isLoading) {
         this.setState({ isPaging: props.isPaging });
@@ -98,10 +102,14 @@ class HorizontalVideoList extends React.Component {
       this.setState({ items: this.props.items });
   }
 
+  _onOrientationDidChange = () => {
+    this.forceUpdate();
+  };
+
   decideWidth() {
     if (onTablet) {
       if (this.props.isSquare) return 125;
-      else return 225;
+      else return (Dimensions.get('window').width - 4 * paddingInset) / 3;
     } else {
       if (this.props.isSquare) return Dimensions.get('window').width / 3.25;
       else return ((Dimensions.get('window').width - 30) * 3) / 4;
@@ -137,7 +145,6 @@ class HorizontalVideoList extends React.Component {
   };
 
   like = contentID => {
-    console.log(contentID);
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -178,52 +185,51 @@ class HorizontalVideoList extends React.Component {
     ) {
       return;
     }
-    console.log(content.type, content.id);
     switch (content.type) {
       case 'course':
-        return this.props.navigation.navigate('PATHOVERVIEW', {
+        return navigate('PATHOVERVIEW', {
           data: content
         });
       case 'song':
         if (content.lesson_count === 1)
-          return this.props.navigation.navigate('VIDEOPLAYER', {
+          return navigate('VIDEOPLAYER', {
             id: content.currentLessonId
           });
-        return this.props.navigation.navigate('PATHOVERVIEW', {
+        return navigate('PATHOVERVIEW', {
           data: content
         });
       case 'learning-path':
-        return this.props.navigation.navigate('METHOD', {
+        return navigate('METHOD', {
           url: content.mobile_app_url
         });
       case 'learning-path-level':
-        return this.props.navigation.navigate('METHODLEVEL', {
+        return navigate('METHODLEVEL', {
           url: content.mobile_app_url,
           level: index + 1
         });
       case 'learning-path-course':
-        return this.props.navigation.push('PATHOVERVIEW', {
+        return navigate('PATHOVERVIEW', {
           data: content,
           isMethod: true
         });
       case 'learning-path-lesson':
-        return this.props.navigation.push('VIDEOPLAYER', {
+        return navigate('VIDEOPLAYER', {
           url: content.mobile_app_url
         });
       case 'pack':
-        return this.props.navigation.push('SINGLEPACK', {
+        return navigate('SINGLEPACK', {
           url: content.mobile_app_url
         });
       case 'pack-bundle':
-        return this.props.navigation.push('SINGLEPACK', {
+        return navigate('SINGLEPACK', {
           url: content.mobile_app_url
         });
       case 'pack-bundle-lesson':
-        return this.props.navigation.push('VIDEOPLAYER', {
+        return navigate('VIDEOPLAYER', {
           url: content.mobile_app_url
         });
       default:
-        return this.props.navigation.navigate('VIDEOPLAYER', {
+        return navigate('VIDEOPLAYER', {
           id: content.id
         });
     }
@@ -241,9 +247,7 @@ class HorizontalVideoList extends React.Component {
         this.addToCalendatLessonPublishDate = '';
         this.setState({ addToCalendarModal: false });
       })
-      .catch(error => {
-        console.log(error);
-      });
+      .catch(e => {});
   };
 
   listFooter = () => {
@@ -258,7 +262,7 @@ class HorizontalVideoList extends React.Component {
             styles.centerContent,
             {
               flex: 1,
-              marginHorizontal: 40 * factor,
+              marginHorizontal: 40,
               flexDirection: 'row'
             }
           ]}
@@ -296,9 +300,22 @@ class HorizontalVideoList extends React.Component {
     }
   };
 
+  secondsToHms(d) {
+    d = Number(d);
+    var h = Math.floor(d / 3600);
+    var m = Math.floor(d % 3600 / 60);
+    var s = Math.floor(d % 3600 % 60);
+
+    var hDisplay = h !== 0 && h + ' hour';
+    var mDisplay = m !== 0 && m + ' min';
+    var sDisplay = s !== 0 && s + ' sec';
+
+    return [hDisplay, mDisplay, sDisplay].filter(Boolean).join(" ");
+  }
+
   render = () => {
     return (
-      <View style={localStyles.listContainer}>
+      <View style={{ marginLeft: paddingInset }}>
         <View style={localStyles.titleContain}>
           <Text
             style={[
@@ -313,10 +330,7 @@ class HorizontalVideoList extends React.Component {
           {!this.props.hideSeeAll && (
             <>
               {(!onTablet || (onTablet && this.props.hideFilterButton)) && (
-                <TouchableOpacity
-                  key={'seeAll'}
-                  onPress={() => this.props.seeAll()}
-                >
+                <TouchableOpacity onPress={() => this.props.seeAll()}>
                   <Text style={localStyles.seeAllText}>See All</Text>
                 </TouchableOpacity>
               )}
@@ -330,7 +344,7 @@ class HorizontalVideoList extends React.Component {
                           styles.centerContent,
                           {
                             flexDirection: 'row',
-                            marginRight: 7.5 * factor
+                            marginRight: 5
                           }
                         ]}
                         onPress={() => {
@@ -344,16 +358,21 @@ class HorizontalVideoList extends React.Component {
                           style={[
                             localStyles.seeAllText,
                             {
-                              paddingRight: 4 * factor,
-                              fontSize: 18
+                              paddingRight: 5,
+                              fontSize: sizing.descriptionText
                             }
                           ]}
                         >
-                          {sortDict[this.props.currentSort]}
+                          {onTablet
+                            ? sortDict[this.props.currentSort].charAt(0) +
+                              sortDict[this.props.currentSort]
+                                .substring(1)
+                                .toLowerCase()
+                            : sortDict[this.props.currentSort]}
                         </Text>
                         <View>
                           <FontIcon
-                            size={(onTablet ? 12 : 14) * factor}
+                            size={onTablet ? 18 : 14}
                             name={'sort-amount-down'}
                             color={colors.pianoteRed}
                           />
@@ -363,47 +382,29 @@ class HorizontalVideoList extends React.Component {
                     </>
                   )}
                   {!this.props.hideFilterButton && (
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.props.filterResults();
-                      }}
-                      style={[
-                        styles.centerContent,
-                        {
-                          borderWidth: 1.25 * factor,
-                          borderColor: colors.pianoteRed,
-                          height: (onTablet ? 21 : 30) * factor,
-                          width: (onTablet ? 21 : 30) * factor,
-                          borderRadius: 30 * factor,
-                          marginRight: 10 * factor
+                    <View style={{ marginRight: 10 }}>
+                      <Filters_V2
+                        disabled={this.state.isPaging}
+                        onApply={() =>
+                          this.props.applyFilters?.(this.filters?.filterQuery)
                         }
-                      ]}
-                    >
-                      <View style={{ flex: 1 }} />
-                      <View
-                        style={{
-                          transform: [{ rotate: '90deg' }]
-                        }}
-                      >
-                        <IonIcon
-                          size={(onTablet ? 11.5 : 14) * factor}
-                          name={'md-options'}
-                          color={colors.pianoteRed}
-                        />
-                      </View>
-                      <View style={{ flex: 1 }} />
-                    </TouchableOpacity>
+                        meta={this.props.filters}
+                        reference={r => (this.filters = r)}
+                      />
+                    </View>
                   )}
                 </>
               )}
             </>
           )}
         </View>
+        {this.filters?.filterAppliedText}
         <FlatList
-          key={'videos'}
+          numColumns={this.props.isTile ? 3 : 1}
+          scrollEnabled={!this.props.isLive}
           data={this.state.items}
           extraData={this.state}
-          horizontal={true}
+          horizontal={this.props.isTile ? false : true}
           style={{ width: '100%' }}
           showsHorizontalScrollIndicator={false}
           onEndReached={() => {
@@ -414,7 +415,11 @@ class HorizontalVideoList extends React.Component {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => (
             <TouchableOpacity
-              style={{ width: this.decideWidth(), marginRight: 15 }}
+              style={{
+                width: this.decideWidth(),
+                marginRight: paddingInset,
+                marginBottom: this.props.isTile ? paddingInset : 0
+              }}
               onLongPress={() => {
                 this.setState({
                   showModal: true,
@@ -425,17 +430,167 @@ class HorizontalVideoList extends React.Component {
               onPress={() => this.navigate(item, index)}
             >
               <View style={{ width: '100%' }}>
-                {item.isStarted && (
-                  <View
-                    style={[styles.centerContent, localStyles.progressItem]}
-                  >
+                <View style={[styles.centerContent, localStyles.progressItem]}>
+                  {this.props.isLive ? (
+                    <View 
+                      style={[
+                        styles.centerContent, {
+                        height: '100%',
+                        width: '100%',
+                        borderRadius: 10,
+                      }]}
+                    >
+                       <LinearGradient
+                        colors={[
+                          'transparent',
+                          'rgba(20, 20, 20, 0.7)',
+                          'rgba(0, 0, 0, 1)'
+                        ]}
+                        style={{
+                          borderRadius: 0,
+                          width: '100%',
+                          height: '100%',
+                          position: 'absolute',
+                          left: 0,
+                          bottom: 0
+                        }}
+                      />
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontFamily: 'OpenSans-Bold',
+                          position: 'absolute',
+                          fontSize: onTablet ? 16 : 12,
+                          left: 5,
+                          top: 10,
+                        }}
+                      >
+                        UPCOMING EVENT
+                      </Text>
+                      <Text>
+                        <View>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontFamily: 'OpenSans-Bold',
+                              fontSize: onTablet ? 60 : 40,
+                              textAlign: 'center',
+                            }}
+                          >
+                            02
+                          </Text>
+                          <Text
+                              style={{
+                                color: 'white',
+                                fontFamily: 'OpenSans-Bold',
+                                top: 0,
+                                textAlign: 'center'
+                              }}
+                            >
+                              HOURS
+                          </Text>
+                        </View>
+                        <View>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontFamily: 'OpenSans-Bold',
+                              fontSize: onTablet ? 60 : 40,
+                            }}
+                          > : </Text>
+                          <Text
+                              style={{
+                                color: 'white',
+                                fontFamily: 'OpenSans-Bold',
+                                top: 0,
+                                textAlign: 'center',
+                                color: 'transparent'
+                              }}
+                            >
+                              h
+                          </Text>
+                        </View>
+                        <View>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontFamily: 'OpenSans-Bold',
+                              fontSize: onTablet ? 60 : 40,
+                              textAlign: 'center',
+                            }}
+                          >
+                            42
+                          </Text>
+                          <Text
+                              style={{
+                                color: 'white',
+                                fontFamily: 'OpenSans-Bold',
+                                top: 0,
+                                textAlign: 'center'
+                              }}
+                            >
+                              MINUTES
+                          </Text>
+                        </View>
+                        <View>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontFamily: 'OpenSans-Bold',
+                              fontSize: onTablet ? 60 : 40,
+                            }}
+                          > : </Text>
+                          <Text
+                              style={{
+                                color: 'white',
+                                fontFamily: 'OpenSans-Bold',
+                                top: 0,
+                                textAlign: 'center',
+                                color: 'transparent',
+                              }}
+                            >
+                              h
+                          </Text>
+                        </View>
+                        <View>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontFamily: 'OpenSans-Bold',
+                              fontSize: onTablet ? 60 : 40,
+                              textAlign: 'center',
+                            }}
+                          >
+                            02
+                          </Text>
+                          <Text
+                              style={{
+                                color: 'white',
+                                fontFamily: 'OpenSans-Bold',
+                                top: 0,
+                                textAlign: 'center',
+                              }}
+                            >
+                              SECONDS
+                          </Text>
+                        </View>
+                      </Text>
+                    </View>
+                  ) : item.isStarted ? (
                     <Progress
-                      height={50 * factor}
-                      width={50 * factor}
+                      height={onTablet ? 55 : 45}
+                      width={onTablet ? 55 : 45}
                       fill={'white'}
                     />
-                  </View>
-                )}
+                  ) : item.isCompleted ? (
+                    <ApprovedTeacher
+                      height={onTablet ? 70 : 55}
+                      width={onTablet ? 70 : 55}
+                      fill={'white'}
+                    />
+                  ) : null}
+                </View>
+
                 {Platform.OS === 'ios' ? (
                   <FastImage
                     style={[
@@ -480,13 +635,13 @@ class HorizontalVideoList extends React.Component {
               </View>
 
               <View style={localStyles.videoTitle}>
-                <View style={{ width: '80%' }}>
+                <View style={{ width: '85%' }}>
                   <Text
                     numberOfLines={1}
                     ellipsizeMode='tail'
                     style={localStyles.videoTitleText}
                   >
-                    {item.title}
+                    {(this.props.isLive) ? 'Pianote Live Stream' : item.title}
                   </Text>
                   <View style={localStyles.typeContainer}>
                     <Text
@@ -497,8 +652,7 @@ class HorizontalVideoList extends React.Component {
                           ? colors.pianoteGrey
                           : colors.secondBackground,
 
-                        fontSize: (onTablet ? 9.5 : 12) * factor,
-                        marginTop: 1.5
+                        fontSize: sizing.descriptionText
                       }}
                     >
                       {this.props.showType && this.changeType(item.type)}
@@ -507,8 +661,33 @@ class HorizontalVideoList extends React.Component {
                     </Text>
                   </View>
                 </View>
-                {new Date(item.publishedOn) > new Date() ? (
+                {this.props.isLive && (
+                  !item.isAddedToList ? (
                   <TouchableOpacity
+                    onPress={() => this.addToMyList(item.id)}
+                    style={{ paddingRight: 2.5 }}
+                  >
+                    <AntIcon
+                      name={'plus'}
+                      size={sizing.myListButtonSize}
+                      color={colors.pianoteRed}
+                    />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={{ paddingRight: 2.5 }}
+                    onPress={() => this.removeFromMyList(item.id)}
+                  >
+                    <AntIcon
+                      name={'close'}
+                      size={sizing.myListButtonSize}
+                      color={colors.pianoteRed}
+                    />
+                  </TouchableOpacity>
+                ))}                
+                {(new Date(item.publishedOn) > new Date() || this.props.isLive) ? (
+                  <TouchableOpacity
+                    style={{ paddingRight: 5 }}
                     onPress={() => {
                       this.addToCalendarLessonTitle = item.title;
                       this.addToCalendatLessonPublishDate = item.publishedOn;
@@ -516,43 +695,31 @@ class HorizontalVideoList extends React.Component {
                     }}
                   >
                     <FontIcon
-                      size={onTablet ? 12.5 * factor : 27.5 * factor}
+                      size={sizing.infoButtonSize}
                       name={'calendar-plus'}
-                      color={
-                        this.props.isMethod && !this.props.methodLevel
-                          ? colors.pianoteGrey
-                          : colors.pianoteRed
-                      }
+                      color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
                 ) : !item.isAddedToList ? (
                   <TouchableOpacity
                     onPress={() => this.addToMyList(item.id)}
-                    style={{ paddingRight: 5 }}
+                    style={{ paddingRight: 2.5 }}
                   >
                     <AntIcon
                       name={'plus'}
-                      size={onTablet ? 17.5 * factor : 25 * factor}
-                      color={
-                        this.props.isMethod
-                          ? colors.pianoteGrey
-                          : colors.pianoteRed
-                      }
+                      size={sizing.myListButtonSize}
+                      color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
                 ) : (
                   <TouchableOpacity
-                    style={{ paddingRight: 5 }}
+                    style={{ paddingRight: 2.5 }}
                     onPress={() => this.removeFromMyList(item.id)}
                   >
                     <AntIcon
                       name={'close'}
-                      size={onTablet ? 17.5 * factor : 25 * factor}
-                      color={
-                        this.props.isMethod
-                          ? colors.pianoteGrey
-                          : colors.pianoteRed
-                      }
+                      size={sizing.myListButtonSize}
+                      color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
                 )}
@@ -560,9 +727,7 @@ class HorizontalVideoList extends React.Component {
             </TouchableOpacity>
           )}
         />
-
         <Modal
-          key={'modal'}
           isVisible={this.state.showModal}
           style={styles.modalContainer}
           animation={'slideInUp'}
@@ -580,7 +745,6 @@ class HorizontalVideoList extends React.Component {
           />
         </Modal>
         <Modal
-          key={'calendarModal'}
           isVisible={this.state.addToCalendarModal}
           style={{
             margin: 0,
@@ -603,13 +767,8 @@ class HorizontalVideoList extends React.Component {
           />
         </Modal>
         <Modal
-          key={'modalRelevance'}
           isVisible={this.state.showRelevance}
-          style={{
-            margin: 0,
-            height: '100%',
-            width: '100%'
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -635,48 +794,23 @@ class HorizontalVideoList extends React.Component {
 }
 
 const localStyles = StyleSheet.create({
-  listContainer: {
-    paddingLeft: (10 * Dimensions.get('window').width) / 375
-  },
-  artist: {
-    fontSize:
-      ((DeviceInfo.isTablet() ? 12 : 16) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    fontFamily: 'OpenSans-Regular'
-  },
   title: {
-    fontSize: DeviceInfo.isTablet()
-      ? 22
-      : (18 *
-          (Dimensions.get('window').height / 812 +
-            Dimensions.get('window').width / 375)) /
-        2,
-    fontFamily: 'RobotoCondensed-Bold'
+    fontSize: DeviceInfo.isTablet() ? 20 : 16,
+    fontFamily: 'RobotoCondensed-Bold',
+    paddingVertical: 5
   },
   seeAllText: {
     textAlign: 'right',
-    fontSize: DeviceInfo.isTablet()
-      ? 20
-      : (14.5 *
-          (Dimensions.get('window').height / 812 +
-            Dimensions.get('window').width / 375)) /
-        2,
-    fontWeight: DeviceInfo.isTablet() ? '500' : '300',
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: '#fb1b2f',
-    paddingRight: 10 * factor
+    paddingRight: 10
   },
   titleContain: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical:
-      ((DeviceInfo.isTablet() ? 10 : 15) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    paddingVertical: 10
   },
   progressItem: {
     position: 'absolute',
@@ -688,31 +822,17 @@ const localStyles = StyleSheet.create({
   },
   imageIOS: {
     width: '100%',
-    borderRadius:
-      (7.5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    borderRadius: 7.5
   },
   videoTitle: {
     width: '100%',
+    paddingVertical: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center'
   },
   videoTitleText: {
-    fontSize: DeviceInfo.isTablet()
-      ? 16
-      : (14 *
-          (Dimensions.get('window').height / 812 +
-            Dimensions.get('window').width / 375)) /
-        2,
-    marginTop: DeviceInfo.isTablet()
-      ? 5
-      : (7.5 *
-          (Dimensions.get('window').height / 812 +
-            Dimensions.get('window').width / 375)) /
-        2,
+    fontSize: DeviceInfo.isTablet() ? 16 : 14,
     fontFamily: 'OpenSans-Bold',
     color: 'white'
   },
@@ -720,5 +840,3 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row'
   }
 });
-
-export default withNavigation(HorizontalVideoList);

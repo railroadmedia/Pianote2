@@ -10,8 +10,6 @@ import { Download_V2 } from 'RNDownload';
 import { bindActionCreators } from 'redux';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-community/async-storage';
-import { NavigationActions, StackActions } from 'react-navigation';
-
 import { getToken, getUserData } from '../../services/UserDataAuth';
 import { notif, updateFcmToken } from '../../services/notification.service';
 
@@ -30,6 +28,9 @@ import NoConnection from '../../modals/NoConnection';
 
 import { NetworkContext } from '../../context/NetworkProvider';
 import RNFetchBlob from 'rn-fetch-blob';
+import commonService from '../../services/common.service';
+import navigationService from '../../services/navigation.service';
+import { currentScene, navigate, reset } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -53,14 +54,14 @@ const cache = [
 ];
 class LoadPage extends React.Component {
   static contextType = NetworkContext;
-  static navigationOptions = { header: null };
+
   constructor(props) {
     super(props);
     this.state = {};
   }
 
   async componentDidMount() {
-    Download_V2.resumeAll().then(async () => {
+    Download_V2.resumeAll()?.then(async () => {
       this.loadCache();
       await SplashScreen.hide();
 
@@ -77,28 +78,20 @@ class LoadPage extends React.Component {
         i[j[0]] = j[1] === 'undefined' ? undefined : j[1];
         return i;
       }, {});
-
+      await AsyncStorage.removeItem('resetKey');
       const { email, resetKey, password, loggedIn, forumUrl } = data;
 
       if (!this.context.isConnected) {
         if (loggedIn && !global.loadedFromNotification) {
-          return this.props.navigation.navigate('DOWNLOADS');
+          return navigate('DOWNLOADS');
         } else {
-          return this.props.navigation.navigate('LOGINCREDENTIALS');
+          return navigate('LOGIN');
         }
         // if no connection and logged in
       } else if (!loggedIn && !global.loadedFromNotification) {
         // if not logged in
-        return this.props.navigation.dispatch(
-          StackActions.reset({
-            index: 0,
-            actions: [
-              NavigationActions.navigate({
-                routeName: 'LOGIN'
-              })
-            ]
-          })
-        );
+        if (resetKey) return reset('RESETPASSWORD', { resetKey, email });
+        return reset('LOGIN');
       } else {
         // get token
         const res = await getToken(email, password);
@@ -109,63 +102,20 @@ class LoadPage extends React.Component {
           await AsyncStorage.multiSet([['loggedIn', 'true']]);
           let userData = await getUserData();
           let { lessonUrl, commentId } = notif;
-
-          if (lessonUrl && commentId) {
+          if (commonService.urlToOpen) {
+            return navigationService.decideWhereToRedirect();
+          } else if (lessonUrl && commentId) {
             // if lesson or comment notification go to video
-            this.props.navigation.dispatch(
-              StackActions.reset({
-                index: 0,
-                actions: [
-                  NavigationActions.navigate({
-                    routeName: 'VIDEOPLAYER',
-                    params: {
-                      url: lessonUrl,
-                      commentId
-                    }
-                  })
-                ]
-              })
-            );
+            reset('VIDEOPLAYER', { url: lessonUrl, commentId });
           } else if (global.loadedFromNotification) {
             // if going to profile page
-            await this.props.navigation.dispatch(
-              StackActions.reset({
-                index: 0,
-                actions: [
-                  NavigationActions.navigate({
-                    routeName: 'PROFILE'
-                  })
-                ]
-              })
-            );
+            reset('PROFILE');
           } else if (resetKey) {
             // go to reset pass
-            this.props.navigation.dispatch(
-              StackActions.reset({
-                index: 0,
-                actions: [
-                  NavigationActions.navigate({
-                    routeName: 'RESETPASSWORD'
-                  })
-                ]
-              })
-            );
-          } else if (!userData.isMember) {
-            // go to login
-            this.props.navigation.dispatch(
-              StackActions.reset({
-                index: 0,
-                actions: [
-                  NavigationActions.navigate({
-                    routeName: 'LOGIN'
-                  })
-                ]
-              })
-            );
+            reset('RESETPASSWORD', { resetKey, email });
           } else {
             if (forumUrl) {
               // if user got a forum related notification
-              console.log('FORUM URL: ', forumUrl);
               Linking.openURL(forumUrl);
               await AsyncStorage.removeItem('forumUrl');
             }
@@ -173,31 +123,16 @@ class LoadPage extends React.Component {
             if (userData.isPackOlyOwner) {
               // if pack only, set global variable to true & go to packs
               global.isPackOnly = userData.isPackOlyOwner;
-              await this.props.navigation.dispatch(
-                StackActions.reset({
-                  index: 0,
-                  actions: [
-                    NavigationActions.navigate({
-                      routeName: 'PACKS'
-                    })
-                  ]
-                })
-              );
+              global.expirationDate = userData.expirationDate;
+              reset('PACKS');
             } else if (userData.isLifetime || userData.isMember) {
               // is logged in with valid membership go to lessons
-              await this.props.navigation.dispatch(
-                StackActions.reset({
-                  index: 0,
-                  actions: [
-                    NavigationActions.navigate({
-                      routeName: 'LESSONS'
-                    })
-                  ]
-                })
-              );
+              if (!global.notifNavigation) {
+                reset('LESSONS');
+              }
             } else {
               // membership expired, go to membership expired
-              this.props.navigation.navigate('MEMBERSHIPEXPIRED', {
+              navigate('MEMBERSHIPEXPIRED', {
                 email: this.state.email,
                 password: this.state.password,
                 token: res.token
@@ -206,16 +141,8 @@ class LoadPage extends React.Component {
           }
         } else if (!res.success || loggedIn == false || loggedIn == 'false') {
           // is not logged in
-          this.props.navigation.dispatch(
-            StackActions.reset({
-              index: 0,
-              actions: [
-                NavigationActions.navigate({
-                  routeName: 'LOGIN'
-                })
-              ]
-            })
-          );
+          if (resetKey) return reset('RESETPASSWORD', { resetKey, email });
+          return reset('LOGIN');
         }
       }
     });
@@ -223,32 +150,20 @@ class LoadPage extends React.Component {
 
   loadCache = () => {
     let { dirs } = RNFetchBlob.fs;
-    cache.map(c =>
+    cache.map(c => {
       RNFetchBlob.fs
         .readFile(`${dirs.LibraryDir || dirs.DocumentDir}/${c}`, 'utf8')
         .then(stream => this.props[c]?.(JSON.parse(stream)))
-        .catch(() => {})
-    );
+        .catch(() => {});
+    });
   };
 
   async handleNoConnection() {
     let isLoggedIn = await AsyncStorage.getItem('loggedIn');
     if (isLoggedIn == 'true') {
-      return this.props.navigation.dispatch(
-        StackActions.reset({
-          index: 0,
-          actions: [NavigationActions.navigate({ routeName: 'DOWNLOADS' })]
-        })
-      );
+      return reset('DOWNLOADS');
     } else {
-      return this.props.navigation.dispatch(
-        StackActions.reset({
-          index: 0,
-          actions: [
-            NavigationActions.navigate({ routeName: 'LOGINCREDENTIALS' })
-          ]
-        })
-      );
+      reset('LOGINCREDENTIALS');
     }
   }
 
@@ -264,7 +179,6 @@ class LoadPage extends React.Component {
         ]}
       >
         <View
-          key={'loadPage'}
           style={[
             styles.centerContent,
             {
@@ -296,16 +210,8 @@ class LoadPage extends React.Component {
           />
         </View>
         <Modal
-          key={'NoConnection'}
           isVisible={this.state.showNoConnection}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
+          style={[styles.centerContent, styles.modalContainer]}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

@@ -32,6 +32,7 @@ import Orientation from 'react-native-orientation-locker';
 
 import { cacheAndWritePacks } from '../../redux/PacksCacheActions';
 import ResetIcon from '../../components/ResetIcon';
+import { navigate } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -42,7 +43,6 @@ const factor = (height / 812 + width / 375) / 2;
 
 let greaterWDim;
 class Packs extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -67,7 +67,6 @@ class Packs extends React.Component {
 
   componentDidMount() {
     Orientation.addDeviceOrientationListener(this.orientationListener);
-
     this.getData();
   }
 
@@ -161,7 +160,6 @@ class Packs extends React.Component {
     return (
       <View style={styles.packsContainer}>
         <NavMenuHeaders currentPage={'PACKS'} />
-
         <FlatList
           windowSize={10}
           style={{ flex: 1 }}
@@ -230,7 +228,8 @@ class Packs extends React.Component {
                   style={{
                     height: greaterWDim / 15,
                     width: '100%',
-                    zIndex: 6
+                    zIndex: 6,
+                    marginBottom: onTablet ? '3%' : '4.5%'
                   }}
                   source={{
                     uri: `https://cdn.musora.com/image/fetch/f_png,q_auto:eco,w_${Math.round(
@@ -239,50 +238,63 @@ class Packs extends React.Component {
                   }}
                   resizeMode={FastImage.resizeMode.contain}
                 />
-
                 <View
-                  style={{
-                    flex: onTablet ? 0.2 : 0.15,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-evenly',
-                    paddingHorizontal: 25 * factor,
-                    marginVertical: 15
-                  }}
+                  style={[
+                    styles.heightButtons,
+                    {
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginBottom: onTablet ? '5%' : '7.5%'
+                    }
+                  ]}
                 >
-                  {this.state.headerPackCompleted ? (
-                    <ResetIcon
-                      pressed={() =>
-                        this.setState({
-                          showRestartCourse: true
-                        })
-                      }
-                    />
-                  ) : !this.state.headerPackStarted ? (
-                    <StartIcon
-                      pressed={() =>
-                        this.props.navigation.navigate('VIDEOPLAYER', {
-                          url: this.state.headerPackNextLessonUrl
-                        })
-                      }
-                    />
-                  ) : (
-                    <ContinueIcon
-                      pressed={() =>
-                        this.props.navigation.navigate('VIDEOPLAYER', {
-                          url: this.state.headerPackNextLessonUrl
-                        })
-                      }
-                    />
-                  )}
-                  <View style={{ flex: 0.1 }} />
-                  <MoreInfoIcon
-                    pressed={() => {
-                      this.props.navigation.push('SINGLEPACK', {
-                        url: this.state.headerPackUrl
-                      });
+                  <View style={{ flex: 1 }} />
+                  <View
+                    style={{
+                      width: onTablet ? 200 : '45%'
                     }}
-                  />
+                  >
+                    {this.state.headerPackCompleted ? (
+                      <ResetIcon
+                        pressed={() =>
+                          this.setState({
+                            showRestartCourse: true
+                          })
+                        }
+                      />
+                    ) : !this.state.headerPackStarted ? (
+                      <StartIcon
+                        pressed={() =>
+                          navigate('VIDEOPLAYER', {
+                            url: this.state.headerPackNextLessonUrl
+                          })
+                        }
+                      />
+                    ) : (
+                      <ContinueIcon
+                        pressed={() =>
+                          navigate('VIDEOPLAYER', {
+                            url: this.state.headerPackNextLessonUrl
+                          })
+                        }
+                      />
+                    )}
+                  </View>
+                  <View style={onTablet ? { width: 10 } : { flex: 0.5 }} />
+                  <View
+                    style={{
+                      width: onTablet ? 200 : '45%'
+                    }}
+                  >
+                    <MoreInfoIcon
+                      pressed={() => {
+                        navigate('SINGLEPACK', {
+                          url: this.state.headerPackUrl
+                        });
+                      }}
+                    />
+                  </View>
+                  <View style={{ flex: 1 }} />
                 </View>
               </ImageBackground>
             </>
@@ -290,23 +302,21 @@ class Packs extends React.Component {
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => {
-                this.props.navigation.push('SINGLEPACK', {
+                navigate('SINGLEPACK', {
                   url: item.mobile_app_url
                 });
               }}
               style={{
                 width: '33%',
                 paddingLeft: 10,
-                paddingBottom: 10
+                paddingTop: 10
               }}
             >
               <FastImage
                 style={{
-                  borderRadius: 7.5 * factor,
+                  borderRadius: 10,
                   width: '100%',
-                  aspectRatio: 0.7,
-                  alignItems: 'center',
-                  justifyContent: 'center'
+                  aspectRatio: 0.7
                 }}
                 source={{
                   uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,c_thumb,w_${
@@ -316,7 +326,6 @@ class Packs extends React.Component {
                 resizeMode={FastImage.resizeMode.cover}
               >
                 <View
-                  key={'logo'}
                   style={{
                     flex: 1,
                     width: '100%',
@@ -347,16 +356,10 @@ class Packs extends React.Component {
             </TouchableOpacity>
           )}
         />
-
         <NavigationBar currentPage={'PACKS'} />
-
         <Modal
-          key={'restartCourse'}
           isVisible={this.state.showRestartCourse}
-          style={{
-            margin: 0,
-            flex: 1
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

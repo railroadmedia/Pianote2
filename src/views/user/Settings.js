@@ -11,7 +11,6 @@ import {
   Alert,
   StatusBar,
   StyleSheet,
-  Dimensions,
   Linking
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
@@ -30,11 +29,7 @@ import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
 import Loading from '../../components/Loading.js';
 import CustomModal from '../../modals/CustomModal.js';
 import { logOut, restorePurchase } from '../../services/UserDataAuth.js';
-import {
-  NavigationActions,
-  SafeAreaView,
-  StackActions
-} from 'react-navigation';
+import { SafeAreaView } from 'react-navigation';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import commonService from '../../services/common.service.js';
 
@@ -46,16 +41,9 @@ import { cacheAndWritePodcasts } from '../../redux/PodcastsCacheActions';
 import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
 import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
 import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
+import { goBack, navigate, reset } from '../../../AppNavigator.js';
 
 class Settings extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -170,7 +158,7 @@ class Settings extends React.Component {
         this.loadingRef?.toggleLoading();
         await logOut();
         this.loadingRef?.toggleLoading();
-        this.props.navigation.navigate('LOGINCREDENTIALS', {
+        navigate('LOGINCREDENTIALS', {
           email: restoreResponse.email
         });
 
@@ -183,18 +171,8 @@ class Settings extends React.Component {
           { cancelable: false }
         );
       } else if (restoreResponse.token) {
-        this.props.navigation.dispatch(
-          StackActions.reset({
-            index: 0,
-            actions: [
-              NavigationActions.navigate({
-                routeName: 'LESSONS'
-              })
-            ]
-          })
-        );
-      } else if (restoreResponse.shouldCreateAccount)
-        this.props.navigation.navigate('CREATEACCOUNT');
+        reset('LESSONS');
+      } else if (restoreResponse.shouldCreateAccount) navigate('CREATEACCOUNT');
     } catch (err) {
       this.loadingRef?.toggleLoading();
       this.customModal.toggle(
@@ -212,15 +190,10 @@ class Settings extends React.Component {
           barStyle={'light-content'}
         />
         <View style={localStyles.header}>
-          <TouchableOpacity
-            style={{ flex: 1 }}
-            onPress={() => {
-              this.props.navigation.goBack();
-            }}
-          >
+          <TouchableOpacity style={{ flex: 1 }} onPress={() => goBack()}>
             <Back
-              width={(onTablet ? 17.5 : 25) * factor}
-              height={(onTablet ? 17.5 : 25) * factor}
+              width={backButtonSize}
+              height={backButtonSize}
               fill={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -239,48 +212,48 @@ class Settings extends React.Component {
               styles.centerContent,
               localStyles.container,
               {
-                borderTopWidth: 0.5 * factor,
+                borderTopWidth: 1,
                 borderTopColor: '#445f73'
               }
             ]}
             onPress={() => {
-              this.props.navigation.navigate('PROFILESETTINGS');
+              navigate('PROFILESETTINGS');
             }}
           >
-            <View style={[styles.centerContent, { width: 60 * factor }]}>
+            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
               <FeatherIcon
                 name={'user'}
-                size={(onTablet ? 22.5 : 25) * factor}
+                size={onTablet ? 30 : 20}
                 color={colors.pianoteRed}
               />
             </View>
-            <Text style={styles.settingsText}>Profile Settings</Text>
+            <Text style={localStyles.settingsText}>Profile Settings</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 20 : 25) * factor}
+              size={onTablet ? 30 : 20}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
           <TouchableOpacity
             key={'notificationSettings'}
             onPress={() => {
-              this.props.navigation.navigate('NOTIFICATIONSETTINGS');
+              navigate('NOTIFICATIONSETTINGS');
             }}
             style={[styles.centerContent, localStyles.container]}
           >
-            <View style={[styles.centerContent, { width: 60 * factor }]}>
+            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
               <IonIcon
                 name={'ios-notifications-outline'}
                 color={colors.pianoteRed}
-                size={(onTablet ? 27 : 35) * factor}
+                size={onTablet ? 35 : 27.5}
               />
             </View>
-            <Text style={styles.settingsText}>Notification Settings</Text>
+            <Text style={localStyles.settingsText}>Notification Settings</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 20 : 25) * factor}
+              size={onTablet ? 30 : 20}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -288,18 +261,18 @@ class Settings extends React.Component {
             style={[styles.centerContent, localStyles.container]}
             onPress={this.manageSubscriptions}
           >
-            <View style={[styles.centerContent, { width: 60 * factor }]}>
+            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
               <AntIcon
                 name={'folder1'}
-                size={(onTablet ? 20 : 25) * factor}
+                size={onTablet ? 30 : 20}
                 color={colors.pianoteRed}
               />
             </View>
-            <Text style={styles.settingsText}>Manage Subscriptions</Text>
+            <Text style={localStyles.settingsText}>Manage Subscriptions</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 20 : 25) * factor}
+              size={onTablet ? 30 : 20}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -309,81 +282,81 @@ class Settings extends React.Component {
             onPress={this.restorePurchase}
             style={[styles.centerContent, localStyles.container]}
           >
-            <View style={[styles.centerContent, { width: 60 * factor }]}>
+            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
               <AntIcon
                 name={'creditcard'}
-                size={(onTablet ? 20 : 25) * factor}
+                size={onTablet ? 30 : 20}
                 color={colors.pianoteRed}
               />
             </View>
-            <Text style={styles.settingsText}>Restore Purchases</Text>
+            <Text style={localStyles.settingsText}>Restore Purchases</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 20 : 25) * factor}
+              size={onTablet ? 30 : 20}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.centerContent, localStyles.container]}
             onPress={() => {
-              this.props.navigation.navigate('SUPPORT');
+              navigate('SUPPORT');
             }}
           >
-            <View style={[styles.centerContent, { width: 60 * factor }]}>
+            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
               <FontIcon
                 name={'support'}
-                size={(onTablet ? 20 : 25) * factor}
+                size={onTablet ? 30 : 20}
                 color={colors.pianoteRed}
               />
             </View>
-            <Text style={styles.settingsText}>Support</Text>
+            <Text style={localStyles.settingsText}>Support</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 20 : 25) * factor}
+              size={onTablet ? 30 : 20}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.centerContent, localStyles.container]}
             onPress={() => {
-              this.props.navigation.navigate('TERMS');
+              navigate('TERMS');
             }}
           >
-            <View style={[styles.centerContent, { width: 60 * factor }]}>
+            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
               <AntIcon
                 name={'form'}
-                size={(onTablet ? 20 : 25) * factor}
+                size={onTablet ? 30 : 20}
                 color={colors.pianoteRed}
               />
             </View>
-            <Text style={styles.settingsText}>Terms of Use</Text>
+            <Text style={localStyles.settingsText}>Terms of Use</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 20 : 25) * factor}
+              size={onTablet ? 30 : 20}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.centerContent, localStyles.container]}
             onPress={() => {
-              this.props.navigation.navigate('PRIVACYPOLICY');
+              navigate('PRIVACYPOLICY');
             }}
           >
-            <View style={[styles.centerContent, { width: 60 * factor }]}>
+            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
               <FontIcon
                 name={'shield'}
                 color={colors.pianoteRed}
-                size={(onTablet ? 21.5 : 27.5) * factor}
+                size={onTablet ? 32.5 : 22.5}
               />
             </View>
-            <Text style={styles.settingsText}>Privacy Policy</Text>
+            <Text style={localStyles.settingsText}>Privacy Policy</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 20 : 25) * factor}
+              size={onTablet ? 30 : 20}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -393,22 +366,22 @@ class Settings extends React.Component {
               this.setState({ showLogOut: true });
             }}
           >
-            <View style={[styles.centerContent, { width: 60 * factor }]}>
+            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
               <AntIcon
                 name={'poweroff'}
                 color={colors.pianoteRed}
-                size={(onTablet ? 18 : 23.5) * factor}
+                size={onTablet ? 30 : 20}
               />
             </View>
-            <Text style={styles.settingsText}>Log Out</Text>
+            <Text style={localStyles.settingsText}>Log Out</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 20 : 25) * factor}
+              size={onTablet ? 30 : 20}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
-          <Text style={[styles.settingsText, localStyles.appText]}>
+          <Text style={[localStyles.settingsText, localStyles.appText]}>
             APP VERSION {DeviceInfo.getVersion()}
           </Text>
           {commonService.rootUrl.includes('staging') && (
@@ -419,15 +392,8 @@ class Settings extends React.Component {
         </ScrollView>
 
         <Modal
-          key={'logout'}
           isVisible={this.state.showLogOut}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              flex: 1
-            }
-          ]}
+          style={[styles.centerContent, styles.modalContainer]}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -468,15 +434,14 @@ class Settings extends React.Component {
             <TouchableOpacity
               onPress={() => this.restoreSuccessfull.toggle()}
               style={{
-                marginTop: 10,
                 borderRadius: 50,
                 backgroundColor: colors.pianoteRed
               }}
             >
               <Text
                 style={{
-                  paddingVertical: 10 * factor,
-                  marginHorizontal: (onTablet ? 50 : 75) * factor,
+                  paddingVertical: 10,
+                  marginHorizontal: onTablet ? 50 : 75,
                   fontSize: 15,
                   color: '#ffffff',
                   textAlign: 'center',
@@ -487,9 +452,7 @@ class Settings extends React.Component {
               </Text>
             </TouchableOpacity>
           }
-          onClose={() => {
-            if (this.loadingRef) this.loadingRef.toggleLoading(false);
-          }}
+          onClose={() => this.loadingRef?.toggleLoading(false)}
         />
         <NavigationBar currentPage={'PROFILE'} pad={true} />
       </SafeAreaView>
@@ -499,12 +462,17 @@ class Settings extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    height: (DeviceInfo.isTablet() ? 40 : 50) * factor,
+    height: DeviceInfo.isTablet() ? 70 : 50,
     width: '100%',
     borderBottomColor: '#445f73',
     borderBottomWidth: 1,
     flexDirection: 'row',
-    paddingRight: 15
+    paddingRight: 10
+  },
+  settingsText: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: DeviceInfo.isTablet() ? 20 : 16,
+    color: '#445f73'
   },
   header: {
     flexDirection: 'row',
@@ -513,16 +481,16 @@ const localStyles = StyleSheet.create({
     padding: 15
   },
   appText: {
-    marginTop: 10 * factor,
+    marginTop: 10,
     textAlign: 'center',
-    fontSize: DeviceInfo.isTablet() ? 18 : 12 * factor
+    fontSize: DeviceInfo.isTablet() ? 18 : 12
   },
   buildText: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'center',
     color: '#445f73',
-    marginTop: 10 * factor,
-    fontSize: DeviceInfo.isTablet() ? 18 : 12 * factor
+    marginTop: 10,
+    fontSize: DeviceInfo.isTablet() ? 18 : 12
   }
 });
 const mapDispatchToProps = dispatch =>

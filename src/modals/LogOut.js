@@ -7,28 +7,15 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
-  Dimensions
+  StyleSheet
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
+import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-community/async-storage';
-import { NavigationActions, StackActions } from 'react-navigation';
 import Intercom from 'react-native-intercom';
 import { logOut } from '../services/UserDataAuth';
+import { reset } from '../../AppNavigator';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
-const resetAction = StackActions.reset({
-  index: 0,
-  actions: [NavigationActions.navigate({ routeName: 'LOGIN' })]
-});
-
-class LogOut extends React.Component {
-  static navigationOptions = { header: null };
+export default class LogOut extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -41,7 +28,7 @@ class LogOut extends React.Component {
     Intercom.logout();
     await AsyncStorage.clear();
     await AsyncStorage.setItem('loggedIn', 'false');
-    await this.props.navigation.dispatch(resetAction);
+    reset('LOGIN');
     this.props.onLogout?.();
   };
 
@@ -59,6 +46,7 @@ class LogOut extends React.Component {
             <Text style={[styles.modalBodyText, localStyles.description]}>
               Are you sure that you want to log out?
             </Text>
+            <View style={{ height: 5 }} />
             <TouchableOpacity
               style={[styles.centerContent, localStyles.logoutText]}
               onPress={() => this.logOut()}
@@ -85,35 +73,37 @@ class LogOut extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor
+    borderRadius: 15,
+    margin: 20
   },
   title: {
-    marginTop: 25 * factor,
-    paddingHorizontal: 40
+    marginTop: 20,
+    paddingHorizontal: 20
   },
   description: {
-    paddingHorizontal: 40,
-    marginVertical: 10 * factor,
-    marginBottom: 10 * factor
+    paddingHorizontal: 30,
+    marginTop: 10,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14
   },
   logoutText: {
     backgroundColor: '#fb1b2f',
     borderRadius: 40,
-    marginHorizontal: 40
+    marginVertical: 15,
+    marginHorizontal: 30,
+    fontFamily: 'OpenSans-Bold',
+    height: DeviceInfo.isTablet() ? 40 : 30,
+    textAlign: 'center'
   },
   logout: {
     color: 'white',
-    paddingVertical: 12.5 * factor
+    fontSize: DeviceInfo.isTablet() ? 18 : 14
   },
   cancelContainter: {
-    paddingHorizontal: 40,
-    marginVertical: 15 * factor
+    paddingHorizontal: 20,
+    marginBottom: 15
   },
   cancel: {
     color: 'grey',
-    marginBottom: 10 * factor
+    fontSize: DeviceInfo.isTablet() ? 16 : 12
   }
 });
-
-export default withNavigation(LogOut);

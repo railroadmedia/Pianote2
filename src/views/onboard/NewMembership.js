@@ -16,7 +16,6 @@ import {
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
-import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
 import Orientation from 'react-native-orientation-locker';
 import { SafeAreaView } from 'react-navigation';
 import RNIap, {
@@ -28,12 +27,13 @@ import { signUp, restorePurchase } from '../../services/UserDataAuth';
 import CustomModal from '../../modals/CustomModal';
 import Loading from '../../components/Loading';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
+import { goBack, navigate } from '../../../AppNavigator';
 
 let purchaseErrorSubscription = null;
 let purchaseUpdateSubscription = null;
 
 const skus = Platform.select({
-  android: ['pianote_app_1_month_member', 'pianote_app_1_year_member'],
+  android: ['pianote_app_1_year_2021', 'pianote_app_1_month_2021'],
   ios: ['pianote_app_1_month_membership', 'pianote_app_1_year_membership']
 });
 
@@ -43,26 +43,24 @@ const width =
 const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const fontIndex = width / 50;
-const factor = (height / 812 + width / 375) / 2;
 
 export default class NewMembership extends React.Component {
-  static navigationOptions = { header: null, subscriptions: [] };
   constructor(props) {
     super(props);
     Orientation.lockToPortrait();
     this.state = {
-      newUser: this.props.navigation.state.params.data.type,
-      email: this.props.navigation.state.params.data.email,
-      password: this.props.navigation.state.params.data.password,
-      token: this.props.navigation.state.params.data.token,
-      isExpired: false, 
+      newUser: props.route?.params?.data.type,
+      email: props.route?.params?.data.email,
+      password: props.route?.params?.data.password,
+      token: props.route?.params?.data.token,
+      isExpired: false,
       benefits: [
         'Pay nothing for 7 days.',
         'Award-winning piano lessons & more.',
         'Access to the Pianote Experience app.',
         'Access to the Pianote Experience website.',
         'Cancel anytime through the App Store.'
-      ],
+      ]
     };
   }
 
@@ -78,11 +76,11 @@ export default class NewMembership extends React.Component {
       });
     });
     try {
-      this.loadingRef.toggleLoading(true);
+      this.loadingRef?.toggleLoading(true);
       const subscriptions = (await RNIap.getSubscriptions(skus)).sort((a, b) =>
         parseFloat(a.price) > parseFloat(b.price) ? 1 : -1
       );
-      this.loadingRef.toggleLoading();
+      this.loadingRef?.toggleLoading();
       this.setState({ subscriptions });
     } catch (e) {}
   }
@@ -92,7 +90,7 @@ export default class NewMembership extends React.Component {
       price: plan.price,
       currency: plan.currency
     };
-    this.loadingRef.toggleLoading();
+    this.loadingRef?.toggleLoading();
     try {
       await RNIap.requestSubscription(plan.productId, false);
     } catch (e) {}
@@ -118,9 +116,11 @@ export default class NewMembership extends React.Component {
           ]);
         } catch (e) {}
         try {
+          // finish transaction
           await RNIap.finishTransaction(purchase, false);
-          if (this.state.newUser === 'SIGNUP') {
-            this.props.navigation.navigate('CREATEACCOUNT3', {
+          // if new user no pack only then create account
+          if (this.state.newUser === 'SIGNUP' && global.isPackOnly == false) {
+            navigate('CREATEACCOUNT3', {
               data: {
                 email: this.state.email,
                 password: this.state.password,
@@ -128,7 +128,7 @@ export default class NewMembership extends React.Component {
               }
             });
           } else {
-            this.props.navigation.navigate('LESSONS');
+            navigate('LOADPAGE');
           }
         } catch (e) {}
       } else {
@@ -174,10 +174,9 @@ export default class NewMembership extends React.Component {
       let resp = await restorePurchase(reducedPurchase);
       this.loadingRef?.toggleLoading();
       if (resp)
-        if (resp.shouldCreateAccount)
-          this.props.navigation.navigate('CREATEACCOUNT');
+        if (resp.shouldCreateAccount) navigate('CREATEACCOUNT');
         else if (resp.shouldLogin)
-          this.props.navigation.navigate('LOGINCREDENTIALS', {
+          navigate('LOGINCREDENTIALS', {
             email: resp.email
           });
     } catch (err) {
@@ -209,14 +208,15 @@ export default class NewMembership extends React.Component {
               style={{ position: 'absolute', left: 15, padding: 5 }}
               onPress={() => {
                 if (onTablet) Orientation.unlockAllOrientations();
-                this.props.navigation.state.params.type == 'SIGNUP' || global.isPackOnly == true
-                  ? this.props.navigation.goBack()
-                  : this.props.navigation.navigate('LOGINCREDENTIALS');
+                this.props.route?.params?.type == 'SIGNUP' ||
+                global.isPackOnly == true
+                  ? goBack()
+                  : navigate('LOGINCREDENTIALS');
               }}
             >
               <Back
-                width={(onTablet ? 17.5 : 25) * factor}
-                height={(onTablet ? 17.5 : 25) * factor}
+                width={backButtonSize}
+                height={backButtonSize}
                 fill={'white'}
               />
             </TouchableOpacity>
@@ -238,7 +238,11 @@ export default class NewMembership extends React.Component {
                   textAlign: 'center'
                 }}
               >
-                {`${(this.state.newUser == 'EXPIRED') ? 'Start your new\n membership TODAY':'Start your 7-Day \n FREE Trial Today'}`}
+                {`${
+                  this.state.newUser == 'EXPIRED'
+                    ? 'Start your new\n membership TODAY'
+                    : 'Start your 7-Day \n FREE Trial Today'
+                }`}
               </Text>
               <Text
                 style={{
@@ -248,10 +252,10 @@ export default class NewMembership extends React.Component {
                   textAlign: 'center'
                 }}
               >
-                {`${(this.state.newUser == 'EXPIRED') ? 
-                  'Choose the perfect plan that matches your learning style.'
-                  :
-                  `Your first 7 days are on us. Choose the\nplan that will start after your trial ends.`
+                {`${
+                  this.state.newUser == 'EXPIRED'
+                    ? 'Choose the perfect plan that matches your learning style.'
+                    : `Your first 7 days are on us. Choose the\nplan that will start after your trial ends.`
                 }`}
               </Text>
             </View>
@@ -306,7 +310,11 @@ export default class NewMembership extends React.Component {
                     onPress={() => this.startPlan(subscriptions[0])}
                   >
                     <Text style={styles.planBtnText}>
-                      {`START YOUR\n${(this.state.newUser == 'EXPIRED') ? 'MEMBERSHIP':'7-DAY FREE TRIAL'}`}
+                      {`START YOUR\n${
+                        this.state.newUser == 'EXPIRED'
+                          ? 'MEMBERSHIP'
+                          : '7-DAY FREE TRIAL'
+                      }`}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -378,7 +386,11 @@ export default class NewMembership extends React.Component {
                     onPress={() => this.startPlan(subscriptions[1])}
                   >
                     <Text style={styles.planBtnText}>
-                      {`START YOUR\n${(this.state.newUser == 'EXPIRED') ? 'MEMBERSHIP':'7-DAY FREE TRIAL'}`}
+                      {`START YOUR\n${
+                        this.state.newUser == 'EXPIRED'
+                          ? 'MEMBERSHIP'
+                          : '7-DAY FREE TRIAL'
+                      }`}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -405,7 +417,7 @@ export default class NewMembership extends React.Component {
               }}
             >
               {this.state.benefits.map((benefit, i) => {
-                if(!this.state.newUser == 'EXPIRED' || i > 0) {
+                if (!this.state.newUser == 'EXPIRED' || i > 0) {
                   return (
                     <View>
                       <View
@@ -425,7 +437,9 @@ export default class NewMembership extends React.Component {
                           style={{
                             color: '#ffffff',
                             fontFamily: 'OpenSans',
-                            fontSize: onTablet ? 1.3 * fontIndex : 1.65 * fontIndex,
+                            fontSize: onTablet
+                              ? 1.3 * fontIndex
+                              : 1.65 * fontIndex,
                             marginLeft: 5
                           }}
                         >
@@ -433,12 +447,13 @@ export default class NewMembership extends React.Component {
                         </Text>
                       </View>
                     </View>
-                )}
+                  );
+                }
               })}
               <TouchableOpacity
                 onPress={() => {
                   this.state.newUser == 'SIGNUP'
-                    ? this.props.navigation.navigate('LOGINCREDENTIALS')
+                    ? navigate('LOGINCREDENTIALS')
                     : this.restorePurchases();
                 }}
                 style={{ paddingTop: 20 }}
@@ -461,9 +476,7 @@ export default class NewMembership extends React.Component {
                     justifyContent: 'center',
                     alignItems: 'center'
                   }}
-                  onPress={() => {
-                    this.props.navigation.navigate('TERMS');
-                  }}
+                  onPress={() => navigate('TERMS')}
                 >
                   <Text
                     style={[

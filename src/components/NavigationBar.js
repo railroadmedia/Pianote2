@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import FastImage from 'react-native-fast-image';
-import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import DeviceInfo from 'react-native-device-info';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -11,23 +11,12 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {
-  withNavigation,
-  NavigationActions,
-  StackActions
-} from 'react-navigation';
 import { NetworkContext } from '../context/NetworkProvider';
+import { navigate, reset } from '../../AppNavigator';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
-
-class NavigationBar extends React.Component {
+export default class NavigationBar extends React.Component {
   static contextType = NetworkContext;
-  static navigationOptions = { header: null };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -64,7 +53,7 @@ class NavigationBar extends React.Component {
               ? 'white'
               : this.state.secondaryColor
           }
-          size={onTablet ? 20.625 * factor : 27.5 * factor}
+          size={onTablet ? 40 : 30}
         />
       );
     } else {
@@ -97,127 +86,89 @@ class NavigationBar extends React.Component {
           backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground
         }}
       >
-        <View style={localStyles.navContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              !this.context.isConnected
-                ? this.context.showNoConnectionAlert()
-                : this.state.onMain
-                ? this.props.navigation.dispatch(
-                    StackActions.reset({
-                      index: 0,
-                      actions: [
-                        NavigationActions.navigate({
-                          routeName: isPackOnly ? 'PACKS' : 'LESSONS'
-                        })
-                      ]
-                    })
-                  )
-                : this.props.navigation.navigate(
-                    isPackOnly ? 'PACKS' : 'LESSONS'
-                  );
-            }}
-          >
-            <SimpleLineIcon
-              name={'home'}
-              size={onTablet ? 22.5 * factor : 30 * factor}
-              color={
-                this.props.currentPage == 'LESSONS'
-                  ? this.state.primaryColor
-                  : this.state.secondaryColor
-              }
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              !this.context.isConnected
-                ? this.context.showNoConnectionAlert()
-                : this.state.onMain
-                ? this.props.navigation.dispatch(
-                    StackActions.reset({
-                      index: 0,
-                      actions: [
-                        NavigationActions.navigate({
-                          routeName: 'SEARCH'
-                        })
-                      ]
-                    })
-                  )
-                : this.props.navigation.navigate('SEARCH');
-            }}
-          >
-            <EvilIcons
-              name={'search'}
-              size={onTablet ? 30 * factor : 40 * factor}
-              color={
-                this.props.currentPage == 'SEARCH'
-                  ? this.state.primaryColor
-                  : this.state.secondaryColor
-              }
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              this.state.onMain
-                ? this.props.navigation.dispatch(
-                    StackActions.reset({
-                      index: 0,
-                      actions: [
-                        NavigationActions.navigate({
-                          routeName: 'DOWNLOADS'
-                        })
-                      ]
-                    })
-                  )
-                : this.props.navigation.navigate('DOWNLOADS');
-            }}
-          >
-            <MaterialIcon
-              name={'arrow-collapse-down'}
-              size={onTablet ? 22.5 * factor : 30 * factor}
-              color={
-                this.props.currentPage == 'DOWNLOAD'
-                  ? this.state.primaryColor
-                  : this.state.secondaryColor
-              }
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              !this.context.isConnected
-                ? this.context.showNoConnectionAlert()
-                : this.state.onMain
-                ? this.props.navigation.dispatch(
-                    StackActions.reset({
-                      index: 0,
-                      actions: [
-                        NavigationActions.navigate({
-                          routeName: 'PROFILE'
-                        })
-                      ]
-                    })
-                  )
-                : this.props.navigation.navigate('PROFILE');
-            }}
-          >
-            <View
-              style={[
-                localStyles.navIconContainer,
-                this.state.profileImage.length > 0
-                  ? null
-                  : styles.centerContent,
-                {
-                  borderColor:
-                    this.props.currentPage == 'PROFILE' &&
-                    this.state.profileImage.length > 0
-                      ? 'white'
-                      : 'transparent'
-                }
-              ]}
+        <View style={{ justifyContent: 'center' }}>
+          <View style={localStyles.navContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                !this.context.isConnected
+                  ? this.context.showNoConnectionAlert()
+                  : this.state.onMain
+                  ? reset(isPackOnly ? 'PACKS' : 'LESSONS')
+                  : navigate(isPackOnly ? 'PACKS' : 'LESSONS');
+              }}
             >
-              {this.profile()}
-            </View>
-          </TouchableOpacity>
+              <SimpleLineIcon
+                name={'home'}
+                size={onTablet ? 35 : 27.5}
+                color={
+                  this.props.currentPage == 'LESSONS'
+                    ? this.state.primaryColor
+                    : this.state.secondaryColor
+                }
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                !this.context.isConnected
+                  ? this.context.showNoConnectionAlert()
+                  : this.state.onMain
+                  ? reset('SEARCH')
+                  : navigate('SEARCH');
+              }}
+            >
+              <EvilIcons
+                name={'search'}
+                size={onTablet ? 55 : 40}
+                color={
+                  this.props.currentPage == 'SEARCH'
+                    ? this.state.primaryColor
+                    : this.state.secondaryColor
+                }
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                this.state.onMain ? reset('DOWNLOADS') : navigate('DOWNLOADS');
+              }}
+            >
+              <MaterialIcon
+                name={'arrow-collapse-down'}
+                size={onTablet ? 40 : 30}
+                color={
+                  this.props.currentPage == 'DOWNLOAD'
+                    ? this.state.primaryColor
+                    : this.state.secondaryColor
+                }
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                !this.context.isConnected
+                  ? this.context.showNoConnectionAlert()
+                  : this.state.onMain
+                  ? reset('PROFILE')
+                  : navigate('PROFILE');
+              }}
+            >
+              <View
+                style={[
+                  localStyles.navIconContainer,
+                  this.state.profileImage.length > 0
+                    ? null
+                    : styles.centerContent,
+                  {
+                    borderColor:
+                      this.props.currentPage == 'PROFILE' &&
+                      this.state.profileImage.length > 0
+                        ? 'white'
+                        : 'transparent'
+                  }
+                ]}
+              >
+                {this.profile()}
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
       </SafeAreaView>
     );
@@ -227,30 +178,15 @@ class NavigationBar extends React.Component {
 const localStyles = StyleSheet.create({
   navIconContainer: {
     borderRadius: 100,
-    width:
-      ((DeviceInfo.isTablet() ? 28.125 : 37.5) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    height:
-      ((DeviceInfo.isTablet() ? 28.125 : 37.5) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    borderWidth:
-      (2.25 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    marginBottom: DeviceInfo.hasNotch() ? 0 : 5
+    borderWidth: 2.25,
+    height: DeviceInfo.isTablet() ? 40 : 30,
+    width: DeviceInfo.isTablet() ? 40 : 30
   },
   navContainer: {
     alignSelf: 'stretch',
+    padding: 10,
     flexDirection: 'row',
-    paddingTop: 10 * (Dimensions.get('window').height / 812),
     justifyContent: 'space-around',
     alignContent: 'space-around'
   }
 });
-
-export default withNavigation(NavigationBar);

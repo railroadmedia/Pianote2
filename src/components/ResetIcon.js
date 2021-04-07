@@ -2,23 +2,39 @@
  * ResetIcon
  */
 import React from 'react';
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
-import { withNavigation } from 'react-navigation';
+import { View, Text, TouchableOpacity } from 'react-native';
+
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
-
-class ResetIcon extends React.Component {
-  static navigationOptions = { header: null };
+export default class ResetIcon extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
+
+  sizing = type => {
+    if (type == 'icon') {
+      if (onTablet) {
+        if (this.props.isMethod) {
+          return 30;
+        } else {
+          return 25;
+        }
+      } else {
+        return 17.5;
+      }
+    } else {
+      if (onTablet) {
+        if (this.props.isMethod) {
+          return 17.5;
+        } else {
+          return 15;
+        }
+      } else {
+        return 12.5;
+      }
+    }
+  };
 
   render = () => {
     return (
@@ -26,7 +42,7 @@ class ResetIcon extends React.Component {
         style={[
           styles.centerContent,
           {
-            borderRadius: width * 0.1,
+            borderRadius: 500,
             flex: 1,
             backgroundColor: '#fb1b2f'
           }
@@ -46,16 +62,15 @@ class ResetIcon extends React.Component {
         >
           <MaterialIcon
             name={'replay'}
-            size={(onTablet ? 21.5 : 25) * factor}
+            size={this.sizing('icon')}
             color={'white'}
           />
-          <View style={{ flex: 0.075 }} />
+          <View style={{ flex: 0.025 }} />
           <Text
             style={[
               styles.buttonText,
               {
-                fontSize:
-                  this.props.isMethod && onTablet ? 16 * factor : 14 * factor
+                fontSize: this.sizing('font')
               }
             ]}
           >
@@ -66,5 +81,3 @@ class ResetIcon extends React.Component {
     );
   };
 }
-
-export default withNavigation(ResetIcon);

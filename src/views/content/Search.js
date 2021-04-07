@@ -17,8 +17,6 @@ import { ContentModel } from '@musora/models';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import { SafeAreaView } from 'react-navigation';
-import Modal from 'react-native-modal';
-import Filters from '../../components/FIlters.js';
 import NavigationBar from '../../components/NavigationBar';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import { searchContent } from '../../services/GetContent';
@@ -27,9 +25,7 @@ import { NetworkContext } from '../../context/NetworkProvider';
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
+
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
   return (
@@ -39,12 +35,10 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 };
 
 export default class Search extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
     this.state = {
-      filterSize: new Animated.Value(height * 0.225),
       recentSearchResults: [],
 
       searchResults: [],
@@ -54,35 +48,28 @@ export default class Search extends React.Component {
       isLoadingAll: false, // all lessons
       isPaging: false, // scrolling more
       filtering: false, // filtering
-      filtersAvailable: null,
-      showFilters: false,
-      filters: {
-        types: [],
-        displayTopics: [],
-        content_type: [],
-        topics: [],
-        level: [],
-        progress: [],
-        instructors: []
-      },
-
       searchEntered: false,
       showCancel: false,
       noResults: false,
       numSearchResults: null,
       searchTerm: ''
     };
+    const url = props.route?.params?.url;
+    if (url && url.includes('term=')) {
+      let searchedText = url.split('term=')[1];
+      searchedText = searchedText.split('+').join(' ');
+      this.state.searchTerm = searchedText;
+      this.search();
+    }
   }
 
   async componentDidMount() {
-    console.log(await AsyncStorage.getItem('recentSearches'));
     // get recent searches from memory
     let recentSearchResults = await AsyncStorage.getItem('recentSearches');
     if (recentSearchResults) {
       recentSearchResults = await JSON.parse(recentSearchResults);
       this.setState({ recentSearchResults });
     }
-    console.log(await AsyncStorage.getItem('recentSearches'));
   }
 
   mapRecentResults() {
@@ -104,13 +91,13 @@ export default class Search extends React.Component {
             onPress={() => this.clickSearchRecent(row[0])}
             style={{
               justifyContent: 'center',
-              paddingLeft: 15 * factor
+              paddingLeft: 10
             }}
           >
             <Text
               style={{
                 color: 'white',
-                fontSize: 18 * factor,
+                fontSize: onTablet ? 20 : 14,
                 fontFamily: 'OpenSans-Bold',
                 paddingVertical: 10
               }}
@@ -123,21 +110,20 @@ export default class Search extends React.Component {
     } else {
       return (
         <View
-          key={'noResults'}
           style={{
             justifyContent: 'center',
-            paddingLeft: 15 * factor,
+            paddingLeft: paddingInset,
             borderTopWidth: 0.5,
             borderTopColor: colors.secondBackground
           }}
         >
           <Text
             style={{
-              fontSize: 18 * factor,
+              fontSize: onTablet ? 20 : 14,
               fontFamily: 'OpenSans-Regular',
               fontWeight: 'bold',
               color: 'white',
-              paddingTop: 10
+              paddingTop: paddingInset
             }}
           >
             No Recent Searches
@@ -148,10 +134,11 @@ export default class Search extends React.Component {
   }
 
   search = async () => {
-    this.setState({ filtering: true });
-    if (!this.context.isConnected) {
+    if (this.context && !this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
+    this.setState({ filtering: true });
+
     let term = this.state.searchTerm;
     if (term.length > 0) {
       var isNewTerm = true;
@@ -185,9 +172,8 @@ export default class Search extends React.Component {
       let response = await searchContent(
         term,
         this.state.page,
-        this.state.filters
+        this.filterQuery
       );
-      console.log(response);
       if (response.data.length == 0) {
         this.setState({
           searchEntered: false,
@@ -196,6 +182,7 @@ export default class Search extends React.Component {
           showCancel: true
         });
       } else {
+        this.metaFilters = response?.meta?.filterOptions;
         let newContent = await response.data.map(data => {
           return new ContentModel(data);
         });
@@ -235,11 +222,7 @@ export default class Search extends React.Component {
             progress_percent: newContent[i].post.progress_percent
           });
         }
-
-        console.log(response);
-
         this.setState({
-          filtersAvailable: response.meta.filterOptions,
           searchResults: [...this.state.searchResults, ...items],
           outVideos:
             items.length == 0 || response.data.length < 20 ? true : false,
@@ -265,10 +248,14 @@ export default class Search extends React.Component {
         }
       }
     } else {
-      if (newContent.getField('instructor') !== 'TBD') {
-        return newContent.getField('instructor').fields[0].value;
-      } else {
-        return newContent.getField('instructor').name;
+      try {
+        if (newContent.getField('instructor') !== 'TBD') {
+          return newContent.getField('instructor').fields[0].value;
+        } else {
+          return newContent.getField('instructor').name;
+        }
+      } catch (error) {
+        return '';
       }
     }
   };
@@ -286,19 +273,15 @@ export default class Search extends React.Component {
           }
         }
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   async clearRecent() {
-    console.log(await AsyncStorage.getItem('recentSearches'));
     await this.setState({ recentSearchResults: [] });
     await AsyncStorage.setItem(
       'recentSearches',
       JSON.stringify(this.state.recentSearchResults)
     );
-    console.log(await AsyncStorage.getItem('recentSearches'));
   }
 
   clickSearchRecent = searchTerm => {
@@ -356,12 +339,20 @@ export default class Search extends React.Component {
             onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
             style={styles.mainContainer}
           >
-            <View style={styles.searchContainer}>
+            <View
+              style={{
+                marginTop: onTablet ? '3%' : '4%',
+                flexDirection: 'row',
+                paddingLeft: paddingInset
+              }}
+            >
               <View style={styles.searchBox}>
-                <View style={[styles.centerContent, { width: 40 * factor }]}>
+                <View
+                  style={[styles.centerContent, { width: onTablet ? 60 : 40 }]}
+                >
                   <EvilIcons
                     name={'search'}
-                    size={27.5 * factor}
+                    size={onTablet ? 35 : 25}
                     color={
                       this.props.currentPage == 'SEARCH' ? '#fb1b2f' : 'grey'
                     }
@@ -373,7 +364,14 @@ export default class Search extends React.Component {
                   placeholderTextColor={'grey'}
                   onChangeText={searchTerm => this.setState({ searchTerm })}
                   returnKeyType={'search'}
-                  style={styles.searchText}
+                  style={{
+                    flex: 0.9,
+                    color: 'grey',
+                    paddingVertical: paddingInset,
+                    justifyContent: 'center',
+                    fontFamily: 'OpenSans-Regular',
+                    fontSize: onTablet ? 20 : 16
+                  }}
                   onSubmitEditing={() => {
                     this.setState({
                       showCancel: true,
@@ -390,7 +388,7 @@ export default class Search extends React.Component {
                     paddingRight:
                       this.state.showCancel || this.state.searchTerm.length > 0
                         ? 0
-                        : 15
+                        : paddingInset
                   }
                 ]}
               >
@@ -399,7 +397,7 @@ export default class Search extends React.Component {
                   <TouchableOpacity
                     style={{
                       flex: 1,
-                      paddingHorizontal: 15 * factor,
+                      paddingHorizontal: paddingInset,
                       justifyContent: 'center'
                     }}
                     onPress={() => {
@@ -414,7 +412,16 @@ export default class Search extends React.Component {
                       });
                     }}
                   >
-                    <Text style={styles.cancelSearch}>CANCEL</Text>
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        fontSize: onTablet ? 16 : 12,
+                        color: '#fb1b2f',
+                        fontFamily: 'OpenSans-Bold'
+                      }}
+                    >
+                      CANCEL
+                    </Text>
                   </TouchableOpacity>
                 )}
               </View>
@@ -425,9 +432,9 @@ export default class Search extends React.Component {
                   this.state.searchResults.length > 0) && (
                   <Text
                     style={{
-                      paddingLeft: 15 * factor,
+                      paddingLeft: paddingInset,
                       fontFamily: 'OpenSans-Bold',
-                      fontSize: 18 * factor,
+                      fontSize: onTablet ? 22 : 16,
                       color: colors.secondBackground
                     }}
                   >
@@ -442,14 +449,14 @@ export default class Search extends React.Component {
                     style={[
                       styles.centerContent,
                       {
-                        paddingRight: 15 * factor
+                        paddingRight: paddingInset
                       }
                     ]}
                   >
                     {!this.state.filtering && (
                       <Text
                         style={{
-                          fontSize: 14 * factor,
+                          fontSize: onTablet ? 18 : 14,
                           color: colors.pianoteRed,
                           textAlign: 'right',
                           fontFamily: 'OpenSans-Regular'
@@ -471,8 +478,7 @@ export default class Search extends React.Component {
                 !this.state.isLoadingAll && (
                   <View
                     style={{
-                      marginBottom: 10 * factor,
-                      marginTop: 15 * factor
+                      paddingVertical: paddingInset
                     }}
                   >
                     <VerticalVideoList
@@ -487,12 +493,26 @@ export default class Search extends React.Component {
                       showArtist={true}
                       showSort={false}
                       showLength={false}
-                      filters={this.state.filters}
+                      filters={this.metaFilters}
                       currentSort={this.state.currentSort}
                       changeSort={sort => this.changeSort(sort)}
-                      filterResults={() => this.setState({ showFilters: true })}
-                      imageWidth={onTablet ? width * 0.225 : width * 0.3}
+                      imageWidth={(onTablet ? 0.225 : 0.3) * width}
                       outVideos={this.state.outVideos} // if paging and out of videos
+                      applyFilters={filters =>
+                        new Promise(res =>
+                          this.setState(
+                            {
+                              searchResults: [],
+                              outVideos: false,
+                              page: 1
+                            },
+                            () => {
+                              this.filterQuery = filters;
+                              this.search().then(res);
+                            }
+                          )
+                        )
+                      }
                     />
                   </View>
                 )}
@@ -502,7 +522,7 @@ export default class Search extends React.Component {
                     styles.centerContent,
                     {
                       flex: 1,
-                      marginTop: 15 * factor
+                      marginTop: paddingInset
                     }
                   ]}
                 >
@@ -518,17 +538,17 @@ export default class Search extends React.Component {
                   key={'noResults'}
                   style={{
                     flex: 1,
-                    borderTopWidth: 1 * factor,
+                    borderTopWidth: 1,
                     borderTopColor: colors.secondBackground
                   }}
                 >
                   <Text
                     style={{
-                      marginTop: 5 * factor,
-                      fontSize: 18 * factor,
+                      marginTop: 5,
+                      fontSize: onTablet ? 20 : 16,
                       fontFamily: 'OpenSans-Bold',
                       color: 'white',
-                      paddingLeft: 15 * factor
+                      paddingLeft: paddingInset
                     }}
                   >
                     No Results
@@ -537,51 +557,6 @@ export default class Search extends React.Component {
               )}
             </View>
           </ScrollView>
-          <Modal
-            isVisible={this.state.showFilters}
-            style={[
-              styles.centerContent,
-              {
-                margin: 0,
-                height: '100%',
-                width: '100%'
-              }
-            ]}
-            animation={'slideInUp'}
-            animationInTiming={1}
-            animationOutTiming={1}
-            coverScreen={true}
-            hasBackdrop={true}
-          >
-            <Filters
-              hideFilters={() => this.setState({ showFilters: false })}
-              filtersAvailable={this.state.filtersAvailable}
-              filters={this.state.filters}
-              filtering={this.state.filtering}
-              type={'Search'}
-              reset={filters => {
-                this.setState(
-                  {
-                    searchResults: [],
-                    filters,
-                    page: 1
-                  },
-                  () => this.search()
-                );
-              }}
-              filterVideos={filters => {
-                this.setState(
-                  {
-                    searchResults: [],
-                    outVideos: false,
-                    page: 1,
-                    filters
-                  },
-                  () => this.search()
-                );
-              }}
-            />
-          </Modal>
         </View>
         <NavigationBar currentPage={'SEARCH'} />
       </SafeAreaView>

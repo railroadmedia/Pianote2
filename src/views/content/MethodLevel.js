@@ -24,7 +24,6 @@ import ResetIcon from '../../components/ResetIcon';
 import RestartCourse from '../../modals/RestartCourse';
 import NextVideo from '../../components/NextVideo';
 import StartIcon from '../../components/StartIcon';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import ContinueIcon from '../../components/ContinueIcon';
 import NavigationBar from '../../components/NavigationBar';
 import VerticalVideoList from '../../components/VerticalVideoList';
@@ -35,23 +34,20 @@ import {
 } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 import methodService from '../../services/method.service';
+import { goBack, navigate } from '../../../AppNavigator';
 
 let greaterWDim;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 export default class MethodLevel extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
     this.state = {
       items: [],
-      level: this.props.navigation.state.params.level,
+      level: props.route?.params.level,
       id: null,
       isStarted: false,
       isCompleted: false,
@@ -86,7 +82,7 @@ export default class MethodLevel extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     let response = await methodService.getMethodContent(
-      this.props.navigation.state.params.url
+      this.props.route?.params.url
     );
     const newContent = response.courses.map(data => {
       return new ContentModel(data);
@@ -217,26 +213,23 @@ export default class MethodLevel extends React.Component {
           }
         >
           <TouchableOpacity
-            onPress={() => {
-              this.props.navigation.goBack();
-            }}
+            onPress={() => goBack()}
             style={[
               styles.centerContent,
               {
                 position: 'absolute',
-                height: 35 * factor,
-                width: 35 * factor,
+                height: 40,
+                width: 40,
                 borderRadius: 100,
-                position: 'absolute',
-                left: 7.5 * factor,
-                top: 10 * factor,
+                left: 10,
+                top: 10,
                 zIndex: 4
               }
             ]}
           >
             <Back
-              width={(onTablet ? 17.5 : 25) * factor}
-              height={(onTablet ? 17.5 : 25) * factor}
+              width={backButtonSize}
+              height={backButtonSize}
               fill={'white'}
             />
           </TouchableOpacity>
@@ -277,120 +270,130 @@ export default class MethodLevel extends React.Component {
               <View style={styles.centerContent}>
                 <FastImage
                   style={{
-                    width: width * 0.48 * factor,
-                    height: 49 * factor,
+                    width: '75%',
+                    height: onTablet ? 100 : 60,
                     alignSelf: 'center',
-                    marginBottom: 5 * factor
+                    marginBottom: onTablet ? '2%' : '4%'
                   }}
                   source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
                   resizeMode={FastImage.resizeMode.contain}
                 />
               </View>
-              <Text
-                key={'level'}
-                style={{
-                  fontSize: 42.5 * factor,
-                  color: 'white',
-                  marginBottom: 10 * factor,
-                  fontFamily: 'RobotoCondensed-Bold',
-                  textAlign: 'center'
-                }}
-              >
-                LEVEL {this.state.level}
-              </Text>
               <View
-                key={'startIcon'}
-                style={{
-                  height: 40 * factor,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-evenly',
-                  marginBottom: 15 * factor
-                }}
+                style={[
+                  styles.heightButtons,
+                  {
+                    marginBottom: 10,
+                    width: '100%',
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                  }
+                ]}
               >
-                <TouchableOpacity
-                  style={[styles.centerContent, { flex: 0.5 }]}
-                  onPress={() => {
-                    this.toggleMyList();
-                  }}
-                >
-                  {!this.state.isAddedToList ? (
-                    <AntIcon
-                      name={'plus'}
-                      size={27.5 * factor}
-                      color={colors.pianoteRed}
-                    />
-                  ) : (
-                    <AntIcon
-                      name={'close'}
-                      size={27.5 * factor}
-                      color={colors.pianoteRed}
-                    />
-                  )}
-                  <Text
+                <View style={{ flex: 1, flexDirection: 'row' }}>
+                  <View style={{ flex: 0.5 }} />
+                  <TouchableOpacity
                     style={{
-                      fontFamily: 'OpenSans-Regular',
-                      color: 'white',
-                      fontSize: 12 * factor
+                      flex: 0.5,
+                      alignItems: 'center'
+                    }}
+                    onPress={() => {
+                      this.toggleMyList();
                     }}
                   >
-                    {this.state.isAddedToList ? 'Added' : 'My List'}
-                  </Text>
-                </TouchableOpacity>
-                {this.state.isCompleted ? (
-                  <ResetIcon
-                    isMethod={true}
-                    pressed={() => this.setState({ showRestartCourse: true })}
-                  />
-                ) : this.state.isStarted ? (
-                  <ContinueIcon
-                    isMethod={true}
-                    pressed={() =>
-                      this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.bannerNextLessonUrl
-                      })
-                    }
-                  />
-                ) : !this.state.isStarted ? (
-                  <StartIcon
-                    isMethod={true}
-                    pressed={() =>
-                      this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.bannerNextLessonUrl
-                      })
-                    }
-                  />
-                ) : null}
-                <TouchableOpacity
-                  style={[styles.centerContent, { flex: 0.5 }]}
-                  onPress={() => {
-                    this.setState({
-                      showInfo: !this.state.showInfo
-                    });
-                  }}
-                >
-                  <AntIcon
-                    name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                    size={22 * factor}
-                    color={colors.pianoteRed}
-                  />
-                  <Text
+                    <View style={[styles.centerContent]}>
+                      {!this.state.isAddedToList ? (
+                        <AntIcon
+                          name={'plus'}
+                          size={sizing.myListButtonSize}
+                          color={colors.pianoteRed}
+                        />
+                      ) : (
+                        <AntIcon
+                          name={'close'}
+                          size={sizing.myListButtonSize}
+                          color={colors.pianoteRed}
+                        />
+                      )}
+                    </View>
+                    <Text
+                      style={{
+                        fontFamily: 'OpenSans-Regular',
+                        color: 'white',
+                        fontSize: sizing.descriptionText
+                      }}
+                    >
+                      {this.state.isAddedToList ? 'Added' : 'My List'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={{ width: '50%' }}>
+                  {this.state.isCompleted ? (
+                    <ResetIcon
+                      isMethod={true}
+                      pressed={() => this.setState({ showRestartCourse: true })}
+                    />
+                  ) : this.state.isStarted ? (
+                    <ContinueIcon
+                      isMethod={true}
+                      pressed={() =>
+                        navigate('VIDEOPLAYER', {
+                          url: this.state.bannerNextLessonUrl
+                        })
+                      }
+                    />
+                  ) : !this.state.isStarted ? (
+                    <StartIcon
+                      isMethod={true}
+                      pressed={() =>
+                        navigate('VIDEOPLAYER', {
+                          url: this.state.bannerNextLessonUrl
+                        })
+                      }
+                    />
+                  ) : null}
+                </View>
+                <View style={{ flex: 1, flexDirection: 'row' }}>
+                  <TouchableOpacity
                     style={{
-                      fontFamily: 'OpenSans-Regular',
-                      color: 'white',
-                      marginTop: 3 * factor,
-                      fontSize: 13 * factor
+                      flex: 0.5,
+                      alignItems: 'center'
+                    }}
+                    onPress={() => {
+                      this.setState({
+                        showInfo: !this.state.showInfo
+                      });
                     }}
                   >
-                    Info
-                  </Text>
-                </TouchableOpacity>
+                    <View
+                      style={[styles.centerContent, { flexDirection: 'row' }]}
+                    >
+                      <AntIcon
+                        name={
+                          this.state.showInfo ? 'infocirlce' : 'infocirlceo'
+                        }
+                        size={sizing.infoButtonSize}
+                        color={colors.pianoteRed}
+                      />
+                    </View>
+                    <Text
+                      style={{
+                        fontFamily: 'OpenSans-Regular',
+                        color: 'white',
+                        marginTop: 2,
+                        fontSize: sizing.descriptionText
+                      }}
+                    >
+                      Info
+                    </Text>
+                  </TouchableOpacity>
+                  <View style={{ flex: 0.5 }} />
+                </View>
               </View>
             </View>
           </ImageBackground>
           {this.state.showInfo && (
             <View
-              key={'info'}
               style={{
                 width: '100%',
                 paddingHorizontal: this.state.isLandscape ? '10%' : 15
@@ -399,8 +402,9 @@ export default class MethodLevel extends React.Component {
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  marginVertical: 20 * factor,
-                  fontSize: 15 * factor,
+                  marginTop: onTablet ? 40 : 30,
+                  fontSize: sizing.descriptionText,
+                  paddingHorizontal: paddingInset,
                   color: 'white',
                   textAlign: 'center'
                 }}
@@ -412,7 +416,8 @@ export default class MethodLevel extends React.Component {
           <View
             style={{
               paddingHorizontal: this.state.isLandscape ? '10%' : 0,
-              marginBottom: 10 * factor
+              marginBottom: 10,
+              marginTop: onTablet ? 40 : 30
             }}
           >
             <VerticalVideoList
@@ -431,12 +436,8 @@ export default class MethodLevel extends React.Component {
           </View>
         </ScrollView>
         <Modal
-          key={'restartCourse'}
           isVisible={this.state.showRestartCourse}
-          style={{
-            margin: 0,
-            flex: 1
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -460,13 +461,12 @@ export default class MethodLevel extends React.Component {
             progress={this.state.progress}
             type='LEVEL'
             onNextLesson={() =>
-              this.props.navigation.navigate('VIDEOPLAYER', {
+              navigate('VIDEOPLAYER', {
                 url: this.state.nextLesson.post.mobile_app_url
               })
             }
           />
         )}
-
         <NavigationBar currentPage={''} isMethod={true} />
       </SafeAreaView>
     );

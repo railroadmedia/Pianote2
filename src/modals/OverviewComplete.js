@@ -9,7 +9,6 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
 import { BlurView } from '@react-native-community/blur';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 
@@ -20,8 +19,7 @@ const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
-class OverviewComplete extends React.Component {
-  static navigationOptions = { header: null };
+export default class OverviewComplete extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -55,11 +53,11 @@ class OverviewComplete extends React.Component {
             <View style={[styles.centerContent]}>
               <IonIcon
                 name={'ios-trophy'}
-                size={36 * factor}
+                size={onTablet ? 45 : 35}
                 color={'#fb1b2f'}
               />
             </View>
-            <View style={[styles.centerContent, { padding: 5 * factor }]}>
+            <View style={[styles.centerContent, { padding: 5 }]}>
               <Text style={[styles.modalHeaderText]}>
                 {this.changeType(this.props.type).toUpperCase()}
                 {'\n'}Complete
@@ -84,23 +82,21 @@ class OverviewComplete extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 10 * factor,
+    borderRadius: 10,
     marginHorizontal: 30,
     paddingVertical: 30
   },
   congrats: {
     textAlign: 'center',
-    marginVertical: 5 * factor,
-    marginHorizontal: 20 * factor
+    marginVertical: 5,
+    marginHorizontal: 20
   },
   title: {
-    marginHorizontal: 20 * factor,
-    marginBottom: 15 * factor,
+    marginHorizontal: 20,
+    marginBottom: 15,
     fontWeight: 'bold'
   },
   xp: {
     color: '#fb1b2f'
   }
 });
-
-export default withNavigation(OverviewComplete);

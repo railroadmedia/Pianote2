@@ -7,20 +7,10 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
-  Dimensions
+  StyleSheet
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
-
-class NoConnection extends React.Component {
-  static navigationOptions = { header: null };
+export default class NoConnection extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -44,7 +34,7 @@ class NoConnection extends React.Component {
               style={localStyles.tryAgainContainer}
               onPress={() => this.props.hideNoConnection()}
             >
-              <Text style={(styles.modalButtonText, localStyles.tryAgain)}>
+              <Text style={[styles.modalButtonText, localStyles.tryAgain]}>
                 TRY AGAIN
               </Text>
             </TouchableOpacity>
@@ -58,23 +48,21 @@ class NoConnection extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor
+    borderRadius: 15,
+    margin: 20
   },
   sorryText: {
     paddingHorizontal: 40,
-    marginTop: 10 * factor
+    marginTop: 10
   },
   tryAgainContainer: {
     alignSelf: 'center',
     paddingHorizontal: 40,
-    marginVertical: 10 * factor
+    marginVertical: 10
   },
   tryAgain: {
     color: '#fb1b2f',
     paddingHorizontal: 20,
-    margin: 10 * factor
+    margin: 10
   }
 });
-
-export default withNavigation(NoConnection);

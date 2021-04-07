@@ -6,21 +6,21 @@ import {
   View,
   Text,
   Platform,
-  Animated,
   StatusBar,
   TextInput,
   Dimensions,
   RefreshControl,
   TouchableOpacity,
   ActivityIndicator,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  BackHandler
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
 import Video from 'RNVideoEnhanced';
 import Modal from 'react-native-modal';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import { SafeAreaView } from 'react-navigation';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -34,7 +34,6 @@ import Replies from '../../components/Replies';
 import SoundSlice from '../../components/SoundSlice';
 import VerticalVideoList from '../../components/VerticalVideoList';
 
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import CommentSort from '../../modals/CommentSort';
 import CustomModal from '../../modals/CustomModal';
 import RestartCourse from '../../modals/RestartCourse';
@@ -62,26 +61,24 @@ import VideoPlayerSong from './VideoPlayerSong';
 
 import { NetworkContext } from '../../context/NetworkProvider';
 import methodService from '../../services/method.service';
+import { goBack, navigate } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 export default class VideoPlayer extends React.Component {
   static contextType = NetworkContext;
-  static navigationOptions = { header: null };
+
   constructor(props) {
     super(props);
     this.limit = 10;
     this.allCommentsNum = 0;
     this.state = {
-      id: this.props.navigation.state.params.id,
-      url: this.props.navigation.state.params.url,
+      id: props.route?.params?.id,
+      url: props.route?.params?.url,
       commentId: '',
-      commentSort: 'Popular', // Newest, Oldest, Mine, Popular
+      commentSort: 'Popular',
       profileImage: '',
       isLoadingAll: true,
       selectedComment: undefined,
@@ -93,13 +90,11 @@ export default class VideoPlayer extends React.Component {
       isLoadingComm: false,
       showAssignmentComplete: false,
       showOverviewComplete: false,
-      showQualitySettings: false,
       showLessonComplete: false,
       showResDownload: false,
       showVideo: true,
-      makeCommentVertDelta: new Animated.Value(0.01),
       comments: [],
-      outComments: false,
+      chapters: [],
       relatedLessons: [],
       likes: 0,
       videoId: 0,
@@ -119,12 +114,13 @@ export default class VideoPlayer extends React.Component {
       description: '',
       progress: null,
       publishedOn: '',
-      reply: '',
-      makeReply: false
+      reply: ''
     };
   }
 
   componentDidMount = async () => {
+    BackHandler.addEventListener('hardwareBackPress', this.onBack);
+
     // get profile image
     this.limit = 10;
     let storage = await Promise.all([
@@ -136,30 +132,35 @@ export default class VideoPlayer extends React.Component {
     this.getContent();
   };
 
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.onBack);
+  }
+
   getContent = async () => {
     let content, comments;
     if (!this.context.isConnected) {
       content =
         offlineContent[this.state.id]?.lesson ||
         offlineContent[
-          this.props.navigation.state.params.parentId
+          this.props.route?.params?.parentId
         ]?.overview.lessons.find(l => l.id === this.state.id);
       comments = content.comments;
       this.allCommentsNum = comments.length;
     } else {
       let result;
-      if (this.props.navigation.state.params.url) {
+      if (this.props.route?.params?.url) {
         result = await methodService.getMethodContent(this.state.url);
       } else {
         result = await contentService.getContent(this.state.id);
       }
       if (result.title && result.message) {
-        return this.alert.toggle(result.title, result.message);
+        return this.alert?.toggle(result.title, result.message);
       }
       content = result;
       this.allCommentsNum = result.total_comments;
     }
     content = new ContentModel(content);
+
     let relatedLessons = content.post.related_lessons?.map(rl => {
       return new ContentModel(rl);
     });
@@ -267,17 +268,13 @@ export default class VideoPlayer extends React.Component {
                 .replace(/&quot;/g, '"')
                 .replace(/&gt;/g, '>')
                 .replace(/&lt;/g, '<'),
+        chapters: content.post.chapters,
         xp: content.post.total_xp,
         artist:
           content.post.type === 'song-part' && content.post.parent
             ? new ContentModel(content.post.parent).getField('artist')
             : content.getField('artist'),
-        instructor:
-          content.post.type === 'learning-path-level'
-            ? content.post.instructors
-            : content.post.type === 'course-part' && content.post.parent
-            ? new ContentModel(content.post.parent).getFieldMulti('instructor')
-            : content.getFieldMulti('instructor'),
+        instructor: content.post.instructors,
         isLoadingAll: false,
         publishedOn: content.publishedOn,
         relatedLessons: rl,
@@ -318,14 +315,14 @@ export default class VideoPlayer extends React.Component {
       async () => {
         if (this.state.resources) this.createResourcesArr();
         if (!this.state.video_playback_endpoints && !this.state.youtubeId) {
-          this.alert.toggle(
+          this.alert?.toggle(
             `We're sorry, there was an issue loading this video, try reloading the lesson.`,
             `If the problem persists please contact support.`
           );
         }
-        const { comment, commentId } = this.props.navigation.state.params;
+        const { comment, commentId } = this.props.route?.params;
         if (comment)
-          this.replies.toggle(() =>
+          this.replies?.toggle(() =>
             this.setState({ selectedComment: comment })
           );
         else if (commentId) {
@@ -334,7 +331,7 @@ export default class VideoPlayer extends React.Component {
           ).data;
           const selectedComment = comments?.find(f => f.id == commentId);
           if (selectedComment)
-            this.replies.toggle(() => this.setState({ selectedComment }));
+            this.replies?.toggle(() => this.setState({ selectedComment }));
         }
       }
     );
@@ -389,6 +386,16 @@ export default class VideoPlayer extends React.Component {
     if (path === 'application/zip') return 'zip';
   };
 
+  onBack = () => {
+    const { commentId } = this.props.route?.params;
+    if (commentId) {
+      navigate('LESSONS');
+    } else {
+      goBack();
+    }
+    return true;
+  };
+
   fetchComments = async id => {
     let comments = await commentsService.getComments(
       id || this.state.id,
@@ -436,7 +443,7 @@ export default class VideoPlayer extends React.Component {
       if (
         offlineContent[id]?.lesson ||
         offlineContent[
-          this.props.navigation.state.params.parentId
+          this.props.route?.params?.parentId
         ]?.overview.lessons.find(l => l.id === id)
       )
         this.resetState(id, url);
@@ -500,24 +507,23 @@ export default class VideoPlayer extends React.Component {
           flex: 1,
           borderTopWidth: 0.25,
           flexDirection: 'row',
-          paddingTop: 10 * factor,
-          paddingBottom: 0 * factor,
-          paddingHorizontal: 10 * factor
+          paddingTop: 10,
+          paddingHorizontal: 10
         }}
       >
         <View
           style={{
             alignItems: 'center',
             justifyContent: 'flex-start',
-            paddingBottom: 10 * factor
+            paddingBottom: 10
           }}
         >
           <FastImage
             style={{
-              height: (onTablet ? 30 : 40) * factor,
-              width: (onTablet ? 30 : 40) * factor,
+              height: onTablet ? 60 : 40,
+              width: onTablet ? 60 : 40,
               borderRadius: 100,
-              marginTop: 10 * factor
+              marginTop: 10
             }}
             source={{
               uri: item.user['fields.profile_picture_image_url']
@@ -527,8 +533,8 @@ export default class VideoPlayer extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: onTablet ? 15 : 10 * factor,
-              marginTop: 5 * factor,
+              fontSize: onTablet ? 15 : 12,
+              paddingTop: 5,
               fontWeight: 'bold',
               color: colors.pianoteGrey
             }}
@@ -537,13 +543,13 @@ export default class VideoPlayer extends React.Component {
           </Text>
         </View>
 
-        <View style={{ flex: 1, paddingLeft: 10 * factor }}>
+        <View style={{ flex: 1, paddingLeft: paddingInset }}>
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: (onTablet ? 10 : 13) * factor,
+              fontSize: sizing.descriptionText,
               color: 'white',
-              paddingTop: 10 * factor
+              paddingTop: 10
             }}
           >
             {item.comment}
@@ -552,10 +558,10 @@ export default class VideoPlayer extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: (onTablet ? 9 : 10) * factor,
+              fontSize: sizing.descriptionText,
               color: colors.secondBackground,
-              paddingTop: 5 * factor,
-              paddingBottom: 10 * factor
+              paddingTop: 5,
+              paddingBottom: 10
             }}
           >
             {item.user['display_name']} | {item.user.rank} |{' '}
@@ -563,8 +569,8 @@ export default class VideoPlayer extends React.Component {
           </Text>
           <View
             style={{
-              paddingBottom: 15 * factor,
-              paddingTop: 5 * factor
+              paddingBottom: 15,
+              paddingTop: 5
             }}
           >
             <View style={{ flexDirection: 'row' }}>
@@ -575,7 +581,7 @@ export default class VideoPlayer extends React.Component {
                 >
                   <AntIcon
                     name={item.is_liked ? 'like1' : 'like2'}
-                    size={(onTablet ? 17.5 : 22.5) * factor}
+                    size={sizing.infoButtonSize}
                     color={colors.pianoteRed}
                   />
                 </TouchableOpacity>
@@ -591,9 +597,9 @@ export default class VideoPlayer extends React.Component {
                     <Text
                       style={{
                         fontFamily: 'OpenSans-Regular',
-                        fontSize: (onTablet ? 8 : 10) * factor,
+                        fontSize: sizing.descriptionText,
                         color: colors.pianoteRed,
-                        paddingHorizontal: 5 * factor
+                        paddingHorizontal: 5
                       }}
                     >
                       {item.like_count}{' '}
@@ -606,17 +612,17 @@ export default class VideoPlayer extends React.Component {
                 <TouchableOpacity
                   style={{
                     marginRight: 10,
-                    marginLeft: -2.5 * factor
+                    marginLeft: -2.5
                   }}
                   onPress={() =>
-                    this.replies.toggle(() =>
+                    this.replies?.toggle(() =>
                       this.setState({ selectedComment: item })
                     )
                   }
                 >
                   <MaterialIcon
                     name={'comment-text-outline'}
-                    size={(onTablet ? 17.5 : 22.5) * factor}
+                    size={sizing.infoButtonSize}
                     color={colors.pianoteRed}
                   />
                 </TouchableOpacity>
@@ -632,9 +638,9 @@ export default class VideoPlayer extends React.Component {
                     <Text
                       style={{
                         fontFamily: 'OpenSans-Regular',
-                        fontSize: (onTablet ? 8 : 10) * factor,
+                        fontSize: sizing.descriptionText,
                         color: colors.pianoteRed,
-                        paddingHorizontal: 5 * factor
+                        paddingHorizontal: 5
                       }}
                     >
                       {item.replies?.length}{' '}
@@ -645,12 +651,12 @@ export default class VideoPlayer extends React.Component {
               </View>
               {this.userId === item.user_id && (
                 <TouchableOpacity
-                  style={{ marginLeft: 15 }}
+                  style={{ marginLeft: paddingInset }}
                   onPress={() => this.deleteComment(item.id)}
                 >
                   <AntIcon
                     name={'delete'}
-                    size={20 * factor}
+                    size={sizing.infoButtonSize}
                     color={colors.pianoteRed}
                   />
                 </TouchableOpacity>
@@ -660,7 +666,7 @@ export default class VideoPlayer extends React.Component {
           {item.replies?.length !== 0 && (
             <TouchableOpacity
               onPress={() =>
-                this.replies.toggle(() =>
+                this.replies?.toggle(() =>
                   this.setState({ selectedComment: item })
                 )
               }
@@ -668,9 +674,9 @@ export default class VideoPlayer extends React.Component {
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  fontSize: (onTablet ? 9 : 10) * factor,
+                  fontSize: sizing.descriptionText,
                   color: colors.secondBackground,
-                  marginBottom: 10 * factor
+                  marginBottom: 10
                 }}
               >
                 VIEW {item.replies?.length}{' '}
@@ -827,8 +833,8 @@ export default class VideoPlayer extends React.Component {
             this.setState({ selectedAssignment: assignment });
           }}
           style={{
-            paddingHorizontal: 10 * factor,
-            paddingVertical: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
             borderBottomColor: colors.secondBackground,
             borderBottomWidth: 1,
             justifyContent: 'space-between',
@@ -837,8 +843,9 @@ export default class VideoPlayer extends React.Component {
           }}
         >
           <Text
+            numberOfLines={1}
             style={{
-              fontSize: 18 * factor,
+              fontSize: sizing.verticalListTitleSmall,
               color: colors.secondBackground,
               fontFamily: 'RobotoCondensed-Bold',
               maxWidth: '90%'
@@ -850,13 +857,15 @@ export default class VideoPlayer extends React.Component {
           {row.progress === 100 ? (
             <AntIcon
               name={'checkcircle'}
-              size={25 * factor}
+              size={onTablet ? 25 : 20}
+              style={{ paddingVertical: 5 }}
               color={colors.pianoteRed}
             />
           ) : (
             <EntypoIcon
               name={'chevron-thin-right'}
-              size={20 * factor}
+              size={onTablet ? 25 : 20}
+              style={{ paddingVertical: 5 }}
               color={colors.secondBackground}
             />
           )}
@@ -898,17 +907,18 @@ export default class VideoPlayer extends React.Component {
 
   renderTagsDependingOnContentType = () => {
     let { artist, xp, type, publishedOn, instructor, style } = this.state;
+    if (typeof instructor[0] == 'object') {
+      instructor = [instructor[0]?.fields?.[0]?.value];
+    }
+
     let releaseDate = this.transformDate(publishedOn);
     let releaseDateTag = releaseDate ? `${releaseDate} | ` : '';
-
     let artistTag = artist ? `${artist.toUpperCase()} | ` : '';
     let xpTag = `${xp || 0} XP`;
     let instructorTag = instructor
-      ? `${instructor
-          .map(i => i.fields.find(f => f.key === 'name').value)
-          .join(', ')
-          .toUpperCase()} | `
+      ? `${instructor.join(',').toUpperCase()} | `
       : '';
+
     switch (type) {
       case 'song-part':
         return artistTag + style + xpTag;
@@ -923,6 +933,17 @@ export default class VideoPlayer extends React.Component {
       default:
         return instructorTag + xpTag;
     }
+  };
+
+  secondsToTime = seconds => {
+    if (seconds < 1) return '0:00';
+    let h = parseInt(seconds / 3600);
+    let m = parseInt((seconds - h * 3600) / 60);
+    let s = parseInt(seconds - m * 60 - h * 3600);
+
+    s = `${s < 10 ? 0 : ''}${s}`;
+    m = `${h && m < 10 ? 0 : ''}${m}`;
+    return h ? `${h}:${m}:${s}` : `${m}:${s}`;
   };
 
   render() {
@@ -942,13 +963,10 @@ export default class VideoPlayer extends React.Component {
           <>
             {this.state.isLoadingAll ||
             (!this.state.video_playback_endpoints && !youtubeId) ? (
-              <SafeAreaView
-                forceInset={{ top: 'always', bottom: 'never' }}
-                style={{ backgroundColor: 'black' }}
-              >
+              <View style={{ backgroundColor: 'black' }}>
                 <View style={{ aspectRatio: 16 / 9, justifyContent: 'center' }}>
                   <TouchableOpacity
-                    onPress={() => this.props.navigation.goBack()}
+                    onPress={() => this.onBack()}
                     style={{
                       top: 0,
                       left: 0,
@@ -958,14 +976,14 @@ export default class VideoPlayer extends React.Component {
                     }}
                   >
                     <ArrowLeft
-                      width={18 * factor}
-                      height={18 * factor}
+                      width={onTablet ? 25 : 18}
+                      height={onTablet ? 25 : 18}
                       fill={'white'}
                     />
                   </TouchableOpacity>
                   <ActivityIndicator size='large' color='#ffffff' />
                 </View>
-              </SafeAreaView>
+              </View>
             ) : (
               <Video
                 youtubeId={youtubeId}
@@ -978,21 +996,23 @@ export default class VideoPlayer extends React.Component {
                 ref={r => (this.video = r)}
                 type={false ? 'audio' : 'video'}
                 connection={this.context.isConnected}
-                onBack={this.props.navigation.goBack}
+                onBack={this.onBack}
                 showControls={true}
                 paused={true}
-                goToNextLesson={() =>
-                  this.switchLesson(
-                    this.state.nextLesson.id,
-                    this.state.nextLesson.post.mobile_app_url
-                  )
-                }
-                goToPreviousLesson={() =>
-                  this.switchLesson(
-                    this.state.previousLesson.id,
-                    this.state.previousLesson.post.mobile_app_url
-                  )
-                }
+                goToNextLesson={() => {
+                  if (this.state.nextLesson)
+                    this.switchLesson(
+                      this.state.nextLesson.id,
+                      this.state.nextLesson.post.mobile_app_url
+                    );
+                }}
+                goToPreviousLesson={() => {
+                  if (this.state.previousLesson)
+                    this.switchLesson(
+                      this.state.previousLesson.id,
+                      this.state.previousLesson.post.mobile_app_url
+                    );
+                }}
                 onUpdateVideoProgress={async (
                   videoId,
                   id,
@@ -1030,13 +1050,6 @@ export default class VideoPlayer extends React.Component {
                       fill: colors.pianoteRed
                     }
                   }
-                  //   alert: {
-                  //     background: 'purple',
-                  //     titleTextColor: 'blue',
-                  //     subtitleTextColor: 'green',
-                  //     reloadLesson: {color: 'green', background: 'blue'},
-                  //     contactSupport: {color: 'green', background: 'blue'},
-                  //   },
                 }}
               />
             )}
@@ -1044,10 +1057,7 @@ export default class VideoPlayer extends React.Component {
         )}
 
         {!this.state.isLoadingAll ? (
-          <View
-            key={'container2'}
-            style={{ flex: 1, backgroundColor: colors.mainBackground }}
-          >
+          <View style={{ flex: 1, backgroundColor: colors.mainBackground }}>
             <View key={'belowVideo'} style={{ flex: 1 }}>
               {this.state.selectedAssignment ? (
                 <VideoPlayerSong
@@ -1112,34 +1122,32 @@ export default class VideoPlayer extends React.Component {
                     <View style={{ height: 5 }} />
                     <Text
                       style={{
-                        fontSize: (onTablet ? 15 : 20) * factor,
-                        marginVertical: 10 * factor,
-                        fontWeight: 'bold',
-                        fontFamily: 'OpenSans-Regular',
+                        fontSize: sizing.titleVideoPlayer,
+                        marginTop: 10,
+                        marginBottom: 5,
+                        fontFamily: 'OpenSans-Bold',
                         textAlign: 'center',
                         color: 'white',
-                        paddingHorizontal: 15
+                        paddingHorizontal: paddingInset
                       }}
                     >
                       {this.state.lessonTitle}
                     </Text>
                     <Text
                       style={{
-                        fontSize: (onTablet ? 12 : 16) * factor,
+                        fontSize: sizing.descriptionText,
                         fontFamily: 'OpenSans-Regular',
                         textAlign: 'center',
                         color: colors.secondBackground,
-                        paddingBottom: 12.5 * factor
+                        paddingBottom: 20
                       }}
                     >
                       {this.renderTagsDependingOnContentType()}
                     </Text>
                   </View>
                   <View
-                    key={'icons'}
                     style={{
-                      paddingHorizontal: 10 * factor,
-                      paddingVertical: 5 * factor
+                      paddingHorizontal: 10
                     }}
                   >
                     <View
@@ -1151,44 +1159,42 @@ export default class VideoPlayer extends React.Component {
                       }}
                     >
                       <TouchableOpacity
-                        key={'like'}
                         onPress={this.likeOrDislikeLesson}
                         style={{ flex: 1, alignItems: 'center' }}
                       >
                         <View style={{ flex: 1 }} />
                         <AntIcon
                           name={this.state.isLiked ? 'like1' : 'like2'}
-                          size={onTablet ? 20 * factor : 27.5 * factor}
+                          size={sizing.infoButtonSize}
                           color={colors.pianoteRed}
                         />
                         <Text
                           style={{
                             textAlign: 'center',
-                            fontSize: 12 * factor,
+                            fontSize: sizing.descriptionText,
                             color: 'white',
-                            marginTop: 5 * factor
+                            marginTop: 5
                           }}
                         >
                           {this.state.likes}
                         </Text>
                       </TouchableOpacity>
                       <TouchableOpacity
-                        key={'list'}
                         onPress={this.toggleMyList}
                         style={{ flex: 1, alignItems: 'center' }}
                       >
                         <View style={{ flex: 1 }} />
                         <AntIcon
                           name={this.state.isAddedToMyList ? 'close' : 'plus'}
-                          size={onTablet ? 22.5 * factor : 28.5 * factor}
+                          size={sizing.myListButtonSize}
                           color={colors.pianoteRed}
                         />
                         <Text
                           style={{
                             textAlign: 'center',
-                            fontSize: 12 * factor,
+                            fontSize: sizing.descriptionText,
                             color: 'white',
-                            marginTop: 5 * factor
+                            marginTop: 2
                           }}
                         >
                           {this.state.isAddedToMyList ? 'Added' : 'My List'}
@@ -1196,7 +1202,6 @@ export default class VideoPlayer extends React.Component {
                       </TouchableOpacity>
                       {this.state.resources && (
                         <TouchableOpacity
-                          key={'resource'}
                           onPress={() =>
                             this.setState({
                               showResDownload: true
@@ -1206,16 +1211,16 @@ export default class VideoPlayer extends React.Component {
                         >
                           <View style={{ flex: 1 }} />
                           <Resources
-                            height={onTablet ? 20 * factor : 27.5 * factor}
-                            width={onTablet ? 20 * factor : 27.5 * factor}
+                            height={sizing.infoButtonSize}
+                            width={sizing.infoButtonSize}
                             fill={colors.pianoteRed}
                           />
                           <Text
                             style={{
                               textAlign: 'center',
-                              fontSize: 12 * factor,
+                              fontSize: sizing.descriptionText,
                               color: 'white',
-                              marginTop: 5 * factor
+                              marginTop: 5
                             }}
                           >
                             Resources
@@ -1226,24 +1231,23 @@ export default class VideoPlayer extends React.Component {
                         entity={{
                           id,
                           comments,
-                          content: this.props.navigation.state.params.url
+                          content: this.props.route?.params?.url
                             ? methodService.getMethodContent(this.state.url)
                             : contentService.getContent(this.state.id)
                         }}
                         styles={{
                           touchable: { flex: 1 },
                           iconSize: {
-                            height: onTablet ? 22.5 * factor : 27.5 * factor,
-                            width: onTablet ? 22.5 * factor : 27.5 * factor
+                            width: sizing.myListButtonSize,
+                            height: sizing.myListButtonSize
                           },
                           iconDownloadColor: colors.pianoteRed,
                           activityIndicatorColor: colors.pianoteRed,
                           animatedProgressBackground: colors.pianoteRed,
                           textStatus: {
                             color: '#ffffff',
-                            fontSize: 12 * factor,
-                            fontFamily: 'OpenSans-Regular',
-                            marginTop: 5 * factor
+                            fontSize: sizing.descriptionText,
+                            fontFamily: 'OpenSans-Regular'
                           },
                           alert: {
                             alertTextMessageFontFamily: 'OpenSans-Regular',
@@ -1260,7 +1264,6 @@ export default class VideoPlayer extends React.Component {
                         }}
                       />
                       <TouchableOpacity
-                        key={'info'}
                         onPress={() =>
                           this.setState({
                             showInfo: !this.state.showInfo
@@ -1276,15 +1279,15 @@ export default class VideoPlayer extends React.Component {
                           name={
                             this.state.showInfo ? 'infocirlce' : 'infocirlceo'
                           }
-                          size={onTablet ? 20 * factor : 22.5 * factor}
+                          size={sizing.infoButtonSize}
                           color={colors.pianoteRed}
                         />
                         <Text
                           style={{
                             textAlign: 'center',
-                            fontSize: 12 * factor,
+                            fontSize: sizing.descriptionText,
                             color: 'white',
-                            marginTop: 5 * factor
+                            marginTop: 5
                           }}
                         >
                           Info
@@ -1292,33 +1295,67 @@ export default class VideoPlayer extends React.Component {
                       </TouchableOpacity>
                     </View>
                   </View>
-                  <View key={'infoExpanded'}>
+                  <View>
                     {this.state.showInfo && (
-                      <Text
-                        style={{
-                          paddingHorizontal: '5%',
-                          paddingTop: 10 * factor,
-                          fontFamily: 'OpenSans-Regular',
-                          fontSize: 14 * factor,
-                          textAlign: 'center',
-                          marginVertical: 7.5 * factor,
-                          color: 'white'
-                        }}
-                      >
-                        {this.state.description}
-                      </Text>
+                      <>
+                        <Text
+                          style={{
+                            paddingHorizontal: 10,
+                            paddingTop: 20,
+                            fontFamily: 'OpenSans-Regular',
+                            fontSize: sizing.descriptionText,
+                            textAlign: 'left',
+                            color: 'white'
+                          }}
+                        >
+                          {this.state.description}
+                        </Text>
+                        {this.state.chapters?.map(item => (
+                          <TouchableOpacity
+                            style={{
+                              alignSelf: 'flex-start',
+                              paddingVertical: 5
+                            }}
+                            onPress={() =>
+                              this.video?.onSeek?.(item.chapter_timecode)
+                            }
+                          >
+                            <Text
+                              style={{
+                                color: 'white',
+                                fontFamily: 'OpenSans-Regular',
+                                fontSize: sizing.descriptionText,
+                                marginTop: 5,
+                                paddingHorizontal: 10,
+                                textAlign: 'left'
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  color: '#007AFF',
+                                  textDecorationLine: 'underline'
+                                }}
+                              >
+                                {this.secondsToTime(item.chapter_timecode)}
+                              </Text>{' '}
+                              - {item.chapter_description}
+                            </Text>
+                          </TouchableOpacity>
+                        ))}
+                      </>
                     )}
                   </View>
-                  <View style={{ height: 10 * factor }} />
                   {this.state.assignmentList?.length > 0 && (
-                    <>
+                    <View style={{ marginTop: 20, marginBottom: 10 }}>
                       <View
-                        key={'assingmentsHeader'}
-                        style={{ paddingLeft: 15, paddingBottom: 10 }}
+                        style={{
+                          paddingLeft: paddingInset,
+                          paddingBottom: 10
+                        }}
                       >
                         <Text
                           style={{
-                            fontSize: 18 * factor,
+                            fontSize: sizing.verticalListTitleSmall,
                             fontFamily: 'RobotoCondensed-Bold',
                             color: colors.secondBackground
                           }}
@@ -1328,7 +1365,6 @@ export default class VideoPlayer extends React.Component {
                       </View>
 
                       <View
-                        key={'assignments'}
                         style={{
                           width: '100%',
                           borderTopColor: colors.secondBackground,
@@ -1337,9 +1373,9 @@ export default class VideoPlayer extends React.Component {
                       >
                         {this.renderAssignments()}
                       </View>
-                    </>
+                    </View>
                   )}
-                  <View style={{ height: 5 }} />
+                  <View style={{ height: 10 }} />
                   {this.state.relatedLessons.length > 0 && (
                     <VerticalVideoList
                       title={'RELATED LESSONS'}
@@ -1352,7 +1388,7 @@ export default class VideoPlayer extends React.Component {
                       showArtist={false}
                       showSort={false}
                       showLength={true}
-                      imageWidth={onTablet ? width * 0.2 : width * 0.28}
+                      imageWidth={(onTablet ? 0.2 : 0.28) * width}
                       navigator={row =>
                         this.switchLesson(row.id, row.mobile_app_url)
                       }
@@ -1360,14 +1396,13 @@ export default class VideoPlayer extends React.Component {
                   )}
 
                   <View
-                    key={'commentContainer'}
                     style={[
                       styles.centerContent,
                       {
                         flex: 1,
                         width: '100%',
                         zIndex: 10,
-                        marginTop: 10 * factor
+                        marginTop: 10
                       }
                     ]}
                   >
@@ -1380,17 +1415,16 @@ export default class VideoPlayer extends React.Component {
                         }}
                       >
                         <View
-                          key={'commentHeader'}
                           style={{
                             flexDirection: 'row',
                             flex: 1,
                             justifyContent: 'space-between',
-                            paddingHorizontal: 10 * factor
+                            paddingHorizontal: 10
                           }}
                         >
                           <Text
                             style={{
-                              fontSize: onTablet ? 26 : 18 * factor,
+                              fontSize: sizing.verticalListTitleSmall,
                               fontFamily: 'RobotoCondensed-Bold',
                               color: colors.secondBackground
                             }}
@@ -1399,13 +1433,12 @@ export default class VideoPlayer extends React.Component {
                           </Text>
                           {global.isConnected && (
                             <TouchableOpacity
-                              style={{ marginRight: factor * 10 }}
                               onPress={() =>
                                 this.setState({ showCommentSort: true })
                               }
                             >
                               <FontIcon
-                                size={(onTablet ? 18 : 20) * factor}
+                                size={onTablet ? 20 : 15}
                                 name={'sort-amount-down'}
                                 color={colors.pianoteRed}
                               />
@@ -1414,12 +1447,11 @@ export default class VideoPlayer extends React.Component {
                         </View>
 
                         <View
-                          key={'addComment'}
                           style={{
                             width: '100%',
                             flexDirection: 'row',
-                            paddingHorizontal: 10 * factor,
-                            paddingVertical: 20 * factor
+                            paddingHorizontal: 10,
+                            paddingVertical: 20
                           }}
                         >
                           <TouchableOpacity
@@ -1430,9 +1462,9 @@ export default class VideoPlayer extends React.Component {
                           >
                             <FastImage
                               style={{
-                                height: (onTablet ? 30 : 40) * factor,
-                                width: (onTablet ? 30 : 40) * factor,
-                                paddingVertical: 10 * factor,
+                                height: onTablet ? 60 : 40,
+                                width: onTablet ? 60 : 40,
+                                paddingVertical: 10,
                                 borderRadius: 100
                               }}
                               source={{
@@ -1444,7 +1476,6 @@ export default class VideoPlayer extends React.Component {
                             />
 
                             <View
-                              key={'addComment'}
                               style={{
                                 flex: 1,
                                 justifyContent: 'center'
@@ -1454,9 +1485,9 @@ export default class VideoPlayer extends React.Component {
                                 style={{
                                   textAlign: 'left',
                                   fontFamily: 'OpenSans-Regular',
-                                  fontSize: (onTablet ? 10 : 13) * factor,
+                                  fontSize: sizing.descriptionText,
                                   color: 'white',
-                                  paddingLeft: 10 * factor
+                                  paddingLeft: paddingInset
                                 }}
                               >
                                 Add a comment...
@@ -1523,7 +1554,7 @@ export default class VideoPlayer extends React.Component {
                     comments: comments.filter(c => c.id !== id)
                   }),
                   () =>
-                    this.replies.toggle(() =>
+                    this.replies?.toggle(() =>
                       this.setState({ selectedComment: undefined })
                     )
                 );
@@ -1589,7 +1620,7 @@ export default class VideoPlayer extends React.Component {
                   this.setState({ selectedComment: undefined })
                 )
               }
-              onRef={r => (this.replies = r)}
+              ref={r => (this.replies = r)}
               comment={this.state.selectedComment}
               me={{
                 userId: this.userId,
@@ -1605,9 +1636,7 @@ export default class VideoPlayer extends React.Component {
           />
         )}
         {!this.state.selectedAssignment && !this.state.showMakeComment && (
-          <SafeAreaView
-            key={'completeLesson'}
-            forceInset={{ bottom: 'always' }}
+          <View
             style={[
               {
                 backgroundColor: colors.mainBackground
@@ -1617,7 +1646,7 @@ export default class VideoPlayer extends React.Component {
             <View
               style={{
                 backgroundColor: colors.mainBackground,
-                height: 2 * factor,
+                height: 2,
                 width: '100%'
               }}
             >
@@ -1644,8 +1673,9 @@ export default class VideoPlayer extends React.Component {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-evenly',
-                paddingVertical: 5 * factor,
-                paddingHorizontal: 10 * factor
+                paddingVertical: 5,
+                paddingHorizontal: 10,
+                marginBottom: DeviceInfo.hasNotch() ? 20 : 0
               }}
             >
               <TouchableOpacity
@@ -1655,7 +1685,7 @@ export default class VideoPlayer extends React.Component {
                   borderWidth: 2,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginRight: 10 * factor,
+                  marginRight: 10,
                   borderColor: this.state.previousLesson
                     ? colors.pianoteRed
                     : colors.secondBackground
@@ -1670,8 +1700,8 @@ export default class VideoPlayer extends React.Component {
               >
                 <EntypoIcon
                   name={'chevron-thin-left'}
-                  size={(onTablet ? 17.5 : 22.5) * factor}
-                  style={{ padding: (onTablet ? 5 : 7.5) * factor }}
+                  size={onTablet ? 22.5 : 17.5}
+                  style={{ padding: 5 }}
                   color={
                     this.state.previousLesson
                       ? colors.pianoteRed
@@ -1680,14 +1710,16 @@ export default class VideoPlayer extends React.Component {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={{
-                  backgroundColor: colors.pianoteRed,
-                  borderRadius: 500,
-                  minHeight: (onTablet ? 40 : 50) * factor,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  flex: 1
-                }}
+                style={[
+                  styles.heightButtons,
+                  {
+                    backgroundColor: colors.pianoteRed,
+                    borderRadius: 500,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flex: 1
+                  }
+                ]}
                 onPress={() =>
                   this.state.progress === 100
                     ? this.setState({ showRestartCourse: true })
@@ -1698,8 +1730,7 @@ export default class VideoPlayer extends React.Component {
                   style={{
                     color: 'white',
                     fontFamily: 'RobotoCondensed-Bold',
-                    fontSize: (onTablet ? 14 : 18) * factor,
-                    paddingVertical: 10
+                    fontSize: sizing.verticalListTitleSmall
                   }}
                 >
                   {this.state.progress === 100
@@ -1714,7 +1745,7 @@ export default class VideoPlayer extends React.Component {
                   borderWidth: 2,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginLeft: 10 * factor,
+                  marginLeft: paddingInset,
                   borderColor: this.state.nextLesson
                     ? colors.pianoteRed
                     : colors.secondBackground
@@ -1729,8 +1760,8 @@ export default class VideoPlayer extends React.Component {
               >
                 <EntypoIcon
                   name={'chevron-thin-right'}
-                  size={(onTablet ? 17.5 : 22.5) * factor}
-                  style={{ padding: (onTablet ? 5 : 7.5) * factor }}
+                  size={onTablet ? 22.5 : 17.5}
+                  style={{ padding: 5 }}
                   color={
                     this.state.nextLesson
                       ? colors.pianoteRed
@@ -1739,14 +1770,13 @@ export default class VideoPlayer extends React.Component {
                 />
               </TouchableOpacity>
             </View>
-          </SafeAreaView>
+          </View>
         )}
 
         {this.state.selectedAssignment && (
           <Modal
-            key={'assignmentComplete'}
             isVisible={this.state.showAssignmentComplete}
-            style={{ margin: 0, height: '100%', width: '100%' }}
+            style={styles.modalContainer}
             animation={'slideInUp'}
             animationInTiming={250}
             animationOutTiming={250}
@@ -1763,14 +1793,11 @@ export default class VideoPlayer extends React.Component {
           </Modal>
         )}
         <Modal
-          key={'resourceDownload'}
           isVisible={this.state.showResDownload}
-          onDismiss={() => this.modalDismissed()}
+          onDismiss={() => this.modalDismissed}
           style={[
+            styles.modalContainer,
             {
-              margin: 0,
-              height: '100%',
-              width: '100%',
               justifyContent: 'flex-end'
             }
           ]}
@@ -1811,9 +1838,8 @@ export default class VideoPlayer extends React.Component {
         {!this.state.isLoadingAll && (
           <>
             <Modal
-              key={'lessonComplete'}
               isVisible={this.state.showLessonComplete}
-              style={{ margin: 0, height: '100%', width: '100%' }}
+              style={styles.modalContainer}
               animation={'slideInUp'}
               animationInTiming={250}
               animationOutTiming={250}
@@ -1841,12 +1867,8 @@ export default class VideoPlayer extends React.Component {
               />
             </Modal>
             <Modal
-              key={'restartCourse'}
               isVisible={this.state.showRestartCourse}
-              style={{
-                margin: 0,
-                flex: 1
-              }}
+              style={styles.modalContainer}
               animation={'slideInUp'}
               animationInTiming={250}
               animationOutTiming={250}
@@ -1864,9 +1886,8 @@ export default class VideoPlayer extends React.Component {
               />
             </Modal>
             <Modal
-              key={'overviewComplete'}
               isVisible={this.state.showOverviewComplete}
-              style={{ margin: 0, height: '100%', width: '100%' }}
+              style={styles.modalContainer}
               animation={'slideInUp'}
               animationInTiming={250}
               animationOutTiming={250}
@@ -1893,12 +1914,8 @@ export default class VideoPlayer extends React.Component {
         )}
 
         <Modal
-          key={'modalCommentSort'}
           isVisible={this.state.showCommentSort}
-          style={[
-            styles.centerContent,
-            { margin: 0, height: '100%', width: '100%' }
-          ]}
+          style={[styles.centerContent, styles.modalContainer]}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -1921,12 +1938,8 @@ export default class VideoPlayer extends React.Component {
           />
         </Modal>
         <Modal
-          key={'soundSlice'}
           isVisible={this.state.showSoundSlice}
-          style={[
-            styles.centerContent,
-            { margin: 0, height: '100%', width: '100%' }
-          ]}
+          style={[styles.centerContent, styles.modalContainer]}
           animation={'slideInUp'}
           animationInTiming={350}
           animationOutTiming={350}
@@ -1947,7 +1960,7 @@ export default class VideoPlayer extends React.Component {
             <TouchableOpacity
               onPress={() => {
                 this.refresh();
-                this.alert.toggle();
+                this.alert?.toggle();
               }}
               style={{
                 marginTop: 10,
@@ -1975,7 +1988,7 @@ export default class VideoPlayer extends React.Component {
         {this.state.showMakeComment && (
           <Modal
             isVisible={this.state.showMakeComment}
-            style={{ margin: 0 }}
+            style={styles.modalContainer}
             backdropColor={'transparent'}
             animation={'slideInUp'}
             animationInTiming={350}
@@ -1990,7 +2003,6 @@ export default class VideoPlayer extends React.Component {
               onPress={() => this.setState({ showMakeComment: false })}
             >
               <KeyboardAvoidingView
-                key={'makeComment'}
                 behavior={`${isiOS ? 'padding' : ''}`}
                 style={{ flex: 1, justifyContent: 'flex-end' }}
               >
@@ -1998,19 +2010,19 @@ export default class VideoPlayer extends React.Component {
                   style={{
                     backgroundColor: colors.mainBackground,
                     flexDirection: 'row',
-                    padding: 10 * factor,
+                    padding: 10,
                     alignItems: 'center',
-                    borderTopWidth: 0.5 * factor,
+                    borderTopWidth: 0.5,
                     borderTopColor: colors.secondBackground
                   }}
                 >
                   <FastImage
                     style={{
-                      height: (onTablet ? 30 : 40) * factor,
-                      width: (onTablet ? 30 : 40) * factor,
-                      paddingVertical: 10 * factor,
+                      height: onTablet ? 60 : 40,
+                      width: onTablet ? 60 : 40,
+                      paddingVertical: 10,
                       borderRadius: 100,
-                      marginRight: 10 * factor
+                      marginRight: 10
                     }}
                     source={{
                       uri:
@@ -2024,11 +2036,11 @@ export default class VideoPlayer extends React.Component {
                     multiline={true}
                     style={{
                       fontFamily: 'OpenSans-Regular',
-                      fontSize: (onTablet ? 10 : 14) * factor,
-                      width: onTablet ? '80%' : '70%',
+                      fontSize: sizing.descriptionText,
+                      flex: 1,
                       backgroundColor: colors.mainBackground,
                       color: colors.secondBackground,
-                      paddingVertical: 10 * factor
+                      paddingVertical: 10
                     }}
                     onSubmitEditing={() => {
                       this.makeComment();
@@ -2040,14 +2052,14 @@ export default class VideoPlayer extends React.Component {
                   />
                   <TouchableOpacity
                     style={{
-                      marginBottom: Platform.OS == 'android' ? 10 * factor : 0,
+                      marginBottom: Platform.OS == 'android' ? 10 : 0,
                       marginLeft: 20
                     }}
                     onPress={() => this.makeComment()}
                   >
                     <IonIcon
                       name={'md-send'}
-                      size={(onTablet ? 17.5 : 25) * factor}
+                      size={onTablet ? 25 : 17.5}
                       color={colors.pianoteRed}
                     />
                   </TouchableOpacity>

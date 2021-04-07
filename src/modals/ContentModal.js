@@ -7,8 +7,7 @@ import {
   Text,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  StyleSheet,
-  Dimensions
+  StyleSheet
 } from 'react-native';
 import {
   likeContent,
@@ -17,21 +16,12 @@ import {
   removeFromMyList
 } from 'Pianote2/src/services/UserActions.js';
 import FastImage from 'react-native-fast-image';
-import { withNavigation } from 'react-navigation';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { Download_V2 } from 'RNDownload';
 import DeviceInfo from 'react-native-device-info';
 import contentService from '../services/content.service';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
-
-class ContentModal extends React.Component {
-  static navigationOptions = { header: null };
+export default class ContentModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -78,10 +68,6 @@ class ContentModal extends React.Component {
     };
   }
 
-  componentDidMount = () => {
-    console.log(this.state.isLiked);
-  };
-
   addToMyList = contentID => {
     if (this.props.data.description !== 'TBD') {
       // change status of content on parent data structure
@@ -122,7 +108,6 @@ class ContentModal extends React.Component {
   };
 
   like = contentID => {
-    console.log('like');
     if (this.props.data.description !== 'TBD') {
       // change data on modal
       this.state.isLiked = !this.state.isLiked;
@@ -138,7 +123,6 @@ class ContentModal extends React.Component {
   };
 
   unlike = contentID => {
-    console.log('unlike');
     // change data on modal
     this.state.isLiked = !this.state.isLiked;
     this.state.like_count = Number(this.state.like_count) - 1;
@@ -192,7 +176,7 @@ class ContentModal extends React.Component {
                   style={[
                     styles.centerContent,
                     {
-                      width: 70 * factor
+                      flex: 1
                     }
                   ]}
                 >
@@ -211,7 +195,7 @@ class ContentModal extends React.Component {
                 style={[
                   styles.centerContent,
                   {
-                    width: 70 * factor
+                    flex: 1
                   }
                 ]}
               >
@@ -231,9 +215,8 @@ class ContentModal extends React.Component {
               >
                 <AntIcon
                   name={this.state.isLiked ? 'like1' : 'like2'}
-                  size={22.5 * factor}
+                  size={sizing.myListButtonSize * 0.9}
                 />
-                <View style={{ flex: 1 }} />
                 <Text style={localStyles.likeCount}>
                   {this.state.like_count}
                 </Text>
@@ -247,11 +230,10 @@ class ContentModal extends React.Component {
                 }}
               >
                 <AntIcon
-                  size={25 * factor}
+                  size={sizing.myListButtonSize}
                   name={this.state.isAddedToList ? 'close' : 'plus'}
                   color={'black'}
                 />
-                <View style={{ flex: 1 }} />
                 <Text style={localStyles.myList}>My List</Text>
               </TouchableOpacity>
               <Download_V2
@@ -261,17 +243,16 @@ class ContentModal extends React.Component {
                 }}
                 styles={{
                   iconSize: {
-                    width: 25 * factor,
-                    height: 25 * factor
+                    width: sizing.myListButtonSize,
+                    height: sizing.myListButtonSize
                   },
                   touchable: { flex: 1 },
                   activityIndicatorColor: colors.pianoteRed,
                   animatedProgressBackground: colors.pianoteRed,
                   textStatus: {
                     color: 'black',
-                    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
-                    fontFamily: 'OpenSans-Regular',
-                    marginTop: 7.5 * factor
+                    fontSize: sizing.descriptionText,
+                    fontFamily: 'OpenSans-Regular'
                   },
                   alert: {
                     alertTextMessageFontFamily: 'OpenSans-Regular',
@@ -297,11 +278,11 @@ class ContentModal extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    margin: 40 * factor,
-    borderRadius: 10 * factor,
+    margin: 40,
+    borderRadius: 10,
     shadowOffset: {
-      width: 5 * factor,
-      height: 10 * factor
+      width: 5,
+      height: 10
     },
     shadowColor: 'black',
     shadowOpacity: 0.1,
@@ -309,23 +290,24 @@ const localStyles = StyleSheet.create({
     backgroundColor: 'white'
   },
   imageContainer: {
-    height: 180 * factor,
+    width: '95%',
     backgroundColor: 'white',
     zIndex: 10,
-    marginTop: 10 * factor,
-    marginHorizontal: 12.5 * factor
+    marginTop: 10,
+    marginHorizontal: 10
   },
   title: {
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
-    fontSize: 22 * factor,
+    paddingHorizontal: 10,
+    fontSize: DeviceInfo.isTablet() ? 24 : 18,
     textAlign: 'center',
     marginTop: 5
   },
   type: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'center',
-    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: 'grey',
     marginVertical: 5
   },
@@ -334,23 +316,21 @@ const localStyles = StyleSheet.create({
     borderRadius: 10
   },
   description: {
-    marginHorizontal: 10 * factor,
+    marginHorizontal: 10,
     fontFamily: 'OpenSans-Regular',
     paddingHorizontal: 5,
-    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     textAlign: 'center'
   },
   myList: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
-    textAlign: 'left',
-    marginTop: 10 * factor
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    textAlign: 'left'
   },
   likeCount: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
-    textAlign: 'left',
-    marginTop: 15 * factor
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    textAlign: 'left'
   },
   likeContainer: {
     flex: 1,
@@ -362,29 +342,28 @@ const localStyles = StyleSheet.create({
   },
   XPtext: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     textAlign: 'left',
-    marginTop: 5 * factor
+    marginTop: 5
   },
   xp: {
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
-    fontSize: 18 * factor,
+    fontSize: DeviceInfo.isTablet() ? 24 : 18,
     textAlign: 'left',
-    marginTop: 10 * factor
+    marginTop: 10
   },
   lessonCount: {
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
-    fontSize: 18 * factor,
+    fontSize: DeviceInfo.isTablet() ? 24 : 18,
     textAlign: 'left',
-    marginTop: 10 * factor
+    marginTop: 10
   },
   lessons: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     textAlign: 'left',
-    marginTop: 5 * factor
+    marginTop: 5
   }
 });
-export default withNavigation(ContentModal);

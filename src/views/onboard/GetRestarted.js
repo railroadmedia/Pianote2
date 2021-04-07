@@ -2,24 +2,12 @@
  * GetRestarted
  */
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import FastImage from 'react-native-fast-image';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
+import { navigate } from '../../../AppNavigator';
 
 export default class GetRestarted extends React.Component {
-  static navigationOptions = { header: null };
   constructor(props) {
     super(props);
     this.state = {};
@@ -30,8 +18,8 @@ export default class GetRestarted extends React.Component {
       <View style={styles.centerContent}>
         <View
           style={{
-            height: height,
-            width: width
+            height: '100%',
+            width: '100%'
           }}
         >
           <View
@@ -70,14 +58,12 @@ export default class GetRestarted extends React.Component {
               where you{'\n'}left off or you can start exploring!
             </Text>
             <View style={localStyles.skip}>
-              <View style={{ flex: 1 }} />
               <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('WELCOMEBACK')}
+                onPress={() => navigate('WELCOMEBACK')}
                 style={[styles.centerContent, localStyles.getStartedContainer]}
               >
                 <Text style={localStyles.getStarted}>GET STARTED</Text>
               </TouchableOpacity>
-              <View style={{ flex: 1 }} />
             </View>
           </View>
         </View>
@@ -89,16 +75,16 @@ export default class GetRestarted extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor,
+    borderRadius: 15,
+    margin: 20,
     height: 200,
     width: '80%'
   },
   pianoteText: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: 18 * factor,
+    fontSize: DeviceInfo.isTablet() ? 24 : 18,
     textAlign: 'center',
-    marginBottom: 20 * factor
+    marginBottom: 20
   },
   outerContainer: {
     position: 'absolute',
@@ -111,38 +97,40 @@ const localStyles = StyleSheet.create({
     height: '100%',
     width: '100%',
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
+    borderRadius: 15,
     flexDirection: 'row',
     zIndex: 5
   },
   image: {
     height: '100%',
     width: '100%',
-    borderRadius: 15 * factor
+    borderRadius: 15
   },
   description: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 18 * factor,
+    fontSize: DeviceInfo.isTablet() ? 22 : 16,
     textAlign: 'center',
-    marginBottom: (155 * Dimensions.get('window').height) / 812
+    flex: 1
   },
   skip: {
-    width: Dimensions.get('window').width,
+    width: '100%',
     height: '13.5%',
+    justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    borderRadius: 30 * factor
+    borderRadius: 100,
+    marginBottom: 20
   },
   getStartedContainer: {
     width: '85%',
     height: '100%',
-    borderRadius: 30 * factor,
+    borderRadius: 300,
     backgroundColor: '#fb1b2f',
     zIndex: 5
   },
   getStarted: {
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: 18 * factor,
+    fontSize: DeviceInfo.isTablet() ? 24 : 18,
     color: 'white'
   }
 });

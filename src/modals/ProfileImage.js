@@ -7,20 +7,10 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
-  Dimensions
+  StyleSheet
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
-
-class ProfileImage extends React.Component {
-  static navigationOptions = { header: null };
+export default class ProfileImage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -61,25 +51,23 @@ class ProfileImage extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor
+    borderRadius: 15,
+    margin: 20
   },
   title: {
     paddingHorizontal: 40,
-    marginTop: 20 * factor
+    marginTop: 10
   },
   tryAgain: {
     paddingHorizontal: 40,
-    marginTop: 20 * factor
+    marginTop: 5
   },
   tryAgainTextContainer: {
     paddingHorizontal: 20,
-    marginVertical: 17.5 * factor
+    marginVertical: 15
   },
   tryAgainText: {
     color: '#fb1b2f',
-    marginBottom: 5
+    marginTop: 10
   }
 });
-
-export default withNavigation(ProfileImage);

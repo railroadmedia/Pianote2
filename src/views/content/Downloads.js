@@ -17,6 +17,7 @@ import IconFeather from 'react-native-vector-icons/Feather';
 import { SafeAreaView } from 'react-navigation';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { ContentModel } from '@musora/models';
+import { navigate } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -27,7 +28,7 @@ const factor = (height / 812 + width / 375) / 2;
 
 export default class Downloads extends React.Component {
   static contextType = NetworkContext;
-  static navigationOptions = { header: null };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -62,7 +63,7 @@ export default class Downloads extends React.Component {
   navigate = item => {
     if (item.overview) {
       item = new ContentModel(item.overview);
-      return this.props.navigation.navigate('PATHOVERVIEW', {
+      return navigate('PATHOVERVIEW', {
         data: {
           isLiked: item.post.is_liked_by_current_user,
           id: item.post.id,
@@ -70,12 +71,14 @@ export default class Downloads extends React.Component {
           title: item.getField('title'),
           artist: item.getField('instructor').fields[0].value,
           xp: item.post.xp,
+          total_xp: item.post.total_xp,
           description: item.getData('description'),
           like_count: item.post.like_count,
           isAddedToList: item.post.is_added_to_primary_playlist,
           next_lesson: new ContentModel(item.post.next_lesson),
           started: item.post.started,
-          started: item.post.completed
+          completed: item.post.completed,
+          difficulty: item.getField('difficulty')
         },
         items: item.post.lessons
           .map(l => new ContentModel(l))
@@ -100,11 +103,11 @@ export default class Downloads extends React.Component {
           }))
       });
     } else if (item?.lesson.type === 'learning-path-lesson') {
-      this.props.navigation.navigate('VIDEOPLAYER', {
+      navigate('VIDEOPLAYER', {
         url: item.lesson.mobile_app_url
       });
     } else {
-      this.props.navigation.navigate('VIDEOPLAYER', {
+      navigate('VIDEOPLAYER', {
         id: item.id
       });
     }
@@ -125,7 +128,6 @@ export default class Downloads extends React.Component {
           <View style={styles.childHeader}>
             <View style={{ flex: 1 }} />
             <Text style={styles.childHeaderText}>Downloads</Text>
-
             <TouchableOpacity
               onPress={() =>
                 this.setState(({ edit }) => ({
@@ -142,14 +144,13 @@ export default class Downloads extends React.Component {
                 style={{
                   color: colors.pianoteRed,
                   fontFamily: 'OpenSans-Bold',
-                  fontSize: onTablet ? 22 : 16 * factor
+                  fontSize: onTablet ? 18 : 12
                 }}
               >
                 EDIT
               </Text>
             </TouchableOpacity>
           </View>
-
           <FlatList
             data={items}
             keyboardShouldPersistTaps='handled'
@@ -158,10 +159,10 @@ export default class Downloads extends React.Component {
             ListEmptyComponent={() => (
               <Text
                 style={{
-                  padding: 20,
+                  padding: paddingInset * 1.5,
                   color: 'white',
                   textAlign: 'center',
-                  fontSize: onTablet ? 26 : 18 * factor
+                  fontSize: onTablet ? 20 : 12
                 }}
               >
                 Any lessons you download will be available here.
@@ -174,36 +175,43 @@ export default class Downloads extends React.Component {
                   disabled={!!item.dlding.length}
                   onPress={() => this.navigate(item)}
                   style={{
-                    padding: 5,
-                    borderTopWidth: 0.5,
+                    padding: paddingInset,
                     flexDirection: 'row',
                     borderBottomWidth: 0.5,
                     borderColor: 'lightgrey'
                   }}
                 >
-                  <FastImage
+                  <View
                     style={{
-                      width: '30%',
-                      borderRadius: 5,
-                      aspectRatio: 16 / 9
+                      width: onTablet ? '22.5%' : '26%',
+                      marginRight: paddingInset
                     }}
-                    source={{
-                      uri: item[type]?.data?.find(
-                        d => d.key === 'thumbnail_url'
-                      )?.value
-                    }}
-                    resizeMode={FastImage.resizeMode.stretch}
-                  />
+                  >
+                    <FastImage
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: 2,
+                        aspectRatio: 16 / 9
+                      }}
+                      source={{
+                        uri: item[type]?.data?.find(
+                          d => d.key === 'thumbnail_url'
+                        )?.value
+                      }}
+                      resizeMode={FastImage.resizeMode.cover}
+                    />
+                  </View>
                   <View
                     style={{
                       flex: 1,
-                      padding: 10,
                       justifyContent: 'center'
                     }}
                   >
                     <Text
                       style={{
-                        fontSize: 18,
+                        fontSize: sizing.videoTitleText,
+                        marginBottom: 2,
                         color: 'white',
                         fontFamily: 'OpenSans-Bold'
                       }}
@@ -212,12 +220,12 @@ export default class Downloads extends React.Component {
                     </Text>
                     <Text
                       style={{
-                        color: 'white'
+                        color: 'white',
+                        fontSize: sizing.descriptionText
                       }}
                     >
-                      {item[type]?.type?.replace('-', ' ')} |{' '}
-                      {parseInt(item.sizeInBytes / 1024 / 1024)}
-                      MB
+                      {item[type]?.type?.replace('-', ' ').replace('-', ' ')} |{' '}
+                      {parseInt(item.sizeInBytes / 1024 / 1024)}MB
                     </Text>
                   </View>
                   {!!item.dlding.length && (
@@ -236,7 +244,7 @@ export default class Downloads extends React.Component {
                     <View style={{ justifyContent: 'center' }}>
                       <IconFeather
                         name={'chevron-right'}
-                        size={25 * factor}
+                        size={onTablet ? 25 : 20}
                         color={'white'}
                       />
                     </View>

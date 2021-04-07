@@ -8,9 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
-  ScrollView,
-  StyleSheet,
-  Dimensions
+  ScrollView
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -24,16 +22,9 @@ import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import CustomModal from '../../modals/CustomModal';
 import { changePassword } from '../../services/UserDataAuth';
 import { NetworkContext } from '../../context/NetworkProvider';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
+import { navigate } from '../../../AppNavigator';
 
 export default class ResetPassword extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -52,9 +43,7 @@ export default class ResetPassword extends React.Component {
     }
     if (this.state.password == this.state.confirmPassword) {
       if (this.state.password.length > 7) {
-        let email = await AsyncStorage.getItem('email');
-        let resetKey = await AsyncStorage.getItem('resetKey');
-        console.log(email.replace('%40', '@'), this.state.password, resetKey);
+        const { email, resetKey } = this.props.route?.params;
         let res = await changePassword(
           email.replace('%40', '@'),
           this.state.password,
@@ -100,7 +89,7 @@ export default class ResetPassword extends React.Component {
             behavior={`${isiOS ? 'padding' : ''}`}
           >
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('LOGINCREDENTIALS')}
+              onPress={() => navigate('LOGINCREDENTIALS')}
               style={{
                 padding: 15,
                 flexDirection: 'row',
@@ -109,15 +98,14 @@ export default class ResetPassword extends React.Component {
               }}
             >
               <Back
-                width={(onTablet ? 17.5 : 25) * factor}
-                height={(onTablet ? 17.5 : 25) * factor}
+                width={backButtonSize}
+                height={backButtonSize}
                 fill={'white'}
               />
               <Text
                 style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 24 * factor,
-                  fontWeight: Platform.OS == 'ios' ? '700' : 'bold',
+                  fontFamily: 'OpenSans-Bold',
+                  fontSize: onTablet ? 36 : 24,
                   color: 'white'
                 }}
               >
@@ -140,9 +128,8 @@ export default class ResetPassword extends React.Component {
               >
                 <Text
                   style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 19 * factor,
-                    fontWeight: '600',
+                    fontFamily: 'OpenSans-Bold',
+                    fontSize: onTablet ? 24 : 16,
                     textAlign: 'left',
                     color: 'white',
                     paddingLeft: 15
@@ -186,6 +173,7 @@ export default class ResetPassword extends React.Component {
                     secureTextEntry={true}
                     onChangeText={password => this.setState({ password })}
                     style={{
+                      fontSize: onTablet ? 20 : 14,
                       padding: 15,
                       color: 'black',
                       marginRight: 45,
@@ -235,9 +223,8 @@ export default class ResetPassword extends React.Component {
                 </View>
                 <Text
                   style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 19 * factor,
-                    fontWeight: '600',
+                    fontFamily: 'OpenSans-Bold',
+                    fontSize: onTablet ? 24 : 16,
                     textAlign: 'left',
                     color: 'white',
                     paddingLeft: 15
@@ -246,7 +233,7 @@ export default class ResetPassword extends React.Component {
                   Confirm password
                 </Text>
                 <View
-                  key={'pass'}
+                  key={'confirm_pass'}
                   style={{
                     borderRadius: 100,
                     marginVertical: 10,
@@ -269,6 +256,7 @@ export default class ResetPassword extends React.Component {
                       this.setState({ confirmPassword })
                     }
                     style={{
+                      fontSize: onTablet ? 20 : 14,
                       padding: 15,
                       color: 'black',
                       marginRight: 45,
@@ -320,7 +308,7 @@ export default class ResetPassword extends React.Component {
                   style={{
                     fontFamily: 'OpenSans-Regular',
                     textAlign: 'left',
-                    fontSize: 14 * factor,
+                    fontSize: onTablet ? 18 : 14,
                     color: 'white',
                     paddingLeft: 15,
                     marginBottom: 40
@@ -352,7 +340,7 @@ export default class ResetPassword extends React.Component {
                   <Text
                     style={{
                       padding: 15,
-                      fontSize: 15 * factor,
+                      fontSize: onTablet ? 20 : 14,
                       fontFamily: 'RobotoCondensed-Bold',
                       color:
                         this.state.password.length > 0 &&
@@ -369,16 +357,8 @@ export default class ResetPassword extends React.Component {
             </ScrollView>
           </KeyboardAvoidingView>
           <Modal
-            key={'passwordMatch'}
             isVisible={this.state.showPasswordMatch}
-            style={[
-              styles.centerContent,
-              {
-                margin: 0,
-                height: '100%',
-                width: '100%'
-              }
-            ]}
+            style={[styles.centerContent, styles.modalContainer]}
             animation={'slideInUp'}
             animationInTiming={450}
             animationOutTiming={450}
@@ -409,7 +389,7 @@ export default class ResetPassword extends React.Component {
                 }}
                 onPress={() => {
                   this.alert.toggle();
-                  this.props.navigation.navigate({
+                  navigate({
                     routeName: 'LOGINCREDENTIALS'
                   });
                 }}
@@ -431,13 +411,3 @@ export default class ResetPassword extends React.Component {
     );
   }
 }
-
-const localStyles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor,
-    height: 200,
-    width: '80%'
-  }
-});

@@ -10,7 +10,6 @@ import {
   ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Dimensions,
   StyleSheet
 } from 'react-native';
 
@@ -20,7 +19,6 @@ import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-community/async-storage';
-import { NavigationActions, StackActions } from 'react-navigation';
 import Orientation from 'react-native-orientation-locker';
 
 import Back from '../../assets/img/svgs/back';
@@ -41,23 +39,18 @@ import GradientFeature from '../../components/GradientFeature';
 import CustomModal from '../../modals/CustomModal.js';
 import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
 import { NetworkContext } from '../../context/NetworkProvider';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
+import { goBack, navigate, reset } from '../../../AppNavigator';
+import commonService from '../../services/common.service';
+import navigationService from '../../services/navigation.service';
 
 export default class LoginCredentials extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
     if (onTablet) Orientation.unlockAllOrientations();
     else Orientation.lockToPortrait();
     this.state = {
-      email: props?.navigation?.state?.params?.email || '',
+      email: props.route?.params?.email || '',
       password: '',
       secureTextEntry: true,
       showPasswordEmailMatch: false,
@@ -74,7 +67,6 @@ export default class LoginCredentials extends React.Component {
     try {
       await RNIap.initConnection();
     } catch (error) {
-      console.log('ERROR: ', error);
       return;
     }
     try {
@@ -96,14 +88,12 @@ export default class LoginCredentials extends React.Component {
           })
         };
       }
-    } catch (error) {
-      console.log('error getting purchases: ', error);
-    }
+    } catch (error) {}
   };
 
   login = async () => {
     if (!this.context.isConnected) {
-      this.context.showNoConnectionAlert();
+      return this.context.showNoConnectionAlert();
     }
 
     Keyboard.dismiss();
@@ -125,26 +115,20 @@ export default class LoginCredentials extends React.Component {
 
       // checkmembership status
       let userData = await getUserData();
+      if (commonService.urlToOpen !== '') {
+        return navigationService.decideWhereToRedirect();
+      }
       if (userData.isPackOlyOwner) {
         // if pack only, make global & go to packs
         global.isPackOnly = userData.isPackOlyOwner;
-        await this.props.navigation.dispatch(
-          StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'PACKS' })]
-          })
-        );
+        global.expirationDate = userData.expirationDate;
+        reset('PACKS');
       } else if (userData.isLifetime || userData.isMember) {
         // is logged in with valid membership
-        await this.props.navigation.dispatch(
-          StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'LESSONS' })]
-          })
-        );
+        reset('LESSONS');
       } else {
         // membership expired
-        this.props.navigation.navigate('MEMBERSHIPEXPIRED', {
+        navigate('MEMBERSHIPEXPIRED', {
           email: this.state.email,
           password: this.state.password,
           token: response.token
@@ -171,6 +155,7 @@ export default class LoginCredentials extends React.Component {
     this.loadingRef?.toggleLoading();
     try {
       const purchases = await RNIap.getAvailablePurchases();
+      console.log(purchases);
       if (!purchases.length) {
         this.loadingRef?.toggleLoading();
         return this.customModal.toggle(
@@ -194,7 +179,7 @@ export default class LoginCredentials extends React.Component {
       if (this.loadingRef) this.loadingRef?.toggleLoading();
       if (resp) {
         if (resp.shouldCreateAccount) {
-          this.props.navigation.navigate('CREATEACCOUNT');
+          navigate('CREATEACCOUNT');
         } else if (resp.shouldLogin) {
           this.setState({ email: resp.email });
         }
@@ -241,28 +226,16 @@ export default class LoginCredentials extends React.Component {
                 <View>
                   <Text
                     style={{
-                      fontSize: 20 * factor,
+                      fontSize: onTablet ? 30 : 20,
                       color: 'white',
                       paddingTop: 15,
                       alignSelf: 'center',
                       textAlign: 'center',
                       fontFamily: 'OpenSans-Regular',
-                      width: '50%'
+                      width: '100%'
                     }}
                   >
-                    The Ultimate Online
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 20 * factor,
-                      color: 'white',
-                      alignSelf: 'center',
-                      textAlign: 'center',
-                      fontFamily: 'OpenSans-Regular',
-                      width: `${(25 * (onTablet ? 50 : 50)) / 19}%` //25=second row chars, 50=width % of first row (same as pianote svg), 19=first row chars
-                    }}
-                  >
-                    Piano Lessons Experience.
+                    The Ultimate Online{'\n'}Piano Lessons Experience.
                   </Text>
                 </View>
                 <TextInput
@@ -278,7 +251,7 @@ export default class LoginCredentials extends React.Component {
                   }
                   autoCorrect={false}
                   value={this.state.email}
-                  autoCapitalize={false}
+                  autoCapitalize={'none'}
                   keyboardAppearance={'dark'}
                   placeholderTextColor={'grey'}
                   placeholder={'Email Address'}
@@ -288,7 +261,7 @@ export default class LoginCredentials extends React.Component {
                 />
                 <View style={localStyles.textInputContainer}>
                   <TextInput
-                    autoCapitalize={false}
+                    autoCapitalize={'none'}
                     onBlur={() =>
                       this.setState({
                         scrollViewContentFlex: {
@@ -368,7 +341,7 @@ export default class LoginCredentials extends React.Component {
                 >
                   <Text
                     style={{
-                      fontSize: 18 * factor,
+                      fontSize: onTablet ? 24 : 16,
                       padding: 10,
                       fontFamily: 'RobotoCondensed-Bold',
                       color:
@@ -386,15 +359,21 @@ export default class LoginCredentials extends React.Component {
                 <Text
                   style={localStyles.greyText}
                   onPress={() => {
-                    this.props.navigation.navigate('FORGOTPASSWORD');
+                    navigate('FORGOTPASSWORD');
                   }}
                 >
                   Forgot your password?
                 </Text>
                 <Text
                   style={localStyles.greyText}
+                  onPress={this.restorePurchases}
+                >
+                  Restore Purchases
+                </Text>
+                <Text
+                  style={localStyles.greyText}
                   onPress={() => {
-                    this.props.navigation.navigate('SUPPORTSIGNUP');
+                    navigate('SUPPORTSIGNUP');
                   }}
                 >
                   Can't log in? Contact support.
@@ -404,14 +383,18 @@ export default class LoginCredentials extends React.Component {
             <TouchableOpacity
               onPress={() => {
                 Orientation.lockToPortrait();
-                this.props.navigation.goBack();
+                goBack();
               }}
               style={{
                 padding: 15,
                 position: 'absolute'
               }}
             >
-              <Back width={25} height={25} fill={'white'} />
+              <Back
+                width={backButtonSize}
+                height={backButtonSize}
+                fill={'white'}
+              />
             </TouchableOpacity>
           </KeyboardAvoidingView>
         </SafeAreaView>
@@ -421,12 +404,8 @@ export default class LoginCredentials extends React.Component {
           }}
         />
         <Modal
-          key={'passwords'}
           isVisible={this.state.showPasswordEmailMatch}
-          style={{
-            margin: 0,
-            flex: 1
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -453,8 +432,8 @@ export default class LoginCredentials extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor,
+    borderRadius: 150,
+    margin: 20,
     height: 200,
     width: '80%'
   },
@@ -466,7 +445,7 @@ const localStyles = StyleSheet.create({
   pianoteInnerContainer: {
     alignSelf: 'center',
     alignItems: 'center',
-    width: DeviceInfo.isTablet() ? '30%' : '50%',
+    width: DeviceInfo.isTablet() ? '30%' : '45%',
     aspectRatio: 177 / 53
   },
   email: {
@@ -475,13 +454,13 @@ const localStyles = StyleSheet.create({
     color: 'black',
     borderRadius: 100,
     marginHorizontal: 15,
-    fontSize: (DeviceInfo.isTablet() ? 14 : 16) * factor,
+    fontSize: DeviceInfo.isTablet() ? 20 : 14,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
   greyText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: 'grey',
     textAlign: 'center',
     textDecorationLine: 'underline'
@@ -520,7 +499,7 @@ const localStyles = StyleSheet.create({
     padding: 15,
     color: 'black',
     marginRight: 45,
-    fontSize: (DeviceInfo.isTablet() ? 14 : 16) * factor,
+    fontSize: DeviceInfo.isTablet() ? 20 : 14,
     fontFamily: 'OpenSans-Regular'
   }
 });

@@ -26,16 +26,17 @@ import CustomModal from '../../modals/CustomModal';
 import Loading from '../../components/Loading';
 import { openInbox } from 'react-native-email-link';
 import { NetworkContext } from '../../context/NetworkProvider';
+import { goBack, navigate } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
+  windowDim.width < windowDim.height ? windowDim.height : windowDim.width;
+const verticalRatio =
+  windowDim.width < windowDim.height ? height / 812 : width / 375;
 
 export default class ForgotPassword extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -50,10 +51,10 @@ export default class ForgotPassword extends React.Component {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    this.loadingRef.toggleLoading();
+    this.loadingRef?.toggleLoading();
     this.textInput.clear();
     const response = await forgotPass(this.state.email);
-    this.loadingRef.toggleLoading();
+    this.loadingRef?.toggleLoading();
     if (response.success) {
       this.alertSuccess.toggle(
         'Please check your email',
@@ -87,7 +88,7 @@ export default class ForgotPassword extends React.Component {
             style={{ flex: 1 }}
             behavior={`${isiOS ? 'padding' : ''}`}
             keyboardVerticalOffset={Platform.select({
-              ios: () => (onTablet ? 0 : -75 * factorVertical),
+              ios: () => (onTablet ? 0 : -75 * verticalRatio),
               android: () => 0
             })()}
           >
@@ -104,25 +105,25 @@ export default class ForgotPassword extends React.Component {
                 <View>
                   <Text
                     style={{
-                      fontSize: (onTablet ? 16 : 20) * factorRatio,
+                      fontSize: onTablet ? 30 : 20,
                       color: 'white',
                       paddingTop: 15,
                       alignSelf: 'center',
                       textAlign: 'center',
                       fontFamily: 'OpenSans-Regular',
-                      width: '50%'
+                      width: '100%'
                     }}
                   >
                     The Ultimate Online
                   </Text>
                   <Text
                     style={{
-                      fontSize: (onTablet ? 16 : 20) * factorRatio,
+                      fontSize: onTablet ? 30 : 20,
                       color: 'white',
                       alignSelf: 'center',
                       textAlign: 'center',
                       fontFamily: 'OpenSans-Regular',
-                      width: `${(25 * (onTablet ? 50 : 50)) / 19}%` //25=second row chars, 50=width % of first row (same as pianote svg), 19=first row chars
+                      width: `100%`
                     }}
                   >
                     Piano Lessons Experience.
@@ -161,7 +162,8 @@ export default class ForgotPassword extends React.Component {
                 >
                   <Text
                     style={{
-                      padding: 15,
+                      padding: 10,
+                      fontSize: onTablet ? 20 : 14,
                       fontFamily: 'RobotoCondensed-Bold',
                       color: this.state.email.length > 0 ? 'white' : '#fb1b2f'
                     }}
@@ -173,7 +175,7 @@ export default class ForgotPassword extends React.Component {
               <View style={{ padding: 10 }}>
                 <TouchableOpacity
                   onPress={() => {
-                    this.props.navigation.navigate('LOGINCREDENTIALS');
+                    navigate('LOGINCREDENTIALS');
                   }}
                 >
                   <Text style={localStyles.greyText}>
@@ -182,7 +184,7 @@ export default class ForgotPassword extends React.Component {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    this.props.navigation.navigate('CREATEACCOUNT');
+                    navigate('CREATEACCOUNT');
                   }}
                 >
                   <Text style={localStyles.greyText}>Not a member?</Text>
@@ -190,12 +192,12 @@ export default class ForgotPassword extends React.Component {
               </View>
             </ScrollView>
             <TouchableOpacity
-              onPress={() => this.props.navigation.goBack()}
+              onPress={() => goBack()}
               style={{ padding: 15, position: 'absolute' }}
             >
               <Back
-                width={(onTablet ? 17.5 : 25) * factor}
-                height={(onTablet ? 17.5 : 25) * factor}
+                width={backButtonSize}
+                height={backButtonSize}
                 fill={'white'}
               />
             </TouchableOpacity>
@@ -214,7 +216,7 @@ export default class ForgotPassword extends React.Component {
                   onPress={() => {
                     this.alertSuccess.toggle();
                     openInbox();
-                    this.props.navigation.navigate('LOGINCREDENTIALS');
+                    navigate('LOGINCREDENTIALS');
                   }}
                 >
                   <Text
@@ -263,8 +265,8 @@ export default class ForgotPassword extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * factor,
-    margin: 20 * factor,
+    borderRadius: 15,
+    margin: 20,
     height: 200,
     width: '80%'
   },
@@ -284,14 +286,14 @@ const localStyles = StyleSheet.create({
     marginVertical: 20,
     color: 'black',
     borderRadius: 100,
-    fontSize: (DeviceInfo.isTablet() ? 14 : 16) * factor,
+    fontSize: DeviceInfo.isTablet() ? 20 : 14,
     marginHorizontal: 15,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
   greyText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
+    fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: 'grey',
     textAlign: 'center',
     textDecorationLine: 'underline'

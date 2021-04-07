@@ -14,8 +14,6 @@ import {
 import { ContentModel } from '@musora/models';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
-import Modal from 'react-native-modal';
-import Filters from '../../components/FIlters.js';
 import NavigationBar from '../../components/NavigationBar.js';
 import VerticalVideoList from '../../components/VerticalVideoList.js';
 import {
@@ -25,6 +23,7 @@ import {
   getStartedContent
 } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
+import { goBack } from '../../../AppNavigator.js';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -52,13 +51,12 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 };
 
 export default class SeeAll extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
     this.state = {
-      title: this.props.navigation.state.params.title, // In Progress, Completed, Continue
-      parent: this.props.navigation.state.params.parent, // My List, Packs, Student Focus, Foundations, Courses
+      title: props.route?.params?.title, // In Progress, Completed, Continue
+      parent: props.route?.params?.parent, // My List, Packs, Student Focus, Foundations, Courses
       allLessons: [],
       currentSort: 'newest',
       page: 1,
@@ -66,21 +64,15 @@ export default class SeeAll extends React.Component {
       refreshing: false,
       isLoadingAll: true, // all lessons
       isPaging: false, // scrolling more
-      filtering: false, // filtering
-      filtersAvailable: null,
-      showFilters: false,
-      filters: {
-        displayTopics: [],
-        topics: [],
-        content_type: [],
-        level: [],
-        progress: [],
-        instructors: []
-      }
+      filtering: false // filtering
     };
   }
 
   componentDidMount() {
+    let deepFilters = decodeURIComponent(this.props.route?.params?.url).split(
+      '?'
+    )[1];
+    this.filterQuery = deepFilters && `&${deepFilters}`;
     this.getAllLessons();
   }
 
@@ -94,7 +86,7 @@ export default class SeeAll extends React.Component {
       // use my list API call when navigating to see all from my list
       response = await getMyListContent(
         this.state.page,
-        this.state.filters,
+        this.filterQuery,
         this.state.title == 'In Progress' ? 'started' : 'completed'
       );
     } else if (this.state.parent === 'Lessons') {
@@ -104,21 +96,21 @@ export default class SeeAll extends React.Component {
           'lessons',
           'new',
           this.state.page,
-          this.state.filters
+          this.filterQuery
         );
       } else if (this.state.title.includes('All')) {
         response = await getAllContent(
           '',
           'newest',
           this.state.page,
-          this.state.filters
+          this.filterQuery
         );
       } else {
         response = await seeAllContent(
           'lessons',
           'continue',
           this.state.page,
-          this.state.filters
+          this.filterQuery
         );
       }
     } else if (this.state.parent === 'Courses') {
@@ -127,14 +119,14 @@ export default class SeeAll extends React.Component {
           'courses',
           'continue',
           this.state.page,
-          this.state.filters
+          this.filterQuery
         );
       } else {
         response = await getAllContent(
           'course',
           'newest',
           this.state.page,
-          this.state.filters
+          this.filterQuery
         );
       }
     } else if (this.state.parent === 'Songs') {
@@ -143,14 +135,14 @@ export default class SeeAll extends React.Component {
           'song',
           'continue',
           this.state.page,
-          this.state.filters
+          this.filterQuery
         );
       } else {
         response = await getAllContent(
           'song',
           'newest',
           this.state.page,
-          this.state.filters
+          this.filterQuery
         );
       }
     } else if (this.state.parent === 'Student Focus') {
@@ -158,7 +150,7 @@ export default class SeeAll extends React.Component {
         'quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=podcast'
       );
     }
-
+    this.metaFilters = response?.meta?.filterOptions;
     const newContent = await response.data.map(data => {
       return new ContentModel(data);
     });
@@ -200,7 +192,6 @@ export default class SeeAll extends React.Component {
     }
 
     this.setState(state => ({
-      filtersAvailable: response.meta.filterOptions,
       allLessons: loadMore ? state.allLessons.concat(items) : items,
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
       page: this.state.page + 1,
@@ -223,10 +214,14 @@ export default class SeeAll extends React.Component {
         }
       }
     } else {
-      if (newContent.getField('instructor') !== 'TBD') {
-        return newContent.getField('instructor').fields[0].value;
-      } else {
-        return newContent.getField('instructor').name;
+      try {
+        if (newContent.getField('instructor') !== 'TBD') {
+          return newContent.getField('instructor').fields[0].value;
+        } else {
+          return newContent.getField('instructor').name;
+        }
+      } catch (error) {
+        return '';
       }
     }
   };
@@ -275,13 +270,10 @@ export default class SeeAll extends React.Component {
           barStyle={'light-content'}
         />
         <View style={styles.childHeader}>
-          <TouchableOpacity
-            style={{ flex: 1 }}
-            onPress={() => this.props.navigation.goBack()}
-          >
+          <TouchableOpacity style={{ flex: 1 }} onPress={() => goBack()}>
             <Back
-              width={(onTablet ? 17.5 : 25) * factor}
-              height={(onTablet ? 17.5 : 25) * factor}
+              width={backButtonSize}
+              height={backButtonSize}
               fill={'white'}
             />
           </TouchableOpacity>
@@ -301,13 +293,12 @@ export default class SeeAll extends React.Component {
             />
           }
         >
-          <View style={{ height: 5 * factorVertical }} />
           <VerticalVideoList
             items={this.state.allLessons}
             isLoading={this.state.isLoadingAll}
             isPaging={this.state.isPaging}
-            title={this.state.title} // title for see all page
-            type={typeDict[this.state.parent]} // the type of content on page
+            title={this.state.title}
+            type={typeDict[this.state.parent]}
             showFilter={true}
             hideFilterButton={this.state.parent == 'Lessons' ? false : false} // only show filter button on lessons
             showType={false}
@@ -315,7 +306,7 @@ export default class SeeAll extends React.Component {
             showSort={false}
             showLength={false}
             showLargeTitle={true}
-            filters={this.state.filters} // show filter list
+            filters={this.metaFilters}
             currentSort={this.state.currentSort}
             changeSort={sort => {
               this.setState({
@@ -324,60 +315,25 @@ export default class SeeAll extends React.Component {
               }),
                 this.getAllLessons();
             }} // change sort and reload videos
-            filterResults={() => this.setState({ showFilters: true })} // apply from filters page
-            imageWidth={onTablet ? width * 0.225 : width * 0.3}
+            imageWidth={(onTablet ? 0.225 : 0.3) * width}
             outVideos={this.state.outVideos} // if paging and out of videos
-          />
-        </ScrollView>
-        {this.state.showFilters && (
-          <Modal
-            isVisible={this.state.showFilters}
-            style={[
-              styles.centerContent,
-              {
-                margin: 0,
-                height: '100%',
-                width: '100%'
-              }
-            ]}
-            animation={'slideInUp'}
-            animationInTiming={1}
-            animationOutTiming={1}
-            coverScreen={true}
-            hasBackdrop={true}
-          >
-            <Filters
-              hideFilters={() => {
-                this.setState({ showFilters: false });
-              }}
-              filtersAvailable={this.state.filtersAvailable}
-              filters={this.state.filters}
-              filtering={this.state.filtering}
-              type={'See All'}
-              reset={filters => {
-                this.setState(
-                  {
-                    allLessons: [],
-                    filters,
-                    page: 1
-                  },
-                  () => this.getAllLessons()
-                );
-              }}
-              filterVideos={filters => {
+            applyFilters={filters =>
+              new Promise(res =>
                 this.setState(
                   {
                     allLessons: [],
                     outVideos: false,
-                    page: 1,
-                    filters
+                    page: 1
                   },
-                  () => this.getAllLessons()
-                );
-              }}
-            />
-          </Modal>
-        )}
+                  () => {
+                    this.filterQuery = filters;
+                    this.getAllLessons().then(res);
+                  }
+                )
+              )
+            }
+          />
+        </ScrollView>
         <NavigationBar currentPage={'SEEALL'} />
       </SafeAreaView>
     );

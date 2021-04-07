@@ -11,10 +11,8 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { connect } from 'react-redux';
-import Modal from 'react-native-modal';
 import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
-import Filters from '../../components/FIlters.js';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
@@ -23,13 +21,13 @@ import { getStartedContent, getAllContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
 import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
+import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
@@ -40,7 +38,6 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 };
 
 class SongCatalog extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -50,19 +47,9 @@ class SongCatalog extends React.Component {
       allSongs: [],
       currentSort: 'newest',
       page: 1,
-      filtersAvailable: null,
-      showFilters: false,
       outVideos: false,
       isPaging: false,
       filtering: false,
-      filters: {
-        displayTopics: [],
-        topics: [],
-        content_type: [],
-        level: [],
-        progress: [],
-        instructors: []
-      },
       started: true,
       refreshing: true,
       refreshControl: false,
@@ -71,16 +58,16 @@ class SongCatalog extends React.Component {
   }
 
   componentDidMount() {
+    let deepFilters = decodeURIComponent(this.props.route?.params?.url).split(
+      '?'
+    )[1];
+    this.filterQuery = deepFilters && `&${deepFilters}`;
     this.getContent();
-    this.willFocusSubscription = this.props.navigation.addListener(
-      'willFocus',
-      () =>
-        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
-    );
+    this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   }
 
   componentWillUnmount() {
-    this.willFocusSubscription.remove();
+    this.refreshOnFocusListener?.();
   }
 
   async getContent() {
@@ -90,10 +77,11 @@ class SongCatalog extends React.Component {
         'song',
         this.state.currentSort,
         this.state.page,
-        this.state.filters
+        this.filterQuery
       ),
       getStartedContent('song')
     ]);
+    this.metaFilters = content?.[0]?.meta?.filterOptions;
     this.props.cacheAndWriteSongs({
       all: content[0],
       inProgress: content[1]
@@ -121,7 +109,6 @@ class SongCatalog extends React.Component {
       );
       return {
         allSongs: allVideos,
-        filtersAvailable: content.all.meta.filterOptions,
         outVideos:
           allVideos.length == 0 || content.all.data.length < 20 ? true : false,
         filtering: false,
@@ -145,8 +132,9 @@ class SongCatalog extends React.Component {
       'song',
       this.state.currentSort,
       this.state.page,
-      this.state.filters
+      this.filterQuery
     );
+    this.metaFilters = response?.meta?.filterOptions;
 
     const newContent = await response.data.map(data => {
       return new ContentModel(data);
@@ -155,7 +143,6 @@ class SongCatalog extends React.Component {
     let items = this.setData(newContent);
 
     this.setState(state => ({
-      filtersAvailable: response.meta.filterOptions,
       allSongs: loadMore ? state.allSongs.concat(items) : items,
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
       filtering: false,
@@ -264,7 +251,6 @@ class SongCatalog extends React.Component {
     return (
       <View style={styles.mainContainer}>
         <NavMenuHeaders currentPage={'LESSONS'} parentPage={'SONGS'} />
-
         {!this.state.refreshing ? (
           <ScrollView
             style={styles.mainContainer}
@@ -284,7 +270,7 @@ class SongCatalog extends React.Component {
             {isiOS && this.state.refreshControl && (
               <ActivityIndicator
                 size='small'
-                style={{ padding: 10 }}
+                style={styles.ActivityIndicator}
                 color={colors.secondBackground}
               />
             )}
@@ -295,12 +281,11 @@ class SongCatalog extends React.Component {
                   hideFilterButton={true}
                   Title={'CONTINUE'}
                   seeAll={() =>
-                    this.props.navigation.navigate('SEEALL', {
+                    navigate('SEEALL', {
                       title: 'Continue',
                       parent: 'Songs'
                     })
                   }
-                  hideSeeAll={false}
                   isSquare={true}
                   items={this.state.progressSongs}
                 />
@@ -310,26 +295,40 @@ class SongCatalog extends React.Component {
             <VerticalVideoList
               items={this.state.allSongs}
               isLoading={false}
-              title={'ALL SONGS'} // title for see all page
-              type={'SONGS'} // the type of content on page
+              title={'ALL SONGS'}
+              type={'SONGS'}
               showFilter={true}
-              showType={false} // show course / song by artist name
-              showArtist={true} // show artist name
+              showType={false}
+              showArtist={true}
               showLength={false}
               showSort={true}
               isPaging={this.state.isPaging}
-              filters={this.state.filters} // show filter list
-              imageRadius={5 * factor} // radius of image shown
-              containerBorderWidth={0} // border of box
-              containerWidth={width} // width of list
+              filters={this.metaFilters}
+              imageRadius={5}
+              containerBorderWidth={0}
+              containerWidth={width}
               currentSort={this.state.currentSort}
               changeSort={sort => this.changeSort(sort)} // change sort and reload videos
               outVideos={this.state.outVideos} // if paging and out of videos
-              filterResults={() => this.setState({ showFilters: true })} // apply from filters page
               isSquare={true}
               containerHeight={this.getSquareHeight()} // height per row
               imageHeight={this.getSquareHeight()} // image height
               imageWidth={this.getSquareHeight()} // image height
+              applyFilters={filters =>
+                new Promise(res =>
+                  this.setState(
+                    {
+                      allSongs: [],
+                      outVideos: false,
+                      page: 1
+                    },
+                    () => {
+                      this.filterQuery = filters;
+                      this.getAllSongs().then(res);
+                    }
+                  )
+                )
+              }
             />
           </ScrollView>
         ) : (
@@ -338,53 +337,6 @@ class SongCatalog extends React.Component {
             style={{ flex: 1 }}
             color={colors.secondBackground}
           />
-        )}
-        {this.state.showFilters && (
-          <Modal
-            isVisible={this.state.showFilters}
-            style={[
-              styles.centerContent,
-              {
-                margin: 0,
-                height: '100%',
-                width: '100%'
-              }
-            ]}
-            animation={'slideInUp'}
-            animationInTiming={1}
-            animationOutTiming={1}
-            coverScreen={true}
-            hasBackdrop={true}
-          >
-            <Filters
-              hideFilters={() => this.setState({ showFilters: false })}
-              filtersAvailable={this.state.filtersAvailable}
-              filters={this.state.filters}
-              filtering={this.state.filtering}
-              type={'Songs'}
-              reset={filters => {
-                this.setState(
-                  {
-                    allSongs: [],
-                    filters,
-                    page: 1
-                  },
-                  () => this.getAllSongs()
-                );
-              }}
-              filterVideos={filters => {
-                this.setState(
-                  {
-                    allSongs: [],
-                    outVideos: false,
-                    page: 1,
-                    filters
-                  },
-                  () => this.getAllSongs()
-                );
-              }}
-            />
-          </Modal>
         )}
         <NavigationBar currentPage={''} />
       </View>

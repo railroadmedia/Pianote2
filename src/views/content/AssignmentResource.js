@@ -3,16 +3,15 @@ import { PanResponder, View, Dimensions, ScrollView } from 'react-native';
 
 import ImageSvg from 'react-native-remote-svg';
 import PDFView from 'react-native-view-pdf';
-import Orientation from 'react-native-orientation-locker';
+import { SafeAreaView } from 'react-navigation';
 
-import dldService from '../../services/download.service';
 import { NetworkContext } from '../../context/NetworkProvider';
 
 export default class AssignmentResource extends React.Component {
   static contextType = NetworkContext;
   state = {
     scroll: true,
-    width: Dimensions.get('window').width
+    width: 0
   };
 
   constructor(props) {
@@ -87,16 +86,6 @@ export default class AssignmentResource extends React.Component {
     });
   }
 
-  componentDidMount() {
-    Orientation.addOrientationListener(this._onOrientationDidChange);
-  }
-
-  componentWillUnmount() {
-    Orientation.removeOrientationListener(this._onOrientationDidChange);
-  }
-
-  _onOrientationDidChange = orientation => this.setState({ width: fullWidth });
-
   renderDots(i) {
     return (
       <View
@@ -104,8 +93,7 @@ export default class AssignmentResource extends React.Component {
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
-          marginTop: 10,
-          marginBottom: 10
+          marginVertical: 10
         }}
       >
         {this.props.data?.map((dot, index) => (
@@ -135,151 +123,75 @@ export default class AssignmentResource extends React.Component {
   render() {
     let { width } = this.state;
     return (
-      <ScrollView
-        horizontal={true}
-        style={{ flex: 1 }}
-        pagingEnabled={true}
-        removeClippedSubviews={false}
-        scrollEnabled={this.state.scroll}
-        showsHorizontalScrollIndicator={false}
-        onScroll={() => {
-          delete this.t1;
-          delete this.t2;
-        }}
-      >
-        <View
-          activeOpacity={1}
-          {...this.panResponder.panHandlers}
-          style={{
-            width: width * this.props.data?.length || 0,
-            flexDirection: 'row'
+      <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
+        <ScrollView
+          horizontal={true}
+          style={{ flex: 1 }}
+          pagingEnabled={true}
+          removeClippedSubviews={false}
+          scrollEnabled={this.state.scroll}
+          showsHorizontalScrollIndicator={false}
+          onScroll={() => {
+            delete this.t1;
+            delete this.t2;
           }}
+          onLayout={({
+            nativeEvent: {
+              layout: { width }
+            }
+          }) =>
+            this.setState({ width }, () =>
+              this.scrollView.scrollTo({ x: 0, animated: true })
+            )
+          }
+          ref={r => (this.scrollView = r)}
         >
-          {this.props.data?.map((sheet, i) => {
-            let sourceUri = sheet.value;
-            if (sheet.value.indexOf('.pdf') < 0) {
-              return (
-                <View
-                  key={sheet.id}
-                  style={{
-                    width,
-                    flex: 1,
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <View
-                    style={{
-                      aspectRatio: sheet.whRatio,
-                      backgroundColor: 'transparent',
-                      marginHorizontal: 10,
-                      width: width - 20
-                    }}
-                  >
-                    <ImageSvg
-                      resizeMode='contain'
-                      source={{ uri: sourceUri }}
+          <View
+            activeOpacity={1}
+            {...this.panResponder.panHandlers}
+            style={{ flexDirection: 'row' }}
+          >
+            {this.props.data?.map((sheet, i) => (
+              <View>
+                {sheet.value.includes('.pdf') ? (
+                  <>
+                    <PDFView
+                      resourceType={this.context.isConnected ? 'url' : 'file'}
+                      resource={sheet.value}
+                      fadeInDuration={250.0}
                       style={{
-                        width: '100%',
-                        height: '100%',
-                        backgroundColor: 'white'
+                        width: width - 10,
+                        marginHorizontal: 5,
+                        aspectRatio:
+                          1 / Math.sqrt(2) / (sheet.numberOfPages || 1)
                       }}
                     />
-                  </View>
-                  {this.props.data?.length !== 1 && this.renderDots(i)}
-                </View>
-              );
-            } else {
-              if (this.context.isConnected)
-                return (
-                  <View
-                    key={sheet.id}
-                    style={{
-                      flex: 1,
-                      width: this.state.width,
-                      justifyContent: 'space-between'
-                    }}
-                  >
                     <View
                       style={{
-                        aspectRatio: 1 / Math.sqrt(2),
-                        backgroundColor: 'transparent',
-                        marginHorizontal: 10,
-                        width
+                        position: 'absolute',
+                        width: '100%',
+                        height: '100%'
                       }}
-                    >
-                      <View
-                        style={{
-                          backgroundColor: 'transparent',
-                          position: 'absolute',
-                          width: '100%',
-                          height: '100%',
-                          zIndex: 10
-                        }}
-                      />
-                      <PDFView
-                        onLoad={e => {}}
-                        onError={e => {}}
-                        resourceType={'file'}
-                        resource={sourceUri}
-                        fadeInDuration={250.0}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          backgroundColor: 'white'
-                        }}
-                      />
-                    </View>
-                    {this.props.data?.length !== 1 && this.renderDots(i)}
-                  </View>
-                );
-              else
-                return (
-                  <View
-                    key={sheet.id}
+                    />
+                  </>
+                ) : (
+                  <ImageSvg
+                    resizeMode='contain'
+                    source={{ uri: sheet.value }}
                     style={{
-                      flex: 1,
-                      width: width,
-                      justifyContent: 'space-between'
+                      margin: 5,
+                      width: width - 10,
+                      aspectRatio: sheet.whRatio,
+                      backgroundColor: 'white'
                     }}
-                  >
-                    <View
-                      key={sheet.id}
-                      style={{
-                        aspectRatio: 1 / Math.sqrt(2),
-                        backgroundColor: 'transparent',
-                        marginHorizontal: 10,
-                        width: width - 20
-                      }}
-                    >
-                      <View
-                        style={{
-                          backgroundColor: 'transparent',
-                          position: 'absolute',
-                          width: '100%',
-                          height: '100%',
-                          zIndex: 10
-                        }}
-                      />
-                      <PDFView
-                        onLoad={e => {}}
-                        onError={e => {}}
-                        resourceType={'url'}
-                        resource={sourceUri}
-                        fadeInDuration={250.0}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          backgroundColor: 'white'
-                        }}
-                      />
-                    </View>
-                    {this.props.data?.length !== 1 && this.renderDots(i)}
-                  </View>
-                );
-            }
-          })}
-        </View>
-      </ScrollView>
+                  />
+                )}
+                {this.renderDots(i)}
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     );
   }
 }
