@@ -49,6 +49,7 @@ class Packs extends React.Component {
     let { packsCache } = props;
     this.state = {
       packs: [],
+      id: '',
       headerPackImg: '',
       headerPackLogo: '',
       headerPackUrl: '',
@@ -90,43 +91,25 @@ class Packs extends React.Component {
   async getData() {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     const response = await packsService.allPacks();
+    console.log(response);
     this.props.cacheAndWritePacks(response);
     this.setState(this.initialValidData(response));
   }
 
   initialValidData = (content, fromCache) => {
-    try {
-      const newContent = content.myPacks.map(data => {
-        return new ContentModel(data);
-      });
-      const topHeaderPack = new ContentModel(content.topHeaderPack);
-
-      let items = [];
-      for (let i in newContent) {
-        items.push({
-          id: newContent[i].id,
-          thumbnail: newContent[i].getData('thumbnail_url'),
-          logo: newContent[i].getData('logo_image_url'),
-          bundle_count: newContent[i].post.bundle_count,
-          mobile_app_url: newContent[i].post.mobile_app_url
-        });
-      }
-
-      return {
-        packs: items,
-        isLoading: false,
-        refreshing: fromCache,
-        showRestartCourse: false,
-        headerPackImg: topHeaderPack.getData('thumbnail_url'),
-        headerPackLogo: topHeaderPack.getData('logo_image_url'),
-        headerPackUrl: topHeaderPack.post.mobile_app_url,
-        headerPackCompleted: topHeaderPack.isCompleted,
-        headerPackStarted: topHeaderPack.isStarted,
-        headerPackNextLessonUrl: topHeaderPack.post.next_lesson_mobile_app_url
-      };
-    } catch (e) {
-      return {};
-    }
+    return {
+      packs: content.myPacks,
+      isLoading: false,
+      refreshing: fromCache,
+      showRestartCourse: false,
+      id: content.topHeaderPack.id,
+      headerPackImg: content.topHeaderPack.thumbnail,
+      headerPackLogo: content.topHeaderPack.pack_logo,
+      headerPackUrl: content.topHeaderPack.mobile_app_url,
+      headerPackCompleted: content.topHeaderPack.completed,
+      headerPackStarted: content.topHeaderPack.started,
+      headerPackNextLessonUrl: content.topHeaderPack.next_lesson_url
+    };
   };
 
   onRestartPack = async () => {
@@ -346,7 +329,7 @@ class Packs extends React.Component {
                       source={{
                         uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
                           (((0.9 * greaterWDim) / 3) >> 0) * 2
-                        }/${item.logo}`
+                        }/${item.pack_logo}`
                       }}
                       resizeMode={FastImage.resizeMode.contain}
                     />

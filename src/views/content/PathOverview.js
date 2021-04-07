@@ -13,7 +13,6 @@ import {
   FlatList
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { ContentModel } from '@musora/models';
 import Modal from 'react-native-modal';
 import { Download_V2 } from 'RNDownload';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -118,6 +117,7 @@ export default class PathOverview extends React.Component {
     } else {
       res = await contentService.getContent(this.state.data.id);
     }
+    console.log(res);
     this.setState({
       likeCount: res.like_count,
       isLiked: res.is_liked_by_current_user,
@@ -125,43 +125,18 @@ export default class PathOverview extends React.Component {
       totalLength: res.length_in_seconds,
       started: res.started,
       completed: res.completed,
-      nextLesson: res.next_lesson ? new ContentModel(res.next_lesson) : null,
+      nextLesson: res.next_lesson,
       levelNum: res.level_position + '.' + res.course_position,
       progress: res.progress_percent,
-      difficulty: res.fields.find(f => f.key === 'difficulty')?.value,
-      thumbnail: res.data.find(f => f.key === 'thumbnail_url')?.value,
-      xp: res.total_xp,
+      difficulty: res.difficulty,
+      thumbnail: res.thumbnail_url,
+      xp: res.xp,
       type: res.type,
       bannerNextLessonUrl: res.banner_button_url,
-      artist:
-        res.type === 'song'
-          ? res.fields.find(f => f.key === 'artist')?.value
-          : new ContentModel(
-              res.fields.find(f => f.key === 'instructor')?.value
-            )?.getField('name'),
+      artist: res.type === 'song' ? res.artist : res.instructors.join(', '),
       isLoadingAll: false,
       refreshing: false,
-      items:
-        res?.lessons?.map(l => {
-          l = new ContentModel(l);
-          let duration = l.post.fields.find(f => f.key === 'video')
-            ? new ContentModel(l.getFieldMulti('video')[0])?.getField(
-                'length_in_seconds'
-              )
-            : 0;
-          return {
-            title: l.getField('title'),
-            thumbnail: l.getData('thumbnail_url'),
-            type: l.type,
-            id: l.id,
-            mobile_app_url: l.post.mobile_app_url,
-            duration: duration < 60 ? 60 : duration,
-            isAddedToList: l.isAddedToList,
-            isStarted: l.isStarted,
-            isCompleted: l.isCompleted,
-            progress_percent: l.post.progress_percent
-          };
-        }) || []
+      items: res.lessons
     });
   };
 
@@ -744,17 +719,17 @@ export default class PathOverview extends React.Component {
                     aspectRatio: 16 / 9
                   }}
                   source={{
-                    uri: item.thumbnail?.includes('https')
+                    uri: item.thumbnail_url?.includes('https')
                       ? `https://cdn.musora.com/image/fetch/w_${Math.round(
                           width
                         )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
-                          item.thumbnail
+                          item.thumbnail_url
                         }`
-                      : item.thumbnail
+                      : item.thumbnail_url
                   }}
                   resizeMode='cover'
                 >
-                  {item.isCompleted && (
+                  {item.completed && (
                     <View
                       style={{
                         position: 'absolute',
@@ -783,13 +758,13 @@ export default class PathOverview extends React.Component {
                       }
                     ]}
                   >
-                    {item.isStarted ? (
+                    {item.started ? (
                       <Progress
                         height={onTablet ? 60 : 35}
                         width={onTablet ? 60 : 35}
                         fill={'white'}
                       />
-                    ) : item.isCompleted ? (
+                    ) : item.completed ? (
                       <ApprovedTeacher
                         height={onTablet ? 70 : 45}
                         width={onTablet ? 70 : 45}
@@ -835,15 +810,21 @@ export default class PathOverview extends React.Component {
                         paddingHorizontal: onTablet ? 0 : 5
                       }}
                     >
-                      {Math.floor(item.duration / 60)}{' '}
-                      {Math.floor(item.duration / 60) == 1 ? 'min' : 'mins'}
+                      {item.length_in_seconds
+                        ? Math.floor(item.length_in_seconds / 60)
+                        : 0}{' '}
+                      {Math.floor(item.length_in_seconds / 60) == 1
+                        ? 'min'
+                        : 'mins'}
                     </Text>
                     <View style={{ flex: 1 }} />
                   </View>
 
                   <TouchableOpacity onPress={() => this.toggleMyList(item.id)}>
                     <AntIcon
-                      name={item.isAddedToList ? 'close' : 'plus'}
+                      name={
+                        item.is_added_to_primary_playlist ? 'close' : 'plus'
+                      }
                       size={sizing.myListButtonSize}
                       color={colors.pianoteRed}
                     />
@@ -866,9 +847,7 @@ export default class PathOverview extends React.Component {
             }
             onNextLesson={() =>
               this.goToLesson(
-                this.state.isMethod
-                  ? nextLesson.post?.mobile_app_url
-                  : nextLesson.id
+                this.state.isMethod ? nextLesson.mobile_app_url : nextLesson.id
               )
             }
             isMethod={isMethod}

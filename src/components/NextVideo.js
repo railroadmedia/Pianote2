@@ -99,9 +99,9 @@ export default class NextVideo extends React.Component {
                 source={{
                   uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
                     width * 0.24 * 2
-                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${this.props.item.getData(
-                    'thumbnail_url'
-                  )}`
+                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
+                    this.props.item.thumbnail_url
+                  }`
                 }}
                 resizeMode={FastImage.resizeMode.cover}
               />
@@ -113,7 +113,7 @@ export default class NextVideo extends React.Component {
                   { fontSize: sizing.descriptionText }
                 ]}
               >
-                {this.props.item.getField('title')}
+                {this.props.item.title}
               </Text>
               <Text
                 numberOfLines={2}
@@ -129,12 +129,8 @@ export default class NextVideo extends React.Component {
                   }
                 ]}
               >
-                {this.props.item.post.fields?.find(f => f.key === 'video')
-                  ? Math.round(
-                      new ContentModel(
-                        this.props.item.getFieldMulti('video')[0]
-                      )?.getField('length_in_seconds') / 60
-                    )
+                {this.props.item.length_in_seconds
+                  ? Math.round(this.props.item.length_in_seconds / 60)
                   : 0}{' '}
                 Mins
               </Text>

@@ -90,61 +90,29 @@ export default class SinglePack extends React.Component {
     // get bundles
     const response = await packsService.getPack(this.state.url);
     console.log(response);
-    const newContent = new ContentModel(response);
-    const lessons = newContent.post.lessons.map(rl => {
-      return new ContentModel(rl);
-    });
     // if more than one bundle then display bundles otherwise show videos
-    if (newContent.post.bundle_count > 1)
+    if (response.bundles)
+      // TODO: response.bundle_count > 1
       this.setState({ isDisplayingLessons: false });
-    let items = [];
-    try {
-      for (let i in lessons) {
-        items.push({
-          title: lessons[i].getField('title'),
-          type: lessons[i].post.type,
-          thumbnail: lessons[i].getData('thumbnail_url'),
-          id: lessons[i].id,
-          publishedOn:
-            lessons[i].publishedOn.slice(0, 10) +
-            'T' +
-            lessons[i].publishedOn.slice(11, 16),
-          duration:
-            newContent.post.bundle_count > 1
-              ? 0
-              : new ContentModel(
-                  lessons[i].getFieldMulti('video')[0]
-                )?.getField('length_in_seconds'),
 
-          isAddedToList: lessons[i].isAddedToList,
-          isStarted: lessons[i].isStarted,
-          isCompleted: lessons[i].isCompleted,
-          progress_percent: lessons[i].post.progress_percent,
-          mobile_app_url: lessons[i].post.mobile_app_url
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
     this.setState(
       {
-        id: newContent.id,
-        isAddedToList: newContent.isAddedToList,
-        thumbnail:
-          newContent.post.thumbnail_url || newContent.getData('thumbnail_url'),
-        title: newContent.getField('title'),
-        logo: newContent.post.pack_logo,
-        description: newContent.getData('description'),
-        isStarted: newContent.isStarted,
-        isCompleted: newContent.isCompleted,
-        xp: newContent.xp,
-        videos: items,
-        nextLessonUrl: newContent.post.next_lesson_mobile_app_url,
+        id: response.id,
+        isAddedToList: response.is_added_to_primary_playlist,
+        thumbnail: response.thumbnail,
+        title: response.title,
+        logo: response.pack_logo,
+        description: response.description,
+        isStarted: response.started,
+        isCompleted: response.completed,
+        xp: response.xp,
+        videos: response.bundles || response.lessons,
+        nextLessonUrl: response.next_lesson?.mobile_app_url,
         isLoadingAll: false,
         refreshing: false,
-        resources: newContent.post.resources
-          ? Object.keys(newContent.post.resources).map(key => {
-              return newContent.post.resources[key];
+        resources: response.resources
+          ? Object.keys(response.resources).map(key => {
+              return response.resources[key];
             })
           : null
       },

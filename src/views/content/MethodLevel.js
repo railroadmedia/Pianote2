@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { SafeAreaView } from 'react-navigation';
-import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
@@ -57,7 +56,6 @@ export default class MethodLevel extends React.Component {
       xp: 0,
       description: '',
       showInfo: false,
-      totalLength: 0,
       isAddedToList: false,
       progress: 0,
       refreshing: false,
@@ -84,58 +82,21 @@ export default class MethodLevel extends React.Component {
     let response = await methodService.getMethodContent(
       this.props.route?.params.url
     );
-    const newContent = response.courses.map(data => {
-      return new ContentModel(data);
-    });
-    response = new ContentModel(response);
-    try {
-      let items = [];
-      for (let i in newContent) {
-        items.push({
-          title: newContent[i].getField('title'),
-          thumbnail: newContent[i].getData('thumbnail_url'),
-          type: newContent[i].type,
-          publishedOn:
-            newContent[i].publishedOn.slice(0, 10) +
-            'T' +
-            newContent[i].publishedOn.slice(11, 16),
-          id: newContent[i].id,
-          isAddedToList: newContent[i].isAddedToList,
-          isStarted: newContent[i].isStarted,
-          isCompleted: newContent[i].isCompleted,
-          progress_percent: newContent[i].post.progress_percent,
-          mobile_app_url: newContent[i].post.mobile_app_url,
-          levelNum: response.post.level_number
-        });
-      }
+    console.log(response);
 
-      this.setState({
-        items: items,
-        nextLesson: response.post.next_lesson
-          ? new ContentModel(response.post.next_lesson)
-          : null,
-        isLoadingAll: false,
-        totalLength: this.state.totalLength,
-        id: response.id,
-        bannerNextLessonUrl: response.post.banner_button_url,
-        isStarted: response.isStarted,
-        isCompleted: response.isCompleted,
-        description: response
-          .getData('description')
-          .replace(/(<([^>]+)>)/g, '')
-          .replace(/&nbsp;/g, '')
-          .replace(/&amp;/g, '&')
-          .replace(/&#039;/g, "'")
-          .replace(/&quot;/g, '"')
-          .replace(/&gt;/g, '>')
-          .replace(/&lt;/g, '<'),
-        isAddedToList: response.isAddedToList,
-        progress: response.post.progress_percent,
-        refreshing: false
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    this.setState({
+      items: response.courses,
+      nextLesson: response.next_lesson,
+      isLoadingAll: false,
+      id: response.id,
+      bannerNextLessonUrl: response.banner_button_url,
+      isStarted: response.started,
+      isCompleted: response.completed,
+      description: response.description,
+      isAddedToList: response.is_added_to_primary_playlist,
+      progress: response.progress_percent,
+      refreshing: false
+    });
   };
 
   toggleMyList = () => {
@@ -462,7 +423,7 @@ export default class MethodLevel extends React.Component {
             type='LEVEL'
             onNextLesson={() =>
               navigate('VIDEOPLAYER', {
-                url: this.state.nextLesson.post.mobile_app_url
+                url: this.state.nextLesson.mobile_app_url
               })
             }
           />

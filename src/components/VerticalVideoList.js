@@ -96,7 +96,7 @@ export default class VerticalVideoList extends React.Component {
     }
     for (i in this.state.items) {
       if (this.state.items[i].id == contentID) {
-        this.state.items[i].isAddedToList = true;
+        this.state.items[i].is_added_to_primary_playlist = true;
       }
     }
     addToMyList(contentID);
@@ -109,7 +109,7 @@ export default class VerticalVideoList extends React.Component {
     }
     for (i in this.state.items) {
       if (this.state.items[i].id == contentID) {
-        this.state.items[i].isAddedToList = false;
+        this.state.items[i].is_added_to_primary_playlist = false;
       }
     }
     removeFromMyList(contentID);
@@ -143,7 +143,8 @@ export default class VerticalVideoList extends React.Component {
     }
     for (i in this.state.items) {
       if (this.state.items[i].id == contentID) {
-        this.state.items[i].isLiked = !this.state.items[i].isLiked;
+        this.state.items[i].is_liked_by_current_user = !this.state.items[i]
+          .is_liked_by_current_user;
         this.state.items[i].like_count = this.state.items[i].isLiked
           ? this.state.items[i].like_count + 1
           : this.state.items[i].like_count - 1;
@@ -239,9 +240,9 @@ export default class VerticalVideoList extends React.Component {
   };
 
   getImageUrl(thumbnail, publishDate) {
-    if (thumbnail.includes('var/mobile') || thumbnail.includes('data/user'))
+    if (thumbnail?.includes('var/mobile') || thumbnail?.includes('data/user'))
       return thumbnail;
-    if (thumbnail.includes('http')) {
+    if (thumbnail?.includes('http')) {
       return `https://cdn.musora.com/image/fetch/w_${Math.round(
         this.props.imageWidth * 2
       )},ar_${
@@ -290,7 +291,7 @@ export default class VerticalVideoList extends React.Component {
                 borderRadius: 5
               }}
             >
-              {row.isCompleted && (
+              {row.completed && (
                 <View
                   style={{
                     position: 'absolute',
@@ -317,13 +318,13 @@ export default class VerticalVideoList extends React.Component {
                   }
                 ]}
               >
-                {row.isStarted ? (
+                {row.started ? (
                   <Progress
                     height={onTablet ? 60 : 35}
                     width={onTablet ? 60 : 35}
                     fill={'white'}
                   />
-                ) : row.isCompleted ? (
+                ) : row.completed ? (
                   <ApprovedTeacher
                     height={onTablet ? 70 : 45}
                     width={onTablet ? 70 : 45}
@@ -420,7 +421,7 @@ export default class VerticalVideoList extends React.Component {
                     borderRadius: 5
                   }}
                   source={{
-                    uri: this.getImageUrl(row.thumbnail, row.publishedOn)
+                    uri: this.getImageUrl(row.thumbnail_url, row.published_on)
                   }}
                   resizeMode={FastImage.resizeMode.cover}
                 />
@@ -431,7 +432,7 @@ export default class VerticalVideoList extends React.Component {
                     borderRadius: 5
                   }}
                   source={{
-                    uri: this.getImageUrl(row.thumbnail, row.publishedOn)
+                    uri: this.getImageUrl(row.thumbnail_url, row.published_on)
                   }}
                   resizeMode='cover'
                 />
@@ -500,8 +501,10 @@ export default class VerticalVideoList extends React.Component {
                       fontFamily: 'OpenSans-Regular'
                     }}
                   >
-                    {Math.floor(row.duration / 60)}{' '}
-                    {Math.floor(row.duration / 60) == 1 ? 'min' : 'mins'}
+                    {Math.floor(row.length_in_seconds / 60)}{' '}
+                    {Math.floor(row.length_in_seconds / 60) == 1
+                      ? 'min'
+                      : 'mins'}
                   </Text>
                 )}
                 {this.props.showLines && (
@@ -555,11 +558,11 @@ export default class VerticalVideoList extends React.Component {
             {!this.props.isMethodLevel && (
               <View style={{ width: 45 }}>
                 <View style={[styles.centerContent, { flex: 1 }]}>
-                  {new Date(row.publishedOn) > new Date() ? (
+                  {new Date(row.published_on) > new Date() ? (
                     <TouchableOpacity
                       onPress={() => {
                         this.addToCalendarLessonTitle = row.title;
-                        this.addToCalendatLessonPublishDate = row.publishedOn;
+                        this.addToCalendatLessonPublishDate = row.published_on;
                         this.setState({ addToCalendarModal: true });
                       }}
                     >
@@ -569,7 +572,7 @@ export default class VerticalVideoList extends React.Component {
                         color={colors.pianoteRed}
                       />
                     </TouchableOpacity>
-                  ) : !row.isAddedToList ? (
+                  ) : !row.is_added_to_primary_playlist ? (
                     <TouchableOpacity onPress={() => this.addToMyList(row.id)}>
                       <AntIcon
                         name={'plus'}
@@ -577,7 +580,7 @@ export default class VerticalVideoList extends React.Component {
                         color={colors.pianoteRed}
                       />
                     </TouchableOpacity>
-                  ) : row.isAddedToList ? (
+                  ) : row.is_added_to_primary_playlist ? (
                     <TouchableOpacity
                       onPress={() => this.removeFromMyList(row.id)}
                     >

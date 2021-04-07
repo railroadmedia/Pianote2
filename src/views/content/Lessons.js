@@ -11,7 +11,7 @@ import {
   Dimensions,
   ImageBackground,
   TouchableOpacity,
-  Text,
+  Text
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -36,7 +36,11 @@ import GradientFeature from '../../components/GradientFeature';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
 import methodService from '../../services/method.service.js';
-import { getStartedContent, getLiveContent, getAllContent } from '../../services/GetContent';
+import {
+  getStartedContent,
+  getLiveContent,
+  getAllContent
+} from '../../services/GetContent';
 import RestartCourse from '../../modals/RestartCourse';
 import AddToCalendar from '../../modals/AddToCalendar';
 import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
@@ -104,12 +108,14 @@ class Lessons extends React.Component {
         xp: data[0][1],
         rank: data[1][1],
         profileImage: data[2][1],
-        methodIsStarted: typeof data[3][1] !== null ? JSON.parse(data[3][1]) : false,
-        methodIsCompleted: typeof data[4][1] !== null ? JSON.parse(data[4][1]) : false,
+        methodIsStarted:
+          typeof data[3][1] !== null ? JSON.parse(data[3][1]) : false,
+        methodIsCompleted:
+          typeof data[4][1] !== null ? JSON.parse(data[4][1]) : false
       });
     });
 
-    this.getLiveContent()
+    this.getLiveContent();
     this.getContent();
     messaging().requestPermission();
     this.refreshOnFocusListener = refreshOnFocusListener.call(this);
@@ -141,7 +147,7 @@ class Lessons extends React.Component {
       method: content[0],
       inProgress: content[2]
     });
-
+    console.log(content[0]);
     this.setState(
       this.initialValidData({
         all: content[1],
@@ -162,16 +168,16 @@ class Lessons extends React.Component {
     }
 
     for (i in word) {
-      string = string + word[i]
-      if(Number(i) < word.length-1) (string = string + ' / ');
+      string = string + word[i];
+      if (Number(i) < word.length - 1) string = string + ' / ';
     }
 
     return string;
   };
 
   async getLiveContent() {
-    let content = await getLiveContent()
-    this.setState({liveLesson: [content]})
+    let content = await getLiveContent();
+    this.setState({ liveLesson: [content] });
   }
 
   initialValidData = (content, fromCache) => {
@@ -412,7 +418,11 @@ class Lessons extends React.Component {
   render() {
     return (
       <View style={styles.methodContainer}>
-        <NavMenuHeaders isMethod={true} currentPage={'HOME'} parentPage={'HOME'} />
+        <NavMenuHeaders
+          isMethod={true}
+          currentPage={'HOME'}
+          parentPage={'HOME'}
+        />
         {!this.state.refreshing ? (
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -557,7 +567,7 @@ class Lessons extends React.Component {
                 }
                 showType={true}
                 items={this.state.progressLessons}
-              />  
+              />
               {/*
               <View style={{ height: paddingInset / 2 }} />
               {this.state.liveLesson.length > 0 && (

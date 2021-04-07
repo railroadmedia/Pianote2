@@ -13,7 +13,6 @@ import {
   ImageBackground
 } from 'react-native';
 import Modal from 'react-native-modal';
-import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import AsyncStorage from '@react-native-community/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -55,8 +54,6 @@ export default class Foundations extends React.Component {
       id: null,
       isStarted: false,
       isCompleted: false,
-      isLiked: false,
-      likeCount: 0,
       showInfo: false,
       isLoadingAll: true,
       totalLength: 0,
@@ -105,87 +102,21 @@ export default class Foundations extends React.Component {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    const response = new ContentModel(
-      await foundationsService.getFoundation('foundations-2019')
-    );
-
-    const newContent = response.post.units.map(data => {
-      return new ContentModel(data);
-    });
-
-    let items = [];
-    for (let i in newContent) {
-      items.push({
-        title: newContent[i].getField('title'),
-        artist: newContent[i].post.fields
-          .filter(d => d.key === 'instructor')
-          .map(s => ({
-            value: s.value.fields.find(f => f.key === 'name').value
-          }))
-          .reduce((r, obj) => r.concat(obj.value, '  '), []),
-        thumbnail: newContent[i].getData('thumbnail_url'),
-        type: newContent[i].post.type,
-        isStarted: newContent[i].isStarted,
-        isCompleted: newContent[i].isCompleted,
-        publishedOn:
-          newContent[i].publishedOn.slice(0, 10) +
-          'T' +
-          newContent[i].publishedOn.slice(11, 16),
-        description: newContent[i]
-          .getData('description')
-          .replace(/(<([^>]+)>)/g, '')
-          .replace(/&nbsp;/g, '')
-          .replace(/&amp;/g, '&')
-          .replace(/&#039;/g, "'")
-          .replace(/&quot;/g, '"')
-          .replace(/&gt;/g, '>')
-          .replace(/&lt;/g, '<'),
-        id: newContent[i].id,
-        progress_percent: newContent[i].post.progress_percent,
-        mobile_app_url: newContent[i].post.mobile_app_url
-      });
-    }
-
+    const response = await foundationsService.getFoundation('foundations-2019');
+    console.log(response);
     this.setState({
-      items: items,
+      items: response.units,
       id: response.id,
-      isStarted: response.isStarted,
-      isCompleted: response.isCompleted,
-      bannerNextLessonUrl: response.post.banner_button_url,
-      isLiked: response.post.is_liked_by_current_user,
-      likeCount: response.likeCount,
+      isStarted: response.started,
+      isCompleted: response.completed,
+      bannerNextLessonUrl: response.banner_button_url,
       isLoadingAll: false,
-      totalLength: response.post.length_in_seconds,
-      xp: response.post.total_xp,
-      description: response
-        .getData('description')
-        .replace(/(<([^>]+)>)/g, '')
-        .replace(/&nbsp;/g, '')
-        .replace(/&amp;/g, '&')
-        .replace(/&#039;/g, "'")
-        .replace(/&quot;/g, '"')
-        .replace(/&gt;/g, '>')
-        .replace(/&lt;/g, '<'),
-      progress: response.post.progress_percent,
-      nextLesson: new ContentModel(response.post.next_lesson),
+      totalLength: response.length_in_seconds,
+      xp: response.total_xp,
+      description: response.description,
+      progress: response.progress_percent,
+      nextLesson: response.next_lesson,
       refreshing: false
-    });
-  };
-
-  toggleLike = () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    if (this.state.isLiked) {
-      unlikeContent(this.state.id);
-    } else {
-      likeContent(this.state.id);
-    }
-    this.setState({
-      isLiked: !this.state.isLiked,
-      likeCount: this.state.isLiked
-        ? this.state.likeCount - 1
-        : this.state.likeCount + 1
     });
   };
 
@@ -562,7 +493,7 @@ export default class Foundations extends React.Component {
             progress={this.state.progress}
             type='FOUNDATIONS'
             onNextLesson={() =>
-              this.goToLesson(this.state.nextLesson.post.mobile_app_url)
+              this.goToLesson(this.state.nextLesson.mobile_app_url)
             }
           />
         )}
