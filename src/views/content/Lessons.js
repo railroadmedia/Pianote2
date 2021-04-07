@@ -558,7 +558,6 @@ class Lessons extends React.Component {
                 showType={true}
                 items={this.state.progressLessons}
               />  
-              {/*
               <View style={{ height: paddingInset / 2 }} />
               {this.state.liveLesson.length > 0 && (
                 <>
@@ -881,7 +880,6 @@ class Lessons extends React.Component {
                   )}
                 </>
               )}
-              */}
               <View style={{ height: paddingInset / 2 }} />
               {onTablet ? (
                 <HorizontalVideoList
