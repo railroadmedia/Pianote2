@@ -80,7 +80,7 @@ class Lessons extends React.Component {
       methodIsCompleted: false,
       methodNextLessonUrl: null,
       showRestartCourse: false,
-      showLive: true, 
+      showLive: false, 
       lessonsStarted: true,
       refreshing: !lessonsCache,
       refreshControl: true,
@@ -207,7 +207,7 @@ class Lessons extends React.Component {
         seconds: date.getSeconds(),
       }
     })
-    if(timeDiff < 0) {
+    if(timeDiff < 0) { // date.getSeconds() == 1 || date.getSeconds() == 30
       // if time ran out show reminder, get rid of modal
       this.setState({showLive: true})
       await clearInterval(this.interval)

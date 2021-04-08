@@ -27,6 +27,8 @@ export default class Live extends React.Component {
     }
 
   changeType = word => {
+    if(!word) return
+    
     let string = '';
 
     for (let i = 0; i < word.length; i++) {
@@ -34,11 +36,10 @@ export default class Live extends React.Component {
         word[i] = word[i][0].toUpperCase() + word[i].substr(1);
       }
     }
-    console.log(string, word)
+
     for (i in word) {
-    
       string = string + word[i]
-      if(Number(i) < word.length-1) (string = string + ' / ') 
+      if(Number(i) < word.length-1) (string = string + ', ') 
     }
 
     return string;
@@ -85,7 +86,7 @@ export default class Live extends React.Component {
                     </Text>
                 </View>
             </View>
-            <Text style={[styles.modalBodyText, localStyles.Live]}>
+            <Text style={[styles.modalBodyText, localStyles.live]}>
                 <Text
                     style={{
                         fontFamily: 'OpenSans-Bold',
@@ -96,28 +97,129 @@ export default class Live extends React.Component {
                     {this.changeType(this.props.liveLesson[0]?.instructors)}
                 </Text> just went live. Would you like to join?
             </Text>
-            <FontIcon
-              size={onTablet ? 70 : 50}
-              name={'calendar-plus'}
-              color={colors.pianoteRed}
-              style={localStyles.calendarIcon}
-            />
+            <Text style={[styles.modalBodyText, localStyles.live]}>
+                Join
+                <Text
+                    style={{
+                        fontFamily: 'OpenSans-Bold',
+                        position: 'absolute',
+                        fontSize: onTablet ? 16 : 14,
+                    }}
+                > @jared-Drummer
+                </Text> and
+                <Text
+                    style={{
+                        fontFamily: 'OpenSans-Bold',
+                        position: 'absolute',
+                        fontSize: onTablet ? 16 : 14,
+                    }}
+                > 143 members
+                </Text>
+            </Text>            
+            <View
+                style={[
+                    styles.centerContent, {
+                    height: 50, 
+                }]}
+            >
+                <View 
+                    style={{
+                        width: 100, 
+                        height: '80%', 
+                        justifyContent: 'center'
+                    }}
+                >
+                    <View
+                        style={{
+                            position: 'absolute',
+                            left: 35/2,
+                            zIndex: 1,
+                            elevation: 1,
+                            height: 25, 
+                            width: 25,
+                            borderRadius: 100,
+                        }}
+                    >
+                        <FastImage
+                            style={{ flex: 1, borderRadius: 100, alignSelf: 'stretch'}}
+                            source={{
+                                uri: 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                            }}
+                            resizeMode={FastImage.resizeMode.cover}
+                        />
+                        <View
+                            style={{
+                                position: 'absolute',
+                                zIndex: 2,
+                                elevation: 2,
+                                left: 20,
+                                height: 25, 
+                                width: 25,
+                                borderRadius: 100,
+                            }}
+                        >
+                            <FastImage
+                                style={{ flex: 1, borderRadius: 100, alignSelf: 'stretch'}}
+                                source={{
+                                    uri: 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                                }}
+                                resizeMode={FastImage.resizeMode.cover}
+                            />
+                        </View>
+                        <View
+                            style={{
+                                position: 'absolute',
+                                zIndex: 3,
+                                elevation: 3,
+                                left: 40,
+                                height: 25, 
+                                width: 25,
+                                borderRadius: 100,
+                            }}
+                        >
+                            <FastImage
+                                style={{ flex: 1, borderRadius: 100, alignSelf: 'stretch'}}
+                                source={{
+                                    uri: 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                                }}
+                                resizeMode={FastImage.resizeMode.cover}
+                            />
+                        </View>
+                    </View>
+                </View>
+            </View>
             <TouchableOpacity
               style={[
-                localStyles.confirmAddition,
+                localStyles.watch,
                 { justifyContent: 'center' }
               ]}
-              onPress={() => this.props.addEventToCalendar()}
+              onPress={() => {}}
             >
               <Text
                 style={[
                   styles.modalButtonText,
-                  localStyles.confirmAdditionText
+                  localStyles.watchText
                 ]}
               >
-                CONFIRM ADDITION
+                WATCH
               </Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                localStyles.cancelButton,
+                { justifyContent: 'center' }
+              ]}
+              onPress={() => this.props.hideLive()}
+            >
+              <Text
+                style={[
+                  styles.modalButtonText,
+                  localStyles.cancelButtonText
+                ]}
+              >
+                CANCEL
+              </Text>
+            </TouchableOpacity>            
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -133,9 +235,10 @@ const localStyles = StyleSheet.create({
     margin: 20,
     paddingVertical: 20,
   },
-  Live: {
+  live: {
     marginTop: 15,
-    paddingHorizontal: 30
+    paddingHorizontal: 30,
+    fontSize: DeviceInfo.isTablet() ? 14 : 12
   },
   calendarIcon: {
     paddingTop: 7.5,
@@ -143,15 +246,28 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: 40,
     marginTop: 10
   },
-  confirmAddition: {
-    marginTop: 15,
+  watch: {
+    marginTop: 5,
     borderRadius: 100,
     backgroundColor: '#fb1b2f',
-    marginHorizontal: 40,
+    marginHorizontal: 70,
     justifyContent: 'center',
     height: DeviceInfo.isTablet() ? 40 : 30
   },
-  confirmAdditionText: {
+  cancelButton: {
+    marginTop: 5,
+    borderRadius: 100,
+    backgroundColor: 'white',
+    borderWidth: 1.5,
+    borderColor: '#fb1b2f',
+    marginHorizontal: 70,
+    justifyContent: 'center',
+    height: DeviceInfo.isTablet() ? 40 : 30
+  },
+  watchText: {
     color: 'white'
+  },
+  cancelButtonText: {
+    color: 'red'
   }
 });
