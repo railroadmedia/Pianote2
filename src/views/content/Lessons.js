@@ -1057,27 +1057,6 @@ class Lessons extends React.Component {
                 </>
               )}
               <View style={{ height: paddingInset / 2 }} />
-<<<<<<< HEAD
-              {this.state.lessonsStarted && (
-                <HorizontalVideoList
-                  hideFilterButton={true}
-                  isLive={true}
-                  isMethod={true}
-                  Title={'LIVE'}
-                  seeAll={() =>
-                    this.props.navigation.navigate('SEEALL', {
-                      title: 'Continue',
-                      parent: 'Lessons'
-                    })
-                  }
-                  showType={false}
-                  hideSeeAll={true}
-                  items={this.state.progressLessons}
-                />
-              )}              
-              <View style={{ height: paddingInset / 2 }} />
-=======
->>>>>>> master
               {onTablet ? (
                 <HorizontalVideoList
                   isMethod={true}

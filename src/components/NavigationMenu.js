@@ -54,11 +54,7 @@ const navigationOptions = [
     navigator: 'SEEALL'
   },
   {
-<<<<<<< HEAD
-    title: 'Schedule',
-=======
       title: 'Schedule',
->>>>>>> master
     navigator: 'SEEALL'
   },
   {
