@@ -23,6 +23,7 @@ import DeviceInfo from 'react-native-device-info';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
+import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import Orientation from 'react-native-orientation-locker';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
@@ -173,7 +174,7 @@ class Lessons extends React.Component {
   async getLiveContent() {
     let content = [await getLiveContent()]
     
-    if(content[0].isLive) {
+    if(!content[0].isLive) {
       let timeNow = Math.floor(Date.now() / 1000);
       let timeLive = (new Date(content[0].live_event_start_time)).getTime()/1000;
       let timeDiff = timeLive - timeNow
@@ -596,176 +597,320 @@ class Lessons extends React.Component {
                 items={this.state.progressLessons}
               />  
               <View style={{ height: paddingInset / 2 }} />
-              {this.state.liveLesson.length > 0 && (
-                <TouchableOpacity
-                  style={{
-                    width: Dimensions.get('window').width - 10,
-                    paddingLeft: paddingInset,
-                  }}
-                  onPress={() => this.navigate(item, index)}
-                >
-                  <View style={{ width: '100%' }}>
-                    <View 
-                      style={[
-                        styles.centerContent, 
-                        {
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: '100%',
-                          height: '100%',
-                          zIndex: 1
-                        }
-                      ]}
-                    >
+              {(this.state.liveLesson.length > 0 && this.state.timeDiffLive.timeDiff < 3600*4) && (
+                // if there is a live lesson && it is less than 4 hours away 
+                <>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      textAlign: 'left',
+                      fontSize: DeviceInfo.isTablet() ? 20 : 16,
+                      fontFamily: 'RobotoCondensed-Bold',
+                      paddingTop: 5,
+                      paddingBottom: 15,
+                      color: 'white',
+                      paddingLeft: paddingInset
+                    }}
+                  >
+                    LIVE
+                  </Text>
+                  {this.state.timeDiffLive.timeDiff > 0 ? (
+                    // live lesson has time to countdown || time ran out --> live
+                  <TouchableOpacity
+                    style={{
+                      width: Dimensions.get('window').width - 10,
+                      paddingLeft: paddingInset,
+                    }}
+                    onPress={() => this.navigate(item, index)}
+                  >
+                    <View style={{ width: '100%' }}>
                       <View 
                         style={[
-                          styles.centerContent, {
-                          height: '100%',
-                          width: '100%',
-                          borderRadius: 10,
-                        }]}
-                      >
-                        <LinearGradient
-                          colors={[
-                            'transparent',
-                            'rgba(20, 20, 20, 0.5)',
-                            'rgba(0, 0, 0, 1)'
-                          ]}
-                          style={{
-                            borderRadius: 0,
+                          styles.centerContent, 
+                          {
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
                             width: '100%',
                             height: '100%',
-                            position: 'absolute',
-                            left: 0,
-                            bottom: 0
-                          }}
-                        />
-                        <Text
-                          style={{
-                            color: 'white',
-                            fontFamily: 'OpenSans-Bold',
-                            position: 'absolute',
-                            fontSize: onTablet ? 16 : 12,
-                            left: 5,
-                            top: 10,
-                          }}
-                        >
-                          {
-                            'UPCOMING EVENT' 
+                            zIndex: 1
                           }
-                        </Text>
-                        <Text>
-                          <View>
-                            <Text
-                              style={{
-                                color: 'white',
-                                fontFamily: 'OpenSans-Bold',
-                                fontSize: onTablet ? 60 : 40,
-                                textAlign: 'center',
-                              }}
-                            >
-                              {this.state.timeDiffLive?.hours}
-                            </Text>
-                            <Text
+                        ]}
+                      >
+                        <View 
+                          style={[
+                            styles.centerContent, {
+                            height: '100%',
+                            width: '100%',
+                            borderRadius: 10,
+                          }]}
+                        >
+                          <LinearGradient
+                            colors={[
+                              'transparent',
+                              'rgba(20, 20, 20, 0.5)',
+                              'rgba(0, 0, 0, 1)'
+                            ]}
+                            style={{
+                              borderRadius: 0,
+                              width: '100%',
+                              height: '100%',
+                              position: 'absolute',
+                              left: 0,
+                              bottom: 0
+                            }}
+                          />
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontFamily: 'OpenSans-Bold',
+                              position: 'absolute',
+                              fontSize: onTablet ? 16 : 12,
+                              left: 5,
+                              top: 10,
+                            }}
+                          >
+                            {
+                              'UPCOMING EVENT' 
+                            }
+                          </Text>
+                          <Text>
+                            <View>
+                              <Text
                                 style={{
                                   color: 'white',
                                   fontFamily: 'OpenSans-Bold',
-                                  top: 0,
-                                  textAlign: 'center'
-                                }}
-                              >
-                                HOURS
-                            </Text>
-                          </View>
-                          <View>
-                            <Text
-                              style={{
-                                color: 'white',
-                                fontFamily: 'OpenSans-Bold',
-                                fontSize: onTablet ? 60 : 40,
-                              }}
-                            > : </Text>
-                            <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  top: 0,
-                                  textAlign: 'center',
-                                  color: 'transparent'
-                                }}
-                              >
-                                h
-                            </Text>
-                          </View>
-                          <View>
-                            <Text
-                              style={{
-                                color: 'white',
-                                fontFamily: 'OpenSans-Bold',
-                                fontSize: onTablet ? 60 : 40,
-                                textAlign: 'center',
-                              }}
-                            >
-                              {this.state.timeDiffLive?.minutes}
-                            </Text>
-                            <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  top: 0,
-                                  textAlign: 'center'
-                                }}
-                              >
-                                MINUTES
-                            </Text>
-                          </View>
-                          <View>
-                            <Text
-                              style={{
-                                color: 'white',
-                                fontFamily: 'OpenSans-Bold',
-                                fontSize: onTablet ? 60 : 40,
-                              }}
-                            > : </Text>
-                            <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  top: 0,
-                                  textAlign: 'center',
-                                  color: 'transparent',
-                                }}
-                              >
-                                h
-                            </Text>
-                          </View>
-                          <View>
-                            <Text
-                              style={{
-                                color: 'white',
-                                fontFamily: 'OpenSans-Bold',
-                                fontSize: onTablet ? 60 : 40,
-                                textAlign: 'center',
-                              }}
-                            >
-                              {this.state.timeDiffLive?.seconds}
-                            </Text>
-                            <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  top: 0,
+                                  fontSize: onTablet ? 60 : 40,
                                   textAlign: 'center',
                                 }}
                               >
-                                SECONDS
-                            </Text>
-                          </View>
-                        </Text>
+                                {this.state.timeDiffLive?.hours}
+                              </Text>
+                              <Text
+                                  style={{
+                                    color: 'white',
+                                    fontFamily: 'OpenSans-Bold',
+                                    top: 0,
+                                    textAlign: 'center'
+                                  }}
+                                >
+                                  HOURS
+                              </Text>
+                            </View>
+                            <View>
+                              <Text
+                                style={{
+                                  color: 'white',
+                                  fontFamily: 'OpenSans-Bold',
+                                  fontSize: onTablet ? 60 : 40,
+                                }}
+                              > : </Text>
+                              <Text
+                                  style={{
+                                    color: 'white',
+                                    fontFamily: 'OpenSans-Bold',
+                                    top: 0,
+                                    textAlign: 'center',
+                                    color: 'transparent'
+                                  }}
+                                >
+                                  h
+                              </Text>
+                            </View>
+                            <View>
+                              <Text
+                                style={{
+                                  color: 'white',
+                                  fontFamily: 'OpenSans-Bold',
+                                  fontSize: onTablet ? 60 : 40,
+                                  textAlign: 'center',
+                                }}
+                              >
+                                {this.state.timeDiffLive?.minutes}
+                              </Text>
+                              <Text
+                                  style={{
+                                    color: 'white',
+                                    fontFamily: 'OpenSans-Bold',
+                                    top: 0,
+                                    textAlign: 'center'
+                                  }}
+                                >
+                                  MINUTES
+                              </Text>
+                            </View>
+                            <View>
+                              <Text
+                                style={{
+                                  color: 'white',
+                                  fontFamily: 'OpenSans-Bold',
+                                  fontSize: onTablet ? 60 : 40,
+                                }}
+                              > : </Text>
+                              <Text
+                                  style={{
+                                    color: 'white',
+                                    fontFamily: 'OpenSans-Bold',
+                                    top: 0,
+                                    textAlign: 'center',
+                                    color: 'transparent',
+                                  }}
+                                >
+                                  h
+                              </Text>
+                            </View>
+                            <View>
+                              <Text
+                                style={{
+                                  color: 'white',
+                                  fontFamily: 'OpenSans-Bold',
+                                  fontSize: onTablet ? 60 : 40,
+                                  textAlign: 'center',
+                                }}
+                              >
+                                {this.state.timeDiffLive?.seconds}
+                              </Text>
+                              <Text
+                                  style={{
+                                    color: 'white',
+                                    fontFamily: 'OpenSans-Bold',
+                                    top: 0,
+                                    textAlign: 'center',
+                                  }}
+                                >
+                                  SECONDS
+                              </Text>
+                            </View>
+                          </Text>
+                        </View>
+                      </View>
+
+                      <View style={{ width: '100%' }}>
+                        {Platform.OS === 'ios' ? (
+                          <FastImage
+                            style={
+                              { 
+                                width: '100%',
+                                borderRadius: 7.5,
+                                aspectRatio: 16 / 9 
+                              }
+                            }
+                            source={{
+                              uri:                                
+                                this.state.liveLesson[0].thumbnail_url !== 'TBD'
+                                  ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                                      (Dimensions.get('window').width - 20) * 2
+                                    )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
+                                      this.state.liveLesson[0].thumbnail_url
+                                    }`
+                                  : fallbackThumb
+                            }}
+                            resizeMode={FastImage.resizeMode.cover}
+                          />
+                        ) : (
+                          <Image
+                            style={{ 
+                              width: '100%',
+                              borderRadius: 7.5,
+                              aspectRatio: 16 / 9
+                            }}
+                            resizeMode='cover'
+                            source={{
+                              uri:
+                                this.state.liveLesson[0].thumbnail_url !== 'TBD'
+                                  ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                                      (Dimensions.get('window').width - 20) * 2
+                                    )},ar_16:9},fl_lossy,q_auto:eco,c_fill,g_face/${
+                                      this.state.liveLesson[0].thumbnail_url
+                                    }`
+                                  : fallbackThumb
+                            }}
+                          />
+                        )}
                       </View>
                     </View>
+                    <View 
+                      style={{
+                        width: '100%',
+                        paddingVertical: 10,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <View style={{ width: '80%' }}>
+                        <Text
+                          numberOfLines={1}
+                          ellipsizeMode='tail'
+                          style={{
+                            fontSize: DeviceInfo.isTablet() ? 16 : 14,
+                            fontFamily: 'OpenSans-Bold',
+                            color: 'white',
+                          }}
+                        >
+                          Pianote Live Stream
+                        </Text>
+                        <View style={{flexDirection: 'row'}}>
+                          <Text
+                            numberOfLines={1}
+                            style={{
+                              fontFamily: 'OpenSans-Regular',
+                              color: colors.pianoteGrey,
 
+                              fontSize: sizing.descriptionText
+                            }}
+                          >
+                            {this.changeType(this.state.liveLesson[0].instructors)}
+                          </Text>
+                        </View>
+                      </View>           
+                      <TouchableOpacity
+                        style={{ paddingRight: 5 }}
+                        onPress={() => {
+                          this.addToCalendarLessonTitle = this.state.liveLesson[0].title;
+                          this.addToCalendatLessonPublishDate = this.state.liveLesson[0].live_event_start_time;
+                          this.setState({ addToCalendarModal: true });
+                        }}
+                      >
+                        <FontIcon
+                          size={sizing.infoButtonSize}
+                          name={'calendar-plus'}
+                          color={colors.pianoteRed}
+                        />
+                      </TouchableOpacity>
+                      {!this.state.liveLesson[0].is_added_to_primary_playlist ? (
+                        <TouchableOpacity
+                          onPress={() => this.addToMyList()}
+                          style={{ paddingRight: 2.5 }}
+                        >
+                          <AntIcon
+                            name={'plus'}
+                            size={sizing.myListButtonSize}
+                            color={colors.pianoteRed}
+                          />
+                        </TouchableOpacity>
+                      ) : (
+                        <TouchableOpacity
+                          style={{ paddingRight: 2.5 }}
+                          onPress={() => this.removeFromMyList()}
+                        >
+                          <AntIcon
+                            name={'close'}
+                            size={sizing.myListButtonSize}
+                            color={colors.pianoteRed}
+                          />
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                  ) : (
+                  <TouchableOpacity
+                    style={{
+                      width: Dimensions.get('window').width - 10,
+                      paddingLeft: paddingInset,
+                    }}
+                    onPress={() => this.navigate(item, index)}
+                  >
                     <View style={{ width: '100%' }}>
                       {Platform.OS === 'ios' ? (
                         <FastImage
@@ -809,81 +954,109 @@ class Lessons extends React.Component {
                         />
                       )}
                     </View>
-                  </View>
-                  <View 
-                    style={{
-                      width: '100%',
-                      paddingVertical: 10,
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center'
-                    }}
-                  >
-                    <View style={{ width: '80%' }}>
-                      <Text
-                        numberOfLines={1}
-                        ellipsizeMode='tail'
-                        style={{
-                          fontSize: DeviceInfo.isTablet() ? 16 : 14,
-                          fontFamily: 'OpenSans-Bold',
-                          color: 'white',
-                        }}
-                      >
-                        {'Pianote Live Stream' + this.state.liveLesson[0].title}
-                      </Text>
-                      <View style={{flexDirection: 'row'}}>
-                        <Text
-                          numberOfLines={1}
-                          style={{
-                            fontFamily: 'OpenSans-Regular',
-                            color: colors.pianoteGrey,
-
-                            fontSize: sizing.descriptionText
-                          }}
-                        >
-                          {this.changeType(this.state.liveLesson[0].instructors)}
-                        </Text>
-                      </View>
-                    </View>           
-                    <TouchableOpacity
-                      style={{ paddingRight: 5 }}
-                      onPress={() => {
-                        this.addToCalendarLessonTitle = this.state.liveLesson[0].title;
-                        this.addToCalendatLessonPublishDate = this.state.liveLesson[0].live_event_start_time;
-                        this.setState({ addToCalendarModal: true });
+                    <View 
+                      style={{
+                        width: '100%',
+                        paddingVertical: 10,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
                       }}
                     >
-                      <FontIcon
-                        size={sizing.infoButtonSize}
-                        name={'calendar-plus'}
-                        color={colors.pianoteRed}
-                      />
-                    </TouchableOpacity>
-                    {!this.state.liveLesson[0].is_added_to_primary_playlist ? (
-                      <TouchableOpacity
-                        onPress={() => this.addToMyList()}
-                        style={{ paddingRight: 2.5 }}
-                      >
-                        <AntIcon
-                          name={'plus'}
-                          size={sizing.myListButtonSize}
-                          color={colors.pianoteRed}
-                        />
-                      </TouchableOpacity>
-                    ) : (
-                      <TouchableOpacity
-                        style={{ paddingRight: 2.5 }}
-                        onPress={() => this.removeFromMyList()}
-                      >
-                        <AntIcon
-                          name={'close'}
-                          size={sizing.myListButtonSize}
-                          color={colors.pianoteRed}
-                        />
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                </TouchableOpacity>
+                      <View style={{ width: '80%' }}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            width: 80, 
+                            marginBottom: 5,
+                            marginTop: 2,
+                          }}
+                        >
+                          <View 
+                            style={{
+                              borderRadius: onTablet ? 5 : 3,
+                              backgroundColor: 'red',
+                              paddingHorizontal: onTablet ? 7.5 : 5,
+                            }}
+                          >
+                            <Text
+                              numberOfLines={1}
+                              ellipsizeMode='tail'
+                              style={{
+                                fontSize: onTablet ? 16 : 14,
+                                fontFamily: 'OpenSans-Regular',
+                                color: 'white',
+                              }}
+                            >
+                              LIVE
+                            </Text>
+                          </View>
+                          <View style={{ paddingHorizontal: 10, flexDirection: 'row' }}>
+                              <View style={{justifyContent: 'center'}}>
+                                <PasswordVisible 
+                                  height={onTablet ? 22 : 18}
+                                  width={onTablet ? 22 : 18}
+                                  fill={'white'}
+                                />
+                              </View>
+                              <View style={{justifyContent: 'center'}}>
+                                <Text
+                                  style={{
+                                    fontSize: DeviceInfo.isTablet() ? 14 : 12,
+                                    fontFamily: 'OpenSans-Regular',
+                                    color: 'white',
+                                    paddingLeft: 5,
+                                  }}
+                                >
+                                  129
+                                </Text>
+                              </View>
+                          </View>
+                        </View>
+                        <Text
+                          numberOfLines={1}
+                          ellipsizeMode='tail'
+                          style={{
+                            fontSize: DeviceInfo.isTablet() ? 16 : 14,
+                            fontFamily: 'OpenSans-Bold',
+                            color: 'white',
+                          }}
+                        >
+                          Pianote Live Stream
+                        </Text>
+                        <View style={{flexDirection: 'row'}}>
+                          <Text
+                            numberOfLines={1}
+                            style={{
+                              fontFamily: 'OpenSans-Regular',
+                              color: colors.pianoteGrey,
+
+                              fontSize: sizing.descriptionText
+                            }}
+                          >
+                            {this.changeType(this.state.liveLesson[0].instructors)}
+                          </Text>
+                        </View>
+                      </View>           
+                      {!this.state.liveLesson[0].is_added_to_primary_playlist ? (
+                        <TouchableOpacity
+                          onPress={() => this.addToMyList()}
+                          style={{ paddingRight: 2.5, paddingBottom: 25 }}
+                        >
+                          <AntIcon name={'plus'} size={sizing.myListButtonSize} color={colors.pianoteRed} />
+                        </TouchableOpacity>
+                      ) : (
+                        <TouchableOpacity
+                          style={{ paddingRight: 2.5, paddingBottom: 25 }}
+                          onPress={() => this.removeFromMyList()}
+                        >
+                          <AntIcon name={'close'} size={sizing.myListButtonSize} color={colors.pianoteRed} />
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  </TouchableOpacity>  
+                  )}
+                </>
               )}
               <View style={{ height: paddingInset / 2 }} />
               {onTablet ? (
