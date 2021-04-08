@@ -124,9 +124,12 @@ class LoadPage extends React.Component {
               // if pack only, set global variable to true & go to packs
               global.isPackOnly = userData.isPackOlyOwner;
               global.expirationDate = userData.expirationDate;
-              reset('PACKS');
+              if (!global.notifNavigation) {
+                reset('PACKS');
+              }
             } else if (userData.isLifetime || userData.isMember) {
               // is logged in with valid membership go to lessons
+
               if (!global.notifNavigation) {
                 reset('LESSONS');
               }
