@@ -13,7 +13,6 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
-
 import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
 import { bindActionCreators } from 'redux';
@@ -39,6 +38,7 @@ import HorizontalVideoList from '../../components/HorizontalVideoList';
 import methodService from '../../services/method.service.js';
 import { getStartedContent, getLiveContent, getAllContent } from '../../services/GetContent';
 import RestartCourse from '../../modals/RestartCourse';
+import Live from '../../modals/Live';
 import AddToCalendar from '../../modals/AddToCalendar';
 import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 import { NetworkContext } from '../../context/NetworkProvider';
@@ -80,6 +80,7 @@ class Lessons extends React.Component {
       methodIsCompleted: false,
       methodNextLessonUrl: null,
       showRestartCourse: false,
+      showLive: true, 
       lessonsStarted: true,
       refreshing: !lessonsCache,
       refreshControl: true,
@@ -173,24 +174,23 @@ class Lessons extends React.Component {
 
   async getLiveContent() {
     let content = [await getLiveContent()]
-    
-    if(!content[0].isLive) {
-      let timeNow = Math.floor(Date.now() / 1000);
-      let timeLive = (new Date(content[0].live_event_start_time)).getTime()/1000;
-      let timeDiff = timeLive - timeNow
-      var date = new Date(timeDiff*1000);
-  
-      this.setState({
-        liveLesson: content,
-        timeDiffLive: {
-          timeDiff,
-          hours: date.getHours(),
-          minutes: date.getMinutes(),
-          seconds: date.getSeconds(),
-        }
-      })
+    let timeNow = Math.floor(Date.now() / 1000);
+    let timeLive = (new Date(content[0].live_event_start_time)).getTime()/1000;
+    let timeDiff = timeLive - timeNow
+    var date = new Date(timeDiff*1000);
 
-      setInterval(() => this.timer(), 1000);
+    this.setState({
+      liveLesson: content,
+      timeDiffLive: {
+        timeDiff,
+        hours: date.getHours(),
+        minutes: date.getMinutes(),
+        seconds: date.getSeconds(),
+      }
+    })
+
+    if(!content[0].isLive) {
+      this.interval = setInterval(() => this.timer(), 1000);
     }
   }
 
@@ -198,18 +198,20 @@ class Lessons extends React.Component {
     let timeNow = Math.floor(Date.now() / 1000);
     let timeLive = (new Date(this.state.liveLesson[0].live_event_start_time)).getTime()/1000;
     let timeDiff = timeLive - timeNow
-    
     let date = new Date(timeDiff * 1000);
-
     this.setState({
       timeDiffLive: {
         timeDiff, 
-        lessThanFour: date.getHours() < 5 ? true : false,
         hours: date.getHours(),
         minutes: date.getMinutes(),
         seconds: date.getSeconds(),
       }
     })
+    if(timeDiff < 0) {
+      // if time ran out show reminder, get rid of modal
+      this.setState({showLive: true})
+      await clearInterval(this.interval)
+    }
   }
 
   initialValidData = (content, fromCache) => {
@@ -614,8 +616,8 @@ class Lessons extends React.Component {
                   >
                     LIVE
                   </Text>
-                  {this.state.timeDiffLive.timeDiff < 0 ? (
-                    // live lesson has time to countdown || time ran out --> live
+                  {this.state.timeDiffLive.timeDiff > 0 ? (
+                    // live lesson has time to countdown 
                     <TouchableOpacity
                       style={{
                         width: Dimensions.get('window').width - 10,
@@ -898,7 +900,7 @@ class Lessons extends React.Component {
                         </TouchableOpacity>
                       </View>
                     </TouchableOpacity>
-                    ) : (
+                    ) : ( // else if time ran out switch to live
                     <TouchableOpacity
                       style={{
                         width: Dimensions.get('window').width - 10,
@@ -996,6 +998,7 @@ class Lessons extends React.Component {
                                 </View>
                                 <View style={{justifyContent: 'center'}}>
                                   <Text
+                                    numberOfLines={1}
                                     style={{
                                       fontSize: DeviceInfo.isTablet() ? 14 : 12,
                                       fontFamily: 'OpenSans-Regular',
@@ -1003,7 +1006,7 @@ class Lessons extends React.Component {
                                       paddingLeft: 5,
                                     }}
                                   >
-                                    129
+                                    {this.state.liveLesson[0].chatRollViewersNumberClass}
                                   </Text>
                                 </View>
                             </View>
@@ -1050,7 +1053,7 @@ class Lessons extends React.Component {
                         )}
                       </View>
                     </TouchableOpacity>  
-                  )}
+                  )} 
                 </>
               )}
               <View style={{ height: paddingInset / 2 }} />
@@ -1162,6 +1165,24 @@ class Lessons extends React.Component {
             onRestart={() => this.onRestartMethod()}
           />
         </Modal>
+        <Modal
+          isVisible={this.state.showLive}
+          style={styles.modalContainer}
+          animation={'slideInUp'}
+          animationInTiming={250}
+          animationOutTiming={250}
+          coverScreen={true}
+          hasBackdrop={true}
+        >
+          <Live
+            liveLesson={this.state.liveLesson}
+            hideLive={() => {
+              this.setState({
+                showLive: false
+              });
+            }}
+          />
+        </Modal>        
         <NavigationBar currentPage={'LESSONS'} isMethod={true} />
       </View>
     );
