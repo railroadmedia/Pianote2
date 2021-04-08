@@ -11,7 +11,6 @@ import {
   Dimensions
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { withNavigation } from 'react-navigation';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 
@@ -19,8 +18,7 @@ const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
-class LessonComplete extends React.Component {
-  static navigationOptions = { header: null };
+export default class LessonComplete extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -200,5 +198,3 @@ const localStyles = StyleSheet.create({
     marginTop: 10
   }
 });
-
-export default withNavigation(LessonComplete);

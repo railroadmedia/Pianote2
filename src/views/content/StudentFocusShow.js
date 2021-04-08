@@ -27,6 +27,7 @@ import { getAllContent, getStudentFocusTypes } from '../../services/GetContent';
 
 import { cacheAndWritePodcasts } from '../../redux/PodcastsCacheActions';
 import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
+import { goBack, refreshOnFocusListener } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -41,12 +42,11 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 };
 
 class StudentFocusShow extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
     this.state = {
-      thumbnailUrl: props.navigation.state.params.thumbnailUrl,
+      thumbnailUrl: props.route?.params?.thumbnailUrl,
       allLessons: [],
       currentSort: 'newest',
       page: 1,
@@ -56,7 +56,7 @@ class StudentFocusShow extends React.Component {
       isPaging: false, 
       filtering: false, 
       ...this.initialValidData(
-        props.navigation.state.params.type == 'quick-tips'
+        props.route?.params?.type == 'quick-tips'
           ? props.quickTipsCache
           : props.podcastsCache,
         true
@@ -66,15 +66,11 @@ class StudentFocusShow extends React.Component {
 
   componentDidMount() {
     this.getData();
-    this.willFocusSubscription = this.props.navigation.addListener(
-      'willFocus',
-      () =>
-        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
-    );
+    this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   }
 
   componentWillUnmount() {
-    this.willFocusSubscription.remove();
+    this.refreshOnFocusListener?.();
   }
 
   getData = async () => {
@@ -82,7 +78,7 @@ class StudentFocusShow extends React.Component {
     let content = await Promise.all([
       getStudentFocusTypes(),
       getAllContent(
-        this.props.navigation.state.params.type,
+        this.props.route?.params?.type,
         this.state.currentSort,
         this.state.page,
         this.filterQuery
@@ -90,7 +86,7 @@ class StudentFocusShow extends React.Component {
     ]);
     this.metaFilters = content?.[1]?.meta?.filterOptions;
     this.props[
-      this.props.navigation.state.params.type == 'quick-tips'
+      this.props.route?.params?.type == 'quick-tips'
         ? 'cacheAndWriteQuickTips'
         : 'cacheAndWritePodcasts'
     ]({
@@ -132,8 +128,7 @@ class StudentFocusShow extends React.Component {
 
       return {
         thumbnailUrl:
-          content.thumbnail[this.props.navigation.state.params.type]
-            .thumbnailUrl,
+          content.thumbnail[this.props.route?.params?.type]?.thumbnailUrl,
         allLessons: items,
         outVideos:
           items.length == 0 || content.all.data.length < 20 ? true : false,
@@ -151,8 +146,7 @@ class StudentFocusShow extends React.Component {
   async getStudentFocus() {
     let studentFocus = await getStudentFocusTypes();
     this.setState({
-      thumbnailUrl:
-        studentFocus[this.props.navigation.state.params.type].thumbnailUrl
+      thumbnailUrl: studentFocus[this.props.route?.params?.type].thumbnailUrl
     });
   }
 
@@ -162,7 +156,7 @@ class StudentFocusShow extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     let response = await getAllContent(
-      this.props.navigation.state.params.type,
+      this.props.route?.params?.type,
       this.state.currentSort,
       this.state.page,
       this.filterQuery
@@ -240,9 +234,9 @@ class StudentFocusShow extends React.Component {
           return newContent.getField('instructor').fields[0].value;
         } else {
           return newContent.getField('instructor').name;
-        }  
+        }
       } catch (error) {
-        return '' 
+        return '';
       }
     }
   };
@@ -305,7 +299,7 @@ class StudentFocusShow extends React.Component {
           )}
           <View key={'imageContainer'} style={{ width: '100%' }}>
             <TouchableOpacity
-              onPress={() => this.props.navigation.goBack()}
+              onPress={() => goBack()}
               style={{
                 padding: 15
               }}
@@ -352,14 +346,10 @@ class StudentFocusShow extends React.Component {
             showArtist={true}
             showLength={false}
             showFilter={
-              this.props.navigation.state.params.type == 'quick-tips'
-                ? true
-                : false
+              this.props.route?.params?.type == 'quick-tips' ? true : false
             }
             showSort={
-              this.props.navigation.state.params.type == 'quick-tips'
-                ? true
-                : false
+              this.props.route?.params?.type == 'quick-tips' ? true : false
             }
             filters={this.metaFilters}
             currentSort={this.state.currentSort}

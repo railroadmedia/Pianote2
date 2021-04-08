@@ -10,28 +10,23 @@ import {
 } from 'react-native';
 import App from './App';
 import { name as appName } from './app.json';
-import { configure } from '@musora/services';
 import DeviceInfo from 'react-native-device-info';
 
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
-var PushNotification = require('react-native-push-notification');
+import PushNotification from 'react-native-push-notification';
 
-import NavigationService from './src/services/navigation.service';
 import {
   localNotification,
   notif,
   showNotification
 } from './src/services/notification.service';
 import AsyncStorage from '@react-native-community/async-storage';
+import { navigate, reset } from './AppNavigator';
+import navigationService from './src/services/navigation.service';
+import commonService from './src/services/common.service';
 
-localNotification();
 PushNotification.configure({
-  onRegister: function () {
-    PushNotification.createChannel({
-      channelId: 'pianote-app-chanel',
-      channelName: 'pianote-app-chanel'
-    });
-  },
+  onRegister: () => {},
   requestPermissions: false,
   popInitialNotification: true,
   permissions: { alert: true, sound: true },
@@ -59,14 +54,14 @@ PushNotification.configure({
       if ((isiOS || (!isiOS && userInteraction)) && !type.includes('forum')) {
         if (type.includes('aggregated')) {
           global.loadedFromNotification = true;
-          await NavigationService.navigate('PROFILE');
+          navigate('PROFILE');
         } else if (type === 'deeplink') {
-          global.notifNavigation = true;
-          NavigationService.reset('LESSONS');
-          if (uri.includes('members/learning-paths/pianote-method'))
-            NavigationService.navigate('METHOD', {});
+          commonService.urlToOpen = uri;
+          navigationService.decideWhereToRedirect();
         } else if (commentId || mobile_app_url) {
-          NavigationService.navigate('VIDEOPLAYER', {
+          global.notifNavigation = true;
+
+          navigate('VIDEOPLAYER', {
             commentId,
             url: mobile_app_url
           });
@@ -90,9 +85,16 @@ PushNotification.configure({
     }
   }
 });
+PushNotification.createChannel({
+  channelId: 'pianote-app-channel',
+  channelName: 'pianote-app-channel',
+  channelDescription: 'Pianote app channel'
+});
+localNotification();
 
 AppRegistry.registerComponent(appName, () => App);
-LogBox.ignoreAllLogs(true);
+LogBox.ignoreLogs(['Require cycle:', 'Remote debugger']);
+LogBox.ignoreAllLogs(true)
 global.fullWidth = Dimensions.get('window').width;
 global.fullHeight = Dimensions.get('window').height;
 global.token = '';
@@ -122,9 +124,3 @@ global.sizing = {
   videoTitleText: onTablet ? 16 : 14,
   verticalListTitleSmall: onTablet ? 18 : 14
 };
-
-configure({
-  baseURL: 'https://www.pianote.com',
-  'Content-Type': 'application/x-www-form-urlencoded',
-  Accept: 'application/json'
-});

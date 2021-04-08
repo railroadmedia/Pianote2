@@ -19,7 +19,6 @@ import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-community/async-storage';
-import { NavigationActions, StackActions } from 'react-navigation';
 import Orientation from 'react-native-orientation-locker';
 
 import Back from '../../assets/img/svgs/back';
@@ -40,16 +39,18 @@ import GradientFeature from '../../components/GradientFeature';
 import CustomModal from '../../modals/CustomModal.js';
 import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
 import { NetworkContext } from '../../context/NetworkProvider';
+import { goBack, navigate, reset } from '../../../AppNavigator';
+import commonService from '../../services/common.service';
+import navigationService from '../../services/navigation.service';
 
 export default class LoginCredentials extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
     if (onTablet) Orientation.unlockAllOrientations();
     else Orientation.lockToPortrait();
     this.state = {
-      email: props?.navigation?.state?.params?.email || '',
+      email: props.route?.params?.email || '',
       password: '',
       secureTextEntry: true,
       showPasswordEmailMatch: false,
@@ -114,27 +115,20 @@ export default class LoginCredentials extends React.Component {
 
       // checkmembership status
       let userData = await getUserData();
+      if (commonService.urlToOpen !== '') {
+        return navigationService.decideWhereToRedirect();
+      }
       if (userData.isPackOlyOwner) {
         // if pack only, make global & go to packs
         global.isPackOnly = userData.isPackOlyOwner;
         global.expirationDate = userData.expirationDate;
-        await this.props.navigation.dispatch(
-          StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'PACKS' })]
-          })
-        );
+        reset('PACKS');
       } else if (userData.isLifetime || userData.isMember) {
         // is logged in with valid membership
-        await this.props.navigation.dispatch(
-          StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'LESSONS' })]
-          })
-        );
+        reset('LESSONS');
       } else {
         // membership expired
-        this.props.navigation.navigate('MEMBERSHIPEXPIRED', {
+        navigate('MEMBERSHIPEXPIRED', {
           email: this.state.email,
           password: this.state.password,
           token: response.token
@@ -185,7 +179,7 @@ export default class LoginCredentials extends React.Component {
       if (this.loadingRef) this.loadingRef?.toggleLoading();
       if (resp) {
         if (resp.shouldCreateAccount) {
-          this.props.navigation.navigate('CREATEACCOUNT');
+          navigate('CREATEACCOUNT');
         } else if (resp.shouldLogin) {
           this.setState({ email: resp.email });
         }
@@ -365,7 +359,7 @@ export default class LoginCredentials extends React.Component {
                 <Text
                   style={localStyles.greyText}
                   onPress={() => {
-                    this.props.navigation.navigate('FORGOTPASSWORD');
+                    navigate('FORGOTPASSWORD');
                   }}
                 >
                   Forgot your password?
@@ -379,7 +373,7 @@ export default class LoginCredentials extends React.Component {
                 <Text
                   style={localStyles.greyText}
                   onPress={() => {
-                    this.props.navigation.navigate('SUPPORTSIGNUP');
+                    navigate('SUPPORTSIGNUP');
                   }}
                 >
                   Can't log in? Contact support.
@@ -389,7 +383,7 @@ export default class LoginCredentials extends React.Component {
             <TouchableOpacity
               onPress={() => {
                 Orientation.lockToPortrait();
-                this.props.navigation.goBack();
+                goBack();
               }}
               style={{
                 padding: 15,

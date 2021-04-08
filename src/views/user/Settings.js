@@ -29,11 +29,7 @@ import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
 import Loading from '../../components/Loading.js';
 import CustomModal from '../../modals/CustomModal.js';
 import { logOut, restorePurchase } from '../../services/UserDataAuth.js';
-import {
-  NavigationActions,
-  SafeAreaView,
-  StackActions
-} from 'react-navigation';
+import { SafeAreaView } from 'react-navigation';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import commonService from '../../services/common.service.js';
 
@@ -45,9 +41,9 @@ import { cacheAndWritePodcasts } from '../../redux/PodcastsCacheActions';
 import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
 import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
 import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
+import { goBack, navigate, reset } from '../../../AppNavigator.js';
 
 class Settings extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -162,7 +158,7 @@ class Settings extends React.Component {
         this.loadingRef?.toggleLoading();
         await logOut();
         this.loadingRef?.toggleLoading();
-        this.props.navigation.navigate('LOGINCREDENTIALS', {
+        navigate('LOGINCREDENTIALS', {
           email: restoreResponse.email
         });
 
@@ -175,18 +171,8 @@ class Settings extends React.Component {
           { cancelable: false }
         );
       } else if (restoreResponse.token) {
-        this.props.navigation.dispatch(
-          StackActions.reset({
-            index: 0,
-            actions: [
-              NavigationActions.navigate({
-                routeName: 'LESSONS'
-              })
-            ]
-          })
-        );
-      } else if (restoreResponse.shouldCreateAccount)
-        this.props.navigation.navigate('CREATEACCOUNT');
+        reset('LESSONS');
+      } else if (restoreResponse.shouldCreateAccount) navigate('CREATEACCOUNT');
     } catch (err) {
       this.loadingRef?.toggleLoading();
       this.customModal.toggle(
@@ -204,12 +190,7 @@ class Settings extends React.Component {
           barStyle={'light-content'}
         />
         <View style={localStyles.header}>
-          <TouchableOpacity
-            style={{ flex: 1 }}
-            onPress={() => {
-              this.props.navigation.goBack();
-            }}
-          >
+          <TouchableOpacity style={{ flex: 1 }} onPress={() => goBack()}>
             <Back
               width={backButtonSize}
               height={backButtonSize}
@@ -236,7 +217,7 @@ class Settings extends React.Component {
               }
             ]}
             onPress={() => {
-              this.props.navigation.navigate('PROFILESETTINGS');
+              navigate('PROFILESETTINGS');
             }}
           >
             <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
@@ -257,7 +238,7 @@ class Settings extends React.Component {
           <TouchableOpacity
             key={'notificationSettings'}
             onPress={() => {
-              this.props.navigation.navigate('NOTIFICATIONSETTINGS');
+              navigate('NOTIFICATIONSETTINGS');
             }}
             style={[styles.centerContent, localStyles.container]}
           >
@@ -319,7 +300,7 @@ class Settings extends React.Component {
           <TouchableOpacity
             style={[styles.centerContent, localStyles.container]}
             onPress={() => {
-              this.props.navigation.navigate('SUPPORT');
+              navigate('SUPPORT');
             }}
           >
             <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
@@ -340,7 +321,7 @@ class Settings extends React.Component {
           <TouchableOpacity
             style={[styles.centerContent, localStyles.container]}
             onPress={() => {
-              this.props.navigation.navigate('TERMS');
+              navigate('TERMS');
             }}
           >
             <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
@@ -361,7 +342,7 @@ class Settings extends React.Component {
           <TouchableOpacity
             style={[styles.centerContent, localStyles.container]}
             onPress={() => {
-              this.props.navigation.navigate('PRIVACYPOLICY');
+              navigate('PRIVACYPOLICY');
             }}
           >
             <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>

@@ -20,7 +20,6 @@ import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import AddToCalendar from '../modals/AddToCalendar';
-import { withNavigation } from 'react-navigation';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 
 import Relevance from '../modals/Relevance';
@@ -31,6 +30,7 @@ import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 import Filters_V2 from './Filters_V2';
 import Orientation from 'react-native-orientation-locker';
+import { navigate } from '../../AppNavigator';
 
 let greaterWDim;
 const windowDim = Dimensions.get('window');
@@ -44,8 +44,7 @@ const sortDict = {
   relevance: 'RELEVANCE'
 };
 
-class HorizontalVideoList extends React.Component {
-  static navigationOptions = { header: null };
+export default class HorizontalVideoList extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -108,9 +107,7 @@ class HorizontalVideoList extends React.Component {
   };
 
   decideWidth() {
-    if (this.props.isLive) {
-      return Dimensions.get('window').width - 20
-    } else if (onTablet) {
+    if (onTablet) {
       if (this.props.isSquare) return 125;
       else return (Dimensions.get('window').width - 4 * paddingInset) / 3;
     } else {
@@ -190,49 +187,49 @@ class HorizontalVideoList extends React.Component {
     }
     switch (content.type) {
       case 'course':
-        return this.props.navigation.navigate('PATHOVERVIEW', {
+        return navigate('PATHOVERVIEW', {
           data: content
         });
       case 'song':
         if (content.lesson_count === 1)
-          return this.props.navigation.navigate('VIDEOPLAYER', {
+          return navigate('VIDEOPLAYER', {
             id: content.currentLessonId
           });
-        return this.props.navigation.navigate('PATHOVERVIEW', {
+        return navigate('PATHOVERVIEW', {
           data: content
         });
       case 'learning-path':
-        return this.props.navigation.navigate('METHOD', {
+        return navigate('METHOD', {
           url: content.mobile_app_url
         });
       case 'learning-path-level':
-        return this.props.navigation.navigate('METHODLEVEL', {
+        return navigate('METHODLEVEL', {
           url: content.mobile_app_url,
           level: index + 1
         });
       case 'learning-path-course':
-        return this.props.navigation.push('PATHOVERVIEW', {
+        return navigate('PATHOVERVIEW', {
           data: content,
           isMethod: true
         });
       case 'learning-path-lesson':
-        return this.props.navigation.push('VIDEOPLAYER', {
+        return navigate('VIDEOPLAYER', {
           url: content.mobile_app_url
         });
       case 'pack':
-        return this.props.navigation.push('SINGLEPACK', {
+        return navigate('SINGLEPACK', {
           url: content.mobile_app_url
         });
       case 'pack-bundle':
-        return this.props.navigation.push('SINGLEPACK', {
+        return navigate('SINGLEPACK', {
           url: content.mobile_app_url
         });
       case 'pack-bundle-lesson':
-        return this.props.navigation.push('VIDEOPLAYER', {
+        return navigate('VIDEOPLAYER', {
           url: content.mobile_app_url
         });
       default:
-        return this.props.navigation.navigate('VIDEOPLAYER', {
+        return navigate('VIDEOPLAYER', {
           id: content.id
         });
     }
@@ -843,5 +840,3 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row'
   }
 });
-
-export default withNavigation(HorizontalVideoList);

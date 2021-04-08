@@ -38,6 +38,7 @@ import {
 } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 import Resources from 'Pianote2/src/assets/img/svgs/resources';
+import { goBack, navigate, push } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -45,7 +46,6 @@ const width =
 
 let greaterWDim;
 export default class SinglePack extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -55,7 +55,7 @@ export default class SinglePack extends React.Component {
       videos: [],
       id: '',
       title: '',
-      url: this.props.navigation.state.params.url,
+      url: props.route?.params?.url,
       isAddedToList: false,
       description: '',
       thumbnail: '',
@@ -89,6 +89,7 @@ export default class SinglePack extends React.Component {
     }
     // get bundles
     const response = await packsService.getPack(this.state.url);
+    console.log(response);
     const newContent = new ContentModel(response);
     const lessons = newContent.post.lessons.map(rl => {
       return new ContentModel(rl);
@@ -142,6 +143,10 @@ export default class SinglePack extends React.Component {
         isLoadingAll: false,
         refreshing: false,
         resources: newContent.post.resources
+          ? Object.keys(newContent.post.resources).map(key => {
+              return newContent.post.resources[key];
+            })
+          : null
       },
       () => {
         if (this.state.resources) this.createResourcesArr();
@@ -153,7 +158,7 @@ export default class SinglePack extends React.Component {
     const { resources } = this.state;
     const extensions = ['mp3', 'pdf', 'zip'];
 
-    resources.forEach(resource => {
+    resources?.forEach(resource => {
       let extension = this.decideExtension(resource.resource_url);
       resource.extension = extension;
       if (!extensions.includes(extension)) {
@@ -224,11 +229,11 @@ export default class SinglePack extends React.Component {
 
   navigate = row => {
     if (this.state.isDisplayingLessons) {
-      this.props.navigation.navigate('VIDEOPLAYER', {
+      navigate('VIDEOPLAYER', {
         url: row.mobile_app_url
       });
     } else {
-      this.props.navigation.push('SINGLEPACK', {
+      push('SINGLEPACK', {
         url: row.mobile_app_url
       });
     }
@@ -286,9 +291,7 @@ export default class SinglePack extends React.Component {
             }
           >
             <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.goBack();
-              }}
+              onPress={() => goBack()}
               style={[
                 styles.centerContent,
                 {
@@ -405,7 +408,7 @@ export default class SinglePack extends React.Component {
                     ) : !this.state.isStarted ? (
                       <StartIcon
                         pressed={() => {
-                          this.props.navigation.navigate('VIDEOPLAYER', {
+                          navigate('VIDEOPLAYER', {
                             url: this.state.nextLessonUrl
                           });
                         }}
@@ -414,7 +417,7 @@ export default class SinglePack extends React.Component {
                       this.state.isStarted && (
                         <ContinueIcon
                           pressed={() =>
-                            this.props.navigation.navigate('VIDEOPLAYER', {
+                            navigate('VIDEOPLAYER', {
                               url: this.state.nextLessonUrl
                             })
                           }

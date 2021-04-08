@@ -36,6 +36,7 @@ import {
 } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 import methodService from '../../services/method.service';
+import { navigate } from '../../../AppNavigator';
 
 let greaterWDim;
 const windowDim = Dimensions.get('window');
@@ -43,15 +44,14 @@ const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
 export default class Method extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
 
     this.state = {
       items: [],
-      methodIsStarted: this.props.navigation.state.params.methodIsStarted,
-      methodIsCompleted: this.props.navigation.state.params.methodIsCompleted,
+      methodIsStarted: props.route?.params.methodIsStarted,
+      methodIsCompleted: props.route?.params.methodIsCompleted,
       showRestartCourse: false,
       bannerNextLessonUrl: '',
       id: null,
@@ -225,7 +225,7 @@ export default class Method extends React.Component {
   }
 
   goToLesson(url) {
-    return this.props.navigation.navigate('VIDEOPLAYER', { url });
+    return navigate('VIDEOPLAYER', { url });
   }
 
   getSquareHeight = () => {

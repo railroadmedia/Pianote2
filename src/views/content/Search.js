@@ -35,7 +35,6 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 };
 
 export default class Search extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -55,6 +54,13 @@ export default class Search extends React.Component {
       numSearchResults: null,
       searchTerm: ''
     };
+    const url = props.route?.params?.url;
+    if (url && url.includes('term=')) {
+      let searchedText = url.split('term=')[1];
+      searchedText = searchedText.split('+').join(' ');
+      this.state.searchTerm = searchedText;
+      this.search();
+    }
   }
 
   async componentDidMount() {
@@ -128,10 +134,11 @@ export default class Search extends React.Component {
   }
 
   search = async () => {
-    this.setState({ filtering: true });
-    if (!this.context.isConnected) {
+    if (this.context && !this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
+    this.setState({ filtering: true });
+
     let term = this.state.searchTerm;
     if (term.length > 0) {
       var isNewTerm = true;
@@ -246,9 +253,9 @@ export default class Search extends React.Component {
           return newContent.getField('instructor').fields[0].value;
         } else {
           return newContent.getField('instructor').name;
-        }  
+        }
       } catch (error) {
-        return '' 
+        return '';
       }
     }
   };

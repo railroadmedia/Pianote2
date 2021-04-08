@@ -10,10 +10,9 @@ import {
   StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { withNavigation } from 'react-navigation';
+import { navigate } from '../../AppNavigator';
 
-class CheckEmail extends React.Component {
-  static navigationOptions = { header: null };
+export default class CheckEmail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -36,7 +35,7 @@ class CheckEmail extends React.Component {
             <TouchableOpacity
               style={localStyles.loginContainer}
               onPress={() => {
-                this.props.navigation.navigate('LOGINCREDENTIALS');
+                navigate('LOGINCREDENTIALS');
                 this.props.hideCheckEmail();
               }}
             >
@@ -93,5 +92,3 @@ const localStyles = StyleSheet.create({
     color: '#fb1b2f'
   }
 });
-
-export default withNavigation(CheckEmail);

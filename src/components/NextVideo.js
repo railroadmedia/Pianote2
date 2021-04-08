@@ -10,7 +10,6 @@ import {
   Dimensions
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { withNavigation } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import { ContentModel } from '@musora/models';
@@ -22,8 +21,7 @@ const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
-class NextVideo extends React.Component {
-  static navigationOptions = { header: null };
+export default class NextVideo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -201,5 +199,3 @@ const localStyles = StyleSheet.create({
     alignSelf: 'center'
   }
 });
-
-export default withNavigation(NextVideo);

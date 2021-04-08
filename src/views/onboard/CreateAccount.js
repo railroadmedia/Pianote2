@@ -25,9 +25,9 @@ import { NetworkContext } from '../../context/NetworkProvider.js';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
 import Orientation from 'react-native-orientation-locker';
 import DeviceInfo from 'react-native-device-info';
+import { navigate } from '../../../AppNavigator';
 
 export default class CreateAccount extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -59,9 +59,9 @@ export default class CreateAccount extends React.Component {
           ) {
             this.setState({ showValidateEmail: true });
           } else {
-            this.props.navigation.navigate('CREATEACCOUNT2', {
+            navigate('CREATEACCOUNT2', {
               email: this.state.email,
-              purchase: this.props.navigation.state.params?.purchase
+              purchase: this.props.route?.params?.purchase
             });
           }
         })
@@ -92,7 +92,7 @@ export default class CreateAccount extends React.Component {
             behavior={`${isiOS ? 'padding' : ''}`}
           >
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('LOGINCREDENTIALS')}
+              onPress={() => navigate('LOGINCREDENTIALS')}
               style={localStyles.createAccountContainer}
             >
               <Back

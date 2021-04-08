@@ -16,9 +16,9 @@ import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
+import { goBack } from '../../../AppNavigator';
 
 export default class Support extends React.Component {
-  static navigationOptions = { header: null };
   constructor(props) {
     super(props);
     this.state = {};
@@ -26,7 +26,6 @@ export default class Support extends React.Component {
 
   componentDidMount = async () => {
     const userData = await getUserData();
-    console.log(userData);
     await Intercom.registerIdentifiedUser({
       userId: 'musora_' + userData.id.toString()
     });
@@ -103,7 +102,7 @@ export default class Support extends React.Component {
               ]}
             >
               <TouchableOpacity
-                onPress={() => this.props.navigation.goBack()}
+                onPress={() => goBack()}
                 style={[
                   styles.centerContent,
                   {

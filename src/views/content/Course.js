@@ -21,6 +21,7 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import NavigationBar from '../../components/NavigationBar';
 
 import { cacheAndWriteCourses } from '../../redux/CoursesCacheActions';
+import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -35,7 +36,6 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 };
 
 class Course extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -56,16 +56,16 @@ class Course extends React.Component {
   }
 
   componentDidMount() {
+    let deepFilters = decodeURIComponent(this.props.route?.params?.url).split(
+      '?'
+    )[1];
+    this.filterQuery = deepFilters && `&${deepFilters}`;
     this.getContent();
-    this.willFocusSubscription = this.props.navigation.addListener(
-      'willFocus',
-      () =>
-        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
-    );
+    this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   }
 
   componentWillUnmount() {
-    this.willFocusSubscription.remove();
+    this.refreshOnFocusListener?.();
   }
 
   async getContent() {
@@ -261,7 +261,7 @@ class Course extends React.Component {
                 hideFilterButton={true}
                 Title={'CONTINUE'}
                 seeAll={() =>
-                  this.props.navigation.navigate('SEEALL', {
+                  navigate('SEEALL', {
                     title: 'Continue',
                     parent: 'Courses'
                   })
@@ -274,7 +274,7 @@ class Course extends React.Component {
                 isTile={true}
                 Title={'COURSES'}
                 seeAll={() =>
-                  this.props.navigation.navigate('SEEALL', {
+                  navigate('SEEALL', {
                     title: 'Courses',
                     parent: 'Courses'
                   })

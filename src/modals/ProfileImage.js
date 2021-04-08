@@ -7,12 +7,10 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
 
-class ProfileImage extends React.Component {
-  static navigationOptions = { header: null };
+export default class ProfileImage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -73,5 +71,3 @@ const localStyles = StyleSheet.create({
     marginTop: 10
   }
 });
-
-export default withNavigation(ProfileImage);

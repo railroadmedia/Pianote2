@@ -17,6 +17,7 @@ import IconFeather from 'react-native-vector-icons/Feather';
 import { SafeAreaView } from 'react-navigation';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { ContentModel } from '@musora/models';
+import { navigate } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -27,7 +28,7 @@ const factor = (height / 812 + width / 375) / 2;
 
 export default class Downloads extends React.Component {
   static contextType = NetworkContext;
-  static navigationOptions = { header: null };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -62,7 +63,7 @@ export default class Downloads extends React.Component {
   navigate = item => {
     if (item.overview) {
       item = new ContentModel(item.overview);
-      return this.props.navigation.navigate('PATHOVERVIEW', {
+      return navigate('PATHOVERVIEW', {
         data: {
           isLiked: item.post.is_liked_by_current_user,
           id: item.post.id,
@@ -102,11 +103,11 @@ export default class Downloads extends React.Component {
           }))
       });
     } else if (item?.lesson.type === 'learning-path-lesson') {
-      this.props.navigation.navigate('VIDEOPLAYER', {
+      navigate('VIDEOPLAYER', {
         url: item.lesson.mobile_app_url
       });
     } else {
-      this.props.navigation.navigate('VIDEOPLAYER', {
+      navigate('VIDEOPLAYER', {
         id: item.id
       });
     }

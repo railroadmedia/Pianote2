@@ -27,7 +27,7 @@ const factor = (height / 812 + width / 375) / 2;
 
 export default class VideoPlayerSong extends React.Component {
   static contextType = NetworkContext;
-  static navigationOptions = { header: null };
+
   constructor(props) {
     super(props);
     this.state = {

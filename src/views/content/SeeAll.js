@@ -23,6 +23,7 @@ import {
   getStartedContent
 } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
+import { goBack } from '../../../AppNavigator.js';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -50,13 +51,12 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 };
 
 export default class SeeAll extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
     this.state = {
-      title: this.props.navigation.state.params.title, // In Progress, Completed, Continue
-      parent: this.props.navigation.state.params.parent, // My List, Packs, Student Focus, Foundations, Courses
+      title: props.route?.params?.title, // In Progress, Completed, Continue
+      parent: props.route?.params?.parent, // My List, Packs, Student Focus, Foundations, Courses
       allLessons: [],
       currentSort: 'newest',
       page: 1,
@@ -69,6 +69,10 @@ export default class SeeAll extends React.Component {
   }
 
   componentDidMount() {
+    let deepFilters = decodeURIComponent(this.props.route?.params?.url).split(
+      '?'
+    )[1];
+    this.filterQuery = deepFilters && `&${deepFilters}`;
     this.getAllLessons();
   }
 
@@ -215,9 +219,9 @@ export default class SeeAll extends React.Component {
           return newContent.getField('instructor').fields[0].value;
         } else {
           return newContent.getField('instructor').name;
-        }  
+        }
       } catch (error) {
-        return '' 
+        return '';
       }
     }
   };
@@ -266,10 +270,7 @@ export default class SeeAll extends React.Component {
           barStyle={'light-content'}
         />
         <View style={styles.childHeader}>
-          <TouchableOpacity
-            style={{ flex: 1 }}
-            onPress={() => this.props.navigation.goBack()}
-          >
+          <TouchableOpacity style={{ flex: 1 }} onPress={() => goBack()}>
             <Back
               width={backButtonSize}
               height={backButtonSize}
@@ -296,8 +297,8 @@ export default class SeeAll extends React.Component {
             items={this.state.allLessons}
             isLoading={this.state.isLoadingAll}
             isPaging={this.state.isPaging}
-            title={this.state.title} 
-            type={typeDict[this.state.parent]} 
+            title={this.state.title}
+            type={typeDict[this.state.parent]}
             showFilter={true}
             hideFilterButton={this.state.parent == 'Lessons' ? false : false} // only show filter button on lessons
             showType={false}

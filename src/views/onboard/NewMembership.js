@@ -27,12 +27,13 @@ import { signUp, restorePurchase } from '../../services/UserDataAuth';
 import CustomModal from '../../modals/CustomModal';
 import Loading from '../../components/Loading';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
+import { goBack, navigate } from '../../../AppNavigator';
 
 let purchaseErrorSubscription = null;
 let purchaseUpdateSubscription = null;
 
 const skus = Platform.select({
-  android: ['pianote_app_1_month_member', 'pianote_app_1_year_member'],
+  android: ['pianote_app_1_year_2021', 'pianote_app_1_month_2021'],
   ios: ['pianote_app_1_month_membership', 'pianote_app_1_year_membership']
 });
 
@@ -44,15 +45,14 @@ const height =
 const fontIndex = width / 50;
 
 export default class NewMembership extends React.Component {
-  static navigationOptions = { header: null, subscriptions: [] };
   constructor(props) {
     super(props);
     Orientation.lockToPortrait();
     this.state = {
-      newUser: this.props.navigation.state.params.data.type,
-      email: this.props.navigation.state.params.data.email,
-      password: this.props.navigation.state.params.data.password,
-      token: this.props.navigation.state.params.data.token,
+      newUser: props.route?.params?.data.type,
+      email: props.route?.params?.data.email,
+      password: props.route?.params?.data.password,
+      token: props.route?.params?.data.token,
       isExpired: false,
       benefits: [
         'Pay nothing for 7 days.',
@@ -120,7 +120,7 @@ export default class NewMembership extends React.Component {
           await RNIap.finishTransaction(purchase, false);
           // if new user no pack only then create account
           if (this.state.newUser === 'SIGNUP' && global.isPackOnly == false) {
-            this.props.navigation.navigate('CREATEACCOUNT3', {
+            navigate('CREATEACCOUNT3', {
               data: {
                 email: this.state.email,
                 password: this.state.password,
@@ -128,7 +128,7 @@ export default class NewMembership extends React.Component {
               }
             });
           } else {
-            this.props.navigation.navigate('LOADPAGE');
+            navigate('LOADPAGE');
           }
         } catch (e) {}
       } else {
@@ -174,10 +174,9 @@ export default class NewMembership extends React.Component {
       let resp = await restorePurchase(reducedPurchase);
       this.loadingRef?.toggleLoading();
       if (resp)
-        if (resp.shouldCreateAccount)
-          this.props.navigation.navigate('CREATEACCOUNT');
+        if (resp.shouldCreateAccount) navigate('CREATEACCOUNT');
         else if (resp.shouldLogin)
-          this.props.navigation.navigate('LOGINCREDENTIALS', {
+          navigate('LOGINCREDENTIALS', {
             email: resp.email
           });
     } catch (err) {
@@ -209,10 +208,10 @@ export default class NewMembership extends React.Component {
               style={{ position: 'absolute', left: 15, padding: 5 }}
               onPress={() => {
                 if (onTablet) Orientation.unlockAllOrientations();
-                this.props.navigation.state.params.type == 'SIGNUP' ||
+                this.props.route?.params?.type == 'SIGNUP' ||
                 global.isPackOnly == true
-                  ? this.props.navigation.goBack()
-                  : this.props.navigation.navigate('LOGINCREDENTIALS');
+                  ? goBack()
+                  : navigate('LOGINCREDENTIALS');
               }}
             >
               <Back
@@ -454,7 +453,7 @@ export default class NewMembership extends React.Component {
               <TouchableOpacity
                 onPress={() => {
                   this.state.newUser == 'SIGNUP'
-                    ? this.props.navigation.navigate('LOGINCREDENTIALS')
+                    ? navigate('LOGINCREDENTIALS')
                     : this.restorePurchases();
                 }}
                 style={{ paddingTop: 20 }}
@@ -477,9 +476,7 @@ export default class NewMembership extends React.Component {
                     justifyContent: 'center',
                     alignItems: 'center'
                   }}
-                  onPress={() => {
-                    this.props.navigation.navigate('TERMS');
-                  }}
+                  onPress={() => navigate('TERMS')}
                 >
                   <Text
                     style={[

@@ -4,12 +4,10 @@
 import React from 'react';
 import { View, SafeAreaView, TouchableOpacity } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { withNavigation } from 'react-navigation';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import IdleTimerManager from 'react-native-idle-timer';
 
-class SoundSlice extends React.Component {
-  static navigationOptions = { header: null };
+export default class SoundSlice extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -105,5 +103,3 @@ class SoundSlice extends React.Component {
     );
   };
 }
-
-export default withNavigation(SoundSlice);

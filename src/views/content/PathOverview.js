@@ -41,6 +41,7 @@ import methodService from '../../services/method.service';
 import foundationsService from '../../services/foundations.service';
 import NextVideo from '../../components/NextVideo';
 import { ScrollView } from 'react-native-gesture-handler';
+import { goBack, navigate } from '../../../AppNavigator';
 
 let greaterWDim;
 const windowDim = Dimensions.get('window');
@@ -49,25 +50,25 @@ const width =
 
 export default class PathOverview extends React.Component {
   static contextType = NetworkContext;
-  static navigationOptions = { header: null };
+
   constructor(props) {
     super(props);
     this.state = {
-      data: this.props.navigation.state.params.data,
-      items: this.props.navigation.state.params.items || [],
-      isAddedToList: this.props.navigation.state.params.data?.isAddedToList,
-      thumbnail: this.props.navigation.state.params.data?.thumbnail,
+      data: props.route?.params?.data,
+      items: props.route?.params?.items || [],
+      isAddedToList: props.route?.params?.data?.isAddedToList,
+      thumbnail: props.route?.params?.data?.thumbnail,
       artist:
-        typeof this.props.navigation.state.params.data?.artist == 'object'
-          ? this.props.navigation.state.params.data?.artist.join(', ')
-          : this.props.navigation.state.params.data?.artist,
-      isMethod: this.props.navigation.state.params.isMethod,
-      isFoundations: this.props.navigation.state.params.isFoundations,
-      xp: this.props.navigation.state.params.data.total_xp,
-      started: this.props.navigation.state.params.data.started,
-      completed: this.props.navigation.state.params.data.completed,
-      nextLesson: this.props.navigation.state.params.data.next_lesson,
-      difficulty: this.props.navigation.state.params.data.difficulty,
+        typeof props.route?.params?.data?.artist == 'object'
+          ? props.route?.params?.data?.artist.join(', ')
+          : props.route?.params?.data?.artist,
+      isMethod: props.route?.params?.isMethod,
+      isFoundations: props.route?.params?.isFoundations,
+      xp: props.route?.params?.data?.total_xp,
+      started: props.route?.params?.data?.started,
+      completed: props.route?.params?.data?.completed,
+      nextLesson: props.route?.params?.data?.next_lesson,
+      difficulty: props.route?.params?.data?.difficulty,
       type: '',
       showInfo: false,
       totalLength: 0,
@@ -75,9 +76,7 @@ export default class PathOverview extends React.Component {
       likeCount: 0,
       showRestartCourse: false,
       progress: 0,
-      isLoadingAll: this.props.navigation.state.params.items?.length
-        ? false
-        : true,
+      isLoadingAll: props.route?.params?.items?.length ? false : true,
       refreshing: false,
       levelNum: 0,
       bannerNextLessonUrl: '',
@@ -110,7 +109,7 @@ export default class PathOverview extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     let res;
-    if (this.state.foundations) {
+    if (this.state.isFoundations) {
       res = await foundationsService.getUnit(this.state.data.mobile_app_url);
     } else if (this.state.isMethod) {
       res = await methodService.getMethodContent(
@@ -264,12 +263,12 @@ export default class PathOverview extends React.Component {
   goToLesson(lesson) {
     if (lesson) {
       if (this.state.isMethod) {
-        return this.props.navigation.navigate('VIDEOPLAYER', {
+        return navigate('VIDEOPLAYER', {
           url: lesson,
           parentId: this.state.data?.id
         });
       }
-      return this.props.navigation.navigate('VIDEOPLAYER', {
+      return navigate('VIDEOPLAYER', {
         id: lesson,
         parentId: this.state.data?.id
       });
@@ -288,7 +287,7 @@ export default class PathOverview extends React.Component {
             resizeMode: 'cover'
           }}
           source={{
-            uri: thumbnail.includes('https')
+            uri: thumbnail?.includes('https')
               ? `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
                   width
                 )},ar_${this.getAspectRatio()},${
@@ -300,9 +299,7 @@ export default class PathOverview extends React.Component {
           }}
         >
           <TouchableOpacity
-            onPress={() => {
-              this.props.navigation.goBack();
-            }}
+            onPress={() => goBack()}
             style={[
               styles.centerContent,
               {
@@ -747,7 +744,7 @@ export default class PathOverview extends React.Component {
                     aspectRatio: 16 / 9
                   }}
                   source={{
-                    uri: item.thumbnail.includes('https')
+                    uri: item.thumbnail?.includes('https')
                       ? `https://cdn.musora.com/image/fetch/w_${Math.round(
                           width
                         )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${

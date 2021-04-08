@@ -21,9 +21,9 @@ import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import commonService from '../../services/common.service';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { SafeAreaView } from 'react-navigation';
+import { goBack } from '../../../AppNavigator';
 
 export default class NotificationSettings extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -43,14 +43,15 @@ export default class NotificationSettings extends React.Component {
     getUserData().then(userData =>
       this.setState({
         notifications_summary_frequency_minutes:
-          userData.notifications_summary_frequency_minutes,
+          userData?.notifications_summary_frequency_minutes,
         notify_on_forum_followed_thread_reply:
-          userData.notify_on_forum_followed_thread_reply,
-        notify_on_forum_post_like: userData.notify_on_forum_post_like,
-        notify_on_forum_post_reply: userData.notify_on_forum_post_reply,
-        notify_on_lesson_comment_like: userData.notify_on_lesson_comment_like,
-        notify_on_lesson_comment_reply: userData.notify_on_lesson_comment_reply,
-        notify_weekly_update: userData.notify_weekly_update,
+          userData?.notify_on_forum_followed_thread_reply,
+        notify_on_forum_post_like: userData?.notify_on_forum_post_like,
+        notify_on_forum_post_reply: userData?.notify_on_forum_post_reply,
+        notify_on_lesson_comment_like: userData?.notify_on_lesson_comment_like,
+        notify_on_lesson_comment_reply:
+          userData?.notify_on_lesson_comment_reply,
+        notify_weekly_update: userData?.notify_weekly_update,
         isLoading: false
       })
     );
@@ -110,7 +111,7 @@ export default class NotificationSettings extends React.Component {
               style={{ flex: 1 }}
               onPress={() => {
                 this.state.currentlyView == 'Profile Settings'
-                  ? this.props.navigation.goBack()
+                  ? goBack()
                   : this.setState({
                       currentlyView: 'Profile Settings'
                     });

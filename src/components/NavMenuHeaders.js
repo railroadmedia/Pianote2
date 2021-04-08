@@ -3,21 +3,17 @@
  */
 import React from 'react';
 import { View, Text, TouchableOpacity, StatusBar } from 'react-native';
-import {
-  StackActions,
-  withNavigation,
-  NavigationActions
-} from 'react-navigation';
 import Modal from 'react-native-modal';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import { NetworkContext } from '../context/NetworkProvider';
 import { SafeAreaView } from 'react-navigation';
+import { navigate, reset } from '../../AppNavigator';
 
-class NavMenuHeaders extends React.Component {
+export default class NavMenuHeaders extends React.Component {
   static contextType = NetworkContext;
-  static navigationOptions = { header: null };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -51,16 +47,7 @@ class NavMenuHeaders extends React.Component {
             onPress={() => {
               !this.context.isConnected
                 ? this.context.showNoConnectionAlert()
-                : this.props.navigation.dispatch(
-                    StackActions.reset({
-                      index: 0,
-                      actions: [
-                        NavigationActions.navigate({
-                          routeName: isPackOnly ? 'PACKS' : 'LESSONS'
-                        })
-                      ]
-                    })
-                  );
+                : reset(isPackOnly ? 'PACKS' : 'LESSONS');
             }}
             style={{
               height: onTablet ? 45 : 30,
@@ -84,8 +71,8 @@ class NavMenuHeaders extends React.Component {
                   ? this.context.showNoConnectionAlert()
                   : isPackOnly
                   ? expirationDate
-                    ? this.props.navigation.navigate('MEMBERSHIPEXPIRED')
-                    : this.props.navigation.navigate('NEWMEMBERSHIP', {
+                    ? navigate('MEMBERSHIPEXPIRED')
+                    : navigate('NEWMEMBERSHIP', {
                         data: { type: 'PACKONLY' }
                       })
                   : this.setState({ showModalMenu: true });
@@ -125,7 +112,7 @@ class NavMenuHeaders extends React.Component {
               onPress={() => {
                 !this.context.isConnected
                   ? this.context.showNoConnectionAlert()
-                  : this.props.navigation.navigate('PACKS');
+                  : navigate('PACKS');
               }}
               style={[
                 styles.centerContent,
@@ -154,7 +141,7 @@ class NavMenuHeaders extends React.Component {
               onPress={() => {
                 !this.context.isConnected
                   ? this.context.showNoConnectionAlert()
-                  : this.props.navigation.navigate('MYLIST');
+                  : navigate('MYLIST');
               }}
               style={styles.centerContent}
             >
@@ -198,5 +185,3 @@ class NavMenuHeaders extends React.Component {
     );
   };
 }
-
-export default withNavigation(NavMenuHeaders);

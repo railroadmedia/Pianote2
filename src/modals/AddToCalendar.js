@@ -10,11 +10,9 @@ import {
   StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { withNavigation } from 'react-navigation';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
 
-class AddToCalendar extends React.Component {
-  static navigationOptions = { header: null };
+export default class AddToCalendar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -102,5 +100,3 @@ const localStyles = StyleSheet.create({
     color: 'white'
   }
 });
-
-export default withNavigation(AddToCalendar);

@@ -49,6 +49,19 @@ export async function getAllContent(type, sort, page, filters = '') {
   }
 }
 
+export async function getLiveContent() {
+  try {
+    let response = await commonService.tryCall(
+      `${commonService.rootUrl}//musora-api/live-event?forced-upcoming-content-id=275886`,
+      'GET'                                          //forced-content-id
+    );
+    console.log('live : ', response)
+    return response;
+  } catch (error) {
+    return new Error(error);
+  }
+}
+
 export async function getNewContent(type) {
   try {
     if (type == '') {

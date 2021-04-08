@@ -34,6 +34,7 @@ import {
 } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 import methodService from '../../services/method.service';
+import { goBack, navigate } from '../../../AppNavigator';
 
 let greaterWDim;
 const windowDim = Dimensions.get('window');
@@ -41,13 +42,12 @@ const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
 export default class MethodLevel extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
     this.state = {
       items: [],
-      level: this.props.navigation.state.params.level,
+      level: props.route?.params.level,
       id: null,
       isStarted: false,
       isCompleted: false,
@@ -82,7 +82,7 @@ export default class MethodLevel extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     let response = await methodService.getMethodContent(
-      this.props.navigation.state.params.url
+      this.props.route?.params.url
     );
     const newContent = response.courses.map(data => {
       return new ContentModel(data);
@@ -213,7 +213,7 @@ export default class MethodLevel extends React.Component {
           }
         >
           <TouchableOpacity
-            onPress={() => this.props.navigation.goBack()}
+            onPress={() => goBack()}
             style={[
               styles.centerContent,
               {
@@ -337,7 +337,7 @@ export default class MethodLevel extends React.Component {
                     <ContinueIcon
                       isMethod={true}
                       pressed={() =>
-                        this.props.navigation.navigate('VIDEOPLAYER', {
+                        navigate('VIDEOPLAYER', {
                           url: this.state.bannerNextLessonUrl
                         })
                       }
@@ -346,7 +346,7 @@ export default class MethodLevel extends React.Component {
                     <StartIcon
                       isMethod={true}
                       pressed={() =>
-                        this.props.navigation.navigate('VIDEOPLAYER', {
+                        navigate('VIDEOPLAYER', {
                           url: this.state.bannerNextLessonUrl
                         })
                       }
@@ -461,7 +461,7 @@ export default class MethodLevel extends React.Component {
             progress={this.state.progress}
             type='LEVEL'
             onNextLesson={() =>
-              this.props.navigation.navigate('VIDEOPLAYER', {
+              navigate('VIDEOPLAYER', {
                 url: this.state.nextLesson.post.mobile_app_url
               })
             }
