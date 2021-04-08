@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
@@ -52,9 +51,9 @@ class StudentFocusShow extends React.Component {
       page: 1,
       outVideos: false,
       refreshing: false,
-      isLoadingAll: true, 
-      isPaging: false, 
-      filtering: false, 
+      isLoadingAll: true,
+      isPaging: false,
+      filtering: false,
       ...this.initialValidData(
         props.route?.params?.type == 'quick-tips'
           ? props.quickTipsCache
@@ -103,35 +102,14 @@ class StudentFocusShow extends React.Component {
 
   initialValidData = (content, fromCache) => {
     try {
-      const newContent = content.all.data.map(data => {
-        return new ContentModel(data);
-      });
-
-      let items = [];
-      for (let i in newContent) {
-        items.push({
-          title: newContent[i].getField('title'),
-          artist: this.getArtist(newContent[i]),
-          thumbnail: newContent[i].getData('thumbnail_url'),
-          publishedOn:
-            newContent[i].publishedOn.slice(0, 10) +
-            'T' +
-            newContent[i].publishedOn.slice(11, 16),
-          type: newContent[i].post.type,
-          id: newContent[i].id,
-          isAddedToList: newContent[i].isAddedToList,
-          isStarted: newContent[i].isStarted,
-          isCompleted: newContent[i].isCompleted,
-          progress_percent: newContent[i].post.progress_percent
-        });
-      }
+      const newContent = content.all.data;
 
       return {
         thumbnailUrl:
           content.thumbnail[this.props.route?.params?.type]?.thumbnailUrl,
-        allLessons: items,
+        allLessons: newContent,
         outVideos:
-          items.length == 0 || content.all.data.length < 20 ? true : false,
+          newContent.length == 0 || newContent.length < 20 ? true : false,
         page: this.state?.page + 1 || 1,
         isLoadingAll: false,
         refreshing: fromCache,
@@ -162,31 +140,14 @@ class StudentFocusShow extends React.Component {
       this.filterQuery
     );
     this.metaFilters = response?.meta?.filterOptions;
-    const newContent = await response.data.map(data => {
-      return new ContentModel(data);
-    });
+    const newContent = response.data;
 
-    let items = [];
-    for (let i in newContent) {
-      items.push({
-        title: newContent[i].getField('title'),
-        artist: this.getArtist(newContent[i]),
-        thumbnail: newContent[i].getData('thumbnail_url'),
-        publishedOn:
-          newContent[i].publishedOn.slice(0, 10) +
-          'T' +
-          newContent[i].publishedOn.slice(11, 16),
-        type: newContent[i].post.type,
-        id: newContent[i].id,
-        isAddedToList: newContent[i].isAddedToList,
-        isStarted: newContent[i].isStarted,
-        isCompleted: newContent[i].isCompleted,
-        progress_percent: newContent[i].post.progress_percent
-      });
-    }
     this.setState(state => ({
-      allLessons: isLoadingMore ? state.allLessons.concat(items) : items,
-      outVideos: items.length == 0 || response.data.length < 20 ? true : false,
+      allLessons: isLoadingMore
+        ? state.allLessons.concat(newContent)
+        : newContent,
+      outVideos:
+        newContent.length == 0 || newContent.length < 20 ? true : false,
       page: this.state.page + 1,
       isLoadingAll: false,
       refreshing: false,

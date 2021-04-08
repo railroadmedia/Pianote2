@@ -11,7 +11,6 @@ import {
   RefreshControl,
   StatusBar
 } from 'react-native';
-import { ContentModel } from '@musora/models';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
 import NavigationBar from '../../components/NavigationBar.js';
@@ -90,15 +89,7 @@ export default class SeeAll extends React.Component {
         this.state.title == 'In Progress' ? 'started' : 'completed'
       );
     } else if (this.state.parent === 'Lessons') {
-      // lessons continue and new
-      if (this.state.title.slice(0, 3) == 'New') {
-        response = await seeAllContent(
-          'lessons',
-          'new',
-          this.state.page,
-          this.filterQuery
-        );
-      } else if (this.state.title.includes('All')) {
+      if (this.state.title.includes('All')) {
         response = await getAllContent(
           '',
           'newest',
@@ -150,50 +141,14 @@ export default class SeeAll extends React.Component {
         'quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=podcast'
       );
     }
+    console.log(response);
     this.metaFilters = response?.meta?.filterOptions;
-    const newContent = await response.data.map(data => {
-      return new ContentModel(data);
-    });
-
-    let items = [];
-    for (let i in newContent) {
-      items.push({
-        title: newContent[i].getField('title'),
-        artist: this.getArtist(newContent[i]),
-        thumbnail: newContent[i].getData('thumbnail_url'),
-        type: newContent[i].post.type,
-        publishedOn:
-          newContent[i].publishedOn.slice(0, 10) +
-          'T' +
-          newContent[i].publishedOn.slice(11, 16),
-        description: newContent[i]
-          .getData('description')
-          .replace(/(<([^>]+)>)/g, '')
-          .replace(/&nbsp;/g, '')
-          .replace(/&amp;/g, '&')
-          .replace(/&#039;/g, "'")
-          .replace(/&quot;/g, '"')
-          .replace(/&gt;/g, '>')
-          .replace(/&lt;/g, '<'),
-        xp: newContent[i].post.xp,
-        id: newContent[i].id,
-        duration: i,
-        like_count: newContent[i].post.like_count,
-        mobile_app_url: newContent[i].post.mobile_app_url,
-        lesson_count: newContent[i].post.lesson_count,
-        currentLessonId: newContent[i].post?.song_part_id,
-        isLiked: newContent[i].post.is_liked_by_current_user,
-        isAddedToList: newContent[i].isAddedToList,
-        isStarted: newContent[i].isStarted,
-        isCompleted: newContent[i].isCompleted,
-        bundle_count: newContent[i].post.bundle_count,
-        progress_percent: newContent[i].post.progress_percent
-      });
-    }
+    const newContent = response.data;
 
     this.setState(state => ({
-      allLessons: loadMore ? state.allLessons.concat(items) : items,
-      outVideos: items.length == 0 || response.data.length < 20 ? true : false,
+      allLessons: loadMore ? state.allLessons.concat(newContent) : newContent,
+      outVideos:
+        newContent.length == 0 || newContent.length < 20 ? true : false,
       page: this.state.page + 1,
       isLoadingAll: false,
       refreshing: false,

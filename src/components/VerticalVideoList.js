@@ -550,7 +550,7 @@ export default class VerticalVideoList extends React.Component {
                       fontFamily: 'OpenSans-Regular'
                     }}
                   >
-                    {row.artist}
+                    {row.artist || row.instructors.join(', ')}
                   </Text>
                 )}
               </View>

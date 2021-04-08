@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 
 import {
@@ -81,34 +80,19 @@ class StudentFocusCatalog extends React.Component {
 
   initialValidData = (content, fromCache) => {
     try {
-      const newContent = content.inProgress.data.map(data => {
-        return new ContentModel(data);
-      });
+      const newContent = content.inProgress.data;
       let shows = content.types;
       shows = Object.keys(shows).map(key => {
         shows[key].type = key;
         return shows[key];
       });
-      let items = [];
-      for (let i in newContent) {
-        items.push({
-          title: newContent[i].getField('title'),
-          artist: newContent[i].getField('instructor').fields[0].value,
-          thumbnail: newContent[i].getData('thumbnail_url'),
-          type: newContent[i].post.type,
-          id: newContent[i].id,
-          isAddedToList: newContent[i].isAddedToList,
-          isStarted: newContent[i].isStarted,
-          isCompleted: newContent[i].isCompleted,
-          progress_percent: newContent[i].post.progress_percent
-        });
-      }
+
       return {
-        progressStudentFocus: items,
+        progressStudentFocus: newContent,
         studentFocus: shows,
         refreshing: false,
         refreshControl: fromCache,
-        started: items.length !== 0
+        started: newContent.length !== 0
       };
     } catch (e) {
       return {};

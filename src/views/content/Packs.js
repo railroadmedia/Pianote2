@@ -15,7 +15,6 @@ import {
 import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
 import { bindActionCreators } from 'redux';
-import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 
 import StartIcon from '../../components/StartIcon';

@@ -16,7 +16,6 @@ import {
 import Modal from 'react-native-modal';
 import { Download_V2 } from 'RNDownload';
 import { SafeAreaView } from 'react-navigation';
-import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import AntIcon from 'react-native-vector-icons/AntDesign';

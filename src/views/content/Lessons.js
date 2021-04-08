@@ -17,7 +17,6 @@ import {
 import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
 import { bindActionCreators } from 'redux';
-import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import DeviceInfo from 'react-native-device-info';
 import messaging from '@react-native-firebase/messaging';
@@ -147,7 +146,6 @@ class Lessons extends React.Component {
       method: content[0],
       inProgress: content[2]
     });
-    console.log(content[0]);
     this.setState(
       this.initialValidData({
         all: content[1],
@@ -184,17 +182,9 @@ class Lessons extends React.Component {
     try {
       if (!content) return {};
       let { method } = content;
-      let allVideos = this.setData(
-        content.all.data.map(data => {
-          return new ContentModel(data);
-        })
-      );
+      let allVideos = content.all.data;
 
-      let inprogressVideos = this.setData(
-        content.inProgress.data.map(data => {
-          return new ContentModel(data);
-        })
-      );
+      let inprogressVideos = content.inProgress.data;
       AsyncStorage.multiSet([
         ['methodIsStarted', method.started.toString()],
         ['methodIsCompleted', method.completed.toString()]
@@ -207,7 +197,7 @@ class Lessons extends React.Component {
         allLessons: allVideos,
         progressLessons: inprogressVideos,
         outVideos:
-          allVideos.length == 0 || content.all.data.length < 20 ? true : false,
+          allVideos.length == 0 || allVideos.length < 20 ? true : false,
         filtering: false,
         isPaging: false,
         lessonsStarted: inprogressVideos.length !== 0,
@@ -251,58 +241,16 @@ class Lessons extends React.Component {
         this.filterQuery
       );
       this.metaFilters = response?.meta?.filterOptions;
-      const newContent = await response.data.map(data => {
-        return new ContentModel(data);
-      });
-      let items = this.setData(newContent);
+      let items = response.data;
 
       this.setState({
         allLessons: [...this.state.allLessons, ...items],
-        outVideos:
-          items.length == 0 || response.data.length < 20 ? true : false,
+        outVideos: items.length == 0 || items.length < 20 ? true : false,
         filtering: false,
         isPaging: false
       });
     } catch (error) {}
   };
-
-  setData(newContent) {
-    let items = [];
-    for (let i in newContent) {
-      items.push({
-        title: newContent[i].getField('title'),
-        artist: this.getArtist(newContent[i]),
-        thumbnail: newContent[i].getData('thumbnail_url'),
-        type: newContent[i].post.type,
-        publishedOn:
-          newContent[i].publishedOn.slice(0, 10) +
-          'T' +
-          newContent[i].publishedOn.slice(11, 16),
-        description: newContent[i]
-          .getData('description')
-          .replace(/(<([^>]+)>)/g, '')
-          .replace(/&nbsp;/g, '')
-          .replace(/&amp;/g, '&')
-          .replace(/&#039;/g, "'")
-          .replace(/&quot;/g, '"')
-          .replace(/&gt;/g, '>')
-          .replace(/&lt;/g, '<'),
-        xp: newContent[i].post.xp,
-        id: newContent[i].id,
-        mobile_app_url: newContent[i].post.mobile_app_url,
-        lesson_count: newContent[i].post.lesson_count,
-        currentLessonId: newContent[i].post?.song_part_id,
-        like_count: newContent[i].post.like_count,
-        duration: this.getDuration(newContent[i]),
-        isLiked: newContent[i].post.is_liked_by_current_user,
-        isAddedToList: newContent[i].isAddedToList,
-        isStarted: newContent[i].isStarted,
-        isCompleted: newContent[i].isCompleted,
-        progress_percent: newContent[i].post.progress_percent
-      });
-    }
-    return items;
-  }
 
   onRestartMethod = async () => {
     if (!this.context.isConnected) {
@@ -317,34 +265,6 @@ class Lessons extends React.Component {
       },
       () => this.getMethod()
     );
-  };
-
-  getArtist = newContent => {
-    if (newContent.post.type == 'song') {
-      if (typeof newContent.post.artist !== 'undefined') {
-        return newContent.post.artist;
-      } else {
-        for (i in newContent.post.fields) {
-          if (newContent.post.fields[i].key == 'artist') {
-            return newContent.post.fields[i].value;
-          }
-        }
-      }
-    } else {
-      try {
-        if (newContent.getField('instructor') !== 'TBD') {
-          return newContent.getField('instructor').fields[0].value;
-        } else {
-          return newContent.getField('instructor').name;
-        }
-      } catch (error) {
-        return '';
-      }
-    }
-  };
-
-  getDuration = newContent => {
-    newContent.post.fields.find(f => f.key === 'video')?.length_in_seconds;
   };
 
   changeSort = async currentSort => {
@@ -379,7 +299,7 @@ class Lessons extends React.Component {
           page: this.state.page + 1,
           isPaging: true
         },
-        () => this.getAllLessons()
+        () => this.getAllLessons(true)
       );
     }
   };

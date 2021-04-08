@@ -11,7 +11,7 @@ export async function getAllContent(type, sort, page, filters = '') {
   else if (sort == 'oldest') sort = 'published_on';
 
   try {
-    let url = `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${included_types}${filters}`;
+    let url = `${commonService.rootUrl}/musora-api/all?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${included_types}${filters}`;
     let response = await commonService.tryCall(url);
     // if there is no filters available, then dont just show a blank array, maintain data structure
 
@@ -52,29 +52,10 @@ export async function getAllContent(type, sort, page, filters = '') {
 export async function getLiveContent() {
   try {
     let response = await commonService.tryCall(
-      `${commonService.rootUrl}//musora-api/live-event?forced-content-id=275886`,
+      `${commonService.rootUrl}/musora-api/live-event?forced-content-id=275886`,
       'GET'
     );
-    console.log('live : ', response)
-    return response;
-  } catch (error) {
-    return new Error(error);
-  }
-}
-
-export async function getNewContent(type) {
-  try {
-    if (type == '') {
-      // if type not specified take almost all lesson types
-      type =
-        'course&included_types[]=song&included_types[]=learning-path-level&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chords-and-scales&included_types[]=pack&included_types[]=podcasts';
-    }
-
-    let response = await commonService.tryCall(
-      `${commonService.rootUrl}/api/railcontent/content?show_in_new_feed,1&brand=pianote&sort=-published_on&statuses[]=published&limit=40&page=1&included_types[]=${type}`,
-      'GET'
-    );
-
+    console.log('live : ', response);
     return response;
   } catch (error) {
     return new Error(error);
@@ -88,7 +69,7 @@ export async function getStartedContent(type) {
         'learning-path-lesson&included_types[]=course&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=podcasts&included_types[]=pack-bundle-lesson';
     }
     return commonService.tryCall(
-      `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=-progress&statuses[]=published&limit=40&page=1&included_types[]=${type}&required_user_states[]=started`
+      `${commonService.rootUrl}/musora-api/in-progress?brand=pianote&sort=-progress&statuses[]=published&limit=40&page=1&included_types[]=${type}&required_user_states[]=started`
     );
   } catch (error) {
     return new Error(error);
@@ -97,7 +78,7 @@ export async function getStartedContent(type) {
 
 export async function searchContent(term, page, filters = '') {
   try {
-    let url = `${commonService.rootUrl}/api/railcontent/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&page=${page}${filters}`;
+    let url = `${commonService.rootUrl}/musora-api/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&page=${page}${filters}`;
     return commonService.tryCall(url);
   } catch (error) {
     return new Error(error);
@@ -115,7 +96,7 @@ export async function getMyListContent(page, filters = '', progressState) {
 
   try {
     var url =
-      `${commonService.rootUrl}/api/railcontent/my-list?brand=pianote&limit=20&statuses[]=published&sort=${sort}&page=${page}${filters}` +
+      `${commonService.rootUrl}/musora-api/my-list?brand=pianote&limit=20&statuses[]=published&sort=${sort}&page=${page}${filters}` +
       progress_types;
     return await commonService.tryCall(url);
   } catch (error) {
@@ -124,7 +105,7 @@ export async function getMyListContent(page, filters = '', progressState) {
 }
 
 export async function seeAllContent(contentType, type, page, filters = '') {
-  let url = `${commonService.rootUrl}/api/railcontent/content?brand=pianote&limit=20&statuses[]=published&page=${page}${filters}`;
+  let url = `${commonService.rootUrl}/musora-api/content?brand=pianote&limit=20&statuses[]=published&page=${page}${filters}`;
   if (contentType == 'lessons')
     url +=
       '&included_types[]=learning-path-lesson&included_types[]=course&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chords-and-scales&included_types[]=podcasts&included_types[]=pack-bundle-lesson';
@@ -133,18 +114,9 @@ export async function seeAllContent(contentType, type, page, filters = '') {
   if (type == 'continue')
     url += `&required_user_states[]=started&sort=-progress`;
   else url += `&sort=-published_on`;
+  console.log(url);
   try {
     return await commonService.tryCall(url);
-  } catch (error) {
-    return new Error(error);
-  }
-}
-
-export async function getContentById(contentID) {
-  try {
-    return commonService.tryCall(
-      `${commonService.rootUrl}/railcontent/content/${contentID}`
-    );
   } catch (error) {
     return new Error(error);
   }

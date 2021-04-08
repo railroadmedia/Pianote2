@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { ContentModel } from '@musora/models';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
@@ -81,6 +80,7 @@ class SongCatalog extends React.Component {
       ),
       getStartedContent('song')
     ]);
+    console.log(content);
     this.metaFilters = content?.[0]?.meta?.filterOptions;
     this.props.cacheAndWriteSongs({
       all: content[0],
@@ -96,17 +96,9 @@ class SongCatalog extends React.Component {
 
   initialValidData = (content, fromCache) => {
     try {
-      let allVideos = this.setData(
-        content.all.data.map(data => {
-          return new ContentModel(data);
-        })
-      );
+      let allVideos = content.all.data;
 
-      let inprogressVideos = this.setData(
-        content.inProgress.data.map(data => {
-          return new ContentModel(data);
-        })
-      );
+      let inprogressVideos = content.inProgress.data;
       return {
         allSongs: allVideos,
         outVideos:
@@ -136,57 +128,16 @@ class SongCatalog extends React.Component {
     );
     this.metaFilters = response?.meta?.filterOptions;
 
-    const newContent = await response.data.map(data => {
-      return new ContentModel(data);
-    });
-
-    let items = this.setData(newContent);
-
     this.setState(state => ({
-      allSongs: loadMore ? state.allSongs.concat(items) : items,
-      outVideos: items.length == 0 || response.data.length < 20 ? true : false,
+      allSongs: loadMore ? state.allSongs.concat(response.data) : response.data,
+      outVideos:
+        response.data.length == 0 || response.data.length < 20 ? true : false,
       filtering: false,
       refreshControl: false,
       isPaging: false,
       refreshing: false
     }));
   };
-
-  setData(newContent) {
-    let items = [];
-    for (let i in newContent) {
-      items.push({
-        title: newContent[i].getField('title'),
-        artist: newContent[i].getField('artist'),
-        thumbnail: newContent[i].getData('thumbnail_url'),
-        type: newContent[i].post.type,
-        publishedOn:
-          newContent[i].publishedOn.slice(0, 10) +
-          'T' +
-          newContent[i].publishedOn.slice(11, 16),
-        description: newContent[i]
-          .getData('description')
-          .replace(/(<([^>]+)>)/g, '')
-          .replace(/&nbsp;/g, '')
-          .replace(/&amp;/g, '&')
-          .replace(/&#039;/g, "'")
-          .replace(/&quot;/g, '"')
-          .replace(/&gt;/g, '>')
-          .replace(/&lt;/g, '<'),
-        xp: newContent[i].post.xp,
-        id: newContent[i].post.id,
-        currentLessonId: newContent[i].post?.song_part_id,
-        lesson_count: newContent[i].post.lesson_count,
-        like_count: newContent[i].post.like_count,
-        isLiked: newContent[i].post.is_liked_by_current_user,
-        isAddedToList: newContent[i].isAddedToList,
-        isStarted: newContent[i].isStarted,
-        isCompleted: newContent[i].isCompleted,
-        progress_percent: newContent[i].post.progress_percent
-      });
-    }
-    return items;
-  }
 
   changeSort = currentSort => {
     this.setState(

@@ -12,7 +12,6 @@ import {
 import DeviceInfo from 'react-native-device-info';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import { ContentModel } from '@musora/models';
 
 const windowDim = Dimensions.get('window');
 const width =

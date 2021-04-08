@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { ContentModel } from '@musora/models';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
@@ -82,48 +81,14 @@ class MyList extends React.Component {
 
   initialValidData = (content, loadMore, fromCache) => {
     try {
-      const newContent = content.data.map(data => {
-        return new ContentModel(data);
-      });
+      const newContent = content.data;
 
-      let items = [];
-      for (let i in newContent) {
-        items.push({
-          title: newContent[i].getField('title'),
-          artist: this.getArtist(newContent[i]),
-          thumbnail: newContent[i].getData('thumbnail_url'),
-          type: newContent[i].post.type,
-          publishedOn:
-            newContent[i].publishedOn.slice(0, 10) +
-            'T' +
-            newContent[i].publishedOn.slice(11, 16),
-          description: newContent[i]
-            .getData('description')
-            .replace(/(<([^>]+)>)/g, '')
-            .replace(/&nbsp;/g, '')
-            .replace(/&amp;/g, '&')
-            .replace(/&#039;/g, "'")
-            .replace(/&quot;/g, '"')
-            .replace(/&gt;/g, '>')
-            .replace(/&lt;/g, '<'),
-          xp: newContent[i].post.xp,
-          id: newContent[i].id,
-          mobile_app_url: newContent[i].post.mobile_app_url,
-          lesson_count: newContent[i].post.lesson_count,
-          currentLessonId: newContent[i].post?.song_part_id,
-          like_count: newContent[i].post.like_count,
-          duration: i,
-          isLiked: newContent[i].post.is_liked_by_current_user,
-          isAddedToList: newContent[i].isAddedToList,
-          isStarted: newContent[i].isStarted,
-          isCompleted: newContent[i].isCompleted,
-          bundle_count: newContent[i].post.bundle_count,
-          progress_percent: newContent[i].post.progress_percent
-        });
-      }
       return {
-        allLessons: loadMore ? this.state?.allLessons?.concat(items) : items,
-        outVideos: items.length == 0 || content.data.length < 20 ? true : false,
+        allLessons: loadMore
+          ? this.state?.allLessons?.concat(newContent)
+          : newContent,
+        outVideos:
+          newContent.length == 0 || newContent.length < 20 ? true : false,
         page: this.state?.page + 1 || 1,
         isLoadingAll: false,
         filtering: false,

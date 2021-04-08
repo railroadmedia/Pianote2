@@ -13,7 +13,6 @@ import {
   ActivityIndicator,
   StatusBar
 } from 'react-native';
-import { ContentModel } from '@musora/models';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import { SafeAreaView } from 'react-navigation';
@@ -183,49 +182,12 @@ export default class Search extends React.Component {
         });
       } else {
         this.metaFilters = response?.meta?.filterOptions;
-        let newContent = await response.data.map(data => {
-          return new ContentModel(data);
-        });
+        let newContent = response.data;
 
-        let items = [];
-        for (let i in newContent) {
-          items.push({
-            title: newContent[i].getField('title'),
-            artist: this.getArtist(newContent[i]),
-            thumbnail: newContent[i].getData('thumbnail_url'),
-            type: newContent[i].post.type,
-            publishedOn:
-              newContent[i].publishedOn.slice(0, 10) +
-              'T' +
-              newContent[i].publishedOn.slice(11, 16),
-            description: newContent[i]
-              .getData('description')
-              .replace(/(<([^>]+)>)/g, '')
-              .replace(/&nbsp;/g, '')
-              .replace(/&amp;/g, '&')
-              .replace(/&#039;/g, "'")
-              .replace(/&quot;/g, '"')
-              .replace(/&gt;/g, '>')
-              .replace(/&lt;/g, '<'),
-            xp: newContent[i].post.xp,
-            id: newContent[i].id,
-            mobile_app_url: newContent[i].post.mobile_app_url,
-            lesson_count: newContent[i].post.lesson_count,
-            currentLessonId: newContent[i].post?.song_part_id,
-            like_count: newContent[i].post.like_count,
-            duration: this.getDuration(newContent[i]),
-            isLiked: newContent[i].post.is_liked_by_current_user,
-            isAddedToList: newContent[i].isAddedToList,
-            isStarted: newContent[i].isStarted,
-            isCompleted: newContent[i].isCompleted,
-            bundle_count: newContent[i].post.bundle_count,
-            progress_percent: newContent[i].post.progress_percent
-          });
-        }
         this.setState({
-          searchResults: [...this.state.searchResults, ...items],
+          searchResults: [...this.state.searchResults, ...newContent],
           outVideos:
-            items.length == 0 || response.data.length < 20 ? true : false,
+            newContent.length == 0 || newContent.length < 20 ? true : false,
           isLoadingAll: false,
           filtering: false,
           isPaging: false,
@@ -293,13 +255,6 @@ export default class Search extends React.Component {
       },
       () => this.search()
     );
-  };
-
-  getVideos = () => {
-    // change page before getting more lessons if paging
-    if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () => this.search());
-    }
   };
 
   handleScroll = event => {

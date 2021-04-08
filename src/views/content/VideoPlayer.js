@@ -19,7 +19,6 @@ import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
 import Video from 'RNVideoEnhanced';
 import Modal from 'react-native-modal';
-import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -159,156 +158,78 @@ export default class VideoPlayer extends React.Component {
       content = result;
       this.allCommentsNum = result.total_comments;
     }
-    content = new ContentModel(content);
-
-    let relatedLessons = content.post.related_lessons?.map(rl => {
-      return new ContentModel(rl);
-    });
+    console.log(content);
     let al = [];
-    if (content.post.assignments) {
-      let assignments = content.post.assignments.map(assignment => {
-        return new ContentModel(assignment);
-      });
-
-      for (let a in assignments) {
+    if (content.assignments) {
+      for (let i in content.assignments) {
+        let a = content.assignments[i];
         al.push({
-          id: assignments[a].id,
-          title: assignments[a].getField('title'),
-          isCompleted: assignments[a].isCompleted,
-          description: assignments[a]
-            .getData('description')
-            .replace(/(<([^>]+)>)/g, '')
-            .replace(/&nbsp;/g, '')
-            .replace(/&amp;/g, '&')
-            .replace(/&#039;/g, "'")
-            .replace(/&quot;/g, '"')
-            .replace(/&gt;/g, '>')
-            .replace(/&lt;/g, '<'),
-          xp: assignments[a].xp,
-          progress: assignments[a].post.progress_percent,
-          slug: assignments[a].post.fields?.find(
-            f => f.key === 'soundslice_slug'
-          )?.value,
-          timeCodes: assignments[a].post.data
-            .filter(d => d.key === 'timecode')
-            .map(tc => ({ value: tc.value })),
-          sheets:
-            assignments[a].post.data
-              .filter(d => d.key === 'sheet_music_image_url')
-              .map(s => ({
-                value: s.value,
-                id: s.id,
-                whRatio: s.whRatio
-              })) || []
+          id: a.id,
+          xp: a.xp,
+          index: i,
+          progress:
+            parseInt(Object.values(a.user_progress)?.[0]?.progress_percent) ||
+            0,
+          title: a.title,
+          description: a.description,
+          soundsliceSlug: a.soundslice_slug,
+          sheet_music_image_url: a.sheet_music_image_url,
+          timecode: a.timecode
         });
       }
     }
-    let rl = [];
-    if (relatedLessons) {
-      for (let i in relatedLessons) {
-        let duration = relatedLessons[i].post.fields?.find(
-          f => f.key === 'video'
-        )
-          ? new ContentModel(
-              relatedLessons[i].getFieldMulti('video')[0]
-            )?.getField('length_in_seconds')
-          : 0;
-        rl.push({
-          title: relatedLessons[i].getField('title'),
-          thumbnail: relatedLessons[i].getData('thumbnail_url'),
-          type: relatedLessons[i].type,
-          id: relatedLessons[i].id,
-          mobile_app_url: relatedLessons[i].post.mobile_app_url,
-          duration: duration < 60 ? 60 : duration,
-          isAddedToList: relatedLessons[i].isAddedToList,
-          isStarted: relatedLessons[i].isStarted,
-          isCompleted: relatedLessons[i].isCompleted,
-          progress_percent: relatedLessons[i].post.progress_percent
-        });
-      }
-    }
-    let youtubeId = content.post.fields
-      ?.find(f => f.key === 'video')
-      ?.value?.fields?.find(f => f.key === 'youtube_video_id')?.value;
+
     this.setState(
       {
-        youtubeId,
-        comments: content.post.comments,
+        youtubeId: content.youtube_video_id,
+        comments: content.comments,
         id: content.id,
-        url: content.post.mobile_app_url,
+        url: content.mobile_app_url,
         type: content.type,
-        videoId: content.post.fields?.find(f => f.key === 'video')
-          ? youtubeId
-            ? new ContentModel(content.getFieldMulti('video')[0])?.getField(
-                'youtube_video_id'
-              )
-            : new ContentModel(content.getFieldMulti('video')[0])?.getField(
-                'vimeo_video_id'
-              )
-          : -1,
-        lessonImage: content.getData('thumbnail_url'),
-        lessonTitle: content.getField('title'),
+        videoId: content.vimeo_video_id,
+        lessonImage: content.thumbnail_url,
+        lessonTitle: content.title,
         style:
-          content.post.type === 'song-part' && content.post.parent
-            ? `${new ContentModel(content.post.parent)
-                .getField('style')
-                .toUpperCase()} | `
+          content.type === 'song-part' && content.parent
+            ? `${content.parent.style.toUpperCase()} | `
             : '',
         description:
-          content.post.type === 'song-part' && content.post.parent
-            ? new ContentModel(content.post.parent)
-                .getField('instructor')
-                ?.data?.find(d => d.key === 'biography')?.value
-            : content
-                .getData('description')
-                .replace(/(<([^>]+)>)/g, '')
-                .replace(/&nbsp;/g, '')
-                .replace(/&amp;/g, '&')
-                .replace(/&#039;/g, "'")
-                .replace(/&quot;/g, '"')
-                .replace(/&gt;/g, '>')
-                .replace(/&lt;/g, '<'),
-        chapters: content.post.chapters,
-        xp: content.post.total_xp,
+          content.type === 'song-part' && content.parent
+            ? content.parent.instructor.biography
+            : content.description,
+        chapters: content.chapters,
+        xp: content.xp,
         artist:
-          content.post.type === 'song-part' && content.post.parent
-            ? new ContentModel(content.post.parent).getField('artist')
-            : content.getField('artist'),
-        instructor: content.post.instructors,
+          content.type === 'song-part' && content.parent
+            ? content.parent.artist
+            : content.artist,
+        // instructor: content.instructors,
         isLoadingAll: false,
-        publishedOn: content.publishedOn,
-        relatedLessons: rl,
-        likes: parseInt(content.likeCount),
-        isLiked: content.post.is_liked_by_current_user,
-        lengthInSec: content.post.fields?.find(f => f.key === 'video')
-          ? new ContentModel(content.getFieldMulti('video')[0])?.getField(
-              'length_in_seconds'
-            )
-          : 0,
-        lastWatchedPosInSec: content.post.last_watch_position_in_seconds,
+        publishedOn: content.published_on,
+        relatedLessons: content.related_lessons,
+        likes: parseInt(content.like_count),
+        isLiked: content.is_liked_by_current_user,
+        lengthInSec: 100, // content.length_in_seconds,
+        lastWatchedPosInSec: content.last_watch_position_in_seconds,
         progress:
           parseInt(
-            Object.values(content.post.user_progress)?.[0].progress_percent
+            Object.values(content.user_progress)?.[0].progress_percent
           ) || 0,
-        isAddedToMyList: content.isAddedToList,
-        isStarted: content.isStarted,
+        isAddedToMyList: content.is_added_to_primary_playlist,
+        isStarted: content.started,
         assignmentList: al,
-        nextLesson: content.post.next_lesson
-          ? new ContentModel(content.post.next_lesson)
-          : null,
-        previousLesson: content.post.previous_lesson
-          ? new ContentModel(content.post.previous_lesson)
-          : null,
-        mp3s: content.post.mp3s || [],
-        video_playback_endpoints: content.post.video_playback_endpoints,
-        nextLessonId: content?.post?.next_lesson?.id,
-        previousLessonId: content?.post?.previous_lesson?.id,
-        nextLessonUrl: content?.post?.next_lesson?.mobile_app_url,
-        previousLessonUrl: content?.post?.previous_lesson?.mobile_app_url,
+        nextLesson: content.next_lesson,
+        previousLesson: content.previous_lesson,
+        mp3s: content.mp3s || [],
+        video_playback_endpoints: content.video_playback_endpoints,
+        nextLessonId: content.next_lesson?.id,
+        previousLessonId: content.previous_lesson?.id,
+        nextLessonUrl: content.next_lesson?.mobile_app_url,
+        previousLessonUrl: content.previous_lesson?.mobile_app_url,
         resources:
-          content.post.resources && content.post.resources.length > 0
-            ? Object.keys(content.post.resources).map(key => {
-                return content.post.resources[key];
+          content.resources && content.resources.length > 0
+            ? Object.keys(content.resources).map(key => {
+                return content.resources[key];
               })
             : undefined
       },
@@ -907,9 +828,9 @@ export default class VideoPlayer extends React.Component {
 
   renderTagsDependingOnContentType = () => {
     let { artist, xp, type, publishedOn, instructor, style } = this.state;
-    if (typeof instructor[0] == 'object') {
-      instructor = [instructor[0]?.fields?.[0]?.value];
-    }
+    // if (typeof instructor[0] == 'object') {
+    //   instructor = [instructor[0]?.fields?.[0]?.value];
+    // }
 
     let releaseDate = this.transformDate(publishedOn);
     let releaseDateTag = releaseDate ? `${releaseDate} | ` : '';
@@ -1003,14 +924,14 @@ export default class VideoPlayer extends React.Component {
                   if (this.state.nextLesson)
                     this.switchLesson(
                       this.state.nextLesson.id,
-                      this.state.nextLesson.post.mobile_app_url
+                      this.state.nextLesson.mobile_app_url
                     );
                 }}
                 goToPreviousLesson={() => {
                   if (this.state.previousLesson)
                     this.switchLesson(
                       this.state.previousLesson.id,
-                      this.state.previousLesson.post.mobile_app_url
+                      this.state.previousLesson.mobile_app_url
                     );
                 }}
                 onUpdateVideoProgress={async (
@@ -1694,7 +1615,7 @@ export default class VideoPlayer extends React.Component {
                 onPress={() =>
                   this.switchLesson(
                     this.state.previousLesson.id,
-                    this.state.previousLesson.post.mobile_app_url
+                    this.state.previousLesson.mobile_app_url
                   )
                 }
               >
@@ -1754,7 +1675,7 @@ export default class VideoPlayer extends React.Component {
                 onPress={() =>
                   this.switchLesson(
                     this.state.nextLesson.id,
-                    this.state.nextLesson.post.mobile_app_url
+                    this.state.nextLesson.mobile_app_url
                   )
                 }
               >
@@ -1860,7 +1781,7 @@ export default class VideoPlayer extends React.Component {
                   if (this.state.nextLesson) {
                     this.switchLesson(
                       this.state.nextLesson.id,
-                      this.state.nextLesson.post.mobile_app_url
+                      this.state.nextLesson.mobile_app_url
                     );
                   }
                 }}

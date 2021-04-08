@@ -24,22 +24,20 @@ export default {
     return path;
   },
   getAssignWHRatio: async function (assignments) {
-    let assignPromises = [],
-      pdfs = [];
+    let assignPromises = [];
     assignments.map(a => {
       let svgs = [],
         nsvgs = [];
-      a.sheets.map(s => {
-        if (s.value.includes('.pdf')) return pdfs.push({ ...s });
-        if (s.value.includes('.svg')) return svgs.push({ ...s });
-        if (!s.value.includes('.svg')) return nsvgs.push({ ...s });
+      a.sheet_music_image_url?.map(s => {
+        if (s.value.includes('.pdf')) return;
+        if (s.value.includes('.svg')) svgs.push({ ...s });
+        else nsvgs.push({ ...s });
       });
       if (svgs.length) {
         assignPromises.push(
           new Promise(async res => {
             let vbPromises = [];
             svgs.map(s => vbPromises.push(fetch(s.value)));
-
             (await Promise.all(vbPromises)).map(async (vbResp, i) => {
               let vbArr;
               try {
@@ -54,34 +52,13 @@ export default {
                   .split(' ');
               }
               svgs[i].whRatio = vbArr[2] / vbArr[3];
-              i === svgs.length - 1 && res(svgs);
-            });
-          })
-        );
-      }
-      if (pdfs.length) {
-        assignPromises.push(
-          new Promise(async res => {
-            let pagesNo = [];
-            pdfs.map(p =>
-              pagesNo.push(
-                RNFetchBlob.fetch(
-                  'GET',
-                  'https://www.anre.ro/files/furnizori/oferta%20Hidroelectrica.pdf'
-                )
-              )
-            );
-            (await Promise.all(pagesNo)).map(async (pagesNoResp, i) => {
-              pdfs[i].numberOfPages = pagesNoResp
-                .text()
-                .match(/\/Type[\s]*\/Page[^s]/g).length;
-              i === pdfs.length - 1 && res(pdfs);
+              if (i === svgs.length - 1) return res(svgs);
             });
           })
         );
       }
       if (nsvgs.length) {
-        nsvgs.map((ns, i) => {
+        nsvgs.map(ns => {
           assignPromises.push(
             new Promise(res => {
               Image.getSize(
