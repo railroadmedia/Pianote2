@@ -32,7 +32,7 @@ export default class NavigationBar extends React.Component {
   componentDidMount = async () => {
     let profileImage = await AsyncStorage.getItem('profileURI');
     this.setState({
-      profileImage: profileImage || '',
+      profileImage: profileImage || ''
     });
   };
 
@@ -84,7 +84,7 @@ export default class NavigationBar extends React.Component {
             <TouchableOpacity
               onPress={() => {
                 !this.context.isConnected
-                  ? this.context.showNoConnectionAlert() 
+                  ? this.context.showNoConnectionAlert()
                   : navigate(isPackOnly ? 'PACKS' : 'LESSONS');
               }}
             >

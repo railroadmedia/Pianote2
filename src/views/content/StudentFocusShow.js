@@ -52,9 +52,9 @@ class StudentFocusShow extends React.Component {
       page: 1,
       outVideos: false,
       refreshing: false,
-      isLoadingAll: true, 
-      isPaging: false, 
-      filtering: false, 
+      isLoadingAll: true,
+      isPaging: false,
+      filtering: false,
       ...this.initialValidData(
         props.route?.params?.type == 'quick-tips'
           ? props.quickTipsCache

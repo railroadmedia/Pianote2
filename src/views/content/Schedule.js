@@ -6,7 +6,7 @@ import {
   View,
   Text,
   Dimensions,
-  FlatList, 
+  FlatList,
   TouchableOpacity,
   StatusBar
 } from 'react-native';
@@ -32,8 +32,8 @@ export default class Schedule extends React.Component {
   }
 
   async componentDidMount() {
-    let response = await getScheduleContent()
-    console.log('response: ', response)
+    let response = await getScheduleContent();
+    console.log('response: ', response);
   }
 
   getArtist = newContent => {
@@ -74,16 +74,20 @@ export default class Schedule extends React.Component {
       <SafeAreaView
         forceInset={{
           bottom: 'never',
-          top: 'never',
+          top: 'never'
         }}
         style={styles.mainContainer}
       >
-        <NavMenuHeaders currentPage={'LESSONS'} parentPage={this.state.parent} />
-        <StatusBar backgroundColor={colors.thirdBackground} barStyle={'light-content'} />
+        <NavMenuHeaders
+          currentPage={'LESSONS'}
+          parentPage={this.state.parent}
+        />
+        <StatusBar
+          backgroundColor={colors.thirdBackground}
+          barStyle={'light-content'}
+        />
         <Text style={styles.contentPageHeader}>{this.state.title}</Text>
-        <View style={{flex: 1}}>
-            
-        </View>
+        <View style={{ flex: 1 }}></View>
         <NavigationBar currentPage={'SCHEDULE'} />
       </SafeAreaView>
     );

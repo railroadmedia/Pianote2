@@ -74,7 +74,7 @@ export default class NavigationMenu extends React.Component {
     super(props);
     this.state = {
       methodIsStarted: false,
-      methodIsCompleted: false,
+      methodIsCompleted: false
     };
   }
 
@@ -122,7 +122,7 @@ export default class NavigationMenu extends React.Component {
                   parent: 'live'
                 });
               } else if (nav.title === 'Schedule') {
-                return  navigate(nav.navigator, {
+                return navigate(nav.navigator, {
                   title: nav.title,
                   parent: 'SCHEDULE'
                 });

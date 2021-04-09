@@ -94,7 +94,7 @@ localNotification();
 
 AppRegistry.registerComponent(appName, () => App);
 LogBox.ignoreLogs(['Require cycle:', 'Remote debugger']);
-LogBox.ignoreAllLogs(true)
+LogBox.ignoreAllLogs(true);
 global.fullWidth = Dimensions.get('window').width;
 global.fullHeight = Dimensions.get('window').height;
 global.token = '';
