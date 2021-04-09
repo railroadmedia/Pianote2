@@ -22,6 +22,7 @@ import DeviceInfo from 'react-native-device-info';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
+import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import Orientation from 'react-native-orientation-locker';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -37,6 +38,7 @@ import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
 import methodService from '../../services/method.service.js';
 import { getStartedContent, getLiveContent, getAllContent } from '../../services/GetContent';
+import { addToMyList, removeFromMyList } from '../../services/UserActions';
 import RestartCourse from '../../modals/RestartCourse';
 import Live from '../../modals/Live';
 import AddToCalendar from '../../modals/AddToCalendar';
@@ -75,6 +77,7 @@ class Lessons extends React.Component {
       currentLesson: [],
       liveLesson: [],
       timeDiffLive: {}, // time variables on live experience
+      addToCalendarModal: false,
       methodId: 0,
       methodIsStarted: false,
       methodIsCompleted: false,
@@ -207,7 +210,10 @@ class Lessons extends React.Component {
         seconds: date.getSeconds(),
       }
     })
-    if(timeDiff < 0) { // date.getSeconds() == 1 || date.getSeconds() == 30
+    if(timeDiff < 0) { 
+      // prod: timeDiff < 0
+      // test: date.getSeconds() == 1 || date.getSeconds() == 30
+      
       // if time ran out show reminder, get rid of modal
       this.setState({showLive: true})
       await clearInterval(this.interval)
@@ -400,6 +406,43 @@ class Lessons extends React.Component {
     if (!this.state.outVideos) {
       this.setState({ page: this.state.page + 1 }, () => this.getAllLessons());
     }
+  };
+
+  addEventToCalendar = () => {
+    const eventConfig = {
+      title: this.addToCalendarLessonTitle,
+      startDate: new Date(this.addToCalendatLessonPublishDate),
+      endDate: new Date(this.addToCalendatLessonPublishDate)
+    };
+    AddCalendarEvent.presentEventCreatingDialog(eventConfig)
+      .then(eventInfo => {
+        this.addToCalendarLessonTitle = '';
+        this.addToCalendatLessonPublishDate = '';
+        this.setState({ addToCalendarModal: false });
+      })
+      .catch(e => {});
+  };
+
+  addToMyList = contentID => {
+    if (!this.context.isConnected) {
+      return this.context.showNoConnectionAlert();
+    }
+
+    this.state.liveLesson[0].is_added_to_primary_playlist = true
+    this.setState({ liveLesson: this.state.liveLesson });
+
+    addToMyList(contentID);
+  };
+
+  removeFromMyList = contentID => {
+    if (!this.context.isConnected) {
+      return this.context.showNoConnectionAlert();
+    }
+
+    this.state.liveLesson[0].is_added_to_primary_playlist = false
+    this.setState({ liveLesson: this.state.liveLesson });
+
+    removeFromMyList(contentID);
   };
 
   handleScroll = event => {
@@ -617,6 +660,7 @@ class Lessons extends React.Component {
                     LIVE
                   </Text>
                   {this.state.timeDiffLive.timeDiff > 0 ? (
+                    // prod: > 0
                     // live lesson has time to countdown 
                     <TouchableOpacity
                       style={{
@@ -865,7 +909,7 @@ class Lessons extends React.Component {
                         </View>           
                         {!this.state.liveLesson[0].is_added_to_primary_playlist ? (
                           <TouchableOpacity
-                            onPress={() => this.addToMyList()}
+                            onPress={() => this.addToMyList(this.state.liveLesson[0]?.id)}
                           >
                             <AntIcon
                               name={'plus'}
@@ -875,7 +919,7 @@ class Lessons extends React.Component {
                           </TouchableOpacity>
                         ) : (
                           <TouchableOpacity
-                            onPress={() => this.removeFromMyList()}
+                            onPress={() => this.removeFromMyList(this.state.liveLesson[0]?.id)}
                           >
                             <AntIcon
                               name={'close'}
@@ -1183,6 +1227,24 @@ class Lessons extends React.Component {
             }}
           />
         </Modal>        
+        <Modal
+          isVisible={this.state.addToCalendarModal}
+          style={styles.modalContainer}
+          animation={'slideInUp'}
+          animationInTiming={250}
+          animationOutTiming={250}
+          coverScreen={true}
+          hasBackdrop={true}
+        >
+          <AddToCalendar
+            hideAddToCalendar={() =>
+              this.setState({ addToCalendarModal: false })
+            }
+            addEventToCalendar={() => {
+              this.addEventToCalendar();
+            }}
+          />
+        </Modal>   
         <NavigationBar currentPage={'LESSONS'} isMethod={true} />
       </View>
     );

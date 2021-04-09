@@ -51,7 +51,7 @@ const navigationOptions = [
   },
   {
     title: 'Live',
-    navigator: 'SEEALL'
+    navigator: 'LIVE'
   },
   {
       title: 'Schedule',

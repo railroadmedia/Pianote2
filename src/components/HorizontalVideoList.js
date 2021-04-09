@@ -746,11 +746,7 @@ export default class HorizontalVideoList extends React.Component {
         </Modal>
         <Modal
           isVisible={this.state.addToCalendarModal}
-          style={{
-            margin: 0,
-            height: '100%',
-            width: '100%'
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

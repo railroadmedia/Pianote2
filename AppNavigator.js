@@ -21,8 +21,9 @@ import SeeAll from './src/views/content/SeeAll';
 import Course from './src/views/content/Course';
 import MyList from './src/views/content/MyList';
 import Search from './src/views/content/Search';
-import Packs from './src/views/content/Packs';
 import Method from './src/views/content/Method';
+import Packs from './src/views/content/Packs';
+import Live from './src/views/content/Live';
 import MethodLevel from './src/views/content/MethodLevel';
 import Foundations from './src/views/content/Foundations';
 
@@ -182,6 +183,7 @@ export default () => (
         <Stack.Screen name='STUDENTFOCUSSHOW' component={StudentFocusShow} />
         <Stack.Screen name='VIDEOPLAYERSONG' component={VideoPlayerSong} />
         <Stack.Screen name='METHODLEVEL' component={MethodLevel} />
+        <Stack.Screen name='Live' component={Live} />
         <Stack.Screen name='LIVESCHEDULE' component={LiveSchedule} />
         <Stack.Screen name='METHOD' component={Method} />
         <Stack.Screen name='FOUNDATIONS' component={Foundations} />
