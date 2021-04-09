@@ -52,7 +52,7 @@ export async function getAllContent(type, sort, page, filters = '') {
 export async function getLiveContent() {
   try {
     let response = await commonService.tryCall(
-      `${commonService.rootUrl}//musora-api/live-event?forced-upcoming-content-id=275886`,
+      `${commonService.rootUrl}//musora-api/live-event`,
       'GET'  
       // ?forced-content-id=275886
       // ?forced-upcoming-content-id=275886

@@ -5,17 +5,14 @@ import React from 'react';
 import {
   View,
   Text,
-  ScrollView,
   Dimensions,
   TouchableOpacity,
-  RefreshControl,
   StatusBar
 } from 'react-native';
 import { ContentModel } from '@musora/models';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
 import NavigationBar from '../../components/NavigationBar.js';
-import VerticalVideoList from '../../components/VerticalVideoList.js';
 import {
   seeAllContent,
   getMyListContent,
@@ -55,16 +52,6 @@ export default class LiveSchedule extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: props.route?.params?.title, // In Progress, Completed, Continue
-      parent: props.route?.params?.parent, // My List, Packs, Student Focus, Foundations, Courses
-      allLessons: [],
-      currentSort: 'newest',
-      page: 1,
-      outVideos: false,
-      refreshing: false,
-      isLoadingAll: true, // all lessons
-      isPaging: false, // scrolling more
-      filtering: false // filtering
     };
   }
 
@@ -235,35 +222,13 @@ export default class LiveSchedule extends React.Component {
     }
   };
 
-  handleScroll = event => {
-    if (
-      isCloseToBottom(event) &&
-      !this.state.isPaging &&
-      !this.state.outVideos
-    ) {
-      this.setState(
-        {
-          page: this.state.page + 1,
-          isPaging: true
-        },
-        () => this.getAllLessons(true)
-      );
-    }
-  };
-
-  refresh = () => {
-    this.setState({ refreshing: true, outVideos: false, page: 1 }, () =>
-      this.getAllLessons()
-    );
-  };
-
   render() {
     return (
       <SafeAreaView
         forceInset={{
           bottom: 'never'
         }}
-        style={styles.packsContainer}
+        style={styles.mainContainer}
       >
         <StatusBar
           backgroundColor={colors.thirdBackground}
@@ -277,63 +242,21 @@ export default class LiveSchedule extends React.Component {
               fill={'white'}
             />
           </TouchableOpacity>
-          <Text style={styles.childHeaderText}>{this.state.parent}</Text>
+          <Text style={styles.childHeaderText}>Lessons</Text>
           <View style={{ flex: 1 }} />
         </View>
-        <ScrollView
-          style={styles.mainContainer}
-          showsVerticalScrollIndicator={false}
-          contentInsetAdjustmentBehavior={'never'}
-          onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
-          refreshControl={
-            <RefreshControl
-              colors={[colors.pianoteRed]}
-              refreshing={this.state.refreshing}
-              onRefresh={() => this.refresh()}
-            />
-          }
-        >
-          <VerticalVideoList
-            items={this.state.allLessons}
-            isLoading={this.state.isLoadingAll}
-            isPaging={this.state.isPaging}
-            title={this.state.title}
-            type={typeDict[this.state.parent]}
-            showFilter={true}
-            hideFilterButton={this.state.parent == 'Lessons' ? false : false} // only show filter button on lessons
-            showType={false}
-            showArtist={true}
-            showSort={false}
-            showLength={false}
-            showLargeTitle={true}
-            filters={this.metaFilters}
-            currentSort={this.state.currentSort}
-            changeSort={sort => {
-              this.setState({
-                currentSort: sort,
-                allLessons: []
-              }),
-                this.getAllLessons();
-            }} // change sort and reload videos
-            imageWidth={(onTablet ? 0.225 : 0.3) * width}
-            outVideos={this.state.outVideos} // if paging and out of videos
-            applyFilters={filters =>
-              new Promise(res =>
-                this.setState(
-                  {
-                    allLessons: [],
-                    outVideos: false,
-                    page: 1
-                  },
-                  () => {
-                    this.filterQuery = filters;
-                    this.getAllLessons().then(res);
-                  }
-                )
-              )
-            }
-          />
-        </ScrollView>
+        <View style={{flex: 1}}>
+            <Text 
+                style={[
+                    styles.contentPageHeader,
+                    {
+                        marginVertical: 10,
+                    }
+                ]}
+            >
+                Live Schedule
+            </Text>
+        </View>
         <NavigationBar currentPage={'LIVESCHEDULE'} />
       </SafeAreaView>
     );

@@ -18,16 +18,8 @@ export default class Live extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        liveLesson: this.props.liveLesson[0],
-        isLoading: false
+        liveLesson: this.props.liveLesson[0]
     };
-  }
-
-  toggleLoading(isLoading) {
-    this.setState(state => {
-      isLoading = isLoading === undefined ? !state.isLoading : isLoading;
-      return { isLoading };
-    });
   }
 
   changeType = word => {
@@ -52,125 +44,111 @@ export default class Live extends React.Component {
   render = () => {
     return (
       <TouchableWithoutFeedback
-        style={
-          { 
-            overflow: 'hidden',
-            position: 'absolute',
-            height: '100%',
-            justifyContent: 'center',
-            zIndex: 2,
-            backgroundColor: 'rgba(0,0,0,.5)' 
-          },
-            this.state.isLoading ? { width: '100%' } : { width: 0, }
-        }
+        style={styles.container}
         onPress={() => this.props.hideLive()}
       >
-        <>
-          {this.state.isLoading && (
-            <View style={[styles.container, styles.centerContent]}>
-              <View style={localStyles.container}>
-                <View style={[styles.centerContent, {flexDirection: 'row'}]}>
-                    <FastImage
-                        style={{ 
-                            width: 150,
-                            height: 150,
-                            borderRadius: 500,
-                        }}
-                        source={{ uri: `https://cdn.musora.com/image/fetch/w_${Math.round((Dimensions.get('window').width - 20) * 2)},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${this.props.liveLesson[0]?.thumbnail_url}` }}
-                        resizeMode={FastImage.resizeMode.cover}
-                    />
-                    <View 
-                        style={{
-                            position: 'absolute',
-                            bottom: 10, 
-                            alignContent: 'center',
-                            borderRadius: onTablet ? 5 : 3,
-                            backgroundColor: 'red',
-                            paddingHorizontal: onTablet ? 7.5 : 5,
-                        }}
+        <View style={[styles.container, styles.centerContent]}>
+          <View style={localStyles.container}>
+            <View style={[styles.centerContent, {flexDirection: 'row'}]}>
+                <FastImage
+                    style={{ 
+                        width: 150,
+                        height: 150,
+                        borderRadius: 500,
+                    }}
+                    source={{ uri: `https://cdn.musora.com/image/fetch/w_${Math.round((Dimensions.get('window').width - 20) * 2)},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${this.props.liveLesson[0]?.thumbnail_url}` }}
+                    resizeMode={FastImage.resizeMode.cover}
+                />
+                <View 
+                    style={{
+                        position: 'absolute',
+                        bottom: 10, 
+                        alignContent: 'center',
+                        borderRadius: onTablet ? 5 : 3,
+                        backgroundColor: 'red',
+                        paddingHorizontal: onTablet ? 7.5 : 5,
+                    }}
+                >
+                    <Text
+                    numberOfLines={1}
+                    ellipsizeMode='tail'
+                    style={{
+                        fontSize: onTablet ? 16 : 14,
+                        fontFamily: 'OpenSans-Regular',
+                        color: 'white',
+                    }}
                     >
-                        <Text
-                        numberOfLines={1}
-                        ellipsizeMode='tail'
-                        style={{
-                            fontSize: onTablet ? 16 : 14,
-                            fontFamily: 'OpenSans-Regular',
-                            color: 'white',
-                        }}
-                        >
-                        LIVE
-                        </Text>
-                    </View>
-                </View>
-                <Text style={[styles.modalBodyText, localStyles.live]}>
-                    <Text
-                        style={{
-                            fontFamily: 'OpenSans-Bold',
-                            position: 'absolute',
-                            fontSize: onTablet ? 16 : 14,
-                        }}
-                    >
-                        {this.changeType(this.props.liveLesson[0]?.instructors)}
-                    </Text> just went live. Would you like to join?
-                </Text>
-                <Text style={[styles.modalBodyText, localStyles.live]}>
-                    Join
-                    <Text
-                        style={{
-                            fontFamily: 'OpenSans-Bold',
-                            position: 'absolute',
-                            fontSize: onTablet ? 16 : 14,
-                        }}
-                    > @jared-Drummer
-                    </Text> and
-                    <Text
-                        style={{
-                            fontFamily: 'OpenSans-Bold',
-                            position: 'absolute',
-                            fontSize: onTablet ? 16 : 14,
-                        }}
-                    > 143 members
+                    LIVE
                     </Text>
-                </Text>            
-                <TouchableOpacity
-                  style={[
-                    localStyles.watch,
-                    { justifyContent: 'center', marginTop: 20 }
-                  ]}
-                  onPress={() => {
-                    navigate('LIVE'),
-                    this.props.hideLive()
-                  }}
-                >
-                  <Text
-                    style={[
-                      styles.modalButtonText,
-                      localStyles.watchText
-                    ]}
-                  >
-                    WATCH
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    localStyles.cancelButton,
-                    { justifyContent: 'center' }
-                  ]}
-                  onPress={() => this.props.hideLive()}
-                >
-                  <Text
-                    style={[
-                      styles.modalButtonText,
-                      localStyles.cancelButtonText
-                    ]}
-                  >
-                    CANCEL
-                  </Text>
-                </TouchableOpacity>            
-              </View>
+                </View>
             </View>
-          )}
-        </>
+            <Text style={[styles.modalBodyText, localStyles.live]}>
+                <Text
+                    style={{
+                        fontFamily: 'OpenSans-Bold',
+                        position: 'absolute',
+                        fontSize: onTablet ? 16 : 14,
+                    }}
+                >
+                    {this.changeType(this.props.liveLesson[0]?.instructors)}
+                </Text> just went live. Would you like to join?
+            </Text>
+            <Text style={[styles.modalBodyText, localStyles.live]}>
+                Join
+                <Text
+                    style={{
+                        fontFamily: 'OpenSans-Bold',
+                        position: 'absolute',
+                        fontSize: onTablet ? 16 : 14,
+                    }}
+                > @jared-Drummer
+                </Text> and
+                <Text
+                    style={{
+                        fontFamily: 'OpenSans-Bold',
+                        position: 'absolute',
+                        fontSize: onTablet ? 16 : 14,
+                    }}
+                > 143 members
+                </Text>
+            </Text>            
+            <TouchableOpacity
+              style={[
+                localStyles.watch,
+                { justifyContent: 'center', marginTop: 20 }
+              ]}
+              onPress={() => {
+                navigate('LIVE'),
+                this.props.hideLive()
+              }}
+            >
+              <Text
+                style={[
+                  styles.modalButtonText,
+                  localStyles.watchText
+                ]}
+              >
+                WATCH
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                localStyles.cancelButton,
+                { justifyContent: 'center' }
+              ]}
+              onPress={() => this.props.hideLive()}
+            >
+              <Text
+                style={[
+                  styles.modalButtonText,
+                  localStyles.cancelButtonText
+                ]}
+              >
+                CANCEL
+              </Text>
+            </TouchableOpacity>            
+          </View>
+        </View>
       </TouchableWithoutFeedback>
     );
   };
