@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import DeviceInfo from 'react-native-device-info';
-import FontIcon from 'react-native-vector-icons/FontAwesome5';
+import { navigate } from 'Pianote2/AppNavigator';
 
 export default class Live extends React.Component {
   constructor(props) {
@@ -21,10 +21,6 @@ export default class Live extends React.Component {
         liveLesson: this.props.liveLesson[0]
     };
   }
-
-  componentDidMount() {
-    console.log(this.state.liveLesson)
-    }
 
   changeType = word => {
     if(!word) return
@@ -116,84 +112,15 @@ export default class Live extends React.Component {
                 > 143 members
                 </Text>
             </Text>            
-            <View
-                style={[
-                    styles.centerContent, {
-                    height: 50, 
-                }]}
-            >
-                <View 
-                    style={{
-                        width: 100, 
-                        height: '80%', 
-                        justifyContent: 'center'
-                    }}
-                >
-                    <View
-                        style={{
-                            position: 'absolute',
-                            left: 35/2,
-                            zIndex: 1,
-                            elevation: 1,
-                            height: 25, 
-                            width: 25,
-                            borderRadius: 100,
-                        }}
-                    >
-                        <FastImage
-                            style={{ flex: 1, borderRadius: 100, alignSelf: 'stretch'}}
-                            source={{
-                                uri: 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-                            }}
-                            resizeMode={FastImage.resizeMode.cover}
-                        />
-                        <View
-                            style={{
-                                position: 'absolute',
-                                zIndex: 2,
-                                elevation: 2,
-                                left: 20,
-                                height: 25, 
-                                width: 25,
-                                borderRadius: 100,
-                            }}
-                        >
-                            <FastImage
-                                style={{ flex: 1, borderRadius: 100, alignSelf: 'stretch'}}
-                                source={{
-                                    uri: 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-                                }}
-                                resizeMode={FastImage.resizeMode.cover}
-                            />
-                        </View>
-                        <View
-                            style={{
-                                position: 'absolute',
-                                zIndex: 3,
-                                elevation: 3,
-                                left: 40,
-                                height: 25, 
-                                width: 25,
-                                borderRadius: 100,
-                            }}
-                        >
-                            <FastImage
-                                style={{ flex: 1, borderRadius: 100, alignSelf: 'stretch'}}
-                                source={{
-                                    uri: 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-                                }}
-                                resizeMode={FastImage.resizeMode.cover}
-                            />
-                        </View>
-                    </View>
-                </View>
-            </View>
             <TouchableOpacity
               style={[
                 localStyles.watch,
-                { justifyContent: 'center' }
+                { justifyContent: 'center', marginTop: 20 }
               ]}
-              onPress={() => {}}
+              onPress={() => {
+                navigate('LIVE'),
+                this.props.hideLive()
+              }}
             >
               <Text
                 style={[

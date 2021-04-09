@@ -83,7 +83,7 @@ class Lessons extends React.Component {
       methodIsCompleted: false,
       methodNextLessonUrl: null,
       showRestartCourse: false,
-      showLive: false, 
+      showLive: true, 
       lessonsStarted: true,
       refreshing: !lessonsCache,
       refreshControl: true,

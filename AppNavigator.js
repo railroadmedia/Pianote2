@@ -183,7 +183,7 @@ export default () => (
         <Stack.Screen name='STUDENTFOCUSSHOW' component={StudentFocusShow} />
         <Stack.Screen name='VIDEOPLAYERSONG' component={VideoPlayerSong} />
         <Stack.Screen name='METHODLEVEL' component={MethodLevel} />
-        <Stack.Screen name='Live' component={Live} />
+        <Stack.Screen name='LIVE' component={Live} />
         <Stack.Screen name='LIVESCHEDULE' component={LiveSchedule} />
         <Stack.Screen name='METHOD' component={Method} />
         <Stack.Screen name='FOUNDATIONS' component={Foundations} />

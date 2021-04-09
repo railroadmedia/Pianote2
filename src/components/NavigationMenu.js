@@ -13,6 +13,7 @@ import {
 import DeviceInfo from 'react-native-device-info';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
+import { getLiveContent } from 'Pianote2/src/services/GetContent';
 import { NetworkContext } from '../context/NetworkProvider';
 import { navigate } from '../../AppNavigator';
 
@@ -54,7 +55,7 @@ const navigationOptions = [
     navigator: 'LIVE'
   },
   {
-      title: 'Schedule',
+    title: 'Schedule',
     navigator: 'LIVESCHEDULE'
   },
   {
@@ -74,11 +75,17 @@ export default class NavigationMenu extends React.Component {
     super(props);
     this.state = {
       methodIsStarted: false,
-      methodIsCompleted: false
+      methodIsCompleted: false,
+      isLive: false, 
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    let content = [await getLiveContent()]
+    if(content[0]?.isLive) {
+      this.setState({isLive: true})
+    }
+    
     AsyncStorage.multiGet(['methodIsStarted', 'methodIsCompleted']).then(data =>
       this.setState({
         methodIsStarted:
@@ -117,14 +124,21 @@ export default class NavigationMenu extends React.Component {
                   type: 'boot-camps'
                 });
               } else if (nav.title === 'Live') {
-                navigate(nav.navigator, {
-                  title: nav.title,
-                  parent: 'Lessons'
-                });
+                if(this.state.isLive) {
+                  navigate(nav.navigator, {
+                    title: nav.title,
+                    parent: 'live'
+                  });
+                } else {
+                  navigate('LIVESCHEDULE', {
+                    title: nav.title,
+                    parent: 'live'
+                  });
+                }
               } else if (nav.title === 'Schedule') {
                 navigate(nav.navigator, {
                   title: nav.title,
-                  parent: 'Lessons'
+                  parent: 'live-schedule'
                 });
               } else {
                 navigate(nav.navigator);
