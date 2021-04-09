@@ -214,7 +214,7 @@ class Lessons extends React.Component {
       // prod: timeDiff < 0
       // test: date.getSeconds() == 1 || date.getSeconds() == 30
       
-      // if time ran out show reminder, get rid of modal
+      // if time ran out show reminder, get rid of timer
       this.setState({showLive: true})
       clearInterval(this.interval)
     }

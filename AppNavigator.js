@@ -10,7 +10,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import StudentFocusCatalog from './src/views/content/StudentFocusCatalog';
 import StudentFocusShow from './src/views/content/StudentFocusShow';
 import VideoPlayerSong from './src/views/content/VideoPlayerSong';
-import LiveSchedule from './src/views/content/LiveSchedule';
+import Schedule from './src/views/content/Schedule';
 import VideoPlayer from './src/views/content/VideoPlayer';
 import SongCatalog from './src/views/content/SongCatalog';
 import PathOverview from './src/views/content/PathOverview';
@@ -184,7 +184,7 @@ export default () => (
         <Stack.Screen name='VIDEOPLAYERSONG' component={VideoPlayerSong} />
         <Stack.Screen name='METHODLEVEL' component={MethodLevel} />
         <Stack.Screen name='LIVE' component={Live} />
-        <Stack.Screen name='LIVESCHEDULE' component={LiveSchedule} />
+        <Stack.Screen name='SCHEDULE' component={Schedule} />
         <Stack.Screen name='METHOD' component={Method} />
         <Stack.Screen name='FOUNDATIONS' component={Foundations} />
         <Stack.Screen name='PATHOVERVIEW' component={PathOverview} />
