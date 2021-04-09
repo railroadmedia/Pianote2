@@ -55,7 +55,7 @@ const navigationOptions = [
   },
   {
       title: 'Schedule',
-    navigator: 'SEEALL'
+    navigator: 'LIVESCHEDULE'
   },
   {
     title: 'Podcasts',
