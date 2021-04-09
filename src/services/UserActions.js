@@ -115,3 +115,17 @@ export async function updateUsersVideoProgress(id, seconds, lengthInSeconds) {
     'PUT'
   );
 }
+export function removeAllMessages(userId) {
+  return commonService.tryCall(
+    `${commonService.rootUrl}/api/chat/delete-user-messages?user_id=${userId}`,
+    'POST'
+  );
+}
+export function toggleBlockStudent(user) {
+  return commonService.tryCall(
+    `${commonService.rootUrl}/api/chat/${
+      user.banned ? 'unban-user' : 'ban-user'
+    }?user_id=${user.id}`,
+    'POST'
+  );
+}

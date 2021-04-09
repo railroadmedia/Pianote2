@@ -42,31 +42,31 @@ export async function getAllContent(type, sort, page, filters = '') {
   if (typeof response.meta.filterOptions.topic == 'undefined') {
     response.meta.filterOptions.topic = [];
   }
-  
+
   return response;
 }
 
 export async function getLiveContent() {
-  return response = await commonService.tryCall(
+  return (response = await commonService.tryCall(
     `${commonService.rootUrl}//musora-api/live-event`,
-    'GET'  
+    'GET'
     // ?forced-content-id=275886
     // ?forced-upcoming-content-id=275886
-  );
+  ));
 }
 
 export async function getScheduleContent() {
-  return response = await commonService.tryCall(
+  return (response = await commonService.tryCall(
     `${commonService.rootUrl}//musora-api/schedule`,
     'GET'
-  );
+  ));
 }
 
 export async function getLiveScheduleContent() {
-  return response = await commonService.tryCall(
+  return (response = await commonService.tryCall(
     `${commonService.rootUrl}//musora-api/live-schedule`,
     'GET'
-  );
+  ));
 }
 
 export async function getStartedContent(type) {
@@ -109,7 +109,7 @@ export async function seeAllContent(contentType, type, page, filters = '') {
   if (type == 'continue')
     url += `&required_user_states[]=started&sort=-progress`;
   else url += `&sort=-published_on`;
-  
+
   return await commonService.tryCall(url);
 }
 

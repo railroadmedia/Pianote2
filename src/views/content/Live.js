@@ -20,11 +20,14 @@ import NavMenuHeaders from '../../components/NavMenuHeaders';
 import NavigationBar from '../../components/NavigationBar.js';
 import FastImage from 'react-native-fast-image';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import { MusoraChat } from 'MusoraChat';
 
 import { getLiveScheduleContent } from '../../services/GetContent';
 import {
   getMediaSessionId,
-  updateUsersVideoProgress
+  updateUsersVideoProgress,
+  removeAllMessages,
+  toggleBlockStudent
 } from '../../services/UserActions';
 
 import ArrowLeft from 'Pianote2/src/assets/img/svgs/arrowLeft';
@@ -35,6 +38,7 @@ import { getLiveContent } from 'Pianote2/src/services/GetContent';
 
 export default class Live extends React.Component {
   static contextType = NetworkContext;
+  content = {};
   constructor(props) {
     super(props);
     this.state = {
@@ -50,7 +54,8 @@ export default class Live extends React.Component {
 
     let content = [await getLiveContent()];
     if (content[0]?.isLive) {
-      this.setState({ isLive: true });
+      this.content = content[0];
+      this.setState({ isLive: true, isLoadingAll: false });
     } else {
       let response = await getLiveScheduleContent();
       console.log('rep', response);
@@ -64,6 +69,14 @@ export default class Live extends React.Component {
   onBack = () => goBack();
 
   render() {
+    let {
+      apiKey,
+      chatChannelName,
+      questionsChannelName,
+      userId,
+      token,
+      youtube_video_id
+    } = this.content;
     return (
       <>
         {this.state.isLive ? (
@@ -102,7 +115,7 @@ export default class Live extends React.Component {
                     </View>
                   ) : (
                     <Video
-                      youtubeId={youtubeId}
+                      youtubeId={youtube_video_id}
                       toSupport={() => {}}
                       onRefresh={() => {}}
                       content={this.state}
@@ -171,10 +184,17 @@ export default class Live extends React.Component {
                   )}
                 </>
               )}
-
               {!this.state.isLoadingAll ? (
-                // LIVE CHAT HERE
-                <View style={styles.mainBackground}></View>
+                <MusoraChat
+                  appColor={colors.pianoteRed}
+                  chatId={chatChannelName}
+                  clientId={apiKey}
+                  isDark={true}
+                  onRemoveAllMessages={removeAllMessages}
+                  onToggleBlockStudent={toggleBlockStudent}
+                  questionsId={questionsChannelName}
+                  user={{ id: `${userId}`, gsToken: token }}
+                />
               ) : (
                 <ActivityIndicator
                   size='small'
