@@ -38,6 +38,7 @@ import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
 import methodService from '../../services/method.service.js';
 import { getStartedContent, getLiveContent, getAllContent } from '../../services/GetContent';
+import Loading from '../../components/Loading.js';
 import { addToMyList, removeFromMyList } from '../../services/UserActions';
 import RestartCourse from '../../modals/RestartCourse';
 import Live from '../../modals/Live';
@@ -83,7 +84,7 @@ class Lessons extends React.Component {
       methodIsCompleted: false,
       methodNextLessonUrl: null,
       showRestartCourse: false,
-      showLive: true, 
+      showLive: false, 
       lessonsStarted: true,
       refreshing: !lessonsCache,
       refreshControl: true,
@@ -210,13 +211,15 @@ class Lessons extends React.Component {
         seconds: date.getSeconds(),
       }
     })
-    if(timeDiff < 0) { 
+    if(date.getSeconds() == 1 || date.getSeconds() == 30) { 
       // prod: timeDiff < 0
       // test: date.getSeconds() == 1 || date.getSeconds() == 30
       
       // if time ran out show reminder, get rid of modal
-      this.setState({showLive: true})
+      //this.setState({showLive: true})
       await clearInterval(this.interval)
+      Alert.alert('hi')
+      this.loadingRef?.toggleLoading();
     }
   }
 
@@ -659,7 +662,7 @@ class Lessons extends React.Component {
                   >
                     LIVE
                   </Text>
-                  {this.state.timeDiffLive.timeDiff > 0 ? (
+                  {this.state.timeDiffLive.timeDiff < 0 ? (
                     // prod: > 0
                     // live lesson has time to countdown 
                     <TouchableOpacity
@@ -1190,6 +1193,17 @@ class Lessons extends React.Component {
         ) : (
           <ActivityIndicator size='small' style={{ flex: 1 }} color={'white'} />
         )}
+        <Live
+            ref={ref => {
+              this.loadingRef = ref;
+            }}
+            liveLesson={this.state.liveLesson}
+            hideLive={() => {
+              this.setState({
+                showLive: false
+              });
+            }}
+          />
         <Modal
           isVisible={this.state.showRestartCourse}
           style={styles.modalContainer}

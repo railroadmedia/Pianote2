@@ -9,7 +9,7 @@ import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import { NetworkContext } from '../context/NetworkProvider';
 import { SafeAreaView } from 'react-navigation';
-import { navigate, reset } from '../../AppNavigator';
+import { navigate } from '../../AppNavigator';
 
 export default class NavMenuHeaders extends React.Component {
   static contextType = NetworkContext;
@@ -47,7 +47,7 @@ export default class NavMenuHeaders extends React.Component {
             onPress={() => {
               !this.context.isConnected
                 ? this.context.showNoConnectionAlert()
-                : reset(isPackOnly ? 'PACKS' : 'LESSONS');
+                : navigate(isPackOnly ? 'PACKS' : 'LESSONS');
             }}
             style={{
               height: onTablet ? 45 : 30,
