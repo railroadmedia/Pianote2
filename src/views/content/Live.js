@@ -53,6 +53,7 @@ export default class Live extends React.Component {
       this.setState({isLive: true})
     } else {
       let response = await getLiveScheduleContent()
+      console.log('rep', response)
     }
 
   };
