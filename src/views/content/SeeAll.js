@@ -15,12 +15,7 @@ import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
 import NavigationBar from '../../components/NavigationBar.js';
 import VerticalVideoList from '../../components/VerticalVideoList.js';
-import {
-  seeAllContent,
-  getMyListContent,
-  getAllContent,
-  getStartedContent
-} from '../../services/GetContent';
+import { getMyListContent, getStartedContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { goBack } from '../../../AppNavigator.js';
 
@@ -89,59 +84,27 @@ export default class SeeAll extends React.Component {
         this.state.title == 'In Progress' ? 'started' : 'completed'
       );
     } else if (this.state.parent === 'Lessons') {
-      if (this.state.title.includes('All')) {
-        response = await getAllContent(
-          '',
-          'newest',
-          this.state.page,
-          this.filterQuery
-        );
-      } else {
-        response = await seeAllContent(
-          'lessons',
-          'continue',
-          this.state.page,
-          this.filterQuery
-        );
-      }
+      response = await getStartedContent('', this.state.page, this.filterQuery);
     } else if (this.state.parent === 'Courses') {
-      if (this.state.title === 'Continue') {
-        response = await seeAllContent(
-          'courses',
-          'continue',
-          this.state.page,
-          this.filterQuery
-        );
-      } else {
-        response = await getAllContent(
-          'course',
-          'newest',
-          this.state.page,
-          this.filterQuery
-        );
-      }
+      response = await getStartedContent(
+        'course',
+        this.state.page,
+        this.filterQuery
+      );
     } else if (this.state.parent === 'Songs') {
-      if (this.state.title === 'Continue') {
-        response = await seeAllContent(
-          'song',
-          'continue',
-          this.state.page,
-          this.filterQuery
-        );
-      } else {
-        response = await getAllContent(
-          'song',
-          'newest',
-          this.state.page,
-          this.filterQuery
-        );
-      }
+      response = await getStartedContent(
+        'song',
+        this.state.page,
+        this.filterQuery
+      );
     } else if (this.state.parent === 'Student Focus') {
       response = await getStartedContent(
-        'quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=podcast'
+        'quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=podcast',
+        this.state.page,
+        this.filterQuery
       );
     }
-    console.log(response);
+
     this.metaFilters = response?.meta?.filterOptions;
     const newContent = response.data;
 

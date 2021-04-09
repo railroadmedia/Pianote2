@@ -92,7 +92,7 @@ function decideWhereToRedirect() {
           return navigate('METHODLEVEL', {
             url:
               commonService.rootUrl +
-              '/api/members/learning-paths' +
+              '/musora-api/members/learning-paths' +
               url.substr(url.indexOf('/pianote-method'))
           });
         }
@@ -104,14 +104,17 @@ function decideWhereToRedirect() {
             data: {
               mobile_app_url:
                 commonService.rootUrl +
-                '/api/members/learning-path-courses/' +
+                '/musora-api/members/learning-path-courses/' +
                 id
             },
             isMethod: true
           });
         }
         return navigate('VIDEOPLAYER', {
-          url: commonService.rootUrl + '/api/members/learning-path-lesson/' + id
+          url:
+            commonService.rootUrl +
+            '/musora-api/members/learning-path-lesson/' +
+            id
         });
       } else if (url.includes('foundations')) {
         if (url.split('/').length - 1 === 6) {
@@ -125,7 +128,7 @@ function decideWhereToRedirect() {
             data: {
               mobile_app_url:
                 commonService.rootUrl +
-                '/api/members/learning-path-levels/foundations-2019/' +
+                '/musora-api/members/learning-path-levels/foundations-2019/' +
                 slug
             },
             isFoundations: true
@@ -133,7 +136,9 @@ function decideWhereToRedirect() {
         }
         return navigate('VIDEOPLAYER', {
           url:
-            commonService.rootUrl + '/api/members/learning-path-lessons/' + id
+            commonService.rootUrl +
+            '/musora-api/members/learning-path-lessons/' +
+            id
         });
       }
     }
@@ -167,17 +172,19 @@ function decideWhereToRedirect() {
   if (url.includes('packs') && !isNaN(id)) {
     if (url.split('/').length - 1 === 8)
       return navigate('SINGLEPACK', {
-        url: commonService.rootUrl + '/api/members/pack/' + id
+        url: commonService.rootUrl + '/musora-api/members/pack/' + id
       });
     return navigate('VIDEOPLAYER', {
-      url: commonService.rootUrl + '/api/content/' + id
+      url: commonService.rootUrl + '/musora-api/content/' + id
     });
   }
   if (url.includes('packs') && isNaN(id)) {
     if (url.split('/').length - 1 === 5)
       return navigate('SINGLEPACK', {
         url:
-          commonService.rootUrl + '/api' + url.substr(url.indexOf('/members'))
+          commonService.rootUrl +
+          '/musora-api' +
+          url.substr(url.indexOf('/members'))
       });
   }
 }

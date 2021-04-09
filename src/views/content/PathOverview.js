@@ -117,7 +117,7 @@ export default class PathOverview extends React.Component {
     } else {
       res = await contentService.getContent(this.state.data.id);
     }
-    console.log(res);
+
     this.setState({
       likeCount: res.like_count,
       isLiked: res.is_liked_by_current_user,

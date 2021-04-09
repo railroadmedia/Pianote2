@@ -101,6 +101,7 @@ class LoadPage extends React.Component {
           updateFcmToken();
           await AsyncStorage.multiSet([['loggedIn', 'true']]);
           let userData = await getUserData();
+
           let { lessonUrl, commentId } = notif;
           if (commonService.urlToOpen) {
             return navigationService.decideWhereToRedirect();

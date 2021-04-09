@@ -62,7 +62,8 @@ class StudentFocusCatalog extends React.Component {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let content = await Promise.all([
       getStartedContent(
-        'quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=podcast'
+        'quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=podcast',
+        1
       ),
       getStudentFocusTypes()
     ]);

@@ -14,17 +14,14 @@ export async function getToken(userEmail, userPass, purchases) {
 
   let email = userEmail || data.email;
   let password = userPass || data.password;
-  email = encodeURIComponent(email);
-  password = encodeURIComponent(password);
 
-  let response = await fetch(
-    `${commonService.rootUrl}/usora/api/login?email=${email}&password=${password}`,
-    {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: purchases ? JSON.stringify(purchases) : {}
-    }
-  );
+  const body = purchases ? { email, password, purchases } : { email, password };
+
+  let response = await fetch(`${commonService.rootUrl}/musora-api/login`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
 
   if (response.status == 500) {
     return 500;
@@ -44,64 +41,67 @@ export async function getUserData() {
   // return profile details
   try {
     await getToken();
-    let userData = await fetch(`${commonService.rootUrl}/api/profile`, {
+    let userData = await fetch(`${commonService.rootUrl}/musora-api/profile`, {
       method: 'GET',
       headers: { Authorization: `Bearer ${token}` }
     });
     if (typeof userData.error == 'undefined') {
       userData = await userData.json();
       // if received data, update data
-      await AsyncStorage.multiSet([
-        ['totalXP', userData.totalXp.toString()],
-        ['rank', userData.xpRank.toString()],
-        ['userId', userData.id.toString()],
-        ['displayName', userData.display_name.toString()],
-        ['profileURI', userData.profile_picture_url.toString()],
-        ['joined', userData.created_at.toString()],
-        [
-          'weeklyCommunityUpdatesClicked',
-          userData.notify_weekly_update.toString()
-        ],
-        [
-          'commentRepliesClicked',
-          userData.notify_on_lesson_comment_reply.toString()
-        ],
-        [
-          'commentLikesClicked',
-          userData.notify_on_lesson_comment_like.toString()
-        ],
-        [
-          'forumPostRepliesClicked',
-          userData.notify_on_forum_post_reply.toString()
-        ],
-        [
-          'forumPostLikesClicked',
-          userData.notify_on_forum_post_like.toString()
-        ],
-        [
-          'notifications_summary_frequency_minutes',
-          userData.notify_weekly_update == null ||
-          userData.notify_weekly_update == ''
-            ? 'null'
-            : userData.notify_weekly_update.toString()
-        ]
-      ]);
+      try {
+        await AsyncStorage.multiSet([
+          ['totalXP', userData.totalXp?.toString()],
+          ['rank', userData.xpRank?.toString()],
+          ['userId', userData.id.toString()],
+          ['displayName', userData.display_name?.toString()],
+          ['profileURI', userData.profile_picture_url?.toString()],
+          ['joined', userData.created_at?.toString()],
+          [
+            'weeklyCommunityUpdatesClicked',
+            userData.notify_weekly_update?.toString()
+          ],
+          [
+            'commentRepliesClicked',
+            userData.notify_on_lesson_comment_reply?.toString()
+          ],
+          [
+            'commentLikesClicked',
+            userData.notify_on_lesson_comment_like?.toString()
+          ],
+          [
+            'forumPostRepliesClicked',
+            userData.notify_on_forum_post_reply?.toString()
+          ],
+          [
+            'forumPostLikesClicked',
+            userData.notify_on_forum_post_like?.toString()
+          ],
+          [
+            'notifications_summary_frequency_minutes',
+            userData.notify_weekly_update == null ||
+            userData.notify_weekly_update == ''
+              ? 'null'
+              : userData.notify_weekly_update?.toString()
+          ]
+        ]);
+      } catch (e) {}
+      return userData;
     }
 
-    return userData;
+    // return userData;
   } catch (error) {}
 }
 
 export async function forgotPass(emailAddress) {
   return commonService.tryCall(
-    `${commonService.rootUrl}/api/forgot?email=${emailAddress}`,
+    `${commonService.rootUrl}/musora-api/forgot?email=${emailAddress}`,
     'PUT'
   );
 }
 
 export async function changePassword(email, pass, token) {
   return commonService.tryCall(
-    `${commonService.rootUrl}/api/change-password`,
+    `${commonService.rootUrl}/musora-api/change-password`,
     'PUT',
     {
       pass1: pass,

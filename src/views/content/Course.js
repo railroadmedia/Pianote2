@@ -78,7 +78,7 @@ class Course extends React.Component {
         this.state.page,
         this.filterQuery
       ),
-      getStartedContent('course')
+      getStartedContent('course', 1)
     ]);
     this.metaFilters = content?.[0]?.meta?.filterOptions;
     this.props.cacheAndWriteCourses({

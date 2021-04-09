@@ -78,9 +78,9 @@ class SongCatalog extends React.Component {
         this.state.page,
         this.filterQuery
       ),
-      getStartedContent('song')
+      getStartedContent('song', 1)
     ]);
-    console.log(content);
+
     this.metaFilters = content?.[0]?.meta?.filterOptions;
     this.props.cacheAndWriteSongs({
       all: content[0],

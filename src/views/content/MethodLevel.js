@@ -82,7 +82,6 @@ export default class MethodLevel extends React.Component {
     let response = await methodService.getMethodContent(
       this.props.route?.params.url
     );
-    console.log(response);
 
     this.setState({
       items: response.courses,

@@ -158,7 +158,7 @@ export default class VideoPlayer extends React.Component {
       content = result;
       this.allCommentsNum = result.total_comments;
     }
-    console.log(content);
+
     let al = [];
     if (content.assignments) {
       for (let i in content.assignments) {

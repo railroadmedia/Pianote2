@@ -103,7 +103,6 @@ export default class Foundations extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     const response = await foundationsService.getFoundation('foundations-2019');
-    console.log(response);
     this.setState({
       items: response.units,
       id: response.id,

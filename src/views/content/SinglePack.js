@@ -88,7 +88,7 @@ export default class SinglePack extends React.Component {
     }
     // get bundles
     const response = await packsService.getPack(this.state.url);
-    console.log(response);
+
     // if more than one bundle then display bundles otherwise show videos
     if (response.bundles)
       // TODO: response.bundle_count > 1

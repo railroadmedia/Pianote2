@@ -107,7 +107,7 @@ export default class ProfileSettings extends React.Component {
 
     if (response.unique) {
       let nameResponse = await commonService.tryCall(
-        `${commonService.rootUrl}/api/profile/update`,
+        `${commonService.rootUrl}/musora-api/profile/update`,
         'POST',
         {
           display_name: this.state.displayName
@@ -136,7 +136,7 @@ export default class ProfileSettings extends React.Component {
     try {
       if (this.state.imageURI !== '') {
         let response = await fetch(
-          `${commonService.rootUrl}/api/avatar/upload`,
+          `${commonService.rootUrl}/musora-api/avatar/upload`,
           {
             method: 'POST',
             headers: { Authorization: `Bearer ${token}` },
@@ -150,7 +150,7 @@ export default class ProfileSettings extends React.Component {
         let url = await response.json();
         if (url.data[0].url) {
           await commonService.tryCall(
-            `${commonService.rootUrl}/api/profile/update`,
+            `${commonService.rootUrl}/musora-api/profile/update`,
             'POST',
             { file: url == '' ? url : url.data[0].url }
           );

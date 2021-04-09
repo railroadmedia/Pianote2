@@ -244,7 +244,7 @@ export default class Profile extends React.Component {
     this.setState(data);
     try {
       let response = await commonService.tryCall(
-        `${commonService.rootUrl}/usora/api/profile/update`,
+        `${commonService.rootUrl}/musora-api/profile/update`,
         'PATCH',
         {
           data: {

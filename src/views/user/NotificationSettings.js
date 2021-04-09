@@ -81,7 +81,7 @@ export default class NotificationSettings extends React.Component {
       };
 
       let response = await commonService.tryCall(
-        `${commonService.rootUrl}/usora/api/profile/update`,
+        `${commonService.rootUrl}/musora-api/profile/update`,
         'POST',
         body
       );

@@ -189,7 +189,7 @@ export default class CreateAccount3 extends React.Component {
           try {
             // upload file
             let response = await fetch(
-              `${commonService.rootUrl}/api/avatar/upload`,
+              `${commonService.rootUrl}/musora-api/avatar/upload`,
               {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}` },
@@ -206,7 +206,7 @@ export default class CreateAccount3 extends React.Component {
             // get data back, put image URL & display name in user details
             url = await response.json();
             await commonService.tryCall(
-              `${commonService.rootUrl}/api/profile/update`,
+              `${commonService.rootUrl}/musora-api/profile/update`,
               'POST',
               {
                 file: url?.data?.[0]?.url,
@@ -219,7 +219,7 @@ export default class CreateAccount3 extends React.Component {
           } catch (e) {}
         } else {
           await commonService.tryCall(
-            `${commonService.rootUrl}/api/profile/update`,
+            `${commonService.rootUrl}/musora-api/profile/update`,
             'POST',
             {
               file: url?.data?.[0]?.url,

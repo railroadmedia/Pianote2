@@ -138,7 +138,7 @@ class Lessons extends React.Component {
         this.state.page,
         this.filterQuery
       ),
-      getStartedContent('')
+      getStartedContent('', 1)
     ]);
     this.metaFilters = content?.[1]?.meta?.filterOptions;
     this.props.cacheAndWriteLessons({

@@ -90,7 +90,6 @@ class Packs extends React.Component {
   async getData() {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     const response = await packsService.allPacks();
-    console.log(response);
     this.props.cacheAndWritePacks(response);
     this.setState(this.initialValidData(response));
   }
