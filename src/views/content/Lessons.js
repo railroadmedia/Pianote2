@@ -27,6 +27,7 @@ import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import Orientation from 'react-native-orientation-locker';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
+import { watchersListener } from 'MusoraChat';
 import StartIcon from '../../components/StartIcon';
 import ResetIcon from '../../components/ResetIcon';
 import MoreInfoIcon from '../../components/MoreInfoIcon';
@@ -91,6 +92,7 @@ class Lessons extends React.Component {
       lessonsStarted: true,
       refreshing: !lessonsCache,
       refreshControl: true,
+      liveViewers: undefined,
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width,
       ...this.initialValidData(lessonsCache, true)
@@ -129,7 +131,7 @@ class Lessons extends React.Component {
 
   componentWillUnmount() {
     this.refreshOnFocusListener?.();
-
+    this.removeWatchersListener?.();
     Orientation.removeDeviceOrientationListener(this.orientationListener);
   }
 
@@ -183,6 +185,14 @@ class Lessons extends React.Component {
 
   async getLiveContent() {
     let content = [await getLiveContent()];
+
+    //watchers listener
+    let [{ apiKey, chatChannelName, userId, token }] = content;
+    watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
+      this.setState({ liveViewers })
+    ).then(rwl => (this.removeWatchersListener = rwl));
+    ///////////////////
+
     let timeNow = Math.floor(Date.now() / 1000);
     let timeLive = new Date(content[0].live_event_start_time).getTime() / 1000;
     let timeDiff = timeLive - timeNow;
@@ -1091,10 +1101,7 @@ class Lessons extends React.Component {
                                       paddingLeft: 5
                                     }}
                                   >
-                                    {
-                                      this.state.liveLesson[0]
-                                        .chatRollViewersNumberClass
-                                    }
+                                    {this.state.liveViewers}
                                   </Text>
                                 </View>
                               </View>
