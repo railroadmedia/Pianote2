@@ -121,7 +121,7 @@ export default class Live extends React.Component {
                 }}
               >
                 {' '}
-                143 members
+                {this.props.numViewers} members
               </Text>
             </Text>
             <TouchableOpacity

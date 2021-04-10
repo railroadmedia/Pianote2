@@ -1281,6 +1281,7 @@ class Lessons extends React.Component {
           hasBackdrop={true}
         >
           <Live
+            numViewers={this.state.liveViewers}
             liveLesson={this.state.liveLesson}
             hideLive={() => {
               this.setState({
