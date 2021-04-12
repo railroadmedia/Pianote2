@@ -106,7 +106,7 @@ class Course extends React.PureComponent {
   };
 
   navigate = data =>
-    this.props.navigation.navigate('PATHOVERVIEW', {
+    navigate('PATHOVERVIEW', {
       data
     });
 
@@ -130,10 +130,7 @@ class Course extends React.PureComponent {
               <Text style={lStyle.continueText}>CONTINUE</Text>
               <TouchableOpacity
                 onPress={() =>
-                  this.props.navigation.navigate('SEEALL', {
-                    title: 'Continue',
-                    parent: 'Courses'
-                  })
+                  navigate('SEEALL', { title: 'Continue', parent: 'Courses' })
                 }
                 style={{ padding: 10, paddingRight: 0 }}
               >
