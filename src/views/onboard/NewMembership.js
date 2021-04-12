@@ -34,7 +34,10 @@ let purchaseUpdateSubscription = null;
 
 const skus = Platform.select({
   android: ['pianote_app_1_year_2021', 'pianote_app_1_month_2021'],
-  ios: ['pianote_app_1_month_membership', 'pianote_app_1_year_membership']
+  ios: [
+    'pianote_app_1_month_membership_2021',
+    'pianote_app_1_year_membership_2021'
+  ]
 });
 
 const windowDim = Dimensions.get('window');
