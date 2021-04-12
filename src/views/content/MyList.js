@@ -88,7 +88,7 @@ class MyList extends React.Component {
           ? this.state?.allLessons?.concat(newContent)
           : newContent,
         outVideos:
-          newContent.length == 0 || newContent.length < 20 ? true : false,
+          newContent.length == 0 || newContent.length < 10 ? true : false,
         page: this.state?.page + 1 || 1,
         isLoadingAll: false,
         filtering: false,

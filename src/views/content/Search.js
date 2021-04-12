@@ -187,7 +187,7 @@ export default class Search extends React.Component {
         this.setState({
           searchResults: [...this.state.searchResults, ...newContent],
           outVideos:
-            newContent.length == 0 || newContent.length < 20 ? true : false,
+            newContent.length == 0 || newContent.length < 10 ? true : false,
           isLoadingAll: false,
           filtering: false,
           isPaging: false,

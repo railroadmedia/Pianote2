@@ -98,7 +98,7 @@ export default class Downloads extends React.Component {
             isAddedToList: l.post.is_added_to_primary_playlist,
             isStarted: l.post.started,
             isCompleted: l.post.completed,
-            bundle_count: l.post.bundle_count,
+            bundle_number: l.post.bundle_number,
             progress_percent: l.post.progress_percent
           }))
       });

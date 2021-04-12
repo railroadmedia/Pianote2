@@ -105,10 +105,10 @@ class Course extends React.Component {
         refreshing: false,
         refreshControl: fromCache,
         outVideos:
-          allVideos.length == 0 || content.all.data.length < 20 ? true : false,
+          allVideos.length == 0 || content.all.data.length < 10 ? true : false,
         filtering: false,
         isPaging: false,
-        page: this.state?.page + 1 || 1,
+        page: 1,
         started: inprogressVideos.length !== 0
       };
     } catch (e) {
@@ -134,11 +134,10 @@ class Course extends React.Component {
 
     this.setState(state => ({
       allCourses: loadMore ? state.allCourses.concat(items) : items,
-      outVideos: items.length == 0 || response.data.length < 20 ? true : false,
+      outVideos: items.length == 0 || response.data.length < 10 ? true : false,
       filtering: false,
       isPaging: false,
-      refreshControl: false,
-      page: this.state.page + 1
+      refreshControl: false
     }));
   };
 
@@ -152,15 +151,6 @@ class Course extends React.Component {
       },
       () => this.getAllCourses()
     );
-  };
-
-  getVideos = async () => {
-    // change page before getting more lessons if paging
-    if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () =>
-        this.getAllCourses(true)
-      );
-    }
   };
 
   handleScroll = event => {
@@ -256,7 +246,6 @@ class Course extends React.Component {
                   )
                 }
                 outVideos={this.state.outVideos}
-                getVideos={() => this.getVideos()}
                 callEndReached={true}
                 reachedEnd={() => {
                   if (!this.state.isPaging && !this.state.outVideos) {
@@ -302,7 +291,6 @@ class Course extends React.Component {
                 }
                 imageWidth={width * 0.26} // image width
                 outVideos={this.state.outVideos}
-                getVideos={() => this.getVideos()}
               />
             )}
           </ScrollView>

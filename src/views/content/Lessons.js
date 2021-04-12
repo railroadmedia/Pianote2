@@ -197,7 +197,7 @@ class Lessons extends React.Component {
         allLessons: allVideos,
         progressLessons: inprogressVideos,
         outVideos:
-          allVideos.length == 0 || allVideos.length < 20 ? true : false,
+          allVideos.length == 0 || allVideos.length < 10 ? true : false,
         filtering: false,
         isPaging: false,
         lessonsStarted: inprogressVideos.length !== 0,
@@ -245,7 +245,7 @@ class Lessons extends React.Component {
 
       this.setState({
         allLessons: [...this.state.allLessons, ...items],
-        outVideos: items.length == 0 || items.length < 20 ? true : false,
+        outVideos: items.length == 0 || items.length < 10 ? true : false,
         filtering: false,
         isPaging: false
       });
@@ -275,17 +275,10 @@ class Lessons extends React.Component {
         outVideos: false,
         isPaging: true,
         allLessons: [],
-        page: 0
+        page: 1
       },
       () => this.getAllLessons()
     );
-  };
-
-  getVideos = () => {
-    // change page before getting more lessons if paging
-    if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () => this.getAllLessons());
-    }
   };
 
   handleScroll = event => {
@@ -847,7 +840,6 @@ class Lessons extends React.Component {
                     )
                   }
                   outVideos={this.state.outVideos} // if paging and out of videos
-                  getVideos={() => this.getVideos()}
                   callEndReached={true}
                   reachedEnd={() => {
                     if (!this.state.isPaging && !this.state.outVideos) {
@@ -894,7 +886,6 @@ class Lessons extends React.Component {
                   }
                   imageWidth={width * 0.26} // image width
                   outVideos={this.state.outVideos} // if paging and out of videos
-                  getVideos={() => this.getVideos()}
                 />
               )}
             </View>

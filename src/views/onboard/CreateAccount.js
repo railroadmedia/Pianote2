@@ -26,6 +26,7 @@ import CreateAccountStepCounter from './CreateAccountStepCounter';
 import Orientation from 'react-native-orientation-locker';
 import DeviceInfo from 'react-native-device-info';
 import { navigate } from '../../../AppNavigator';
+import { isEmailUnique } from '../../services/UserDataAuth';
 
 export default class CreateAccount extends React.Component {
   static contextType = NetworkContext;
@@ -41,33 +42,25 @@ export default class CreateAccount extends React.Component {
     };
   }
 
-  verifyEmail = () => {
+  verifyEmail = async () => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
     if (this.state.email.length > 0) {
       let email = encodeURIComponent(this.state.email);
-      fetch(`${commonService.rootUrl}/usora/api/is-email-unique?email=${email}`)
-        .then(response => response.json())
-        .then(response => {
-          console.log(response);
-          if (response?.exists) {
-            this.setState({ showCheckEmail: true });
-          } else if (
-            response?.errors?.email ==
-            'The email must be a valid email address.'
-          ) {
-            this.setState({ showValidateEmail: true });
-          } else {
-            navigate('CREATEACCOUNT2', {
-              email: this.state.email,
-              purchase: this.props.route?.params?.purchase
-            });
-          }
-        })
-        .catch(error => {
-          console.log('API Error: ', error);
+      let response = await isEmailUnique(email);
+      if (response?.exists) {
+        this.setState({ showCheckEmail: true });
+      } else if (
+        response?.errors?.email == 'The email must be a valid email address.'
+      ) {
+        this.setState({ showValidateEmail: true });
+      } else {
+        navigate('CREATEACCOUNT2', {
+          email: this.state.email,
+          purchase: this.props.route?.params?.purchase
         });
+      }
     }
   };
 

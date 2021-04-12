@@ -43,9 +43,9 @@ export default class ContentModal extends React.Component {
         typeof this.props.data.description !== 'undefined'
           ? this.props.data.description
           : '',
-      bundle_count:
-        typeof this.props.data.bundle_count !== 'undefined'
-          ? this.props.data.bundle_count
+      bundle_number:
+        typeof this.props.data.bundle_number !== 'undefined'
+          ? this.props.data.bundle_number
           : 0,
       lesson_count:
         typeof this.props.data.lesson_count !== 'undefined'
@@ -171,7 +171,8 @@ export default class ContentModal extends React.Component {
             </Text>
             <View style={[styles.centerContent, { flexDirection: 'row' }]}>
               <View style={{ flex: 1 }} />
-              {(this.state.bundle_count > 1 || this.state.lesson_count > 1) && (
+              {(this.state.bundle_number > 1 ||
+                this.state.lesson_count > 1) && (
                 <View
                   style={[
                     styles.centerContent,
@@ -183,14 +184,13 @@ export default class ContentModal extends React.Component {
                   <Text style={localStyles.lessonCount}>
                     {this.state.lesson_count > 1
                       ? this.state.lesson_count
-                      : this.state.bundle_count}
+                      : this.state.bundle_number}
                   </Text>
                   <Text style={localStyles.lessons}>LESSONS</Text>
                 </View>
               )}
-              {(this.state.bundle_count > 1 || this.state.lesson_count > 1) && (
-                <View style={{ flex: 0.6 }} />
-              )}
+              {(this.state.bundle_number > 1 ||
+                this.state.lesson_count > 1) && <View style={{ flex: 0.6 }} />}
               <View
                 style={[
                   styles.centerContent,

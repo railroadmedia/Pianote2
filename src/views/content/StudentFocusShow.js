@@ -109,8 +109,8 @@ class StudentFocusShow extends React.Component {
           content.thumbnail[this.props.route?.params?.type]?.thumbnailUrl,
         allLessons: newContent,
         outVideos:
-          newContent.length == 0 || newContent.length < 20 ? true : false,
-        page: this.state?.page + 1 || 1,
+          newContent.length == 0 || newContent.length < 10 ? true : false,
+        page: 1,
         isLoadingAll: false,
         refreshing: fromCache,
         filtering: false,
@@ -147,8 +147,7 @@ class StudentFocusShow extends React.Component {
         ? state.allLessons.concat(newContent)
         : newContent,
       outVideos:
-        newContent.length == 0 || newContent.length < 20 ? true : false,
-      page: this.state.page + 1,
+        newContent.length == 0 || newContent.length < 10 ? true : false,
       isLoadingAll: false,
       refreshing: false,
       filtering: false,
@@ -167,15 +166,6 @@ class StudentFocusShow extends React.Component {
       },
       () => this.getAllLessons()
     );
-  };
-
-  getVideos = async () => {
-    // change page before getting more lessons if paging
-    if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () =>
-        this.getAllLessons(true)
-      );
-    }
   };
 
   getArtist = newContent => {
@@ -317,7 +307,6 @@ class StudentFocusShow extends React.Component {
             changeSort={sort => this.changeSort(sort)}
             imageWidth={(onTablet ? 0.225 : 0.3) * width}
             outVideos={this.state.outVideos}
-            getVideos={() => this.getVideos()}
             applyFilters={filters =>
               new Promise(res =>
                 this.setState(

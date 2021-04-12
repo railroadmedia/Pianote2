@@ -111,8 +111,7 @@ export default class SeeAll extends React.Component {
     this.setState(state => ({
       allLessons: loadMore ? state.allLessons.concat(newContent) : newContent,
       outVideos:
-        newContent.length == 0 || newContent.length < 20 ? true : false,
-      page: this.state.page + 1,
+        newContent.length == 0 || newContent.length < 10 ? true : false,
       isLoadingAll: false,
       refreshing: false,
       filtering: false,
@@ -141,15 +140,6 @@ export default class SeeAll extends React.Component {
       } catch (error) {
         return '';
       }
-    }
-  };
-
-  getVideos = () => {
-    // change page before getting more lessons if paging
-    if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () =>
-        this.getAllLessons(true)
-      );
     }
   };
 

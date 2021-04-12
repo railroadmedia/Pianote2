@@ -35,6 +35,7 @@ import { NetworkContext } from '../../context/NetworkProvider.js';
 import Orientation from 'react-native-orientation-locker';
 import Loading from '../../components/Loading';
 import { reset } from '../../../AppNavigator';
+import { isNameUnique } from '../../services/UserDataAuth';
 
 var data = new FormData();
 
@@ -130,10 +131,8 @@ export default class CreateAccount3 extends React.Component {
     if (this.state.displayName.length > 0) {
       Keyboard.dismiss();
       // check if valid
-      let response = await fetch(
-        `${commonService.rootUrl}/usora/api/is-display-name-unique?display_name=${this.state.displayName}`
-      );
-      response = await response.json();
+      let response = await isNameUnique(this.state.displayName);
+
       if (response.unique) {
         this.myScroll.scrollTo({
           x: width,

@@ -102,7 +102,7 @@ class SongCatalog extends React.Component {
       return {
         allSongs: allVideos,
         outVideos:
-          allVideos.length == 0 || content.all.data.length < 20 ? true : false,
+          allVideos.length == 0 || content.all.data.length < 10 ? true : false,
         filtering: false,
         isPaging: false,
         progressSongs: inprogressVideos,
@@ -131,7 +131,7 @@ class SongCatalog extends React.Component {
     this.setState(state => ({
       allSongs: loadMore ? state.allSongs.concat(response.data) : response.data,
       outVideos:
-        response.data.length == 0 || response.data.length < 20 ? true : false,
+        response.data.length == 0 || response.data.length < 10 ? true : false,
       filtering: false,
       refreshControl: false,
       isPaging: false,
@@ -150,14 +150,6 @@ class SongCatalog extends React.Component {
       },
       () => this.getAllSongs()
     );
-  };
-
-  getVideos = () => {
-    if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () =>
-        this.getAllSongs(true)
-      );
-    }
   };
 
   handleScroll = event => {

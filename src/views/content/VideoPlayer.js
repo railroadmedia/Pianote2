@@ -158,7 +158,6 @@ export default class VideoPlayer extends React.Component {
       content = result;
       this.allCommentsNum = result.total_comments;
     }
-
     let al = [];
     if (content.assignments) {
       for (let i in content.assignments) {
@@ -203,13 +202,13 @@ export default class VideoPlayer extends React.Component {
           content.type === 'song-part' && content.parent
             ? content.parent.artist
             : content.artist,
-        // instructor: content.instructors,
+        instructor: content.instructors,
         isLoadingAll: false,
         publishedOn: content.published_on,
         relatedLessons: content.related_lessons,
         likes: parseInt(content.like_count),
         isLiked: content.is_liked_by_current_user,
-        lengthInSec: 100, // content.length_in_seconds,
+        lengthInSec: content.length_in_seconds,
         lastWatchedPosInSec: content.last_watch_position_in_seconds,
         progress:
           parseInt(
@@ -657,8 +656,8 @@ export default class VideoPlayer extends React.Component {
           ),
       progress: !selectedAssignment
         ? 0
-        : res[0].type !== 'course'
-        ? res[0].user_progress?.[this.userId]?.progress_percent
+        : res.type !== 'course'
+        ? res.user_progress?.[this.userId]?.progress_percent
         : state.progress
     }));
   }
@@ -704,10 +703,11 @@ export default class VideoPlayer extends React.Component {
       }));
     }
     let res = await markComplete(id);
-    if (res?.parent?.[0]) {
-      if (res.parent[0].type !== 'course') {
+    if (res?.parent) {
+      if (res.parent.type !== 'course') {
         this.setState({
-          progress: res.parent[0].progress_percent
+          progress: Object.values(res.parent.user_progress)?.[0]
+            .progress_percent
         });
       }
     }
@@ -828,9 +828,9 @@ export default class VideoPlayer extends React.Component {
 
   renderTagsDependingOnContentType = () => {
     let { artist, xp, type, publishedOn, instructor, style } = this.state;
-    // if (typeof instructor[0] == 'object') {
-    //   instructor = [instructor[0]?.fields?.[0]?.value];
-    // }
+    if (typeof instructor[0] == 'object') {
+      instructor = [instructor[0]?.fields?.[0]?.value];
+    }
 
     let releaseDate = this.transformDate(publishedOn);
     let releaseDateTag = releaseDate ? `${releaseDate} | ` : '';

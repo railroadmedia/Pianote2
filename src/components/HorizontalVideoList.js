@@ -669,7 +669,7 @@ export default class HorizontalVideoList extends React.Component {
                     >
                       {this.props.showType && this.changeType(item.type)}
                       {this.props.showType && '/ '}
-                      {item.artist || item.instructors.join(', ')}
+                      {item.artist || item.instructors?.join(', ')}
                     </Text>
                   </View>
                 </View>

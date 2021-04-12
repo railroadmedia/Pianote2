@@ -111,6 +111,18 @@ export async function changePassword(email, pass, token) {
   );
 }
 
+export async function isNameUnique(name) {
+  return commonService.tryCall(
+    `${commonService.rootUrl}/usora/api/is-display-name-unique?display_name=${name}`
+  );
+}
+
+export async function isEmailUnique(email) {
+  return commonService.tryCall(
+    `${commonService.rootUrl}/usora/api/is-email-unique?email=${email}`
+  );
+}
+
 export async function logOut() {
   // return profile details
   try {
@@ -192,7 +204,7 @@ export async function restorePurchase(purchases) {
   let platform = Platform.OS === 'ios' ? 'apple' : 'google';
   try {
     let response = await fetch(
-      `${commonService.rootUrl}/mobile-app/${platform}/restore`,
+      `${commonService.rootUrl}/api/${platform}/restore`,
       {
         method: 'POST',
         headers: {
@@ -218,7 +230,7 @@ export async function validateSignUp(purchases) {
   let platform = Platform.OS === 'ios' ? 'apple' : 'google';
   try {
     let response = await fetch(
-      `${commonService.rootUrl}/mobile-app/${platform}/signup`,
+      `${commonService.rootUrl}/api/${platform}/signup`,
       {
         method: 'POST',
         headers: {

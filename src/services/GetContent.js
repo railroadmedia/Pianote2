@@ -11,7 +11,7 @@ export async function getAllContent(type, sort, page, filters = '') {
   else if (sort == 'oldest') sort = 'published_on';
 
   try {
-    let url = `${commonService.rootUrl}/musora-api/all?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${included_types}${filters}`;
+    let url = `${commonService.rootUrl}/musora-api/all?brand=pianote&sort=${sort}&statuses[]=published&limit=10&page=${page}&${included_types}${filters}`;
     let response = await commonService.tryCall(url);
     // if there is no filters available, then dont just show a blank array, maintain data structure
 
@@ -68,7 +68,7 @@ export async function getStartedContent(type, page, filters = '') {
         'learning-path-lesson&included_types[]=course&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=podcasts&included_types[]=pack-bundle-lesson';
     }
     return commonService.tryCall(
-      `${commonService.rootUrl}/musora-api/in-progress?brand=pianote&sort=-progress&statuses[]=published&limit=40&included_types[]=${type}&required_user_states[]=started&page=${page}${filters}`
+      `${commonService.rootUrl}/musora-api/in-progress?brand=pianote&sort=-progress&statuses[]=published&limit=10&included_types[]=${type}&required_user_states[]=started&page=${page}${filters}`
     );
   } catch (error) {
     return new Error(error);
@@ -77,7 +77,7 @@ export async function getStartedContent(type, page, filters = '') {
 
 export async function searchContent(term, page, filters = '') {
   try {
-    let url = `${commonService.rootUrl}/musora-api/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&page=${page}${filters}`;
+    let url = `${commonService.rootUrl}/musora-api/search?brand=pianote&limit=10&statuses[]=published&sort=-score&term=${term}&page=${page}${filters}`;
     return commonService.tryCall(url);
   } catch (error) {
     return new Error(error);
@@ -95,7 +95,7 @@ export async function getMyListContent(page, filters = '', progressState) {
 
   try {
     var url =
-      `${commonService.rootUrl}/musora-api/my-list?brand=pianote&limit=20&statuses[]=published&sort=${sort}&page=${page}${filters}` +
+      `${commonService.rootUrl}/musora-api/my-list?brand=pianote&limit=10&statuses[]=published&sort=${sort}&page=${page}${filters}` +
       progress_types;
     return await commonService.tryCall(url);
   } catch (error) {

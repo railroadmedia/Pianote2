@@ -29,6 +29,7 @@ import commonService from '../../services/common.service.js';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import Loading from '../../components/Loading.js';
 import { goBack, reset } from '../../../AppNavigator.js';
+import { isNameUnique } from '../../services/UserDataAuth.js';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -100,10 +101,7 @@ export default class ProfileSettings extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     // check if display name available
-    let response = await fetch(
-      `${commonService.rootUrl}/usora/is-display-name-unique?display_name=${this.state.displayName}`
-    );
-    response = await response.json();
+    let response = await isNameUnique(this.state.displayName);
 
     if (response.unique) {
       let nameResponse = await commonService.tryCall(
