@@ -1,3 +1,4 @@
+import RNFetchBlob from 'rn-fetch-blob';
 import commonService from './common.service';
 
 export async function getAllContent(type, sort, page, filters = '') {
@@ -55,7 +56,7 @@ export async function getLiveContent() {
       `${commonService.rootUrl}//musora-api/live-event?forced-content-id=275886`,
       'GET'
     );
-    console.log('live : ', response)
+    console.log('live : ', response);
     return response;
   } catch (error) {
     return new Error(error);
@@ -153,5 +154,26 @@ export async function getContentById(contentID) {
 export async function getStudentFocusTypes() {
   return commonService.tryCall(
     `${commonService.rootUrl}/api/railcontent/shows`
+  );
+}
+
+let appCache = {};
+export function getCache(path) {
+  if (appCache[path]) return appCache[path];
+  let { dirs } = RNFetchBlob.fs;
+  RNFetchBlob.fs
+    .readFile(`${dirs.LibraryDir || dirs.DocumentDir}/cache/${path}`, 'utf8')
+    .then(stream => (appCache[path] = JSON.parse(stream)))
+    .catch(() => {});
+  return {};
+}
+
+export function setCache(path, cache) {
+  appCache[path] = cache;
+  let { dirs } = RNFetchBlob.fs;
+  RNFetchBlob.fs.writeFile(
+    `${dirs.LibraryDir || dirs.DocumentDir}/cache/${path}`,
+    JSON.stringify(cache),
+    'utf8'
   );
 }

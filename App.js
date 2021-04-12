@@ -12,7 +12,6 @@ import cards from './src/redux/CardsReducer';
 import packsReducer from './src/redux/PacksCacheReducer';
 import songsReducer from './src/redux/SongsCacheReducer';
 import myListReducer from './src/redux/MyListCacheReducer';
-import coursesReducer from './src/redux/CoursesCacheReducer';
 import lessonsReducer from './src/redux/LessonsCacheReducer';
 import podcastsReducer from './src/redux/PodcastsCacheReducer';
 import quickTipsReducer from './src/redux/QuickTipsCacheReducer';
@@ -26,7 +25,6 @@ const store = createStore(
     ...songsReducer,
     ...myListReducer,
     ...lessonsReducer,
-    ...coursesReducer,
     ...podcastsReducer,
     ...quickTipsReducer,
     ...studentFocusReducer

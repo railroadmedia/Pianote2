@@ -12,24 +12,25 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-
 import Filters_V2 from '../../components/Filters_V2';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import RowCard from '../../components/Cards';
 import Sort from '../../components/Sort';
 
-import { getStartedContent, getAllContent } from '../../services/GetContent';
+import {
+  getAllContent,
+  getCache,
+  getStartedContent,
+  setCache
+} from '../../services/GetContent';
 import structuredState from '../../services/structuredState.service';
 
 import { NetworkContext } from '../../context/NetworkProvider';
 
-import { cacheAndWriteCourses } from '../../redux/CoursesCacheActions';
 import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
-class Course extends React.PureComponent {
+export default class Course extends React.PureComponent {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
 
@@ -38,13 +39,13 @@ class Course extends React.PureComponent {
   inProgress = [];
   constructor(props) {
     super(props);
-    let { all, inProgress } = props.coursesCache;
+    let { all, inProgress } = getCache('courses');
     this.all = all;
     this.inProgress = inProgress;
     this.state = {
-      refreshControl: true,
-      loading: !this.all?.length,
-      loadingMore: false
+      loading: !all?.length,
+      loadingMore: false,
+      refreshControl: true
     };
   }
 
@@ -77,12 +78,9 @@ class Course extends React.PureComponent {
       all: content[0],
       inProgress: content[1]
     });
+    setCache('courses', { all, inProgress });
     this.all = all;
     this.inProgress = inProgress;
-    this.props.cacheAndWriteCourses({
-      all: this.all,
-      inProgress: this.inProgress
-    });
     this.setState({ loading: false, refreshControl: false });
   };
 
@@ -287,9 +285,3 @@ let lStyle = StyleSheet.create({
   },
   noResultsText: { color: 'white', textAlign: 'center', padding: 20 }
 });
-
-const mapStateToProps = state => ({ coursesCache: state.coursesCache });
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheAndWriteCourses }, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(Course);
