@@ -11,7 +11,6 @@ import {
   Dimensions
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { withNavigation } from 'react-navigation';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 
@@ -19,8 +18,7 @@ const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
-class LessonComplete extends React.Component {
-  static navigationOptions = { header: null };
+export default class LessonComplete extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -115,14 +113,14 @@ class LessonComplete extends React.Component {
                 source={{
                   uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
                     width * 0.55 * 2
-                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${nextLesson.getData(
+                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${nextLesson?.getData(
                     'thumbnail_url'
                   )}`
                 }}
               />
             </TouchableOpacity>
             <Text style={[styles.modalHeaderText, localStyles.videoTitle]}>
-              {nextLesson.getField('title')}
+              {nextLesson?.getField('title')}
             </Text>
           </View>
         </View>
@@ -200,5 +198,3 @@ const localStyles = StyleSheet.create({
     marginTop: 10
   }
 });
-
-export default withNavigation(LessonComplete);

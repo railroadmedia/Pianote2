@@ -26,6 +26,7 @@ import CustomModal from '../../modals/CustomModal';
 import Loading from '../../components/Loading';
 import { openInbox } from 'react-native-email-link';
 import { NetworkContext } from '../../context/NetworkProvider';
+import { goBack, navigate } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -36,7 +37,6 @@ const verticalRatio =
   windowDim.width < windowDim.height ? height / 812 : width / 375;
 
 export default class ForgotPassword extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -175,7 +175,7 @@ export default class ForgotPassword extends React.Component {
               <View style={{ padding: 10 }}>
                 <TouchableOpacity
                   onPress={() => {
-                    this.props.navigation.navigate('LOGINCREDENTIALS');
+                    navigate('LOGINCREDENTIALS');
                   }}
                 >
                   <Text style={localStyles.greyText}>
@@ -184,7 +184,7 @@ export default class ForgotPassword extends React.Component {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    this.props.navigation.navigate('CREATEACCOUNT');
+                    navigate('CREATEACCOUNT');
                   }}
                 >
                   <Text style={localStyles.greyText}>Not a member?</Text>
@@ -192,7 +192,7 @@ export default class ForgotPassword extends React.Component {
               </View>
             </ScrollView>
             <TouchableOpacity
-              onPress={() => this.props.navigation.goBack()}
+              onPress={() => goBack()}
               style={{ padding: 15, position: 'absolute' }}
             >
               <Back
@@ -216,7 +216,7 @@ export default class ForgotPassword extends React.Component {
                   onPress={() => {
                     this.alertSuccess.toggle();
                     openInbox();
-                    this.props.navigation.navigate('LOGINCREDENTIALS');
+                    navigate('LOGINCREDENTIALS');
                   }}
                 >
                   <Text

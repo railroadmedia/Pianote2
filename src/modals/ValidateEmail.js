@@ -9,10 +9,8 @@ import {
   TouchableWithoutFeedback,
   StyleSheet
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
 
-class ValidateEmail extends React.Component {
-  static navigationOptions = { header: null };
+export default class ValidateEmail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -76,5 +74,3 @@ const localStyles = StyleSheet.create({
     color: '#fb1b2f'
   }
 });
-
-export default withNavigation(ValidateEmail);

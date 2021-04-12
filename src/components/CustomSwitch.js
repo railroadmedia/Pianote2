@@ -3,12 +3,10 @@
  */
 import React from 'react';
 import { View, TouchableOpacity, Animated } from 'react-native';
-import { withNavigation } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
 
-class CustomSwitch extends React.Component {
-  static navigationOptions = { header: null };
+export default class CustomSwitch extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -112,5 +110,3 @@ class CustomSwitch extends React.Component {
     );
   };
 }
-
-export default withNavigation(CustomSwitch);

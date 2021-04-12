@@ -11,16 +11,12 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {
-  withNavigation,
-  NavigationActions,
-  StackActions
-} from 'react-navigation';
 import { NetworkContext } from '../context/NetworkProvider';
+import { navigate, reset } from '../../AppNavigator';
 
-class NavigationBar extends React.Component {
+export default class NavigationBar extends React.Component {
   static contextType = NetworkContext;
-  static navigationOptions = { header: null };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -97,19 +93,8 @@ class NavigationBar extends React.Component {
                 !this.context.isConnected
                   ? this.context.showNoConnectionAlert()
                   : this.state.onMain
-                  ? this.props.navigation.dispatch(
-                      StackActions.reset({
-                        index: 0,
-                        actions: [
-                          NavigationActions.navigate({
-                            routeName: isPackOnly ? 'PACKS' : 'LESSONS'
-                          })
-                        ]
-                      })
-                    )
-                  : this.props.navigation.navigate(
-                      isPackOnly ? 'PACKS' : 'LESSONS'
-                    );
+                  ? reset(isPackOnly ? 'PACKS' : 'LESSONS')
+                  : navigate(isPackOnly ? 'PACKS' : 'LESSONS');
               }}
             >
               <SimpleLineIcon
@@ -127,17 +112,8 @@ class NavigationBar extends React.Component {
                 !this.context.isConnected
                   ? this.context.showNoConnectionAlert()
                   : this.state.onMain
-                  ? this.props.navigation.dispatch(
-                      StackActions.reset({
-                        index: 0,
-                        actions: [
-                          NavigationActions.navigate({
-                            routeName: 'SEARCH'
-                          })
-                        ]
-                      })
-                    )
-                  : this.props.navigation.navigate('SEARCH');
+                  ? reset('SEARCH')
+                  : navigate('SEARCH');
               }}
             >
               <EvilIcons
@@ -152,18 +128,7 @@ class NavigationBar extends React.Component {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                this.state.onMain
-                  ? this.props.navigation.dispatch(
-                      StackActions.reset({
-                        index: 0,
-                        actions: [
-                          NavigationActions.navigate({
-                            routeName: 'DOWNLOADS'
-                          })
-                        ]
-                      })
-                    )
-                  : this.props.navigation.navigate('DOWNLOADS');
+                this.state.onMain ? reset('DOWNLOADS') : navigate('DOWNLOADS');
               }}
             >
               <MaterialIcon
@@ -181,17 +146,8 @@ class NavigationBar extends React.Component {
                 !this.context.isConnected
                   ? this.context.showNoConnectionAlert()
                   : this.state.onMain
-                  ? this.props.navigation.dispatch(
-                      StackActions.reset({
-                        index: 0,
-                        actions: [
-                          NavigationActions.navigate({
-                            routeName: 'PROFILE'
-                          })
-                        ]
-                      })
-                    )
-                  : this.props.navigation.navigate('PROFILE');
+                  ? reset('PROFILE')
+                  : navigate('PROFILE');
               }}
             >
               <View
@@ -234,5 +190,3 @@ const localStyles = StyleSheet.create({
     alignContent: 'space-around'
   }
 });
-
-export default withNavigation(NavigationBar);

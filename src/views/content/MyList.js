@@ -23,6 +23,7 @@ import { NetworkContext } from '../../context/NetworkProvider';
 
 import { cacheAndWriteMyList } from '../../redux/MyListCacheActions';
 import { ActivityIndicator } from 'react-native';
+import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -39,7 +40,6 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 };
 
 class MyList extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -60,15 +60,11 @@ class MyList extends React.Component {
 
   componentDidMount() {
     this.getMyList();
-    this.willFocusSubscription = this.props.navigation.addListener(
-      'willFocus',
-      () =>
-        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
-    );
+    this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   }
 
   componentWillUnmount() {
-    this.willFocusSubscription.remove();
+    this.refreshOnFocusListener?.();
   }
 
   getMyList = async loadMore => {
@@ -163,10 +159,14 @@ class MyList extends React.Component {
         }
       }
     } else {
-      if (newContent.getField('instructor') !== 'TBD') {
-        return newContent.getField('instructor').fields[0].value;
-      } else {
-        return newContent.getField('instructor').name;
+      try {
+        if (newContent.getField('instructor') !== 'TBD') {
+          return newContent.getField('instructor').fields[0].value;
+        } else {
+          return newContent.getField('instructor').name;
+        }
+      } catch (error) {
+        return '';
       }
     }
   };
@@ -230,7 +230,7 @@ class MyList extends React.Component {
               }
             ]}
             onPress={() => {
-              this.props.navigation.navigate('SEEALL', {
+              navigate('SEEALL', {
                 title: 'In Progress',
                 parent: 'My List'
               });
@@ -268,7 +268,7 @@ class MyList extends React.Component {
           <TouchableOpacity
             style={styles.tabRightContainer}
             onPress={() => {
-              this.props.navigation.navigate('SEEALL', {
+              navigate('SEEALL', {
                 title: 'Completed',
                 parent: 'My List'
               });

@@ -10,7 +10,6 @@ import {
   Dimensions
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { withNavigation } from 'react-navigation';
 import ProgressCircle from 'react-native-progress-circle';
 
 const ranks = [
@@ -36,8 +35,7 @@ const ranks = [
   100000000
 ];
 
-class XpRank extends React.Component {
-  static navigationOptions = { header: null };
+export default class XpRank extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -146,5 +144,3 @@ const localStyles = StyleSheet.create({
     fontSize: DeviceInfo.isTablet() ? 18 : 14
   }
 });
-
-export default withNavigation(XpRank);

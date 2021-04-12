@@ -15,15 +15,15 @@ import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
+import { navigate } from '../../../AppNavigator';
 
 export default class MembershipExpired extends React.Component {
-  static navigationOptions = { header: null };
   constructor(props) {
     super(props);
 
     this.state = {
-      email: this.props.navigation.state.params?.email,
-      password: this.props.navigation.state.params?.password
+      email: props.route?.params?.email,
+      password: props.route?.params?.password
     };
   }
 
@@ -65,16 +65,16 @@ export default class MembershipExpired extends React.Component {
               {this.state.email ? (
                 <TouchableOpacity
                   style={localStyles.buttonContainer}
-                  onPress={() => {
-                    this.props.navigation.navigate('NEWMEMBERSHIP', {
+                  onPress={() =>
+                    navigate('NEWMEMBERSHIP', {
                       data: {
                         type: 'EXPIRED',
-                        email: this.props.navigation.state.params?.email,
-                        password: this.props.navigation.state.params?.password,
-                        token: this.props.navigation.state.params?.token
+                        email: this.props.route?.params?.email,
+                        password: this.props.route?.params?.password,
+                        token: this.props.route?.params?.token
                       }
-                    });
-                  }}
+                    })
+                  }
                 >
                   <Text style={localStyles.buttonText}>RENEW MEMBERSHIP</Text>
                 </TouchableOpacity>

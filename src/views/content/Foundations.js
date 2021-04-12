@@ -36,6 +36,7 @@ import {
 } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 import foundationsService from '../../services/foundations.service';
+import { navigate } from '../../../AppNavigator';
 
 let greaterWDim;
 const windowDim = Dimensions.get('window');
@@ -43,7 +44,6 @@ const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
 export default class Foundations extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -224,7 +224,7 @@ export default class Foundations extends React.Component {
   }
 
   goToLesson(url) {
-    return this.props.navigation.navigate('VIDEOPLAYER', { url });
+    return navigate('VIDEOPLAYER', { url });
   }
 
   getSquareHeight = () => {

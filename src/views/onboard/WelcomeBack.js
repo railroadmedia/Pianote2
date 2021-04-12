@@ -14,13 +14,13 @@ import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import SwipeLeft from 'Pianote2/src/assets/img/svgs/swipe-left.svg';
 import Orientation from 'react-native-orientation-locker';
+import { navigate } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
 export default class WelcomeBack extends React.Component {
-  static navigationOptions = { header: null };
   constructor(props) {
     super(props);
     Orientation.lockToPortrait();
@@ -195,7 +195,7 @@ export default class WelcomeBack extends React.Component {
           {this.state.page < 3 ? (
             <TouchableOpacity
               testID='skipBtn'
-              onPress={() => this.props.navigation.navigate('LESSONS')}
+              onPress={() => navigate('LESSONS')}
               style={{ marginBottom: '2%', padding: 15 }}
             >
               <Text
@@ -218,7 +218,7 @@ export default class WelcomeBack extends React.Component {
                 borderRadius: 100,
                 backgroundColor: colors.pianoteRed
               }}
-              onPress={() => this.props.navigation.navigate('LESSONS')}
+              onPress={() => navigate('LESSONS')}
             >
               <Text
                 style={{

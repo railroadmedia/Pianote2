@@ -9,10 +9,8 @@ import {
   TouchableWithoutFeedback,
   StyleSheet
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
 
-class PasswordEmailMatch extends React.Component {
-  static navigationOptions = { header: null };
+export default class PasswordEmailMatch extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -80,5 +78,3 @@ const localStyles = StyleSheet.create({
     marginBottom: 15
   }
 });
-
-export default withNavigation(PasswordEmailMatch);

@@ -16,14 +16,12 @@ import {
   removeFromMyList
 } from 'Pianote2/src/services/UserActions.js';
 import FastImage from 'react-native-fast-image';
-import { withNavigation } from 'react-navigation';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { Download_V2 } from 'RNDownload';
 import DeviceInfo from 'react-native-device-info';
 import contentService from '../services/content.service';
 
-class ContentModal extends React.Component {
-  static navigationOptions = { header: null };
+export default class ContentModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -70,10 +68,6 @@ class ContentModal extends React.Component {
     };
   }
 
-  componentDidMount = () => {
-    console.log(this.state.isLiked);
-  };
-
   addToMyList = contentID => {
     if (this.props.data.description !== 'TBD') {
       // change status of content on parent data structure
@@ -114,7 +108,6 @@ class ContentModal extends React.Component {
   };
 
   like = contentID => {
-    console.log('like');
     if (this.props.data.description !== 'TBD') {
       // change data on modal
       this.state.isLiked = !this.state.isLiked;
@@ -130,7 +123,6 @@ class ContentModal extends React.Component {
   };
 
   unlike = contentID => {
-    console.log('unlike');
     // change data on modal
     this.state.isLiked = !this.state.isLiked;
     this.state.like_count = Number(this.state.like_count) - 1;
@@ -375,4 +367,3 @@ const localStyles = StyleSheet.create({
     marginTop: 5
   }
 });
-export default withNavigation(ContentModal);

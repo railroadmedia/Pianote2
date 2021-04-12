@@ -2,12 +2,23 @@
  * BlurredList
  */
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { withNavigation } from 'react-navigation';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+  ScrollView
+} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NetworkContext } from '../context/NetworkProvider';
+import { navigate } from '../../AppNavigator';
+
+const windowDim = Dimensions.get('window');
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 
 const navigationOptions = [
   {
@@ -31,22 +42,36 @@ const navigationOptions = [
     navigator: 'SONGCATALOG'
   },
   {
+    title: 'Quick Tips',
+    navigator: 'STUDENTFOCUSSHOW'
+  },
+  {
     title: 'Student Focus',
     navigator: 'STUDENTFOCUSCATALOG'
   },
+  /*
+  {
+    title: 'Live',
+    navigator: 'SEEALL'
+  },
+  {
+      title: 'Schedule',
+    navigator: 'SEEALL'
+  },
+  */
   {
     title: 'Podcasts',
     navigator: 'STUDENTFOCUSSHOW'
   },
   {
-    title: 'Quick Tips',
+    title: 'Bootcamps',
     navigator: 'STUDENTFOCUSSHOW'
   }
 ];
 
-class NavigationMenu extends React.Component {
+export default class NavigationMenu extends React.Component {
   static contextType = NetworkContext;
-  static navigationOptions = { header: null };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -68,7 +93,7 @@ class NavigationMenu extends React.Component {
 
   lessonNav() {
     return (
-      <View style={{ flex: 1 }}>
+      <>
         {navigationOptions.map((nav, index) => (
           <TouchableOpacity
             key={index}
@@ -77,23 +102,42 @@ class NavigationMenu extends React.Component {
                 return this.context.showNoConnectionAlert();
               this.props.onClose(false);
               if (nav.title === 'Method') {
-                this.props.navigation.navigate('METHOD', {
+                navigate('METHOD', {
                   methodIsStarted: this.state.methodIsStarted,
                   methodIsCompleted: this.state.methodIsCompleted
                 });
               } else if (nav.title === 'Quick Tips') {
-                this.props.navigation.navigate(nav.navigator, {
+                navigate(nav.navigator, {
                   type: 'quick-tips'
                 });
               } else if (nav.title === 'Podcasts') {
-                this.props.navigation.navigate(nav.navigator, {
+                navigate(nav.navigator, {
                   type: 'podcasts'
                 });
+              } else if (nav.title === 'Bootcamps') {
+                this.props.navigation.navigate(nav.navigator, {
+                  type: 'boot-camps'
+                });
+              } else if (nav.title === 'Live') {
+                navigate(nav.navigator, {
+                  title: nav.title,
+                  parent: 'Lessons'
+                });
+              } else if (nav.title === 'Schedule') {
+                navigate(nav.navigator, {
+                  title: nav.title,
+                  parent: 'Lessons'
+                });
               } else {
-                this.props.navigation.navigate(nav.navigator);
+                navigate(nav.navigator);
               }
             }}
-            style={{ flex: 1, alignSelf: 'center' }}
+            style={[
+              styles.centerContent,
+              {
+                height: height / 10
+              }
+            ]}
           >
             <Text
               style={{
@@ -123,7 +167,7 @@ class NavigationMenu extends React.Component {
             </Text>
           </TouchableOpacity>
         ))}
-      </View>
+      </>
     );
   }
 
@@ -139,7 +183,14 @@ class NavigationMenu extends React.Component {
           }
         ]}
       >
-        {this.lessonNav()}
+        <ScrollView
+          style={{
+            flex: 1,
+            maxHeight: (height / 10) * 7
+          }}
+        >
+          {this.lessonNav()}
+        </ScrollView>
         <View style={{ alignSelf: 'center' }}>
           <TouchableOpacity
             onPress={() => {
@@ -151,7 +202,7 @@ class NavigationMenu extends React.Component {
               {
                 height: onTablet ? 80 : 65,
                 width: onTablet ? 80 : 65,
-                marginBottom: 10,
+                marginTop: 10,
                 borderRadius: 500
               }
             ]}
@@ -180,5 +231,3 @@ const localStyles = StyleSheet.create({
     paddingBottom: DeviceInfo.hasNotch() ? 30 : 10
   }
 });
-
-export default withNavigation(NavigationMenu);

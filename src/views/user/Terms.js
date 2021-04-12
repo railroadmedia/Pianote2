@@ -13,9 +13,9 @@ import {
 import DeviceInfo from 'react-native-device-info';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
+import { goBack } from '../../../AppNavigator';
 
 export default class Terms extends React.Component {
-  static navigationOptions = { header: null };
   constructor(props) {
     super(props);
     this.state = {};
@@ -26,10 +26,7 @@ export default class Terms extends React.Component {
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar backgroundColor={'#ffffff'} barStyle={'dark-content'} />
         <View style={localStyles.header}>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.goBack()}
-            style={{ flex: 1 }}
-          >
+          <TouchableOpacity onPress={() => goBack()} style={{ flex: 1 }}>
             <Back
               width={backButtonSize}
               height={backButtonSize}

@@ -5,9 +5,9 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import FastImage from 'react-native-fast-image';
+import { navigate } from '../../../AppNavigator';
 
 export default class GetRestarted extends React.Component {
-  static navigationOptions = { header: null };
   constructor(props) {
     super(props);
     this.state = {};
@@ -59,7 +59,7 @@ export default class GetRestarted extends React.Component {
             </Text>
             <View style={localStyles.skip}>
               <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('WELCOMEBACK')}
+                onPress={() => navigate('WELCOMEBACK')}
                 style={[styles.centerContent, localStyles.getStartedContainer]}
               >
                 <Text style={localStyles.getStarted}>GET STARTED</Text>

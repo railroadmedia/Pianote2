@@ -22,9 +22,9 @@ import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import CustomModal from '../../modals/CustomModal';
 import { changePassword } from '../../services/UserDataAuth';
 import { NetworkContext } from '../../context/NetworkProvider';
+import { navigate } from '../../../AppNavigator';
 
 export default class ResetPassword extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -43,9 +43,7 @@ export default class ResetPassword extends React.Component {
     }
     if (this.state.password == this.state.confirmPassword) {
       if (this.state.password.length > 7) {
-        let email = await AsyncStorage.getItem('email');
-        let resetKey = await AsyncStorage.getItem('resetKey');
-        console.log(email.replace('%40', '@'), this.state.password, resetKey);
+        const { email, resetKey } = this.props.route?.params;
         let res = await changePassword(
           email.replace('%40', '@'),
           this.state.password,
@@ -91,7 +89,7 @@ export default class ResetPassword extends React.Component {
             behavior={`${isiOS ? 'padding' : ''}`}
           >
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('LOGINCREDENTIALS')}
+              onPress={() => navigate('LOGINCREDENTIALS')}
               style={{
                 padding: 15,
                 flexDirection: 'row',
@@ -235,7 +233,7 @@ export default class ResetPassword extends React.Component {
                   Confirm password
                 </Text>
                 <View
-                  key={'pass'}
+                  key={'confirm_pass'}
                   style={{
                     borderRadius: 100,
                     marginVertical: 10,
@@ -391,7 +389,7 @@ export default class ResetPassword extends React.Component {
                 }}
                 onPress={() => {
                   this.alert.toggle();
-                  this.props.navigation.navigate({
+                  navigate({
                     routeName: 'LOGINCREDENTIALS'
                   });
                 }}

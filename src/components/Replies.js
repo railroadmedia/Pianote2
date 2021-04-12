@@ -16,7 +16,6 @@ import {
 import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
-import { withNavigation } from 'react-navigation';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -24,9 +23,8 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { NetworkContext } from '../context/NetworkProvider';
 
-class Replies extends React.Component {
+export default class Replies extends React.Component {
   static contextType = NetworkContext;
-  static navigationOptions = { header: null };
 
   constructor(props) {
     super(props);
@@ -626,5 +624,3 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#00101d'
   }
 });
-
-export default withNavigation(Replies);

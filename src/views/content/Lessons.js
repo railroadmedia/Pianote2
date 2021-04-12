@@ -9,7 +9,9 @@ import {
   RefreshControl,
   ActivityIndicator,
   Dimensions,
-  ImageBackground
+  ImageBackground,
+  TouchableOpacity,
+  Text
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -17,9 +19,13 @@ import Modal from 'react-native-modal';
 import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
+import DeviceInfo from 'react-native-device-info';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
+import LinearGradient from 'react-native-linear-gradient';
 import Orientation from 'react-native-orientation-locker';
+import AntIcon from 'react-native-vector-icons/AntDesign';
+import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import StartIcon from '../../components/StartIcon';
 import ResetIcon from '../../components/ResetIcon';
 import MoreInfoIcon from '../../components/MoreInfoIcon';
@@ -30,17 +36,21 @@ import GradientFeature from '../../components/GradientFeature';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
 import methodService from '../../services/method.service.js';
-import { getStartedContent, getAllContent } from '../../services/GetContent';
+import {
+  getStartedContent,
+  getLiveContent,
+  getAllContent
+} from '../../services/GetContent';
 import RestartCourse from '../../modals/RestartCourse';
+import AddToCalendar from '../../modals/AddToCalendar';
 import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 import { NetworkContext } from '../../context/NetworkProvider';
+import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
+
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
   return (
@@ -50,7 +60,6 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 };
 
 class Lessons extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -67,12 +76,13 @@ class Lessons extends React.Component {
       xp: '',
       rank: '',
       currentLesson: [],
+      liveLesson: [],
       methodId: 0,
       methodIsStarted: false,
       methodIsCompleted: false,
       methodNextLessonUrl: null,
       showRestartCourse: false,
-      lessonsStarted: true, // for showing continue lessons horizontal list
+      lessonsStarted: true,
       refreshing: !lessonsCache,
       refreshControl: true,
       isLandscape:
@@ -82,6 +92,10 @@ class Lessons extends React.Component {
   }
 
   componentDidMount = () => {
+    let deepFilters = decodeURIComponent(this.props.route?.params?.url).split(
+      '?'
+    )[1];
+    this.filterQuery = deepFilters && `&${deepFilters}`;
     Orientation.addDeviceOrientationListener(this.orientationListener);
     AsyncStorage.multiGet([
       'totalXP',
@@ -101,17 +115,15 @@ class Lessons extends React.Component {
       });
     });
 
+    this.getLiveContent();
     this.getContent();
     messaging().requestPermission();
-    this.willFocusSubscription = this.props.navigation.addListener(
-      'willFocus',
-      () =>
-        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
-    );
+    this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   };
 
   componentWillUnmount() {
-    this.willFocusSubscription.remove();
+    this.refreshOnFocusListener?.();
+
     Orientation.removeDeviceOrientationListener(this.orientationListener);
   }
 
@@ -143,6 +155,29 @@ class Lessons extends React.Component {
         inProgress: content[2]
       })
     );
+  }
+
+  changeType = word => {
+    //word = word.replace(/[- )(]/g, ' ').split(' ');
+    let string = '';
+
+    for (let i = 0; i < word.length; i++) {
+      if (word[i] !== 'and') {
+        word[i] = word[i][0].toUpperCase() + word[i].substr(1);
+      }
+    }
+
+    for (i in word) {
+      string = string + word[i];
+      if (Number(i) < word.length - 1) string = string + ' / ';
+    }
+
+    return string;
+  };
+
+  async getLiveContent() {
+    let content = await getLiveContent();
+    this.setState({ liveLesson: [content] });
   }
 
   initialValidData = (content, fromCache) => {
@@ -296,10 +331,14 @@ class Lessons extends React.Component {
         }
       }
     } else {
-      if (newContent.getField('instructor') !== 'TBD') {
-        return newContent.getField('instructor').fields[0].value;
-      } else {
-        return newContent.getField('instructor').name;
+      try {
+        if (newContent.getField('instructor') !== 'TBD') {
+          return newContent.getField('instructor').fields[0].value;
+        } else {
+          return newContent.getField('instructor').name;
+        }
+      } catch (error) {
+        return '';
       }
     }
   };
@@ -477,7 +516,7 @@ class Lessons extends React.Component {
                             return this.context.showNoConnectionAlert();
                           }
                           if (this.state.methodNextLessonUrl)
-                            this.props.navigation.navigate('VIDEOPLAYER', {
+                            navigate('VIDEOPLAYER', {
                               url: this.state.methodNextLessonUrl
                             });
                         }}
@@ -489,7 +528,7 @@ class Lessons extends React.Component {
                             return this.context.showNoConnectionAlert();
                           }
                           if (this.state.methodNextLessonUrl)
-                            this.props.navigation.navigate('VIDEOPLAYER', {
+                            navigate('VIDEOPLAYER', {
                               url: this.state.methodNextLessonUrl
                             });
                         }}
@@ -504,7 +543,7 @@ class Lessons extends React.Component {
                   >
                     <MoreInfoIcon
                       pressed={() => {
-                        this.props.navigation.navigate('METHOD', {
+                        navigate('METHOD', {
                           methodIsStarted: this.state.methodIsStarted,
                           methodIsCompleted: this.state.methodIsCompleted
                         });
@@ -516,21 +555,343 @@ class Lessons extends React.Component {
               </View>
             </ImageBackground>
             <View style={{ marginTop: paddingInset / 2 }}>
-              {this.state.lessonsStarted && (
-                <HorizontalVideoList
-                  hideFilterButton={true}
-                  isMethod={true}
-                  Title={'IN PROGRESS'}
-                  seeAll={() =>
-                    this.props.navigation.navigate('SEEALL', {
-                      title: 'Continue',
-                      parent: 'Lessons'
-                    })
-                  }
-                  showType={true}
-                  items={this.state.progressLessons}
-                />
+              <HorizontalVideoList
+                hideFilterButton={true}
+                isMethod={true}
+                Title={'IN PROGRESS'}
+                seeAll={() =>
+                  navigate('SEEALL', {
+                    title: 'Continue',
+                    parent: 'Lessons'
+                  })
+                }
+                showType={true}
+                items={this.state.progressLessons}
+              />
+              {/*
+              <View style={{ height: paddingInset / 2 }} />
+              {this.state.liveLesson.length > 0 && (
+                <>
+                  {this.state.liveLesson[0].isLive ? (
+                    <TouchableOpacity
+                      style={{
+                        width: Dimensions.get('window').width - 10,
+                        paddingLeft: paddingInset,
+                      }}
+                      onLongPress={() => {
+                        this.setState({
+                          //showModal: true,
+                          //item
+                        });
+                      }}
+                      delayLongPress={250}
+                      onPress={() => this.navigate(item, index)}
+                    >
+                      <View style={{ width: '100%' }}>
+                        <View 
+                          style={[
+                            styles.centerContent, 
+                            {
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              width: '100%',
+                              height: '100%',
+                              zIndex: 1
+                            }
+                          ]}
+                        >
+                          <View 
+                            style={[
+                              styles.centerContent, {
+                              height: '100%',
+                              width: '100%',
+                              borderRadius: 10,
+                            }]}
+                          >
+                            <LinearGradient
+                              colors={[
+                                'transparent',
+                                'rgba(20, 20, 20, 0.7)',
+                                'rgba(0, 0, 0, 1)'
+                              ]}
+                              style={{
+                                borderRadius: 0,
+                                width: '100%',
+                                height: '100%',
+                                position: 'absolute',
+                                left: 0,
+                                bottom: 0
+                              }}
+                            />
+                            <Text
+                              style={{
+                                color: 'white',
+                                fontFamily: 'OpenSans-Bold',
+                                position: 'absolute',
+                                fontSize: onTablet ? 16 : 12,
+                                left: 5,
+                                top: 10,
+                              }}
+                            >
+                              UPCOMING EVENT
+                            </Text>
+                            <Text>
+                              <View>
+                                <Text
+                                  style={{
+                                    color: 'white',
+                                    fontFamily: 'OpenSans-Bold',
+                                    fontSize: onTablet ? 60 : 40,
+                                    textAlign: 'center',
+                                  }}
+                                >
+                                  02
+                                </Text>
+                                <Text
+                                    style={{
+                                      color: 'white',
+                                      fontFamily: 'OpenSans-Bold',
+                                      top: 0,
+                                      textAlign: 'center'
+                                    }}
+                                  >
+                                    HOURS
+                                </Text>
+                              </View>
+                              <View>
+                                <Text
+                                  style={{
+                                    color: 'white',
+                                    fontFamily: 'OpenSans-Bold',
+                                    fontSize: onTablet ? 60 : 40,
+                                  }}
+                                > : </Text>
+                                <Text
+                                    style={{
+                                      color: 'white',
+                                      fontFamily: 'OpenSans-Bold',
+                                      top: 0,
+                                      textAlign: 'center',
+                                      color: 'transparent'
+                                    }}
+                                  >
+                                    h
+                                </Text>
+                              </View>
+                              <View>
+                                <Text
+                                  style={{
+                                    color: 'white',
+                                    fontFamily: 'OpenSans-Bold',
+                                    fontSize: onTablet ? 60 : 40,
+                                    textAlign: 'center',
+                                  }}
+                                >
+                                  42
+                                </Text>
+                                <Text
+                                    style={{
+                                      color: 'white',
+                                      fontFamily: 'OpenSans-Bold',
+                                      top: 0,
+                                      textAlign: 'center'
+                                    }}
+                                  >
+                                    MINUTES
+                                </Text>
+                              </View>
+                              <View>
+                                <Text
+                                  style={{
+                                    color: 'white',
+                                    fontFamily: 'OpenSans-Bold',
+                                    fontSize: onTablet ? 60 : 40,
+                                  }}
+                                > : </Text>
+                                <Text
+                                    style={{
+                                      color: 'white',
+                                      fontFamily: 'OpenSans-Bold',
+                                      top: 0,
+                                      textAlign: 'center',
+                                      color: 'transparent',
+                                    }}
+                                  >
+                                    h
+                                </Text>
+                              </View>
+                              <View>
+                                <Text
+                                  style={{
+                                    color: 'white',
+                                    fontFamily: 'OpenSans-Bold',
+                                    fontSize: onTablet ? 60 : 40,
+                                    textAlign: 'center',
+                                  }}
+                                >
+                                  02
+                                </Text>
+                                <Text
+                                    style={{
+                                      color: 'white',
+                                      fontFamily: 'OpenSans-Bold',
+                                      top: 0,
+                                      textAlign: 'center',
+                                    }}
+                                  >
+                                    SECONDS
+                                </Text>
+                              </View>
+                            </Text>
+                          </View>
+                        </View>
+
+                        <View
+                          style={{
+                            width: '100%',
+                            backgroundColor: 'blue'
+                          }}
+                        >
+                          {Platform.OS === 'ios' ? (
+                            <FastImage
+                              style={
+                                { 
+                                  width: '100%',
+                                  borderRadius: 7.5,
+                                  aspectRatio: 16 / 9 
+                                }
+                              }
+                              source={{
+                                uri:
+                                  this.state.liveLesson[0].thumbnail_url !== 'TBD'
+                                    ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                                        (Dimensions.get('window').width - 20) * 2
+                                      )},ar_16:9},fl_lossy,q_auto:eco,c_fill,g_face/${
+                                        this.state.liveLesson[0].thumbnail_url
+                                      }`
+                                    : fallbackThumb
+                              }}
+                              resizeMode={FastImage.resizeMode.cover}
+                            />
+                          ) : (
+                            <Image
+                              style={{ 
+                                width: '100%',
+                                borderRadius: 7.5,
+                                aspectRatio: 16 / 9
+                              }}
+                              resizeMode='cover'
+                              source={{
+                                uri:
+                                  this.state.liveLesson[0].thumbnail_url !== 'TBD'
+                                    ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                                        (Dimensions.get('window').width - 20) * 2
+                                      )},ar_16:9},fl_lossy,q_auto:eco,c_fill,g_face/${
+                                        this.state.liveLesson[0].thumbnail_url
+                                      }`
+                                    : fallbackThumb
+                              }}
+                            />
+                          )}
+                        </View>
+                      </View>
+                      <View 
+                        style={{
+                          width: '100%',
+                          paddingVertical: 10,
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          alignItems: 'center'
+                        }}
+                      >
+                        <View style={{ width: '80%' }}>
+                          <Text
+                            numberOfLines={1}
+                            ellipsizeMode='tail'
+                            style={{
+                              fontSize: DeviceInfo.isTablet() ? 16 : 14,
+                              fontFamily: 'OpenSans-Bold',
+                              color: 'white',
+                            }}
+                          >
+                            {'Pianote Live Stream' + this.state.liveLesson[0].title}
+                          </Text>
+                          <View style={{flexDirection: 'row'}}>
+                            <Text
+                              numberOfLines={1}
+                              style={{
+                                fontFamily: 'OpenSans-Regular',
+                                color: colors.pianoteGrey,
+
+                                fontSize: sizing.descriptionText
+                              }}
+                            >
+                              {this.changeType(this.state.liveLesson[0].instructors)}
+                            </Text>
+                          </View>
+                        </View>           
+                        <TouchableOpacity
+                          style={{ paddingRight: 5 }}
+                          onPress={() => {
+                            this.addToCalendarLessonTitle = this.state.liveLesson[0].title;
+                            this.addToCalendatLessonPublishDate = this.state.liveLesson[0].live_event_start_time;
+                            this.setState({ addToCalendarModal: true });
+                          }}
+                        >
+                          <FontIcon
+                            size={sizing.infoButtonSize}
+                            name={'calendar-plus'}
+                            color={colors.pianoteRed}
+                          />
+                        </TouchableOpacity>
+                        {!this.state.liveLesson[0].is_added_to_primary_playlist ? (
+                          <TouchableOpacity
+                            onPress={() => this.addToMyList()}
+                            style={{ paddingRight: 2.5 }}
+                          >
+                            <AntIcon
+                              name={'plus'}
+                              size={sizing.myListButtonSize}
+                              color={colors.pianoteRed}
+                            />
+                          </TouchableOpacity>
+                        ) : (
+                          <TouchableOpacity
+                            style={{ paddingRight: 2.5 }}
+                            onPress={() => this.removeFromMyList()}
+                          >
+                            <AntIcon
+                              name={'close'}
+                              size={sizing.myListButtonSize}
+                              color={colors.pianoteRed}
+                            />
+                          </TouchableOpacity>
+                        )}
+                      </View>
+                    </TouchableOpacity>
+                  ) : (
+                    <View>
+                      <HorizontalVideoList
+                        hideFilterButton={true}
+                        isLive={true}
+                        isMethod={true}
+                        Title={'LIVE'}
+                        seeAll={() =>
+                          this.props.navigation.navigate('SEEALL', {
+                            title: 'Continue',
+                            parent: 'Lessons'
+                          })
+                        }
+                        showType={false}
+                        hideSeeAll={true}
+                        items={this.state.progressLessons}
+                      />  
+                    </View>  
+                  )}
+                </>
               )}
+              */}
               <View style={{ height: paddingInset / 2 }} />
               {onTablet ? (
                 <HorizontalVideoList
@@ -539,7 +900,7 @@ class Lessons extends React.Component {
                   Title={'ALL LESSONS'}
                   showType={true}
                   seeAll={() =>
-                    this.props.navigation.navigate('SEEALL', {
+                    navigate('SEEALL', {
                       title: 'All Lessons',
                       parent: 'Lessons'
                     })
@@ -622,7 +983,6 @@ class Lessons extends React.Component {
           <ActivityIndicator size='small' style={{ flex: 1 }} color={'white'} />
         )}
         <Modal
-          key={'restartCourse'}
           isVisible={this.state.showRestartCourse}
           style={styles.modalContainer}
           animation={'slideInUp'}

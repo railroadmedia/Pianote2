@@ -34,6 +34,7 @@ import {
   removeNotification
 } from '../../services/notification.service';
 import { SafeAreaView } from 'react-navigation';
+import { navigate } from '../../../AppNavigator.js';
 
 const messageDict = {
   'lesson comment reply': [
@@ -75,7 +76,6 @@ const messageDict = {
 };
 
 export default class Profile extends React.Component {
-  static navigationOptions = { header: null };
   static contextType = NetworkContext;
   page = 1;
   constructor(props) {
@@ -119,14 +119,15 @@ export default class Profile extends React.Component {
     getUserData().then(userData => {
       this.setState({
         notifications_summary_frequency_minutes:
-          userData.notifications_summary_frequency_minutes,
+          userData?.notifications_summary_frequency_minutes,
         notify_on_forum_followed_thread_reply:
-          userData.notify_on_forum_followed_thread_reply,
-        notify_on_forum_post_like: userData.notify_on_forum_post_like,
-        notify_on_forum_post_reply: userData.notify_on_forum_post_reply,
-        notify_on_lesson_comment_like: userData.notify_on_lesson_comment_like,
-        notify_on_lesson_comment_reply: userData.notify_on_lesson_comment_reply,
-        notify_weekly_update: userData.notify_weekly_update
+          userData?.notify_on_forum_followed_thread_reply,
+        notify_on_forum_post_like: userData?.notify_on_forum_post_like,
+        notify_on_forum_post_reply: userData?.notify_on_forum_post_reply,
+        notify_on_lesson_comment_like: userData?.notify_on_lesson_comment_like,
+        notify_on_lesson_comment_reply:
+          userData?.notify_on_lesson_comment_reply,
+        notify_weekly_update: userData?.notify_weekly_update
       });
       this.getNotifications(false);
     });
@@ -259,14 +260,14 @@ export default class Profile extends React.Component {
 
   openNotification = notification => {
     if (notification.type === 'new content releases') {
-      this.props.navigation.navigate('VIDEOPLAYER', {
+      navigate('VIDEOPLAYER', {
         url: notification.content.mobile_app_url
       });
     } else if (
       notification.type === 'lesson comment reply' ||
       notification.type === 'lesson comment liked'
     ) {
-      this.props.navigation.navigate('VIDEOPLAYER', {
+      navigate('VIDEOPLAYER', {
         comment: notification.comment,
         url: notification.content.mobile_app_url
       });
@@ -295,7 +296,7 @@ export default class Profile extends React.Component {
             <Text style={styles.childHeaderText}>My Profile</Text>
             <TouchableOpacity
               style={{ flex: 1 }}
-              onPress={() => this.props.navigation.navigate('SETTINGS')}
+              onPress={() => navigate('SETTINGS')}
             >
               <Settings
                 height={onTablet ? 25 : 17.5}
@@ -325,7 +326,7 @@ export default class Profile extends React.Component {
                     >
                       <TouchableOpacity
                         onPress={() =>
-                          this.props.navigation.navigate('PROFILESETTINGS', {
+                          navigate('PROFILESETTINGS', {
                             data: 'Profile Photo'
                           })
                         }
