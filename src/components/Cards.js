@@ -70,7 +70,6 @@ class RowCard extends React.Component {
   };
 
   render() {
-    console.log('rend card', this.props);
     let {
       props,
       state: { detailsModalVisible, calendarModalVisible }
