@@ -8,10 +8,13 @@ import {
   FlatList,
   TouchableOpacity,
   StatusBar,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
-import DeviceInfo from 'react-native-device-info';
+import Modal from 'react-native-modal';
+import * as AddCalendarEvent from 'react-native-add-calendar-event';
+import AddToCalendar from '../../modals/AddToCalendar';
+import { addToMyList, removeFromMyList } from '../../services/UserActions';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import { SafeAreaView } from 'react-navigation';
@@ -19,8 +22,21 @@ import NavigationBar from '../../components/NavigationBar.js';
 import { getScheduleContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
-const day = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat']
-const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+const day = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
+const month = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+];
 
 export default class Schedule extends React.Component {
   static contextType = NetworkContext;
@@ -29,25 +45,26 @@ export default class Schedule extends React.Component {
     this.state = {
       title: props.route.params.title,
       parent: props.route.params.parent,
-      items: [], 
+      items: [],
       month: '',
+      addToCalendarModal: false
     };
   }
 
   async componentDidMount() {
     let response = await getScheduleContent();
-    this.setState({ items: response })
+    this.setState({ items: response });
   }
 
   timeVariables = time => {
-    let date = new Date(time+' UTC').getTime()
-    let localDate = new Date(date)
+    let date = new Date(time + ' UTC').getTime();
+    let localDate = new Date(date);
     let amPM = 'AM';
 
-    if(this.state.month == '') {
+    if (this.state.month == '') {
       this.setState({
         month: localDate.getMonth()
-      })
+      });
     }
 
     if (localDate.getHours() > 11) {
@@ -56,13 +73,16 @@ export default class Schedule extends React.Component {
 
     return {
       minutes: localDate.getMinutes(),
-      hours: (localDate.getHours() > 12) ? localDate.getHours() - 12 : localDate.getHours(),
+      hours:
+        localDate.getHours() > 12
+          ? localDate.getHours() - 12
+          : localDate.getHours(),
       day: localDate.getDay(),
       date: localDate.getDate(),
       month: localDate.getMonth(),
       amPM
-    }
-  }
+    };
+  };
 
   changeType = word => {
     word = word.replace(/[- )(]/g, ' ').split(' ');
@@ -79,6 +99,49 @@ export default class Schedule extends React.Component {
     }
 
     return string;
+  };
+
+  addEventToCalendar = () => {
+    const eventConfig = {
+      title: this.addToCalendarLessonTitle,
+      startDate: new Date(this.addToCalendatLessonPublishDate),
+      endDate: new Date(this.addToCalendatLessonPublishDate)
+    };
+    AddCalendarEvent.presentEventCreatingDialog(eventConfig)
+      .then(eventInfo => {
+        this.addToCalendarLessonTitle = '';
+        this.addToCalendatLessonPublishDate = '';
+        this.setState({ addToCalendarModal: false });
+      })
+      .catch(e => {});
+  };
+
+  addToMyList = contentID => {
+    if (!this.context.isConnected) {
+      return this.context.showNoConnectionAlert();
+    }
+
+    this.state.items.find(
+      item => item.id == contentID
+    ).is_added_to_primary_playlist = true;
+
+    this.setState({ items: this.state.items });
+
+    addToMyList(contentID);
+  };
+
+  removeFromMyList = contentID => {
+    if (!this.context.isConnected) {
+      return this.context.showNoConnectionAlert();
+    }
+
+    this.state.items.find(
+      item => item.id == contentID
+    ).is_added_to_primary_playlist = false;
+
+    this.setState({ items: this.state.items });
+
+    removeFromMyList(contentID);
   };
 
   render() {
@@ -100,7 +163,7 @@ export default class Schedule extends React.Component {
         />
         <Text style={styles.contentPageHeader}>{this.state.title}</Text>
         <View style={{ flex: 1 }}>
-        <FlatList
+          <FlatList
             data={this.state.items}
             extraData={this.state}
             keyExtractor={item => item.id.toString()}
@@ -122,11 +185,11 @@ export default class Schedule extends React.Component {
                 style={{
                   padding: 10,
                   color: 'white',
-                  textAlign: 'center',
-                  fontSize: onTablet ? 20 : 12
+                  textAlign: 'left',
+                  fontSize: onTablet ? 16 : 14
                 }}
               >
-                Sorry, there are no upcoming events! 
+                Sorry, there are no upcoming events!
               </Text>
             )}
             renderItem={({ item }) => {
@@ -137,18 +200,20 @@ export default class Schedule extends React.Component {
                   style={{
                     padding: 10,
                     flexDirection: 'row',
-                    height: 80, 
+                    height: 80
                   }}
                 >
                   <View
                     style={[
-                      styles.centerContent, {
-                      width: '26%',
-                      aspectRatio: 16 / 9,
-                      backgroundColor: 'black',
-                      borderRadius: 10, 
-                      marginRight: 10,
-                    }]}
+                      styles.centerContent,
+                      {
+                        width: '26%',
+                        aspectRatio: 16 / 9,
+                        backgroundColor: 'black',
+                        borderRadius: 10,
+                        marginRight: 10
+                      }
+                    ]}
                   >
                     <Text
                       numberOfLines={1}
@@ -157,11 +222,12 @@ export default class Schedule extends React.Component {
                         color: 'white',
                         textAlign: 'left',
                         fontFamily: 'OpenSans-Bold',
-                        textAlign: 'center',
+                        textAlign: 'center'
                       }}
                     >
-                      {day[this.timeVariables(item.live_event_start_time).day]} {this.timeVariables(item.live_event_start_time).date}
-                    </Text>                    
+                      {day[this.timeVariables(item.live_event_start_time).day]}{' '}
+                      {this.timeVariables(item.live_event_start_time).date}
+                    </Text>
                     <Text
                       numberOfLines={1}
                       style={{
@@ -169,13 +235,17 @@ export default class Schedule extends React.Component {
                         color: 'white',
                         textAlign: 'left',
                         fontFamily: 'OpenSans-Regular',
-                        textAlign: 'center',
+                        textAlign: 'center'
                       }}
                     >
-                      {this.timeVariables(item.live_event_start_time).hours}
-                      :
-                      {(this.timeVariables(item.live_event_start_time).minutes) == 0 ? '00' : this.timeVariables(item.live_event_start_time).minutes}
-                      {' ' + (this.timeVariables(item.live_event_start_time).amPM)}
+                      {this.timeVariables(item.live_event_start_time).hours}:
+                      {this.timeVariables(item.live_event_start_time).minutes ==
+                      0
+                        ? '00'
+                        : this.timeVariables(item.live_event_start_time)
+                            .minutes}
+                      {' ' +
+                        this.timeVariables(item.live_event_start_time).amPM}
                     </Text>
                   </View>
                   <View
@@ -206,17 +276,17 @@ export default class Schedule extends React.Component {
                       {this.changeType(item.type)}
                     </Text>
                   </View>
-                  <View 
+                  <View
                     style={[
-                      styles.centerContent, { 
-                      flexDirection: 'row',
-                    }]}
+                      styles.centerContent,
+                      {
+                        flexDirection: 'row'
+                      }
+                    ]}
                   >
                     {!item.is_added_to_primary_playlist ? (
                       <TouchableOpacity
-                        onPress={() =>
-                          this.addToMyList(this.state.liveLesson[0]?.id)
-                        }
+                        onPress={() => this.addToMyList(item.id)}
                       >
                         <AntIcon
                           name={'plus'}
@@ -226,11 +296,7 @@ export default class Schedule extends React.Component {
                       </TouchableOpacity>
                     ) : (
                       <TouchableOpacity
-                        onPress={() =>
-                          this.removeFromMyList(
-                            this.state.liveLesson[0]?.id
-                          )
-                        }
+                        onPress={() => this.removeFromMyList(item.id)}
                       >
                         <AntIcon
                           name={'close'}
@@ -243,8 +309,9 @@ export default class Schedule extends React.Component {
                     <TouchableOpacity
                       style={{ marginLeft: 10 }}
                       onPress={() => {
-                        this.addToCalendarLessonTitle = this.state.liveLesson[0].title;
-                        this.addToCalendatLessonPublishDate = this.state.liveLesson[0].live_event_start_time;
+                        this.addToCalendarLessonTitle = item.title;
+                        this.addToCalendatLessonPublishDate =
+                          item.live_event_start_time;
                         this.setState({ addToCalendarModal: true });
                       }}
                     >
@@ -260,57 +327,28 @@ export default class Schedule extends React.Component {
             }}
           />
         </View>
+        <Modal
+          isVisible={this.state.addToCalendarModal}
+          style={styles.modalContainer}
+          animation={'slideInUp'}
+          animationInTiming={250}
+          animationOutTiming={250}
+          coverScreen={true}
+          hasBackdrop={true}
+        >
+          <AddToCalendar
+            hideAddToCalendar={() =>
+              this.setState({ addToCalendarModal: false })
+            }
+            addEventToCalendar={() => {
+              this.addEventToCalendar();
+            }}
+          />
+        </Modal>
         <NavigationBar currentPage={'SCHEDULE'} />
       </SafeAreaView>
     );
   }
 }
 
-
-const localStyles = StyleSheet.create({
-  title: {
-    fontSize: DeviceInfo.isTablet() ? 20 : 16,
-    fontFamily: 'RobotoCondensed-Bold',
-    paddingVertical: 5
-  },
-  seeAllText: {
-    textAlign: 'right',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
-    color: '#fb1b2f',
-    paddingRight: 10
-  },
-  titleContain: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10
-  },
-  progressItem: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    zIndex: 1
-  },
-  imageIOS: {
-    width: '100%',
-    borderRadius: 7.5
-  },
-  videoTitle: {
-    width: '100%',
-    paddingVertical: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  videoTitleText: {
-    fontSize: DeviceInfo.isTablet() ? 16 : 14,
-    fontFamily: 'OpenSans-Bold',
-    color: 'white'
-  },
-  typeContainer: {
-    flexDirection: 'row'
-  }
-});
+const localStyles = StyleSheet.create({});

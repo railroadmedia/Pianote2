@@ -469,9 +469,7 @@ export default class SinglePack extends React.Component {
                 style={{
                   alignSelf: 'center',
                   backgroundColor: colors.mainBackground,
-                  marginHorizontal: this.state.isLandscape
-                    ? '10%'
-                    : 10,
+                  marginHorizontal: this.state.isLandscape ? '10%' : 10,
                   marginTop: '2%'
                 }}
               >
