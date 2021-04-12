@@ -40,7 +40,7 @@ export default class NavMenuHeaders extends React.Component {
           style={{
             flexDirection: 'row',
             width: '100%',
-            padding: paddingInset
+            padding: 10
           }}
         >
           <TouchableOpacity
@@ -63,7 +63,7 @@ export default class NavMenuHeaders extends React.Component {
                 styles.centerContent,
                 {
                   flexDirection: 'row',
-                  paddingRight: paddingInset
+                  paddingRight: 10
                 }
               ]}
               onPress={() => {
@@ -117,7 +117,7 @@ export default class NavMenuHeaders extends React.Component {
               style={[
                 styles.centerContent,
                 {
-                  paddingRight: paddingInset
+                  paddingRight: 10
                 }
               ]}
             >

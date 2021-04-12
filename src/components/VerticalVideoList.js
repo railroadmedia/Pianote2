@@ -480,7 +480,7 @@ export default class VerticalVideoList extends React.Component {
                       : colors.secondBackground,
                     textAlign: 'left',
                     fontFamily: 'OpenSans-Regular',
-                    paddingRight: paddingInset
+                    paddingRight: 10
                   }}
                 >
                   {row.description}

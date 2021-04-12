@@ -70,8 +70,8 @@ export default class VideoPlayerSong extends React.Component {
                 onPress={this.props.onX}
                 style={{
                   position: 'absolute',
-                  right: paddingInset,
-                  top: paddingInset,
+                  right: 10,
+                  top: 10,
                   zIndex: 1
                 }}
               >
@@ -83,7 +83,7 @@ export default class VideoPlayerSong extends React.Component {
               </TouchableOpacity>
               <Text
                 style={{
-                  padding: paddingInset,
+                  padding: 10,
                   fontFamily: 'OpenSans-Bold',
                   fontSize: sizing.verticalListTitleSmall,
                   textAlign: 'center',
@@ -98,7 +98,7 @@ export default class VideoPlayerSong extends React.Component {
                   fontFamily: 'OpenSans-Bold',
                   textAlign: 'center',
                   color: 'white',
-                  paddingHorizontal: paddingInset
+                  paddingHorizontal: 10
                 }}
               >
                 {title}

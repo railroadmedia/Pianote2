@@ -109,7 +109,7 @@ export default class HorizontalVideoList extends React.Component {
   decideWidth() {
     if (onTablet) {
       if (this.props.isSquare) return 125;
-      else return (Dimensions.get('window').width - 4 * paddingInset) / 3;
+      else return (Dimensions.get('window').width - 4 * 10) / 3;
     } else {
       if (this.props.isSquare) return Dimensions.get('window').width / 3.25;
       else return ((Dimensions.get('window').width - 30) * 3) / 4;
@@ -315,7 +315,7 @@ export default class HorizontalVideoList extends React.Component {
 
   render = () => {
     return (
-      <View style={{ marginLeft: paddingInset }}>
+      <View style={{ marginLeft: 10 }}>
         <View style={localStyles.titleContain}>
           <Text
             style={[
@@ -417,8 +417,8 @@ export default class HorizontalVideoList extends React.Component {
             <TouchableOpacity
               style={{
                 width: this.decideWidth(),
-                marginRight: paddingInset,
-                marginBottom: this.props.isTile ? paddingInset : 0
+                marginRight: 10,
+                marginBottom: this.props.isTile ? 10 : 0
               }}
               onLongPress={() => {
                 this.setState({

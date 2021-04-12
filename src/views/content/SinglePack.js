@@ -300,8 +300,8 @@ export default class SinglePack extends React.Component {
                   width: 35,
                   borderRadius: 100,
                   position: 'absolute',
-                  left: paddingInset,
-                  top: paddingInset,
+                  left: 10,
+                  top: 10,
                   zIndex: 4
                 }
               ]}
@@ -471,7 +471,7 @@ export default class SinglePack extends React.Component {
                   backgroundColor: colors.mainBackground,
                   marginHorizontal: this.state.isLandscape
                     ? '10%'
-                    : paddingInset,
+                    : 10,
                   marginTop: '2%'
                 }}
               >
@@ -480,7 +480,7 @@ export default class SinglePack extends React.Component {
                     fontFamily: 'OpenSans-Regular',
                     marginTop: '5%',
                     fontSize: sizing.descriptionText,
-                    paddingHorizontal: paddingInset,
+                    paddingHorizontal: 10,
 
                     color: 'white',
                     textAlign: 'center'

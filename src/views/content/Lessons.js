@@ -648,7 +648,7 @@ class Lessons extends React.Component {
                 </View>
               </View>
             </ImageBackground>
-            <View style={{ marginTop: paddingInset / 2 }}>
+            <View style={{ marginTop: 10 / 2 }}>
               <HorizontalVideoList
                 hideFilterButton={true}
                 isMethod={true}
@@ -662,7 +662,7 @@ class Lessons extends React.Component {
                 showType={true}
                 items={this.state.progressLessons}
               />
-              <View style={{ height: paddingInset / 2 }} />
+              <View style={{ height: 10 / 2 }} />
               {this.state.liveLesson.length > 0 &&
                 this.state.timeDiffLive.timeDiff < 3600 * 4 && (
                   // if there is a live lesson && it is less than 4 hours away
@@ -676,7 +676,7 @@ class Lessons extends React.Component {
                         paddingTop: 5,
                         paddingBottom: 15,
                         color: 'white',
-                        paddingLeft: paddingInset
+                        paddingLeft: 10
                       }}
                     >
                       LIVE
@@ -687,7 +687,7 @@ class Lessons extends React.Component {
                       <TouchableOpacity
                         style={{
                           width: Dimensions.get('window').width - 10,
-                          paddingLeft: paddingInset
+                          paddingLeft: 10
                         }}
                         onPress={() => this.navigate(item, index)}
                       >
@@ -992,7 +992,7 @@ class Lessons extends React.Component {
                       <TouchableOpacity
                         style={{
                           width: Dimensions.get('window').width - 10,
-                          paddingLeft: paddingInset
+                          paddingLeft: 10
                         }}
                         onPress={() => this.navigate(item, index)}
                       >
@@ -1162,7 +1162,7 @@ class Lessons extends React.Component {
                     )}
                   </>
                 )}
-              <View style={{ height: paddingInset / 2 }} />
+              <View style={{ height: 10 / 2 }} />
               {onTablet ? (
                 <HorizontalVideoList
                   isMethod={true}
