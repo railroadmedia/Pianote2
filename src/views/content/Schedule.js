@@ -8,7 +8,8 @@ import {
   FlatList,
   TouchableOpacity,
   StatusBar,
-  StyleSheet
+  StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import Modal from 'react-native-modal';
@@ -47,39 +48,38 @@ export default class Schedule extends React.Component {
       parent: props.route.params.parent,
       items: [],
       month: '',
-      addToCalendarModal: false
+      addToCalendarModal: false,
+      isLoading: true,
     };
   }
 
-  async componentDidMount() {
+  componentDidMount = async () => {
     let response = await getScheduleContent();
-    this.setState({ items: response });
+    this.setState({ items: response, isLoading: false, });
   }
 
   timeVariables = time => {
     let date = new Date(time + ' UTC').getTime();
-    let localDate = new Date(date);
+    let d = new Date(date);
     let amPM = 'AM';
 
-    if (this.state.month == '') {
-      this.setState({
-        month: localDate.getMonth()
-      });
+    if(this.state.month == '' && (d instanceof Date && !isNaN(d.valueOf()))) {
+        this.setState({ month: d.getMonth()});
     }
 
-    if (localDate.getHours() > 11) {
+    if (d.getHours() > 11) {
       amPM = 'PM';
     }
 
     return {
-      minutes: localDate.getMinutes(),
+      minutes: d.getMinutes(),
       hours:
-        localDate.getHours() > 12
-          ? localDate.getHours() - 12
-          : localDate.getHours(),
-      day: localDate.getDay(),
-      date: localDate.getDate(),
-      month: localDate.getMonth(),
+        d.getHours() > 12
+          ? d.getHours() - 12
+          : d.getHours(),
+      day: d.getDay(),
+      date: d.getDate(),
+      month: d.getMonth(),
       amPM
     };
   };
@@ -147,20 +147,14 @@ export default class Schedule extends React.Component {
   render() {
     return (
       <SafeAreaView
+        style={styles.mainContainer}  
         forceInset={{
           bottom: 'never',
           top: 'never'
         }}
-        style={styles.mainContainer}
       >
-        <NavMenuHeaders
-          currentPage={'LESSONS'}
-          parentPage={this.state.parent}
-        />
-        <StatusBar
-          backgroundColor={colors.thirdBackground}
-          barStyle={'light-content'}
-        />
+        <NavMenuHeaders currentPage={'LESSONS'} parentPage={this.state.parent} />
+        <StatusBar backgroundColor={colors.thirdBackground} barStyle={'light-content'} />
         <Text style={styles.contentPageHeader}>{this.state.title}</Text>
         <View style={{ flex: 1 }}>
           <FlatList
@@ -174,13 +168,23 @@ export default class Schedule extends React.Component {
                   paddingLeft: 10,
                   paddingTop: 10,
                   color: colors.secondBackground,
-                  fontSize: onTablet ? 14 : 12
+                  fontSize: onTablet ? 14 : 12, 
                 }}
               >
                 {month[this.state.month]}
               </Text>
             )}
-            ListEmptyComponent={() => (
+            ListEmptyComponent={() => this.state.isLoading ? (
+              <ActivityIndicator
+                size={'small'}
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+                color={colors.secondBackground}
+              />
+              ) : (
               <Text
                 style={{
                   padding: 10,
@@ -191,12 +195,12 @@ export default class Schedule extends React.Component {
               >
                 Sorry, there are no upcoming events!
               </Text>
-            )}
+              )
+            }
             renderItem={({ item }) => {
               let type = item.lesson ? 'lesson' : 'overview';
               return (
                 <TouchableOpacity
-                  onPress={() => this.navigate(item)}
                   style={{
                     padding: 10,
                     flexDirection: 'row',
@@ -280,6 +284,7 @@ export default class Schedule extends React.Component {
                     style={[
                       styles.centerContent,
                       {
+                        paddingLeft: 20,
                         flexDirection: 'row'
                       }
                     ]}
