@@ -80,6 +80,29 @@ export default class Live extends React.Component {
     await this.getLiveContent();
     let response = await getLiveScheduleContent();
 
+    for(i in response) {
+      let time = (response[i].live_event_start_time) ? response[i].live_event_start_time : response[i].published_on
+      let date = new Date(time + ' UTC').getTime();
+      let d = new Date(date);
+      let amPM = 'AM';
+      
+      if (this.state.month == '' && d instanceof Date && !isNaN(d.valueOf())) {
+        this.setState({ month: d.getMonth() });
+      }
+      if (d.getHours() > 11) {
+        amPM = 'PM';
+      }
+
+      response[i].timeData = {
+        minutes: d.getMinutes(),
+        hours: d.getHours() > 12 ? d.getHours() - 12 : d.getHours(),
+        day: d.getDay(),
+        date: d.getDate(),
+        month: d.getMonth(),
+        amPM
+      };
+    }
+    
     this.setState({
       items: response,
       isLoadingAll: false,
@@ -146,30 +169,11 @@ export default class Live extends React.Component {
 
   onBack = () => goBack();
 
-  timeVariables = time => {
-    let date = new Date(time + ' UTC').getTime();
-    let d = new Date(date);
-    let amPM = 'AM';
-
-    if (this.state.month == '' && d instanceof Date && !isNaN(d.valueOf())) {
-      this.setState({ month: d.getMonth() });
-    }
-
-    if (d.getHours() > 11) {
-      amPM = 'PM';
-    }
-
-    return {
-      minutes: d.getMinutes(),
-      hours: d.getHours() > 12 ? d.getHours() - 12 : d.getHours(),
-      day: d.getDay(),
-      date: d.getDate(),
-      month: d.getMonth(),
-      amPM
-    };
-  };
-
   changeType = word => {
+    try {
+      word = word.replace(/[- )(]/g, ' ').split(' '); 
+    } catch {}
+
     let string = '';
 
     for (let i = 0; i < word.length; i++) {
@@ -239,7 +243,7 @@ export default class Live extends React.Component {
     } = this.content;
     return (
       <>
-        {this.state.liveLesson[0]?.isLive ||
+      {this.state.liveLesson[0]?.isLive ||
         (this.state.timeDiffLive?.timeDiff > 0 &&
           this.state.timeDiffLive?.timeDiff < 3600 * 4) ? (
           <View
@@ -823,12 +827,8 @@ export default class Live extends React.Component {
                           textAlign: 'center'
                         }}
                       >
-                        {
-                          day[
-                            this.timeVariables(item.live_event_start_time).day
-                          ]
-                        }{' '}
-                        {this.timeVariables(item.live_event_start_time).date}
+                        {day[item.timeData.day]}{' '}
+                        {item.timeData.date}
                       </Text>
                       <Text
                         numberOfLines={1}
@@ -840,14 +840,9 @@ export default class Live extends React.Component {
                           textAlign: 'center'
                         }}
                       >
-                        {this.timeVariables(item.live_event_start_time).hours}:
-                        {this.timeVariables(item.live_event_start_time)
-                          .minutes == 0
-                          ? '00'
-                          : this.timeVariables(item.live_event_start_time)
-                              .minutes}
-                        {' ' +
-                          this.timeVariables(item.live_event_start_time).amPM}
+                        {item.timeData.hours}:
+                        {item.timeData.minutes == 0 ? '00' : item.timeData.minutes}
+                        {' ' + item.timeData.amPM}
                       </Text>
                     </View>
                     <View

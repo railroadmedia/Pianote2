@@ -166,7 +166,10 @@ class Lessons extends React.Component {
   }
 
   changeType = word => {
-    //word = word.replace(/[- )(]/g, ' ').split(' ');
+    try {
+      word = word.replace(/[- )(]/g, ' ').split(' '); 
+    } catch {}
+    
     let string = '';
 
     for (let i = 0; i < word.length; i++) {
