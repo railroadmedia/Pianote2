@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   StatusBar,
   StyleSheet,
-  ActivityIndicator,
+  ActivityIndicator
 } from 'react-native';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import Modal from 'react-native-modal';
@@ -49,22 +49,22 @@ export default class Schedule extends React.Component {
       items: [],
       month: '',
       addToCalendarModal: false,
-      isLoading: true,
+      isLoading: true
     };
   }
 
   componentDidMount = async () => {
     let response = await getScheduleContent();
-    this.setState({ items: response, isLoading: false, });
-  }
+    this.setState({ items: response, isLoading: false });
+  };
 
   timeVariables = time => {
     let date = new Date(time + ' UTC').getTime();
     let d = new Date(date);
     let amPM = 'AM';
 
-    if(this.state.month == '' && (d instanceof Date && !isNaN(d.valueOf()))) {
-        this.setState({ month: d.getMonth()});
+    if (this.state.month == '' && d instanceof Date && !isNaN(d.valueOf())) {
+      this.setState({ month: d.getMonth() });
     }
 
     if (d.getHours() > 11) {
@@ -73,10 +73,7 @@ export default class Schedule extends React.Component {
 
     return {
       minutes: d.getMinutes(),
-      hours:
-        d.getHours() > 12
-          ? d.getHours() - 12
-          : d.getHours(),
+      hours: d.getHours() > 12 ? d.getHours() - 12 : d.getHours(),
       day: d.getDay(),
       date: d.getDate(),
       month: d.getMonth(),
@@ -147,14 +144,20 @@ export default class Schedule extends React.Component {
   render() {
     return (
       <SafeAreaView
-        style={styles.mainContainer}  
+        style={styles.mainContainer}
         forceInset={{
           bottom: 'never',
           top: 'never'
         }}
       >
-        <NavMenuHeaders currentPage={'LESSONS'} parentPage={this.state.parent} />
-        <StatusBar backgroundColor={colors.thirdBackground} barStyle={'light-content'} />
+        <NavMenuHeaders
+          currentPage={'LESSONS'}
+          parentPage={this.state.parent}
+        />
+        <StatusBar
+          backgroundColor={colors.thirdBackground}
+          barStyle={'light-content'}
+        />
         <Text style={styles.contentPageHeader}>{this.state.title}</Text>
         <View style={{ flex: 1 }}>
           <FlatList
@@ -168,33 +171,34 @@ export default class Schedule extends React.Component {
                   paddingLeft: 10,
                   paddingTop: 10,
                   color: colors.secondBackground,
-                  fontSize: onTablet ? 14 : 12, 
+                  fontSize: onTablet ? 14 : 12
                 }}
               >
                 {month[this.state.month]}
               </Text>
             )}
-            ListEmptyComponent={() => this.state.isLoading ? (
-              <ActivityIndicator
-                size={'small'}
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-                color={colors.secondBackground}
-              />
+            ListEmptyComponent={() =>
+              this.state.isLoading ? (
+                <ActivityIndicator
+                  size={'small'}
+                  style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                  color={colors.secondBackground}
+                />
               ) : (
-              <Text
-                style={{
-                  padding: 10,
-                  color: 'white',
-                  textAlign: 'left',
-                  fontSize: onTablet ? 16 : 14
-                }}
-              >
-                Sorry, there are no upcoming events!
-              </Text>
+                <Text
+                  style={{
+                    padding: 10,
+                    color: 'white',
+                    textAlign: 'left',
+                    fontSize: onTablet ? 16 : 14
+                  }}
+                >
+                  Sorry, there are no upcoming events!
+                </Text>
               )
             }
             renderItem={({ item }) => {
