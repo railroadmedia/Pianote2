@@ -25,7 +25,7 @@ import FastImage from 'react-native-fast-image';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import { MusoraChat } from 'MusoraChat';
+import { MusoraChat, watchersListener } from 'MusoraChat';
 import { getLiveScheduleContent } from '../../services/GetContent';
 import {
   getMediaSessionId,
@@ -95,12 +95,10 @@ export default class Live extends React.Component {
     let content = [await getLiveContent()];
     this.content = content[0];
 
-    //watchers listener
-    // let [{ apiKey, chatChannelName, userId, token }] = content;
-    // watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
-    // this.setState({ liveViewers })
-    // ).then(rwl => (this.removeWatchersListener = rwl));
-    ///////////////////
+    let [{ apiKey, chatChannelName, userId, token }] = content;
+    watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
+    this.setState({ liveViewers })
+    ).then(rwl => (this.removeWatchersListener = rwl));
 
     let timeNow = Math.floor(Date.now() / 1000);
     let timeLive = new Date(content[0].live_event_start_time).getTime() / 1000;
