@@ -583,131 +583,155 @@ export default class Live extends React.Component {
                   ) : (
                     // TODO: ADD LIVE PLAYER HERE
                     <>
+                      <Video
+                        youtubeId={this.state.liveLesson[0]?.youtube_video_id}
+                        toSupport={() => {}}
+                        onRefresh={() => {}}
+                        content={this.state}
+                        maxFontMultiplier={1}
+                        settingsMode={'bottom'}
+                        onFullscreen={() => {}}
+                        ref={r => (this.video = r)}
+                        type={false ? 'audio' : 'video'}
+                        connection={this.context.isConnected}
+                        onBack={this.onBack}
+                        showControls={true}
+                        paused={true}
+                        styles={{
+                          timerCursorBackground: colors.pianoteRed,
+                          beforeTimerCursorBackground: colors.pianoteRed,
+                          settings: {
+                            cancel: {
+                              color: 'black'
+                            },
+                            separatorColor: 'rgb(230, 230, 230)',
+                            background: 'white',
+                            optionsBorderColor: 'rgb(230, 230, 230)',
+                            downloadIcon: {
+                              width: 20,
+                              height: 20,
+                              fill: colors.pianoteRed
+                            }
+                          }
+                        }}
+                      />
                       <View
                         style={{
                           width: '100%',
-                          aspectRatio: 16 / 9,
-                          backgroundColor: 'red',
-
+                          padding: 10,
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          alignItems: 'center'
                         }}
-                      />
-                        <View
-                          style={{
-                            width: '100%',
-                            padding: 10,
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center'
-                          }}
-                        >
-                          <View style={{ width: '80%' }}>
+                      >
+                        <View style={{ width: '80%' }}>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              width: 80,
+                              marginBottom: 5,
+                              marginTop: 2
+                            }}
+                          >
                             <View
                               style={{
-                                flexDirection: 'row',
-                                width: 80,
-                                marginBottom: 5,
-                                marginTop: 2
+                                borderRadius: onTablet ? 5 : 3,
+                                backgroundColor: 'red',
+                                paddingHorizontal: onTablet ? 7.5 : 5
                               }}
                             >
-                              <View
-                                style={{
-                                  borderRadius: onTablet ? 5 : 3,
-                                  backgroundColor: 'red',
-                                  paddingHorizontal: onTablet ? 7.5 : 5
-                                }}
-                              >
-                                <Text
-                                  numberOfLines={1}
-                                  ellipsizeMode='tail'
-                                  style={{
-                                    fontSize: onTablet ? 16 : 14,
-                                    fontFamily: 'OpenSans-Regular',
-                                    color: 'white'
-                                  }}
-                                >
-                                  LIVE
-                                </Text>
-                              </View>
-                              <View
-                                style={{
-                                  paddingHorizontal: 10,
-                                  flexDirection: 'row'
-                                }}
-                              >
-                                <View style={{ justifyContent: 'center' }}>
-                                  <PasswordVisible
-                                    height={onTablet ? 22 : 18}
-                                    width={onTablet ? 22 : 18}
-                                    fill={'white'}
-                                  />
-                                </View>
-                                <View style={{ justifyContent: 'center' }}>
-                                  <Text
-                                    numberOfLines={1}
-                                    style={{
-                                      fontSize: DeviceInfo.isTablet() ? 14 : 12,
-                                      fontFamily: 'OpenSans-Regular',
-                                      color: 'white',
-                                      paddingLeft: 5
-                                    }}
-                                  >
-                                    {this.state.liveViewers}
-                                  </Text>
-                                </View>
-                              </View>
-                            </View>
-                            <Text
-                              numberOfLines={1}
-                              ellipsizeMode='tail'
-                              style={{
-                                fontSize: DeviceInfo.isTablet() ? 16 : 14,
-                                fontFamily: 'OpenSans-Bold',
-                                color: 'white'
-                              }}
-                            >
-                              Pianote Live Stream
-                            </Text>
-                            <View style={{ flexDirection: 'row' }}>
                               <Text
                                 numberOfLines={1}
+                                ellipsizeMode='tail'
                                 style={{
+                                  fontSize: onTablet ? 16 : 14,
                                   fontFamily: 'OpenSans-Regular',
-                                  color: colors.pianoteGrey,
-
-                                  fontSize: sizing.descriptionText
+                                  color: 'white'
                                 }}
                               >
-                                {this.changeType(
-                                  this.state.liveLesson[0].instructors
-                                )}
+                                LIVE
                               </Text>
                             </View>
+                            <View
+                              style={{
+                                paddingHorizontal: 10,
+                                flexDirection: 'row'
+                              }}
+                            >
+                              <View style={{ justifyContent: 'center' }}>
+                                <PasswordVisible
+                                  height={onTablet ? 22 : 18}
+                                  width={onTablet ? 22 : 18}
+                                  fill={'white'}
+                                />
+                              </View>
+                              <View style={{ justifyContent: 'center' }}>
+                                <Text
+                                  numberOfLines={1}
+                                  style={{
+                                    fontSize: DeviceInfo.isTablet() ? 14 : 12,
+                                    fontFamily: 'OpenSans-Regular',
+                                    color: 'white',
+                                    paddingLeft: 5
+                                  }}
+                                >
+                                  {this.state.liveViewers}
+                                </Text>
+                              </View>
+                            </View>
                           </View>
-                          {!this.state.liveLesson[0]
-                            .is_added_to_primary_playlist ? (
-                            <TouchableOpacity
-                              onPress={() => this.addToMyList(this.state.liveLesson[0].id)}
-                              style={{ paddingRight: 2.5, paddingBottom: 25 }}
+                          <Text
+                            numberOfLines={1}
+                            ellipsizeMode='tail'
+                            style={{
+                              fontSize: DeviceInfo.isTablet() ? 16 : 14,
+                              fontFamily: 'OpenSans-Bold',
+                              color: 'white'
+                            }}
+                          >
+                            Pianote Live Stream
+                          </Text>
+                          <View style={{ flexDirection: 'row' }}>
+                            <Text
+                              numberOfLines={1}
+                              style={{
+                                fontFamily: 'OpenSans-Regular',
+                                color: colors.pianoteGrey,
+
+                                fontSize: sizing.descriptionText
+                              }}
                             >
-                              <AntIcon
-                                name={'plus'}
-                                size={sizing.myListButtonSize}
-                                color={colors.pianoteRed}
-                              />
-                            </TouchableOpacity>
-                          ) : (
-                            <TouchableOpacity
-                              style={{ paddingRight: 2.5, paddingBottom: 25 }}
-                              onPress={() => this.removeFromMyList(this.state.liveLesson[0].id)}
-                            >
-                              <AntIcon
-                                name={'close'}
-                                size={sizing.myListButtonSize}
-                                color={colors.pianoteRed}
-                              />
-                            </TouchableOpacity>
-                          )}
-                        </View>                      
+                              {this.changeType(
+                                this.state.liveLesson[0].instructors
+                              )}
+                            </Text>
+                          </View>
+                        </View>
+                        {!this.state.liveLesson[0]
+                          .is_added_to_primary_playlist ? (
+                          <TouchableOpacity
+                            onPress={() => this.addToMyList(this.state.liveLesson[0].id)}
+                            style={{ paddingRight: 2.5, paddingBottom: 25 }}
+                          >
+                            <AntIcon
+                              name={'plus'}
+                              size={sizing.myListButtonSize}
+                              color={colors.pianoteRed}
+                            />
+                          </TouchableOpacity>
+                        ) : (
+                          <TouchableOpacity
+                            style={{ paddingRight: 2.5, paddingBottom: 25 }}
+                            onPress={() => this.removeFromMyList(this.state.liveLesson[0].id)}
+                          >
+                            <AntIcon
+                              name={'close'}
+                              size={sizing.myListButtonSize}
+                              color={colors.pianoteRed}
+                            />
+                          </TouchableOpacity>
+                        )}
+                      </View>                      
                     </>
                   )}
                 </>
