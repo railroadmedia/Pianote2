@@ -240,7 +240,9 @@ export default class Live extends React.Component {
     } = this.content;
     return (
       <>
-        {this.state.liveLesson.length > 0 ? (
+        {this.state.liveLesson[0]?.isLive ||
+        (this.state.timeDiffLive?.timeDiff > 0 &&
+          this.state.timeDiffLive?.timeDiff < 3600 * 4) ? (
           <SafeAreaView
             forceInset={{ top: 'never', bottom: 'never' }}
             style={{
@@ -248,7 +250,7 @@ export default class Live extends React.Component {
               flex: 1
             }}
           >
-            <StatusBar backgroundColor={'black'} barStyle={'light-content'} />
+            {/* COUNTDOWN or LIVE */}
             <>
               {this.state.timeDiffLive.timeDiff > 0 &&
               this.state.timeDiffLive.timeDiff < 3600 * 4 ? (
@@ -577,7 +579,7 @@ export default class Live extends React.Component {
                       </View>
                     </View>
                   ) : (
-                    // TODO: FIX LIVE PLAYER HERE
+                    // TODO: ADD LIVE PLAYER HERE
                     <>
                       <View
                         style={{
@@ -585,33 +587,37 @@ export default class Live extends React.Component {
                           aspectRatio: 16 / 9,
                           backgroundColor: 'red'
                         }}
-                      ></View>
+                      />
                     </>
                   )}
                 </>
               )}
-              {!this.state.isLoadingAll ? (
-                <MusoraChat
-                  appColor={colors.pianoteRed}
-                  chatId={chatChannelName}
-                  clientId={apiKey}
-                  isDark={true}
-                  onRemoveAllMessages={removeAllMessages}
-                  onToggleBlockStudent={toggleBlockStudent}
-                  questionsId={questionsChannelName}
-                  user={{ id: `${userId}`, gsToken: token }}
-                />
-              ) : (
-                <ActivityIndicator
-                  size={'small'}
-                  style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                  }}
-                  color={colors.secondBackground}
-                />
-              )}
+
+              {/* CHAT */}
+              <>
+                {!this.state.isLoadingAll ? (
+                  <MusoraChat
+                    appColor={colors.pianoteRed}
+                    chatId={chatChannelName}
+                    clientId={apiKey}
+                    isDark={true}
+                    onRemoveAllMessages={removeAllMessages}
+                    onToggleBlockStudent={toggleBlockStudent}
+                    questionsId={questionsChannelName}
+                    user={{ id: `${userId}`, gsToken: token }}
+                  />
+                ) : (
+                  <ActivityIndicator
+                    size={'small'}
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
+                    color={colors.secondBackground}
+                  />
+                )}
+              </>
             </>
           </SafeAreaView>
         ) : (
@@ -827,10 +833,4 @@ export default class Live extends React.Component {
   }
 }
 
-const localStyles = StyleSheet.create({
-  container: {
-    height: '100%',
-    width: '100%',
-    backgroundColor: '#00101d'
-  }
-});
+const localStyles = StyleSheet.create({});
