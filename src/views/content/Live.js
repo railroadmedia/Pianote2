@@ -13,7 +13,6 @@ import {
   TouchableOpacity,
   Dimensions,
   ActivityIndicator,
-  KeyboardAvoidingView,
   BackHandler,
   SafeAreaView
 } from 'react-native';
@@ -23,6 +22,7 @@ import DeviceInfo from 'react-native-device-info';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import NavigationBar from '../../components/NavigationBar.js';
 import FastImage from 'react-native-fast-image';
+import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import { MusoraChat } from 'MusoraChat';
@@ -70,7 +70,8 @@ export default class Live extends React.Component {
       items: [], // for scheduled live events
       liveLesson: [],
       month: '',
-      addToCalendarModal: false
+      addToCalendarModal: false,
+      liveViewers: 0,
     };
   }
 
@@ -243,8 +244,7 @@ export default class Live extends React.Component {
         {this.state.liveLesson[0]?.isLive ||
         (this.state.timeDiffLive?.timeDiff > 0 &&
           this.state.timeDiffLive?.timeDiff < 3600 * 4) ? (
-          <SafeAreaView
-            forceInset={{ top: 'never', bottom: 'never' }}
+          <View
             style={{
               backgroundColor: colors.mainBackground,
               flex: 1
@@ -585,16 +585,140 @@ export default class Live extends React.Component {
                         style={{
                           width: '100%',
                           aspectRatio: 16 / 9,
-                          backgroundColor: 'red'
+                          backgroundColor: 'red',
+
                         }}
                       />
+                        <View
+                          style={{
+                            width: '100%',
+                            padding: 10,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                          }}
+                        >
+                          <View style={{ width: '80%' }}>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                width: 80,
+                                marginBottom: 5,
+                                marginTop: 2
+                              }}
+                            >
+                              <View
+                                style={{
+                                  borderRadius: onTablet ? 5 : 3,
+                                  backgroundColor: 'red',
+                                  paddingHorizontal: onTablet ? 7.5 : 5
+                                }}
+                              >
+                                <Text
+                                  numberOfLines={1}
+                                  ellipsizeMode='tail'
+                                  style={{
+                                    fontSize: onTablet ? 16 : 14,
+                                    fontFamily: 'OpenSans-Regular',
+                                    color: 'white'
+                                  }}
+                                >
+                                  LIVE
+                                </Text>
+                              </View>
+                              <View
+                                style={{
+                                  paddingHorizontal: 10,
+                                  flexDirection: 'row'
+                                }}
+                              >
+                                <View style={{ justifyContent: 'center' }}>
+                                  <PasswordVisible
+                                    height={onTablet ? 22 : 18}
+                                    width={onTablet ? 22 : 18}
+                                    fill={'white'}
+                                  />
+                                </View>
+                                <View style={{ justifyContent: 'center' }}>
+                                  <Text
+                                    numberOfLines={1}
+                                    style={{
+                                      fontSize: DeviceInfo.isTablet() ? 14 : 12,
+                                      fontFamily: 'OpenSans-Regular',
+                                      color: 'white',
+                                      paddingLeft: 5
+                                    }}
+                                  >
+                                    {this.state.liveViewers}
+                                  </Text>
+                                </View>
+                              </View>
+                            </View>
+                            <Text
+                              numberOfLines={1}
+                              ellipsizeMode='tail'
+                              style={{
+                                fontSize: DeviceInfo.isTablet() ? 16 : 14,
+                                fontFamily: 'OpenSans-Bold',
+                                color: 'white'
+                              }}
+                            >
+                              Pianote Live Stream
+                            </Text>
+                            <View style={{ flexDirection: 'row' }}>
+                              <Text
+                                numberOfLines={1}
+                                style={{
+                                  fontFamily: 'OpenSans-Regular',
+                                  color: colors.pianoteGrey,
+
+                                  fontSize: sizing.descriptionText
+                                }}
+                              >
+                                {this.changeType(
+                                  this.state.liveLesson[0].instructors
+                                )}
+                              </Text>
+                            </View>
+                          </View>
+                          {!this.state.liveLesson[0]
+                            .is_added_to_primary_playlist ? (
+                            <TouchableOpacity
+                              onPress={() => this.addToMyList(this.state.liveLesson[0].id)}
+                              style={{ paddingRight: 2.5, paddingBottom: 25 }}
+                            >
+                              <AntIcon
+                                name={'plus'}
+                                size={sizing.myListButtonSize}
+                                color={colors.pianoteRed}
+                              />
+                            </TouchableOpacity>
+                          ) : (
+                            <TouchableOpacity
+                              style={{ paddingRight: 2.5, paddingBottom: 25 }}
+                              onPress={() => this.removeFromMyList(this.state.liveLesson[0].id)}
+                            >
+                              <AntIcon
+                                name={'close'}
+                                size={sizing.myListButtonSize}
+                                color={colors.pianoteRed}
+                              />
+                            </TouchableOpacity>
+                          )}
+                        </View>                      
                     </>
                   )}
                 </>
               )}
 
               {/* CHAT */}
-              <>
+              <SafeAreaView
+                forceInset={{ bottom: 'never' }}
+                style={{
+                  backgroundColor: colors.mainBackground,
+                  flex: 1
+                }}
+              >
                 {!this.state.isLoadingAll ? (
                   <MusoraChat
                     appColor={colors.pianoteRed}
@@ -617,9 +741,9 @@ export default class Live extends React.Component {
                     color={colors.secondBackground}
                   />
                 )}
-              </>
+              </SafeAreaView>
             </>
-          </SafeAreaView>
+          </View>
         ) : (
           <View style={styles.mainContainer}>
             <NavMenuHeaders currentPage={'LESSONS'} parentPage={'LIVE'} />
