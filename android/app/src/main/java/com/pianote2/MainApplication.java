@@ -13,7 +13,6 @@ import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 import com.rnfs.RNFSPackage;
 import com.eko.RNBackgroundDownloaderPackage;
 import com.brentvatne.react.ReactVideoPackage;
-import net.zubricky.AndroidKeyboardAdjust.AndroidKeyboardAdjustPackage;
 
 import com.robinpowered.react.Intercom.IntercomPackage;
 import io.intercom.android.sdk.Intercom;
@@ -49,7 +48,6 @@ public class MainApplication extends Application implements  ReactApplication {
           //packages.add(new RNBackgroundDownloaderPackage());
          // packages.add(new ReactVideoPackage());
           // packages.add(new MyReactNativePackage());
-          packages.add(new AndroidKeyboardAdjustPackage());
           return packages;
         }
 
