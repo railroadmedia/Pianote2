@@ -57,10 +57,7 @@ export default class PathOverview extends React.Component {
       items: props.route?.params?.items || [],
       isAddedToList: props.route?.params?.data?.isAddedToList,
       thumbnail: props.route?.params?.data?.thumbnail,
-      artist:
-        typeof props.route?.params?.data?.artist == 'object'
-          ? props.route?.params?.data?.artist.join(', ')
-          : props.route?.params?.data?.artist,
+      artist: '',
       isMethod: props.route?.params?.isMethod,
       isFoundations: props.route?.params?.isFoundations,
       xp: props.route?.params?.data?.total_xp,
@@ -133,7 +130,8 @@ export default class PathOverview extends React.Component {
       xp: res.xp,
       type: res.type,
       bannerNextLessonUrl: res.banner_button_url,
-      artist: res.type === 'song' ? res.artist : res.instructors.join(', '),
+      artist: res.artist,
+      instructor: res.instructor,
       isLoadingAll: false,
       refreshing: false,
       items: res.lessons
@@ -326,7 +324,12 @@ export default class PathOverview extends React.Component {
               }
             ]}
           >
-            {this.state.artist?.toUpperCase()} |{' '}
+            {this.state.artist ||
+              this.state.instructor
+                ?.map(i => i.name)
+                .join(', ')
+                .toUpperCase()}
+            |{' '}
             {this.state.isMethod && !this.state.isFoundations
               ? 'LEVEL ' + this.state.levelNum
               : this.formatDifficulty()}{' '}

@@ -158,6 +158,7 @@ export default class VideoPlayer extends React.Component {
       content = result;
       this.allCommentsNum = result.total_comments;
     }
+
     let al = [];
     if (content.assignments) {
       for (let i in content.assignments) {
@@ -202,7 +203,7 @@ export default class VideoPlayer extends React.Component {
           content.type === 'song-part' && content.parent
             ? content.parent.artist
             : content.artist,
-        instructor: content.instructors,
+        instructor: content.instructor,
         isLoadingAll: false,
         publishedOn: content.published_on,
         relatedLessons: content.related_lessons,
@@ -828,16 +829,16 @@ export default class VideoPlayer extends React.Component {
 
   renderTagsDependingOnContentType = () => {
     let { artist, xp, type, publishedOn, instructor, style } = this.state;
-    if (typeof instructor[0] == 'object') {
-      instructor = [instructor[0]?.fields?.[0]?.value];
-    }
 
     let releaseDate = this.transformDate(publishedOn);
     let releaseDateTag = releaseDate ? `${releaseDate} | ` : '';
     let artistTag = artist ? `${artist.toUpperCase()} | ` : '';
     let xpTag = `${xp || 0} XP`;
     let instructorTag = instructor
-      ? `${instructor.join(',').toUpperCase()} | `
+      ? `${instructor
+          .map(i => i.name)
+          .join(',')
+          .toUpperCase()} | `
       : '';
 
     switch (type) {

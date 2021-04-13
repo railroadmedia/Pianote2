@@ -204,7 +204,7 @@ export async function restorePurchase(purchases) {
   let platform = Platform.OS === 'ios' ? 'apple' : 'google';
   try {
     let response = await fetch(
-      `${commonService.rootUrl}/api/${platform}/restore`,
+      `${commonService.rootUrl}/mobile-app/api/${platform}/restore`,
       {
         method: 'POST',
         headers: {
@@ -230,7 +230,7 @@ export async function validateSignUp(purchases) {
   let platform = Platform.OS === 'ios' ? 'apple' : 'google';
   try {
     let response = await fetch(
-      `${commonService.rootUrl}/api/${platform}/signup`,
+      `${commonService.rootUrl}/mobile-app/api/${platform}/signup`,
       {
         method: 'POST',
         headers: {

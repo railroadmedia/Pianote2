@@ -96,7 +96,7 @@ export default class SinglePack extends React.Component {
       {
         id: response.id,
         isAddedToList: response.is_added_to_primary_playlist,
-        thumbnail: response.thumbnail,
+        thumbnail: response.thumbnail_url || response.thumbnail,
         title: response.title,
         logo: response.pack_logo,
         description: response.description,
