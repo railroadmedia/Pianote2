@@ -96,22 +96,23 @@ export default class AssignmentResource extends React.Component {
           marginVertical: 10
         }}
       >
-        {this.props.data?.map((dot, index) => (
-          <View
-            key={index}
-            style={[
-              {
-                height: 10,
-                width: 10,
-                marginRight: 10,
-                borderRadius: 50
-              },
-              index === i
-                ? { backgroundColor: colors.pianoteRed }
-                : { backgroundColor: colors.secondBackground }
-            ]}
-          />
-        ))}
+        {this.props.data.length > 1 &&
+          this.props.data?.map((dot, index) => (
+            <View
+              key={index}
+              style={[
+                {
+                  height: 10,
+                  width: 10,
+                  marginRight: 10,
+                  borderRadius: 50
+                },
+                index === i
+                  ? { backgroundColor: colors.pianoteRed }
+                  : { backgroundColor: colors.secondBackground }
+              ]}
+            />
+          ))}
       </View>
     );
   }
