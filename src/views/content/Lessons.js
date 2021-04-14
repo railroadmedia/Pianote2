@@ -169,9 +169,6 @@ class Lessons extends React.Component {
 
   async getLiveContent() {
     let content = [await getLiveContent()];
-    console.log(content)
-    content[0].live_event_start_time = "2021/04/14 01:00:00"
-
     let [{ apiKey, chatChannelName, userId, token }] = content;
     watchersListener(apiKey, chatChannelName, userId, token, liveViewers => this.setState({ liveViewers })).then(rwl => (this.removeWatchersListener = rwl));
     
@@ -181,8 +178,6 @@ class Lessons extends React.Component {
     let hours = Math.floor(timeDiff / 3600)
     let minutes = Math.floor((timeDiff - hours*3600)/60)
     let seconds = timeDiff - hours*3600 - minutes*60
-    
-    console.log(timeDiff, hours, minutes, seconds)
     
     if(timeDiff < 4*3600) {
       this.setState({
@@ -1005,7 +1000,7 @@ class Lessons extends React.Component {
                           width: Dimensions.get('window').width - 10,
                           paddingLeft: 10
                         }}
-                        onPress={() => this.navigate(item, index)}
+                        onPress={() => navigate('LIVE')}
                       >
                         <View style={{ width: '100%' }}>
                           {Platform.OS === 'ios' ? (
@@ -1186,8 +1181,7 @@ class Lessons extends React.Component {
                       parent: 'Lessons'
                     })
                   }
-                  // if horizontal replace vertical on tablet include below
-                  hideFilterButton={false} // if on tablet & should be filter list not see all
+                  hideFilterButton={false}
                   isPaging={this.state.isPaging}
                   filters={this.metaFilters}
                   currentSort={this.state.currentSort}

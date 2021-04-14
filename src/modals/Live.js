@@ -93,44 +93,33 @@ export default class Live extends React.Component {
                 style={{
                   fontFamily: 'OpenSans-Bold',
                   position: 'absolute',
-                  fontSize: onTablet ? 16 : 14
+                  fontSize: onTablet ? 16 : 14,
+                  marginTop: 20,
                 }}
               >
                 {this.changeType(this.props.liveLesson[0]?.instructors)}
               </Text>{' '}
-              just went live. Would you like to join?
+              just went live. {'\n'}Would you like to join?
             </Text>
             <Text style={[styles.modalBodyText, localStyles.live]}>
-              Join
               <Text
                 style={{
-                  fontFamily: 'OpenSans-Bold',
+                  fontFamily: 'OpenSans-Regular',
                   position: 'absolute',
                   fontSize: onTablet ? 16 : 14
                 }}
               >
-                {' '}
-                @jared-Drummer
-              </Text>{' '}
-              and
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Bold',
-                  position: 'absolute',
-                  fontSize: onTablet ? 16 : 14
-                }}
-              >
-                {' '}
-                {this.props.numViewers} members
+                {/* Join {this.props.numViewers} members now! */}
               </Text>
             </Text>
             <TouchableOpacity
               style={[
                 localStyles.watch,
-                { justifyContent: 'center', marginTop: 20 }
+                { justifyContent: 'center', marginTop: 0 }
               ]}
               onPress={() => {
-                navigate('LIVE'), this.props.hideLive();
+                navigate('LIVE'), 
+                this.props.hideLive();
               }}
             >
               <Text style={[styles.modalButtonText, localStyles.watchText]}>
