@@ -216,7 +216,7 @@ class MyList extends React.Component {
             style={[
               styles.contentPageHeader,
               {
-                paddingLeft: paddingInset
+                paddingLeft: 10
               }
             ]}
           >
@@ -240,7 +240,7 @@ class MyList extends React.Component {
               style={{
                 justifyContent: 'center',
                 paddingVertical: 20,
-                width: width * 0.26 + paddingInset / 2
+                width: width * 0.26 + 10 / 2
               }}
             >
               <Text
@@ -248,8 +248,8 @@ class MyList extends React.Component {
                   styles.tabRightContainerText,
                   {
                     position: 'absolute',
-                    paddingLeft: paddingInset,
-                    width: width * 0.56 + paddingInset / 2
+                    paddingLeft: 10,
+                    width: width * 0.56 + 10 / 2
                   }
                 ]}
               >
@@ -278,7 +278,7 @@ class MyList extends React.Component {
               style={{
                 justifyContent: 'center',
                 paddingVertical: 20,
-                width: width * 0.26 + paddingInset / 2
+                width: width * 0.26 + 10 / 2
               }}
             >
               <Text
@@ -286,8 +286,8 @@ class MyList extends React.Component {
                   styles.tabRightContainerText,
                   {
                     position: 'absolute',
-                    paddingLeft: paddingInset,
-                    width: width * 0.56 + paddingInset / 2
+                    paddingLeft: 10,
+                    width: width * 0.56 + 10 / 2
                   }
                 ]}
               >

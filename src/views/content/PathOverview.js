@@ -470,7 +470,7 @@ export default class PathOverview extends React.Component {
           <View
             style={[
               {
-                paddingHorizontal: paddingInset * 2
+                paddingHorizontal: 10 * 2
               },
               this.state.isLandscape
                 ? { marginHorizontal: '10%' }

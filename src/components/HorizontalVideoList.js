@@ -109,7 +109,7 @@ export default class HorizontalVideoList extends React.Component {
   decideWidth() {
     if (onTablet) {
       if (this.props.isSquare) return 125;
-      else return (Dimensions.get('window').width - 4 * paddingInset) / 3;
+      else return (Dimensions.get('window').width - 4 * 10) / 3;
     } else {
       if (this.props.isSquare) return Dimensions.get('window').width / 3.25;
       else return ((Dimensions.get('window').width - 30) * 3) / 4;
@@ -303,19 +303,19 @@ export default class HorizontalVideoList extends React.Component {
   secondsToHms(d) {
     d = Number(d);
     var h = Math.floor(d / 3600);
-    var m = Math.floor(d % 3600 / 60);
-    var s = Math.floor(d % 3600 % 60);
+    var m = Math.floor((d % 3600) / 60);
+    var s = Math.floor((d % 3600) % 60);
 
     var hDisplay = h !== 0 && h + ' hour';
     var mDisplay = m !== 0 && m + ' min';
     var sDisplay = s !== 0 && s + ' sec';
 
-    return [hDisplay, mDisplay, sDisplay].filter(Boolean).join(" ");
+    return [hDisplay, mDisplay, sDisplay].filter(Boolean).join(' ');
   }
 
   render = () => {
     return (
-      <View style={{ marginLeft: paddingInset }}>
+      <View style={{ marginLeft: 10 }}>
         <View style={localStyles.titleContain}>
           <Text
             style={[
@@ -417,8 +417,8 @@ export default class HorizontalVideoList extends React.Component {
             <TouchableOpacity
               style={{
                 width: this.decideWidth(),
-                marginRight: paddingInset,
-                marginBottom: this.props.isTile ? paddingInset : 0
+                marginRight: 10,
+                marginBottom: this.props.isTile ? 10 : 0
               }}
               onLongPress={() => {
                 this.setState({
@@ -432,15 +432,17 @@ export default class HorizontalVideoList extends React.Component {
               <View style={{ width: '100%' }}>
                 <View style={[styles.centerContent, localStyles.progressItem]}>
                   {this.props.isLive ? (
-                    <View 
+                    <View
                       style={[
-                        styles.centerContent, {
-                        height: '100%',
-                        width: '100%',
-                        borderRadius: 10,
-                      }]}
+                        styles.centerContent,
+                        {
+                          height: '100%',
+                          width: '100%',
+                          borderRadius: 10
+                        }
+                      ]}
                     >
-                       <LinearGradient
+                      <LinearGradient
                         colors={[
                           'transparent',
                           'rgba(20, 20, 20, 0.7)',
@@ -462,7 +464,7 @@ export default class HorizontalVideoList extends React.Component {
                           position: 'absolute',
                           fontSize: onTablet ? 16 : 12,
                           left: 5,
-                          top: 10,
+                          top: 10
                         }}
                       >
                         UPCOMING EVENT
@@ -474,40 +476,43 @@ export default class HorizontalVideoList extends React.Component {
                               color: 'white',
                               fontFamily: 'OpenSans-Bold',
                               fontSize: onTablet ? 60 : 40,
-                              textAlign: 'center',
+                              textAlign: 'center'
                             }}
                           >
                             02
                           </Text>
                           <Text
-                              style={{
-                                color: 'white',
-                                fontFamily: 'OpenSans-Bold',
-                                top: 0,
-                                textAlign: 'center'
-                              }}
-                            >
-                              HOURS
-                          </Text>
-                        </View>
-                        <View>
-                          <Text
                             style={{
                               color: 'white',
                               fontFamily: 'OpenSans-Bold',
-                              fontSize: onTablet ? 60 : 40,
+                              top: 0,
+                              textAlign: 'center'
                             }}
-                          > : </Text>
+                          >
+                            HOURS
+                          </Text>
+                        </View>
+                        <View>
                           <Text
-                              style={{
-                                color: 'white',
-                                fontFamily: 'OpenSans-Bold',
-                                top: 0,
-                                textAlign: 'center',
-                                color: 'transparent'
-                              }}
-                            >
-                              h
+                            style={{
+                              color: 'white',
+                              fontFamily: 'OpenSans-Bold',
+                              fontSize: onTablet ? 60 : 40
+                            }}
+                          >
+                            {' '}
+                            :{' '}
+                          </Text>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontFamily: 'OpenSans-Bold',
+                              top: 0,
+                              textAlign: 'center',
+                              color: 'transparent'
+                            }}
+                          >
+                            h
                           </Text>
                         </View>
                         <View>
@@ -516,40 +521,43 @@ export default class HorizontalVideoList extends React.Component {
                               color: 'white',
                               fontFamily: 'OpenSans-Bold',
                               fontSize: onTablet ? 60 : 40,
-                              textAlign: 'center',
+                              textAlign: 'center'
                             }}
                           >
                             42
                           </Text>
                           <Text
-                              style={{
-                                color: 'white',
-                                fontFamily: 'OpenSans-Bold',
-                                top: 0,
-                                textAlign: 'center'
-                              }}
-                            >
-                              MINUTES
-                          </Text>
-                        </View>
-                        <View>
-                          <Text
                             style={{
                               color: 'white',
                               fontFamily: 'OpenSans-Bold',
-                              fontSize: onTablet ? 60 : 40,
+                              top: 0,
+                              textAlign: 'center'
                             }}
-                          > : </Text>
+                          >
+                            MINUTES
+                          </Text>
+                        </View>
+                        <View>
                           <Text
-                              style={{
-                                color: 'white',
-                                fontFamily: 'OpenSans-Bold',
-                                top: 0,
-                                textAlign: 'center',
-                                color: 'transparent',
-                              }}
-                            >
-                              h
+                            style={{
+                              color: 'white',
+                              fontFamily: 'OpenSans-Bold',
+                              fontSize: onTablet ? 60 : 40
+                            }}
+                          >
+                            {' '}
+                            :{' '}
+                          </Text>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontFamily: 'OpenSans-Bold',
+                              top: 0,
+                              textAlign: 'center',
+                              color: 'transparent'
+                            }}
+                          >
+                            h
                           </Text>
                         </View>
                         <View>
@@ -558,20 +566,20 @@ export default class HorizontalVideoList extends React.Component {
                               color: 'white',
                               fontFamily: 'OpenSans-Bold',
                               fontSize: onTablet ? 60 : 40,
-                              textAlign: 'center',
+                              textAlign: 'center'
                             }}
                           >
                             02
                           </Text>
                           <Text
-                              style={{
-                                color: 'white',
-                                fontFamily: 'OpenSans-Bold',
-                                top: 0,
-                                textAlign: 'center',
-                              }}
-                            >
-                              SECONDS
+                            style={{
+                              color: 'white',
+                              fontFamily: 'OpenSans-Bold',
+                              top: 0,
+                              textAlign: 'center'
+                            }}
+                          >
+                            SECONDS
                           </Text>
                         </View>
                       </Text>
@@ -641,7 +649,7 @@ export default class HorizontalVideoList extends React.Component {
                     ellipsizeMode='tail'
                     style={localStyles.videoTitleText}
                   >
-                    {(this.props.isLive) ? 'Pianote Live Stream' : item.title}
+                    {this.props.isLive ? 'Pianote Live Stream' : item.title}
                   </Text>
                   <View style={localStyles.typeContainer}>
                     <Text
@@ -661,31 +669,32 @@ export default class HorizontalVideoList extends React.Component {
                     </Text>
                   </View>
                 </View>
-                {this.props.isLive && (
-                  !item.isAddedToList ? (
-                  <TouchableOpacity
-                    onPress={() => this.addToMyList(item.id)}
-                    style={{ paddingRight: 2.5 }}
-                  >
-                    <AntIcon
-                      name={'plus'}
-                      size={sizing.myListButtonSize}
-                      color={colors.pianoteRed}
-                    />
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    style={{ paddingRight: 2.5 }}
-                    onPress={() => this.removeFromMyList(item.id)}
-                  >
-                    <AntIcon
-                      name={'close'}
-                      size={sizing.myListButtonSize}
-                      color={colors.pianoteRed}
-                    />
-                  </TouchableOpacity>
-                ))}                
-                {(new Date(item.publishedOn) > new Date() || this.props.isLive) ? (
+                {this.props.isLive &&
+                  (!item.isAddedToList ? (
+                    <TouchableOpacity
+                      onPress={() => this.addToMyList(item.id)}
+                      style={{ paddingRight: 2.5 }}
+                    >
+                      <AntIcon
+                        name={'plus'}
+                        size={sizing.myListButtonSize}
+                        color={colors.pianoteRed}
+                      />
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      style={{ paddingRight: 2.5 }}
+                      onPress={() => this.removeFromMyList(item.id)}
+                    >
+                      <AntIcon
+                        name={'close'}
+                        size={sizing.myListButtonSize}
+                        color={colors.pianoteRed}
+                      />
+                    </TouchableOpacity>
+                  ))}
+                {new Date(item.publishedOn) > new Date() ||
+                this.props.isLive ? (
                   <TouchableOpacity
                     style={{ paddingRight: 5 }}
                     onPress={() => {
@@ -746,11 +755,7 @@ export default class HorizontalVideoList extends React.Component {
         </Modal>
         <Modal
           isVisible={this.state.addToCalendarModal}
-          style={{
-            margin: 0,
-            height: '100%',
-            width: '100%'
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

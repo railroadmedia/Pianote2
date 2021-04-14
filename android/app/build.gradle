@@ -77,7 +77,7 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     entryFile: "index.js",
-    enableHermes: true,  // clean and rebuild if changing
+    enableHermes: false,  // clean and rebuild if changing
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -196,9 +196,15 @@ android {
 
         }
     }
+    packagingOptions {
+        // Make sure libjsc.so does not packed in APK
+        exclude "**/libjsc.so"
+    }
+
 }
 
 dependencies {
+    implementation project(":react-native-android-keyboard-adjust")
     implementation project(':react-native-google-cast')
     implementation project(':react-native-push-notification')
     implementation project(':@react-native-firebase_crashlytics')
@@ -233,6 +239,9 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+    // Add v8-android - prebuilt libv8android.so into APK
+    implementation 'org.chromium:v8-android:+'
+
 }
 def safeExtGet(prop, fallback) {
     rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback

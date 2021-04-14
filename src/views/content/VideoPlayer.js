@@ -543,7 +543,7 @@ export default class VideoPlayer extends React.Component {
           </Text>
         </View>
 
-        <View style={{ flex: 1, paddingLeft: paddingInset }}>
+        <View style={{ flex: 1, paddingLeft: 10 }}>
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
@@ -651,7 +651,7 @@ export default class VideoPlayer extends React.Component {
               </View>
               {this.userId === item.user_id && (
                 <TouchableOpacity
-                  style={{ marginLeft: paddingInset }}
+                  style={{ marginLeft: 10 }}
                   onPress={() => this.deleteComment(item.id)}
                 >
                   <AntIcon
@@ -1128,7 +1128,7 @@ export default class VideoPlayer extends React.Component {
                         fontFamily: 'OpenSans-Bold',
                         textAlign: 'center',
                         color: 'white',
-                        paddingHorizontal: paddingInset
+                        paddingHorizontal: 10
                       }}
                     >
                       {this.state.lessonTitle}
@@ -1349,7 +1349,7 @@ export default class VideoPlayer extends React.Component {
                     <View style={{ marginTop: 20, marginBottom: 10 }}>
                       <View
                         style={{
-                          paddingLeft: paddingInset,
+                          paddingLeft: 10,
                           paddingBottom: 10
                         }}
                       >
@@ -1487,7 +1487,7 @@ export default class VideoPlayer extends React.Component {
                                   fontFamily: 'OpenSans-Regular',
                                   fontSize: sizing.descriptionText,
                                   color: 'white',
-                                  paddingLeft: paddingInset
+                                  paddingLeft: 10
                                 }}
                               >
                                 Add a comment...
@@ -1745,7 +1745,7 @@ export default class VideoPlayer extends React.Component {
                   borderWidth: 2,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginLeft: paddingInset,
+                  marginLeft: 10,
                   borderColor: this.state.nextLesson
                     ? colors.pianoteRed
                     : colors.secondBackground

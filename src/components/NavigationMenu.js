@@ -50,6 +50,14 @@ const navigationOptions = [
     navigator: 'STUDENTFOCUSCATALOG'
   },
   {
+    title: 'Live',
+    navigator: 'LIVE'
+  },
+  {
+    title: 'Schedule',
+    navigator: 'SCHEDULE'
+  },
+  {
     title: 'Podcasts',
     navigator: 'STUDENTFOCUSSHOW'
   },
@@ -70,7 +78,7 @@ export default class NavigationMenu extends React.Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     AsyncStorage.multiGet(['methodIsStarted', 'methodIsCompleted']).then(data =>
       this.setState({
         methodIsStarted:
@@ -111,12 +119,12 @@ export default class NavigationMenu extends React.Component {
               } else if (nav.title === 'Live') {
                 navigate(nav.navigator, {
                   title: nav.title,
-                  parent: 'Lessons'
+                  parent: 'live'
                 });
               } else if (nav.title === 'Schedule') {
-                navigate(nav.navigator, {
+                return navigate(nav.navigator, {
                   title: nav.title,
-                  parent: 'Lessons'
+                  parent: 'SCHEDULE'
                 });
               } else {
                 navigate(nav.navigator);
@@ -174,6 +182,7 @@ export default class NavigationMenu extends React.Component {
         ]}
       >
         <ScrollView
+          showsVerticalScrollIndicator={false}
           style={{
             flex: 1,
             maxHeight: (height / 10) * 7

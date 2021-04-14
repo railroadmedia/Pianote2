@@ -404,7 +404,7 @@ export default class MethodLevel extends React.Component {
                   fontFamily: 'OpenSans-Regular',
                   marginTop: onTablet ? 40 : 30,
                   fontSize: sizing.descriptionText,
-                  paddingHorizontal: paddingInset,
+                  paddingHorizontal: 10,
                   color: 'white',
                   textAlign: 'center'
                 }}
