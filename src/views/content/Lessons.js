@@ -170,6 +170,7 @@ class Lessons extends React.Component {
   async getLiveContent() {
     let content = [await getLiveContent()];
     let [{ apiKey, chatChannelName, userId, token }] = content;
+    
     watchersListener(apiKey, chatChannelName, userId, token, liveViewers => this.setState({ liveViewers })).then(rwl => (this.removeWatchersListener = rwl));
     
     let timeNow = Math.floor(Date.now() / 1000);
@@ -845,7 +846,7 @@ class Lessons extends React.Component {
                                       color: 'white',
                                       fontFamily: 'OpenSans-Bold',
                                       fontSize: onTablet ? 60 : 40,
-                                      textAlign: 'center'
+                                      textAlign: 'center',
                                     }}
                                   >
                                     {this.state.timeDiffLive?.seconds}
@@ -855,7 +856,7 @@ class Lessons extends React.Component {
                                       color: 'white',
                                       fontFamily: 'OpenSans-Bold',
                                       top: 0,
-                                      textAlign: 'center'
+                                      textAlign: 'center',
                                     }}
                                   >
                                     SECONDS
@@ -943,9 +944,7 @@ class Lessons extends React.Component {
                                   fontSize: sizing.descriptionText
                                 }}
                               >
-                                {this.changeType(
-                                  this.state.liveLesson[0].instructors
-                                )}
+                                {this.changeType(this.state.liveLesson[0].instructors)}
                               </Text>
                             </View>
                           </View>
@@ -965,9 +964,7 @@ class Lessons extends React.Component {
                           ) : (
                             <TouchableOpacity
                               onPress={() =>
-                                this.removeFromMyList(
-                                  this.state.liveLesson[0]?.id
-                                )
+                                this.removeFromMyList(this.state.liveLesson[0]?.id)
                               }
                             >
                               <AntIcon
@@ -1142,7 +1139,7 @@ class Lessons extends React.Component {
                           {!this.state.liveLesson[0]
                             .is_added_to_primary_playlist ? (
                             <TouchableOpacity
-                              onPress={() => this.addToMyList()}
+                              onPress={() => this.addToMyList(this.state.liveLesson[0]?.id)}
                               style={{ paddingRight: 2.5, paddingBottom: 25 }}
                             >
                               <AntIcon
@@ -1154,7 +1151,7 @@ class Lessons extends React.Component {
                           ) : (
                             <TouchableOpacity
                               style={{ paddingRight: 2.5, paddingBottom: 25 }}
-                              onPress={() => this.removeFromMyList()}
+                              onPress={() => this.removeFromMyList(this.state.liveLesson[0]?.id)}
                             >
                               <AntIcon
                                 name={'close'}

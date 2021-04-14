@@ -24,12 +24,9 @@ import NavigationBar from '../../components/NavigationBar.js';
 import FastImage from 'react-native-fast-image';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import LinearGradient from 'react-native-linear-gradient';
-import IonIcon from 'react-native-vector-icons/Ionicons';
 import { MusoraChat, watchersListener } from 'MusoraChat';
 import { getLiveScheduleContent } from '../../services/GetContent';
 import {
-  getMediaSessionId,
-  updateUsersVideoProgress,
   removeAllMessages,
   toggleBlockStudent
 } from '../../services/UserActions';
@@ -68,7 +65,7 @@ export default class Live extends React.Component {
       isLoadingAll: true,
       isLive: false,
       items: [], // for scheduled live events
-      liveLesson: [],
+      liveLesson: [], // the lesson
       month: '',
       addToCalendarModal: false,
       liveViewers: 0,
@@ -117,10 +114,7 @@ export default class Live extends React.Component {
   async getLiveContent() {
     let content = [await getLiveContent()];
     this.content = content[0];
-
-    console.log(content)
-    content[0].live_event_start_time = "2021/04/14 02:00:00"
-
+ 
     let [{ apiKey, chatChannelName, userId, token }] = content;
     watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
     this.setState({ liveViewers })
@@ -132,8 +126,6 @@ export default class Live extends React.Component {
     let hours = Math.floor(timeDiff / 3600)
     let minutes = Math.floor((timeDiff - hours*3600)/60)
     let seconds = timeDiff - hours*3600 - minutes*60
-    
-    console.log(timeDiff, hours, minutes, seconds)
     
     if(timeDiff < 4*3600) {
       this.setState({
@@ -213,28 +205,36 @@ export default class Live extends React.Component {
       .catch(e => {});
   };
 
-  addToMyList = async contentID => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
+  addToMyList = async (contentID, type) => {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert()
+
+    if(type == 'live') {
+      this.state.liveLesson[0].is_added_to_primary_playlist = true;
+    } else {
+      this.state.items.find(item => item.id == contentID).is_added_to_primary_playlist = true;
     }
 
-    this.state.items.find(item => item.id == contentID).is_added_to_primary_playlist = true;
-
-    this.setState({ items: this.state.items });
+    this.setState({
+      items: this.state.items,
+      liveLesson: this.state.liveLesson,
+    });
 
     addToMyList(contentID);
   };
 
-  removeFromMyList = contentID => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
+  removeFromMyList = (contentID, type) => {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert()
+
+    if(type == 'live') {
+      this.state.items.find(item => item.id == contentID).is_added_to_primary_playlist = false;
+    } else {
+      this.state.liveLesson[0].is_added_to_primary_playlist = false;
     }
 
-    this.state.items.find(
-      item => item.id == contentID
-    ).is_added_to_primary_playlist = false;
-
-    this.setState({ items: this.state.items });
+    this.setState({ 
+      items: this.state.items,
+      liveLesson: this.state.liveLesson,
+    });
 
     removeFromMyList(contentID);
   };
@@ -249,9 +249,7 @@ export default class Live extends React.Component {
     } = this.content;
     return (
       <>
-      {this.state.liveLesson[0]?.isLive ||
-        (this.state.timeDiffLive?.timeDiff > 0 &&
-          this.state.timeDiffLive?.timeDiff < 3600 * 4) ? (
+      {this.state.liveLesson.length > 0 ? (
           <View
             style={{
               backgroundColor: colors.mainBackground,
@@ -263,7 +261,7 @@ export default class Live extends React.Component {
               {this.state.timeDiffLive.timeDiff > 0 &&
               this.state.timeDiffLive.timeDiff < 3600 * 4 ? (
                 <>
-                  <TouchableOpacity
+                  <SafeAreaView
                     style={{
                       width: Dimensions.get('window').width
                     }}
@@ -518,7 +516,7 @@ export default class Live extends React.Component {
                         .is_added_to_primary_playlist ? (
                         <TouchableOpacity
                           onPress={() =>
-                            this.addToMyList(this.state.liveLesson[0]?.id)
+                            this.addToMyList(this.state.liveLesson[0]?.id, 'live')
                           }
                         >
                           <AntIcon
@@ -555,7 +553,7 @@ export default class Live extends React.Component {
                         />
                       </TouchableOpacity>
                     </View>
-                  </TouchableOpacity>
+                  </SafeAreaView>
                 </>
               ) : (
                 <>
@@ -689,7 +687,7 @@ export default class Live extends React.Component {
                         {!this.state.liveLesson[0]
                           .is_added_to_primary_playlist ? (
                           <TouchableOpacity
-                            onPress={() => this.addToMyList(this.state.liveLesson[0].id)}
+                            onPress={() => this.addToMyList(this.state.liveLesson[0].id, 'live')}
                             style={{ paddingRight: 2.5, paddingBottom: 25 }}
                           >
                             <AntIcon
@@ -887,7 +885,7 @@ export default class Live extends React.Component {
                     >
                       {!item.is_added_to_primary_playlist ? (
                         <TouchableOpacity
-                          onPress={() => this.addToMyList(item.id)}
+                          onPress={() => this.addToMyList(item.id, 'schedule')}
                         >
                           <AntIcon
                             name={'plus'}
