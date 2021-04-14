@@ -139,6 +139,7 @@ class Lessons extends React.Component {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
+
     let content = await Promise.all([
       methodService.getMethod(),
       getAllContent(
@@ -149,6 +150,7 @@ class Lessons extends React.Component {
       ),
       getStartedContent('')
     ]);
+
     this.metaFilters = content?.[1]?.meta?.filterOptions;
     this.props.cacheAndWriteLessons({
       all: content[1],
@@ -165,11 +167,69 @@ class Lessons extends React.Component {
     );
   }
 
+  async getLiveContent() {
+    let content = [await getLiveContent()];
+    console.log(content)
+    content[0].live_event_start_time = "2021/04/14 01:00:00"
+
+    let [{ apiKey, chatChannelName, userId, token }] = content;
+    watchersListener(apiKey, chatChannelName, userId, token, liveViewers => this.setState({ liveViewers })).then(rwl => (this.removeWatchersListener = rwl));
+    
+    let timeNow = Math.floor(Date.now() / 1000);
+    let timeLive = new Date(content[0].live_event_start_time + ' UTC').getTime() / 1000;
+    let timeDiff = timeLive - timeNow;
+    let hours = Math.floor(timeDiff / 3600)
+    let minutes = Math.floor((timeDiff - hours*3600)/60)
+    let seconds = timeDiff - hours*3600 - minutes*60
+    
+    console.log(timeDiff, hours, minutes, seconds)
+    
+    if(timeDiff < 4*3600) {
+      this.setState({
+        liveLesson: content,
+        timeDiffLive: {
+          timeDiff,
+          hours,
+          minutes,
+          seconds,
+        }
+      });
+
+      if (!content[0].isLive) {
+        this.interval = setInterval(() => this.timer(), 1000);
+      }
+    }
+  }
+
+  async timer() {
+    let timeNow = Math.floor(Date.now() / 1000);
+    let timeLive = new Date(this.state.liveLesson[0].live_event_start_time + ' UTC').getTime() / 1000;
+    let timeDiff = timeLive - timeNow;
+    let hours = Math.floor(timeDiff / 3600)
+    let minutes = Math.floor((timeDiff - hours*3600)/60)
+    let seconds = timeDiff - hours*3600 - minutes*60
+
+    this.setState({
+      timeDiffLive: {
+        timeDiff,
+        hours,
+        minutes,
+        seconds,
+      }
+    });
+
+    if (timeDiff < 0) {
+      // if time ran out show reminder, get rid of timer
+      this.setState({ showLive: true });
+      clearInterval(this.interval);
+    }
+  }
+
   changeType = word => {
     try {
-      word = word.replace(/[- )(]/g, ' ').split(' '); 
+      word = word.replace(/[- )(]/g, ' ').split(' ');
     } catch {}
-    
+
     let string = '';
 
     for (let i = 0; i < word.length; i++) {
@@ -185,60 +245,6 @@ class Lessons extends React.Component {
 
     return string;
   };
-
-  async getLiveContent() {
-    let content = [await getLiveContent()];
-
-    //watchers listener
-    let [{ apiKey, chatChannelName, userId, token }] = content;
-    watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
-      this.setState({ liveViewers })
-    ).then(rwl => (this.removeWatchersListener = rwl));
-    ///////////////////
-
-    let timeNow = Math.floor(Date.now() / 1000);
-    let timeLive = new Date(content[0].live_event_start_time).getTime() / 1000;
-    let timeDiff = timeLive - timeNow;
-    var date = new Date(timeDiff * 1000);
-
-    this.setState({
-      liveLesson: content,
-      timeDiffLive: {
-        timeDiff,
-        hours: date.getHours(),
-        minutes: date.getMinutes(),
-        seconds: date.getSeconds()
-      }
-    });
-
-    if (!content[0].isLive) {
-      this.interval = setInterval(() => this.timer(), 1000);
-    }
-  }
-
-  async timer() {
-    let timeNow = Math.floor(Date.now() / 1000);
-    let timeLive =
-      new Date(this.state.liveLesson[0].live_event_start_time).getTime() / 1000;
-    let timeDiff = timeLive - timeNow;
-    let date = new Date(timeDiff * 1000);
-    this.setState({
-      timeDiffLive: {
-        timeDiff,
-        hours: date.getHours(),
-        minutes: date.getMinutes(),
-        seconds: date.getSeconds()
-      }
-    });
-    if (timeDiff < 0) {
-      // prod: timeDiff < 0
-      // test: date.getSeconds() == 1 || date.getSeconds() == 30
-
-      // if time ran out show reminder, get rid of timer
-      this.setState({ showLive: true });
-      clearInterval(this.interval);
-    }
-  }
 
   initialValidData = (content, fromCache) => {
     try {
@@ -687,14 +693,16 @@ class Lessons extends React.Component {
                     {this.state.timeDiffLive.timeDiff > 0 ? (
                       // prod: > 0
                       // live lesson has time to countdown
-                      <TouchableOpacity
+                      <View
                         style={{
                           width: Dimensions.get('window').width - 10,
                           paddingLeft: 10
                         }}
-                        onPress={() => this.navigate(item, index)}
                       >
-                        <View style={{ width: '100%' }}>
+                        <TouchableOpacity 
+                          onPress={() => navigate('LIVE')}
+                          style={{ width: '100%' }}
+                        >
                           <View
                             style={[
                               styles.centerContent,
@@ -908,7 +916,7 @@ class Lessons extends React.Component {
                               />
                             )}
                           </View>
-                        </View>
+                        </TouchableOpacity>
                         <View
                           style={{
                             width: '100%',
@@ -989,7 +997,7 @@ class Lessons extends React.Component {
                             />
                           </TouchableOpacity>
                         </View>
-                      </TouchableOpacity>
+                      </View>
                     ) : (
                       // else if time ran out switch to live
                       <TouchableOpacity

@@ -118,49 +118,58 @@ export default class Live extends React.Component {
     let content = [await getLiveContent()];
     this.content = content[0];
 
+    console.log(content)
+    content[0].live_event_start_time = "2021/04/14 02:00:00"
+
     let [{ apiKey, chatChannelName, userId, token }] = content;
     watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
     this.setState({ liveViewers })
     ).then(rwl => (this.removeWatchersListener = rwl));
 
     let timeNow = Math.floor(Date.now() / 1000);
-    let timeLive = new Date(content[0].live_event_start_time).getTime() / 1000;
+    let timeLive = new Date(content[0].live_event_start_time + ' UTC').getTime() / 1000;
     let timeDiff = timeLive - timeNow;
-    var date = new Date(timeDiff * 1000);
+    let hours = Math.floor(timeDiff / 3600)
+    let minutes = Math.floor((timeDiff - hours*3600)/60)
+    let seconds = timeDiff - hours*3600 - minutes*60
+    
+    console.log(timeDiff, hours, minutes, seconds)
+    
+    if(timeDiff < 4*3600) {
+      this.setState({
+        liveLesson: content,
+        timeDiffLive: {
+          timeDiff,
+          hours,
+          minutes,
+          seconds,
+        }
+      });
 
-    this.setState({
-      liveLesson: content,
-      timeDiffLive: {
-        timeDiff,
-        hours: date.getHours(),
-        minutes: date.getMinutes(),
-        seconds: date.getSeconds()
+      if (!content[0].isLive) {
+        this.interval = setInterval(() => this.timer(), 1000);
       }
-    });
-
-    if (!content[0].isLive) {
-      this.interval = setInterval(() => this.timer(), 1000);
     }
   }
 
   async timer() {
     let timeNow = Math.floor(Date.now() / 1000);
-    let timeLive =
-      new Date(this.state.liveLesson[0].live_event_start_time).getTime() / 1000;
+    let timeLive = new Date(this.state.liveLesson[0].live_event_start_time + ' UTC').getTime() / 1000;
     let timeDiff = timeLive - timeNow;
-    let date = new Date(timeDiff * 1000);
+    let hours = Math.floor(timeDiff / 3600)
+    let minutes = Math.floor((timeDiff - hours*3600)/60)
+    let seconds = timeDiff - hours*3600 - minutes*60
+
     this.setState({
       timeDiffLive: {
         timeDiff,
-        hours: date.getHours(),
-        minutes: date.getMinutes(),
-        seconds: date.getSeconds()
+        hours,
+        minutes,
+        seconds,
       }
     });
-    if (timeDiff < 0) {
-      // prod: timeDiff < 0
-      // test: date.getSeconds() == 1 || date.getSeconds() == 30
 
+    if (timeDiff < 0) {
       // if time ran out show reminder, get rid of timer
       this.setState({ isLive: true });
       clearInterval(this.interval);
@@ -209,9 +218,7 @@ export default class Live extends React.Component {
       return this.context.showNoConnectionAlert();
     }
 
-    this.state.items.find(
-      item => item.id == contentID
-    ).is_added_to_primary_playlist = true;
+    this.state.items.find(item => item.id == contentID).is_added_to_primary_playlist = true;
 
     this.setState({ items: this.state.items });
 
@@ -239,7 +246,6 @@ export default class Live extends React.Component {
       questionsChannelName,
       userId,
       token,
-      youtube_video_id
     } = this.content;
     return (
       <>
@@ -581,7 +587,6 @@ export default class Live extends React.Component {
                       </View>
                     </View>
                   ) : (
-                    // TODO: ADD LIVE PLAYER HERE
                     <>
                       <Video
                         youtubeId={this.state.liveLesson[0]?.youtube_video_id}
@@ -679,32 +684,6 @@ export default class Live extends React.Component {
                                 </Text>
                               </View>
                             </View>
-                          </View>
-                          <Text
-                            numberOfLines={1}
-                            ellipsizeMode='tail'
-                            style={{
-                              fontSize: DeviceInfo.isTablet() ? 16 : 14,
-                              fontFamily: 'OpenSans-Bold',
-                              color: 'white'
-                            }}
-                          >
-                            Pianote Live Stream
-                          </Text>
-                          <View style={{ flexDirection: 'row' }}>
-                            <Text
-                              numberOfLines={1}
-                              style={{
-                                fontFamily: 'OpenSans-Regular',
-                                color: colors.pianoteGrey,
-
-                                fontSize: sizing.descriptionText
-                              }}
-                            >
-                              {this.changeType(
-                                this.state.liveLesson[0].instructors
-                              )}
-                            </Text>
                           </View>
                         </View>
                         {!this.state.liveLesson[0]

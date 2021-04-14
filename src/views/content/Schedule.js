@@ -55,13 +55,15 @@ export default class Schedule extends React.Component {
 
   componentDidMount = async () => {
     let response = await getScheduleContent();
-    
-    for(i in response) {
-      let time = (response[i].live_event_start_time) ? response[i].live_event_start_time : response[i].published_on
+
+    for (i in response) {
+      let time = response[i].live_event_start_time
+        ? response[i].live_event_start_time
+        : response[i].published_on;
       let date = new Date(time + ' UTC').getTime();
       let d = new Date(date);
       let amPM = 'AM';
-      
+
       if (this.state.month == '' && d instanceof Date && !isNaN(d.valueOf())) {
         this.setState({ month: d.getMonth() });
       }
@@ -234,8 +236,7 @@ export default class Schedule extends React.Component {
                         textAlign: 'center'
                       }}
                     >
-                      {day[item.timeData.day]}{' '}
-                      {item.timeData.date}
+                      {day[item.timeData.day]} {item.timeData.date}
                     </Text>
                     <Text
                       numberOfLines={1}
@@ -248,7 +249,9 @@ export default class Schedule extends React.Component {
                       }}
                     >
                       {item.timeData.hours}:
-                      {item.timeData.minutes == 0 ? '00' : item.timeData.minutes}
+                      {item.timeData.minutes == 0
+                        ? '00'
+                        : item.timeData.minutes}
                       {' ' + item.timeData.amPM}
                     </Text>
                   </View>
