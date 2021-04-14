@@ -27,6 +27,7 @@ import Orientation from 'react-native-orientation-locker';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import { watchersListener } from 'MusoraChat';
+import DeviceInfo from 'react-native-device-info';
 import StartIcon from '../../components/StartIcon';
 import ResetIcon from '../../components/ResetIcon';
 import MoreInfoIcon from '../../components/MoreInfoIcon';
@@ -44,6 +45,8 @@ import {
 } from '../../services/GetContent';
 import { addToMyList, removeFromMyList } from '../../services/UserActions';
 import RestartCourse from '../../modals/RestartCourse';
+import Live from '../../modals/Live';
+import AddToCalendar from '../../modals/AddToCalendar';
 import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
