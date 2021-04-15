@@ -172,7 +172,7 @@ class Lessons extends React.Component {
     let [{ apiKey, chatChannelName, userId, token }] = content;
     
     watchersListener(apiKey, chatChannelName, userId, token, liveViewers => this.setState({ liveViewers })).then(rwl => (this.removeWatchersListener = rwl));
-    
+
     let timeNow = Math.floor(Date.now() / 1000);
     let timeLive = new Date(content[0].live_event_start_time + ' UTC').getTime() / 1000;
     let timeDiff = timeLive - timeNow;

@@ -9,21 +9,21 @@ import {
   Dimensions,
   TouchableOpacity,
   RefreshControl,
-  StatusBar
+  StatusBar,
 } from 'react-native';
-import { ContentModel } from '@musora/models';
+import {ContentModel} from '@musora/models';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
-import { SafeAreaView } from 'react-navigation';
+import {SafeAreaView} from 'react-navigation';
 import NavigationBar from '../../components/NavigationBar.js';
 import VerticalVideoList from '../../components/VerticalVideoList.js';
 import {
   seeAllContent,
   getMyListContent,
   getAllContent,
-  getStartedContent
+  getStartedContent,
 } from '../../services/GetContent';
-import { NetworkContext } from '../../context/NetworkProvider';
-import { goBack } from '../../../AppNavigator.js';
+import {NetworkContext} from '../../context/NetworkProvider';
+import {goBack} from '../../../AppNavigator.js';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -39,10 +39,10 @@ const typeDict = {
   Lessons: 'LESSONS',
   'Student Focus': 'STUDENTFOCUS',
   Songs: 'SONGS',
-  Courses: 'COURSES'
+  Courses: 'COURSES',
 };
 
-const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
   const paddingToBottom = 20;
   return (
     layoutMeasurement.height + contentOffset.y >=
@@ -64,20 +64,20 @@ export default class SeeAll extends React.Component {
       refreshing: false,
       isLoadingAll: true, // all lessons
       isPaging: false, // scrolling more
-      filtering: false // filtering
+      filtering: false, // filtering
     };
   }
 
   componentDidMount() {
     let deepFilters = decodeURIComponent(this.props.route?.params?.url).split(
-      '?'
+      '?',
     )[1];
     this.filterQuery = deepFilters && `&${deepFilters}`;
     this.getAllLessons();
   }
 
   async getAllLessons(loadMore) {
-    this.setState({ filtering: true });
+    this.setState({filtering: true});
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -87,7 +87,7 @@ export default class SeeAll extends React.Component {
       response = await getMyListContent(
         this.state.page,
         this.filterQuery,
-        this.state.title == 'In Progress' ? 'started' : 'completed'
+        this.state.title == 'In Progress' ? 'started' : 'completed',
       );
     } else if (this.state.parent === 'Lessons') {
       // lessons continue and new
@@ -96,21 +96,21 @@ export default class SeeAll extends React.Component {
           'lessons',
           'new',
           this.state.page,
-          this.filterQuery
+          this.filterQuery,
         );
       } else if (this.state.title.includes('All')) {
         response = await getAllContent(
           '',
           'newest',
           this.state.page,
-          this.filterQuery
+          this.filterQuery,
         );
       } else {
         response = await seeAllContent(
           'lessons',
           'continue',
           this.state.page,
-          this.filterQuery
+          this.filterQuery,
         );
       }
     } else if (this.state.parent === 'Courses') {
@@ -119,14 +119,14 @@ export default class SeeAll extends React.Component {
           'courses',
           'continue',
           this.state.page,
-          this.filterQuery
+          this.filterQuery,
         );
       } else {
         response = await getAllContent(
           'course',
           'newest',
           this.state.page,
-          this.filterQuery
+          this.filterQuery,
         );
       }
     } else if (this.state.parent === 'Songs') {
@@ -135,19 +135,19 @@ export default class SeeAll extends React.Component {
           'song',
           'continue',
           this.state.page,
-          this.filterQuery
+          this.filterQuery,
         );
       } else {
         response = await getAllContent(
           'song',
           'newest',
           this.state.page,
-          this.filterQuery
+          this.filterQuery,
         );
       }
     } else if (this.state.parent === 'Student Focus') {
       response = await getStartedContent(
-        'quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=podcast'
+        'quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=podcast',
       );
     }
     this.metaFilters = response?.meta?.filterOptions;
@@ -187,7 +187,7 @@ export default class SeeAll extends React.Component {
         isStarted: newContent[i].isStarted,
         isCompleted: newContent[i].isCompleted,
         bundle_count: newContent[i].post.bundle_count,
-        progress_percent: newContent[i].post.progress_percent
+        progress_percent: newContent[i].post.progress_percent,
       });
     }
 
@@ -198,7 +198,7 @@ export default class SeeAll extends React.Component {
       isLoadingAll: false,
       refreshing: false,
       filtering: false,
-      isPaging: false
+      isPaging: false,
     }));
   }
 
@@ -229,8 +229,8 @@ export default class SeeAll extends React.Component {
   getVideos = () => {
     // change page before getting more lessons if paging
     if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () =>
-        this.getAllLessons(true)
+      this.setState({page: this.state.page + 1}, () =>
+        this.getAllLessons(true),
       );
     }
   };
@@ -244,16 +244,16 @@ export default class SeeAll extends React.Component {
       this.setState(
         {
           page: this.state.page + 1,
-          isPaging: true
+          isPaging: true,
         },
-        () => this.getAllLessons(true)
+        () => this.getAllLessons(true),
       );
     }
   };
 
   refresh = () => {
-    this.setState({ refreshing: true, outVideos: false, page: 1 }, () =>
-      this.getAllLessons()
+    this.setState({refreshing: true, outVideos: false, page: 1}, () =>
+      this.getAllLessons(),
     );
   };
 
@@ -261,7 +261,7 @@ export default class SeeAll extends React.Component {
     return (
       <SafeAreaView
         forceInset={{
-          bottom: 'never'
+          bottom: 'never',
         }}
         style={styles.packsContainer}
       >
@@ -270,7 +270,7 @@ export default class SeeAll extends React.Component {
           barStyle={'light-content'}
         />
         <View style={styles.childHeader}>
-          <TouchableOpacity style={{ flex: 1 }} onPress={() => goBack()}>
+          <TouchableOpacity style={{flex: 1}} onPress={() => goBack()}>
             <Back
               width={backButtonSize}
               height={backButtonSize}
@@ -278,13 +278,13 @@ export default class SeeAll extends React.Component {
             />
           </TouchableOpacity>
           <Text style={styles.childHeaderText}>{this.state.parent}</Text>
-          <View style={{ flex: 1 }} />
+          <View style={{flex: 1}} />
         </View>
         <ScrollView
           style={styles.mainContainer}
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
-          onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
+          onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
           refreshControl={
             <RefreshControl
               colors={[colors.pianoteRed]}
@@ -311,7 +311,7 @@ export default class SeeAll extends React.Component {
             changeSort={sort => {
               this.setState({
                 currentSort: sort,
-                allLessons: []
+                allLessons: [],
               }),
                 this.getAllLessons();
             }} // change sort and reload videos
@@ -323,13 +323,13 @@ export default class SeeAll extends React.Component {
                   {
                     allLessons: [],
                     outVideos: false,
-                    page: 1
+                    page: 1,
                   },
                   () => {
                     this.filterQuery = filters;
                     this.getAllLessons().then(res);
-                  }
-                )
+                  },
+                ),
               )
             }
           />
