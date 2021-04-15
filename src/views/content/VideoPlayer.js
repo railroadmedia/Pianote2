@@ -158,7 +158,6 @@ export default class VideoPlayer extends React.Component {
       content = result;
       this.allCommentsNum = result.total_comments;
     }
-
     let al = [];
     if (content.assignments) {
       for (let i in content.assignments) {
@@ -172,9 +171,9 @@ export default class VideoPlayer extends React.Component {
             0,
           title: a.title,
           description: a.description,
-          soundsliceSlug: a.soundslice_slug,
-          sheet_music_image_url: a.sheet_music_image_url,
-          timecode: a.timecode
+          slug: a.soundslice_slug,
+          sheets: a.sheet_music_image_url,
+          timeCodes: a.timecode
         });
       }
     }

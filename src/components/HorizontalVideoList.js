@@ -610,16 +610,15 @@ export default class HorizontalVideoList extends React.Component {
                       { aspectRatio: this.props.isSquare ? 1 : 16 / 9 }
                     ]}
                     source={{
-                      uri:
-                        item.thumbnail_url && item.thumbnail_url !== 'TBD'
-                          ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                              this.decideWidth() * 2
-                            )},ar_${
-                              this.props.isSquare ? '1' : '16:9'
-                            },fl_lossy,q_auto:eco,c_fill,g_face/${
-                              item.thumbnail_url
-                            }`
-                          : fallbackThumb
+                      uri: item.thumbnail_url
+                        ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                            this.decideWidth() * 2
+                          )},ar_${
+                            this.props.isSquare ? '1' : '16:9'
+                          },fl_lossy,q_auto:eco,c_fill,g_face/${
+                            item.thumbnail_url
+                          }`
+                        : fallbackThumb
                     }}
                     resizeMode={FastImage.resizeMode.cover}
                   />
@@ -631,16 +630,15 @@ export default class HorizontalVideoList extends React.Component {
                     ]}
                     resizeMode='cover'
                     source={{
-                      uri:
-                        item.thumbnail_url && item.thumbnail_url !== 'TBD'
-                          ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                              this.decideWidth() * 2
-                            )},ar_${
-                              this.props.isSquare ? '1' : '16:9'
-                            },fl_lossy,q_auto:eco,c_fill,g_face/${
-                              item.thumbnail_url
-                            }`
-                          : fallbackThumb
+                      uri: item.thumbnail_url
+                        ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                            this.decideWidth() * 2
+                          )},ar_${
+                            this.props.isSquare ? '1' : '16:9'
+                          },fl_lossy,q_auto:eco,c_fill,g_face/${
+                            item.thumbnail_url
+                          }`
+                        : fallbackThumb
                     }}
                   />
                 )}

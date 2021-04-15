@@ -198,46 +198,6 @@ export default class Search extends React.Component {
     }
   };
 
-  getArtist = newContent => {
-    if (newContent.post.type == 'song') {
-      if (typeof newContent.post.artist !== 'undefined') {
-        return newContent.post.artist;
-      } else {
-        for (i in newContent.post.fields) {
-          if (newContent.post.fields[i].key == 'artist') {
-            return newContent.post.fields[i].value;
-          }
-        }
-      }
-    } else {
-      try {
-        if (newContent.getField('instructor') !== 'TBD') {
-          return newContent.getField('instructor').fields[0].value;
-        } else {
-          return newContent.getField('instructor').name;
-        }
-      } catch (error) {
-        return '';
-      }
-    }
-  };
-
-  getDuration = newContent => {
-    var data = 0;
-    try {
-      for (i in newContent.fields) {
-        if (newContent.fields[i].key == 'video') {
-          var data = newContent.fields[i].value.fields;
-          for (var i = 0; i < data.length; i++) {
-            if (data[i].key == 'length_in_seconds') {
-              return data[i].value;
-            }
-          }
-        }
-      }
-    } catch (error) {}
-  };
-
   async clearRecent() {
     await this.setState({ recentSearchResults: [] });
     await AsyncStorage.setItem(

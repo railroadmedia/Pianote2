@@ -11,9 +11,6 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@musora/icons": "^1.0.1",
-    "@musora/models": "^0.1.3",
-    "@musora/services": "^0.1.4",
     "@ptomasroos/react-native-multi-slider": "^2.2.2",
     "@react-native-community/async-storage": "^1.7.1",
     "@react-native-community/blur": "^3.3.1",

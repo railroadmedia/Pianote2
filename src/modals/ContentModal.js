@@ -25,59 +25,30 @@ export default class ContentModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      type:
-        typeof this.props.data.type !== 'undefined' ? this.props.data.type : '',
-      thumbnail:
-        typeof this.props.data.thumbnail !== 'undefined'
-          ? this.props.data.thumbnail
-          : '',
-      title:
-        typeof this.props.data.title !== 'undefined'
-          ? this.props.data.title
-          : '',
-      artist:
-        typeof this.props.data.artist !== 'undefined'
-          ? this.props.data.artist
-          : '',
-      description:
-        typeof this.props.data.description !== 'undefined'
-          ? this.props.data.description
-          : '',
-      bundle_number:
-        typeof this.props.data.bundle_number !== 'undefined'
-          ? this.props.data.bundle_number
-          : 0,
-      lesson_count:
-        typeof this.props.data.lesson_count !== 'undefined'
-          ? this.props.data.lesson_count
-          : 0,
-      xp: typeof this.props.data.xp !== 'undefined' ? this.props.data.xp : 0,
-      id: typeof this.props.data.id !== 'undefined' ? this.props.data.id : 0,
-      isLiked:
-        typeof this.props.data.isLiked !== 'undefined'
-          ? this.props.data.isLiked
-          : false,
-      like_count:
-        typeof this.props.data.like_count !== 'undefined'
-          ? this.props.data.like_count
-          : 0,
-      isAddedToList:
-        typeof this.props.data.isAddedToList !== 'undefined'
-          ? this.props.data.isAddedToList
-          : false
+      type: props.data.type || '',
+      thumbnail: props.data.thumbnail_url || '',
+      title: props.data.title || '',
+      artist: props.data.artist || '',
+      instructor: props.data.instructors || '',
+      description: props.data.description || '',
+      bundle_number: props.data.bundle_number || '',
+      lesson_count: props.data.lesson_count || 0,
+      xp: props.data.xp || 0,
+      id: props.data.id || 0,
+      isLiked: props.data.is_liked_by_current_user || false,
+      like_count: props.data.like_count || 0,
+      isAddedToList: props.data.is_added_to_primary_playlist || false
     };
   }
 
   addToMyList = contentID => {
-    if (this.props.data.description !== 'TBD') {
-      // change status of content on parent data structure
-      this.props.addToMyList(contentID);
-      // make added to list on current data structure
-      this.state.isAddedToList = true;
-      this.setState({ isAddedToList: this.state.isAddedToList });
-      // add to list on backend
-      addToMyList(contentID);
-    }
+    // change status of content on parent data structure
+    this.props.addToMyList(contentID);
+    // make added to list on current data structure
+    this.state.isAddedToList = true;
+    this.setState({ isAddedToList: this.state.isAddedToList });
+    // add to list on backend
+    addToMyList(contentID);
   };
 
   removeFromMyList = contentID => {
@@ -108,18 +79,16 @@ export default class ContentModal extends React.Component {
   };
 
   like = contentID => {
-    if (this.props.data.description !== 'TBD') {
-      // change data on modal
-      this.state.isLiked = !this.state.isLiked;
-      this.state.like_count = Number(this.state.like_count) + 1;
-      this.setState({
-        isLiked: this.state.isLiked,
-        like_count: this.state.like_count
-      });
-      // change data on parent data
-      this.props.like(contentID);
-      likeContent(contentID);
-    }
+    // change data on modal
+    this.state.isLiked = !this.state.isLiked;
+    this.state.like_count = Number(this.state.like_count) + 1;
+    this.setState({
+      isLiked: this.state.isLiked,
+      like_count: this.state.like_count
+    });
+    // change data on parent data
+    this.props.like(contentID);
+    likeContent(contentID);
   };
 
   unlike = contentID => {
@@ -154,9 +123,8 @@ export default class ContentModal extends React.Component {
                   style={localStyles.image}
                   source={{
                     uri:
-                      this.state.thumbnail == 'TBD'
-                        ? `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,e_grayscale/${fallbackThumb}`
-                        : this.state.thumbnail
+                      this.state.thumbnail ||
+                      `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,e_grayscale/${fallbackThumb}`
                   }}
                   resizeMode={FastImage.resizeMode.cover}
                 />
@@ -164,7 +132,8 @@ export default class ContentModal extends React.Component {
             </View>
             <Text style={localStyles.title}>{this.state.title}</Text>
             <Text style={localStyles.type}>
-              {this.changeType(this.state.type)}/ {this.state.artist}
+              {this.changeType(this.state.type)}/{' '}
+              {this.state.artist || this.state.instructor}
             </Text>
             <Text numberOfLines={5} style={localStyles.description}>
               {this.state.description}

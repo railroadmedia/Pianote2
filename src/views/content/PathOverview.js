@@ -53,10 +53,13 @@ export default class PathOverview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: props.route?.params?.data,
+      id: props.route?.params?.data?.id,
+      mobile_app_url: props.route?.params?.data?.mobile_app_url,
       items: props.route?.params?.items || [],
       isAddedToList: props.route?.params?.data?.isAddedToList,
       thumbnail: props.route?.params?.data?.thumbnail,
+      description: props.route?.params?.data?.description,
+      title: props.route?.params?.data?.title,
       artist: '',
       isMethod: props.route?.params?.isMethod,
       isFoundations: props.route?.params?.isFoundations,
@@ -106,16 +109,16 @@ export default class PathOverview extends React.Component {
     }
     let res;
     if (this.state.isFoundations) {
-      res = await foundationsService.getUnit(this.state.data.mobile_app_url);
+      res = await foundationsService.getUnit(this.state.mobile_app_url);
     } else if (this.state.isMethod) {
-      res = await methodService.getMethodContent(
-        this.state.data.mobile_app_url
-      );
+      res = await methodService.getMethodContent(this.state.mobile_app_url);
     } else {
-      res = await contentService.getContent(this.state.data.id);
+      res = await contentService.getContent(this.state.id);
     }
 
     this.setState({
+      id: res.id,
+      mobile_app_url: res.mobile_app_url,
       likeCount: res.like_count,
       isLiked: res.is_liked_by_current_user,
       isAddedToList: res.is_added_to_primary_playlist,
@@ -127,6 +130,8 @@ export default class PathOverview extends React.Component {
       progress: res.progress_percent,
       difficulty: res.difficulty,
       thumbnail: res.thumbnail_url,
+      description: res.description,
+      title: res.title,
       xp: res.xp,
       type: res.type,
       bannerNextLessonUrl: res.banner_button_url,
@@ -142,7 +147,7 @@ export default class PathOverview extends React.Component {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    if (id === this.state.data.id) {
+    if (id === this.state.id) {
       if (this.state.isAddedToList) {
         removeFromMyList(id);
       } else {
@@ -150,7 +155,7 @@ export default class PathOverview extends React.Component {
       }
     } else {
       const lesson = this.state.items.find(f => f.id === id);
-      if (lesson.isAddedToList) {
+      if (lesson.is_added_to_primary_playlist) {
         removeFromMyList(id);
       } else {
         addToMyList(id);
@@ -159,12 +164,12 @@ export default class PathOverview extends React.Component {
 
     this.setState(state => ({
       isAddedToList:
-        id === state.data.id ? !state.isAddedToList : state.isAddedToList,
+        id === state.id ? !state.isAddedToList : state.isAddedToList,
       items: state.items.map(c =>
         c.id === id
           ? {
               ...c,
-              isAddedToList: !c.isAddedToList
+              is_added_to_primary_playlist: !c.is_added_to_primary_playlist
             }
           : c
       )
@@ -176,9 +181,9 @@ export default class PathOverview extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     if (this.state.isLiked) {
-      unlikeContent(this.state.data.id);
+      unlikeContent(this.state.id);
     } else {
-      likeContent(this.state.data.id);
+      likeContent(this.state.id);
     }
     this.setState({
       isLiked: !this.state.isLiked,
@@ -192,7 +197,7 @@ export default class PathOverview extends React.Component {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    resetProgress(this.state.data.id);
+    resetProgress(this.state.id);
     this.setState(
       {
         started: false,
@@ -238,12 +243,12 @@ export default class PathOverview extends React.Component {
       if (this.state.isMethod) {
         return navigate('VIDEOPLAYER', {
           url: lesson,
-          parentId: this.state.data?.id
+          parentId: this.state.id
         });
       }
       return navigate('VIDEOPLAYER', {
         id: lesson,
-        parentId: this.state.data?.id
+        parentId: this.state.id
       });
     }
   }
@@ -307,7 +312,7 @@ export default class PathOverview extends React.Component {
                 marginTop: 10
               }}
             >
-              {this.state.data.title}
+              {this.state.title}
             </Text>
           )}
           <Text
@@ -324,7 +329,7 @@ export default class PathOverview extends React.Component {
               }
             ]}
           >
-            {this.state.artist ||
+            {this.state.artist?.toUpperCase() ||
               this.state.instructor
                 ?.map(i => i.name)
                 .join(', ')
@@ -352,7 +357,7 @@ export default class PathOverview extends React.Component {
                   flex: 0.5,
                   alignItems: 'center'
                 }}
-                onPress={() => this.toggleMyList(this.state.data.id)}
+                onPress={() => this.toggleMyList(this.state.id)}
               >
                 <View style={[styles.centerContent, { flexDirection: 'row' }]}>
                   {!this.state.isAddedToList ? (
@@ -455,7 +460,7 @@ export default class PathOverview extends React.Component {
                 : { width: '100%' }
             ]}
           >
-            {this.state.data.description !== 'TBD' && (
+            {this.state.description && (
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
@@ -465,7 +470,7 @@ export default class PathOverview extends React.Component {
                   textAlign: 'center'
                 }}
               >
-                {this.state.data.description}
+                {this.state.description}
               </Text>
             )}
             <View style={{ paddingHorizontal: '20%' }}>
@@ -582,8 +587,8 @@ export default class PathOverview extends React.Component {
                 </TouchableOpacity>
                 <Download_V2
                   entity={{
-                    id: this.state.data.id,
-                    content: contentService.getContent(this.state.data.id, true)
+                    id: this.state.id,
+                    content: contentService.getContent(this.state.id, true)
                   }}
                   styles={{
                     flex: 1,

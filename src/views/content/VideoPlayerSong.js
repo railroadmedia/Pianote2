@@ -46,7 +46,7 @@ export default class VideoPlayerSong extends React.Component {
           showSheets: true
         })
       );
-    else this.setState({ showSheets: true });
+    else this.setState({ showSheets: false });
   }
 
   render() {
@@ -160,7 +160,7 @@ export default class VideoPlayerSong extends React.Component {
                   borderBottomWidth: 1
                 }}
               />
-              {description !== 'TBD' && (
+              {description && (
                 <View key={'blurb'} style={{ width: '100%' }}>
                   <Text
                     style={{

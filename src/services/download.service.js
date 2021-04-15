@@ -28,7 +28,7 @@ export default {
     assignments.map(a => {
       let svgs = [],
         nsvgs = [];
-      a.sheet_music_image_url?.map(s => {
+      a.sheets?.map(s => {
         if (s.value.includes('.pdf')) return;
         if (s.value.includes('.svg')) svgs.push({ ...s });
         else nsvgs.push({ ...s });

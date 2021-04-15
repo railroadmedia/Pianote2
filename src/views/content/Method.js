@@ -316,7 +316,7 @@ export default class Method extends React.Component {
                   textAlign: 'center'
                 }}
               >
-                {this.state.description !== 'TBD' ? this.state.description : ''}
+                {this.state.description || ''}
               </Text>
               <View>
                 <View
