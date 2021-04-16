@@ -197,7 +197,7 @@ export default class HorizontalVideoList extends React.Component {
       case 'song':
         if (content.lesson_count === 1)
           return navigate('VIDEOPLAYER', {
-            id: content.currentLessonId
+            id: content.lessons?.[0]?.id
           });
         return navigate('PATHOVERVIEW', {
           data: content
