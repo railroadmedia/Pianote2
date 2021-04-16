@@ -1,6 +1,3 @@
-/**
- * Foundations
- */
 import React from 'react';
 import {
   View,
@@ -10,17 +7,16 @@ import {
   Platform,
   RefreshControl,
   Dimensions,
-  ImageBackground
+  ImageBackground,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import { ContentModel } from '@musora/models';
+import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import AsyncStorage from '@react-native-community/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import LinearGradient from 'react-native-linear-gradient';
 import Orientation from 'react-native-orientation-locker';
-
 import ResetIcon from '../../components/ResetIcon';
 import NextVideo from '../../components/NextVideo';
 import StartIcon from '../../components/StartIcon';
@@ -32,13 +28,12 @@ import VerticalVideoList from '../../components/VerticalVideoList';
 import {
   likeContent,
   unlikeContent,
-  resetProgress
+  resetProgress,
 } from '../../services/UserActions';
-import { NetworkContext } from '../../context/NetworkProvider';
+import {NetworkContext} from '../../context/NetworkProvider';
 import foundationsService from '../../services/foundations.service';
-import { navigate } from '../../../AppNavigator';
+import {navigate} from '../../../AppNavigator';
 
-let greaterWDim;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
@@ -47,7 +42,6 @@ export default class Foundations extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-
     this.state = {
       items: [],
       showRestartCourse: false,
@@ -56,31 +50,20 @@ export default class Foundations extends React.Component {
       isStarted: false,
       isCompleted: false,
       isLiked: false,
-      likeCount: 0,
       showInfo: false,
       isLoadingAll: true,
-      totalLength: 0,
-      level: 1,
-      profileImage: '',
       xp: 0,
       description: '',
       nextLesson: null,
       progress: 0,
       refreshing: false,
       isLandscape:
-        Dimensions.get('window').height < Dimensions.get('window').width
+        Dimensions.get('window').height < Dimensions.get('window').width,
     };
-    greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
 
   async componentDidMount() {
     Orientation.addDeviceOrientationListener(this.orientationListener);
-
-    let profileImage = await AsyncStorage.getItem('profileURI');
-    if (profileImage) {
-      this.setState({ profileImage });
-    }
-
     this.getContent();
   }
 
@@ -93,10 +76,10 @@ export default class Foundations extends React.Component {
     let isLandscape = o.indexOf('LAND') >= 0;
 
     if (Platform.OS === 'ios') {
-      if (onTablet) this.setState({ isLandscape });
+      if (onTablet) this.setState({isLandscape});
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
-        if (isAutoRotateOn && onTablet) this.setState({ isLandscape });
+        if (isAutoRotateOn && onTablet) this.setState({isLandscape});
       });
     }
   };
@@ -106,7 +89,7 @@ export default class Foundations extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     const response = new ContentModel(
-      await foundationsService.getFoundation('foundations-2019')
+      await foundationsService.getFoundation('foundations-2019'),
     );
 
     const newContent = response.post.units.map(data => {
@@ -120,7 +103,7 @@ export default class Foundations extends React.Component {
         artist: newContent[i].post.fields
           .filter(d => d.key === 'instructor')
           .map(s => ({
-            value: s.value.fields.find(f => f.key === 'name').value
+            value: s.value.fields.find(f => f.key === 'name').value,
           }))
           .reduce((r, obj) => r.concat(obj.value, '  '), []),
         thumbnail: newContent[i].getData('thumbnail_url'),
@@ -142,7 +125,7 @@ export default class Foundations extends React.Component {
           .replace(/&lt;/g, '<'),
         id: newContent[i].id,
         progress_percent: newContent[i].post.progress_percent,
-        mobile_app_url: newContent[i].post.mobile_app_url
+        mobile_app_url: newContent[i].post.mobile_app_url,
       });
     }
 
@@ -153,9 +136,7 @@ export default class Foundations extends React.Component {
       isCompleted: response.isCompleted,
       bannerNextLessonUrl: response.post.banner_button_url,
       isLiked: response.post.is_liked_by_current_user,
-      likeCount: response.likeCount,
       isLoadingAll: false,
-      totalLength: response.post.length_in_seconds,
       xp: response.post.total_xp,
       description: response
         .getData('description')
@@ -168,7 +149,7 @@ export default class Foundations extends React.Component {
         .replace(/&lt;/g, '<'),
       progress: response.post.progress_percent,
       nextLesson: new ContentModel(response.post.next_lesson),
-      refreshing: false
+      refreshing: false,
     });
   };
 
@@ -183,9 +164,6 @@ export default class Foundations extends React.Component {
     }
     this.setState({
       isLiked: !this.state.isLiked,
-      likeCount: this.state.isLiked
-        ? this.state.likeCount - 1
-        : this.state.likeCount + 1
     });
   };
 
@@ -194,7 +172,7 @@ export default class Foundations extends React.Component {
       return this.context.showNoConnectionAlert();
     }
 
-    this.setState({ items: [], showRestartCourse: false });
+    this.setState({items: [], showRestartCourse: false});
 
     await resetProgress(this.state.id);
 
@@ -203,16 +181,16 @@ export default class Foundations extends React.Component {
         isStarted: false,
         isCompleted: false,
         isLoadingAll: true,
-        refreshing: true
+        refreshing: true,
       },
       () => {
         this.getContent();
-      }
+      },
     );
   };
 
   refresh = () => {
-    this.setState({ refreshing: true }, () => {
+    this.setState({refreshing: true}, () => {
       this.getContent();
     });
   };
@@ -224,7 +202,7 @@ export default class Foundations extends React.Component {
   }
 
   goToLesson(url) {
-    return navigate('VIDEOPLAYER', { url });
+    return navigate('VIDEOPLAYER', {url});
   }
 
   getSquareHeight = () => {
@@ -237,7 +215,7 @@ export default class Foundations extends React.Component {
 
   render() {
     return (
-      <View style={[styles.mainContainer, { backgroundColor: 'black' }]}>
+      <View style={[styles.mainContainer, {backgroundColor: 'black'}]}>
         <NavMenuHeaders
           isMethod={true}
           currentPage={'LESSONS'}
@@ -260,7 +238,7 @@ export default class Foundations extends React.Component {
             style={{
               width: '100%',
               aspectRatio: this.getAspectRatio(),
-              justifyContent: 'flex-end'
+              justifyContent: 'flex-end',
             }}
             source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
           >
@@ -268,14 +246,14 @@ export default class Foundations extends React.Component {
               colors={[
                 'transparent',
                 'rgba(20, 20, 20, 0.5)',
-                'rgba(0, 0, 0, 1)'
+                'rgba(0, 0, 0, 1)',
               ]}
               style={{
                 borderRadius: 0,
                 position: 'absolute',
                 top: 0,
                 width: '100%',
-                height: '100%'
+                height: '100%',
               }}
             />
             <View
@@ -285,7 +263,7 @@ export default class Foundations extends React.Component {
                 width: '100%',
                 zIndex: 5,
                 elevation: 5,
-                opacity: 1
+                opacity: 1,
               }}
             >
               <View style={styles.centerContent}>
@@ -294,7 +272,7 @@ export default class Foundations extends React.Component {
                     width: '70%',
                     height: onTablet ? 100 : 65,
                     alignSelf: 'center',
-                    marginBottom: onTablet ? '2%' : '4%'
+                    marginBottom: onTablet ? '2%' : '4%',
                   }}
                   source={require('Pianote2/src/assets/img/imgs/foundations-logo-white.png')}
                   resizeMode={FastImage.resizeMode.contain}
@@ -307,18 +285,18 @@ export default class Foundations extends React.Component {
                     marginBottom: '3%',
                     width: '100%',
                     flexDirection: 'row',
-                    alignItems: 'center'
-                  }
+                    alignItems: 'center',
+                  },
                 ]}
               >
-                <View style={{ flex: 1 }} />
-                <View style={{ width: '50%' }}>
+                <View style={{flex: 1}} />
+                <View style={{width: '50%'}}>
                   {this.state.isCompleted ? (
                     <ResetIcon
                       isMethod={true}
                       pressed={() =>
                         this.setState({
-                          showRestartCourse: true
+                          showRestartCourse: true,
                         })
                       }
                     />
@@ -340,15 +318,15 @@ export default class Foundations extends React.Component {
                     )
                   )}
                 </View>
-                <View style={{ flex: 1, flexDirection: 'row' }}>
+                <View style={{flex: 1, flexDirection: 'row'}}>
                   <TouchableOpacity
                     style={{
                       flex: 0.5,
-                      alignItems: 'center'
+                      alignItems: 'center',
                     }}
                     onPress={() => {
                       this.setState({
-                        showInfo: !this.state.showInfo
+                        showInfo: !this.state.showInfo,
                       });
                     }}
                   >
@@ -362,7 +340,7 @@ export default class Foundations extends React.Component {
                         fontFamily: 'OpenSans-Regular',
                         color: 'white',
                         marginTop: 2,
-                        fontSize: sizing.descriptionText
+                        fontSize: sizing.descriptionText,
                       }}
                     >
                       Info
@@ -376,7 +354,7 @@ export default class Foundations extends React.Component {
             <View
               style={{
                 width: '100%',
-                paddingHorizontal: this.state.isLandscape ? '10%' : 10
+                paddingHorizontal: this.state.isLandscape ? '10%' : 10,
               }}
             >
               <Text
@@ -385,7 +363,7 @@ export default class Foundations extends React.Component {
                   fontFamily: 'OpenSans-Regular',
                   fontSize: sizing.descriptionText,
                   color: 'white',
-                  textAlign: 'center'
+                  textAlign: 'center',
                 }}
               >
                 {this.state.description !== 'TBD' ? this.state.description : ''}
@@ -396,19 +374,19 @@ export default class Foundations extends React.Component {
                     styles.centerContent,
                     {
                       flex: 0.22,
-                      flexDirection: 'row'
-                    }
+                      flexDirection: 'row',
+                    },
                   ]}
                 >
-                  <View style={{ flex: 1 }} />
+                  <View style={{flex: 1}} />
                   <View
                     style={[
                       styles.centerContent,
                       {
                         width: onTablet ? 100 : 70,
                         marginRight: 15,
-                        marginVertical: 15
-                      }
+                        marginVertical: 15,
+                      },
                     ]}
                   >
                     <Text
@@ -416,7 +394,7 @@ export default class Foundations extends React.Component {
                         fontSize: onTablet ? 25 : 17.5,
                         textAlign: 'left',
                         color: 'white',
-                        fontFamily: 'OpenSans-Bold'
+                        fontFamily: 'OpenSans-Bold',
                       }}
                     >
                       {this.state.items.length}
@@ -427,7 +405,7 @@ export default class Foundations extends React.Component {
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 5
+                        marginTop: 5,
                       }}
                     >
                       Levels
@@ -437,8 +415,8 @@ export default class Foundations extends React.Component {
                     style={[
                       styles.centerContent,
                       {
-                        width: onTablet ? 100 : 70
-                      }
+                        width: onTablet ? 100 : 70,
+                      },
                     ]}
                   >
                     <Text
@@ -447,7 +425,7 @@ export default class Foundations extends React.Component {
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Bold',
-                        marginVertical: 15
+                        marginVertical: 15,
                       }}
                     >
                       {this.state.xp}
@@ -458,13 +436,13 @@ export default class Foundations extends React.Component {
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 5
+                        marginTop: 5,
                       }}
                     >
                       XP
                     </Text>
                   </View>
-                  <View style={{ flex: 1 }} />
+                  <View style={{flex: 1}} />
                 </View>
                 <View
                   style={[
@@ -472,14 +450,14 @@ export default class Foundations extends React.Component {
                     {
                       flex: 0.25,
                       flexDirection: 'row',
-                      marginTop: 15
-                    }
+                      marginTop: 15,
+                    },
                   ]}
                 >
                   <TouchableOpacity
                     onPress={() => {
                       this.setState({
-                        showRestartCourse: true
+                        showRestartCourse: true,
                       });
                     }}
                     style={[
@@ -487,11 +465,11 @@ export default class Foundations extends React.Component {
                       {
                         marginLeft: 10,
                         marginBottom: 10,
-                        width: onTablet ? 100 : 70
-                      }
+                        width: onTablet ? 100 : 70,
+                      },
                     ]}
                   >
-                    <View style={{ flex: 1 }} />
+                    <View style={{flex: 1}} />
                     <MaterialIcon
                       name={'replay'}
                       size={onTablet ? 28 : 20}
@@ -503,7 +481,7 @@ export default class Foundations extends React.Component {
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 5
+                        marginTop: 5,
                       }}
                     >
                       Restart
@@ -516,7 +494,7 @@ export default class Foundations extends React.Component {
           <View
             style={{
               paddingHorizontal: this.state.isLandscape ? '10%' : 0,
-              marginBottom: 10
+              marginBottom: 10,
             }}
           >
             <VerticalVideoList
@@ -548,10 +526,10 @@ export default class Foundations extends React.Component {
           <RestartCourse
             hideRestartCourse={() => {
               this.setState({
-                showRestartCourse: false
+                showRestartCourse: false,
               });
             }}
-            type='method'
+            type="method"
             onRestart={() => this.onRestartMethod()}
           />
         </Modal>
@@ -560,7 +538,7 @@ export default class Foundations extends React.Component {
             item={this.state.nextLesson}
             isMethod={true}
             progress={this.state.progress}
-            type='FOUNDATIONS'
+            type="FOUNDATIONS"
             onNextLesson={() =>
               this.goToLesson(this.state.nextLesson.post.mobile_app_url)
             }

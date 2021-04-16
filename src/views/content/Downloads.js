@@ -1,15 +1,5 @@
-/**
- * Downloads
- */
 import React from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  Dimensions,
-  StatusBar,
-} from 'react-native';
+import {View, Text, FlatList, TouchableOpacity, StatusBar} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import {Download_V2, offlineContent} from 'RNDownload';

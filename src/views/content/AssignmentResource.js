@@ -1,17 +1,14 @@
 import React from 'react';
-import { PanResponder, View, Dimensions, ScrollView } from 'react-native';
-
+import {PanResponder, View, ScrollView} from 'react-native';
 import ImageSvg from 'react-native-remote-svg';
 import PDFView from 'react-native-view-pdf';
-import { SafeAreaView } from 'react-navigation';
-
-import { NetworkContext } from '../../context/NetworkProvider';
+import {SafeAreaView} from 'react-navigation';
+import {NetworkContext} from '../../context/NetworkProvider';
 
 export default class AssignmentResource extends React.Component {
   static contextType = NetworkContext;
   state = {
     scroll: true,
-    width: 0
   };
 
   constructor(props) {
@@ -27,17 +24,17 @@ export default class AssignmentResource extends React.Component {
       onPanResponderRelease: () => {
         delete this.xDiff;
         delete this.yDiff;
-        if (!this.state.scroll) this.setState({ scroll: true });
+        if (!this.state.scroll) this.setState({scroll: true});
       },
       onPanResponderTerminate: () => {
         delete this.xDiff;
         delete this.yDiff;
-        if (!this.state.scroll) this.setState({ scroll: true });
+        if (!this.state.scroll) this.setState({scroll: true});
       },
       onPanResponderMove: (evt, gesture) => {
-        let { touches } = evt.nativeEvent;
+        let {touches} = evt.nativeEvent;
         if (touches.length === 2) {
-          if (this.state.scroll) this.setState({ scroll: false });
+          if (this.state.scroll) this.setState({scroll: false});
           delete this.t1;
           delete this.t2;
           if (!this.xDiff)
@@ -68,7 +65,7 @@ export default class AssignmentResource extends React.Component {
           clearTimeout(this.onPressTimeout);
           if (!this.t1) this.t1 = new Date();
           else if (!this.t2) this.t2 = new Date();
-          let { t1, t2 } = this;
+          let {t1, t2} = this;
           if (t1 & t2) {
             if (t2 - t1 < 500) {
               this.fs = !this.fs;
@@ -82,7 +79,7 @@ export default class AssignmentResource extends React.Component {
             delete this.t2;
           }, 500);
         }
-      }
+      },
     });
   }
 
@@ -93,7 +90,7 @@ export default class AssignmentResource extends React.Component {
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
-          marginVertical: 10
+          marginVertical: 10,
         }}
       >
         {this.props.data?.map((dot, index) => (
@@ -104,11 +101,11 @@ export default class AssignmentResource extends React.Component {
                 height: 10,
                 width: 10,
                 marginRight: 10,
-                borderRadius: 50
+                borderRadius: 50,
               },
               index === i
-                ? { backgroundColor: colors.pianoteRed }
-                : { backgroundColor: colors.secondBackground }
+                ? {backgroundColor: colors.pianoteRed}
+                : {backgroundColor: colors.secondBackground},
             ]}
           />
         ))}
@@ -121,12 +118,12 @@ export default class AssignmentResource extends React.Component {
   };
 
   render() {
-    let { width } = this.state;
+    let {width} = this.state;
     return (
-      <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
+      <SafeAreaView style={{flex: 1}} forceInset={{top: 'always'}}>
         <ScrollView
           horizontal={true}
-          style={{ flex: 1 }}
+          style={{flex: 1}}
           pagingEnabled={true}
           removeClippedSubviews={false}
           scrollEnabled={this.state.scroll}
@@ -137,11 +134,11 @@ export default class AssignmentResource extends React.Component {
           }}
           onLayout={({
             nativeEvent: {
-              layout: { width }
-            }
+              layout: {width},
+            },
           }) =>
-            this.setState({ width }, () =>
-              this.scrollView.scrollTo({ x: 0, animated: true })
+            this.setState({width}, () =>
+              this.scrollView.scrollTo({x: 0, animated: true}),
             )
           }
           ref={r => (this.scrollView = r)}
@@ -149,7 +146,7 @@ export default class AssignmentResource extends React.Component {
           <View
             activeOpacity={1}
             {...this.panResponder.panHandlers}
-            style={{ flexDirection: 'row' }}
+            style={{flexDirection: 'row'}}
           >
             {this.props.data?.map((sheet, i) => (
               <View>
@@ -163,26 +160,26 @@ export default class AssignmentResource extends React.Component {
                         width: width - 10,
                         marginHorizontal: 5,
                         aspectRatio:
-                          1 / Math.sqrt(2) / (sheet.numberOfPages || 1)
+                          1 / Math.sqrt(2) / (sheet.numberOfPages || 1),
                       }}
                     />
                     <View
                       style={{
                         position: 'absolute',
                         width: '100%',
-                        height: '100%'
+                        height: '100%',
                       }}
                     />
                   </>
                 ) : (
                   <ImageSvg
-                    resizeMode='contain'
-                    source={{ uri: sheet.value }}
+                    resizeMode="contain"
+                    source={{uri: sheet.value}}
                     style={{
                       margin: 5,
                       width: width - 10,
                       aspectRatio: sheet.whRatio,
-                      backgroundColor: 'white'
+                      backgroundColor: 'white',
                     }}
                   />
                 )}

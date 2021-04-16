@@ -1,6 +1,3 @@
-/**
- * Schedule
- */
 import React from 'react';
 import {
   View,
@@ -9,19 +6,19 @@ import {
   TouchableOpacity,
   StatusBar,
   StyleSheet,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import Modal from 'react-native-modal';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import AddToCalendar from '../../modals/AddToCalendar';
-import { addToMyList, removeFromMyList } from '../../services/UserActions';
+import {addToMyList, removeFromMyList} from '../../services/UserActions';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
-import { SafeAreaView } from 'react-navigation';
+import {SafeAreaView} from 'react-navigation';
 import NavigationBar from '../../components/NavigationBar.js';
-import { getScheduleContent } from '../../services/GetContent';
-import { NetworkContext } from '../../context/NetworkProvider';
+import {getScheduleContent} from '../../services/GetContent';
+import {NetworkContext} from '../../context/NetworkProvider';
 
 const day = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
 const month = [
@@ -36,7 +33,7 @@ const month = [
   'September',
   'October',
   'November',
-  'December'
+  'December',
 ];
 
 export default class Schedule extends React.Component {
@@ -49,7 +46,7 @@ export default class Schedule extends React.Component {
       items: [],
       month: '',
       addToCalendarModal: false,
-      isLoading: true
+      isLoading: true,
     };
   }
 
@@ -65,7 +62,7 @@ export default class Schedule extends React.Component {
       let amPM = 'AM';
 
       if (this.state.month == '' && d instanceof Date && !isNaN(d.valueOf())) {
-        this.setState({ month: d.getMonth() });
+        this.setState({month: d.getMonth()});
       }
       if (d.getHours() > 11) {
         amPM = 'PM';
@@ -77,11 +74,11 @@ export default class Schedule extends React.Component {
         day: d.getDay(),
         date: d.getDate(),
         month: d.getMonth(),
-        amPM
+        amPM,
       };
     }
 
-    this.setState({ items: response, isLoading: false });
+    this.setState({items: response, isLoading: false});
   };
 
   changeType = word => {
@@ -105,13 +102,13 @@ export default class Schedule extends React.Component {
     const eventConfig = {
       title: this.addToCalendarLessonTitle,
       startDate: new Date(this.addToCalendatLessonPublishDate),
-      endDate: new Date(this.addToCalendatLessonPublishDate)
+      endDate: new Date(this.addToCalendatLessonPublishDate),
     };
     AddCalendarEvent.presentEventCreatingDialog(eventConfig)
       .then(eventInfo => {
         this.addToCalendarLessonTitle = '';
         this.addToCalendatLessonPublishDate = '';
-        this.setState({ addToCalendarModal: false });
+        this.setState({addToCalendarModal: false});
       })
       .catch(e => {});
   };
@@ -122,10 +119,10 @@ export default class Schedule extends React.Component {
     }
 
     this.state.items.find(
-      item => item.id == contentID
+      item => item.id == contentID,
     ).is_added_to_primary_playlist = true;
 
-    this.setState({ items: this.state.items });
+    this.setState({items: this.state.items});
 
     addToMyList(contentID);
   };
@@ -136,10 +133,10 @@ export default class Schedule extends React.Component {
     }
 
     this.state.items.find(
-      item => item.id == contentID
+      item => item.id == contentID,
     ).is_added_to_primary_playlist = false;
 
-    this.setState({ items: this.state.items });
+    this.setState({items: this.state.items});
 
     removeFromMyList(contentID);
   };
@@ -150,7 +147,7 @@ export default class Schedule extends React.Component {
         style={styles.mainContainer}
         forceInset={{
           bottom: 'never',
-          top: 'never'
+          top: 'never',
         }}
       >
         <NavMenuHeaders
@@ -162,7 +159,7 @@ export default class Schedule extends React.Component {
           barStyle={'light-content'}
         />
         <Text style={styles.contentPageHeader}>{this.state.title}</Text>
-        <View style={{ flex: 1 }}>
+        <View style={{flex: 1}}>
           <FlatList
             data={this.state.items}
             extraData={this.state}
@@ -174,7 +171,7 @@ export default class Schedule extends React.Component {
                   paddingLeft: 10,
                   paddingTop: 10,
                   color: colors.secondBackground,
-                  fontSize: onTablet ? 14 : 12
+                  fontSize: onTablet ? 14 : 12,
                 }}
               >
                 {month[this.state.month]}
@@ -187,7 +184,7 @@ export default class Schedule extends React.Component {
                   style={{
                     flex: 1,
                     justifyContent: 'center',
-                    alignItems: 'center'
+                    alignItems: 'center',
                   }}
                   color={colors.secondBackground}
                 />
@@ -197,21 +194,21 @@ export default class Schedule extends React.Component {
                     padding: 10,
                     color: 'white',
                     textAlign: 'left',
-                    fontSize: onTablet ? 16 : 14
+                    fontSize: onTablet ? 16 : 14,
                   }}
                 >
                   Sorry, there are no upcoming events!
                 </Text>
               )
             }
-            renderItem={({ item }) => {
+            renderItem={({item}) => {
               let type = item.lesson ? 'lesson' : 'overview';
               return (
                 <TouchableOpacity
                   style={{
                     padding: 10,
                     flexDirection: 'row',
-                    height: 80
+                    height: 80,
                   }}
                 >
                   <View
@@ -222,8 +219,8 @@ export default class Schedule extends React.Component {
                         aspectRatio: 16 / 9,
                         backgroundColor: 'black',
                         borderRadius: 10,
-                        marginRight: 10
-                      }
+                        marginRight: 10,
+                      },
                     ]}
                   >
                     <Text
@@ -233,7 +230,7 @@ export default class Schedule extends React.Component {
                         color: 'white',
                         textAlign: 'left',
                         fontFamily: 'OpenSans-Bold',
-                        textAlign: 'center'
+                        textAlign: 'center',
                       }}
                     >
                       {day[item.timeData.day]} {item.timeData.date}
@@ -245,7 +242,7 @@ export default class Schedule extends React.Component {
                         color: 'white',
                         textAlign: 'left',
                         fontFamily: 'OpenSans-Regular',
-                        textAlign: 'center'
+                        textAlign: 'center',
                       }}
                     >
                       {item.timeData.hours}:
@@ -258,7 +255,7 @@ export default class Schedule extends React.Component {
                   <View
                     style={{
                       flex: 1,
-                      justifyContent: 'center'
+                      justifyContent: 'center',
                     }}
                   >
                     <Text
@@ -266,7 +263,7 @@ export default class Schedule extends React.Component {
                         fontSize: sizing.videoTitleText,
                         marginBottom: 2,
                         color: 'white',
-                        fontFamily: 'OpenSans-Bold'
+                        fontFamily: 'OpenSans-Bold',
                       }}
                     >
                       {item.title}
@@ -277,7 +274,7 @@ export default class Schedule extends React.Component {
                         fontSize: sizing.descriptionText,
                         color: colors.secondBackground,
                         textAlign: 'left',
-                        fontFamily: 'OpenSans-Regular'
+                        fontFamily: 'OpenSans-Regular',
                       }}
                     >
                       {this.changeType(item.type)}
@@ -288,8 +285,8 @@ export default class Schedule extends React.Component {
                       styles.centerContent,
                       {
                         paddingLeft: 20,
-                        flexDirection: 'row'
-                      }
+                        flexDirection: 'row',
+                      },
                     ]}
                   >
                     {!item.is_added_to_primary_playlist ? (
@@ -315,12 +312,12 @@ export default class Schedule extends React.Component {
                     )}
 
                     <TouchableOpacity
-                      style={{ marginLeft: 10 }}
+                      style={{marginLeft: 10}}
                       onPress={() => {
                         this.addToCalendarLessonTitle = item.title;
                         this.addToCalendatLessonPublishDate =
                           item.live_event_start_time;
-                        this.setState({ addToCalendarModal: true });
+                        this.setState({addToCalendarModal: true});
                       }}
                     >
                       <FontIcon
@@ -345,9 +342,7 @@ export default class Schedule extends React.Component {
           hasBackdrop={true}
         >
           <AddToCalendar
-            hideAddToCalendar={() =>
-              this.setState({ addToCalendarModal: false })
-            }
+            hideAddToCalendar={() => this.setState({addToCalendarModal: false})}
             addEventToCalendar={() => {
               this.addEventToCalendar();
             }}

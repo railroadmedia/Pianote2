@@ -1,6 +1,3 @@
-/**
- * Packs
- */
 import React from 'react';
 import {
   View,
@@ -10,14 +7,13 @@ import {
   FlatList,
   RefreshControl,
   Dimensions,
-  ImageBackground
+  ImageBackground,
 } from 'react-native';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import Modal from 'react-native-modal';
-import { bindActionCreators } from 'redux';
-import { ContentModel } from '@musora/models';
+import {bindActionCreators} from 'redux';
+import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
-
 import StartIcon from '../../components/StartIcon';
 import MoreInfoIcon from '../../components/MoreInfoIcon';
 import RestartCourse from '../../modals/RestartCourse';
@@ -25,28 +21,20 @@ import ContinueIcon from '../../components/ContinueIcon';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import GradientFeature from '../../components/GradientFeature';
-import { resetProgress } from '../../services/UserActions';
+import {resetProgress} from '../../services/UserActions';
 import packsService from '../../services/packs.service';
-import { NetworkContext } from '../../context/NetworkProvider';
+import {NetworkContext} from '../../context/NetworkProvider';
 import Orientation from 'react-native-orientation-locker';
-
-import { cacheAndWritePacks } from '../../redux/PacksCacheActions';
+import {cacheAndWritePacks} from '../../redux/PacksCacheActions';
 import ResetIcon from '../../components/ResetIcon';
-import { navigate } from '../../../AppNavigator';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
+import {navigate} from '../../../AppNavigator';
 
 let greaterWDim;
 class Packs extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    let { packsCache } = props;
+    let {packsCache} = props;
     this.state = {
       packs: [],
       headerPackImg: '',
@@ -55,12 +43,11 @@ class Packs extends React.Component {
       headerPackNextLessonUrl: '',
       headerPackCompleted: false,
       headerPackStarted: false,
-      isLoading: true,
       refreshing: false,
       showRestartCourse: false,
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width,
-      ...this.initialValidData(packsCache, true)
+      ...this.initialValidData(packsCache, true),
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
@@ -79,10 +66,10 @@ class Packs extends React.Component {
     let isLandscape = o.indexOf('LAND') >= 0;
 
     if (Platform.OS === 'ios') {
-      if (onTablet) this.setState({ isLandscape });
+      if (onTablet) this.setState({isLandscape});
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
-        if (isAutoRotateOn && onTablet) this.setState({ isLandscape });
+        if (isAutoRotateOn && onTablet) this.setState({isLandscape});
       });
     }
   };
@@ -108,13 +95,12 @@ class Packs extends React.Component {
           thumbnail: newContent[i].getData('thumbnail_url'),
           logo: newContent[i].getData('logo_image_url'),
           bundle_count: newContent[i].post.bundle_count,
-          mobile_app_url: newContent[i].post.mobile_app_url
+          mobile_app_url: newContent[i].post.mobile_app_url,
         });
       }
 
       return {
         packs: items,
-        isLoading: false,
         refreshing: fromCache,
         showRestartCourse: false,
         headerPackImg: topHeaderPack.getData('thumbnail_url'),
@@ -122,7 +108,7 @@ class Packs extends React.Component {
         headerPackUrl: topHeaderPack.post.mobile_app_url,
         headerPackCompleted: topHeaderPack.isCompleted,
         headerPackStarted: topHeaderPack.isStarted,
-        headerPackNextLessonUrl: topHeaderPack.post.next_lesson_mobile_app_url
+        headerPackNextLessonUrl: topHeaderPack.post.next_lesson_mobile_app_url,
       };
     } catch (e) {
       return {};
@@ -134,19 +120,19 @@ class Packs extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     await resetProgress(this.state.id);
-    this.setState({ refreshing: true, showRestartCourse: false }, () =>
-      this.getData()
+    this.setState({refreshing: true, showRestartCourse: false}, () =>
+      this.getData(),
     );
   };
 
   refresh = () => {
-    this.setState({ refreshing: true }, () => {
+    this.setState({refreshing: true}, () => {
       this.getData();
     });
   };
 
   getAspectRatio() {
-    let { isLandscape } = this.state;
+    let {isLandscape} = this.state;
     if (onTablet) {
       if (isLandscape) {
         return 3;
@@ -162,14 +148,14 @@ class Packs extends React.Component {
         <NavMenuHeaders currentPage={'PACKS'} />
         <FlatList
           windowSize={10}
-          style={{ flex: 1 }}
+          style={{flex: 1}}
           initialNumToRender={5}
           maxToRenderPerBatch={10}
           numColumns={3}
           removeClippedSubviews={true}
           keyExtractor={item => item.id}
           data={this.state.packs}
-          keyboardShouldPersistTaps='handled'
+          keyboardShouldPersistTaps="handled"
           refreshControl={
             <RefreshControl
               tintColor={'transparent'}
@@ -183,8 +169,8 @@ class Packs extends React.Component {
               style={[
                 styles.centerContent,
                 {
-                  flex: 1
-                }
+                  flex: 1,
+                },
               ]}
             >
               <ActivityIndicator
@@ -198,8 +184,8 @@ class Packs extends React.Component {
             <>
               {isiOS && this.state.refreshing && (
                 <ActivityIndicator
-                  size='small'
-                  style={{ padding: 20 }}
+                  size="small"
+                  style={{padding: 20}}
                   color={colors.secondBackground}
                 />
               )}
@@ -208,12 +194,12 @@ class Packs extends React.Component {
                 style={{
                   width: '100%',
                   aspectRatio: this.getAspectRatio(),
-                  justifyContent: 'flex-end'
+                  justifyContent: 'flex-end',
                 }}
                 source={{
                   uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
-                    greaterWDim * 2
-                  )},ar_2,c_fill,g_face/${this.state.headerPackImg}`
+                    greaterWDim * 2,
+                  )},ar_2,c_fill,g_face/${this.state.headerPackImg}`,
                 }}
               >
                 <GradientFeature
@@ -229,12 +215,12 @@ class Packs extends React.Component {
                     height: greaterWDim / 15,
                     width: '100%',
                     zIndex: 6,
-                    marginBottom: onTablet ? '3%' : '4.5%'
+                    marginBottom: onTablet ? '3%' : '4.5%',
                   }}
                   source={{
                     uri: `https://cdn.musora.com/image/fetch/f_png,q_auto:eco,w_${Math.round(
-                      greaterWDim * 2
-                    )}/${this.state.headerPackLogo}`
+                      greaterWDim * 2,
+                    )}/${this.state.headerPackLogo}`,
                   }}
                   resizeMode={FastImage.resizeMode.contain}
                 />
@@ -244,21 +230,21 @@ class Packs extends React.Component {
                     {
                       flexDirection: 'row',
                       alignItems: 'center',
-                      marginBottom: onTablet ? '5%' : '7.5%'
-                    }
+                      marginBottom: onTablet ? '5%' : '7.5%',
+                    },
                   ]}
                 >
-                  <View style={{ flex: 1 }} />
+                  <View style={{flex: 1}} />
                   <View
                     style={{
-                      width: onTablet ? 200 : '45%'
+                      width: onTablet ? 200 : '45%',
                     }}
                   >
                     {this.state.headerPackCompleted ? (
                       <ResetIcon
                         pressed={() =>
                           this.setState({
-                            showRestartCourse: true
+                            showRestartCourse: true,
                           })
                         }
                       />
@@ -266,7 +252,7 @@ class Packs extends React.Component {
                       <StartIcon
                         pressed={() =>
                           navigate('VIDEOPLAYER', {
-                            url: this.state.headerPackNextLessonUrl
+                            url: this.state.headerPackNextLessonUrl,
                           })
                         }
                       />
@@ -274,54 +260,54 @@ class Packs extends React.Component {
                       <ContinueIcon
                         pressed={() =>
                           navigate('VIDEOPLAYER', {
-                            url: this.state.headerPackNextLessonUrl
+                            url: this.state.headerPackNextLessonUrl,
                           })
                         }
                       />
                     )}
                   </View>
-                  <View style={onTablet ? { width: 10 } : { flex: 0.5 }} />
+                  <View style={onTablet ? {width: 10} : {flex: 0.5}} />
                   <View
                     style={{
-                      width: onTablet ? 200 : '45%'
+                      width: onTablet ? 200 : '45%',
                     }}
                   >
                     <MoreInfoIcon
                       pressed={() => {
                         navigate('SINGLEPACK', {
-                          url: this.state.headerPackUrl
+                          url: this.state.headerPackUrl,
                         });
                       }}
                     />
                   </View>
-                  <View style={{ flex: 1 }} />
+                  <View style={{flex: 1}} />
                 </View>
               </ImageBackground>
             </>
           )}
-          renderItem={({ item }) => (
+          renderItem={({item}) => (
             <TouchableOpacity
               onPress={() => {
                 navigate('SINGLEPACK', {
-                  url: item.mobile_app_url
+                  url: item.mobile_app_url,
                 });
               }}
               style={{
                 width: '33%',
                 paddingLeft: 10,
-                paddingTop: 10
+                paddingTop: 10,
               }}
             >
               <FastImage
                 style={{
                   borderRadius: 10,
                   width: '100%',
-                  aspectRatio: 0.7
+                  aspectRatio: 0.7,
                 }}
                 source={{
                   uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,c_thumb,w_${
                     ((greaterWDim / 3) >> 0) * 2
-                  },ar_0.7/${item.thumbnail}`
+                  },ar_0.7/${item.thumbnail}`,
                 }}
                 resizeMode={FastImage.resizeMode.cover}
               >
@@ -332,21 +318,21 @@ class Packs extends React.Component {
                     alignItems: 'center',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    paddingBottom: 10
+                    paddingBottom: 10,
                   }}
                 >
                   <View />
-                  <View style={{ width: '100%' }}>
+                  <View style={{width: '100%'}}>
                     <FastImage
                       style={{
                         width: '90%',
                         alignSelf: 'center',
-                        height: 2 * (greaterWDim / 50)
+                        height: 2 * (greaterWDim / 50),
                       }}
                       source={{
                         uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
                           (((0.9 * greaterWDim) / 3) >> 0) * 2
-                        }/${item.logo}`
+                        }/${item.logo}`,
                       }}
                       resizeMode={FastImage.resizeMode.contain}
                     />
@@ -369,10 +355,10 @@ class Packs extends React.Component {
           <RestartCourse
             hideRestartCourse={() => {
               this.setState({
-                showRestartCourse: false
+                showRestartCourse: false,
               });
             }}
-            type='pack'
+            type="pack"
             onRestart={() => this.onRestartPack()}
           />
         </Modal>
@@ -380,8 +366,8 @@ class Packs extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({ packsCache: state.packsCache });
+const mapStateToProps = state => ({packsCache: state.packsCache});
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheAndWritePacks }, dispatch);
+  bindActionCreators({cacheAndWritePacks}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Packs);

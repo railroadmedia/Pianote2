@@ -1,6 +1,3 @@
-/**
- * Course
- */
 import React from 'react';
 import {
   View,
@@ -8,26 +5,25 @@ import {
   ScrollView,
   Dimensions,
   RefreshControl,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { ContentModel } from '@musora/models';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {ContentModel} from '@musora/models';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
-import { getStartedContent, getAllContent } from '../../services/GetContent';
-import { NetworkContext } from '../../context/NetworkProvider';
+import {getStartedContent, getAllContent} from '../../services/GetContent';
+import {NetworkContext} from '../../context/NetworkProvider';
 import NavigationBar from '../../components/NavigationBar';
-
-import { cacheAndWriteCourses } from '../../redux/CoursesCacheActions';
-import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
+import {cacheAndWriteCourses} from '../../redux/CoursesCacheActions';
+import {navigate, refreshOnFocusListener} from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
-const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
   const paddingToBottom = 20;
   return (
     layoutMeasurement.height + contentOffset.y >=
@@ -39,7 +35,7 @@ class Course extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    let { coursesCache } = props;
+    let {coursesCache} = props;
     this.state = {
       progressCourses: [],
       allCourses: [],
@@ -47,17 +43,16 @@ class Course extends React.Component {
       page: 1,
       outVideos: false,
       isPaging: false, // scrolling more
-      filtering: false, // filtering
       started: true, // if started lesson
       refreshing: true,
       refreshControl: false,
-      ...this.initialValidData(coursesCache, true)
+      ...this.initialValidData(coursesCache, true),
     };
   }
 
   componentDidMount() {
     let deepFilters = decodeURIComponent(this.props.route?.params?.url).split(
-      '?'
+      '?',
     )[1];
     this.filterQuery = deepFilters && `&${deepFilters}`;
     this.getContent();
@@ -77,20 +72,20 @@ class Course extends React.Component {
         'course',
         this.state.currentSort,
         this.state.page,
-        this.filterQuery
+        this.filterQuery,
       ),
-      getStartedContent('course')
+      getStartedContent('course'),
     ]);
     this.metaFilters = content?.[0]?.meta?.filterOptions;
     this.props.cacheAndWriteCourses({
       all: content[0],
-      inProgress: content[1]
+      inProgress: content[1],
     });
     this.setState(
       this.initialValidData({
         all: content[0],
-        inProgress: content[1]
-      })
+        inProgress: content[1],
+      }),
     );
   }
 
@@ -99,13 +94,13 @@ class Course extends React.Component {
       let allVideos = this.setData(
         content.all.data.map(data => {
           return new ContentModel(data);
-        })
+        }),
       );
 
       let inprogressVideos = this.setData(
         content.inProgress.data.map(data => {
           return new ContentModel(data);
-        })
+        }),
       );
 
       return {
@@ -115,10 +110,9 @@ class Course extends React.Component {
         refreshControl: fromCache,
         outVideos:
           allVideos.length == 0 || content.all.data.length < 20 ? true : false,
-        filtering: false,
         isPaging: false,
         page: this.state?.page + 1 || 1,
-        started: inprogressVideos.length !== 0
+        started: inprogressVideos.length !== 0,
       };
     } catch (e) {
       return {};
@@ -126,7 +120,6 @@ class Course extends React.Component {
   };
 
   getAllCourses = async loadMore => {
-    this.setState({ filtering: true });
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -134,7 +127,7 @@ class Course extends React.Component {
       'course',
       this.state.currentSort,
       this.state.page,
-      this.filterQuery
+      this.filterQuery,
     );
     this.metaFilters = response?.meta?.filterOptions;
     const newContent = await response.data.map(data => {
@@ -146,10 +139,9 @@ class Course extends React.Component {
     this.setState(state => ({
       allCourses: loadMore ? state.allCourses.concat(items) : items,
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
-      filtering: false,
       isPaging: false,
       refreshControl: false,
-      page: this.state.page + 1
+      page: this.state.page + 1,
     }));
   };
 
@@ -181,7 +173,7 @@ class Course extends React.Component {
         isAddedToList: newContent[i].isAddedToList,
         isStarted: newContent[i].isStarted,
         isCompleted: newContent[i].isCompleted,
-        progress_percent: newContent[i].post.progress_percent
+        progress_percent: newContent[i].post.progress_percent,
       });
     }
 
@@ -194,17 +186,17 @@ class Course extends React.Component {
         currentSort,
         outVideos: false,
         isPaging: false,
-        page: 1
+        page: 1,
       },
-      () => this.getAllCourses()
+      () => this.getAllCourses(),
     );
   };
 
   getVideos = async () => {
     // change page before getting more lessons if paging
     if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () =>
-        this.getAllCourses(true)
+      this.setState({page: this.state.page + 1}, () =>
+        this.getAllCourses(true),
       );
     }
   };
@@ -218,15 +210,15 @@ class Course extends React.Component {
       this.setState(
         {
           page: this.state.page + 1,
-          isPaging: true
+          isPaging: true,
         },
-        () => this.getAllCourses(true)
+        () => this.getAllCourses(true),
       );
     }
   };
 
   refresh() {
-    this.setState({ refreshControl: true, page: 1 }, this.getContent);
+    this.setState({refreshControl: true, page: 1}, this.getContent);
   }
 
   render() {
@@ -238,7 +230,7 @@ class Course extends React.Component {
             style={styles.mainContainer}
             showsVerticalScrollIndicator={false}
             contentInsetAdjustmentBehavior={'never'}
-            onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
+            onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
             refreshControl={
               <RefreshControl
                 tintColor={'transparent'}
@@ -250,7 +242,7 @@ class Course extends React.Component {
           >
             {isiOS && this.state.refreshControl && (
               <ActivityIndicator
-                size='small'
+                size="small"
                 style={styles.activityIndicator}
                 color={colors.secondBackground}
               />
@@ -263,7 +255,7 @@ class Course extends React.Component {
                 seeAll={() =>
                   navigate('SEEALL', {
                     title: 'Continue',
-                    parent: 'Courses'
+                    parent: 'Courses',
                   })
                 }
                 items={this.state.progressCourses}
@@ -276,7 +268,7 @@ class Course extends React.Component {
                 seeAll={() =>
                   navigate('SEEALL', {
                     title: 'Courses',
-                    parent: 'Courses'
+                    parent: 'Courses',
                   })
                 }
                 items={this.state.allCourses}
@@ -285,20 +277,20 @@ class Course extends React.Component {
                 filters={this.state.filters}
                 currentSort={this.state.currentSort}
                 changeSort={sort => this.changeSort(sort)}
-                filterResults={() => this.setState({ showFilters: true })}
+                filterResults={() => this.setState({showFilters: true})}
                 applyFilters={filters =>
                   new Promise(res =>
                     this.setState(
                       {
                         allCourses: [],
                         outVideos: false,
-                        page: 1
+                        page: 1,
                       },
                       () => {
                         this.filterQuery = filters;
                         this.getAllCourses().then(res);
-                      }
-                    )
+                      },
+                    ),
                   )
                 }
                 outVideos={this.state.outVideos}
@@ -309,9 +301,9 @@ class Course extends React.Component {
                     this.setState(
                       {
                         page: this.state.page + 1,
-                        isPaging: true
+                        isPaging: true,
                       },
-                      () => this.getAllCourses()
+                      () => this.getAllCourses(),
                     );
                   }
                 }}
@@ -337,13 +329,13 @@ class Course extends React.Component {
                       {
                         allCourses: [],
                         outVideos: false,
-                        page: 1
+                        page: 1,
                       },
                       () => {
                         this.filterQuery = filters;
                         this.getAllCourses().then(res);
-                      }
-                    )
+                      },
+                    ),
                   )
                 }
                 imageWidth={width * 0.26} // image width
@@ -354,8 +346,8 @@ class Course extends React.Component {
           </ScrollView>
         ) : (
           <ActivityIndicator
-            size='large'
-            style={{ flex: 1 }}
+            size="large"
+            style={{flex: 1}}
             color={colors.secondBackground}
           />
         )}
@@ -364,8 +356,8 @@ class Course extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({ coursesCache: state.coursesCache });
+const mapStateToProps = state => ({coursesCache: state.coursesCache});
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheAndWriteCourses }, dispatch);
+  bindActionCreators({cacheAndWriteCourses}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Course);

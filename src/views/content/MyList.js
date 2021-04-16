@@ -1,6 +1,3 @@
-/**
- * MyList
- */
 import React from 'react';
 import {
   View,
@@ -8,30 +5,26 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
-  RefreshControl
+  RefreshControl,
 } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { ContentModel } from '@musora/models';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {ContentModel} from '@musora/models';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
-
-import { getMyListContent } from '../../services/GetContent';
-import { NetworkContext } from '../../context/NetworkProvider';
-
-import { cacheAndWriteMyList } from '../../redux/MyListCacheActions';
-import { ActivityIndicator } from 'react-native';
-import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
+import {getMyListContent} from '../../services/GetContent';
+import {NetworkContext} from '../../context/NetworkProvider';
+import {cacheAndWriteMyList} from '../../redux/MyListCacheActions';
+import {ActivityIndicator} from 'react-native';
+import {navigate, refreshOnFocusListener} from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
-const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+
+const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
   const paddingToBottom = 20;
   return (
     layoutMeasurement.height + contentOffset.y >=
@@ -43,18 +36,15 @@ class MyList extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    let { myListCache } = props;
+    let {myListCache} = props;
     this.state = {
       allLessons: [],
-      currentSort: 'newest',
       page: 1,
       outVideos: false,
       isLoadingAll: true,
       isPaging: false,
-      filtering: false,
-      showModalMenu: false,
       refreshing: false,
-      ...this.initialValidData(myListCache, false, true)
+      ...this.initialValidData(myListCache, false, true),
     };
   }
 
@@ -68,12 +58,11 @@ class MyList extends React.Component {
   }
 
   getMyList = async loadMore => {
-    this.setState({ filtering: true });
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = await getMyListContent(
       this.state.page,
       this.filterQuery,
-      ''
+      '',
     );
     this.metaFilters = response?.meta?.filterOptions;
     this.props.cacheAndWriteMyList(response);
@@ -118,7 +107,7 @@ class MyList extends React.Component {
           isStarted: newContent[i].isStarted,
           isCompleted: newContent[i].isCompleted,
           bundle_count: newContent[i].post.bundle_count,
-          progress_percent: newContent[i].post.progress_percent
+          progress_percent: newContent[i].post.progress_percent,
         });
       }
       return {
@@ -126,9 +115,8 @@ class MyList extends React.Component {
         outVideos: items.length == 0 || content.data.length < 20 ? true : false,
         page: this.state?.page + 1 || 1,
         isLoadingAll: false,
-        filtering: false,
         isPaging: false,
-        refreshing: fromCache
+        refreshing: fromCache,
       };
     } catch (e) {
       return {};
@@ -136,14 +124,14 @@ class MyList extends React.Component {
   };
 
   removeFromMyList = contentID => {
-    let { myListCache } = this.props;
+    let {myListCache} = this.props;
     this.props.cacheAndWriteMyList({
       ...myListCache,
-      data: myListCache.data.filter(d => d.id !== contentID)
+      data: myListCache.data.filter(d => d.id !== contentID),
     });
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     this.setState({
-      allLessons: this.state.allLessons.filter(al => al.id !== contentID)
+      allLessons: this.state.allLessons.filter(al => al.id !== contentID),
     });
   };
 
@@ -177,13 +165,13 @@ class MyList extends React.Component {
       !this.state.isPaging &&
       !this.state.outVideos
     ) {
-      this.setState({ isPaging: true }, () => this.getMyList(true));
+      this.setState({isPaging: true}, () => this.getMyList(true));
     }
   };
 
   refresh = () => {
-    this.setState({ refreshing: true, page: 1, outVideos: false }, () =>
-      this.getMyList()
+    this.setState({refreshing: true, page: 1, outVideos: false}, () =>
+      this.getMyList(),
     );
   };
 
@@ -195,7 +183,7 @@ class MyList extends React.Component {
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
           style={styles.mainContainer}
-          onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
+          onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
           refreshControl={
             <RefreshControl
               tintColor={'transparent'}
@@ -207,7 +195,7 @@ class MyList extends React.Component {
         >
           {isiOS && this.state.refreshing && (
             <ActivityIndicator
-              size='small'
+              size="small"
               style={styles.activityIndicator}
               color={colors.secondBackground}
             />
@@ -216,8 +204,8 @@ class MyList extends React.Component {
             style={[
               styles.contentPageHeader,
               {
-                paddingLeft: 10
-              }
+                paddingLeft: 10,
+              },
             ]}
           >
             My List
@@ -226,13 +214,13 @@ class MyList extends React.Component {
             style={[
               styles.tabRightContainer,
               {
-                marginTop: 10
-              }
+                marginTop: 10,
+              },
             ]}
             onPress={() => {
               navigate('SEEALL', {
                 title: 'In Progress',
-                parent: 'My List'
+                parent: 'My List',
               });
             }}
           >
@@ -240,7 +228,7 @@ class MyList extends React.Component {
               style={{
                 justifyContent: 'center',
                 paddingVertical: 20,
-                width: width * 0.26 + 10 / 2
+                width: width * 0.26 + 10 / 2,
               }}
             >
               <Text
@@ -249,15 +237,15 @@ class MyList extends React.Component {
                   {
                     position: 'absolute',
                     paddingLeft: 10,
-                    width: width * 0.56 + 10 / 2
-                  }
+                    width: width * 0.56 + 10 / 2,
+                  },
                 ]}
               >
                 In Progress
               </Text>
             </View>
-            <View style={{ flex: 0.85 }} />
-            <View style={[styles.centerContent, { flex: 0.15 }]}>
+            <View style={{flex: 0.85}} />
+            <View style={[styles.centerContent, {flex: 0.15}]}>
               <EntypoIcon
                 name={'chevron-thin-right'}
                 size={onTablet ? 30 : 20}
@@ -270,7 +258,7 @@ class MyList extends React.Component {
             onPress={() => {
               navigate('SEEALL', {
                 title: 'Completed',
-                parent: 'My List'
+                parent: 'My List',
               });
             }}
           >
@@ -278,7 +266,7 @@ class MyList extends React.Component {
               style={{
                 justifyContent: 'center',
                 paddingVertical: 20,
-                width: width * 0.26 + 10 / 2
+                width: width * 0.26 + 10 / 2,
               }}
             >
               <Text
@@ -287,15 +275,15 @@ class MyList extends React.Component {
                   {
                     position: 'absolute',
                     paddingLeft: 10,
-                    width: width * 0.56 + 10 / 2
-                  }
+                    width: width * 0.56 + 10 / 2,
+                  },
                 ]}
               >
                 Completed
               </Text>
             </View>
-            <View style={{ flex: 0.85 }} />
-            <View style={[styles.centerContent, { flex: 0.15 }]}>
+            <View style={{flex: 0.85}} />
+            <View style={[styles.centerContent, {flex: 0.15}]}>
               <EntypoIcon
                 name={'chevron-thin-right'}
                 s
@@ -322,13 +310,13 @@ class MyList extends React.Component {
                   {
                     allLessons: [],
                     outVideos: false,
-                    page: 1
+                    page: 1,
                   },
                   () => {
                     this.filterQuery = filters;
                     this.getMyList().then(res);
-                  }
-                )
+                  },
+                ),
               )
             }
             removeItem={contentID => this.removeFromMyList(contentID)}
@@ -341,8 +329,8 @@ class MyList extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({ myListCache: state.myListCache });
+const mapStateToProps = state => ({myListCache: state.myListCache});
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheAndWriteMyList }, dispatch);
+  bindActionCreators({cacheAndWriteMyList}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyList);

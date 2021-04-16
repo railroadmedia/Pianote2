@@ -1,6 +1,3 @@
-/**
- * VideoPlayer
- */
 import React from 'react';
 import {
   View,
@@ -13,34 +10,31 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   KeyboardAvoidingView,
-  BackHandler
+  BackHandler,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
 import Video from 'RNVideoEnhanced';
 import Modal from 'react-native-modal';
-import { ContentModel } from '@musora/models';
+import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Download_V2, offlineContent, DownloadResources } from 'RNDownload';
+import {Download_V2, offlineContent, DownloadResources} from 'RNDownload';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons.js';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Replies from '../../components/Replies';
 import SoundSlice from '../../components/SoundSlice';
 import VerticalVideoList from '../../components/VerticalVideoList';
-
 import CommentSort from '../../modals/CommentSort';
 import CustomModal from '../../modals/CustomModal';
 import RestartCourse from '../../modals/RestartCourse';
 import LessonComplete from '../../modals/LessonComplete';
 import OverviewComplete from '../../modals/OverviewComplete';
 import AssignmentComplete from '../../modals/AssignmentComplete';
-
 import contentService from '../../services/content.service';
 import commentsService from '../../services/comments.service';
 import {
@@ -51,17 +45,14 @@ import {
   resetProgress,
   removeFromMyList,
   getMediaSessionId,
-  updateUsersVideoProgress
+  updateUsersVideoProgress,
 } from '../../services/UserActions';
-
 import ArrowLeft from 'Pianote2/src/assets/img/svgs/arrowLeft';
 import Resources from 'Pianote2/src/assets/img/svgs/resources';
-
 import VideoPlayerSong from './VideoPlayerSong';
-
-import { NetworkContext } from '../../context/NetworkProvider';
+import {NetworkContext} from '../../context/NetworkProvider';
 import methodService from '../../services/method.service';
-import { goBack, navigate } from '../../../AppNavigator';
+import {goBack, navigate} from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -69,7 +60,6 @@ const width =
 
 export default class VideoPlayer extends React.Component {
   static contextType = NetworkContext;
-
   constructor(props) {
     super(props);
     this.limit = 10;
@@ -77,9 +67,10 @@ export default class VideoPlayer extends React.Component {
     this.state = {
       id: props.route?.params?.id,
       url: props.route?.params?.url,
-      commentId: '',
-      commentSort: 'Popular',
-      profileImage: '',
+      comments: [],
+      chapters: [],
+      relatedLessons: [],
+      assignmentList: [],
       isLoadingAll: true,
       selectedComment: undefined,
       showAssignment: false,
@@ -93,11 +84,6 @@ export default class VideoPlayer extends React.Component {
       showLessonComplete: false,
       showResDownload: false,
       showVideo: true,
-      comments: [],
-      chapters: [],
-      relatedLessons: [],
-      likes: 0,
-      videoId: 0,
       isStarted: false,
       isLiked: false,
       isAddedToMyList: false,
@@ -105,16 +91,20 @@ export default class VideoPlayer extends React.Component {
       instructor: null,
       nextLesson: null,
       previousLesson: null,
-      lessonImage: '',
-      lessonTitle: '',
-      comment: '',
-      assignmentList: [],
       selectedAssignment: null,
       resources: null,
-      description: '',
       progress: null,
+      likes: 0,
+      videoId: 0,
+      lessonImage: '',
+      lessonTitle: '',
+      commentId: '',
+      commentSort: 'Popular',
+      profileImage: '',
+      comment: '',
+      description: '',
       publishedOn: '',
-      reply: ''
+      reply: '',
     };
   }
 
@@ -125,9 +115,9 @@ export default class VideoPlayer extends React.Component {
     this.limit = 10;
     let storage = await Promise.all([
       AsyncStorage.getItem('userId'),
-      AsyncStorage.getItem('profileURI')
+      AsyncStorage.getItem('profileURI'),
     ]);
-    if (storage[1]) this.setState({ profileImage: storage[1] });
+    if (storage[1]) this.setState({profileImage: storage[1]});
     this.userId = JSON.parse(storage[0]);
     this.getContent();
   };
@@ -187,19 +177,19 @@ export default class VideoPlayer extends React.Component {
           xp: assignments[a].xp,
           progress: assignments[a].post.progress_percent,
           slug: assignments[a].post.fields?.find(
-            f => f.key === 'soundslice_slug'
+            f => f.key === 'soundslice_slug',
           )?.value,
           timeCodes: assignments[a].post.data
             .filter(d => d.key === 'timecode')
-            .map(tc => ({ value: tc.value })),
+            .map(tc => ({value: tc.value})),
           sheets:
             assignments[a].post.data
               .filter(d => d.key === 'sheet_music_image_url')
               .map(s => ({
                 value: s.value,
                 id: s.id,
-                whRatio: s.whRatio
-              })) || []
+                whRatio: s.whRatio,
+              })) || [],
         });
       }
     }
@@ -207,10 +197,10 @@ export default class VideoPlayer extends React.Component {
     if (relatedLessons) {
       for (let i in relatedLessons) {
         let duration = relatedLessons[i].post.fields?.find(
-          f => f.key === 'video'
+          f => f.key === 'video',
         )
           ? new ContentModel(
-              relatedLessons[i].getFieldMulti('video')[0]
+              relatedLessons[i].getFieldMulti('video')[0],
             )?.getField('length_in_seconds')
           : 0;
         rl.push({
@@ -223,7 +213,7 @@ export default class VideoPlayer extends React.Component {
           isAddedToList: relatedLessons[i].isAddedToList,
           isStarted: relatedLessons[i].isStarted,
           isCompleted: relatedLessons[i].isCompleted,
-          progress_percent: relatedLessons[i].post.progress_percent
+          progress_percent: relatedLessons[i].post.progress_percent,
         });
       }
     }
@@ -240,10 +230,10 @@ export default class VideoPlayer extends React.Component {
         videoId: content.post.fields?.find(f => f.key === 'video')
           ? youtubeId
             ? new ContentModel(content.getFieldMulti('video')[0])?.getField(
-                'youtube_video_id'
+                'youtube_video_id',
               )
             : new ContentModel(content.getFieldMulti('video')[0])?.getField(
-                'vimeo_video_id'
+                'vimeo_video_id',
               )
           : -1,
         lessonImage: content.getData('thumbnail_url'),
@@ -282,13 +272,13 @@ export default class VideoPlayer extends React.Component {
         isLiked: content.post.is_liked_by_current_user,
         lengthInSec: content.post.fields?.find(f => f.key === 'video')
           ? new ContentModel(content.getFieldMulti('video')[0])?.getField(
-              'length_in_seconds'
+              'length_in_seconds',
             )
           : 0,
         lastWatchedPosInSec: content.post.last_watch_position_in_seconds,
         progress:
           parseInt(
-            Object.values(content.post.user_progress)?.[0].progress_percent
+            Object.values(content.post.user_progress)?.[0].progress_percent,
           ) || 0,
         isAddedToMyList: content.isAddedToList,
         isStarted: content.isStarted,
@@ -310,35 +300,33 @@ export default class VideoPlayer extends React.Component {
             ? Object.keys(content.post.resources).map(key => {
                 return content.post.resources[key];
               })
-            : undefined
+            : undefined,
       },
       async () => {
         if (this.state.resources) this.createResourcesArr();
         if (!this.state.video_playback_endpoints && !this.state.youtubeId) {
           this.alert?.toggle(
             `We're sorry, there was an issue loading this video, try reloading the lesson.`,
-            `If the problem persists please contact support.`
+            `If the problem persists please contact support.`,
           );
         }
-        const { comment, commentId } = this.props.route?.params;
+        const {comment, commentId} = this.props.route?.params;
         if (comment)
-          this.replies?.toggle(() =>
-            this.setState({ selectedComment: comment })
-          );
+          this.replies?.toggle(() => this.setState({selectedComment: comment}));
         else if (commentId) {
           const comments = (
             await commentsService.getComments(this.state.id, 'Mine')
           ).data;
           const selectedComment = comments?.find(f => f.id == commentId);
           if (selectedComment)
-            this.replies?.toggle(() => this.setState({ selectedComment }));
+            this.replies?.toggle(() => this.setState({selectedComment}));
         }
-      }
+      },
     );
   };
 
   createResourcesArr() {
-    const { resources } = this.state;
+    const {resources} = this.state;
     const extensions = ['mp3', 'pdf', 'zip'];
 
     resources.forEach(resource => {
@@ -348,7 +336,7 @@ export default class VideoPlayer extends React.Component {
         fetch(resource.resource_url)
           .then(res => {
             extension = this.getExtensionByType(
-              res?.headers?.map['content-type']
+              res?.headers?.map['content-type'],
             );
             this.setState({
               resources: this.state.resources.map(r =>
@@ -356,18 +344,18 @@ export default class VideoPlayer extends React.Component {
                   ? {
                       ...r,
                       extension,
-                      wasWithoutExtension: true
+                      wasWithoutExtension: true,
                     }
-                  : r
-              )
+                  : r,
+              ),
             });
           })
           .catch(e => {});
       } else {
         this.setState({
           resources: this.state.resources.map(r =>
-            r.resource_id === resource.resource_id ? { ...r, extension } : r
-          )
+            r.resource_id === resource.resource_id ? {...r, extension} : r,
+          ),
         });
       }
     });
@@ -387,7 +375,7 @@ export default class VideoPlayer extends React.Component {
   };
 
   onBack = () => {
-    const { commentId } = this.props.route?.params;
+    const {commentId} = this.props.route?.params;
     if (commentId) {
       navigate('LESSONS');
     } else {
@@ -400,17 +388,19 @@ export default class VideoPlayer extends React.Component {
     let comments = await commentsService.getComments(
       id || this.state.id,
       this.state.commentSort,
-      this.limit
+      this.limit,
     );
 
     this.allCommentsNum = comments.meta.totalResults;
     this.setState(state => ({
       comments:
-        this.limit === 10 ? comments.data : state.comments.concat(comments.data)
+        this.limit === 10
+          ? comments.data
+          : state.comments.concat(comments.data),
     }));
   };
 
-  isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+  isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 40;
     return (
       layoutMeasurement.height + contentOffset.y >=
@@ -432,9 +422,9 @@ export default class VideoPlayer extends React.Component {
         url,
         isLoadingAll: true,
         resources: null,
-        selectedAssignment: null
+        selectedAssignment: null,
       },
-      () => this.getContent()
+      () => this.getContent(),
     );
   }
 
@@ -467,21 +457,21 @@ export default class VideoPlayer extends React.Component {
         comment.is_liked = true;
         commentsService.likeComment(id);
       }
-      this.setState({ comments });
+      this.setState({comments});
     }
   };
 
   makeComment = async () => {
-    if (!this.state.comment) return this.setState({ showMakeComment: false });
+    if (!this.state.comment) return this.setState({showMakeComment: false});
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    this.setState({ comment: '', isLoadingComm: true, showMakeComment: false });
+    this.setState({comment: '', isLoadingComm: true, showMakeComment: false});
     commentsService
       .addComment(encodeURIComponent(this.state.comment), this.state.id)
       .then(r =>
-        this.setState(({ comments }) => ({
+        this.setState(({comments}) => ({
           isLoadingComm: false,
-          comments: [r.data[0], ...comments]
-        }))
+          comments: [r.data[0], ...comments],
+        })),
       );
   };
 
@@ -489,10 +479,10 @@ export default class VideoPlayer extends React.Component {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    let { comments } = this.state;
+    let {comments} = this.state;
     this.allCommentsNum -= 1;
     this.setState({
-      comments: comments.filter(c => c.id !== id)
+      comments: comments.filter(c => c.id !== id),
     });
     commentsService.deleteComment(id);
   };
@@ -508,14 +498,14 @@ export default class VideoPlayer extends React.Component {
           borderTopWidth: 0.25,
           flexDirection: 'row',
           paddingTop: 10,
-          paddingHorizontal: 10
+          paddingHorizontal: 10,
         }}
       >
         <View
           style={{
             alignItems: 'center',
             justifyContent: 'flex-start',
-            paddingBottom: 10
+            paddingBottom: 10,
           }}
         >
           <FastImage
@@ -523,10 +513,10 @@ export default class VideoPlayer extends React.Component {
               height: onTablet ? 60 : 40,
               width: onTablet ? 60 : 40,
               borderRadius: 100,
-              marginTop: 10
+              marginTop: 10,
             }}
             source={{
-              uri: item.user['fields.profile_picture_image_url']
+              uri: item.user['fields.profile_picture_image_url'],
             }}
             resizeMode={FastImage.resizeMode.stretch}
           />
@@ -536,20 +526,20 @@ export default class VideoPlayer extends React.Component {
               fontSize: onTablet ? 15 : 12,
               paddingTop: 5,
               fontWeight: 'bold',
-              color: colors.pianoteGrey
+              color: colors.pianoteGrey,
             }}
           >
             {this.changeXP(item.user.xp)}
           </Text>
         </View>
 
-        <View style={{ flex: 1, paddingLeft: 10 }}>
+        <View style={{flex: 1, paddingLeft: 10}}>
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
               fontSize: sizing.descriptionText,
               color: 'white',
-              paddingTop: 10
+              paddingTop: 10,
             }}
           >
             {item.comment}
@@ -561,7 +551,7 @@ export default class VideoPlayer extends React.Component {
               fontSize: sizing.descriptionText,
               color: colors.secondBackground,
               paddingTop: 5,
-              paddingBottom: 10
+              paddingBottom: 10,
             }}
           >
             {item.user['display_name']} | {item.user.rank} |{' '}
@@ -570,13 +560,13 @@ export default class VideoPlayer extends React.Component {
           <View
             style={{
               paddingBottom: 15,
-              paddingTop: 5
+              paddingTop: 5,
             }}
           >
-            <View style={{ flexDirection: 'row' }}>
-              <View style={{ flexDirection: 'row', marginRight: 15 }}>
+            <View style={{flexDirection: 'row'}}>
+              <View style={{flexDirection: 'row', marginRight: 15}}>
                 <TouchableOpacity
-                  style={{ marginRight: 10 }}
+                  style={{marginRight: 10}}
                   onPress={() => this.likeComment(item.id)}
                 >
                   <AntIcon
@@ -591,7 +581,7 @@ export default class VideoPlayer extends React.Component {
                       borderRadius: 40,
                       backgroundColor: colors.notificationColor,
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
                     }}
                   >
                     <Text
@@ -599,7 +589,7 @@ export default class VideoPlayer extends React.Component {
                         fontFamily: 'OpenSans-Regular',
                         fontSize: sizing.descriptionText,
                         color: colors.pianoteRed,
-                        paddingHorizontal: 5
+                        paddingHorizontal: 5,
                       }}
                     >
                       {item.like_count}{' '}
@@ -608,15 +598,15 @@ export default class VideoPlayer extends React.Component {
                   </View>
                 )}
               </View>
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{flexDirection: 'row'}}>
                 <TouchableOpacity
                   style={{
                     marginRight: 10,
-                    marginLeft: -2.5
+                    marginLeft: -2.5,
                   }}
                   onPress={() =>
                     this.replies?.toggle(() =>
-                      this.setState({ selectedComment: item })
+                      this.setState({selectedComment: item}),
                     )
                   }
                 >
@@ -632,7 +622,7 @@ export default class VideoPlayer extends React.Component {
                       borderRadius: 40,
                       backgroundColor: colors.notificationColor,
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
                     }}
                   >
                     <Text
@@ -640,7 +630,7 @@ export default class VideoPlayer extends React.Component {
                         fontFamily: 'OpenSans-Regular',
                         fontSize: sizing.descriptionText,
                         color: colors.pianoteRed,
-                        paddingHorizontal: 5
+                        paddingHorizontal: 5,
                       }}
                     >
                       {item.replies?.length}{' '}
@@ -651,7 +641,7 @@ export default class VideoPlayer extends React.Component {
               </View>
               {this.userId === item.user_id && (
                 <TouchableOpacity
-                  style={{ marginLeft: 10 }}
+                  style={{marginLeft: 10}}
                   onPress={() => this.deleteComment(item.id)}
                 >
                   <AntIcon
@@ -667,7 +657,7 @@ export default class VideoPlayer extends React.Component {
             <TouchableOpacity
               onPress={() =>
                 this.replies?.toggle(() =>
-                  this.setState({ selectedComment: item })
+                  this.setState({selectedComment: item}),
                 )
               }
             >
@@ -676,7 +666,7 @@ export default class VideoPlayer extends React.Component {
                   fontFamily: 'OpenSans-Regular',
                   fontSize: sizing.descriptionText,
                   color: colors.secondBackground,
-                  marginBottom: 10
+                  marginBottom: 10,
                 }}
               >
                 VIEW {item.replies?.length}{' '}
@@ -704,7 +694,7 @@ export default class VideoPlayer extends React.Component {
   };
 
   refresh = () => {
-    this.setState({ isLoadingAll: true }, () => {
+    this.setState({isLoadingAll: true}, () => {
       this.getContent();
     });
   };
@@ -713,32 +703,32 @@ export default class VideoPlayer extends React.Component {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    let { selectedAssignment, id } = this.state;
+    let {selectedAssignment, id} = this.state;
     id = selectedAssignment ? selectedAssignment.id : id;
     let res = await resetProgress(id);
     this.setState(state => ({
       showRestartCourse: false,
       selectedAssignment: state.selectedAssignment
-        ? { ...state.selectedAssignment, progress: 0 }
+        ? {...state.selectedAssignment, progress: 0}
         : undefined,
       assignmentList: !selectedAssignment
         ? state.assignmentList.map(a => ({
             ...a,
-            progress: 0
+            progress: 0,
           }))
         : state.assignmentList.map(a =>
             a.id === id
               ? {
                   ...a,
-                  progress: 0
+                  progress: 0,
                 }
-              : a
+              : a,
           ),
       progress: !selectedAssignment
         ? 0
         : res[0].type !== 'course'
         ? res[0].user_progress?.[this.userId]?.progress_percent
-        : state.progress
+        : state.progress,
     }));
   }
 
@@ -747,10 +737,10 @@ export default class VideoPlayer extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     let incompleteAssignments;
-    let { assignmentList, nextLesson } = this.state;
+    let {assignmentList, nextLesson} = this.state;
     if (id !== this.state.id) {
       incompleteAssignments = assignmentList.filter(
-        a => a.progress !== 100 && a.id !== id
+        a => a.progress !== 100 && a.id !== id,
       ).length;
       this.setState(state => ({
         showAssignmentComplete: incompleteAssignments ? true : false,
@@ -760,16 +750,16 @@ export default class VideoPlayer extends React.Component {
         progress: incompleteAssignments ? state.progress : 100,
         selectedAssignment: {
           ...this.state.selectedAssignment,
-          progress: 100
+          progress: 100,
         },
         assignmentList: state.assignmentList.map(a =>
           a.id === id
             ? {
                 ...a,
-                progress: 100
+                progress: 100,
               }
-            : a
-        )
+            : a,
+        ),
       }));
     } else {
       this.setState(state => ({
@@ -778,15 +768,15 @@ export default class VideoPlayer extends React.Component {
         progress: 100,
         assignmentList: state.assignmentList.map(a => ({
           ...a,
-          progress: 100
-        }))
+          progress: 100,
+        })),
       }));
     }
     let res = await markComplete(id);
     if (res?.parent?.[0]) {
       if (res.parent[0].type !== 'course') {
         this.setState({
-          progress: res.parent[0].progress_percent
+          progress: res.parent[0].progress_percent,
         });
       }
     }
@@ -803,7 +793,7 @@ export default class VideoPlayer extends React.Component {
     }
     this.setState({
       isLiked: !this.state.isLiked,
-      likes: this.state.isLiked ? this.state.likes - 1 : this.state.likes + 1
+      likes: this.state.isLiked ? this.state.likes - 1 : this.state.likes + 1,
     });
   };
 
@@ -818,7 +808,7 @@ export default class VideoPlayer extends React.Component {
     }
 
     this.setState({
-      isAddedToMyList: !this.state.isAddedToMyList
+      isAddedToMyList: !this.state.isAddedToMyList,
     });
   };
 
@@ -830,7 +820,7 @@ export default class VideoPlayer extends React.Component {
           onPress={() => {
             let assignment = row;
             assignment.index = index + 1;
-            this.setState({ selectedAssignment: assignment });
+            this.setState({selectedAssignment: assignment});
           }}
           style={{
             paddingHorizontal: 10,
@@ -839,7 +829,7 @@ export default class VideoPlayer extends React.Component {
             borderBottomWidth: 1,
             justifyContent: 'space-between',
             alignItems: 'center',
-            flexDirection: 'row'
+            flexDirection: 'row',
           }}
         >
           <Text
@@ -848,7 +838,7 @@ export default class VideoPlayer extends React.Component {
               fontSize: sizing.verticalListTitleSmall,
               color: colors.secondBackground,
               fontFamily: 'RobotoCondensed-Bold',
-              maxWidth: '90%'
+              maxWidth: '90%',
             }}
           >
             {index + 1}. {row.title}
@@ -858,14 +848,14 @@ export default class VideoPlayer extends React.Component {
             <AntIcon
               name={'checkcircle'}
               size={onTablet ? 25 : 20}
-              style={{ paddingVertical: 5 }}
+              style={{paddingVertical: 5}}
               color={colors.pianoteRed}
             />
           ) : (
             <EntypoIcon
               name={'chevron-thin-right'}
               size={onTablet ? 25 : 20}
-              style={{ paddingVertical: 5 }}
+              style={{paddingVertical: 5}}
               color={colors.secondBackground}
             />
           )}
@@ -887,7 +877,7 @@ export default class VideoPlayer extends React.Component {
       'September',
       'October',
       'November',
-      'December'
+      'December',
     ];
     try {
       let text =
@@ -906,7 +896,7 @@ export default class VideoPlayer extends React.Component {
   };
 
   renderTagsDependingOnContentType = () => {
-    let { artist, xp, type, publishedOn, instructor, style } = this.state;
+    let {artist, xp, type, publishedOn, instructor, style} = this.state;
     if (typeof instructor[0] == 'object') {
       instructor = [instructor[0]?.fields?.[0]?.value];
     }
@@ -947,15 +937,15 @@ export default class VideoPlayer extends React.Component {
   };
 
   render() {
-    let { id, comments, youtubeId } = this.state;
+    let {id, comments, youtubeId} = this.state;
     return (
       <View
         style={[
           {
             backgroundColor: colors.mainBackground,
             width: '100%',
-            height: '100%'
-          }
+            height: '100%',
+          },
         ]}
       >
         <StatusBar backgroundColor={'black'} barStyle={'light-content'} />
@@ -963,8 +953,8 @@ export default class VideoPlayer extends React.Component {
           <>
             {this.state.isLoadingAll ||
             (!this.state.video_playback_endpoints && !youtubeId) ? (
-              <View style={{ backgroundColor: 'black' }}>
-                <View style={{ aspectRatio: 16 / 9, justifyContent: 'center' }}>
+              <View style={{backgroundColor: 'black'}}>
+                <View style={{aspectRatio: 16 / 9, justifyContent: 'center'}}>
                   <TouchableOpacity
                     onPress={() => this.onBack()}
                     style={{
@@ -972,7 +962,7 @@ export default class VideoPlayer extends React.Component {
                       left: 0,
                       padding: 15,
                       position: 'absolute',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
                     }}
                   >
                     <ArrowLeft
@@ -981,7 +971,7 @@ export default class VideoPlayer extends React.Component {
                       fill={'white'}
                     />
                   </TouchableOpacity>
-                  <ActivityIndicator size='large' color='#ffffff' />
+                  <ActivityIndicator size="large" color="#ffffff" />
                 </View>
               </View>
             ) : (
@@ -1003,14 +993,14 @@ export default class VideoPlayer extends React.Component {
                   if (this.state.nextLesson)
                     this.switchLesson(
                       this.state.nextLesson.id,
-                      this.state.nextLesson.post.mobile_app_url
+                      this.state.nextLesson.post.mobile_app_url,
                     );
                 }}
                 goToPreviousLesson={() => {
                   if (this.state.previousLesson)
                     this.switchLesson(
                       this.state.previousLesson.id,
-                      this.state.previousLesson.post.mobile_app_url
+                      this.state.previousLesson.post.mobile_app_url,
                     );
                 }}
                 onUpdateVideoProgress={async (
@@ -1018,7 +1008,7 @@ export default class VideoPlayer extends React.Component {
                   id,
                   lengthInSec,
                   currentTime,
-                  mediaCategory
+                  mediaCategory,
                 ) => {
                   if (!this.context.isConnected) return;
                   updateUsersVideoProgress(
@@ -1027,11 +1017,11 @@ export default class VideoPlayer extends React.Component {
                         videoId,
                         id,
                         lengthInSec,
-                        mediaCategory
+                        mediaCategory,
                       )
                     )?.session_id.id,
                     currentTime,
-                    lengthInSec
+                    lengthInSec,
                   );
                 }}
                 styles={{
@@ -1039,7 +1029,7 @@ export default class VideoPlayer extends React.Component {
                   beforeTimerCursorBackground: colors.pianoteRed,
                   settings: {
                     cancel: {
-                      color: 'black'
+                      color: 'black',
                     },
                     separatorColor: 'rgb(230, 230, 230)',
                     background: 'white',
@@ -1047,9 +1037,9 @@ export default class VideoPlayer extends React.Component {
                     downloadIcon: {
                       width: 20,
                       height: 20,
-                      fill: colors.pianoteRed
-                    }
-                  }
+                      fill: colors.pianoteRed,
+                    },
+                  },
                 }}
               />
             )}
@@ -1057,8 +1047,8 @@ export default class VideoPlayer extends React.Component {
         )}
 
         {!this.state.isLoadingAll ? (
-          <View style={{ flex: 1, backgroundColor: colors.mainBackground }}>
-            <View key={'belowVideo'} style={{ flex: 1 }}>
+          <View style={{flex: 1, backgroundColor: colors.mainBackground}}>
+            <View key={'belowVideo'} style={{flex: 1}}>
               {this.state.selectedAssignment ? (
                 <VideoPlayerSong
                   onSeek={time => this.video?.onSeek?.(time)}
@@ -1066,18 +1056,18 @@ export default class VideoPlayer extends React.Component {
                   assignmentProgress={this.state.selectedAssignment.progress}
                   onAssignmentFullscreen={() =>
                     this.setState({
-                      showVideo: !this.state.showVideo
+                      showVideo: !this.state.showVideo,
                     })
                   }
                   onX={() =>
                     this.setState({
-                      selectedAssignment: null
+                      selectedAssignment: null,
                     })
                   }
                   onCompleteAssignment={() => {
                     if (this.state.selectedAssignment.progress === 100) {
                       this.setState({
-                        showRestartCourse: true
+                        showRestartCourse: true,
                       });
                     } else {
                       this.onComplete(this.state.selectedAssignment.id);
@@ -1089,11 +1079,11 @@ export default class VideoPlayer extends React.Component {
                   innerRef={ref => {
                     this.scroll = ref;
                   }}
-                  keyboardShouldPersistTaps='handled'
+                  keyboardShouldPersistTaps="handled"
                   removeClippedSubviews={false}
                   showsVerticalScrollIndicator={false}
                   contentInsetAdjustmentBehavior={'never'}
-                  onScroll={({ nativeEvent }) => {
+                  onScroll={({nativeEvent}) => {
                     if (
                       Platform.OS === 'android' &&
                       this.isCloseToBottom(nativeEvent)
@@ -1101,7 +1091,7 @@ export default class VideoPlayer extends React.Component {
                       this.loadMoreComments();
                     }
                   }}
-                  onMomentumScrollEnd={({ nativeEvent }) => {
+                  onMomentumScrollEnd={({nativeEvent}) => {
                     if (
                       Platform.OS === 'ios' &&
                       this.isCloseToBottom(nativeEvent)
@@ -1116,10 +1106,10 @@ export default class VideoPlayer extends React.Component {
                       onRefresh={() => this.refresh()}
                     />
                   }
-                  style={{ flex: 1, backgroundColor: colors.mainBackground }}
+                  style={{flex: 1, backgroundColor: colors.mainBackground}}
                 >
                   <View key={'lessonTitle'}>
-                    <View style={{ height: 5 }} />
+                    <View style={{height: 5}} />
                     <Text
                       style={{
                         fontSize: sizing.titleVideoPlayer,
@@ -1128,7 +1118,7 @@ export default class VideoPlayer extends React.Component {
                         fontFamily: 'OpenSans-Bold',
                         textAlign: 'center',
                         color: 'white',
-                        paddingHorizontal: 10
+                        paddingHorizontal: 10,
                       }}
                     >
                       {this.state.lessonTitle}
@@ -1139,7 +1129,7 @@ export default class VideoPlayer extends React.Component {
                         fontFamily: 'OpenSans-Regular',
                         textAlign: 'center',
                         color: colors.secondBackground,
-                        paddingBottom: 20
+                        paddingBottom: 20,
                       }}
                     >
                       {this.renderTagsDependingOnContentType()}
@@ -1147,7 +1137,7 @@ export default class VideoPlayer extends React.Component {
                   </View>
                   <View
                     style={{
-                      paddingHorizontal: 10
+                      paddingHorizontal: 10,
                     }}
                   >
                     <View
@@ -1155,14 +1145,14 @@ export default class VideoPlayer extends React.Component {
                         flex: 1,
                         flexDirection: 'row',
                         justifyContent: 'space-around',
-                        alignContent: 'space-around'
+                        alignContent: 'space-around',
                       }}
                     >
                       <TouchableOpacity
                         onPress={this.likeOrDislikeLesson}
-                        style={{ flex: 1, alignItems: 'center' }}
+                        style={{flex: 1, alignItems: 'center'}}
                       >
-                        <View style={{ flex: 1 }} />
+                        <View style={{flex: 1}} />
                         <AntIcon
                           name={this.state.isLiked ? 'like1' : 'like2'}
                           size={sizing.infoButtonSize}
@@ -1173,7 +1163,7 @@ export default class VideoPlayer extends React.Component {
                             textAlign: 'center',
                             fontSize: sizing.descriptionText,
                             color: 'white',
-                            marginTop: 5
+                            marginTop: 5,
                           }}
                         >
                           {this.state.likes}
@@ -1181,9 +1171,9 @@ export default class VideoPlayer extends React.Component {
                       </TouchableOpacity>
                       <TouchableOpacity
                         onPress={this.toggleMyList}
-                        style={{ flex: 1, alignItems: 'center' }}
+                        style={{flex: 1, alignItems: 'center'}}
                       >
-                        <View style={{ flex: 1 }} />
+                        <View style={{flex: 1}} />
                         <AntIcon
                           name={this.state.isAddedToMyList ? 'close' : 'plus'}
                           size={sizing.myListButtonSize}
@@ -1194,7 +1184,7 @@ export default class VideoPlayer extends React.Component {
                             textAlign: 'center',
                             fontSize: sizing.descriptionText,
                             color: 'white',
-                            marginTop: 2
+                            marginTop: 2,
                           }}
                         >
                           {this.state.isAddedToMyList ? 'Added' : 'My List'}
@@ -1204,12 +1194,12 @@ export default class VideoPlayer extends React.Component {
                         <TouchableOpacity
                           onPress={() =>
                             this.setState({
-                              showResDownload: true
+                              showResDownload: true,
                             })
                           }
-                          style={{ flex: 1, alignItems: 'center' }}
+                          style={{flex: 1, alignItems: 'center'}}
                         >
-                          <View style={{ flex: 1 }} />
+                          <View style={{flex: 1}} />
                           <Resources
                             height={sizing.infoButtonSize}
                             width={sizing.infoButtonSize}
@@ -1220,7 +1210,7 @@ export default class VideoPlayer extends React.Component {
                               textAlign: 'center',
                               fontSize: sizing.descriptionText,
                               color: 'white',
-                              marginTop: 5
+                              marginTop: 5,
                             }}
                           >
                             Resources
@@ -1233,13 +1223,13 @@ export default class VideoPlayer extends React.Component {
                           comments,
                           content: this.props.route?.params?.url
                             ? methodService.getMethodContent(this.state.url)
-                            : contentService.getContent(this.state.id)
+                            : contentService.getContent(this.state.id),
                         }}
                         styles={{
-                          touchable: { flex: 1 },
+                          touchable: {flex: 1},
                           iconSize: {
                             width: sizing.myListButtonSize,
-                            height: sizing.myListButtonSize
+                            height: sizing.myListButtonSize,
                           },
                           iconDownloadColor: colors.pianoteRed,
                           activityIndicatorColor: colors.pianoteRed,
@@ -1247,7 +1237,7 @@ export default class VideoPlayer extends React.Component {
                           textStatus: {
                             color: '#ffffff',
                             fontSize: sizing.descriptionText,
-                            fontFamily: 'OpenSans-Regular'
+                            fontFamily: 'OpenSans-Regular',
                           },
                           alert: {
                             alertTextMessageFontFamily: 'OpenSans-Regular',
@@ -1259,22 +1249,22 @@ export default class VideoPlayer extends React.Component {
                             alertTouchableDeleteBackground: colors.pianoteRed,
                             alertBackground: 'white',
                             alertTouchableTextDeleteFontFamily: 'OpenSans-Bold',
-                            alertTouchableTextCancelFontFamily: 'OpenSans-Bold'
-                          }
+                            alertTouchableTextCancelFontFamily: 'OpenSans-Bold',
+                          },
                         }}
                       />
                       <TouchableOpacity
                         onPress={() =>
                           this.setState({
-                            showInfo: !this.state.showInfo
+                            showInfo: !this.state.showInfo,
                           })
                         }
                         style={{
                           flex: 1,
-                          alignItems: 'center'
+                          alignItems: 'center',
                         }}
                       >
-                        <View style={{ flex: 1 }} />
+                        <View style={{flex: 1}} />
                         <AntIcon
                           name={
                             this.state.showInfo ? 'infocirlce' : 'infocirlceo'
@@ -1287,7 +1277,7 @@ export default class VideoPlayer extends React.Component {
                             textAlign: 'center',
                             fontSize: sizing.descriptionText,
                             color: 'white',
-                            marginTop: 5
+                            marginTop: 5,
                           }}
                         >
                           Info
@@ -1305,7 +1295,7 @@ export default class VideoPlayer extends React.Component {
                             fontFamily: 'OpenSans-Regular',
                             fontSize: sizing.descriptionText,
                             textAlign: 'left',
-                            color: 'white'
+                            color: 'white',
                           }}
                         >
                           {this.state.description}
@@ -1314,7 +1304,7 @@ export default class VideoPlayer extends React.Component {
                           <TouchableOpacity
                             style={{
                               alignSelf: 'flex-start',
-                              paddingVertical: 5
+                              paddingVertical: 5,
                             }}
                             onPress={() =>
                               this.video?.onSeek?.(item.chapter_timecode)
@@ -1327,13 +1317,13 @@ export default class VideoPlayer extends React.Component {
                                 fontSize: sizing.descriptionText,
                                 marginTop: 5,
                                 paddingHorizontal: 10,
-                                textAlign: 'left'
+                                textAlign: 'left',
                               }}
                             >
                               <Text
                                 style={{
                                   color: '#007AFF',
-                                  textDecorationLine: 'underline'
+                                  textDecorationLine: 'underline',
                                 }}
                               >
                                 {this.secondsToTime(item.chapter_timecode)}
@@ -1346,18 +1336,18 @@ export default class VideoPlayer extends React.Component {
                     )}
                   </View>
                   {this.state.assignmentList?.length > 0 && (
-                    <View style={{ marginTop: 20, marginBottom: 10 }}>
+                    <View style={{marginTop: 20, marginBottom: 10}}>
                       <View
                         style={{
                           paddingLeft: 10,
-                          paddingBottom: 10
+                          paddingBottom: 10,
                         }}
                       >
                         <Text
                           style={{
                             fontSize: sizing.verticalListTitleSmall,
                             fontFamily: 'RobotoCondensed-Bold',
-                            color: colors.secondBackground
+                            color: colors.secondBackground,
                           }}
                         >
                           ASSIGNMENTS
@@ -1368,14 +1358,14 @@ export default class VideoPlayer extends React.Component {
                         style={{
                           width: '100%',
                           borderTopColor: colors.secondBackground,
-                          borderTopWidth: 1
+                          borderTopWidth: 1,
                         }}
                       >
                         {this.renderAssignments()}
                       </View>
                     </View>
                   )}
-                  <View style={{ height: 10 }} />
+                  <View style={{height: 10}} />
                   {this.state.relatedLessons.length > 0 && (
                     <VerticalVideoList
                       title={'RELATED LESSONS'}
@@ -1402,16 +1392,16 @@ export default class VideoPlayer extends React.Component {
                         flex: 1,
                         width: '100%',
                         zIndex: 10,
-                        marginTop: 10
-                      }
+                        marginTop: 10,
+                      },
                     ]}
                   >
-                    <View style={{ flex: 1 }}>
+                    <View style={{flex: 1}}>
                       <View
                         style={{
                           width: '100%',
                           backgroundColor: colors.mainBackground,
-                          zIndex: 5
+                          zIndex: 5,
                         }}
                       >
                         <View
@@ -1419,14 +1409,14 @@ export default class VideoPlayer extends React.Component {
                             flexDirection: 'row',
                             flex: 1,
                             justifyContent: 'space-between',
-                            paddingHorizontal: 10
+                            paddingHorizontal: 10,
                           }}
                         >
                           <Text
                             style={{
                               fontSize: sizing.verticalListTitleSmall,
                               fontFamily: 'RobotoCondensed-Bold',
-                              color: colors.secondBackground
+                              color: colors.secondBackground,
                             }}
                           >
                             {this.allCommentsNum + ' COMMENTS'}
@@ -1434,7 +1424,7 @@ export default class VideoPlayer extends React.Component {
                           {global.isConnected && (
                             <TouchableOpacity
                               onPress={() =>
-                                this.setState({ showCommentSort: true })
+                                this.setState({showCommentSort: true})
                               }
                             >
                               <FontIcon
@@ -1451,26 +1441,26 @@ export default class VideoPlayer extends React.Component {
                             width: '100%',
                             flexDirection: 'row',
                             paddingHorizontal: 10,
-                            paddingVertical: 20
+                            paddingVertical: 20,
                           }}
                         >
                           <TouchableOpacity
                             onPress={() =>
-                              this.setState({ showMakeComment: true })
+                              this.setState({showMakeComment: true})
                             }
-                            style={{ flexDirection: 'row', flex: 1 }}
+                            style={{flexDirection: 'row', flex: 1}}
                           >
                             <FastImage
                               style={{
                                 height: onTablet ? 60 : 40,
                                 width: onTablet ? 60 : 40,
                                 paddingVertical: 10,
-                                borderRadius: 100
+                                borderRadius: 100,
                               }}
                               source={{
                                 uri:
                                   this.state.profileImage ||
-                                  'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                                  'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png',
                               }}
                               resizeMode={FastImage.resizeMode.stretch}
                             />
@@ -1478,7 +1468,7 @@ export default class VideoPlayer extends React.Component {
                             <View
                               style={{
                                 flex: 1,
-                                justifyContent: 'center'
+                                justifyContent: 'center',
                               }}
                             >
                               <Text
@@ -1487,7 +1477,7 @@ export default class VideoPlayer extends React.Component {
                                   fontFamily: 'OpenSans-Regular',
                                   fontSize: sizing.descriptionText,
                                   color: 'white',
-                                  paddingLeft: 10
+                                  paddingLeft: 10,
                                 }}
                               >
                                 Add a comment...
@@ -1498,8 +1488,8 @@ export default class VideoPlayer extends React.Component {
                       </View>
                       {this.state.isLoadingComm && (
                         <ActivityIndicator
-                          size='small'
-                          style={{ padding: 10 }}
+                          size="small"
+                          style={{padding: 10}}
                           color={colors.secondBackground}
                         />
                       )}
@@ -1515,53 +1505,53 @@ export default class VideoPlayer extends React.Component {
                 commentsService
                   .addReplyToComment(
                     encodeURIComponent(reply),
-                    this.state.selectedComment.id
+                    this.state.selectedComment.id,
                   )
                   .then(r =>
-                    this.setState(({ comments, selectedComment }) => ({
+                    this.setState(({comments, selectedComment}) => ({
                       comments: comments.map(c =>
                         c.id === selectedComment.id
                           ? {
                               ...c,
-                              replies: [r.data[0], ...c.replies]
+                              replies: [r.data[0], ...c.replies],
                             }
-                          : c
+                          : c,
                       ),
                       selectedComment: {
                         ...selectedComment,
-                        replies: [r.data[0], ...selectedComment.replies]
-                      }
-                    }))
+                        replies: [r.data[0], ...selectedComment.replies],
+                      },
+                    })),
                   )
               }
               deleteReply={id => {
                 commentsService.deleteComment(id);
-                this.setState(({ comments, selectedComment }) => ({
+                this.setState(({comments, selectedComment}) => ({
                   comments: comments.map(c => ({
                     ...c,
-                    replies: c.replies.filter(r => r.id !== id)
+                    replies: c.replies.filter(r => r.id !== id),
                   })),
                   selectedComment: {
                     ...selectedComment,
-                    replies: selectedComment.replies.filter(r => r.id !== id)
-                  }
+                    replies: selectedComment.replies.filter(r => r.id !== id),
+                  },
                 }));
               }}
               deleteComment={id => {
                 commentsService.deleteComment(id);
                 this.setState(
-                  ({ comments }) => ({
-                    comments: comments.filter(c => c.id !== id)
+                  ({comments}) => ({
+                    comments: comments.filter(c => c.id !== id),
                   }),
                   () =>
                     this.replies?.toggle(() =>
-                      this.setState({ selectedComment: undefined })
-                    )
+                      this.setState({selectedComment: undefined}),
+                    ),
                 );
               }}
               toggleCommentLike={(id, action) => {
                 commentsService[action](id);
-                this.setState(({ comments, selectedComment }) => ({
+                this.setState(({comments, selectedComment}) => ({
                   comments: comments.map(c =>
                     c.id === id
                       ? {
@@ -1569,22 +1559,22 @@ export default class VideoPlayer extends React.Component {
                           is_liked: !c.is_liked,
                           like_count: c.is_liked
                             ? c.like_count - 1
-                            : c.like_count + 1
+                            : c.like_count + 1,
                         }
-                      : c
+                      : c,
                   ),
                   selectedComment: {
                     ...selectedComment,
                     is_liked: !selectedComment.is_liked,
                     like_count: selectedComment.is_liked
                       ? selectedComment.like_count - 1
-                      : selectedComment.like_count + 1
-                  }
+                      : selectedComment.like_count + 1,
+                  },
                 }));
               }}
               toggleReplyLike={(id, action) => {
                 commentsService[action](id);
-                this.setState(({ comments, selectedComment }) => ({
+                this.setState(({comments, selectedComment}) => ({
                   comments: comments.map(c => ({
                     ...c,
                     replies: c.replies.map(r =>
@@ -1594,10 +1584,10 @@ export default class VideoPlayer extends React.Component {
                             is_liked: !r.is_liked,
                             like_count: r.is_liked
                               ? r.like_count - 1
-                              : r.like_count + 1
+                              : r.like_count + 1,
                           }
-                        : r
-                    )
+                        : r,
+                    ),
                   })),
                   selectedComment: {
                     ...selectedComment,
@@ -1608,30 +1598,30 @@ export default class VideoPlayer extends React.Component {
                             is_liked: !r.is_liked,
                             like_count: r.is_liked
                               ? r.like_count - 1
-                              : r.like_count + 1
+                              : r.like_count + 1,
                           }
-                        : r
-                    )
-                  }
+                        : r,
+                    ),
+                  },
                 }));
               }}
               close={() =>
                 this.replies.toggle(() =>
-                  this.setState({ selectedComment: undefined })
+                  this.setState({selectedComment: undefined}),
                 )
               }
               ref={r => (this.replies = r)}
               comment={this.state.selectedComment}
               me={{
                 userId: this.userId,
-                profileImage: this.state.profileImage
+                profileImage: this.state.profileImage,
               }}
             />
           </View>
         ) : (
           <ActivityIndicator
-            size='small'
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+            size="small"
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
             color={colors.secondBackground}
           />
         )}
@@ -1639,20 +1629,20 @@ export default class VideoPlayer extends React.Component {
           <View
             style={[
               {
-                backgroundColor: colors.mainBackground
-              }
+                backgroundColor: colors.mainBackground,
+              },
             ]}
           >
             <View
               style={{
                 backgroundColor: colors.mainBackground,
                 height: 2,
-                width: '100%'
+                width: '100%',
               }}
             >
               {!!this.state.progress && (
                 <View
-                  testID='progress'
+                  testID="progress"
                   style={[
                     styles.progressBarCompleted,
                     {
@@ -1661,13 +1651,13 @@ export default class VideoPlayer extends React.Component {
                       alignItems: 'flex-end',
                       justifyContent: 'center',
                       position: 'relative',
-                      width: this.state.progress + '%'
-                    }
+                      width: this.state.progress + '%',
+                    },
                   ]}
                 />
               )}
             </View>
-            <View style={{ height: 5 }} />
+            <View style={{height: 5}} />
             <View
               style={{
                 flexDirection: 'row',
@@ -1675,11 +1665,11 @@ export default class VideoPlayer extends React.Component {
                 justifyContent: 'space-evenly',
                 paddingVertical: 5,
                 paddingHorizontal: 10,
-                marginBottom: DeviceInfo.hasNotch() ? 20 : 0
+                marginBottom: DeviceInfo.hasNotch() ? 20 : 0,
               }}
             >
               <TouchableOpacity
-                testID='prevBtn'
+                testID="prevBtn"
                 style={{
                   borderRadius: 500,
                   borderWidth: 2,
@@ -1688,20 +1678,20 @@ export default class VideoPlayer extends React.Component {
                   marginRight: 10,
                   borderColor: this.state.previousLesson
                     ? colors.pianoteRed
-                    : colors.secondBackground
+                    : colors.secondBackground,
                 }}
                 disabled={!this.state.previousLesson?.id}
                 onPress={() =>
                   this.switchLesson(
                     this.state.previousLesson.id,
-                    this.state.previousLesson.post.mobile_app_url
+                    this.state.previousLesson.post.mobile_app_url,
                   )
                 }
               >
                 <EntypoIcon
                   name={'chevron-thin-left'}
                   size={onTablet ? 22.5 : 17.5}
-                  style={{ padding: 5 }}
+                  style={{padding: 5}}
                   color={
                     this.state.previousLesson
                       ? colors.pianoteRed
@@ -1717,12 +1707,12 @@ export default class VideoPlayer extends React.Component {
                     borderRadius: 500,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    flex: 1
-                  }
+                    flex: 1,
+                  },
                 ]}
                 onPress={() =>
                   this.state.progress === 100
-                    ? this.setState({ showRestartCourse: true })
+                    ? this.setState({showRestartCourse: true})
                     : this.onComplete(this.state.id)
                 }
               >
@@ -1730,7 +1720,7 @@ export default class VideoPlayer extends React.Component {
                   style={{
                     color: 'white',
                     fontFamily: 'RobotoCondensed-Bold',
-                    fontSize: sizing.verticalListTitleSmall
+                    fontSize: sizing.verticalListTitleSmall,
                   }}
                 >
                   {this.state.progress === 100
@@ -1739,7 +1729,7 @@ export default class VideoPlayer extends React.Component {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                testID='prevBtn'
+                testID="prevBtn"
                 style={{
                   borderRadius: 500,
                   borderWidth: 2,
@@ -1748,20 +1738,20 @@ export default class VideoPlayer extends React.Component {
                   marginLeft: 10,
                   borderColor: this.state.nextLesson
                     ? colors.pianoteRed
-                    : colors.secondBackground
+                    : colors.secondBackground,
                 }}
                 disabled={!this.state.nextLesson?.id}
                 onPress={() =>
                   this.switchLesson(
                     this.state.nextLesson.id,
-                    this.state.nextLesson.post.mobile_app_url
+                    this.state.nextLesson.post.mobile_app_url,
                   )
                 }
               >
                 <EntypoIcon
                   name={'chevron-thin-right'}
                   size={onTablet ? 22.5 : 17.5}
-                  style={{ padding: 5 }}
+                  style={{padding: 5}}
                   color={
                     this.state.nextLesson
                       ? colors.pianoteRed
@@ -1787,7 +1777,7 @@ export default class VideoPlayer extends React.Component {
               title={this.state.selectedAssignment.title}
               xp={this.state.selectedAssignment.xp}
               hideAssignmentComplete={() => {
-                this.setState({ showAssignmentComplete: false });
+                this.setState({showAssignmentComplete: false});
               }}
             />
           </Modal>
@@ -1798,8 +1788,8 @@ export default class VideoPlayer extends React.Component {
           style={[
             styles.modalContainer,
             {
-              justifyContent: 'flex-end'
-            }
+              justifyContent: 'flex-end',
+            },
           ]}
           animation={'slideInUp'}
           animationInTiming={350}
@@ -1811,13 +1801,13 @@ export default class VideoPlayer extends React.Component {
             styles={{
               container: {
                 backgroundColor: colors.mainBackground,
-                width: '100%'
+                width: '100%',
               },
               touchableTextResourceNameFontFamily: 'OpenSans',
               touchableTextResourceExtensionFontFamily: 'OpenSans',
               touchableTextResourceCancelFontFamily: 'OpenSans',
               borderColor: colors.secondBackground,
-              color: '#ffffff'
+              color: '#ffffff',
             }}
             resources={this.state.resources}
             lessonTitle={this.state.lessonTitle}
@@ -1825,11 +1815,11 @@ export default class VideoPlayer extends React.Component {
               new Promise(res =>
                 this.setState(
                   {
-                    showResDownload: false
+                    showResDownload: false,
                   },
                   () =>
-                    Platform.OS === 'ios' ? (this.modalDismissed = res) : res()
-                )
+                    Platform.OS === 'ios' ? (this.modalDismissed = res) : res(),
+                ),
               );
             }}
           />
@@ -1853,14 +1843,14 @@ export default class VideoPlayer extends React.Component {
                 type={this.state.type}
                 nextLesson={this.state.nextLesson}
                 hideLessonComplete={() => {
-                  this.setState({ showLessonComplete: false });
+                  this.setState({showLessonComplete: false});
                 }}
                 onGoToNext={() => {
-                  this.setState({ showLessonComplete: false });
+                  this.setState({showLessonComplete: false});
                   if (this.state.nextLesson) {
                     this.switchLesson(
                       this.state.nextLesson.id,
-                      this.state.nextLesson.post.mobile_app_url
+                      this.state.nextLesson.post.mobile_app_url,
                     );
                   }
                 }}
@@ -1877,7 +1867,7 @@ export default class VideoPlayer extends React.Component {
             >
               <RestartCourse
                 hideRestartCourse={() =>
-                  this.setState({ showRestartCourse: false })
+                  this.setState({showRestartCourse: false})
                 }
                 type={
                   this.state.selectedAssignment ? 'assignment' : this.state.type
@@ -1904,7 +1894,7 @@ export default class VideoPlayer extends React.Component {
                 }
                 hideOverviewComplete={() => {
                   this.setState({
-                    showOverviewComplete: false
+                    showOverviewComplete: false,
                   });
                 }}
                 onGoToNext={() => {}}
@@ -1926,11 +1916,11 @@ export default class VideoPlayer extends React.Component {
         >
           <CommentSort
             hideCommentSort={() => {
-              this.setState({ showCommentSort: false });
+              this.setState({showCommentSort: false});
             }}
             currentSort={this.state.commentSort}
             changeSort={commentSort => {
-              this.setState({ commentSort }, () => {
+              this.setState({commentSort}, () => {
                 this.limit = 10;
                 this.fetchComments();
               });
@@ -1949,7 +1939,7 @@ export default class VideoPlayer extends React.Component {
           <SoundSlice
             hideSoundSlice={() => {
               this.setState({
-                showSoundSlice: false
+                showSoundSlice: false,
               });
             }}
           />
@@ -1965,7 +1955,7 @@ export default class VideoPlayer extends React.Component {
               style={{
                 marginTop: 10,
                 borderRadius: 50,
-                backgroundColor: colors.pianoteRed
+                backgroundColor: colors.pianoteRed,
               }}
             >
               <Text
@@ -1974,8 +1964,8 @@ export default class VideoPlayer extends React.Component {
                   {
                     padding: 15,
                     fontSize: 15,
-                    color: '#ffffff'
-                  }
+                    color: '#ffffff',
+                  },
                 ]}
               >
                 RELOAD LESSON
@@ -1996,15 +1986,15 @@ export default class VideoPlayer extends React.Component {
             coverScreen={false}
             hasBackdrop={true}
             transparent={true}
-            onBackdropPress={() => this.setState({ showMakeComment: false })}
+            onBackdropPress={() => this.setState({showMakeComment: false})}
           >
             <TouchableOpacity
-              style={{ flex: 1 }}
-              onPress={() => this.setState({ showMakeComment: false })}
+              style={{flex: 1}}
+              onPress={() => this.setState({showMakeComment: false})}
             >
               <KeyboardAvoidingView
                 behavior={`${isiOS ? 'padding' : ''}`}
-                style={{ flex: 1, justifyContent: 'flex-end' }}
+                style={{flex: 1, justifyContent: 'flex-end'}}
               >
                 <View
                   style={{
@@ -2013,7 +2003,7 @@ export default class VideoPlayer extends React.Component {
                     padding: 10,
                     alignItems: 'center',
                     borderTopWidth: 0.5,
-                    borderTopColor: colors.secondBackground
+                    borderTopColor: colors.secondBackground,
                   }}
                 >
                   <FastImage
@@ -2022,12 +2012,12 @@ export default class VideoPlayer extends React.Component {
                       width: onTablet ? 60 : 40,
                       paddingVertical: 10,
                       borderRadius: 100,
-                      marginRight: 10
+                      marginRight: 10,
                     }}
                     source={{
                       uri:
                         this.state.profileImage ||
-                        'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                        'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png',
                     }}
                     resizeMode={FastImage.resizeMode.stretch}
                   />
@@ -2040,20 +2030,20 @@ export default class VideoPlayer extends React.Component {
                       flex: 1,
                       backgroundColor: colors.mainBackground,
                       color: colors.secondBackground,
-                      paddingVertical: 10
+                      paddingVertical: 10,
                     }}
                     onSubmitEditing={() => {
                       this.makeComment();
                     }}
                     returnKeyType={'go'}
-                    onChangeText={comment => this.setState({ comment })}
+                    onChangeText={comment => this.setState({comment})}
                     placeholder={'Add a comment'}
                     placeholderTextColor={colors.secondBackground}
                   />
                   <TouchableOpacity
                     style={{
                       marginBottom: Platform.OS == 'android' ? 10 : 0,
-                      marginLeft: 20
+                      marginLeft: 20,
                     }}
                     onPress={() => this.makeComment()}
                   >

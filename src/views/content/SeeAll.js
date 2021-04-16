@@ -1,6 +1,3 @@
-/**
- * SeeAll
- */
 import React from 'react';
 import {
   View,
@@ -28,11 +25,7 @@ import {goBack} from '../../../AppNavigator.js';
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
-// correlates to filters
 const typeDict = {
   'My List': 'MYLIST',
   Packs: 'PACKS',
@@ -55,16 +48,15 @@ export default class SeeAll extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: props.route?.params?.title, // In Progress, Completed, Continue
-      parent: props.route?.params?.parent, // My List, Packs, Student Focus, Foundations, Courses
+      title: props.route?.params?.title,
+      parent: props.route?.params?.parent,
       allLessons: [],
       currentSort: 'newest',
       page: 1,
       outVideos: false,
       refreshing: false,
-      isLoadingAll: true, // all lessons
-      isPaging: false, // scrolling more
-      filtering: false, // filtering
+      isLoadingAll: true,
+      isPaging: false,
     };
   }
 
@@ -77,7 +69,6 @@ export default class SeeAll extends React.Component {
   }
 
   async getAllLessons(loadMore) {
-    this.setState({filtering: true});
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -197,7 +188,6 @@ export default class SeeAll extends React.Component {
       page: this.state.page + 1,
       isLoadingAll: false,
       refreshing: false,
-      filtering: false,
       isPaging: false,
     }));
   }

@@ -1,6 +1,3 @@
-/**
- * VideoPlayerSong
- */
 import React from 'react';
 import {
   View,
@@ -8,7 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Modal from 'react-native-modal';
@@ -16,25 +13,21 @@ import SoundSlice from '../../components/SoundSlice.js';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import AssignmentResource from './AssignmentResource.js';
 import downloadService from '../../services/download.service.js';
-import { NetworkContext } from '../../context/NetworkProvider';
+import {NetworkContext} from '../../context/NetworkProvider';
 
 const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 export default class VideoPlayerSong extends React.Component {
   static contextType = NetworkContext;
-
   constructor(props) {
     super(props);
     this.state = {
       hideTitles: false,
       showSheets: false,
       showSoundSlice: false,
-      assignment: props.assignment
+      assignment: props.assignment,
     };
   }
 
@@ -42,17 +35,17 @@ export default class VideoPlayerSong extends React.Component {
     if (this.context.isConnected)
       downloadService.getAssignWHRatio([this.state.assignment]).then(sheets =>
         this.setState({
-          assignment: { ...this.state.assignment, sheets },
-          showSheets: true
-        })
+          assignment: {...this.state.assignment, sheets},
+          showSheets: true,
+        }),
       );
-    else this.setState({ showSheets: true });
+    else this.setState({showSheets: true});
   }
 
   render() {
     let {
       showSheets,
-      assignment: { slug, index, title, sheets, timeCodes, description }
+      assignment: {slug, index, title, sheets, timeCodes, description},
     } = this.state;
     return (
       <>
@@ -61,7 +54,7 @@ export default class VideoPlayerSong extends React.Component {
           contentInsetAdjustmentBehavior={'never'}
           style={{
             flex: 1,
-            backgroundColor: colors.mainBackground
+            backgroundColor: colors.mainBackground,
           }}
         >
           {!this.state.hideTitles && (
@@ -72,7 +65,7 @@ export default class VideoPlayerSong extends React.Component {
                   position: 'absolute',
                   right: 10,
                   top: 10,
-                  zIndex: 1
+                  zIndex: 1,
                 }}
               >
                 <AntIcon
@@ -87,7 +80,7 @@ export default class VideoPlayerSong extends React.Component {
                   fontFamily: 'OpenSans-Bold',
                   fontSize: sizing.verticalListTitleSmall,
                   textAlign: 'center',
-                  color: colors.secondBackground
+                  color: colors.secondBackground,
                 }}
               >
                 ASSIGNMENT #{index}
@@ -98,20 +91,20 @@ export default class VideoPlayerSong extends React.Component {
                   fontFamily: 'OpenSans-Bold',
                   textAlign: 'center',
                   color: 'white',
-                  paddingHorizontal: 10
+                  paddingHorizontal: 10,
                 }}
               >
                 {title}
               </Text>
-              <View style={{ height: 10 }} />
+              <View style={{height: 10}} />
               {timeCodes?.map(tc => (
                 <View
                   style={[
                     styles.centerContent,
                     {
                       height: height * 0.025,
-                      width: '100%'
-                    }
+                      width: '100%',
+                    },
                   ]}
                 >
                   <View
@@ -122,8 +115,8 @@ export default class VideoPlayerSong extends React.Component {
                         height: '100%',
                         borderRadius: 30,
                         backgroundColor: '#ececec',
-                        alignSelf: 'center'
-                      }
+                        alignSelf: 'center',
+                      },
                     ]}
                   >
                     <TouchableOpacity
@@ -133,8 +126,8 @@ export default class VideoPlayerSong extends React.Component {
                         {
                           height: '100%',
                           width: '100%',
-                          alignItems: 'center'
-                        }
+                          alignItems: 'center',
+                        },
                       ]}
                     >
                       <Text
@@ -143,7 +136,7 @@ export default class VideoPlayerSong extends React.Component {
                           fontWeight: '700',
                           color: 'grey',
                           fontSize: sizing.descriptionText,
-                          alignSelf: 'center'
+                          alignSelf: 'center',
                         }}
                       >
                         SKIP VIDEO TO {formatTimeHHMMSS(tc.value)}
@@ -157,11 +150,11 @@ export default class VideoPlayerSong extends React.Component {
                 style={{
                   height: 1,
                   borderBottomColor: colors.secondBackground,
-                  borderBottomWidth: 1
+                  borderBottomWidth: 1,
                 }}
               />
               {description !== 'TBD' && (
-                <View key={'blurb'} style={{ width: '100%' }}>
+                <View key={'blurb'} style={{width: '100%'}}>
                   <Text
                     style={{
                       paddingVertical: '2%',
@@ -169,7 +162,7 @@ export default class VideoPlayerSong extends React.Component {
                       textAlign: 'center',
                       fontSize: sizing.descriptionText,
                       fontFamily: 'OpenSans-Regular',
-                      color: '#ffffff'
+                      color: '#ffffff',
                     }}
                   >
                     {description}
@@ -184,25 +177,25 @@ export default class VideoPlayerSong extends React.Component {
               data={sheets}
               onDoubleTap={() => {
                 this.setState({
-                  hideTitles: !this.state.hideTitles
+                  hideTitles: !this.state.hideTitles,
                 });
                 this.props.onAssignmentFullscreen();
               }}
             />
           ) : (
-            <ActivityIndicator size='large' color={colors.secondBackground} />
+            <ActivityIndicator size="large" color={colors.secondBackground} />
           )}
         </ScrollView>
         {!this.state.hideTitles && this.context.isConnected && (
           <View
             style={{
               backgroundColor: colors.mainBackground,
-              paddingVertical: 10
+              paddingVertical: 10,
             }}
           >
             {slug && (
               <TouchableOpacity
-                onPress={() => this.setState({ showSoundSlice: true })}
+                onPress={() => this.setState({showSoundSlice: true})}
                 style={[
                   styles.centerContent,
                   styles.heightButtons,
@@ -213,15 +206,15 @@ export default class VideoPlayerSong extends React.Component {
                     alignSelf: 'center',
                     borderRadius: 300,
                     paddingHorizontal: 10,
-                    marginBottom: 7.5
-                  }
+                    marginBottom: 7.5,
+                  },
                 ]}
               >
                 <Text
                   style={{
                     color: '#fb1b2f',
                     fontFamily: 'RobotoCondensed-Bold',
-                    fontSize: sizing.verticalListTitleSmall
+                    fontSize: sizing.verticalListTitleSmall,
                   }}
                 >
                   PRACTICE
@@ -237,8 +230,8 @@ export default class VideoPlayerSong extends React.Component {
                   backgroundColor: '#fb1b2f',
                   width: '90%',
                   alignSelf: 'center',
-                  borderRadius: 300
-                }
+                  borderRadius: 300,
+                },
               ]}
             >
               <Text
@@ -246,7 +239,7 @@ export default class VideoPlayerSong extends React.Component {
                   color: 'white',
                   fontFamily: 'RobotoCondensed-Bold',
                   fontSize: sizing.verticalListTitleSmall,
-                  paddingVertical: 10
+                  paddingVertical: 10,
                 }}
               >
                 {this.props.assignmentProgress === 100
@@ -268,7 +261,7 @@ export default class VideoPlayerSong extends React.Component {
           <SoundSlice
             hideSoundSlice={() => {
               this.setState({
-                showSoundSlice: false
+                showSoundSlice: false,
               });
             }}
             slug={slug}

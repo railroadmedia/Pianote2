@@ -1,32 +1,28 @@
-/**
- * Search
- */
 import React from 'react';
 import {
   View,
   Text,
   TextInput,
-  Animated,
   TouchableOpacity,
   ScrollView,
   Dimensions,
   ActivityIndicator,
-  StatusBar
+  StatusBar,
 } from 'react-native';
-import { ContentModel } from '@musora/models';
+import {ContentModel} from '@musora/models';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-community/async-storage';
-import { SafeAreaView } from 'react-navigation';
+import {SafeAreaView} from 'react-navigation';
 import NavigationBar from '../../components/NavigationBar';
 import VerticalVideoList from '../../components/VerticalVideoList';
-import { searchContent } from '../../services/GetContent';
-import { NetworkContext } from '../../context/NetworkProvider';
+import {searchContent} from '../../services/GetContent';
+import {NetworkContext} from '../../context/NetworkProvider';
 
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
-const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
   const paddingToBottom = 20;
   return (
     layoutMeasurement.height + contentOffset.y >=
@@ -40,19 +36,18 @@ export default class Search extends React.Component {
     super(props);
     this.state = {
       recentSearchResults: [],
-
       searchResults: [],
-      currentSort: 'newest',
-      page: 1,
       outVideos: false,
-      isLoadingAll: false, // all lessons
-      isPaging: false, // scrolling more
-      filtering: false, // filtering
+      isLoadingAll: false,
+      isPaging: false,
+      filtering: false,
       searchEntered: false,
       showCancel: false,
       noResults: false,
       numSearchResults: null,
-      searchTerm: ''
+      page: 1,
+      currentSort: 'newest',
+      searchTerm: '',
     };
     const url = props.route?.params?.url;
     if (url && url.includes('term=')) {
@@ -64,11 +59,10 @@ export default class Search extends React.Component {
   }
 
   async componentDidMount() {
-    // get recent searches from memory
     let recentSearchResults = await AsyncStorage.getItem('recentSearches');
     if (recentSearchResults) {
       recentSearchResults = await JSON.parse(recentSearchResults);
-      this.setState({ recentSearchResults });
+      this.setState({recentSearchResults});
     }
   }
 
@@ -84,14 +78,14 @@ export default class Search extends React.Component {
             borderBottomWidth: 0,
             borderTopWidth: 1.25,
             borderBottomColor: colors.thirdBackground,
-            borderTopColor: colors.thirdBackground
+            borderTopColor: colors.thirdBackground,
           }}
         >
           <TouchableOpacity
             onPress={() => this.clickSearchRecent(row[0])}
             style={{
               justifyContent: 'center',
-              paddingLeft: 10
+              paddingLeft: 10,
             }}
           >
             <Text
@@ -99,7 +93,7 @@ export default class Search extends React.Component {
                 color: 'white',
                 fontSize: onTablet ? 20 : 14,
                 fontFamily: 'OpenSans-Bold',
-                paddingVertical: 10
+                paddingVertical: 10,
               }}
             >
               {row[0]}
@@ -114,7 +108,7 @@ export default class Search extends React.Component {
             justifyContent: 'center',
             paddingLeft: 10,
             borderTopWidth: 0.5,
-            borderTopColor: colors.secondBackground
+            borderTopColor: colors.secondBackground,
           }}
         >
           <Text
@@ -123,7 +117,7 @@ export default class Search extends React.Component {
               fontFamily: 'OpenSans-Regular',
               fontWeight: 'bold',
               color: 'white',
-              paddingTop: 10
+              paddingTop: 10,
             }}
           >
             No Recent Searches
@@ -137,14 +131,14 @@ export default class Search extends React.Component {
     if (this.context && !this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    this.setState({ filtering: true });
+    this.setState({filtering: true});
 
     let term = this.state.searchTerm;
     if (term.length > 0) {
       var isNewTerm = true;
 
       if (this.state.searchResults == 0) {
-        this.setState({ isLoadingAll: true });
+        this.setState({isLoadingAll: true});
       }
 
       for (i in this.state.recentSearchResults) {
@@ -156,30 +150,30 @@ export default class Search extends React.Component {
       if (isNewTerm) {
         if (this.state.recentSearchResults.length > 7) {
           this.state.recentSearchResults.pop(
-            this.state.recentSearchResults.length
+            this.state.recentSearchResults.length,
           );
         }
         await this.state.recentSearchResults.unshift([term, Date.now()]);
         await AsyncStorage.setItem(
           'recentSearches',
-          JSON.stringify(this.state.recentSearchResults)
+          JSON.stringify(this.state.recentSearchResults),
         );
         this.setState({
-          recentSearchResults: this.state.recentSearchResults
+          recentSearchResults: this.state.recentSearchResults,
         });
       }
 
       let response = await searchContent(
         term,
         this.state.page,
-        this.filterQuery
+        this.filterQuery,
       );
       if (response.data.length == 0) {
         this.setState({
           searchEntered: false,
           isLoadingAll: false,
           noResults: true,
-          showCancel: true
+          showCancel: true,
         });
       } else {
         this.metaFilters = response?.meta?.filterOptions;
@@ -219,7 +213,7 @@ export default class Search extends React.Component {
             isStarted: newContent[i].isStarted,
             isCompleted: newContent[i].isCompleted,
             bundle_count: newContent[i].post.bundle_count,
-            progress_percent: newContent[i].post.progress_percent
+            progress_percent: newContent[i].post.progress_percent,
           });
         }
         this.setState({
@@ -230,7 +224,7 @@ export default class Search extends React.Component {
           filtering: false,
           isPaging: false,
           searchEntered: true,
-          noResults: false
+          noResults: false,
         });
       }
     }
@@ -277,10 +271,10 @@ export default class Search extends React.Component {
   };
 
   async clearRecent() {
-    await this.setState({ recentSearchResults: [] });
+    await this.setState({recentSearchResults: []});
     await AsyncStorage.setItem(
       'recentSearches',
-      JSON.stringify(this.state.recentSearchResults)
+      JSON.stringify(this.state.recentSearchResults),
     );
   }
 
@@ -289,16 +283,15 @@ export default class Search extends React.Component {
       {
         searchTerm,
         showCancel: true,
-        searchResults: []
+        searchResults: [],
       },
-      () => this.search()
+      () => this.search(),
     );
   };
 
   getVideos = () => {
-    // change page before getting more lessons if paging
     if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () => this.search());
+      this.setState({page: this.state.page + 1}, () => this.search());
     }
   };
 
@@ -311,9 +304,9 @@ export default class Search extends React.Component {
       this.setState(
         {
           page: this.state.page + 1,
-          isPaging: true
+          isPaging: true,
         },
-        () => this.search()
+        () => this.search(),
       );
     }
   };
@@ -321,7 +314,7 @@ export default class Search extends React.Component {
   render() {
     return (
       <SafeAreaView
-        forceInset={{ bottom: 'never' }}
+        forceInset={{bottom: 'never'}}
         style={styles.packsContainer}
       >
         <StatusBar
@@ -334,21 +327,21 @@ export default class Search extends React.Component {
           </View>
           <ScrollView
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ flexGrow: 1 }}
+            contentContainerStyle={{flexGrow: 1}}
             contentInsetAdjustmentBehavior={'never'}
-            onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
+            onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
             style={styles.mainContainer}
           >
             <View
               style={{
                 marginTop: onTablet ? '3%' : '4%',
                 flexDirection: 'row',
-                paddingLeft: 10
+                paddingLeft: 10,
               }}
             >
               <View style={styles.searchBox}>
                 <View
-                  style={[styles.centerContent, { width: onTablet ? 60 : 40 }]}
+                  style={[styles.centerContent, {width: onTablet ? 60 : 40}]}
                 >
                   <EvilIcons
                     name={'search'}
@@ -362,7 +355,7 @@ export default class Search extends React.Component {
                   ref={searchTerm => (this.searchTerm = searchTerm)}
                   placeholder={'Type your search...'}
                   placeholderTextColor={'grey'}
-                  onChangeText={searchTerm => this.setState({ searchTerm })}
+                  onChangeText={searchTerm => this.setState({searchTerm})}
                   returnKeyType={'search'}
                   style={{
                     flex: 0.9,
@@ -370,12 +363,12 @@ export default class Search extends React.Component {
                     paddingVertical: 10,
                     justifyContent: 'center',
                     fontFamily: 'OpenSans-Regular',
-                    fontSize: onTablet ? 20 : 16
+                    fontSize: onTablet ? 20 : 16,
                   }}
                   onSubmitEditing={() => {
                     this.setState({
                       showCancel: true,
-                      searchResults: []
+                      searchResults: [],
                     }),
                       this.search(this.state.searchTerm);
                   }}
@@ -388,8 +381,8 @@ export default class Search extends React.Component {
                     paddingRight:
                       this.state.showCancel || this.state.searchTerm.length > 0
                         ? 0
-                        : 10
-                  }
+                        : 10,
+                  },
                 ]}
               >
                 {(this.state.showCancel ||
@@ -398,7 +391,7 @@ export default class Search extends React.Component {
                     style={{
                       flex: 1,
                       paddingHorizontal: 10,
-                      justifyContent: 'center'
+                      justifyContent: 'center',
                     }}
                     onPress={() => {
                       this.searchTerm.clear();
@@ -408,7 +401,7 @@ export default class Search extends React.Component {
                         searchEntered: false,
                         showCancel: false,
                         noResults: false,
-                        isLoadingAll: false
+                        isLoadingAll: false,
                       });
                     }}
                   >
@@ -417,7 +410,7 @@ export default class Search extends React.Component {
                         textAlign: 'center',
                         fontSize: onTablet ? 16 : 12,
                         color: '#fb1b2f',
-                        fontFamily: 'OpenSans-Bold'
+                        fontFamily: 'OpenSans-Bold',
                       }}
                     >
                       CANCEL
@@ -435,7 +428,7 @@ export default class Search extends React.Component {
                       paddingLeft: 10,
                       fontFamily: 'OpenSans-Bold',
                       fontSize: onTablet ? 22 : 16,
-                      color: colors.secondBackground
+                      color: colors.secondBackground,
                     }}
                   >
                     RECENT
@@ -449,8 +442,8 @@ export default class Search extends React.Component {
                     style={[
                       styles.centerContent,
                       {
-                        paddingRight: 10
-                      }
+                        paddingRight: 10,
+                      },
                     ]}
                   >
                     {!this.state.filtering && (
@@ -459,7 +452,7 @@ export default class Search extends React.Component {
                           fontSize: onTablet ? 18 : 14,
                           color: colors.pianoteRed,
                           textAlign: 'right',
-                          fontFamily: 'OpenSans-Regular'
+                          fontFamily: 'OpenSans-Regular',
                         }}
                       >
                         Clear
@@ -469,7 +462,7 @@ export default class Search extends React.Component {
                 )}
               </View>
             )}
-            <View style={{ flex: 1, marginBottom: '2%' }}>
+            <View style={{flex: 1, marginBottom: '2%'}}>
               {!this.state.searchEntered &&
                 !this.state.isLoadingAll &&
                 !this.state.noResults && <View>{this.mapRecentResults()}</View>}
@@ -478,7 +471,7 @@ export default class Search extends React.Component {
                 !this.state.isLoadingAll && (
                   <View
                     style={{
-                      paddingVertical: 10
+                      paddingVertical: 10,
                     }}
                   >
                     <VerticalVideoList
@@ -504,13 +497,13 @@ export default class Search extends React.Component {
                             {
                               searchResults: [],
                               outVideos: false,
-                              page: 1
+                              page: 1,
                             },
                             () => {
                               this.filterQuery = filters;
                               this.search().then(res);
-                            }
-                          )
+                            },
+                          ),
                         )
                       }
                     />
@@ -522,8 +515,8 @@ export default class Search extends React.Component {
                     styles.centerContent,
                     {
                       flex: 1,
-                      marginTop: 10
-                    }
+                      marginTop: 10,
+                    },
                   ]}
                 >
                   <ActivityIndicator
@@ -539,7 +532,7 @@ export default class Search extends React.Component {
                   style={{
                     flex: 1,
                     borderTopWidth: 1,
-                    borderTopColor: colors.secondBackground
+                    borderTopColor: colors.secondBackground,
                   }}
                 >
                   <Text
@@ -548,7 +541,7 @@ export default class Search extends React.Component {
                       fontSize: onTablet ? 20 : 16,
                       fontFamily: 'OpenSans-Bold',
                       color: 'white',
-                      paddingLeft: 10
+                      paddingLeft: 10,
                     }}
                   >
                     No Results

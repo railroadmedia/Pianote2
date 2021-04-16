@@ -1,6 +1,3 @@
-/**
- * SongCatalog
- */
 import React from 'react';
 import {
   View,
@@ -8,20 +5,19 @@ import {
   ScrollView,
   Dimensions,
   RefreshControl,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { ContentModel } from '@musora/models';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {ContentModel} from '@musora/models';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
-import { getStartedContent, getAllContent } from '../../services/GetContent';
-import { NetworkContext } from '../../context/NetworkProvider';
-
-import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
-import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
+import {getStartedContent, getAllContent} from '../../services/GetContent';
+import {NetworkContext} from '../../context/NetworkProvider';
+import {cacheAndWriteSongs} from '../../redux/SongsCacheActions';
+import {navigate, refreshOnFocusListener} from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -29,7 +25,7 @@ const width =
 const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 
-const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
   const paddingToBottom = 20;
   return (
     layoutMeasurement.height + contentOffset.y >=
@@ -41,7 +37,7 @@ class SongCatalog extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    let { songsCache } = props;
+    let {songsCache} = props;
     this.state = {
       progressSongs: [],
       allSongs: [],
@@ -53,13 +49,13 @@ class SongCatalog extends React.Component {
       started: true,
       refreshing: true,
       refreshControl: false,
-      ...this.initialValidData(songsCache, true)
+      ...this.initialValidData(songsCache, true),
     };
   }
 
   componentDidMount() {
     let deepFilters = decodeURIComponent(this.props.route?.params?.url).split(
-      '?'
+      '?',
     )[1];
     this.filterQuery = deepFilters && `&${deepFilters}`;
     this.getContent();
@@ -77,20 +73,20 @@ class SongCatalog extends React.Component {
         'song',
         this.state.currentSort,
         this.state.page,
-        this.filterQuery
+        this.filterQuery,
       ),
-      getStartedContent('song')
+      getStartedContent('song'),
     ]);
     this.metaFilters = content?.[0]?.meta?.filterOptions;
     this.props.cacheAndWriteSongs({
       all: content[0],
-      inProgress: content[1]
+      inProgress: content[1],
     });
     this.setState(
       this.initialValidData({
         all: content[0],
-        inProgress: content[1]
-      })
+        inProgress: content[1],
+      }),
     );
   }
 
@@ -99,13 +95,13 @@ class SongCatalog extends React.Component {
       let allVideos = this.setData(
         content.all.data.map(data => {
           return new ContentModel(data);
-        })
+        }),
       );
 
       let inprogressVideos = this.setData(
         content.inProgress.data.map(data => {
           return new ContentModel(data);
-        })
+        }),
       );
       return {
         allSongs: allVideos,
@@ -116,7 +112,7 @@ class SongCatalog extends React.Component {
         progressSongs: inprogressVideos,
         started: inprogressVideos.length !== 0,
         refreshing: false,
-        refreshControl: fromCache
+        refreshControl: fromCache,
       };
     } catch (e) {
       return {};
@@ -124,7 +120,7 @@ class SongCatalog extends React.Component {
   };
 
   getAllSongs = async loadMore => {
-    this.setState({ filtering: true });
+    this.setState({filtering: true});
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -132,7 +128,7 @@ class SongCatalog extends React.Component {
       'song',
       this.state.currentSort,
       this.state.page,
-      this.filterQuery
+      this.filterQuery,
     );
     this.metaFilters = response?.meta?.filterOptions;
 
@@ -148,7 +144,7 @@ class SongCatalog extends React.Component {
       filtering: false,
       refreshControl: false,
       isPaging: false,
-      refreshing: false
+      refreshing: false,
     }));
   };
 
@@ -182,7 +178,7 @@ class SongCatalog extends React.Component {
         isAddedToList: newContent[i].isAddedToList,
         isStarted: newContent[i].isStarted,
         isCompleted: newContent[i].isCompleted,
-        progress_percent: newContent[i].post.progress_percent
+        progress_percent: newContent[i].post.progress_percent,
       });
     }
     return items;
@@ -195,17 +191,15 @@ class SongCatalog extends React.Component {
         currentSort,
         outVideos: false,
         isPaging: false,
-        page: 1
+        page: 1,
       },
-      () => this.getAllSongs()
+      () => this.getAllSongs(),
     );
   };
 
   getVideos = () => {
     if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () =>
-        this.getAllSongs(true)
-      );
+      this.setState({page: this.state.page + 1}, () => this.getAllSongs(true));
     }
   };
 
@@ -218,9 +212,9 @@ class SongCatalog extends React.Component {
       this.setState(
         {
           page: this.state.page + 1,
-          isPaging: true
+          isPaging: true,
         },
-        () => this.getAllSongs(true)
+        () => this.getAllSongs(true),
       );
     }
   };
@@ -229,9 +223,9 @@ class SongCatalog extends React.Component {
     this.setState(
       {
         refreshControl: true,
-        page: 1
+        page: 1,
       },
-      () => this.getContent()
+      () => this.getContent(),
     );
   }
 
@@ -257,7 +251,7 @@ class SongCatalog extends React.Component {
             showsVerticalScrollIndicator={false}
             contentInsetAdjustmentBehavior={'never'}
             scrollEventThrottle={400}
-            onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
+            onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
             refreshControl={
               <RefreshControl
                 tintColor={'transparent'}
@@ -269,7 +263,7 @@ class SongCatalog extends React.Component {
           >
             {isiOS && this.state.refreshControl && (
               <ActivityIndicator
-                size='small'
+                size="small"
                 style={styles.ActivityIndicator}
                 color={colors.secondBackground}
               />
@@ -283,13 +277,13 @@ class SongCatalog extends React.Component {
                   seeAll={() =>
                     navigate('SEEALL', {
                       title: 'Continue',
-                      parent: 'Songs'
+                      parent: 'Songs',
                     })
                   }
                   isSquare={true}
                   items={this.state.progressSongs}
                 />
-                <View style={{ height: 5 }} />
+                <View style={{height: 5}} />
               </View>
             )}
             <VerticalVideoList
@@ -320,21 +314,21 @@ class SongCatalog extends React.Component {
                     {
                       allSongs: [],
                       outVideos: false,
-                      page: 1
+                      page: 1,
                     },
                     () => {
                       this.filterQuery = filters;
                       this.getAllSongs().then(res);
-                    }
-                  )
+                    },
+                  ),
                 )
               }
             />
           </ScrollView>
         ) : (
           <ActivityIndicator
-            size='large'
-            style={{ flex: 1 }}
+            size="large"
+            style={{flex: 1}}
             color={colors.secondBackground}
           />
         )}
@@ -343,8 +337,8 @@ class SongCatalog extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({ songsCache: state.songsCache });
+const mapStateToProps = state => ({songsCache: state.songsCache});
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheAndWriteSongs }, dispatch);
+  bindActionCreators({cacheAndWriteSongs}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SongCatalog);
