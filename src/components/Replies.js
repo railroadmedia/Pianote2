@@ -416,7 +416,13 @@ export default class Replies extends React.Component {
                   <View>{this.mapReplies()}</View>
                 </View>
               </KeyboardAwareScrollView>
-              <Modal visible={this.state.showMakeReply} transparent={true}>
+              <Modal
+                visible={this.state.showMakeReply}
+                transparent={true}
+                onBackButtonPress={() =>
+                  this.setState({ showMakeReply: false })
+                }
+              >
                 <TouchableOpacity
                   activeOpacity={1}
                   style={{ flex: 1, backgroundColor: 'rgba(0,0,0,.5)' }}

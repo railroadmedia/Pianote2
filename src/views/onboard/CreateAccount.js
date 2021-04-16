@@ -178,13 +178,14 @@ export default class CreateAccount extends React.Component {
               animationOutTiming={350}
               coverScreen={true}
               hasBackdrop={true}
+              onBackButtonPress={() => this.setState({ showCheckEmail: false })}
             >
               <CheckEmail
-                hideCheckEmail={() => {
+                hideCheckEmail={() =>
                   this.setState({
                     showCheckEmail: false
-                  });
-                }}
+                  })
+                }
               />
             </Modal>
             <Modal
@@ -195,6 +196,9 @@ export default class CreateAccount extends React.Component {
               animationOutTiming={350}
               coverScreen={true}
               hasBackdrop={true}
+              onBackButtonPress={() =>
+                this.setState({ showValidateEmail: false })
+              }
             >
               <ValidateEmail
                 hideValidateEmail={() => {

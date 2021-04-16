@@ -1,6 +1,6 @@
 // NavigationService.js
 
-import { navigate, reset } from '../../AppNavigator';
+import { navigate } from '../../AppNavigator';
 import commonService from './common.service';
 
 function decideWhereToRedirect() {
@@ -11,9 +11,9 @@ function decideWhereToRedirect() {
   let id = parseInt(url.substr(url.lastIndexOf('/') + 1, url.length));
 
   if (isPackOnly) {
-    return reset('PACKS');
+    return navigate('PACKS');
   } else {
-    reset('LESSONS');
+    navigate('LESSONS');
     // links that should redirect edge users only
 
     if (url.includes('members/all')) return navigate('LESSONS');

@@ -9,7 +9,7 @@ import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import { NetworkContext } from '../context/NetworkProvider';
 import { SafeAreaView } from 'react-navigation';
-import { navigate, reset } from '../../AppNavigator';
+import { navigate } from '../../AppNavigator';
 
 export default class NavMenuHeaders extends React.Component {
   static contextType = NetworkContext;
@@ -40,14 +40,14 @@ export default class NavMenuHeaders extends React.Component {
           style={{
             flexDirection: 'row',
             width: '100%',
-            padding: paddingInset
+            padding: 10
           }}
         >
           <TouchableOpacity
             onPress={() => {
               !this.context.isConnected
                 ? this.context.showNoConnectionAlert()
-                : reset(isPackOnly ? 'PACKS' : 'LESSONS');
+                : navigate(isPackOnly ? 'PACKS' : 'LESSONS');
             }}
             style={{
               height: onTablet ? 45 : 30,
@@ -63,7 +63,7 @@ export default class NavMenuHeaders extends React.Component {
                 styles.centerContent,
                 {
                   flexDirection: 'row',
-                  paddingRight: paddingInset
+                  paddingRight: 10
                 }
               ]}
               onPress={() => {
@@ -117,7 +117,7 @@ export default class NavMenuHeaders extends React.Component {
               style={[
                 styles.centerContent,
                 {
-                  paddingRight: paddingInset
+                  paddingRight: 10
                 }
               ]}
             >
@@ -173,6 +173,7 @@ export default class NavMenuHeaders extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={false}
+          onBackButtonPress={() => this.setState({ showModalMenu: false })}
         >
           <NavigationMenu
             isMethod={this.props.isMethod}

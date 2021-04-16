@@ -32,14 +32,7 @@ export default class NavigationBar extends React.Component {
   componentDidMount = async () => {
     let profileImage = await AsyncStorage.getItem('profileURI');
     this.setState({
-      profileImage: profileImage || '',
-      onMain:
-        this.props.currentPage == 'LESSONS' ||
-        this.props.currentPage == 'SEARCH' ||
-        this.props.currentPage == 'DOWNLOADS' ||
-        this.props.currentPage == 'PROFILE'
-          ? true
-          : false
+      profileImage: profileImage || ''
     });
   };
 
@@ -92,8 +85,6 @@ export default class NavigationBar extends React.Component {
               onPress={() => {
                 !this.context.isConnected
                   ? this.context.showNoConnectionAlert()
-                  : this.state.onMain
-                  ? reset(isPackOnly ? 'PACKS' : 'LESSONS')
                   : navigate(isPackOnly ? 'PACKS' : 'LESSONS');
               }}
             >
@@ -111,8 +102,6 @@ export default class NavigationBar extends React.Component {
               onPress={() => {
                 !this.context.isConnected
                   ? this.context.showNoConnectionAlert()
-                  : this.state.onMain
-                  ? reset('SEARCH')
                   : navigate('SEARCH');
               }}
             >
@@ -128,7 +117,7 @@ export default class NavigationBar extends React.Component {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                this.state.onMain ? reset('DOWNLOADS') : navigate('DOWNLOADS');
+                navigate('DOWNLOADS');
               }}
             >
               <MaterialIcon
@@ -145,8 +134,6 @@ export default class NavigationBar extends React.Component {
               onPress={() => {
                 !this.context.isConnected
                   ? this.context.showNoConnectionAlert()
-                  : this.state.onMain
-                  ? reset('PROFILE')
                   : navigate('PROFILE');
               }}
             >

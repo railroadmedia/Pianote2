@@ -18,13 +18,6 @@ import { SafeAreaView } from 'react-navigation';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { navigate } from '../../../AppNavigator';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
-
 export default class Downloads extends React.Component {
   static contextType = NetworkContext;
 
@@ -137,7 +130,7 @@ export default class Downloads extends React.Component {
             ListEmptyComponent={() => (
               <Text
                 style={{
-                  padding: paddingInset * 1.5,
+                  padding: 10 * 1.5,
                   color: 'white',
                   textAlign: 'center',
                   fontSize: onTablet ? 20 : 12
@@ -153,7 +146,7 @@ export default class Downloads extends React.Component {
                   disabled={!!item.dlding.length}
                   onPress={() => this.navigate(item)}
                   style={{
-                    padding: paddingInset,
+                    padding: 10,
                     flexDirection: 'row',
                     borderBottomWidth: 0.5,
                     borderColor: 'lightgrey'
@@ -163,7 +156,7 @@ export default class Downloads extends React.Component {
                     style={{
                       width: onTablet ? '22.5%' : '26%',
                       aspectRatio: 16 / 9,
-                      marginRight: paddingInset
+                      marginRight: 10
                     }}
                   >
                     <FastImage

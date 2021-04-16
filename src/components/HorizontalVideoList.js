@@ -111,7 +111,7 @@ export default class HorizontalVideoList extends React.Component {
   decideWidth() {
     if (onTablet) {
       if (this.props.isSquare) return 125;
-      else return (Dimensions.get('window').width - 4 * paddingInset) / 3;
+      else return (Dimensions.get('window').width - 4 * 10) / 3;
     } else {
       if (this.props.isSquare) return Dimensions.get('window').width / 3.25;
       else return ((Dimensions.get('window').width - 30) * 3) / 4;
@@ -319,7 +319,7 @@ export default class HorizontalVideoList extends React.Component {
 
   render = () => {
     return (
-      <View style={{ marginLeft: paddingInset }}>
+      <View style={{ marginLeft: 10 }}>
         <View style={localStyles.titleContain}>
           <Text
             style={[
@@ -421,8 +421,8 @@ export default class HorizontalVideoList extends React.Component {
             <TouchableOpacity
               style={{
                 width: this.decideWidth(),
-                marginRight: paddingInset,
-                marginBottom: this.props.isTile ? paddingInset : 0
+                marginRight: 10,
+                marginBottom: this.props.isTile ? 10 : 0
               }}
               onLongPress={() => {
                 this.setState({
@@ -746,6 +746,7 @@ export default class HorizontalVideoList extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showModal: false })}
         >
           <ContentModal
             data={this.state.item}
@@ -757,16 +758,13 @@ export default class HorizontalVideoList extends React.Component {
         </Modal>
         <Modal
           isVisible={this.state.addToCalendarModal}
-          style={{
-            margin: 0,
-            height: '100%',
-            width: '100%'
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ addToCalendarModal: false })}
         >
           <AddToCalendar
             hideAddToCalendar={() =>
@@ -787,6 +785,7 @@ export default class HorizontalVideoList extends React.Component {
           hasBackdrop={false}
           backdropColor={'white'}
           backdropOpacity={0.79}
+          onBackButtonPress={() => this.setState({ showRelevance: false })}
         >
           <Relevance
             hideRelevance={() => {

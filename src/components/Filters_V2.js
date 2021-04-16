@@ -271,6 +271,7 @@ export default class Filters_V2 extends React.Component {
           visible={showModal}
           animationType={'fade'}
           onRequestClose={this.toggleModal}
+          onBackButtonPress={() => this.setState({ showModal: false })}
         >
           <SafeAreaView style={fStyles.safeAreaTitleContainer}>
             <TouchableOpacity

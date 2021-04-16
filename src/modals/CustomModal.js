@@ -39,6 +39,7 @@ export default class CustomModal extends React.PureComponent {
         visible={this.state.visible}
         onRequestClose={this.toggle}
         supportedOrientations={['portrait', 'landscape']}
+        onBackButtonPress={this.toggle}
       >
         <TouchableOpacity
           style={localStyles.modalBackground}

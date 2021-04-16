@@ -453,7 +453,7 @@ export default class PathOverview extends React.Component {
           <View
             style={[
               {
-                paddingHorizontal: paddingInset * 2
+                paddingHorizontal: 10 * 2
               },
               this.state.isLandscape
                 ? { marginHorizontal: '10%' }
@@ -873,6 +873,7 @@ export default class PathOverview extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showRestartCourse: false })}
         >
           <RestartCourse
             hideRestartCourse={() => {

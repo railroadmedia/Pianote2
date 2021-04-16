@@ -310,6 +310,8 @@ export default class VideoPlayer extends React.Component {
     const { commentId } = this.props.route?.params;
     if (commentId) {
       navigate('LESSONS');
+    } else if (this.state.selectedComment) {
+      this.replies?.toggle(() => this.setState({ selectedComment: undefined }));
     } else {
       goBack();
     }
@@ -463,7 +465,7 @@ export default class VideoPlayer extends React.Component {
           </Text>
         </View>
 
-        <View style={{ flex: 1, paddingLeft: paddingInset }}>
+        <View style={{ flex: 1, paddingLeft: 10 }}>
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
@@ -571,7 +573,7 @@ export default class VideoPlayer extends React.Component {
               </View>
               {this.userId === item.user_id && (
                 <TouchableOpacity
-                  style={{ marginLeft: paddingInset }}
+                  style={{ marginLeft: 10 }}
                   onPress={() => this.deleteComment(item.id)}
                 >
                   <AntIcon
@@ -1049,7 +1051,7 @@ export default class VideoPlayer extends React.Component {
                         fontFamily: 'OpenSans-Bold',
                         textAlign: 'center',
                         color: 'white',
-                        paddingHorizontal: paddingInset
+                        paddingHorizontal: 10
                       }}
                     >
                       {this.state.lessonTitle}
@@ -1270,7 +1272,7 @@ export default class VideoPlayer extends React.Component {
                     <View style={{ marginTop: 20, marginBottom: 10 }}>
                       <View
                         style={{
-                          paddingLeft: paddingInset,
+                          paddingLeft: 10,
                           paddingBottom: 10
                         }}
                       >
@@ -1408,7 +1410,7 @@ export default class VideoPlayer extends React.Component {
                                   fontFamily: 'OpenSans-Regular',
                                   fontSize: sizing.descriptionText,
                                   color: 'white',
-                                  paddingLeft: paddingInset
+                                  paddingLeft: 10
                                 }}
                               >
                                 Add a comment...
@@ -1666,7 +1668,7 @@ export default class VideoPlayer extends React.Component {
                   borderWidth: 2,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginLeft: paddingInset,
+                  marginLeft: 10,
                   borderColor: this.state.nextLesson
                     ? colors.pianoteRed
                     : colors.secondBackground
@@ -1703,6 +1705,9 @@ export default class VideoPlayer extends React.Component {
             animationOutTiming={250}
             coverScreen={false}
             hasBackdrop={false}
+            onBackButtonPress={() =>
+              this.setState({ showAssignmentComplete: false })
+            }
           >
             <AssignmentComplete
               title={this.state.selectedAssignment.title}
@@ -1727,6 +1732,17 @@ export default class VideoPlayer extends React.Component {
           animationOutTiming={350}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() =>
+            new Promise(res =>
+              this.setState(
+                {
+                  showResDownload: false
+                },
+                () =>
+                  Platform.OS === 'ios' ? (this.modalDismissed = res) : res()
+              )
+            )
+          }
         >
           <DownloadResources
             styles={{
@@ -1766,6 +1782,9 @@ export default class VideoPlayer extends React.Component {
               animationOutTiming={250}
               coverScreen={true}
               hasBackdrop={true}
+              onBackButtonPress={() =>
+                this.setState({ showLessonComplete: false })
+              }
             >
               <LessonComplete
                 completedLessonImg={this.state.lessonImage}
@@ -1795,6 +1814,9 @@ export default class VideoPlayer extends React.Component {
               animationOutTiming={250}
               coverScreen={true}
               hasBackdrop={true}
+              onBackButtonPress={() =>
+                this.setState({ showRestartCourse: false })
+              }
             >
               <RestartCourse
                 hideRestartCourse={() =>
@@ -1814,6 +1836,9 @@ export default class VideoPlayer extends React.Component {
               animationOutTiming={250}
               coverScreen={true}
               hasBackdrop={true}
+              onBackButtonPress={() =>
+                this.setState({ showOverviewComplete: false })
+              }
             >
               <OverviewComplete
                 title={this.state.lessonTitle}
@@ -1844,6 +1869,7 @@ export default class VideoPlayer extends React.Component {
           hasBackdrop={false}
           backdropColor={'white'}
           backdropOpacity={0.79}
+          onBackButtonPress={() => this.setState({ showCommentSort: false })}
         >
           <CommentSort
             hideCommentSort={() => {
@@ -1866,6 +1892,7 @@ export default class VideoPlayer extends React.Component {
           animationOutTiming={350}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showSoundSlice: false })}
         >
           <SoundSlice
             hideSoundSlice={() => {

@@ -364,7 +364,7 @@ export default class MethodLevel extends React.Component {
                   fontFamily: 'OpenSans-Regular',
                   marginTop: onTablet ? 40 : 30,
                   fontSize: sizing.descriptionText,
-                  paddingHorizontal: paddingInset,
+                  paddingHorizontal: 10,
                   color: 'white',
                   textAlign: 'center'
                 }}
@@ -403,6 +403,7 @@ export default class MethodLevel extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showRestartCourse: false })}
         >
           <RestartCourse
             hideRestartCourse={() => {

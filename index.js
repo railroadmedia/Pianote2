@@ -94,7 +94,7 @@ localNotification();
 
 AppRegistry.registerComponent(appName, () => App);
 LogBox.ignoreLogs(['Require cycle:', 'Remote debugger']);
-LogBox.ignoreAllLogs(true)
+LogBox.ignoreAllLogs(true);
 global.fullWidth = Dimensions.get('window').width;
 global.fullHeight = Dimensions.get('window').height;
 global.token = '';
@@ -104,7 +104,6 @@ global.isiOS = Platform.OS === 'ios';
 global.styles = require('Pianote2/src/assets/styles/styles.js');
 global.isConnected = true;
 global.isPackOnly = false;
-global.paddingInset = 10;
 global.fallbackThumb =
   'https://dmmior4id2ysr.cloudfront.net/assets/images/pianote_fallback_thumb.jpg';
 (global.backButtonSize = DeviceInfo.isTablet() ? 30 : 22.5),
