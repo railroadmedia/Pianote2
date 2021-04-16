@@ -751,6 +751,7 @@ export default class VerticalVideoList extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showModal: false })}
         >
           <ContentModal
             data={this.state.item}
@@ -770,6 +771,7 @@ export default class VerticalVideoList extends React.Component {
           hasBackdrop={false}
           backdropColor={'white'}
           backdropOpacity={0.79}
+          onBackButtonPress={() => this.setState({ showRelevance: false })}
         >
           <Relevance
             hideRelevance={() => {
@@ -790,6 +792,7 @@ export default class VerticalVideoList extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ addToCalendarModal: false })}
         >
           <AddToCalendar
             hideAddToCalendar={() =>

@@ -399,6 +399,7 @@ class Settings extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showLogOut: false })}
         >
           <LogOut
             onLogout={() =>

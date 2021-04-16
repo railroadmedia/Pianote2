@@ -481,6 +481,11 @@ export default class CreateAccount3 extends React.Component {
                 animationOutTiming={350}
                 coverScreen={true}
                 hasBackdrop={true}
+                onBackButtonPress={() =>
+                  this.setState({
+                    showDisplayName: false
+                  })
+                }
               >
                 <DisplayName
                   hideDisplayName={() => {
@@ -804,6 +809,11 @@ export default class CreateAccount3 extends React.Component {
                 animationOutTiming={350}
                 coverScreen={true}
                 hasBackdrop={true}
+                onBackButtonPress={() =>
+                  this.setState({
+                    showProfileImage: false
+                  })
+                }
               >
                 <ProfileImage
                   hideProfileImage={() => {
@@ -821,6 +831,11 @@ export default class CreateAccount3 extends React.Component {
                 animationOutTiming={350}
                 coverScreen={true}
                 hasBackdrop={true}
+                onBackButtonPress={() =>
+                  this.setState({
+                    showDisplayName: false
+                  })
+                }
               >
                 <DisplayName
                   hideDisplayName={() => {

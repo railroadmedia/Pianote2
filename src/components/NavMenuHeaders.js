@@ -173,6 +173,7 @@ export default class NavMenuHeaders extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={false}
+          onBackButtonPress={() => this.setState({ showModalMenu: false })}
         >
           <NavigationMenu
             isMethod={this.props.isMethod}

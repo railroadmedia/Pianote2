@@ -707,6 +707,17 @@ export default class SinglePack extends React.Component {
           animationOutTiming={350}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() =>
+            new Promise(res =>
+              this.setState(
+                {
+                  showResDownload: false
+                },
+                () =>
+                  Platform.OS === 'ios' ? (this.modalDismissed = res) : res()
+              )
+            )
+          }
         >
           <DownloadResources
             styles={{
@@ -748,6 +759,7 @@ export default class SinglePack extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showRestartCourse: false })}
         >
           <RestartCourse
             hideRestartCourse={() => {

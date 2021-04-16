@@ -220,6 +220,7 @@ class LoadPage extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showNoConnection: false })}
         >
           <NoConnection
             hideNoConnection={() => {

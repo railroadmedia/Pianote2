@@ -264,6 +264,7 @@ export default class VideoPlayerSong extends React.Component {
           animationOutTiming={350}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showSoundSlice: false })}
         >
           <SoundSlice
             hideSoundSlice={() => {

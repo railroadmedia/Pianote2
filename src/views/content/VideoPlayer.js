@@ -390,6 +390,8 @@ export default class VideoPlayer extends React.Component {
     const { commentId } = this.props.route?.params;
     if (commentId) {
       navigate('LESSONS');
+    } else if (this.state.selectedComment) {
+      this.replies?.toggle(() => this.setState({ selectedComment: undefined }));
     } else {
       goBack();
     }
@@ -1782,6 +1784,9 @@ export default class VideoPlayer extends React.Component {
             animationOutTiming={250}
             coverScreen={false}
             hasBackdrop={false}
+            onBackButtonPress={() =>
+              this.setState({ showAssignmentComplete: false })
+            }
           >
             <AssignmentComplete
               title={this.state.selectedAssignment.title}
@@ -1806,6 +1811,17 @@ export default class VideoPlayer extends React.Component {
           animationOutTiming={350}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() =>
+            new Promise(res =>
+              this.setState(
+                {
+                  showResDownload: false
+                },
+                () =>
+                  Platform.OS === 'ios' ? (this.modalDismissed = res) : res()
+              )
+            )
+          }
         >
           <DownloadResources
             styles={{
@@ -1845,6 +1861,9 @@ export default class VideoPlayer extends React.Component {
               animationOutTiming={250}
               coverScreen={true}
               hasBackdrop={true}
+              onBackButtonPress={() =>
+                this.setState({ showLessonComplete: false })
+              }
             >
               <LessonComplete
                 completedLessonImg={this.state.lessonImage}
@@ -1874,6 +1893,9 @@ export default class VideoPlayer extends React.Component {
               animationOutTiming={250}
               coverScreen={true}
               hasBackdrop={true}
+              onBackButtonPress={() =>
+                this.setState({ showRestartCourse: false })
+              }
             >
               <RestartCourse
                 hideRestartCourse={() =>
@@ -1893,6 +1915,9 @@ export default class VideoPlayer extends React.Component {
               animationOutTiming={250}
               coverScreen={true}
               hasBackdrop={true}
+              onBackButtonPress={() =>
+                this.setState({ showOverviewComplete: false })
+              }
             >
               <OverviewComplete
                 title={this.state.lessonTitle}
@@ -1923,6 +1948,7 @@ export default class VideoPlayer extends React.Component {
           hasBackdrop={false}
           backdropColor={'white'}
           backdropOpacity={0.79}
+          onBackButtonPress={() => this.setState({ showCommentSort: false })}
         >
           <CommentSort
             hideCommentSort={() => {
@@ -1945,6 +1971,7 @@ export default class VideoPlayer extends React.Component {
           animationOutTiming={350}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showSoundSlice: false })}
         >
           <SoundSlice
             hideSoundSlice={() => {
