@@ -1,23 +1,20 @@
-/**
- * ContentModal
- */
 import React from 'react';
 import {
   View,
   Text,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import {
   likeContent,
   unlikeContent,
   addToMyList,
-  removeFromMyList
+  removeFromMyList,
 } from 'Pianote2/src/services/UserActions.js';
 import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import { Download_V2 } from 'RNDownload';
+import {Download_V2} from 'RNDownload';
 import DeviceInfo from 'react-native-device-info';
 import contentService from '../services/content.service';
 
@@ -64,29 +61,23 @@ export default class ContentModal extends React.Component {
       isAddedToList:
         typeof this.props.data.isAddedToList !== 'undefined'
           ? this.props.data.isAddedToList
-          : false
+          : false,
     };
   }
 
   addToMyList = contentID => {
     if (this.props.data.description !== 'TBD') {
-      // change status of content on parent data structure
       this.props.addToMyList(contentID);
-      // make added to list on current data structure
       this.state.isAddedToList = true;
-      this.setState({ isAddedToList: this.state.isAddedToList });
-      // add to list on backend
+      this.setState({isAddedToList: this.state.isAddedToList});
       addToMyList(contentID);
     }
   };
 
   removeFromMyList = contentID => {
-    // change status of parent data
     this.props.removeFromMyList(contentID);
-    // change data on modal
     this.state.isAddedToList = false;
-    this.setState({ isAddedToList: this.state.isAddedToList });
-    // change data on backend
+    this.setState({isAddedToList: this.state.isAddedToList});
     removeFromMyList(contentID);
   };
 
@@ -109,28 +100,24 @@ export default class ContentModal extends React.Component {
 
   like = contentID => {
     if (this.props.data.description !== 'TBD') {
-      // change data on modal
       this.state.isLiked = !this.state.isLiked;
       this.state.like_count = Number(this.state.like_count) + 1;
       this.setState({
         isLiked: this.state.isLiked,
-        like_count: this.state.like_count
+        like_count: this.state.like_count,
       });
-      // change data on parent data
       this.props.like(contentID);
       likeContent(contentID);
     }
   };
 
   unlike = contentID => {
-    // change data on modal
     this.state.isLiked = !this.state.isLiked;
     this.state.like_count = Number(this.state.like_count) - 1;
     this.setState({
       isLiked: this.state.isLiked,
-      like_count: this.state.like_count
+      like_count: this.state.like_count,
     });
-    // change data on parent data
     this.props.like(contentID);
     unlikeContent(contentID);
   };
@@ -147,7 +134,7 @@ export default class ContentModal extends React.Component {
               <View
                 style={[
                   localStyles.imageContainer,
-                  { aspectRatio: this.state.type == 'song' ? 1 : 16 / 9 }
+                  {aspectRatio: this.state.type == 'song' ? 1 : 16 / 9},
                 ]}
               >
                 <FastImage
@@ -156,7 +143,7 @@ export default class ContentModal extends React.Component {
                     uri:
                       this.state.thumbnail == 'TBD'
                         ? `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,e_grayscale/${fallbackThumb}`
-                        : this.state.thumbnail
+                        : this.state.thumbnail,
                   }}
                   resizeMode={FastImage.resizeMode.cover}
                 />
@@ -169,15 +156,15 @@ export default class ContentModal extends React.Component {
             <Text numberOfLines={5} style={localStyles.description}>
               {this.state.description}
             </Text>
-            <View style={[styles.centerContent, { flexDirection: 'row' }]}>
-              <View style={{ flex: 1 }} />
+            <View style={[styles.centerContent, {flexDirection: 'row'}]}>
+              <View style={{flex: 1}} />
               {(this.state.bundle_count > 1 || this.state.lesson_count > 1) && (
                 <View
                   style={[
                     styles.centerContent,
                     {
-                      flex: 1
-                    }
+                      flex: 1,
+                    },
                   ]}
                 >
                   <Text style={localStyles.lessonCount}>
@@ -189,20 +176,20 @@ export default class ContentModal extends React.Component {
                 </View>
               )}
               {(this.state.bundle_count > 1 || this.state.lesson_count > 1) && (
-                <View style={{ flex: 0.6 }} />
+                <View style={{flex: 0.6}} />
               )}
               <View
                 style={[
                   styles.centerContent,
                   {
-                    flex: 1
-                  }
+                    flex: 1,
+                  },
                 ]}
               >
                 <Text style={localStyles.xp}>{this.state.xp}</Text>
                 <Text style={localStyles.XPtext}>XP</Text>
               </View>
-              <View style={{ flex: 1 }} />
+              <View style={{flex: 1}} />
             </View>
             <View style={localStyles.button}>
               <TouchableOpacity
@@ -239,20 +226,20 @@ export default class ContentModal extends React.Component {
               <Download_V2
                 entity={{
                   id: this.state.id,
-                  content: contentService.getContent(this.state.id, true)
+                  content: contentService.getContent(this.state.id, true),
                 }}
                 styles={{
                   iconSize: {
                     width: sizing.myListButtonSize,
-                    height: sizing.myListButtonSize
+                    height: sizing.myListButtonSize,
                   },
-                  touchable: { flex: 1 },
+                  touchable: {flex: 1},
                   activityIndicatorColor: colors.pianoteRed,
                   animatedProgressBackground: colors.pianoteRed,
                   textStatus: {
                     color: 'black',
                     fontSize: sizing.descriptionText,
-                    fontFamily: 'OpenSans-Regular'
+                    fontFamily: 'OpenSans-Regular',
                   },
                   alert: {
                     alertTextMessageFontFamily: 'OpenSans-Regular',
@@ -264,8 +251,8 @@ export default class ContentModal extends React.Component {
                     alertTouchableDeleteBackground: colors.pianoteRed,
                     alertBackground: 'white',
                     alertTouchableTextDeleteFontFamily: 'OpenSans-Bold',
-                    alertTouchableTextCancelFontFamily: 'OpenSans-Bold'
-                  }
+                    alertTouchableTextCancelFontFamily: 'OpenSans-Bold',
+                  },
                 }}
               />
             </View>
@@ -282,19 +269,19 @@ const localStyles = StyleSheet.create({
     borderRadius: 10,
     shadowOffset: {
       width: 5,
-      height: 10
+      height: 10,
     },
     shadowColor: 'black',
     shadowOpacity: 0.1,
     elevation: 3,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   imageContainer: {
     width: '95%',
     backgroundColor: 'white',
     zIndex: 10,
     marginTop: 10,
-    marginHorizontal: 10
+    marginHorizontal: 10,
   },
   title: {
     fontFamily: 'OpenSans-Regular',
@@ -302,68 +289,68 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: DeviceInfo.isTablet() ? 24 : 18,
     textAlign: 'center',
-    marginTop: 5
+    marginTop: 5,
   },
   type: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'center',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: 'grey',
-    marginVertical: 5
+    marginVertical: 5,
   },
   image: {
     flex: 1,
-    borderRadius: 10
+    borderRadius: 10,
   },
   description: {
     marginHorizontal: 10,
     fontFamily: 'OpenSans-Regular',
     paddingHorizontal: 5,
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   myList: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
-    textAlign: 'left'
+    textAlign: 'left',
   },
   likeCount: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
-    textAlign: 'left'
+    textAlign: 'left',
   },
   likeContainer: {
     flex: 1,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   button: {
     flexDirection: 'row',
-    padding: 20
+    padding: 20,
   },
   XPtext: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
     textAlign: 'left',
-    marginTop: 5
+    marginTop: 5,
   },
   xp: {
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
     fontSize: DeviceInfo.isTablet() ? 24 : 18,
     textAlign: 'left',
-    marginTop: 10
+    marginTop: 10,
   },
   lessonCount: {
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
     fontSize: DeviceInfo.isTablet() ? 24 : 18,
     textAlign: 'left',
-    marginTop: 10
+    marginTop: 10,
   },
   lessons: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
     textAlign: 'left',
-    marginTop: 5
-  }
+    marginTop: 5,
+  },
 });

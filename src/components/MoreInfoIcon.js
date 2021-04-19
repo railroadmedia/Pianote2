@@ -1,8 +1,5 @@
-/**
- * StartIcon
- */
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 export default class MoreInfoIcon extends React.Component {
@@ -45,8 +42,8 @@ export default class MoreInfoIcon extends React.Component {
             borderRadius: 500,
             backgroundColor: 'transparent',
             borderColor: 'white',
-            borderWidth: 2
-          }
+            borderWidth: 2,
+          },
         ]}
       >
         <TouchableOpacity
@@ -55,8 +52,8 @@ export default class MoreInfoIcon extends React.Component {
             styles.centerContent,
             {
               flex: 1,
-              flexDirection: 'row'
-            }
+              flexDirection: 'row',
+            },
           ]}
         >
           <Icon
@@ -64,13 +61,13 @@ export default class MoreInfoIcon extends React.Component {
             size={this.sizing('icon')}
             color={'white'}
           />
-          <View style={{ flex: 0.075 }} />
+          <View style={{flex: 0.075}} />
           <Text
             style={[
               styles.buttonText,
               {
-                fontSize: this.sizing('font')
-              }
+                fontSize: this.sizing('font'),
+              },
             ]}
           >
             MORE INFO

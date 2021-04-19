@@ -1,6 +1,3 @@
-/**
- * Login
- */
 import React from 'react';
 import {
   View,
@@ -10,19 +7,19 @@ import {
   Platform,
   Alert,
   Dimensions,
-  StatusBar
+  StatusBar,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { SafeAreaView } from 'react-navigation';
+import {SafeAreaView} from 'react-navigation';
 import RNIap from 'react-native-iap';
 import FastImage from 'react-native-fast-image';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import GradientFeature from '../../components/GradientFeature.js';
-import { validateSignUp, restorePurchase } from '../../services/UserDataAuth';
+import {validateSignUp, restorePurchase} from '../../services/UserDataAuth';
 import CustomModal from '../../modals/CustomModal';
 import Loading from '../../components/Loading';
 import Orientation from 'react-native-orientation-locker';
-import { navigate } from '../../../AppNavigator.js';
+import {navigate} from '../../../AppNavigator.js';
 
 const isNotch = DeviceInfo.hasNotch();
 const windowDim = Dimensions.get('window');
@@ -33,8 +30,8 @@ const skus = Platform.select({
   android: ['pianote_app_1_year_2021', 'pianote_app_1_month_2021'],
   ios: [
     'pianote_app_1_month_membership_2021',
-    'pianote_app_1_year_membership_2021'
-  ]
+    'pianote_app_1_year_membership_2021',
+  ],
 });
 let purchases = [];
 
@@ -44,22 +41,22 @@ export default class Login extends React.Component {
     Orientation.lockToPortrait();
     this.state = {
       page: 1,
-      signupAlertText: ''
+      signupAlertText: '',
     };
   }
 
   changeColor(number) {
     number = Math.round(number.nativeEvent.contentOffset.x / width);
     if (number === 0) {
-      this.setState({ page: 1 });
+      this.setState({page: 1});
     } else if (number === 1) {
-      this.setState({ page: 2 });
+      this.setState({page: 2});
     } else if (number === 2) {
-      this.setState({ page: 3 });
+      this.setState({page: 3});
     } else if (number === 3) {
-      this.setState({ page: 4 });
+      this.setState({page: 4});
     } else if (number === 4) {
-      this.setState({ page: 5 });
+      this.setState({page: 5});
     }
   }
 
@@ -81,10 +78,10 @@ export default class Login extends React.Component {
         Platform.OS === 'ios' ? 'app store' : 'play store'
       } refused`,
       'Please try again later.',
-      [{ text: 'OK' }],
+      [{text: 'OK'}],
       {
-        cancelable: false
-      }
+        cancelable: false,
+      },
     );
   };
 
@@ -106,7 +103,7 @@ export default class Login extends React.Component {
         purchases = purchases.map(p => ({
           purchase_token: p.purchaseToken,
           package_name: 'com.pianote2',
-          product_id: p.productId
+          product_id: p.productId,
         }));
       }
       let resp = await validateSignUp(purchases);
@@ -117,16 +114,16 @@ export default class Login extends React.Component {
             ? 'Renew'
             : resp.shouldLogin
             ? 'Login'
-            : 'Restore'
+            : 'Restore',
         });
       } else {
         this.subscriptionExists.toggle(
           `Signup Blocked`,
           `You cannot create multiple pianote accounts under the same ${
             Platform.OS === 'ios' ? 'apple' : 'google'
-          } account.`
+          } account.`,
         );
-        this.setState({ signupAlertText: 'Restore' });
+        this.setState({signupAlertText: 'Restore'});
       }
       this.loadingRef?.toggleLoading();
       return true;
@@ -143,11 +140,11 @@ export default class Login extends React.Component {
       if (restoreResponse.title && restoreResponse.message)
         return this.alert.toggle(
           restoreResponse.title,
-          restoreResponse.message
+          restoreResponse.message,
         );
       if (restoreResponse.email)
         return navigate('LOGINCREDENTIALS', {
-          email: restoreResponse.email
+          email: restoreResponse.email,
         });
       if (
         !restoreResponse.email &&
@@ -156,12 +153,12 @@ export default class Login extends React.Component {
       ) {
         let purchase = restoreResponse.purchase || purchases[0];
         const product = await RNIap.getSubscriptions([
-          purchase.product_id || purchase.productId
+          purchase.product_id || purchase.productId,
         ]);
         purchase.price = product[0].price;
         purchase.currency = product[0].currency;
         return navigate('CREATEACCOUNT', {
-          purchase
+          purchase,
         });
       }
     } catch (err) {
@@ -169,10 +166,10 @@ export default class Login extends React.Component {
       Alert.alert(
         'Something went wrong',
         'Please try Again later.',
-        [{ text: 'OK' }],
+        [{text: 'OK'}],
         {
-          cancelable: false
-        }
+          cancelable: false,
+        },
       );
     }
   };
@@ -185,7 +182,7 @@ export default class Login extends React.Component {
         justifyContent: 'center',
         alignItems: 'center',
         marginLeft: onTablet ? '10%' : '2.5%',
-        marginRight: onTablet ? '10%' : '2.5%'
+        marginRight: onTablet ? '10%' : '2.5%',
       }}
     >
       <TouchableOpacity
@@ -198,7 +195,7 @@ export default class Login extends React.Component {
           borderRadius: 60,
           backgroundColor: 'transparent',
           borderWidth: 2,
-          borderColor: '#fb1b2f'
+          borderColor: '#fb1b2f',
         }}
       >
         <Text
@@ -207,7 +204,7 @@ export default class Login extends React.Component {
             fontSize: onTablet ? 24 : 16,
             textAlign: 'center',
             color: '#fb1b2f',
-            padding: 10
+            padding: 10,
           }}
         >
           LOG IN
@@ -224,7 +221,7 @@ export default class Login extends React.Component {
           maxWidth: 400,
           justifyContent: 'center',
           borderRadius: 60,
-          backgroundColor: '#fb1b2f'
+          backgroundColor: '#fb1b2f',
         }}
       >
         <Text
@@ -233,7 +230,7 @@ export default class Login extends React.Component {
             fontSize: onTablet ? 24 : 16,
             textAlign: 'center',
             color: 'white',
-            padding: 10
+            padding: 10,
           }}
         >
           SIGN UP
@@ -244,7 +241,7 @@ export default class Login extends React.Component {
 
   renderDots() {
     return (
-      <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+      <View style={{flexDirection: 'row', alignSelf: 'center'}}>
         {[1, 2, 3, 4, 5].map(dot => (
           <View
             key={dot}
@@ -256,7 +253,7 @@ export default class Login extends React.Component {
               backgroundColor:
                 this.state.page == dot ? '#fb1b2f' : 'transparent',
               borderWidth: 2,
-              borderColor: this.state.page == dot ? '#fb1b2f' : 'grey'
+              borderColor: this.state.page == dot ? '#fb1b2f' : 'grey',
             }}
           />
         ))}
@@ -270,7 +267,7 @@ export default class Login extends React.Component {
         style={{
           flex: 1,
           width,
-          backgroundColor: 'rgba(23, 26, 26, 1)'
+          backgroundColor: 'rgba(23, 26, 26, 1)',
         }}
       >
         <View
@@ -279,14 +276,14 @@ export default class Login extends React.Component {
             top: isNotch ? '3%' : '1%',
             zIndex: 3,
             elevation: 3,
-            width: '100%'
+            width: '100%',
           }}
         >
           <Pianote
             height={onTablet ? 80 : 100}
             width={onTablet ? 200 : 120}
             fill={'#fb1b2f'}
-            style={{ alignSelf: 'center' }}
+            style={{alignSelf: 'center'}}
           />
         </View>
         <GradientFeature
@@ -298,11 +295,11 @@ export default class Login extends React.Component {
         <View
           style={{
             flex: 0.75,
-            alignSelf: 'stretch'
+            alignSelf: 'stretch',
           }}
         >
           <FastImage
-            style={{ flex: 1 }}
+            style={{flex: 1}}
             source={require('Pianote2/src/assets/img/imgs/lisa-foundations.png')}
             resizeMode={FastImage.resizeMode.cover}
           />
@@ -313,14 +310,14 @@ export default class Login extends React.Component {
             bottom: '23%',
             width: '100%',
             zIndex: 3,
-            elevation: 3
+            elevation: 3,
           }}
         >
           <View style={styles.centerContent}>
             <FastImage
               style={{
                 height: onTablet ? 200 : 100,
-                width: '100%'
+                width: '100%',
               }}
               source={require('Pianote2/src/assets/img/imgs/devices.png')}
               resizeMode={FastImage.resizeMode.contain}
@@ -332,7 +329,7 @@ export default class Login extends React.Component {
               fontSize: onTablet ? 32 : 24,
               padding: 5,
               textAlign: 'center',
-              color: 'white'
+              color: 'white',
             }}
           >
             {'Pianote Lessons, Songs, \n& Support'}
@@ -343,7 +340,7 @@ export default class Login extends React.Component {
               fontSize: onTablet ? 24 : 16,
               textAlign: 'center',
               color: 'grey',
-              marginTop: 10
+              marginTop: 10,
             }}
           >
             Everywhere you go.
@@ -355,11 +352,11 @@ export default class Login extends React.Component {
             bottom: '5.5%',
             width: '100%',
             zIndex: 3,
-            elevation: 3
+            elevation: 3,
           }}
         >
           {this.renderDots()}
-          <View style={{ height: '20%' }} />
+          <View style={{height: '20%'}} />
           {this.renderButtons()}
         </View>
       </View>
@@ -368,21 +365,21 @@ export default class Login extends React.Component {
 
   renderSecondPage() {
     return (
-      <View style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}>
+      <View style={{flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)'}}>
         <View
           style={{
             position: 'absolute',
             top: isNotch ? '3%' : '1%',
             zIndex: 2,
             elevation: 3,
-            width: '100%'
+            width: '100%',
           }}
         >
           <Pianote
             height={onTablet ? 80 : 100}
             width={onTablet ? 200 : 120}
             fill={'#fb1b2f'}
-            style={{ alignSelf: 'center' }}
+            style={{alignSelf: 'center'}}
           />
         </View>
         <GradientFeature
@@ -394,11 +391,11 @@ export default class Login extends React.Component {
         <View
           style={{
             flex: 0.75,
-            alignSelf: 'stretch'
+            alignSelf: 'stretch',
           }}
         >
           <FastImage
-            style={{ flex: 1 }}
+            style={{flex: 1}}
             source={require('Pianote2/src/assets/img/imgs/prescreenPractice.png')}
             resizeMode={FastImage.resizeMode.cover}
           />
@@ -409,14 +406,14 @@ export default class Login extends React.Component {
             bottom: '21.5%',
             width: '100%',
             zIndex: 3,
-            elevation: 3
+            elevation: 3,
           }}
         >
           <View style={styles.centerContent}>
             <FastImage
               style={{
                 height: onTablet ? 200 : 120,
-                width: '90%'
+                width: '90%',
               }}
               source={require('Pianote2/src/assets/img/imgs/practice.png')}
               resizeMode={FastImage.resizeMode.contain}
@@ -428,7 +425,7 @@ export default class Login extends React.Component {
               fontSize: onTablet ? 32 : 24,
               padding: 5,
               textAlign: 'center',
-              color: 'white'
+              color: 'white',
             }}
           >
             Always know
@@ -437,7 +434,7 @@ export default class Login extends React.Component {
                 fontFamily: 'OpenSans-Bold',
                 padding: 5,
                 textAlign: 'center',
-                color: 'white'
+                color: 'white',
               }}
             >
               {' exactly '}
@@ -450,7 +447,7 @@ export default class Login extends React.Component {
               padding: 5,
               fontSize: onTablet ? 24 : 16,
               textAlign: 'center',
-              color: 'grey'
+              color: 'grey',
             }}
           >
             Unlike "video game" learning where you only learn what keys to hit,
@@ -464,11 +461,11 @@ export default class Login extends React.Component {
             bottom: '5.5%',
             width: '100%',
             zIndex: 3,
-            elevation: 3
+            elevation: 3,
           }}
         >
           {this.renderDots()}
-          <View style={{ height: '20%' }} />
+          <View style={{height: '20%'}} />
           {this.renderButtons()}
         </View>
       </View>
@@ -477,21 +474,21 @@ export default class Login extends React.Component {
 
   renderThirdpage() {
     return (
-      <View style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}>
+      <View style={{flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)'}}>
         <View
           style={{
             position: 'absolute',
             top: isNotch ? '3%' : '1%',
             zIndex: 2,
             elevation: 3,
-            width: '100%'
+            width: '100%',
           }}
         >
           <Pianote
             height={onTablet ? 80 : 100}
             width={onTablet ? 200 : 120}
             fill={'#fb1b2f'}
-            style={{ alignSelf: 'center' }}
+            style={{alignSelf: 'center'}}
           />
         </View>
         <GradientFeature
@@ -503,11 +500,11 @@ export default class Login extends React.Component {
         <View
           style={{
             flex: 0.75,
-            alignSelf: 'stretch'
+            alignSelf: 'stretch',
           }}
         >
           <FastImage
-            style={{ flex: 1 }}
+            style={{flex: 1}}
             source={require('Pianote2/src/assets/img/imgs/prescreenSongs.png')}
             resizeMode={FastImage.resizeMode.cover}
           />
@@ -518,14 +515,14 @@ export default class Login extends React.Component {
             bottom: '22%',
             width: '100%',
             zIndex: 3,
-            elevation: 3
+            elevation: 3,
           }}
         >
           <View style={styles.centerContent}>
             <FastImage
               style={{
                 height: onTablet ? 200 : 100,
-                width: '100%'
+                width: '100%',
               }}
               source={require('Pianote2/src/assets/img/imgs/favorite-songs.png')}
               resizeMode={FastImage.resizeMode.contain}
@@ -537,7 +534,7 @@ export default class Login extends React.Component {
               fontSize: onTablet ? 32 : 24,
               padding: 5,
               textAlign: 'center',
-              color: 'white'
+              color: 'white',
             }}
           >
             Play Your {'\n'}
@@ -546,7 +543,7 @@ export default class Login extends React.Component {
                 fontFamily: 'OpenSans-Bold',
                 padding: 5,
                 textAlign: 'center',
-                color: 'white'
+                color: 'white',
               }}
             >
               {' Favorite Songs'}
@@ -558,7 +555,7 @@ export default class Login extends React.Component {
               padding: 5,
               fontSize: onTablet ? 24 : 16,
               textAlign: 'center',
-              color: 'grey'
+              color: 'grey',
             }}
           >
             Nothing is better than playing to real music! So you'll get custom
@@ -572,11 +569,11 @@ export default class Login extends React.Component {
             bottom: '5.5%',
             width: '100%',
             zIndex: 3,
-            elevation: 3
+            elevation: 3,
           }}
         >
           {this.renderDots()}
-          <View style={{ height: '20%' }} />
+          <View style={{height: '20%'}} />
           {this.renderButtons()}
         </View>
       </View>
@@ -585,21 +582,21 @@ export default class Login extends React.Component {
 
   renderFourthPage() {
     return (
-      <View style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}>
+      <View style={{flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)'}}>
         <View
           style={{
             position: 'absolute',
             top: isNotch ? '3%' : '1.5%',
             zIndex: 2,
             elevation: 3,
-            width: '100%'
+            width: '100%',
           }}
         >
           <Pianote
             height={onTablet ? 80 : 100}
             width={onTablet ? 200 : 120}
             fill={'#fb1b2f'}
-            style={{ alignSelf: 'center' }}
+            style={{alignSelf: 'center'}}
           />
         </View>
         <GradientFeature
@@ -611,11 +608,11 @@ export default class Login extends React.Component {
         <View
           style={{
             flex: 0.75,
-            alignSelf: 'stretch'
+            alignSelf: 'stretch',
           }}
         >
           <FastImage
-            style={{ flex: 1 }}
+            style={{flex: 1}}
             source={require('Pianote2/src/assets/img/imgs/prescreenSupport.png')}
             resizeMode={FastImage.resizeMode.cover}
           />
@@ -627,14 +624,14 @@ export default class Login extends React.Component {
             bottom: '22%',
             width: '100%',
             zIndex: 3,
-            elevation: 3
+            elevation: 3,
           }}
         >
           <View style={styles.centerContent}>
             <FastImage
               style={{
                 height: onTablet ? 200 : 100,
-                width: '100%'
+                width: '100%',
               }}
               source={require('Pianote2/src/assets/img/imgs/support.png')}
               resizeMode={FastImage.resizeMode.contain}
@@ -646,7 +643,7 @@ export default class Login extends React.Component {
               fontSize: onTablet ? 32 : 24,
               padding: 5,
               textAlign: 'center',
-              color: 'white'
+              color: 'white',
             }}
           >
             Personalized
@@ -655,7 +652,7 @@ export default class Login extends React.Component {
                 fontFamily: 'OpenSans-Bold',
                 padding: 5,
                 textAlign: 'center',
-                color: 'white'
+                color: 'white',
               }}
             >
               {' Lessons & Support'}
@@ -668,7 +665,7 @@ export default class Login extends React.Component {
               fontSize: onTablet ? 24 : 16,
               textAlign: 'center',
               color: 'grey',
-              marginTop: '1%'
+              marginTop: '1%',
             }}
           >
             Get direct access to real teachers any time you have a question,
@@ -682,11 +679,11 @@ export default class Login extends React.Component {
             bottom: '5.5%',
             width: '100%',
             zIndex: 3,
-            elevation: 3
+            elevation: 3,
           }}
         >
           {this.renderDots()}
-          <View style={{ height: '20%' }} />
+          <View style={{height: '20%'}} />
           {this.renderButtons()}
         </View>
       </View>
@@ -695,21 +692,21 @@ export default class Login extends React.Component {
 
   renderFifthPage() {
     return (
-      <View style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}>
+      <View style={{flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)'}}>
         <View
           style={{
             position: 'absolute',
             top: isNotch ? '3%' : '1%',
             zIndex: 4,
             elevation: 4,
-            width: '100%'
+            width: '100%',
           }}
         >
           <Pianote
             height={onTablet ? 80 : 100}
             width={onTablet ? 200 : 120}
             fill={'#fb1b2f'}
-            style={{ alignSelf: 'center' }}
+            style={{alignSelf: 'center'}}
           />
         </View>
         <GradientFeature
@@ -726,8 +723,8 @@ export default class Login extends React.Component {
               backgroundColor: 'rgba(23, 26, 26, 1)',
               alignSelf: 'stretch',
               zIndex: 3,
-              marginBottom: 20
-            }
+              marginBottom: 20,
+            },
           ]}
         >
           <View
@@ -736,8 +733,8 @@ export default class Login extends React.Component {
               {
                 width: '100%',
                 zIndex: 3,
-                elevation: 3
-              }
+                elevation: 3,
+              },
             ]}
           >
             <Text
@@ -746,7 +743,7 @@ export default class Login extends React.Component {
                 fontSize: onTablet ? 32 : 24,
                 padding: 5,
                 textAlign: 'center',
-                color: 'white'
+                color: 'white',
               }}
             >
               <Text
@@ -754,7 +751,7 @@ export default class Login extends React.Component {
                   fontFamily: 'OpenSans-Bold',
                   padding: 5,
                   textAlign: 'center',
-                  color: 'white'
+                  color: 'white',
                 }}
               >
                 Not a Member?
@@ -766,7 +763,7 @@ export default class Login extends React.Component {
                 paddingHorizontal: 20,
                 fontSize: onTablet ? 24 : 16,
                 textAlign: 'center',
-                color: 'grey'
+                color: 'grey',
               }}
             >
               Try it for free for 7-days when you click the sign up button below
@@ -780,11 +777,11 @@ export default class Login extends React.Component {
             bottom: '5.5%',
             width: '100%',
             zIndex: 3,
-            elevation: 3
+            elevation: 3,
           }}
         >
           {this.renderDots()}
-          <View style={{ height: '20%' }} />
+          <View style={{height: '20%'}} />
           {this.renderButtons()}
         </View>
       </View>
@@ -794,11 +791,11 @@ export default class Login extends React.Component {
   render() {
     return (
       <SafeAreaView
-        style={{ flex: 1, backgroundColor: 'black' }}
-        forceInset={{ top: 'never', bottom: 'never' }}
+        style={{flex: 1, backgroundColor: 'black'}}
+        forceInset={{top: 'never', bottom: 'never'}}
       >
-        <View style={{ flex: 1 }}>
-          <StatusBar backgroundColor='black' barStyle='light-content' />
+        <View style={{flex: 1}}>
+          <StatusBar backgroundColor="black" barStyle="light-content" />
 
           <ScrollView
             horizontal={true}
@@ -807,7 +804,7 @@ export default class Login extends React.Component {
             }}
             pagingEnabled={true}
             onMomentumScrollEnd={e => this.changeColor(e)}
-            style={{ flex: 1 }}
+            style={{flex: 1}}
           >
             {this.renderFirstPage()}
             {this.renderSecondPage()}
@@ -828,7 +825,7 @@ export default class Login extends React.Component {
                 style={{
                   marginTop: 10,
                   borderRadius: 50,
-                  backgroundColor: colors.pianoteRed
+                  backgroundColor: colors.pianoteRed,
                 }}
               >
                 <Text
@@ -837,7 +834,7 @@ export default class Login extends React.Component {
                     fontSize: 15,
                     color: '#ffffff',
                     textAlign: 'center',
-                    fontFamily: 'OpenSans-Bold'
+                    fontFamily: 'OpenSans-Bold',
                   }}
                 >
                   {this.state.signupAlertText}

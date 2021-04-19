@@ -1,6 +1,3 @@
-/**
- * BlurredList
- */
 import React from 'react';
 import {
   View,
@@ -19,7 +16,6 @@ import {navigate} from '../../AppNavigator';
 const windowDim = Dimensions.get('window');
 const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-
 const navigationOptions = [
   {
     title: 'Home',
@@ -69,7 +65,6 @@ const navigationOptions = [
 
 export default class NavigationMenu extends React.Component {
   static contextType = NetworkContext;
-
   constructor(props) {
     super(props);
     this.state = {

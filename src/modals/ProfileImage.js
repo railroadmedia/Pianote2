@@ -1,13 +1,10 @@
-/**
- * ProfileImage
- */
 import React from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 
 export default class ProfileImage extends React.Component {
@@ -52,22 +49,22 @@ const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     borderRadius: 15,
-    margin: 20
+    margin: 20,
   },
   title: {
     paddingHorizontal: 40,
-    marginTop: 10
+    marginTop: 10,
   },
   tryAgain: {
     paddingHorizontal: 40,
-    marginTop: 5
+    marginTop: 5,
   },
   tryAgainTextContainer: {
     paddingHorizontal: 20,
-    marginVertical: 15
+    marginVertical: 15,
   },
   tryAgainText: {
     color: '#fb1b2f',
-    marginTop: 10
-  }
+    marginTop: 10,
+  },
 });

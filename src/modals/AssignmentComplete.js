@@ -1,24 +1,7 @@
-/**
- * AssignmentComplete
- */
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions
-} from 'react-native';
-
-import { BlurView } from '@react-native-community/blur';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {BlurView} from '@react-native-community/blur';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 export default class AssignmentComplete extends React.Component {
   constructor(props) {
@@ -44,7 +27,7 @@ export default class AssignmentComplete extends React.Component {
             <View
               style={[
                 styles.centerContent,
-                localStyles.assignmentCompleteContainer
+                localStyles.assignmentCompleteContainer,
               ]}
             >
               <Text style={[styles.modalHeaderText]}>Assignment Complete</Text>
@@ -71,22 +54,22 @@ const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     borderRadius: 10,
-    padding: 30
+    padding: 30,
   },
   assignmentCompleteContainer: {
     padding: 5,
-    marginBottom: 0
+    marginBottom: 0,
   },
   xpText: {
     color: '#fb1b2f',
     marginTop: 15,
-    marginBottom: 10
+    marginBottom: 10,
   },
   assignmentTitle: {
     marginHorizontal: 20,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   congratsText: {
-    marginHorizontal: 20
-  }
+    marginHorizontal: 20,
+  },
 });

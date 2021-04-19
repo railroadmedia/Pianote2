@@ -1,15 +1,5 @@
-/*
-
-* props: title, expandableContStyle, titleStyle, iconColor
-* title: the text next to the expandable/collapsable icon
-* expandableContStyle: style for container
-* titleStyle: style for title
-* iconColor: color for arrow icon
-*/
-
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-
+import {View, Text, TouchableOpacity} from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 export default class ExpandableView extends React.Component {
@@ -35,20 +25,20 @@ export default class ExpandableView extends React.Component {
   toggleView = () => {
     switch (this.props.processType) {
       case 'RAM': {
-        this.setState(({ maxHeight }) => ({
-          maxHeight: maxHeight ? 0 : 100000
+        this.setState(({maxHeight}) => ({
+          maxHeight: maxHeight ? 0 : 100000,
         }));
         break;
       }
       case 'CPU': {
-        this.setState(({ contentVisible }) => ({
-          contentVisible: !contentVisible
+        this.setState(({contentVisible}) => ({
+          contentVisible: !contentVisible,
         }));
         break;
       }
       default: {
-        this.setState(({ contentVisible }) => ({
-          contentVisible: !contentVisible
+        this.setState(({contentVisible}) => ({
+          contentVisible: !contentVisible,
         }));
         break;
       }
@@ -56,21 +46,21 @@ export default class ExpandableView extends React.Component {
   };
 
   render() {
-    let { maxHeight, contentVisible } = this.state;
+    let {maxHeight, contentVisible} = this.state;
     return (
-      <View testID='expandableCont' style={this.props.expandableContStyle}>
+      <View testID="expandableCont" style={this.props.expandableContStyle}>
         <TouchableOpacity
-          testID='dropBtn'
+          testID="dropBtn"
           onPress={() => this.toggleView()}
           style={[
             {
               flexDirection: 'row',
-              alignItems: 'center'
+              alignItems: 'center',
             },
-            this.props.dropStyle
+            this.props.dropStyle,
           ]}
         >
-          <Text testID='title' style={[this.props.titleStyle, { flex: 1 }]}>
+          <Text testID="title" style={[this.props.titleStyle, {flex: 1}]}>
             {this.props.title}
           </Text>
           {(contentVisible || !!this.state.maxHeight) && (
@@ -89,7 +79,7 @@ export default class ExpandableView extends React.Component {
           )}
         </TouchableOpacity>
         {contentVisible === undefined ? (
-          <View style={{ overflow: 'hidden', maxHeight }}>
+          <View style={{overflow: 'hidden', maxHeight}}>
             {this.props.children}
           </View>
         ) : (

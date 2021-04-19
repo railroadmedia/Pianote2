@@ -1,8 +1,5 @@
-/**
- * CustomSwitch
- */
 import React from 'react';
-import { View, TouchableOpacity, Animated } from 'react-native';
+import {View, TouchableOpacity, Animated} from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
 
@@ -12,35 +9,35 @@ export default class CustomSwitch extends React.Component {
     this.state = {
       leftMargin: new Animated.Value(this.props.isClicked ? 0.925 : 0.075),
       rightMargin: new Animated.Value(this.props.isClicked ? 0.075 : 0.925),
-      clicked: this.props.isClicked
+      clicked: this.props.isClicked,
     };
   }
 
   click() {
     if (this.state.clicked == false) {
-      setTimeout(() => this.setState({ clicked: true }), 200);
+      setTimeout(() => this.setState({clicked: true}), 200);
       Animated.parallel([
         Animated.timing(this.state.leftMargin, {
           toValue: 0.925,
-          duration: 250
+          duration: 250,
         }),
         Animated.timing(this.state.rightMargin, {
           toValue: 0.075,
-          duration: 250
-        })
+          duration: 250,
+        }),
       ]).start();
       this.props.clicked(true);
     } else {
-      setTimeout(() => this.setState({ clicked: false }), 200);
+      setTimeout(() => this.setState({clicked: false}), 200);
       Animated.parallel([
         Animated.timing(this.state.leftMargin, {
           toValue: 0.075,
-          duration: 250
+          duration: 250,
         }),
         Animated.timing(this.state.rightMargin, {
           toValue: 0.925,
-          duration: 250
-        })
+          duration: 250,
+        }),
       ]).start();
       this.props.clicked(false);
     }
@@ -58,8 +55,8 @@ export default class CustomSwitch extends React.Component {
             backgroundColor: this.state.clicked
               ? '#fb1b2f'
               : colors.secondBackground,
-            flexDirection: 'row'
-          }
+            flexDirection: 'row',
+          },
         ]}
       >
         <TouchableOpacity
@@ -69,13 +66,13 @@ export default class CustomSwitch extends React.Component {
             {
               height: '100%',
               width: '100%',
-              justifyContent: 'center'
-            }
+              justifyContent: 'center',
+            },
           ]}
         >
-          <View style={{ flex: 1 }} />
-          <View style={{ flexDirection: 'row' }}>
-            <Animated.View style={{ flex: this.state.leftMargin }} />
+          <View style={{flex: 1}} />
+          <View style={{flexDirection: 'row'}}>
+            <Animated.View style={{flex: this.state.leftMargin}} />
             <View
               style={[
                 styles.centerContent,
@@ -83,8 +80,8 @@ export default class CustomSwitch extends React.Component {
                   width: onTablet ? 27.5 : 22.5,
                   height: onTablet ? 27.5 : 22.5,
                   borderRadius: 100,
-                  backgroundColor: 'white'
-                }
+                  backgroundColor: 'white',
+                },
               ]}
             >
               {this.state.clicked && (
@@ -102,9 +99,9 @@ export default class CustomSwitch extends React.Component {
                 />
               )}
             </View>
-            <Animated.View style={{ flex: this.state.rightMargin }} />
+            <Animated.View style={{flex: this.state.rightMargin}} />
           </View>
-          <View style={{ flex: 1 }} />
+          <View style={{flex: 1}} />
         </TouchableOpacity>
       </View>
     );

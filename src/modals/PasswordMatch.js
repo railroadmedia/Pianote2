@@ -1,6 +1,3 @@
-/**
- * PasswordMatch
- */
 import React from 'react';
 import {
   View,
@@ -8,15 +5,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
-  Dimensions
+  Dimensions,
 } from 'react-native';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 export default class PasswordMatch extends React.Component {
   constructor(props) {
@@ -57,18 +47,18 @@ const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     borderRadius: 15,
-    margin: 20
+    margin: 20,
   },
   text: {
     paddingHorizontal: 40,
-    marginTop: 10
+    marginTop: 10,
   },
   tryAgainContainer: {
     paddingHorizontal: 40,
-    marginVertical: 10
+    marginVertical: 10,
   },
   tryAgainText: {
     color: '#fb1b2f',
-    marginBottom: 10
-  }
+    marginBottom: 10,
+  },
 });

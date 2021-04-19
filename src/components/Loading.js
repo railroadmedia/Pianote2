@@ -1,36 +1,36 @@
 import React from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import {View, ActivityIndicator, StyleSheet} from 'react-native';
 
 export default class Loading extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: false
+      isLoading: false,
     };
   }
 
   toggleLoading(isLoading) {
     this.setState(state => {
       isLoading = isLoading === undefined ? !state.isLoading : isLoading;
-      return { isLoading };
+      return {isLoading};
     });
   }
 
   render() {
-    let { backgroundColor, activityColor } = this.props;
+    let {backgroundColor, activityColor} = this.props;
     return (
       <View
         style={[
           localStyles.loadingContainer,
-          { backgroundColor: backgroundColor || 'rgba(0,0,0,.5)' },
-          this.state.isLoading ? { width: '100%' } : { width: 0 }
+          {backgroundColor: backgroundColor || 'rgba(0,0,0,.5)'},
+          this.state.isLoading ? {width: '100%'} : {width: 0},
         ]}
       >
         <ActivityIndicator
           size={'large'}
           color={activityColor || 'white'}
           animating={this.state.isLoading}
-          style={{ marginVertical: 10 }}
+          style={{marginVertical: 10}}
         />
       </View>
     );
@@ -43,6 +43,6 @@ const localStyles = StyleSheet.create({
     position: 'absolute',
     height: '100%',
     justifyContent: 'center',
-    zIndex: 2
-  }
+    zIndex: 2,
+  },
 });

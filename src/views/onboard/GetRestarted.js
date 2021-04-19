@@ -1,11 +1,8 @@
-/**
- * GetRestarted
- */
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import FastImage from 'react-native-fast-image';
-import { navigate } from '../../../AppNavigator';
+import {navigate} from '../../../AppNavigator';
 
 export default class GetRestarted extends React.Component {
   constructor(props) {
@@ -19,7 +16,7 @@ export default class GetRestarted extends React.Component {
         <View
           style={{
             height: '100%',
-            width: '100%'
+            width: '100%',
           }}
         >
           <View
@@ -27,13 +24,13 @@ export default class GetRestarted extends React.Component {
               styles.centerContent,
               {
                 flex: 0.53,
-                alignSelf: 'stretch'
-              }
+                alignSelf: 'stretch',
+              },
             ]}
           >
             <View style={[styles.centerContent, localStyles.outerContainer]}>
               <View style={localStyles.innerContainer}>
-                <View style={{ flex: 1 }}>
+                <View style={{flex: 1}}>
                   <FastImage
                     style={localStyles.image}
                     source={require('Pianote2/src/assets/img/imgs/onboarding-welcome-back.png')}
@@ -47,7 +44,7 @@ export default class GetRestarted extends React.Component {
             style={{
               flex: 0.47,
               backgroundColor: 'white',
-              alignSelf: 'stretch'
+              alignSelf: 'stretch',
             }}
           >
             <Text style={localStyles.pianoteText}>
@@ -78,19 +75,19 @@ const localStyles = StyleSheet.create({
     borderRadius: 15,
     margin: 20,
     height: 200,
-    width: '80%'
+    width: '80%',
   },
   pianoteText: {
     fontFamily: 'OpenSans-Bold',
     fontSize: DeviceInfo.isTablet() ? 24 : 18,
     textAlign: 'center',
-    marginBottom: 20
+    marginBottom: 20,
   },
   outerContainer: {
     position: 'absolute',
     height: '80%',
     width: '100%',
-    zIndex: 2
+    zIndex: 2,
   },
   innerContainer: {
     position: 'absolute',
@@ -99,18 +96,18 @@ const localStyles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 15,
     flexDirection: 'row',
-    zIndex: 5
+    zIndex: 5,
   },
   image: {
     height: '100%',
     width: '100%',
-    borderRadius: 15
+    borderRadius: 15,
   },
   description: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 22 : 16,
     textAlign: 'center',
-    flex: 1
+    flex: 1,
   },
   skip: {
     width: '100%',
@@ -119,18 +116,18 @@ const localStyles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     borderRadius: 100,
-    marginBottom: 20
+    marginBottom: 20,
   },
   getStartedContainer: {
     width: '85%',
     height: '100%',
     borderRadius: 300,
     backgroundColor: '#fb1b2f',
-    zIndex: 5
+    zIndex: 5,
   },
   getStarted: {
     fontFamily: 'RobotoCondensed-Bold',
     fontSize: DeviceInfo.isTablet() ? 24 : 18,
-    color: 'white'
-  }
+    color: 'white',
+  },
 });

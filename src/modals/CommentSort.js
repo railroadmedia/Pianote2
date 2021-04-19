@@ -1,23 +1,20 @@
-/**
- * CommentSort
- */
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 const sortOptions = [
-  { title: 'Most Liked', option: 'Popular' },
-  { title: 'My Comments', option: 'Mine' },
-  { title: 'Newest First', option: 'Newest' },
-  { title: 'Oldest First', option: 'Oldest' }
+  {title: 'Most Liked', option: 'Popular'},
+  {title: 'My Comments', option: 'Mine'},
+  {title: 'Newest First', option: 'Newest'},
+  {title: 'Oldest First', option: 'Oldest'},
 ];
 
 export default class CommentSort extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentSort: this.props.currentSort // Mine | Popular | Newest | Oldest
+      currentSort: this.props.currentSort, // Mine | Popular | Newest | Oldest
     };
   }
 
@@ -34,7 +31,7 @@ export default class CommentSort extends React.Component {
           style={{
             width: '100%',
             backgroundColor: '#00101d',
-            paddingBottom: DeviceInfo.hasNotch() ? 30 : 0
+            paddingBottom: DeviceInfo.hasNotch() ? 30 : 0,
           }}
         >
           {sortOptions.map((sortOption, index) => (
@@ -44,7 +41,7 @@ export default class CommentSort extends React.Component {
                 flexDirection: 'row',
                 borderBottomColor: '#445f73',
                 borderBottomWidth: 0.5,
-                alignItems: 'center'
+                alignItems: 'center',
               }}
               onPress={() => {
                 this.props.hideCommentSort();
@@ -68,7 +65,7 @@ export default class CommentSort extends React.Component {
                   color:
                     this.state.currentSort == sortOption.option
                       ? 'white'
-                      : colors.secondBackground
+                      : colors.secondBackground,
                 }}
               >
                 {sortOption.title}
@@ -80,7 +77,7 @@ export default class CommentSort extends React.Component {
             style={{
               padding: 5,
               flexDirection: 'row',
-              alignItems: 'center'
+              alignItems: 'center',
             }}
           >
             <EntypoIcon
@@ -93,7 +90,7 @@ export default class CommentSort extends React.Component {
                 padding: 10,
                 fontSize: onTablet ? 16 : 12,
                 fontFamily: 'OpenSans-Regular',
-                color: 'white'
+                color: 'white',
               }}
             >
               Cancel

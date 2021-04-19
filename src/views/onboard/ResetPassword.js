@@ -1,6 +1,3 @@
-/**
- * ResetPassword
- */
 import React from 'react';
 import {
   View,
@@ -8,21 +5,21 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import PasswordMatch from '../../modals/PasswordMatch';
-import { SafeAreaView } from 'react-navigation';
+import {SafeAreaView} from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
 import Back from '../../assets/img/svgs/back';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import CustomModal from '../../modals/CustomModal';
-import { changePassword } from '../../services/UserDataAuth';
-import { NetworkContext } from '../../context/NetworkProvider';
-import { navigate } from '../../../AppNavigator';
+import {changePassword} from '../../services/UserDataAuth';
+import {NetworkContext} from '../../context/NetworkProvider';
+import {navigate} from '../../../AppNavigator';
 
 export default class ResetPassword extends React.Component {
   static contextType = NetworkContext;
@@ -33,7 +30,7 @@ export default class ResetPassword extends React.Component {
       showPassword: true,
       password: '',
       confirmPassword: '',
-      scrollViewContentFlex: { flex: 1 }
+      scrollViewContentFlex: {flex: 1},
     };
   }
 
@@ -43,11 +40,11 @@ export default class ResetPassword extends React.Component {
     }
     if (this.state.password == this.state.confirmPassword) {
       if (this.state.password.length > 7) {
-        const { email, resetKey } = this.props.route?.params;
+        const {email, resetKey} = this.props.route?.params;
         let res = await changePassword(
           email.replace('%40', '@'),
           this.state.password,
-          resetKey
+          resetKey,
         );
         await AsyncStorage.removeItem('resetKey');
         console.log(res);
@@ -57,7 +54,7 @@ export default class ResetPassword extends React.Component {
             await AsyncStorage.multiSet([
               ['loggedIn', 'true'],
               ['email', email],
-              ['password', this.state.password]
+              ['password', this.state.password],
             ]);
           }
           this.alert.toggle(res.title, res.message);
@@ -71,7 +68,7 @@ export default class ResetPassword extends React.Component {
   render() {
     return (
       <FastImage
-        style={{ flex: 1 }}
+        style={{flex: 1}}
         resizeMode={FastImage.resizeMode.cover}
         source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
       >
@@ -83,9 +80,9 @@ export default class ResetPassword extends React.Component {
           height={'100%'}
           borderRadius={0}
         />
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{flex: 1}}>
           <KeyboardAvoidingView
-            style={{ flex: 1 }}
+            style={{flex: 1}}
             behavior={`${isiOS ? 'padding' : ''}`}
           >
             <TouchableOpacity
@@ -94,7 +91,7 @@ export default class ResetPassword extends React.Component {
                 padding: 15,
                 flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
               }}
             >
               <Back
@@ -106,7 +103,7 @@ export default class ResetPassword extends React.Component {
                 style={{
                   fontFamily: 'OpenSans-Bold',
                   fontSize: onTablet ? 36 : 24,
-                  color: 'white'
+                  color: 'white',
                 }}
               >
                 Reset Password
@@ -114,16 +111,16 @@ export default class ResetPassword extends React.Component {
               <View />
             </TouchableOpacity>
             <ScrollView
-              style={{ flex: 1 }}
-              keyboardShouldPersistTaps='handled'
-              contentInsetAdjustmentBehavior='never'
+              style={{flex: 1}}
+              keyboardShouldPersistTaps="handled"
+              contentInsetAdjustmentBehavior="never"
               contentContainerStyle={this.state.scrollViewContentFlex}
             >
               <View
                 style={{
                   flex: 1,
                   marginTop: 40,
-                  justifyContent: 'center'
+                  justifyContent: 'center',
                 }}
               >
                 <Text
@@ -132,7 +129,7 @@ export default class ResetPassword extends React.Component {
                     fontSize: onTablet ? 24 : 16,
                     textAlign: 'left',
                     color: 'white',
-                    paddingLeft: 15
+                    paddingLeft: 15,
                   }}
                 >
                   Create a new password
@@ -146,7 +143,7 @@ export default class ResetPassword extends React.Component {
                     marginVertical: 10,
                     marginHorizontal: 15,
                     justifyContent: 'center',
-                    backgroundColor: 'white'
+                    backgroundColor: 'white',
                   }}
                 >
                   <TextInput
@@ -154,13 +151,13 @@ export default class ResetPassword extends React.Component {
                     onBlur={() =>
                       this.setState({
                         scrollViewContentFlex: {
-                          flex: 1
-                        }
+                          flex: 1,
+                        },
                       })
                     }
                     onFocus={() =>
                       this.setState({
-                        scrollViewContentFlex: {}
+                        scrollViewContentFlex: {},
                       })
                     }
                     multiline={false}
@@ -171,20 +168,20 @@ export default class ResetPassword extends React.Component {
                       Platform.OS == 'android' ? 'default' : 'email-address'
                     }
                     secureTextEntry={true}
-                    onChangeText={password => this.setState({ password })}
+                    onChangeText={password => this.setState({password})}
                     style={{
                       fontSize: onTablet ? 20 : 14,
                       padding: 15,
                       color: 'black',
                       marginRight: 45,
-                      fontFamily: 'OpenSans-Regular'
+                      fontFamily: 'OpenSans-Regular',
                     }}
                   />
                   {!this.state.showPassword && (
                     <TouchableOpacity
                       onPress={() =>
                         this.setState({
-                          showPassword: true
+                          showPassword: true,
                         })
                       }
                       style={{
@@ -194,7 +191,7 @@ export default class ResetPassword extends React.Component {
                         height: '100%',
                         borderRadius: 100,
                         position: 'absolute',
-                        backgroundColor: 'white'
+                        backgroundColor: 'white',
                       }}
                     >
                       <Text>{this.state.password}</Text>
@@ -203,7 +200,7 @@ export default class ResetPassword extends React.Component {
                   <TouchableOpacity
                     onPress={() => {
                       this.setState({
-                        showPassword: !this.state.showPassword
+                        showPassword: !this.state.showPassword,
                       });
                     }}
                     style={{
@@ -211,7 +208,7 @@ export default class ResetPassword extends React.Component {
                       padding: 15,
                       height: '100%',
                       aspectRatio: 1,
-                      position: 'absolute'
+                      position: 'absolute',
                     }}
                   >
                     {this.state.showPassword ? (
@@ -227,7 +224,7 @@ export default class ResetPassword extends React.Component {
                     fontSize: onTablet ? 24 : 16,
                     textAlign: 'left',
                     color: 'white',
-                    paddingLeft: 15
+                    paddingLeft: 15,
                   }}
                 >
                   Confirm password
@@ -239,7 +236,7 @@ export default class ResetPassword extends React.Component {
                     marginVertical: 10,
                     marginHorizontal: 15,
                     justifyContent: 'center',
-                    backgroundColor: 'white'
+                    backgroundColor: 'white',
                   }}
                 >
                   <TextInput
@@ -253,21 +250,21 @@ export default class ResetPassword extends React.Component {
                     }
                     secureTextEntry={true}
                     onChangeText={confirmPassword =>
-                      this.setState({ confirmPassword })
+                      this.setState({confirmPassword})
                     }
                     style={{
                       fontSize: onTablet ? 20 : 14,
                       padding: 15,
                       color: 'black',
                       marginRight: 45,
-                      fontFamily: 'OpenSans-Regular'
+                      fontFamily: 'OpenSans-Regular',
                     }}
                   />
                   {!this.state.showConfirmPassword && (
                     <TouchableOpacity
                       onPress={() =>
                         this.setState({
-                          showConfirmPassword: true
+                          showConfirmPassword: true,
                         })
                       }
                       style={{
@@ -277,7 +274,7 @@ export default class ResetPassword extends React.Component {
                         height: '100%',
                         borderRadius: 100,
                         position: 'absolute',
-                        backgroundColor: 'white'
+                        backgroundColor: 'white',
                       }}
                     >
                       <Text>{this.state.confirmPassword}</Text>
@@ -286,7 +283,7 @@ export default class ResetPassword extends React.Component {
                   <TouchableOpacity
                     onPress={() => {
                       this.setState({
-                        showConfirmPassword: !this.state.showConfirmPassword
+                        showConfirmPassword: !this.state.showConfirmPassword,
                       });
                     }}
                     style={{
@@ -294,7 +291,7 @@ export default class ResetPassword extends React.Component {
                       padding: 15,
                       height: '100%',
                       aspectRatio: 1,
-                      position: 'absolute'
+                      position: 'absolute',
                     }}
                   >
                     {this.state.showConfirmPassword ? (
@@ -311,7 +308,7 @@ export default class ResetPassword extends React.Component {
                     fontSize: onTablet ? 18 : 14,
                     color: 'white',
                     paddingLeft: 15,
-                    marginBottom: 40
+                    marginBottom: 40,
                   }}
                 >
                   Use at least 8 characters
@@ -333,8 +330,8 @@ export default class ResetPassword extends React.Component {
                         this.state.confirmPassword.length > 0 &&
                         this.state.password == this.state.confirmPassword
                           ? '#fb1b2f'
-                          : 'transparent'
-                    }
+                          : 'transparent',
+                    },
                   ]}
                 >
                   <Text
@@ -347,7 +344,7 @@ export default class ResetPassword extends React.Component {
                         this.state.confirmPassword.length > 0 &&
                         this.state.password == this.state.confirmPassword
                           ? 'white'
-                          : '#fb1b2f'
+                          : '#fb1b2f',
                     }}
                   >
                     RESET PASSWORD
@@ -368,7 +365,7 @@ export default class ResetPassword extends React.Component {
             <PasswordMatch
               hidePasswordMatch={() => {
                 this.setState({
-                  showPasswordMatch: false
+                  showPasswordMatch: false,
                 });
               }}
             />
@@ -385,12 +382,12 @@ export default class ResetPassword extends React.Component {
                   height: 50,
                   marginTop: 10,
                   justifyContent: 'center',
-                  alignItems: 'center'
+                  alignItems: 'center',
                 }}
                 onPress={() => {
                   this.alert.toggle();
                   navigate({
-                    routeName: 'LOGINCREDENTIALS'
+                    routeName: 'LOGINCREDENTIALS',
                   });
                 }}
               >
@@ -398,7 +395,7 @@ export default class ResetPassword extends React.Component {
                   style={{
                     padding: 15,
                     fontSize: 15,
-                    color: '#ffffff'
+                    color: '#ffffff',
                   }}
                 >
                   LOG IN

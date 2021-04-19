@@ -1,6 +1,3 @@
-/**
- * LoginCredentials
- */
 import React from 'react';
 import {
   View,
@@ -10,36 +7,31 @@ import {
   ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
-
 import RNIap from 'react-native-iap';
 import Modal from 'react-native-modal';
-import { SafeAreaView } from 'react-navigation';
+import {SafeAreaView} from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-community/async-storage';
 import Orientation from 'react-native-orientation-locker';
-
 import Back from '../../assets/img/svgs/back';
 import Pianote from '../../assets/img/svgs/pianote';
 import PasswordHidden from '../../assets/img/svgs/passwordHidden.svg';
 import PasswordVisible from '../../assets/img/svgs/passwordVisible.svg';
-
-import { updateFcmToken } from '../../services/notification.service';
+import {updateFcmToken} from '../../services/notification.service';
 import {
   getToken,
   getUserData,
-  restorePurchase
+  restorePurchase,
 } from '../../services/UserDataAuth.js';
-
 import Loading from '../../components/Loading.js';
 import GradientFeature from '../../components/GradientFeature';
-
 import CustomModal from '../../modals/CustomModal.js';
 import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
-import { NetworkContext } from '../../context/NetworkProvider';
-import { goBack, navigate, reset } from '../../../AppNavigator';
+import {NetworkContext} from '../../context/NetworkProvider';
+import {goBack, navigate, reset} from '../../../AppNavigator';
 import commonService from '../../services/common.service';
 import navigationService from '../../services/navigation.service';
 
@@ -56,7 +48,7 @@ export default class LoginCredentials extends React.Component {
       showPasswordEmailMatch: false,
       showNoConnection: false,
       loginErrorMessage: '',
-      scrollViewContentFlex: { flex: 1 }
+      scrollViewContentFlex: {flex: 1},
     };
   }
 
@@ -76,16 +68,16 @@ export default class LoginCredentials extends React.Component {
       if (purchases.length) {
         if (isiOS)
           return {
-            receipt: purchases[0].transactionReceipt
+            receipt: purchases[0].transactionReceipt,
           };
         return {
           purchases: purchases.map(m => {
             return {
               purchase_token: m.purchaseToken,
               package_name: 'com.pianote2',
-              product_id: m.productId
+              product_id: m.productId,
             };
-          })
+          }),
         };
       }
     } catch (error) {}
@@ -101,7 +93,7 @@ export default class LoginCredentials extends React.Component {
     const response = await getToken(
       this.state.email,
       this.state.password,
-      await this.getPurchases()
+      await this.getPurchases(),
     );
 
     if (response.success) {
@@ -110,7 +102,7 @@ export default class LoginCredentials extends React.Component {
       await AsyncStorage.multiSet([
         ['loggedIn', 'true'],
         ['email', this.state.email],
-        ['password', this.state.password]
+        ['password', this.state.password],
       ]);
 
       // checkmembership status
@@ -131,13 +123,13 @@ export default class LoginCredentials extends React.Component {
         navigate('MEMBERSHIPEXPIRED', {
           email: this.state.email,
           password: this.state.password,
-          token: response.token
+          token: response.token,
         });
       }
     } else {
       this.setState({
         showPasswordEmailMatch: true,
-        loginErrorMessage: response.message
+        loginErrorMessage: response.message,
       });
     }
     this.loadingRef?.toggleLoading(false);
@@ -149,7 +141,7 @@ export default class LoginCredentials extends React.Component {
     } catch (e) {
       return this.customModal.toggle(
         'Connection to app store refused',
-        'Please try again later.'
+        'Please try again later.',
       );
     }
     this.loadingRef?.toggleLoading();
@@ -160,7 +152,7 @@ export default class LoginCredentials extends React.Component {
         this.loadingRef?.toggleLoading();
         return this.customModal.toggle(
           'No purchases',
-          'There are no active purchases for this account.'
+          'There are no active purchases for this account.',
         );
       }
       let reducedPurchase = '';
@@ -171,7 +163,7 @@ export default class LoginCredentials extends React.Component {
           return {
             purchase_token: m.purchaseToken,
             package_name: 'com.pianote2',
-            product_id: m.productId
+            product_id: m.productId,
           };
         });
       }
@@ -181,14 +173,14 @@ export default class LoginCredentials extends React.Component {
         if (resp.shouldCreateAccount) {
           navigate('CREATEACCOUNT');
         } else if (resp.shouldLogin) {
-          this.setState({ email: resp.email });
+          this.setState({email: resp.email});
         }
       }
     } catch (err) {
       this.loadingRef?.toggleLoading();
       this.customModal.toggle(
         'Something went wrong',
-        'Something went wrong.\nPlease try Again later.'
+        'Something went wrong.\nPlease try Again later.',
       );
     }
   };
@@ -196,7 +188,7 @@ export default class LoginCredentials extends React.Component {
   render() {
     return (
       <FastImage
-        style={{ flex: 1 }}
+        style={{flex: 1}}
         resizeMode={FastImage.resizeMode.cover}
         source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
       >
@@ -208,15 +200,15 @@ export default class LoginCredentials extends React.Component {
           height={'100%'}
           borderRadius={0}
         />
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{flex: 1}}>
           <KeyboardAvoidingView
-            style={{ flex: 1 }}
+            style={{flex: 1}}
             behavior={`${isiOS ? 'padding' : ''}`}
           >
             <ScrollView
-              style={{ flex: 1 }}
-              keyboardShouldPersistTaps='handled'
-              contentInsetAdjustmentBehavior='never'
+              style={{flex: 1}}
+              keyboardShouldPersistTaps="handled"
+              contentInsetAdjustmentBehavior="never"
               contentContainerStyle={this.state.scrollViewContentFlex}
             >
               <View style={localStyles.scrollContainer}>
@@ -232,7 +224,7 @@ export default class LoginCredentials extends React.Component {
                       alignSelf: 'center',
                       textAlign: 'center',
                       fontFamily: 'OpenSans-Regular',
-                      width: '100%'
+                      width: '100%',
                     }}
                   >
                     The Ultimate Online{'\n'}Piano Lessons Experience.
@@ -241,12 +233,12 @@ export default class LoginCredentials extends React.Component {
                 <TextInput
                   onBlur={() =>
                     this.setState({
-                      scrollViewContentFlex: { flex: 1 }
+                      scrollViewContentFlex: {flex: 1},
                     })
                   }
                   onFocus={() =>
                     this.setState({
-                      scrollViewContentFlex: {}
+                      scrollViewContentFlex: {},
                     })
                   }
                   autoCorrect={false}
@@ -256,7 +248,7 @@ export default class LoginCredentials extends React.Component {
                   placeholderTextColor={'grey'}
                   placeholder={'Email Address'}
                   keyboardType={'email-address'}
-                  onChangeText={email => this.setState({ email })}
+                  onChangeText={email => this.setState({email})}
                   style={localStyles.email}
                 />
                 <View style={localStyles.textInputContainer}>
@@ -265,13 +257,13 @@ export default class LoginCredentials extends React.Component {
                     onBlur={() =>
                       this.setState({
                         scrollViewContentFlex: {
-                          flex: 1
-                        }
+                          flex: 1,
+                        },
                       })
                     }
                     onFocus={() =>
                       this.setState({
-                        scrollViewContentFlex: {}
+                        scrollViewContentFlex: {},
                       })
                     }
                     autoCorrect={false}
@@ -279,7 +271,7 @@ export default class LoginCredentials extends React.Component {
                     placeholderTextColor={'grey'}
                     placeholder={'Password'}
                     secureTextEntry={true}
-                    onChangeText={password => this.setState({ password })}
+                    onChangeText={password => this.setState({password})}
                     style={localStyles.textInputPassword}
                   />
                   {!this.state.secureTextEntry && (
@@ -287,7 +279,7 @@ export default class LoginCredentials extends React.Component {
                       style={localStyles.passwordContainer}
                       onPress={() =>
                         this.setState({
-                          secureTextEntry: true
+                          secureTextEntry: true,
                         })
                       }
                     >
@@ -297,7 +289,7 @@ export default class LoginCredentials extends React.Component {
                   <TouchableOpacity
                     onPress={() =>
                       this.setState({
-                        secureTextEntry: !this.state.secureTextEntry
+                        secureTextEntry: !this.state.secureTextEntry,
                       })
                     }
                     style={{
@@ -305,7 +297,7 @@ export default class LoginCredentials extends React.Component {
                       padding: 15,
                       height: '100%',
                       aspectRatio: 1,
-                      position: 'absolute'
+                      position: 'absolute',
                     }}
                   >
                     {this.state.secureTextEntry ? (
@@ -335,8 +327,8 @@ export default class LoginCredentials extends React.Component {
                         this.state.email.length > 0 &&
                         this.state.password.length > 0
                           ? '#fb1b2f'
-                          : 'transparent'
-                    }
+                          : 'transparent',
+                    },
                   ]}
                 >
                   <Text
@@ -348,14 +340,14 @@ export default class LoginCredentials extends React.Component {
                         this.state.email.length > 0 &&
                         this.state.password.length > 0
                           ? 'white'
-                          : '#fb1b2f'
+                          : '#fb1b2f',
                     }}
                   >
                     LOG IN
                   </Text>
                 </TouchableOpacity>
               </View>
-              <View style={{ padding: 10 }}>
+              <View style={{padding: 10}}>
                 <Text
                   style={localStyles.greyText}
                   onPress={() => {
@@ -387,7 +379,7 @@ export default class LoginCredentials extends React.Component {
               }}
               style={{
                 padding: 15,
-                position: 'absolute'
+                position: 'absolute',
               }}
             >
               <Back
@@ -415,7 +407,7 @@ export default class LoginCredentials extends React.Component {
           <PasswordEmailMatch
             errorMessage={this.state.loginErrorMessage}
             hidePasswordEmailMatch={() => {
-              this.setState({ showPasswordEmailMatch: false });
+              this.setState({showPasswordEmailMatch: false});
             }}
           />
         </Modal>
@@ -435,18 +427,18 @@ const localStyles = StyleSheet.create({
     borderRadius: 150,
     margin: 20,
     height: 200,
-    width: '80%'
+    width: '80%',
   },
   pianoteContainer: {
     flex: 1,
     marginTop: 40,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   pianoteInnerContainer: {
     alignSelf: 'center',
     alignItems: 'center',
     width: DeviceInfo.isTablet() ? '30%' : '45%',
-    aspectRatio: 177 / 53
+    aspectRatio: 177 / 53,
   },
   email: {
     padding: 15,
@@ -456,14 +448,14 @@ const localStyles = StyleSheet.create({
     marginHorizontal: 15,
     fontSize: DeviceInfo.isTablet() ? 20 : 14,
     backgroundColor: 'white',
-    fontFamily: 'OpenSans-Regular'
+    fontFamily: 'OpenSans-Regular',
   },
   greyText: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: 'grey',
     textAlign: 'center',
-    textDecorationLine: 'underline'
+    textDecorationLine: 'underline',
   },
   passwordContainer: {
     left: 0,
@@ -472,7 +464,7 @@ const localStyles = StyleSheet.create({
     height: '100%',
     borderRadius: 100,
     position: 'absolute',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   goToEmailContainer: {
     backgroundColor: '#fb1b2f',
@@ -480,12 +472,12 @@ const localStyles = StyleSheet.create({
     marginTop: 10,
     height: 50,
     justifyContent: 'center',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   scrollContainer: {
     flex: 1,
     marginTop: 40,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   textInputContainer: {
     marginBottom: 40,
@@ -493,13 +485,13 @@ const localStyles = StyleSheet.create({
     marginVertical: 10,
     marginHorizontal: 15,
     justifyContent: 'center',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   textInputPassword: {
     padding: 15,
     color: 'black',
     marginRight: 45,
     fontSize: DeviceInfo.isTablet() ? 20 : 14,
-    fontFamily: 'OpenSans-Regular'
-  }
+    fontFamily: 'OpenSans-Regular',
+  },
 });

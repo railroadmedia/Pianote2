@@ -1,6 +1,3 @@
-/**
- * LessonComplete
- */
 import React from 'react';
 import {
   View,
@@ -8,7 +5,7 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   StyleSheet,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import IonIcon from 'react-native-vector-icons/Ionicons';
@@ -48,7 +45,7 @@ export default class LessonComplete extends React.Component {
       completedLessonXp,
       nextLesson,
       onGoToNext,
-      type
+      type,
     } = this.props;
     return (
       <TouchableWithoutFeedback
@@ -74,14 +71,14 @@ export default class LessonComplete extends React.Component {
                 resizeMode={FastImage.resizeMode.cover}
                 source={{
                   uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                    width * 0.55 * 2
-                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${completedLessonImg}`
+                    width * 0.55 * 2,
+                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${completedLessonImg}`,
                 }}
               >
                 <View
                   style={[
                     styles.centerContent,
-                    localStyles.approvedTeacherContainer
+                    localStyles.approvedTeacherContainer,
                   ]}
                 />
                 <ApprovedTeacher
@@ -112,10 +109,10 @@ export default class LessonComplete extends React.Component {
                 resizeMode={FastImage.resizeMode.cover}
                 source={{
                   uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                    width * 0.55 * 2
+                    width * 0.55 * 2,
                   )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${nextLesson?.getData(
-                    'thumbnail_url'
-                  )}`
+                    'thumbnail_url',
+                  )}`,
                 }}
               />
             </TouchableOpacity>
@@ -136,23 +133,23 @@ const localStyles = StyleSheet.create({
     marginTop: 0,
     backgroundColor: 'white',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   headerText: {
-    marginVertical: 10
+    marginVertical: 10,
   },
   imageContainer: {
     height: '20%',
     width: '100%',
     alignSelf: 'center',
-    borderRadius: 10
+    borderRadius: 10,
   },
   image: {
     height: '100%',
     aspectRatio: 16 / 9,
     borderRadius: 10,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   approvedTeacherContainer: {
     position: 'absolute',
@@ -162,39 +159,39 @@ const localStyles = StyleSheet.create({
     height: '100%',
     borderRadius: 10,
     opacity: 0.2,
-    backgroundColor: 'red'
+    backgroundColor: 'red',
   },
   youEarnedText: {
     fontWeight: 'bold',
     marginTop: 10,
-    color: '#fb1b2f'
+    color: '#fb1b2f',
   },
   congratsText: {
     marginHorizontal: 20,
-    marginTop: 10
+    marginTop: 10,
   },
   completeLesson: {
     fontWeight: 'bold',
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
   upNextText: {
     marginTop: 5,
     marginBottom: 10,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   image2Container: {
     height: '20%',
     width: '100%',
     alignSelf: 'center',
-    borderRadius: 10
+    borderRadius: 10,
   },
   image2: {
     height: '100%',
     aspectRatio: 16 / 9,
-    borderRadius: 10
+    borderRadius: 10,
   },
   videoTitle: {
     paddingHorizontal: 20,
-    marginTop: 10
-  }
+    marginTop: 10,
+  },
 });

@@ -1,9 +1,5 @@
-/**
- * ResetIcon
- */
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-
+import {View, Text, TouchableOpacity} from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default class ResetIcon extends React.Component {
@@ -44,8 +40,8 @@ export default class ResetIcon extends React.Component {
           {
             borderRadius: 500,
             flex: 1,
-            backgroundColor: '#fb1b2f'
-          }
+            backgroundColor: '#fb1b2f',
+          },
         ]}
       >
         <TouchableOpacity
@@ -56,8 +52,8 @@ export default class ResetIcon extends React.Component {
             styles.centerContent,
             {
               flex: 1,
-              flexDirection: 'row'
-            }
+              flexDirection: 'row',
+            },
           ]}
         >
           <MaterialIcon
@@ -65,13 +61,13 @@ export default class ResetIcon extends React.Component {
             size={this.sizing('icon')}
             color={'white'}
           />
-          <View style={{ flex: 0.025 }} />
+          <View style={{flex: 0.025}} />
           <Text
             style={[
               styles.buttonText,
               {
-                fontSize: this.sizing('font')
-              }
+                fontSize: this.sizing('font'),
+              },
             ]}
           >
             RESET

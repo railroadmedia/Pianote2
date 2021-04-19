@@ -1,6 +1,3 @@
-/**
- * Settings
- */
 import React from 'react';
 import {
   View,
@@ -11,13 +8,13 @@ import {
   Alert,
   StatusBar,
   StyleSheet,
-  Linking
+  Linking,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import RNIap from 'react-native-iap';
 import Modal from 'react-native-modal';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import LogOut from '../../modals/LogOut.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -25,30 +22,29 @@ import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
+import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import Loading from '../../components/Loading.js';
 import CustomModal from '../../modals/CustomModal.js';
-import { logOut, restorePurchase } from '../../services/UserDataAuth.js';
-import { SafeAreaView } from 'react-navigation';
-import { NetworkContext } from '../../context/NetworkProvider.js';
+import {logOut, restorePurchase} from '../../services/UserDataAuth.js';
+import {SafeAreaView} from 'react-navigation';
+import {NetworkContext} from '../../context/NetworkProvider.js';
 import commonService from '../../services/common.service.js';
-
-import { cacheAndWriteCourses } from '../../redux/CoursesCacheActions';
-import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
-import { cacheAndWriteMyList } from '../../redux/MyListCacheActions';
-import { cacheAndWritePacks } from '../../redux/PacksCacheActions';
-import { cacheAndWritePodcasts } from '../../redux/PodcastsCacheActions';
-import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
-import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
-import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
-import { goBack, navigate, reset } from '../../../AppNavigator.js';
+import {cacheAndWriteCourses} from '../../redux/CoursesCacheActions';
+import {cacheAndWriteLessons} from '../../redux/LessonsCacheActions';
+import {cacheAndWriteMyList} from '../../redux/MyListCacheActions';
+import {cacheAndWritePacks} from '../../redux/PacksCacheActions';
+import {cacheAndWritePodcasts} from '../../redux/PodcastsCacheActions';
+import {cacheAndWriteQuickTips} from '../../redux/QuickTipsCacheActions';
+import {cacheAndWriteSongs} from '../../redux/SongsCacheActions';
+import {cacheAndWriteStudentFocus} from '../../redux/StudentFocusCacheActions';
+import {goBack, navigate, reset} from '../../../AppNavigator.js';
 
 class Settings extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
     this.state = {
-      showLogOut: false
+      showLogOut: false,
     };
   }
 
@@ -57,7 +53,7 @@ class Settings extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     const userData = await getUserData();
-    let { isAppleAppSubscriber, isGoogleAppSubscriber } = userData;
+    let {isAppleAppSubscriber, isGoogleAppSubscriber} = userData;
     if (Platform.OS === 'ios') {
       if (isAppleAppSubscriber) {
         Alert.alert(
@@ -68,22 +64,22 @@ class Settings extends React.Component {
               text: 'View Subscriptions',
               onPress: () =>
                 Linking.openURL(
-                  'itms-apps://apps.apple.com/account/subscriptions'
-                )
-            }
+                  'itms-apps://apps.apple.com/account/subscriptions',
+                ),
+            },
           ],
           {
-            cancelable: false
-          }
+            cancelable: false,
+          },
         );
       } else {
         Alert.alert(
           'Manage Subscription',
           'Sorry! You can only manage your Apple App Store based subscriptions here.',
-          [{ text: 'Got it!' }],
+          [{text: 'Got it!'}],
           {
-            cancelable: false
-          }
+            cancelable: false,
+          },
         );
       }
     } else {
@@ -96,22 +92,22 @@ class Settings extends React.Component {
               text: 'View Subscriptions',
               onPress: () =>
                 Linking.openURL(
-                  'https://play.google.com/store/account/subscriptions'
-                )
-            }
+                  'https://play.google.com/store/account/subscriptions',
+                ),
+            },
           ],
           {
-            cancelable: false
-          }
+            cancelable: false,
+          },
         );
       } else {
         Alert.alert(
           'Manage Subscription',
           'You can only manage Google Play subscriptions here. Please sign in to Pianote on your original subscription platform to manage your settings.',
-          [{ text: 'Got it!' }],
+          [{text: 'Got it!'}],
           {
-            cancelable: false
-          }
+            cancelable: false,
+          },
         );
       }
     }
@@ -126,7 +122,7 @@ class Settings extends React.Component {
       this.loadingRef?.toggleLoading();
       return this.customModal.toggle(
         'Connection to app store refused',
-        'Please try again later.'
+        'Please try again later.',
       );
     }
     try {
@@ -135,7 +131,7 @@ class Settings extends React.Component {
         this.loadingRef?.toggleLoading();
         return this.restoreSuccessfull.toggle(
           'Restore',
-          'All purchases restored'
+          'All purchases restored',
         );
       }
       if (Platform.OS === 'android') {
@@ -143,7 +139,7 @@ class Settings extends React.Component {
           return {
             purchase_token: m.purchaseToken,
             package_name: 'com.pianote2',
-            product_id: m.productId
+            product_id: m.productId,
           };
         });
       }
@@ -152,14 +148,14 @@ class Settings extends React.Component {
       if (restoreResponse.title && restoreResponse.message)
         return this.customModal.toggle(
           restoreResponse.title,
-          restoreResponse.message
+          restoreResponse.message,
         );
       if (restoreResponse.email) {
         this.loadingRef?.toggleLoading();
         await logOut();
         this.loadingRef?.toggleLoading();
         navigate('LOGINCREDENTIALS', {
-          email: restoreResponse.email
+          email: restoreResponse.email,
         });
 
         return Alert.alert(
@@ -167,8 +163,8 @@ class Settings extends React.Component {
           `This ${
             Platform.OS === 'ios' ? 'Apple' : 'Google'
           } account is already linked to another Pianote account. Please login with that account.`,
-          [{ text: 'OK' }],
-          { cancelable: false }
+          [{text: 'OK'}],
+          {cancelable: false},
         );
       } else if (restoreResponse.token) {
         reset('LESSONS');
@@ -177,7 +173,7 @@ class Settings extends React.Component {
       this.loadingRef?.toggleLoading();
       this.customModal.toggle(
         'Something went wrong',
-        'Please try Again later.'
+        'Please try Again later.',
       );
     }
   };
@@ -190,7 +186,7 @@ class Settings extends React.Component {
           barStyle={'light-content'}
         />
         <View style={localStyles.header}>
-          <TouchableOpacity style={{ flex: 1 }} onPress={() => goBack()}>
+          <TouchableOpacity style={{flex: 1}} onPress={() => goBack()}>
             <Back
               width={backButtonSize}
               height={backButtonSize}
@@ -199,11 +195,11 @@ class Settings extends React.Component {
           </TouchableOpacity>
 
           <Text
-            style={[styles.childHeaderText, { color: colors.secondBackground }]}
+            style={[styles.childHeaderText, {color: colors.secondBackground}]}
           >
             Settings
           </Text>
-          <View style={{ flex: 1 }} />
+          <View style={{flex: 1}} />
         </View>
 
         <ScrollView style={styles.mainContainer}>
@@ -213,14 +209,14 @@ class Settings extends React.Component {
               localStyles.container,
               {
                 borderTopWidth: 1,
-                borderTopColor: '#445f73'
-              }
+                borderTopColor: '#445f73',
+              },
             ]}
             onPress={() => {
               navigate('PROFILESETTINGS');
             }}
           >
-            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
+            <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
               <FeatherIcon
                 name={'user'}
                 size={onTablet ? 30 : 20}
@@ -228,7 +224,7 @@ class Settings extends React.Component {
               />
             </View>
             <Text style={localStyles.settingsText}>Profile Settings</Text>
-            <View style={{ flex: 1 }} />
+            <View style={{flex: 1}} />
             <AntIcon
               name={'right'}
               size={onTablet ? 30 : 20}
@@ -242,7 +238,7 @@ class Settings extends React.Component {
             }}
             style={[styles.centerContent, localStyles.container]}
           >
-            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
+            <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
               <IonIcon
                 name={'ios-notifications-outline'}
                 color={colors.pianoteRed}
@@ -250,7 +246,7 @@ class Settings extends React.Component {
               />
             </View>
             <Text style={localStyles.settingsText}>Notification Settings</Text>
-            <View style={{ flex: 1 }} />
+            <View style={{flex: 1}} />
             <AntIcon
               name={'right'}
               size={onTablet ? 30 : 20}
@@ -261,7 +257,7 @@ class Settings extends React.Component {
             style={[styles.centerContent, localStyles.container]}
             onPress={this.manageSubscriptions}
           >
-            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
+            <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
               <AntIcon
                 name={'folder1'}
                 size={onTablet ? 30 : 20}
@@ -269,7 +265,7 @@ class Settings extends React.Component {
               />
             </View>
             <Text style={localStyles.settingsText}>Manage Subscriptions</Text>
-            <View style={{ flex: 1 }} />
+            <View style={{flex: 1}} />
             <AntIcon
               name={'right'}
               size={onTablet ? 30 : 20}
@@ -282,7 +278,7 @@ class Settings extends React.Component {
             onPress={this.restorePurchase}
             style={[styles.centerContent, localStyles.container]}
           >
-            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
+            <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
               <AntIcon
                 name={'creditcard'}
                 size={onTablet ? 30 : 20}
@@ -290,7 +286,7 @@ class Settings extends React.Component {
               />
             </View>
             <Text style={localStyles.settingsText}>Restore Purchases</Text>
-            <View style={{ flex: 1 }} />
+            <View style={{flex: 1}} />
             <AntIcon
               name={'right'}
               size={onTablet ? 30 : 20}
@@ -303,7 +299,7 @@ class Settings extends React.Component {
               navigate('SUPPORT');
             }}
           >
-            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
+            <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
               <FontIcon
                 name={'support'}
                 size={onTablet ? 30 : 20}
@@ -311,7 +307,7 @@ class Settings extends React.Component {
               />
             </View>
             <Text style={localStyles.settingsText}>Support</Text>
-            <View style={{ flex: 1 }} />
+            <View style={{flex: 1}} />
             <AntIcon
               name={'right'}
               size={onTablet ? 30 : 20}
@@ -324,7 +320,7 @@ class Settings extends React.Component {
               navigate('TERMS');
             }}
           >
-            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
+            <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
               <AntIcon
                 name={'form'}
                 size={onTablet ? 30 : 20}
@@ -332,7 +328,7 @@ class Settings extends React.Component {
               />
             </View>
             <Text style={localStyles.settingsText}>Terms of Use</Text>
-            <View style={{ flex: 1 }} />
+            <View style={{flex: 1}} />
             <AntIcon
               name={'right'}
               size={onTablet ? 30 : 20}
@@ -345,7 +341,7 @@ class Settings extends React.Component {
               navigate('PRIVACYPOLICY');
             }}
           >
-            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
+            <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
               <FontIcon
                 name={'shield'}
                 color={colors.pianoteRed}
@@ -353,7 +349,7 @@ class Settings extends React.Component {
               />
             </View>
             <Text style={localStyles.settingsText}>Privacy Policy</Text>
-            <View style={{ flex: 1 }} />
+            <View style={{flex: 1}} />
             <AntIcon
               name={'right'}
               size={onTablet ? 30 : 20}
@@ -363,10 +359,10 @@ class Settings extends React.Component {
           <TouchableOpacity
             style={[styles.centerContent, localStyles.container]}
             onPress={() => {
-              this.setState({ showLogOut: true });
+              this.setState({showLogOut: true});
             }}
           >
-            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
+            <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
               <AntIcon
                 name={'poweroff'}
                 color={colors.pianoteRed}
@@ -374,7 +370,7 @@ class Settings extends React.Component {
               />
             </View>
             <Text style={localStyles.settingsText}>Log Out</Text>
-            <View style={{ flex: 1 }} />
+            <View style={{flex: 1}} />
             <AntIcon
               name={'right'}
               size={onTablet ? 30 : 20}
@@ -410,11 +406,11 @@ class Settings extends React.Component {
                 'cacheAndWritePodcasts',
                 'cacheAndWriteQuickTips',
                 'cacheAndWriteSongs',
-                'cacheAndWriteStudentFocus'
+                'cacheAndWriteStudentFocus',
               ].map(redux => this.props[redux]({}))
             }
             hideLogOut={() => {
-              this.setState({ showLogOut: false });
+              this.setState({showLogOut: false});
             }}
           />
         </Modal>
@@ -435,7 +431,7 @@ class Settings extends React.Component {
               onPress={() => this.restoreSuccessfull.toggle()}
               style={{
                 borderRadius: 50,
-                backgroundColor: colors.pianoteRed
+                backgroundColor: colors.pianoteRed,
               }}
             >
               <Text
@@ -445,7 +441,7 @@ class Settings extends React.Component {
                   fontSize: 15,
                   color: '#ffffff',
                   textAlign: 'center',
-                  fontFamily: 'OpenSans-Bold'
+                  fontFamily: 'OpenSans-Bold',
                 }}
               >
                 OK
@@ -467,31 +463,31 @@ const localStyles = StyleSheet.create({
     borderBottomColor: '#445f73',
     borderBottomWidth: 1,
     flexDirection: 'row',
-    paddingRight: 10
+    paddingRight: 10,
   },
   settingsText: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 20 : 16,
-    color: '#445f73'
+    color: '#445f73',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 15
+    padding: 15,
   },
   appText: {
     marginTop: 10,
     textAlign: 'center',
-    fontSize: DeviceInfo.isTablet() ? 18 : 12
+    fontSize: DeviceInfo.isTablet() ? 18 : 12,
   },
   buildText: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'center',
     color: '#445f73',
     marginTop: 10,
-    fontSize: DeviceInfo.isTablet() ? 18 : 12
-  }
+    fontSize: DeviceInfo.isTablet() ? 18 : 12,
+  },
 });
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
@@ -503,9 +499,9 @@ const mapDispatchToProps = dispatch =>
       cacheAndWritePodcasts,
       cacheAndWriteQuickTips,
       cacheAndWriteSongs,
-      cacheAndWriteStudentFocus
+      cacheAndWriteStudentFocus,
     },
-    dispatch
+    dispatch,
   );
 
 export default connect(null, mapDispatchToProps)(Settings);

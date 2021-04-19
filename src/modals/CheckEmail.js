@@ -1,16 +1,13 @@
-/**
- * CheckEmail
- */
 import React from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { navigate } from '../../AppNavigator';
+import {navigate} from '../../AppNavigator';
 
 export default class CheckEmail extends React.Component {
   constructor(props) {
@@ -67,28 +64,28 @@ const localStyles = StyleSheet.create({
     margin: 20,
     paddingBottom: 5,
     paddingTop: 20,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   title: {
     paddingHorizontal: 40,
-    marginBottom: 10
+    marginBottom: 10,
   },
   loginContainer: {
     borderRadius: 45,
     backgroundColor: '#fb1b2f',
     marginHorizontal: 40,
     marginVertical: 5,
-    height: DeviceInfo.isTablet() ? 45 : 35
+    height: DeviceInfo.isTablet() ? 45 : 35,
   },
   loginText: {
     color: 'white',
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   tryAgain: {
     paddingHorizontal: 40,
-    marginVertical: 10
+    marginVertical: 10,
   },
   tryAgainText: {
-    color: '#fb1b2f'
-  }
+    color: '#fb1b2f',
+  },
 });

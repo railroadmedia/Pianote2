@@ -1,13 +1,10 @@
-/**
- * Loading
- */
 import React from 'react';
 import {
   View,
   TouchableWithoutFeedback,
   ActivityIndicator,
   StyleSheet,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 
 export default class Loading extends React.Component {
@@ -21,13 +18,13 @@ export default class Loading extends React.Component {
       <TouchableWithoutFeedback style={styles.container}>
         <View style={[styles.centerContent, styles.container]}>
           <View style={localStyles.container}>
-            <View style={{ flex: 1 }} />
+            <View style={{flex: 1}} />
             <ActivityIndicator
               size={onTablet ? 'large' : 'small'}
               color={colors.pianoteRed}
               animating={true}
             />
-            <View style={{ flex: 1 }} />
+            <View style={{flex: 1}} />
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -48,6 +45,6 @@ const localStyles = StyleSheet.create({
           Dimensions.get('window').width / 375)) /
       2,
     height: 200,
-    width: '100%'
-  }
+    width: '100%',
+  },
 });

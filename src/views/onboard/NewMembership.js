@@ -1,6 +1,3 @@
-/**
- * NewMembership
- */
 import React from 'react';
 import {
   View,
@@ -11,23 +8,22 @@ import {
   StatusBar,
   Dimensions,
   PixelRatio,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
 import Orientation from 'react-native-orientation-locker';
-import { SafeAreaView } from 'react-navigation';
+import {SafeAreaView} from 'react-navigation';
 import RNIap, {
   purchaseErrorListener,
-  purchaseUpdatedListener
+  purchaseUpdatedListener,
 } from 'react-native-iap';
-
-import { signUp, restorePurchase } from '../../services/UserDataAuth';
+import {signUp, restorePurchase} from '../../services/UserDataAuth';
 import CustomModal from '../../modals/CustomModal';
 import Loading from '../../components/Loading';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
-import { goBack, navigate } from '../../../AppNavigator';
+import {goBack, navigate} from '../../../AppNavigator';
 
 let purchaseErrorSubscription = null;
 let purchaseUpdateSubscription = null;
@@ -36,8 +32,8 @@ const skus = Platform.select({
   android: ['pianote_app_1_year_2021', 'pianote_app_1_month_2021'],
   ios: [
     'pianote_app_1_month_membership_2021',
-    'pianote_app_1_year_membership_2021'
-  ]
+    'pianote_app_1_year_membership_2021',
+  ],
 });
 
 const windowDim = Dimensions.get('window');
@@ -62,8 +58,8 @@ export default class NewMembership extends React.Component {
         'Award-winning piano lessons & more.',
         'Access to the Pianote Experience app.',
         'Access to the Pianote Experience website.',
-        'Cancel anytime through the App Store.'
-      ]
+        'Cancel anytime through the App Store.',
+      ],
     };
   }
 
@@ -74,24 +70,24 @@ export default class NewMembership extends React.Component {
     purchaseUpdateSubscription = purchaseUpdatedListener(this.pulCallback);
     purchaseErrorSubscription = purchaseErrorListener(e => {
       this.loadingRef?.toggleLoading(false);
-      Alert.alert('Something went wrong', e.message, [{ text: 'OK' }], {
-        cancelable: false
+      Alert.alert('Something went wrong', e.message, [{text: 'OK'}], {
+        cancelable: false,
       });
     });
     try {
       this.loadingRef?.toggleLoading(true);
       const subscriptions = (await RNIap.getSubscriptions(skus)).sort((a, b) =>
-        parseFloat(a.price) > parseFloat(b.price) ? 1 : -1
+        parseFloat(a.price) > parseFloat(b.price) ? 1 : -1,
       );
       this.loadingRef?.toggleLoading();
-      this.setState({ subscriptions });
+      this.setState({subscriptions});
     } catch (e) {}
   }
 
   startPlan = async plan => {
     this.selectedPlan = {
       price: plan.price,
-      currency: plan.currency
+      currency: plan.currency,
     };
     this.loadingRef?.toggleLoading();
     try {
@@ -100,14 +96,14 @@ export default class NewMembership extends React.Component {
   };
 
   pulCallback = async purchase => {
-    let { transactionReceipt } = purchase;
+    let {transactionReceipt} = purchase;
     if (transactionReceipt) {
       let response = await signUp(
         this.state.email,
         this.state.password,
         purchase,
         this.state.token,
-        this.selectedPlan
+        this.selectedPlan,
       );
 
       if (response.meta) {
@@ -115,7 +111,7 @@ export default class NewMembership extends React.Component {
           await AsyncStorage.multiSet([
             ['loggedIn', 'true'],
             ['email', this.state.email],
-            ['password', this.state.password]
+            ['password', this.state.password],
           ]);
         } catch (e) {}
         try {
@@ -127,17 +123,17 @@ export default class NewMembership extends React.Component {
               data: {
                 email: this.state.email,
                 password: this.state.password,
-                plan: ''
-              }
+                plan: '',
+              },
             });
           } else {
             navigate('LOADPAGE');
           }
         } catch (e) {}
       } else {
-        let { title, detail } = response.errors[0];
-        Alert.alert(title, detail, [{ text: 'OK' }], {
-          cancelable: false
+        let {title, detail} = response.errors[0];
+        Alert.alert(title, detail, [{text: 'OK'}], {
+          cancelable: false,
         });
       }
     }
@@ -149,7 +145,7 @@ export default class NewMembership extends React.Component {
     } catch (e) {
       return this.customModal?.toggle(
         'Connection to app store refused',
-        'Please try again later.'
+        'Please try again later.',
       );
     }
     this.loadingRef?.toggleLoading();
@@ -159,7 +155,7 @@ export default class NewMembership extends React.Component {
         this.loadingRef?.toggleLoading();
         return this.customModal?.toggle(
           'No purchases',
-          'There are no active purchases for this account.'
+          'There are no active purchases for this account.',
         );
       }
       let reducedPurchase = '';
@@ -170,7 +166,7 @@ export default class NewMembership extends React.Component {
           return {
             purchase_token: m.purchaseToken,
             package_name: 'com.pianote2',
-            product_id: m.productId
+            product_id: m.productId,
           };
         });
       }
@@ -180,35 +176,35 @@ export default class NewMembership extends React.Component {
         if (resp.shouldCreateAccount) navigate('CREATEACCOUNT');
         else if (resp.shouldLogin)
           navigate('LOGINCREDENTIALS', {
-            email: resp.email
+            email: resp.email,
           });
     } catch (err) {
       this.loadingRef?.toggleLoading();
       this.customModal?.toggle(
         'Something went wrong',
-        'Something went wrong.\nPlease try Again later.'
+        'Something went wrong.\nPlease try Again later.',
       );
     }
   };
 
   render() {
-    let { subscriptions } = this.state;
+    let {subscriptions} = this.state;
     return (
       <>
         <SafeAreaView
-          style={{ flex: 1, backgroundColor: colors.pianoteRed }}
+          style={{flex: 1, backgroundColor: colors.pianoteRed}}
           forceInset={{
             top: 'always',
-            bottom: 'always'
+            bottom: 'always',
           }}
         >
-          <View style={{ flex: 1 }}>
+          <View style={{flex: 1}}>
             <StatusBar
               backgroundColor={colors.pianoteRed}
-              barStyle='light-content'
+              barStyle="light-content"
             />
             <TouchableOpacity
-              style={{ position: 'absolute', left: 15, padding: 5 }}
+              style={{position: 'absolute', left: 15, padding: 5}}
               onPress={() => {
                 if (onTablet) Orientation.unlockAllOrientations();
                 this.props.route?.params?.type == 'SIGNUP' ||
@@ -230,7 +226,7 @@ export default class NewMembership extends React.Component {
                 marginTop: 5,
                 marginHorizontal: '10%',
                 zIndex: 1,
-                justifyContent: 'space-evenly'
+                justifyContent: 'space-evenly',
               }}
             >
               <Text
@@ -238,7 +234,7 @@ export default class NewMembership extends React.Component {
                   color: 'white',
                   fontSize: 3 * fontIndex,
                   fontFamily: 'OpenSans-Bold',
-                  textAlign: 'center'
+                  textAlign: 'center',
                 }}
               >
                 {`${
@@ -252,7 +248,7 @@ export default class NewMembership extends React.Component {
                   color: 'white',
                   fontSize: onTablet ? 1.5 * fontIndex : 2.2 * fontIndex,
                   fontFamily: 'OpenSans',
-                  textAlign: 'center'
+                  textAlign: 'center',
                 }}
               >
                 {`${
@@ -266,7 +262,7 @@ export default class NewMembership extends React.Component {
               style={{
                 flexDirection: 'row',
                 alignItems: 'flex-end',
-                zIndex: 1
+                zIndex: 1,
               }}
             >
               <View
@@ -274,8 +270,8 @@ export default class NewMembership extends React.Component {
                   styles.planContainer,
                   {
                     marginLeft: onTablet ? '10%' : '3%',
-                    marginRight: 5
-                  }
+                    marginRight: 5,
+                  },
                 ]}
               >
                 <View style={styles.planHeader}>
@@ -288,7 +284,7 @@ export default class NewMembership extends React.Component {
                   <View
                     style={{
                       paddingVertical:
-                        windowDim.height * PixelRatio.get() < 900 ? 5 : 10
+                        windowDim.height * PixelRatio.get() < 900 ? 5 : 10,
                     }}
                   >
                     {subscriptions && (
@@ -296,7 +292,7 @@ export default class NewMembership extends React.Component {
                         style={{
                           flexDirection: 'row',
                           alignItems: 'flex-end',
-                          paddingHorizontal: 10
+                          paddingHorizontal: 10,
                         }}
                       >
                         <Text style={styles.planPrice}>
@@ -328,8 +324,8 @@ export default class NewMembership extends React.Component {
                   styles.planContainer,
                   {
                     marginLeft: 5,
-                    marginRight: onTablet ? '10%' : '3%'
-                  }
+                    marginRight: onTablet ? '10%' : '3%',
+                  },
                 ]}
               >
                 <View
@@ -339,7 +335,7 @@ export default class NewMembership extends React.Component {
                     backgroundColor: 'black',
                     height: onTablet ? 30 : 20,
                     borderTopLeftRadius: 10,
-                    borderTopRightRadius: 10
+                    borderTopRightRadius: 10,
                   }}
                 >
                   <Text
@@ -347,7 +343,7 @@ export default class NewMembership extends React.Component {
                       fontSize: 12,
                       fontFamily: 'OpenSans-Semibold',
                       fontSize: onTablet ? 12 : 10,
-                      color: '#ffffff'
+                      color: '#ffffff',
                     }}
                   >
                     SAVE 45% VS MONTHLY.
@@ -363,7 +359,7 @@ export default class NewMembership extends React.Component {
                   <View
                     style={{
                       paddingVertical:
-                        windowDim.height * PixelRatio.get() < 900 ? 5 : 10
+                        windowDim.height * PixelRatio.get() < 900 ? 5 : 10,
                     }}
                   >
                     {subscriptions && (
@@ -371,7 +367,7 @@ export default class NewMembership extends React.Component {
                         style={{
                           flexDirection: 'row',
                           alignItems: 'flex-end',
-                          paddingHorizontal: 10
+                          paddingHorizontal: 10,
                         }}
                       >
                         <Text style={styles.planPrice}>
@@ -404,7 +400,7 @@ export default class NewMembership extends React.Component {
                 style={{
                   zIndex: 5,
                   marginTop: '3%',
-                  marginHorizontal: onTablet ? '15%' : '3%'
+                  marginHorizontal: onTablet ? '15%' : '3%',
                 }}
               >
                 <CreateAccountStepCounter step={3} />
@@ -416,7 +412,7 @@ export default class NewMembership extends React.Component {
                 alignItems: 'center',
                 justifyContent: 'center',
                 zIndex: 1,
-                marginTop: 5
+                marginTop: 5,
               }}
             >
               {this.state.benefits.map((benefit, i) => {
@@ -428,7 +424,7 @@ export default class NewMembership extends React.Component {
                         style={{
                           flexDirection: 'row',
                           justifyContent: 'center',
-                          alignItems: 'center'
+                          alignItems: 'center',
                         }}
                       >
                         <AntIcon
@@ -443,7 +439,7 @@ export default class NewMembership extends React.Component {
                             fontSize: onTablet
                               ? 1.3 * fontIndex
                               : 1.65 * fontIndex,
-                            marginLeft: 5
+                            marginLeft: 5,
                           }}
                         >
                           {benefit}
@@ -459,12 +455,12 @@ export default class NewMembership extends React.Component {
                     ? navigate('LOGINCREDENTIALS')
                     : this.restorePurchases();
                 }}
-                style={{ paddingTop: 20 }}
+                style={{paddingTop: 20}}
               >
                 <Text
                   style={[
                     styles.underlineText,
-                    { fontSize: onTablet ? 1.2 * fontIndex : 1.5 * fontIndex }
+                    {fontSize: onTablet ? 1.2 * fontIndex : 1.5 * fontIndex},
                   ]}
                 >
                   {this.state.newUser == 'SIGNUP'
@@ -477,14 +473,14 @@ export default class NewMembership extends React.Component {
                   style={{
                     paddingTop: 5,
                     justifyContent: 'center',
-                    alignItems: 'center'
+                    alignItems: 'center',
                   }}
                   onPress={() => navigate('TERMS')}
                 >
                   <Text
                     style={[
                       styles.underlineText,
-                      { fontSize: onTablet ? 1.2 * fontIndex : 1.3 * fontIndex }
+                      {fontSize: onTablet ? 1.2 * fontIndex : 1.3 * fontIndex},
                     ]}
                   >
                     Terms - Privacy
@@ -501,9 +497,9 @@ export default class NewMembership extends React.Component {
                 height: height,
                 borderRadius: onTablet ? 0 : height / 4,
                 aspectRatio: 1,
-                top: '50%'
+                top: '50%',
               }}
-            ></View>
+            />
           </View>
           <Loading
             ref={ref => {
@@ -525,36 +521,36 @@ const styles = StyleSheet.create({
   planContainer: {
     backgroundColor: '#ffffff',
     borderRadius: 10,
-    flex: 1
+    flex: 1,
   },
   planHeader: {
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomColor: '#e5e8e8',
     borderBottomWidth: 1,
-    padding: windowDim.height * PixelRatio.get() < 900 ? 5 : 10
+    padding: windowDim.height * PixelRatio.get() < 900 ? 5 : 10,
   },
   planBody: {
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   planTitle: {
     fontFamily: 'RobotoCondensed-Bold',
     color: '#000000',
     fontSize: 2.2 * fontIndex,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   planSubtitle: {
     fontFamily: 'OpenSans',
     color: '#000000',
     fontSize: fontIndex,
     textAlign: 'center',
-    marginBottom: global.onTablet ? 15 : 5
+    marginBottom: global.onTablet ? 15 : 5,
   },
   planPrice: {
     fontFamily: 'OpenSans-Bold',
     color: '#000000',
-    fontSize: global.onTablet ? 2 * fontIndex : 3 * fontIndex
+    fontSize: global.onTablet ? 2 * fontIndex : 3 * fontIndex,
   },
   planBtn: {
     backgroundColor: '#fb1b2f',
@@ -563,20 +559,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: global.onTablet ? 30 : 15,
     marginTop: global.onTablet ? 30 : 0,
-    width: '80%'
+    width: '80%',
   },
   planBtnText: {
     color: '#ffffff',
     fontFamily: 'RobotoCondensed-Bold',
     fontSize: global.onTablet ? 16 : 12,
     textAlign: 'center',
-    padding: global.onTablet ? 16 : 5
+    padding: global.onTablet ? 16 : 5,
   },
   underlineText: {
     color: 'white',
     fontSize: 12,
     fontFamily: 'OpenSans',
     textAlign: 'center',
-    textDecorationLine: 'underline'
-  }
+    textDecorationLine: 'underline',
+  },
 });

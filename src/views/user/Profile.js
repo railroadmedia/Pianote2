@@ -1,6 +1,3 @@
-/**
- * Profile
- */
 import React from 'react';
 import {
   View,
@@ -10,7 +7,7 @@ import {
   FlatList,
   Linking,
   StatusBar,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -22,57 +19,56 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
 import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
 import Settings from 'Pianote2/src/assets/img/svgs/settings.svg';
-
 import XpRank from '../../modals/XpRank.js';
-import { getUserData } from '../../services/UserDataAuth.js';
+import {getUserData} from '../../services/UserDataAuth.js';
 import NavigationBar from '../../components/NavigationBar.js';
 import ReplyNotification from '../../modals/ReplyNotification.js';
 import commonService from '../../services/common.service';
-import { NetworkContext } from '../../context/NetworkProvider';
+import {NetworkContext} from '../../context/NetworkProvider';
 import {
   getnotifications,
-  removeNotification
+  removeNotification,
 } from '../../services/notification.service';
-import { SafeAreaView } from 'react-navigation';
-import { navigate } from '../../../AppNavigator.js';
+import {SafeAreaView} from 'react-navigation';
+import {navigate} from '../../../AppNavigator.js';
 
 const messageDict = {
   'lesson comment reply': [
     'replied to your comment.',
     true,
     'orange',
-    'comment reply notifications'
-  ], // notify_on_lesson_comment_reply: this.state.notify_on_lesson_comment_reply,
+    'comment reply notifications',
+  ],
   'lesson comment liked': [
     'liked your comment.',
     true,
     'blue',
-    'comment like notifications'
-  ], // notify_on_forum_post_like: this.state.notify_on_forum_post_like,
+    'comment like notifications',
+  ],
   'forum post reply': [
     'replied to your forum post.',
     true,
     'orange',
-    'forum post reply notifications'
-  ], // notify_on_forum_post_reply: this.state.notify_on_forum_post_reply,
+    'forum post reply notifications',
+  ],
   'forum post liked': [
     'liked your forum post.',
     true,
     'blue',
-    'forum post like notifications'
-  ], // notify_on_lesson_comment_like: this.state.notify_on_lesson_comment_like,
+    'forum post like notifications',
+  ],
   'forum post in followed thread': [
     'post in followed thread.',
     false,
     'orange',
-    'forum post reply notifications'
+    'forum post reply notifications',
   ],
   'new content releases': [
     '',
     false,
     'red',
-    'new content release notifications'
-  ] // notify_weekly_update: this.state.notify_weekly_update,
+    'new content release notifications',
+  ],
 };
 
 export default class Profile extends React.Component {
@@ -95,7 +91,7 @@ export default class Profile extends React.Component {
       notify_on_forum_post_reply: false,
       notify_on_lesson_comment_like: false,
       notify_on_lesson_comment_reply: false,
-      notify_weekly_update: false
+      notify_weekly_update: false,
     };
   }
 
@@ -105,15 +101,15 @@ export default class Profile extends React.Component {
       'rank',
       'profileURI',
       'displayName',
-      'joined'
+      'joined',
     ]).then(data =>
       this.setState({
         xp: this.changeXP(data[0][1]),
         rank: data[1][1],
         profileImage: data[2][1],
         username: data[3][1],
-        memberSince: data[4][1]
-      })
+        memberSince: data[4][1],
+      }),
     );
 
     getUserData().then(userData => {
@@ -127,7 +123,7 @@ export default class Profile extends React.Component {
         notify_on_lesson_comment_like: userData?.notify_on_lesson_comment_like,
         notify_on_lesson_comment_reply:
           userData?.notify_on_lesson_comment_reply,
-        notify_weekly_update: userData?.notify_weekly_update
+        notify_weekly_update: userData?.notify_weekly_update,
       });
       this.getNotifications(false);
     });
@@ -157,19 +153,19 @@ export default class Profile extends React.Component {
 
       if (timeDelta < 3600) {
         notifications.data[i].created_at = `${(timeDelta / 60).toFixed(
-          0
+          0,
         )} minute${timeDelta < 60 * 2 && timeDelta >= 60 ? '' : 's'} ago`;
       } else if (timeDelta < 86400) {
         notifications.data[i].created_at = `${(timeDelta / 3600).toFixed(
-          0
+          0,
         )} hour${timeDelta < 3600 * 2 ? '' : 's'} ago`;
       } else if (timeDelta < 604800) {
         notifications.data[i].created_at = `${(timeDelta / 86400).toFixed(
-          0
+          0,
         )} day${timeDelta < 86400 * 2 ? '' : 's'} ago`;
       } else {
         notifications.data[i].created_at = `${(timeDelta / 604800).toFixed(
-          0
+          0,
         )} week${timeDelta < 604800 * 2 ? '' : 's'} ago`;
       }
     }
@@ -179,7 +175,7 @@ export default class Profile extends React.Component {
         ? state.notifications.concat(notifications.data)
         : notifications.data,
       isLoading: false,
-      animateLoadMore: notifications.data?.length == 0 ? false : true
+      animateLoadMore: notifications.data?.length == 0 ? false : true,
     }));
   }
 
@@ -202,7 +198,7 @@ export default class Profile extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     this.setState(state => ({
-      notifications: state.notifications.filter(c => c.id !== notificationId)
+      notifications: state.notifications.filter(c => c.id !== notificationId),
     }));
     removeNotification(notificationId);
   };
@@ -211,28 +207,28 @@ export default class Profile extends React.Component {
     let type = messageDict[item.type][0];
     if (type == 'replied to your comment.') {
       this.setState({
-        clickedNotificationStatus: this.state.notify_on_lesson_comment_reply
+        clickedNotificationStatus: this.state.notify_on_lesson_comment_reply,
       });
     } else if (type == 'liked your comment.') {
       this.setState({
-        clickedNotificationStatus: this.state.notify_on_lesson_comment_like
+        clickedNotificationStatus: this.state.notify_on_lesson_comment_like,
       });
     } else if (type == 'replied to your forum post.') {
       this.setState({
-        clickedNotificationStatus: this.state.notify_on_forum_post_reply
+        clickedNotificationStatus: this.state.notify_on_forum_post_reply,
       });
     } else if (type == 'liked your forum post.') {
       this.setState({
-        clickedNotificationStatus: this.state.notify_on_forum_post_like
+        clickedNotificationStatus: this.state.notify_on_forum_post_like,
       });
     } else if (type == 'post in followed thread.') {
       this.setState({
         clickedNotificationStatus: this.state
-          .notify_on_forum_followed_thread_reply
+          .notify_on_forum_followed_thread_reply,
       });
     } else if (type == '') {
       this.setState({
-        clickedNotificationStatus: this.state.notify_weekly_update
+        clickedNotificationStatus: this.state.notify_weekly_update,
       });
     }
   };
@@ -249,9 +245,9 @@ export default class Profile extends React.Component {
         {
           data: {
             type: 'user',
-            attributes: data
-          }
-        }
+            attributes: data,
+          },
+        },
       );
     } catch (error) {
       console.log('ERROR: ', error);
@@ -261,7 +257,7 @@ export default class Profile extends React.Component {
   openNotification = notification => {
     if (notification.type === 'new content releases') {
       navigate('VIDEOPLAYER', {
-        url: notification.content.mobile_app_url
+        url: notification.content.mobile_app_url,
       });
     } else if (
       notification.type === 'lesson comment reply' ||
@@ -269,7 +265,7 @@ export default class Profile extends React.Component {
     ) {
       navigate('VIDEOPLAYER', {
         comment: notification.comment,
-        url: notification.content.mobile_app_url
+        url: notification.content.mobile_app_url,
       });
     } else {
       console.log('LINKING URL: ', notification.url);
@@ -278,7 +274,7 @@ export default class Profile extends React.Component {
   };
 
   loadMoreNotifications = () => {
-    this.setState({ animateLoadMore: true }, () => {
+    this.setState({animateLoadMore: true}, () => {
       this.getNotifications(true);
     });
   };
@@ -292,17 +288,17 @@ export default class Profile extends React.Component {
         />
         <View style={styles.mainContainer}>
           <View style={localStyles.headerContainer}>
-            <View style={{ flex: 1 }} />
+            <View style={{flex: 1}} />
             <Text style={styles.childHeaderText}>My Profile</Text>
             <TouchableOpacity
-              style={{ flex: 1 }}
+              style={{flex: 1}}
               onPress={() => navigate('SETTINGS')}
             >
               <Settings
                 height={onTablet ? 25 : 17.5}
                 width={onTablet ? 25 : 17.5}
                 fill={colors.pianoteRed}
-                style={{ alignSelf: 'flex-end' }}
+                style={{alignSelf: 'flex-end'}}
               />
             </TouchableOpacity>
           </View>
@@ -317,7 +313,7 @@ export default class Profile extends React.Component {
                 <View
                   style={[
                     styles.centerContent,
-                    { marginTop: onTablet ? 40 : 20 }
+                    {marginTop: onTablet ? 40 : 20},
                   ]}
                 >
                   <View style={localStyles.imageContainer}>
@@ -327,7 +323,7 @@ export default class Profile extends React.Component {
                       <TouchableOpacity
                         onPress={() =>
                           navigate('PROFILESETTINGS', {
-                            data: 'Profile Photo'
+                            data: 'Profile Photo',
                           })
                         }
                         style={[styles.centerContent, styles.container]}
@@ -345,7 +341,7 @@ export default class Profile extends React.Component {
                         uri:
                           this.state.profileImage !== ''
                             ? this.state.profileImage
-                            : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                            : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png',
                       }}
                       resizeMode={FastImage.resizeMode.cover}
                     />
@@ -363,14 +359,14 @@ export default class Profile extends React.Component {
                 </View>
                 <View style={localStyles.rankText}>
                   <TouchableOpacity
-                    onPress={() => this.setState({ showXpRank: true })}
+                    onPress={() => this.setState({showXpRank: true})}
                   >
                     <Text style={localStyles.redXpRank}>XP</Text>
                     <Text style={localStyles.whiteXpRank}>{this.state.xp}</Text>
                   </TouchableOpacity>
-                  <View style={{ width: 60 }} />
+                  <View style={{width: 60}} />
                   <TouchableOpacity
-                    onPress={() => this.setState({ showXpRank: true })}
+                    onPress={() => this.setState({showXpRank: true})}
                   >
                     <Text style={localStyles.redXpRank}>RANK</Text>
                     <Text style={localStyles.whiteXpRank}>
@@ -387,8 +383,8 @@ export default class Profile extends React.Component {
                         paddingVertical: 15,
                         paddingLeft: 10,
                         fontFamily: 'OpenSans-ExtraBold',
-                        color: 'white'
-                      }
+                        color: 'white',
+                      },
                     ]}
                   >
                     NOTIFICATIONS
@@ -415,14 +411,14 @@ export default class Profile extends React.Component {
             }
             ListFooterComponent={() => (
               <ActivityIndicator
-                style={{ marginVertical: 20 }}
-                size='small'
+                style={{marginVertical: 20}}
+                size="small"
                 color={colors.secondBackground}
                 animating={this.state.animateLoadMore}
                 hidesWhenStopped={true}
               />
             )}
-            renderItem={({ item, index }) => (
+            renderItem={({item, index}) => (
               <TouchableOpacity
                 style={[
                   localStyles.notification,
@@ -430,8 +426,8 @@ export default class Profile extends React.Component {
                     backgroundColor:
                       index % 2
                         ? colors.mainBackground
-                        : colors.notificationColor
-                  }
+                        : colors.notificationColor,
+                  },
                 ]}
                 onPress={() => this.openNotification(item)}
               >
@@ -442,7 +438,7 @@ export default class Profile extends React.Component {
                         style={[
                           styles.centerContent,
                           localStyles.iconContainer,
-                          { backgroundColor: 'red' }
+                          {backgroundColor: 'red'},
                         ]}
                       >
                         <FontAwesome
@@ -457,7 +453,7 @@ export default class Profile extends React.Component {
                         style={[
                           styles.centerContent,
                           localStyles.iconContainer,
-                          { backgroundColor: 'orange' }
+                          {backgroundColor: 'orange'},
                         ]}
                       >
                         <Chat
@@ -472,7 +468,7 @@ export default class Profile extends React.Component {
                         style={[
                           styles.centerContent,
                           localStyles.iconContainer,
-                          { backgroundColor: 'blue' }
+                          {backgroundColor: 'blue'},
                         ]}
                       >
                         <AntIcon
@@ -488,7 +484,7 @@ export default class Profile extends React.Component {
                         width: onTablet ? 60 : 40,
                         paddingVertical: 10,
                         borderRadius: 100,
-                        marginRight: 10
+                        marginRight: 10,
                       }}
                       source={{
                         uri:
@@ -496,18 +492,18 @@ export default class Profile extends React.Component {
                             ? item.content.thumbnail_url
                             : item.sender
                             ? item.sender.profile_image_url
-                            : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                            : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png',
                       }}
                       resizeMode={FastImage.resizeMode.stretch}
                     />
                   </View>
                 </View>
-                <View style={{ flex: 0.975, paddingLeft: 20 }}>
-                  <View style={{ flex: 1, justifyContent: 'center' }}>
+                <View style={{flex: 0.975, paddingLeft: 20}}>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
                     <Text
                       style={{
                         fontFamily: 'OpenSans-ExtraBold',
-                        color: 'white'
+                        color: 'white',
                       }}
                     >
                       <Text style={localStyles.boldNotificationText}>
@@ -527,14 +523,14 @@ export default class Profile extends React.Component {
                   </View>
                 </View>
                 <View>
-                  <View style={{ flexDirection: 'row' }}>
+                  <View style={{flexDirection: 'row'}}>
                     <TouchableOpacity
                       style={localStyles.threeDotsContainer}
                       onPress={() => {
                         this.checkNotificationTypeStatus(item);
                         this.setState({
                           showReplyNotification: true,
-                          clickedNotification: item
+                          clickedNotification: item,
                         });
                       }}
                     >
@@ -560,7 +556,7 @@ export default class Profile extends React.Component {
           hasBackdrop={true}
         >
           <XpRank
-            hideXpRank={() => this.setState({ showXpRank: false })}
+            hideXpRank={() => this.setState({showXpRank: false})}
             xp={this.state.xp}
             rank={this.state.rank}
           />
@@ -576,15 +572,15 @@ export default class Profile extends React.Component {
         >
           <ReplyNotification
             removeNotification={data => {
-              this.setState({ showReplyNotification: false }),
+              this.setState({showReplyNotification: false}),
                 this.removeNotification(data.id);
             }}
             turnOfffNotifications={data => {
-              this.setState({ showReplyNotification: false }),
+              this.setState({showReplyNotification: false}),
                 this.turnOfffNotifications(data);
             }}
             hideReplyNotification={() => {
-              this.setState({ showReplyNotification: false });
+              this.setState({showReplyNotification: false});
             }}
             data={this.state.clickedNotification}
             notificationStatus={this.state.clickedNotificationStatus}
@@ -601,14 +597,14 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10
+    padding: 10,
   },
   container: {
     backgroundColor: 'white',
     borderRadius: 15,
     margin: 20,
     height: 200,
-    width: '80%'
+    width: '80%',
   },
   imageContainer: {
     borderRadius: 250,
@@ -618,7 +614,7 @@ const localStyles = StyleSheet.create({
     width: DeviceInfo.isTablet() ? 200 : 150,
     aspectRatio: 1,
     marginBottom: 20,
-    marginTop: 10
+    marginTop: 10,
   },
   profilePic: {
     position: 'absolute',
@@ -630,25 +626,25 @@ const localStyles = StyleSheet.create({
     width: DeviceInfo.isTablet() ? 40 : 30,
     borderRadius: 100,
     borderColor: '#fb1b2f',
-    borderWidth: 1
+    borderWidth: 1,
   },
   profileImageBackground: {
     height: '100%',
     width: '100%',
     borderRadius: 250,
-    backgroundColor: '#445f73'
+    backgroundColor: '#445f73',
   },
   usernameText: {
     fontFamily: 'OpenSans-ExtraBold',
     textAlign: 'center',
     color: 'white',
-    paddingBottom: 5
+    paddingBottom: 5,
   },
   memberSinceText: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
     textAlign: 'center',
-    color: '#445f73'
+    color: '#445f73',
   },
   rankText: {
     marginTop: 20,
@@ -660,42 +656,42 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#00101d',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   redXpRank: {
     color: '#fb1b2f',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
     fontFamily: 'OpenSans-Bold',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   whiteXpRank: {
     color: 'white',
     fontSize: DeviceInfo.isTablet() ? 26 : 20,
     fontFamily: 'OpenSans-ExtraBold',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   notificationContainer: {
-    elevation: 1
+    elevation: 1,
   },
   activityContainer: {
     flex: 1,
-    marginTop: 20
+    marginTop: 20,
   },
   noNotificationText: {
     fontFamily: 'OpenSans-ExtraBold',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
     textAlign: 'left',
     paddingLeft: 10,
-    color: 'white'
+    color: 'white',
   },
   notification: {
     flexDirection: 'row',
-    paddingVertical: 20
+    paddingVertical: 20,
   },
   innerNotificationContainer: {
     paddingLeft: 10,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   iconContainer: {
     position: 'absolute',
@@ -704,25 +700,25 @@ const localStyles = StyleSheet.create({
     height: DeviceInfo.isTablet() ? 35 : 25,
     width: DeviceInfo.isTablet() ? 35 : 25,
     borderRadius: 100,
-    zIndex: 5
+    zIndex: 5,
   },
   boldNotificationText: {
     fontFamily: 'OpenSans-ExtraBold',
     fontSize: DeviceInfo.isTablet() ? 16 : 14,
-    color: 'white'
+    color: 'white',
   },
   messageTypeText: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
-    color: 'white'
+    color: 'white',
   },
   createdAtText: {
     marginTop: 1,
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
-    color: '#445f73'
+    color: '#445f73',
   },
   threeDotsContainer: {
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });

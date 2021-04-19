@@ -1,13 +1,10 @@
-/**
- * NoConnection
- */
 import React from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 
 export default class NoConnection extends React.Component {
@@ -49,20 +46,20 @@ const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     borderRadius: 15,
-    margin: 20
+    margin: 20,
   },
   sorryText: {
     paddingHorizontal: 40,
-    marginTop: 10
+    marginTop: 10,
   },
   tryAgainContainer: {
     alignSelf: 'center',
     paddingHorizontal: 40,
-    marginVertical: 10
+    marginVertical: 10,
   },
   tryAgain: {
     color: '#fb1b2f',
     paddingHorizontal: 20,
-    margin: 10
-  }
+    margin: 10,
+  },
 });

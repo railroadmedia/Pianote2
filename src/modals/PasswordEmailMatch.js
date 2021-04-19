@@ -1,13 +1,10 @@
-/**
- * PasswordEmailMatch
- */
 import React from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 
 export default class PasswordEmailMatch extends React.Component {
@@ -29,7 +26,7 @@ export default class PasswordEmailMatch extends React.Component {
               style={[
                 styles.modalHeaderText,
                 localStyles.errorMessage,
-                { marginBottom: 5 }
+                {marginBottom: 5},
               ]}
             >
               {this.props.errorMessage}
@@ -38,7 +35,7 @@ export default class PasswordEmailMatch extends React.Component {
               style={[
                 styles.modalBodyText,
                 localStyles.tryAgainText,
-                { marginBottom: 25 }
+                {marginBottom: 25},
               ]}
             >
               Please try again.
@@ -64,17 +61,17 @@ const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     borderRadius: 15,
-    margin: 20
+    margin: 20,
   },
   errorMessage: {
     paddingHorizontal: 40,
-    marginTop: 15
+    marginTop: 15,
   },
   tryAgainText: {
-    paddingHorizontal: 40
+    paddingHorizontal: 40,
   },
   tryAgain: {
     color: '#fb1b2f',
-    marginBottom: 15
-  }
+    marginBottom: 15,
+  },
 });

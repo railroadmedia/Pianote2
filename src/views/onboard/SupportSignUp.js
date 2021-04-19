@@ -1,6 +1,3 @@
-/**
- * SupportSignUp
- */
 import React from 'react';
 import {
   View,
@@ -8,12 +5,12 @@ import {
   TouchableOpacity,
   ScrollView,
   Linking,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import Intercom from 'react-native-intercom';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
-import { SafeAreaView } from 'react-navigation';
-import { goBack } from '../../../AppNavigator';
+import {SafeAreaView} from 'react-navigation';
+import {goBack} from '../../../AppNavigator';
 
 export default class SupportSignUp extends React.Component {
   constructor(props) {
@@ -36,7 +33,7 @@ export default class SupportSignUp extends React.Component {
           style={{
             flex: 1,
             alignSelf: 'stretch',
-            backgroundColor: colors.mainBackground
+            backgroundColor: colors.mainBackground,
           }}
         >
           <View
@@ -44,8 +41,8 @@ export default class SupportSignUp extends React.Component {
             style={[
               styles.centerContent,
               {
-                flex: 0.1
-              }
+                flex: 0.1,
+              },
             ]}
           >
             <View
@@ -57,8 +54,8 @@ export default class SupportSignUp extends React.Component {
                   paddingLeft: 5,
                   bottom: 10,
                   height: 50,
-                  width: 50
-                }
+                  width: 50,
+                },
               ]}
             >
               <TouchableOpacity
@@ -67,8 +64,8 @@ export default class SupportSignUp extends React.Component {
                   styles.centerContent,
                   {
                     height: '100%',
-                    width: '100%'
-                  }
+                    width: '100%',
+                  },
                 ]}
               >
                 <Back
@@ -78,23 +75,20 @@ export default class SupportSignUp extends React.Component {
                 />
               </TouchableOpacity>
             </View>
-            <View style={{ flex: 0.66 }} />
+            <View style={{flex: 0.66}} />
             <Text
-              style={[
-                styles.childHeaderText,
-                { color: colors.secondBackground }
-              ]}
+              style={[styles.childHeaderText, {color: colors.secondBackground}]}
             >
               Support
             </Text>
-            <View style={{ flex: 0.33 }} />
+            <View style={{flex: 0.33}} />
           </View>
           <ScrollView
             key={'contentContainer'}
-            style={{ flex: 1 }}
-            contentContainerStyle={{ flexGrow: 1 }}
+            style={{flex: 1}}
+            contentContainerStyle={{flexGrow: 1}}
           >
-            <View style={{ height: '15%' }} />
+            <View style={{height: '15%'}} />
 
             <TouchableOpacity
               onPress={() => this.onIntercomPress()}
@@ -105,7 +99,7 @@ export default class SupportSignUp extends React.Component {
                   fontFamily: 'RobotoCondensed-Bold',
                   fontSize: onTablet ? 20 : 16,
                   color: 'white',
-                  paddingVertical: 15
+                  paddingVertical: 15,
                 }}
               >
                 LIVE CHAT SUPPORT
@@ -121,7 +115,7 @@ export default class SupportSignUp extends React.Component {
                   fontFamily: 'RobotoCondensed-Bold',
                   fontSize: onTablet ? 20 : 16,
                   color: 'white',
-                  paddingVertical: 15
+                  paddingVertical: 15,
                 }}
               >
                 EMAIL SUPPORT
@@ -137,7 +131,7 @@ export default class SupportSignUp extends React.Component {
                   fontFamily: 'RobotoCondensed-Bold',
                   fontSize: onTablet ? 20 : 16,
                   color: 'white',
-                  paddingVertical: 15
+                  paddingVertical: 15,
                 }}
               >
                 PHONE SUPPORT
@@ -152,7 +146,7 @@ export default class SupportSignUp extends React.Component {
                 color: colors.secondBackground,
                 textAlign: 'center',
                 padding: 10,
-                paddingTop: 20
+                paddingTop: 20,
               }}
             >
               EMAIL
@@ -164,7 +158,7 @@ export default class SupportSignUp extends React.Component {
                 fontSize: onTablet ? 18 : 14,
                 textAlign: 'center',
                 color: 'white',
-                padding: 5
+                padding: 5,
               }}
             >
               support@musora.com
@@ -177,7 +171,7 @@ export default class SupportSignUp extends React.Component {
                 opacity: 0.8,
                 color: colors.secondBackground,
                 textAlign: 'center',
-                padding: 10
+                padding: 10,
               }}
             >
               PHONE
@@ -188,7 +182,7 @@ export default class SupportSignUp extends React.Component {
                 fontSize: onTablet ? 18 : 14,
                 textAlign: 'center',
                 color: 'white',
-                padding: 5
+                padding: 5,
               }}
             >
               1-800-439-8921
@@ -199,7 +193,7 @@ export default class SupportSignUp extends React.Component {
                 fontSize: onTablet ? 18 : 14,
                 textAlign: 'center',
                 color: 'white',
-                padding: 5
+                padding: 5,
               }}
             >
               1-604-855-7605
@@ -217,6 +211,6 @@ const localStyles = StyleSheet.create({
     borderRadius: 200,
     backgroundColor: '#fb1b2f',
     alignSelf: 'center',
-    marginVertical: 5
-  }
+    marginVertical: 5,
+  },
 });
