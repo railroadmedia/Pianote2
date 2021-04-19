@@ -158,6 +158,7 @@ export default class VideoPlayer extends React.Component {
       content = result;
       this.allCommentsNum = result.total_comments;
     }
+
     let al = [];
     if (content.assignments) {
       for (let i in content.assignments) {
@@ -188,20 +189,14 @@ export default class VideoPlayer extends React.Component {
         videoId: content.vimeo_video_id,
         lessonImage: content.thumbnail_url,
         lessonTitle: content.title,
-        style:
-          content.type === 'song-part' && content.parent
-            ? `${content.parent.style.toUpperCase()} | `
-            : '',
+        style: content.style,
         description:
-          content.type === 'song-part' && content.parent
-            ? content.parent.instructor.biography
+          content.type === 'song-part'
+            ? content.instructor.map(i => i.biography)
             : content.description,
         chapters: content.chapters,
         xp: content.xp,
-        artist:
-          content.type === 'song-part' && content.parent
-            ? content.parent.artist
-            : content.artist,
+        artist: content.artist,
         instructor: content.instructor,
         isLoadingAll: false,
         publishedOn: content.published_on,
@@ -833,6 +828,7 @@ export default class VideoPlayer extends React.Component {
 
     let releaseDate = this.transformDate(publishedOn);
     let releaseDateTag = releaseDate ? `${releaseDate} | ` : '';
+    let styleTag = style ? `${style.toUpperCase()} | ` : '';
     let artistTag = artist ? `${artist.toUpperCase()} | ` : '';
     let xpTag = `${xp || 0} XP`;
     let instructorTag = instructor
@@ -844,7 +840,7 @@ export default class VideoPlayer extends React.Component {
 
     switch (type) {
       case 'song-part':
-        return artistTag + style + xpTag;
+        return artistTag + styleTag + xpTag;
       case 'song':
         return artistTag + xpTag;
       case 'course-part':

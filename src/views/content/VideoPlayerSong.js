@@ -104,13 +104,63 @@ export default class VideoPlayerSong extends React.Component {
                 {title}
               </Text>
               <View style={{ height: 10 }} />
-              {timeCodes?.map(tc => (
+              {Array.isArray(timeCodes) ? (
+                timeCodes?.map(tc => (
+                  <View
+                    style={[
+                      styles.centerContent,
+                      {
+                        height: height * 0.025,
+                        width: '100%'
+                      }
+                    ]}
+                  >
+                    <View
+                      style={[
+                        styles.centerContent,
+                        {
+                          width: '40%',
+                          height: '100%',
+                          borderRadius: 30,
+                          backgroundColor: '#ececec',
+                          alignSelf: 'center'
+                        }
+                      ]}
+                    >
+                      <TouchableOpacity
+                        onPress={() => this.props.onSeek?.(tc.value)}
+                        style={[
+                          styles.centerContent,
+                          {
+                            height: '100%',
+                            width: '100%',
+                            alignItems: 'center'
+                          }
+                        ]}
+                      >
+                        <Text
+                          style={{
+                            fontFamily: 'OpenSans-Regular',
+                            fontWeight: '700',
+                            color: 'grey',
+                            fontSize: sizing.descriptionText,
+                            alignSelf: 'center'
+                          }}
+                        >
+                          SKIP VIDEO TO {formatTimeHHMMSS(tc.value)}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                ))
+              ) : !!timeCodes ? (
                 <View
                   style={[
                     styles.centerContent,
                     {
                       height: height * 0.025,
-                      width: '100%'
+                      width: '100%',
+                      marginBottom: 10
                     }
                   ]}
                 >
@@ -127,7 +177,7 @@ export default class VideoPlayerSong extends React.Component {
                     ]}
                   >
                     <TouchableOpacity
-                      onPress={() => this.props.onSeek?.(tc.value)}
+                      onPress={() => this.props.onSeek?.(timeCodes)}
                       style={[
                         styles.centerContent,
                         {
@@ -146,12 +196,12 @@ export default class VideoPlayerSong extends React.Component {
                           alignSelf: 'center'
                         }}
                       >
-                        SKIP VIDEO TO {formatTimeHHMMSS(tc.value)}
+                        SKIP VIDEO TO {formatTimeHHMMSS(timeCodes)}
                       </Text>
                     </TouchableOpacity>
                   </View>
                 </View>
-              ))}
+              ) : null}
 
               <View
                 style={{

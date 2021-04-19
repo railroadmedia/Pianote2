@@ -103,6 +103,7 @@ export default class Foundations extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     const response = await foundationsService.getFoundation('foundations-2019');
+
     this.setState({
       items: response.units,
       id: response.id,
@@ -376,8 +377,7 @@ export default class Foundations extends React.Component {
                         fontSize: onTablet ? 25 : 17.5,
                         textAlign: 'left',
                         color: 'white',
-                        fontFamily: 'OpenSans-Bold',
-                        marginVertical: 15
+                        fontFamily: 'OpenSans-Bold'
                       }}
                     >
                       {this.state.xp}

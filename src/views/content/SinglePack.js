@@ -102,7 +102,7 @@ export default class SinglePack extends React.Component {
         description: response.description,
         isStarted: response.started,
         isCompleted: response.completed,
-        xp: response.xp,
+        xp: response.total_xp,
         videos: response.bundles || response.lessons,
         nextLessonUrl: response.next_lesson?.mobile_app_url,
         isLoadingAll: false,

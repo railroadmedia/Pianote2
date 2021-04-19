@@ -460,7 +460,7 @@ export default class PathOverview extends React.Component {
                 : { width: '100%' }
             ]}
           >
-            {this.state.description && (
+            {!!this.state.description && (
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
