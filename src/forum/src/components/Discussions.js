@@ -13,9 +13,6 @@ export default class Discussion extends React.Component {
           style={{ padding: 50, backgroundColor: 'black' }}
           onPress={this.props.navigation.goBack}
         />
-        {!!this.props.route.params.BottomNavigator && (
-          <this.props.route.params.BottomNavigator currentPage={'Forum'} />
-        )}
       </View>
     );
   }
