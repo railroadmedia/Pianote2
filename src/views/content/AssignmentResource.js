@@ -153,7 +153,7 @@ export default class AssignmentResource extends React.Component {
             style={{ flexDirection: 'row' }}
           >
             {this.props.data?.map((sheet, i) => (
-              <View>
+              <View key={i}>
                 {sheet.value.includes('.pdf') ? (
                   <>
                     <PDFView

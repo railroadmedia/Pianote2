@@ -115,14 +115,13 @@ export default class PathOverview extends React.Component {
     } else {
       res = await contentService.getContent(this.state.id);
     }
-
     this.setState({
       id: res.id,
       mobile_app_url: res.mobile_app_url,
       likeCount: res.like_count,
       isLiked: res.is_liked_by_current_user,
       isAddedToList: res.is_added_to_primary_playlist,
-      totalLength: res.length_in_seconds,
+      totalLength: res.total_length_in_seconds,
       started: res.started,
       completed: res.completed,
       nextLesson: res.next_lesson,
