@@ -31,6 +31,10 @@ export default class Discussions extends React.Component {
             style={{ padding: 50, backgroundColor: 'black' }}
             onPress={goBack}
           />
+          <TouchableOpacity
+            style={{ padding: 50, backgroundColor: 'green' }}
+            onPress={() => navigate('Edit', { text: 'aa' })}
+          />
         </View>
         {!!BottomNavigator && <BottomNavigator currentPage={'Forum'} />}
       </>
