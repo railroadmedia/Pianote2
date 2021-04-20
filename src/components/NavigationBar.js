@@ -131,7 +131,8 @@ export default class NavigationBar extends React.Component {
                       tryCall: commonService.tryCall,
                       rootUrl: commonService.rootUrl,
                       isDark: true,
-                      BottomNavigator: NavigationBar
+                      BottomNavigator: NavigationBar,
+                      appColor: colors.pianoteRed
                     });
               }}
             >
