@@ -42,8 +42,8 @@ class Course extends React.Component {
       currentSort: 'newest',
       page: 1,
       outVideos: false,
-      isPaging: false, // scrolling more
-      started: true, // if started lesson
+      isPaging: false,
+      started: true,
       refreshing: true,
       refreshControl: false,
       ...this.initialValidData(coursesCache, true),
@@ -338,7 +338,7 @@ class Course extends React.Component {
                     ),
                   )
                 }
-                imageWidth={width * 0.26} // image width
+                imageWidth={width * 0.26}
                 outVideos={this.state.outVideos}
                 getVideos={() => this.getVideos()}
               />

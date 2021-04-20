@@ -17,9 +17,7 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Orientation from 'react-native-orientation-locker';
-import StartIcon from '../../components/StartIcon';
-import ContinueIcon from '../../components/ContinueIcon';
-import ResetIcon from '../../components/ResetIcon';
+import LongButton from '../../components/LongButton';
 import NavigationBar from '../../components/NavigationBar';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
@@ -394,34 +392,27 @@ export default class PathOverview extends React.Component {
               </TouchableOpacity>
             </View>
             <View style={{width: '50%'}}>
-              {this.state.completed ? (
-                <ResetIcon
-                  isMethod={true}
-                  pressed={() => this.setState({showRestartCourse: true})}
-                />
-              ) : this.state.started ? (
-                <ContinueIcon
-                  isMethod={true}
-                  pressed={() =>
+              <LongButton
+                isMethod={true}
+                type={
+                  this.state.completed
+                    ? 'RESET'
+                    : !this.state.started
+                    ? 'START'
+                    : 'CONTINUE'
+                }
+                pressed={() => {
+                  if (this.state.completed) {
+                    this.setState({showRestartCourse: true});
+                  } else {
                     this.goToLesson(
                       this.state.isMethod
                         ? this.state.bannerNextLessonUrl
                         : this.state.nextLesson?.id,
-                    )
+                    );
                   }
-                />
-              ) : (
-                <StartIcon
-                  isMethod={true}
-                  pressed={() =>
-                    this.goToLesson(
-                      this.state.isMethod
-                        ? this.state.bannerNextLessonUrl
-                        : this.state.nextLesson?.id,
-                    )
-                  }
-                />
-              )}
+                }}
+              />
             </View>
             <View style={{flex: 1, flexDirection: 'row'}}>
               <TouchableOpacity

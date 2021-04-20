@@ -12,16 +12,13 @@ import {
 import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import AsyncStorage from '@react-native-community/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import LinearGradient from 'react-native-linear-gradient';
 import Orientation from 'react-native-orientation-locker';
-import ResetIcon from '../../components/ResetIcon';
+import LongButton from '../../components/LongButton';
 import NextVideo from '../../components/NextVideo';
-import StartIcon from '../../components/StartIcon';
 import RestartCourse from '../../modals/RestartCourse';
-import ContinueIcon from '../../components/ContinueIcon';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
@@ -294,32 +291,23 @@ export default class Method extends React.Component {
               >
                 <View style={{flex: 1}} />
                 <View style={{width: '50%'}}>
-                  {this.state.methodIsCompleted ? (
-                    <ResetIcon
-                      isMethod={true}
-                      pressed={() =>
-                        this.setState({
-                          showRestartCourse: true,
-                        })
+                  <LongButton
+                    isMethod={true}
+                    type={
+                      this.state.methodIsCompleted
+                        ? 'RESET'
+                        : !this.state.methodIsStarted
+                        ? 'START'
+                        : 'CONTINUE'
+                    }
+                    pressed={() => {
+                      if (this.state.methodIsCompleted) {
+                        this.setState({showRestartCourse: true});
+                      } else {
+                        this.goToLesson(this.state.bannerNextLessonUrl);
                       }
-                    />
-                  ) : this.state.methodIsStarted ? (
-                    <ContinueIcon
-                      isMethod={true}
-                      pressed={() =>
-                        this.goToLesson(this.state.bannerNextLessonUrl)
-                      }
-                    />
-                  ) : (
-                    !this.state.methodIsStarted && (
-                      <StartIcon
-                        isMethod={true}
-                        pressed={() =>
-                          this.goToLesson(this.state.bannerNextLessonUrl)
-                        }
-                      />
-                    )
-                  )}
+                    }}
+                  />
                 </View>
                 <View style={{flex: 1, flexDirection: 'row'}}>
                   <TouchableOpacity

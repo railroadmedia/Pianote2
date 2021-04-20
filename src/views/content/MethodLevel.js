@@ -16,11 +16,9 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import Orientation from 'react-native-orientation-locker';
-import ResetIcon from '../../components/ResetIcon';
+import LongButton from '../../components/LongButton';
 import RestartCourse from '../../modals/RestartCourse';
 import NextVideo from '../../components/NextVideo';
-import StartIcon from '../../components/StartIcon';
-import ContinueIcon from '../../components/ContinueIcon';
 import NavigationBar from '../../components/NavigationBar';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import {
@@ -321,30 +319,25 @@ export default class MethodLevel extends React.Component {
                   </TouchableOpacity>
                 </View>
                 <View style={{width: '50%'}}>
-                  {this.state.isCompleted ? (
-                    <ResetIcon
-                      isMethod={true}
-                      pressed={() => this.setState({showRestartCourse: true})}
-                    />
-                  ) : this.state.isStarted ? (
-                    <ContinueIcon
-                      isMethod={true}
-                      pressed={() =>
+                  <LongButton
+                    isMethod={true}
+                    type={
+                      this.state.isCompleted
+                        ? 'RESET'
+                        : !this.state.isStarted
+                        ? 'START'
+                        : 'CONTINUE'
+                    }
+                    pressed={() => {
+                      if (this.state.isCompleted) {
+                        this.setState({showRestartCourse: true});
+                      } else {
                         navigate('VIDEOPLAYER', {
                           url: this.state.bannerNextLessonUrl,
-                        })
+                        });
                       }
-                    />
-                  ) : !this.state.isStarted ? (
-                    <StartIcon
-                      isMethod={true}
-                      pressed={() =>
-                        navigate('VIDEOPLAYER', {
-                          url: this.state.bannerNextLessonUrl,
-                        })
-                      }
-                    />
-                  ) : null}
+                    }}
+                  />
                 </View>
                 <View style={{flex: 1, flexDirection: 'row'}}>
                   <TouchableOpacity

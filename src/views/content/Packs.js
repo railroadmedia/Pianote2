@@ -14,10 +14,8 @@ import Modal from 'react-native-modal';
 import {bindActionCreators} from 'redux';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import StartIcon from '../../components/StartIcon';
-import MoreInfoIcon from '../../components/MoreInfoIcon';
+import LongButton from '../../components/LongButton';
 import RestartCourse from '../../modals/RestartCourse';
-import ContinueIcon from '../../components/ContinueIcon';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import GradientFeature from '../../components/GradientFeature';
@@ -26,7 +24,6 @@ import packsService from '../../services/packs.service';
 import {NetworkContext} from '../../context/NetworkProvider';
 import Orientation from 'react-native-orientation-locker';
 import {cacheAndWritePacks} from '../../redux/PacksCacheActions';
-import ResetIcon from '../../components/ResetIcon';
 import {navigate} from '../../../AppNavigator';
 
 let greaterWDim;
@@ -37,14 +34,14 @@ class Packs extends React.Component {
     let {packsCache} = props;
     this.state = {
       packs: [],
-      headerPackImg: '',
-      headerPackLogo: '',
-      headerPackUrl: '',
-      headerPackNextLessonUrl: '',
       headerPackCompleted: false,
       headerPackStarted: false,
       refreshing: false,
       showRestartCourse: false,
+      headerPackImg: '',
+      headerPackLogo: '',
+      headerPackUrl: '',
+      headerPackNextLessonUrl: '',
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width,
       ...this.initialValidData(packsCache, true),
@@ -235,44 +232,30 @@ class Packs extends React.Component {
                   ]}
                 >
                   <View style={{flex: 1}} />
-                  <View
-                    style={{
-                      width: onTablet ? 200 : '45%',
-                    }}
-                  >
-                    {this.state.headerPackCompleted ? (
-                      <ResetIcon
-                        pressed={() =>
-                          this.setState({
-                            showRestartCourse: true,
-                          })
-                        }
-                      />
-                    ) : !this.state.headerPackStarted ? (
-                      <StartIcon
-                        pressed={() =>
+                  <View style={{width: onTablet ? 200 : '45%'}}>
+                    <LongButton
+                      type={
+                        this.state.headerPackCompleted
+                          ? 'RESET'
+                          : !this.state.headerPackStarted
+                          ? 'START'
+                          : 'CONTINUE'
+                      }
+                      pressed={() => {
+                        if (this.state.headerPackCompleted) {
+                          this.setState({showRestartCourse: true});
+                        } else {
                           navigate('VIDEOPLAYER', {
                             url: this.state.headerPackNextLessonUrl,
-                          })
+                          });
                         }
-                      />
-                    ) : (
-                      <ContinueIcon
-                        pressed={() =>
-                          navigate('VIDEOPLAYER', {
-                            url: this.state.headerPackNextLessonUrl,
-                          })
-                        }
-                      />
-                    )}
+                      }}
+                    />
                   </View>
                   <View style={onTablet ? {width: 10} : {flex: 0.5}} />
-                  <View
-                    style={{
-                      width: onTablet ? 200 : '45%',
-                    }}
-                  >
-                    <MoreInfoIcon
+                  <View style={{width: onTablet ? 200 : '45%'}}>
+                    <LongButton
+                      type={'MORE INFO'}
                       pressed={() => {
                         navigate('SINGLEPACK', {
                           url: this.state.headerPackUrl,

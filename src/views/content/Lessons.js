@@ -25,10 +25,7 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import {watchersListener} from 'MusoraChat';
 import DeviceInfo from 'react-native-device-info';
-import StartIcon from '../../components/StartIcon';
-import ResetIcon from '../../components/ResetIcon';
-import MoreInfoIcon from '../../components/MoreInfoIcon';
-import ContinueIcon from '../../components/ContinueIcon';
+import LongButton from '../../components/LongButton';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import GradientFeature from '../../components/GradientFeature';
@@ -598,52 +595,34 @@ class Lessons extends React.Component {
                   ]}
                 >
                   <View style={{flex: 1}} />
-                  <View
-                    style={{
-                      width: onTablet ? 200 : '45%',
-                    }}
-                  >
-                    {this.state.methodIsCompleted ? (
-                      <ResetIcon
-                        pressed={() =>
-                          this.setState({
-                            showRestartCourse: true,
-                          })
+                  <View style={{width: onTablet ? 200 : '45%'}}>
+                    <LongButton
+                      type={
+                        this.state.methodIsCompleted
+                          ? 'RESET'
+                          : !this.state.methodIsStarted
+                          ? 'START'
+                          : 'CONTINUE'
+                      }
+                      pressed={() => {
+                        if (this.state.methodIsCompleted) {
+                          this.setState({showRestartCourse: true});
+                        } else {
+                          if (!this.context.isConnected)
+                            return this.context.showNoConnectionAlert();
+                          if (this.state.methodNextLessonUrl) {
+                            navigate('VIDEOPLAYER', {
+                              url: this.state.methodNextLessonUrl,
+                            });
+                          }
                         }
-                      />
-                    ) : !this.state.methodIsStarted ? (
-                      <StartIcon
-                        pressed={() => {
-                          if (!this.context.isConnected) {
-                            return this.context.showNoConnectionAlert();
-                          }
-                          if (this.state.methodNextLessonUrl)
-                            navigate('VIDEOPLAYER', {
-                              url: this.state.methodNextLessonUrl,
-                            });
-                        }}
-                      />
-                    ) : (
-                      <ContinueIcon
-                        pressed={() => {
-                          if (!this.context.isConnected) {
-                            return this.context.showNoConnectionAlert();
-                          }
-                          if (this.state.methodNextLessonUrl)
-                            navigate('VIDEOPLAYER', {
-                              url: this.state.methodNextLessonUrl,
-                            });
-                        }}
-                      />
-                    )}
+                      }}
+                    />
                   </View>
                   <View style={onTablet ? {width: 10} : {flex: 0.5}} />
-                  <View
-                    style={{
-                      width: onTablet ? 200 : '45%',
-                    }}
-                  >
-                    <MoreInfoIcon
+                  <View style={{width: onTablet ? 200 : '45%'}}>
+                    <LongButton
+                      type={'MORE INFO'}
                       pressed={() => {
                         navigate('METHOD', {
                           methodIsStarted: this.state.methodIsStarted,

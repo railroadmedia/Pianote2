@@ -1,6 +1,8 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import Icon from 'react-native-vector-icons/Entypo';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 
 export default class StartIcon extends React.Component {
   constructor(props) {
@@ -32,6 +34,42 @@ export default class StartIcon extends React.Component {
     }
   };
 
+  whatIcon = () => {
+    if (this.props.type == 'CONTINUE') {
+      return (
+        <EntypoIcon
+          name={'controller-play'}
+          size={this.sizing('icon')}
+          color={'white'}
+        />
+      );
+    } else if (this.props.type == 'START') {
+      return (
+        <EntypoIcon
+          name={'controller-play'}
+          size={this.sizing('icon')}
+          color={'white'}
+        />
+      );
+    } else if (this.props.type == 'RESET') {
+      return (
+        <MaterialIcon
+          name={'replay'}
+          size={this.sizing('icon')}
+          color={'white'}
+        />
+      );
+    } else if (this.props.type == 'MORE INFO') {
+      return (
+        <AntIcon
+          name={'arrowright'}
+          size={this.sizing('icon')}
+          color={'white'}
+        />
+      );
+    }
+  };
+
   render = () => {
     return (
       <View
@@ -40,7 +78,10 @@ export default class StartIcon extends React.Component {
           {
             flex: 1,
             borderRadius: 500,
-            backgroundColor: '#fb1b2f',
+            backgroundColor:
+              this.props.type == 'MORE INFO' ? 'transparent' : '#fb1b2f',
+            borderColor: this.props.type == 'MORE INFO' ? 'white' : '#fb1b2f',
+            borderWidth: 2,
           },
         ]}
       >
@@ -54,11 +95,7 @@ export default class StartIcon extends React.Component {
             },
           ]}
         >
-          <Icon
-            name={'controller-play'}
-            size={this.sizing('icon')}
-            color={'white'}
-          />
+          {this.whatIcon()}
           <View style={{flex: 0.025}} />
           <Text
             style={[
@@ -68,7 +105,7 @@ export default class StartIcon extends React.Component {
               },
             ]}
           >
-            START
+            {this.props.type}
           </Text>
         </TouchableOpacity>
       </View>

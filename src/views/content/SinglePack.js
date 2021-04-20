@@ -20,9 +20,7 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Orientation from 'react-native-orientation-locker';
 import {DownloadResources} from 'RNDownload';
-import StartIcon from '../../components/StartIcon';
-import ResetIcon from '../../components/ResetIcon';
-import ContinueIcon from '../../components/ContinueIcon';
+import LongButton from '../../components/LongButton';
 import NavigationBar from '../../components/NavigationBar';
 import GradientFeature from '../../components/GradientFeature';
 import VerticalVideoList from '../../components/VerticalVideoList';
@@ -392,33 +390,24 @@ export default class SinglePack extends React.Component {
                     </TouchableOpacity>
                   </View>
                   <View style={{width: '50%'}}>
-                    {this.state.isCompleted ? (
-                      <ResetIcon
-                        pressed={() =>
-                          this.setState({
-                            showRestartCourse: true,
-                          })
-                        }
-                      />
-                    ) : !this.state.isStarted ? (
-                      <StartIcon
-                        pressed={() => {
+                    <LongButton
+                      type={
+                        this.state.isCompleted
+                          ? 'RESET'
+                          : !this.state.isStarted
+                          ? 'START'
+                          : 'CONTINUE'
+                      }
+                      pressed={() => {
+                        if (this.state.isCompleted) {
+                          this.setState({showRestartCourse: true});
+                        } else {
                           navigate('VIDEOPLAYER', {
                             url: this.state.nextLessonUrl,
                           });
-                        }}
-                      />
-                    ) : (
-                      this.state.isStarted && (
-                        <ContinueIcon
-                          pressed={() =>
-                            navigate('VIDEOPLAYER', {
-                              url: this.state.nextLessonUrl,
-                            })
-                          }
-                        />
-                      )
-                    )}
+                        }
+                      }}
+                    />
                   </View>
                   <View style={{flex: 1, flexDirection: 'row'}}>
                     <TouchableOpacity
