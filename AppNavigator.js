@@ -52,7 +52,6 @@ import Profile from './src/views/user/Profile';
 import Support from './src/views/user/Support';
 import Terms from './src/views/user/Terms';
 import NetworkProvider from './src/context/NetworkProvider';
-import NavigationBar from './src/components/NavigationBar';
 
 const Stack = createStackNavigator();
 
@@ -97,37 +96,9 @@ const timingAnim = {
   config: { duration: 250, easing: Easing.out(Easing.circle) }
 };
 
-let navigationBar;
 export default () => (
   <NetworkProvider>
-    <NavigationContainer
-      ref={navigationRef}
-      onStateChange={() => {
-        let visible = true;
-        switch (currentScene()) {
-          case 'LOADPAGE':
-          case 'LOGIN':
-          case 'MEMBERSHIPEXPIRED':
-          case 'LOGINCREDENTIALS':
-          case 'SUPPORTSIGNUP':
-          case 'FORGOTPASSWORD':
-          case 'CREATEACCOUNT2':
-          case 'CREATEACCOUNT3':
-          case 'CREATEACCOUNT':
-          case 'NEWMEMBERSHIP':
-          case 'GETRESTARTED':
-          case 'WELCOMEBACK':
-          case 'RESETPASSWORD':
-          case 'PRIVACYPOLICY':
-          case 'TERMS':
-          case 'VIDEOPLAYERSONG':
-          case 'VIDEOPLAYER':
-            visible = false;
-        }
-        if (navigationBar?.state.visible !== visible)
-          navigationBar.navigationBar = { visible };
-      }}
-    >
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         headerMode={'screen'}
         mode={'card'}
@@ -211,10 +182,6 @@ export default () => (
           options={{ gestureEnabled: false }}
         />
       </Stack.Navigator>
-      <NavigationBar
-        navigationRef={navigationRef}
-        ref={r => (navigationBar = r)}
-      />
     </NavigationContainer>
   </NetworkProvider>
 );

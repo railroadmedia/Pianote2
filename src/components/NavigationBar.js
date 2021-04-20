@@ -22,7 +22,6 @@ export default class NavigationBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      visible: true,
       profileImage: '',
       onMain: false,
       secondaryColor: this.props.isMethod
@@ -69,12 +68,7 @@ export default class NavigationBar extends React.Component {
     }
   };
 
-  set navigationBar(state) {
-    this.setState(state);
-  }
-
   render = () => {
-    if (!this.state.visible) return <></>;
     return (
       <SafeAreaView
         forceInset={{
@@ -135,7 +129,9 @@ export default class NavigationBar extends React.Component {
                   : navigate('Forum', {
                       NetworkContext,
                       tryCall: commonService.tryCall,
-                      rootUrl: commonService.rootUrl
+                      rootUrl: commonService.rootUrl,
+                      isDark: true,
+                      BottomNavigator: NavigationBar
                     });
               }}
             >

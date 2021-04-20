@@ -12,27 +12,35 @@ const timingAnim = {
   config: { duration: 250, easing: Easing.out(Easing.circle) }
 };
 
-export default props => (
+export default ({ route: { params } }) => (
   <Stack.Navigator
     screenOptions={{
       gestureEnabled: false,
       transitionSpec: { open: timingAnim, close: timingAnim },
-      headerStyle: { backgroundColor: 'papayawhip' },
-      headerTintColor: 'red',
+      headerStyle: {
+        backgroundColor: params.isDark ? '#00101d' : 'white',
+        elevation: 0,
+        shadowColor: 'transparent'
+      },
+      headerTintColor: params.isDark ? 'white' : 'black',
       headerBackTitleVisible: false,
-      headerBackTitleStyle: { fontSize: 8 }
+      headerTitleStyle: {
+        fontFamily: 'OpenSans',
+        fontSize: 20
+      }
     }}
   >
     <Stack.Screen
       name='Discussions'
       component={Discussions}
       options={{ title: 'Forums' }}
-      initialParams={props.route.params}
+      initialParams={params}
     />
     <Stack.Screen
       name='CreateDiscussion'
       component={CreateDiscussion}
-      initialParams={props.route.params}
+      initialParams={params}
+      options={{ title: 'Create Discussion' }}
     />
   </Stack.Navigator>
 );
