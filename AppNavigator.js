@@ -6,6 +6,8 @@ import { Dimensions, Easing } from 'react-native';
 import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
+import Forum from './src/forum/index';
+
 // content
 import StudentFocusCatalog from './src/views/content/StudentFocusCatalog';
 import StudentFocusShow from './src/views/content/StudentFocusShow';
@@ -50,6 +52,7 @@ import Profile from './src/views/user/Profile';
 import Support from './src/views/user/Support';
 import Terms from './src/views/user/Terms';
 import NetworkProvider from './src/context/NetworkProvider';
+import NavigationBar from './src/components/NavigationBar';
 
 const Stack = createStackNavigator();
 
@@ -94,11 +97,38 @@ const timingAnim = {
   config: { duration: 250, easing: Easing.out(Easing.circle) }
 };
 
+let navigationBar;
 export default () => (
   <NetworkProvider>
-    <NavigationContainer ref={navigationRef}>
+    <NavigationContainer
+      ref={navigationRef}
+      onStateChange={() => {
+        let visible = true;
+        switch (currentScene()) {
+          case 'LOADPAGE':
+          case 'LOGIN':
+          case 'MEMBERSHIPEXPIRED':
+          case 'LOGINCREDENTIALS':
+          case 'SUPPORTSIGNUP':
+          case 'FORGOTPASSWORD':
+          case 'CREATEACCOUNT2':
+          case 'CREATEACCOUNT3':
+          case 'CREATEACCOUNT':
+          case 'NEWMEMBERSHIP':
+          case 'GETRESTARTED':
+          case 'WELCOMEBACK':
+          case 'RESETPASSWORD':
+          case 'PRIVACYPOLICY':
+          case 'TERMS':
+          case 'VIDEOPLAYERSONG':
+          case 'VIDEOPLAYER':
+            visible = false;
+        }
+        if (navigationBar?.state.visible !== visible)
+          navigationBar.navigationBar = { visible };
+      }}
+    >
       <Stack.Navigator
-        // initialRouteName={LoadPage}
         headerMode={'screen'}
         mode={'card'}
         keyboardHandlingEnabled={false}
@@ -108,34 +138,7 @@ export default () => (
           gestureResponseDistance: {
             horizontal: Dimensions.get('window').width
           },
-
-          // cardShadowEnabled: false,
-          // cardOverlayEnabled: false,
-          // cardStyle: { backgroundColor: 'transparent' },
-          // transitionSpec: {
-          //   duration: 300,
-          //   easing: Easing.out(Easing.poly(4)),
-          //   timing: Animated.timing,
-          //   useNativeDriver: true
-          // },
           transitionSpec: { open: timingAnim, close: timingAnim }
-          // screenInterpolator: sceneProps => {
-          //   const { layout, position, scene } = sceneProps;
-          //   const { index } = scene;
-
-          //   const width = layout.initWidth;
-          //   const translateX = position.interpolate({
-          //     inputRange: [index - 1, index, index + 1],
-          //     outputRange: [width, 0, 0]
-          //   });
-
-          //   const opacity = position.interpolate({
-          //     inputRange: [index - 1, index - 0.99, index],
-          //     outputRange: [0, 1, 1]
-          //   });
-
-          //   return { opacity, transform: [{ translateX }] };
-          // }
         }}
       >
         {/* onboard */}
@@ -166,9 +169,7 @@ export default () => (
         <Stack.Screen
           name='PROFILESETTINGS'
           component={ProfileSettings}
-          options={{
-            gestureEnabled: false
-          }}
+          options={{ gestureEnabled: false }}
         />
         <Stack.Screen name='PRIVACYPOLICY' component={PrivacyPolicy} />
         <Stack.Screen name='SETTINGS' component={Settings} />
@@ -204,7 +205,16 @@ export default () => (
         <Stack.Screen name='MYLIST' component={MyList} />
         <Stack.Screen name='SEARCH' component={Search} />
         <Stack.Screen name='PACKS' component={Packs} />
+        <Stack.Screen
+          name='Forum'
+          component={Forum}
+          options={{ gestureEnabled: false }}
+        />
       </Stack.Navigator>
+      <NavigationBar
+        navigationRef={navigationRef}
+        ref={r => (navigationBar = r)}
+      />
     </NavigationContainer>
   </NetworkProvider>
 );

@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import FastImage from 'react-native-fast-image';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import DeviceInfo from 'react-native-device-info';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -14,12 +14,15 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NetworkContext } from '../context/NetworkProvider';
 import { navigate, reset } from '../../AppNavigator';
 
+import commonService from '../services/common.service';
+
 export default class NavigationBar extends React.Component {
   static contextType = NetworkContext;
 
   constructor(props) {
     super(props);
     this.state = {
+      visible: true,
       profileImage: '',
       onMain: false,
       secondaryColor: this.props.isMethod
@@ -66,7 +69,12 @@ export default class NavigationBar extends React.Component {
     }
   };
 
+  set navigationBar(state) {
+    this.setState(state);
+  }
+
   render = () => {
+    if (!this.state.visible) return <></>;
     return (
       <SafeAreaView
         forceInset={{
@@ -114,6 +122,34 @@ export default class NavigationBar extends React.Component {
                     : this.state.secondaryColor
                 }
               />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                aspectRatio: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+              onPress={() => {
+                !this.context.isConnected
+                  ? this.context.showNoConnectionAlert()
+                  : navigate('Forum', {
+                      NetworkContext,
+                      tryCall: commonService.tryCall,
+                      rootUrl: commonService.rootUrl
+                    });
+              }}
+            >
+              <Text
+                style={{
+                  color: this.state[
+                    this.props.currentPage == 'Forum'
+                      ? 'primaryColor'
+                      : 'secondaryColor'
+                  ]
+                }}
+              >
+                F
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
