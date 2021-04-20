@@ -1,9 +1,11 @@
 import React from 'react';
-import { Easing } from 'react-native';
+import { Easing, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import CreateDiscussion from './src/components/CreateDiscussion';
 import Discussions from './src/components/Discussions';
+
+import { arrowLeft } from './src/assets/svgs';
 
 const Stack = createStackNavigator();
 
@@ -14,7 +16,7 @@ const timingAnim = {
 
 export default ({ route: { params } }) => (
   <Stack.Navigator
-    screenOptions={{
+    screenOptions={({ navigation }) => ({
       gestureEnabled: false,
       transitionSpec: { open: timingAnim, close: timingAnim },
       headerStyle: {
@@ -26,9 +28,18 @@ export default ({ route: { params } }) => (
       headerBackTitleVisible: false,
       headerTitleStyle: {
         fontFamily: 'OpenSans',
-        fontSize: 20
-      }
-    }}
+        fontSize: 20,
+        fontWeight: '900'
+      },
+      headerLeft: () => (
+        <TouchableOpacity
+          style={{ paddingHorizontal: 15 }}
+          onPress={navigation.goBack}
+        >
+          {arrowLeft({ height: 20, fill: params.isDark ? 'white' : 'black' })}
+        </TouchableOpacity>
+      )
+    })}
   >
     <Stack.Screen
       name='Discussions'
