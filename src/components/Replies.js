@@ -445,7 +445,7 @@ export default class Replies extends React.Component {
                       <TouchableOpacity
                         onPress={() => this.sendReply(this.state.reply)}
                         style={{
-                          marginBottom: Platform.OS == 'android' ? 10 : 0,
+                          marginBottom: !isiOS ? 10 : 0,
                         }}
                       >
                         <IonIcon

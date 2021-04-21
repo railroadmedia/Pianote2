@@ -7,7 +7,6 @@ import {
   TextInput,
   StatusBar,
   StyleSheet,
-  Dimensions,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Modal from 'react-native-modal';
@@ -63,21 +62,10 @@ export default class ProfileSettings extends React.Component {
       await this.changeName();
     } else if (this.state.currentlyView == 'Profile Photo') {
       await this.changeImage();
-    } else if (this.state.currentlyView == 'Password') {
-      await this.changePassword();
     }
     this.loadingRef?.toggleLoading(false);
     this.setState({isLoading: false});
   }
-
-  changePassword = async () => {
-    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    const email = await AsyncStorage.getItem('email');
-
-    const {response, error} = await userForgotPassword({email});
-
-    this.setState({showChangePassword: true});
-  };
 
   changeName = async () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
@@ -209,7 +197,6 @@ export default class ProfileSettings extends React.Component {
                 }
               >
                 <Text style={localStyles.settingsText}>Display Name</Text>
-                <View style={{flex: 1}} />
                 <AntIcon
                   name={'right'}
                   size={onTablet ? 30 : 20}
@@ -225,7 +212,6 @@ export default class ProfileSettings extends React.Component {
                 }}
               >
                 <Text style={localStyles.settingsText}>Profile Photo</Text>
-                <View style={{flex: 1}} />
                 <AntIcon
                   name={'right'}
                   size={onTablet ? 30 : 20}
@@ -333,13 +319,7 @@ export default class ProfileSettings extends React.Component {
 
           <Modal
             isVisible={this.state.showDisplayName}
-            style={[
-              styles.centerContent,
-              {
-                margin: 0,
-                flex: 1,
-              },
-            ]}
+            style={[styles.centerContent, styles.modalContainer]}
             animation={'slideInUp'}
             animationInTiming={350}
             animationOutTiming={350}
@@ -384,7 +364,6 @@ export default class ProfileSettings extends React.Component {
             }}
             style={{padding: 10}}
           >
-            <View style={{flex: 1}} />
             <Back
               width={backButtonSize}
               height={backButtonSize}
@@ -425,6 +404,7 @@ const localStyles = StyleSheet.create({
     borderTopColor: '#445f73',
     flexDirection: 'row',
     paddingHorizontal: 10,
+    justifyContent: 'space-between',
   },
   profilePhoto: {
     height: DeviceInfo.isTablet() ? 70 : 50,
@@ -433,6 +413,7 @@ const localStyles = StyleSheet.create({
     borderBottomWidth: 1,
     flexDirection: 'row',
     paddingHorizontal: 10,
+    justifyContent: 'space-between',
   },
   textInput: {
     fontFamily: 'OpenSans-Regular',

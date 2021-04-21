@@ -41,7 +41,6 @@ export default class LogOut extends React.Component {
             <Text style={[styles.modalBodyText, localStyles.description]}>
               Are you sure that you want to log out?
             </Text>
-            <View style={{height: 5}} />
             <TouchableOpacity
               style={[styles.centerContent, localStyles.logoutText]}
               onPress={() => this.logOut()}
@@ -78,6 +77,7 @@ const localStyles = StyleSheet.create({
   description: {
     paddingHorizontal: 30,
     marginTop: 10,
+    marginBottom: 5,
     fontSize: DeviceInfo.isTablet() ? 18 : 14,
   },
   logoutText: {

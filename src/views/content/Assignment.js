@@ -19,7 +19,7 @@ const windowDim = Dimensions.get('window');
 const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 
-export default class VideoPlayerSong extends React.Component {
+export default class Assignment extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -87,16 +87,16 @@ export default class VideoPlayerSong extends React.Component {
               </Text>
               <Text
                 style={{
-                  fontSize: sizing.titleVideoPlayer,
+                  fontSize: sizing.titleViewLesson,
                   fontFamily: 'OpenSans-Bold',
                   textAlign: 'center',
                   color: 'white',
                   paddingHorizontal: 10,
+                  marginBottom: 10,
                 }}
               >
                 {title}
               </Text>
-              <View style={{height: 10}} />
               {timeCodes?.map(tc => (
                 <View
                   style={[

@@ -6,9 +6,9 @@ import {createStackNavigator} from '@react-navigation/stack';
 // content
 import StudentFocusCatalog from './src/views/content/StudentFocusCatalog';
 import StudentFocusShow from './src/views/content/StudentFocusShow';
-import VideoPlayerSong from './src/views/content/VideoPlayerSong';
+import Assignment from './src/views/content/Assignment';
 import Schedule from './src/views/content/Schedule';
-import VideoPlayer from './src/views/content/VideoPlayer';
+import ViewLesson from './src/views/content/ViewLesson';
 import SongCatalog from './src/views/content/SongCatalog';
 import PathOverview from './src/views/content/PathOverview';
 import SinglePack from './src/views/content/SinglePack';
@@ -34,7 +34,6 @@ import NewMembership from './src/views/onboard/NewMembership';
 import CreateAccount from './src/views/onboard/CreateAccount';
 import SupportSignUp from './src/views/onboard/SupportSignUp';
 import WelcomeBack from './src/views/onboard/WelcomeBack';
-import GetRestarted from './src/views/onboard/GetRestarted';
 import LoadPage from './src/views/onboard/LoadPage';
 import Login from './src/views/onboard/Login';
 import ResetPassword from './src/views/onboard/ResetPassword';
@@ -151,7 +150,6 @@ export default () => (
         />
         <Stack.Screen name="CREATEACCOUNT" component={CreateAccount} />
         <Stack.Screen name="NEWMEMBERSHIP" component={NewMembership} />
-        <Stack.Screen name="GETRESTARTED" component={GetRestarted} />
         <Stack.Screen name="WELCOMEBACK" component={WelcomeBack} />
         <Stack.Screen name="RESETPASSWORD" component={ResetPassword} />
         {/* user */}
@@ -177,7 +175,7 @@ export default () => (
           component={StudentFocusCatalog}
         />
         <Stack.Screen name="STUDENTFOCUSSHOW" component={StudentFocusShow} />
-        <Stack.Screen name="VIDEOPLAYERSONG" component={VideoPlayerSong} />
+        <Stack.Screen name="ASSIGNMENT" component={Assignment} />
         <Stack.Screen name="METHODLEVEL" component={MethodLevel} />
         <Stack.Screen name="LIVE" component={Live} />
         <Stack.Screen name="SCHEDULE" component={Schedule} />
@@ -186,8 +184,8 @@ export default () => (
         <Stack.Screen name="PATHOVERVIEW" component={PathOverview} />
         <Stack.Screen name="SONGCATALOG" component={SongCatalog} />
         <Stack.Screen
-          name="VIDEOPLAYER"
-          component={VideoPlayer}
+          name="VIEWLESSON"
+          component={ViewLesson}
           options={{
             gestureEnabled: false,
           }}

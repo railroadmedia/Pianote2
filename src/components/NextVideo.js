@@ -33,6 +33,7 @@ export default class NextVideo extends React.Component {
             ? colors.pianoteGrey
             : colors.secondBackground,
           borderBottomWidth: 0.5,
+          marginBottom: 7.5,
         }}
       >
         <View style={{width: '100%'}}>
@@ -146,7 +147,6 @@ export default class NextVideo extends React.Component {
             </View>
           </View>
         </View>
-        <View style={{height: 7.5}} />
       </TouchableOpacity>
     );
   };

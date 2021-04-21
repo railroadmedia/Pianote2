@@ -445,7 +445,7 @@ export default class Live extends React.Component {
                         </View>
                       </View>
                       <View style={{width: '100%'}}>
-                        {Platform.OS === 'ios' ? (
+                        {isiOS ? (
                           <FastImage
                             style={{
                               width: '100%',
@@ -523,35 +523,30 @@ export default class Live extends React.Component {
                           </Text>
                         </View>
                       </View>
-                      {!this.state.liveLesson[0]
-                        .is_added_to_primary_playlist ? (
-                        <TouchableOpacity
-                          onPress={() =>
-                            this.addToMyList(
-                              this.state.liveLesson[0]?.id,
-                              'live',
-                            )
+                      <TouchableOpacity
+                        onPress={() =>
+                          !this.state.liveLesson[0].is_added_to_primary_playlist
+                            ? this.addToMyList(
+                                this.state.liveLesson[0]?.id,
+                                'live',
+                              )
+                            : this.removeFromMyList(
+                                this.state.liveLesson[0]?.id,
+                                'live',
+                              )
+                        }
+                      >
+                        <AntIcon
+                          name={
+                            !this.state.liveLesson[0]
+                              .is_added_to_primary_playlist
+                              ? 'plus'
+                              : 'close'
                           }
-                        >
-                          <AntIcon
-                            name={'plus'}
-                            size={sizing.myListButtonSize}
-                            color={colors.pianoteRed}
-                          />
-                        </TouchableOpacity>
-                      ) : (
-                        <TouchableOpacity
-                          onPress={() =>
-                            this.removeFromMyList(this.state.liveLesson[0]?.id)
-                          }
-                        >
-                          <AntIcon
-                            name={'close'}
-                            size={sizing.myListButtonSize}
-                            color={colors.pianoteRed}
-                          />
-                        </TouchableOpacity>
-                      )}
+                          size={sizing.myListButtonSize}
+                          color={colors.pianoteRed}
+                        />
+                      </TouchableOpacity>
                       <TouchableOpacity
                         style={{paddingRight: 5}}
                         onPress={() => {
@@ -698,37 +693,32 @@ export default class Live extends React.Component {
                             </View>
                           </View>
                         </View>
-                        {!this.state.liveLesson[0]
-                          .is_added_to_primary_playlist ? (
-                          <TouchableOpacity
-                            onPress={() =>
-                              this.addToMyList(
-                                this.state.liveLesson[0].id,
-                                'live',
-                              )
+                        <TouchableOpacity
+                          onPress={() =>
+                            !this.state.liveLesson[0]
+                              .is_added_to_primary_playlist
+                              ? this.addToMyList(
+                                  this.state.liveLesson[0].id,
+                                  'live',
+                                )
+                              : this.removeFromMyList(
+                                  this.state.liveLesson[0].id,
+                                  'live',
+                                )
+                          }
+                          style={{paddingRight: 2.5, paddingBottom: 25}}
+                        >
+                          <AntIcon
+                            name={
+                              !this.state.liveLesson[0]
+                                .is_added_to_primary_playlist
+                                ? 'plus'
+                                : 'close'
                             }
-                            style={{paddingRight: 2.5, paddingBottom: 25}}
-                          >
-                            <AntIcon
-                              name={'plus'}
-                              size={sizing.myListButtonSize}
-                              color={colors.pianoteRed}
-                            />
-                          </TouchableOpacity>
-                        ) : (
-                          <TouchableOpacity
-                            style={{paddingRight: 2.5, paddingBottom: 25}}
-                            onPress={() =>
-                              this.removeFromMyList(this.state.liveLesson[0].id)
-                            }
-                          >
-                            <AntIcon
-                              name={'close'}
-                              size={sizing.myListButtonSize}
-                              color={colors.pianoteRed}
-                            />
-                          </TouchableOpacity>
-                        )}
+                            size={sizing.myListButtonSize}
+                            color={colors.pianoteRed}
+                          />
+                        </TouchableOpacity>
                       </View>
                     </>
                   )}
@@ -905,28 +895,23 @@ export default class Live extends React.Component {
                         },
                       ]}
                     >
-                      {!item.is_added_to_primary_playlist ? (
-                        <TouchableOpacity
-                          onPress={() => this.addToMyList(item.id, 'schedule')}
-                        >
-                          <AntIcon
-                            name={'plus'}
-                            size={sizing.myListButtonSize}
-                            color={colors.pianoteRed}
-                          />
-                        </TouchableOpacity>
-                      ) : (
-                        <TouchableOpacity
-                          onPress={() => this.removeFromMyList(item.id)}
-                        >
-                          <AntIcon
-                            name={'close'}
-                            size={sizing.myListButtonSize}
-                            color={colors.pianoteRed}
-                          />
-                        </TouchableOpacity>
-                      )}
-
+                      <TouchableOpacity
+                        onPress={() =>
+                          !item.is_added_to_primary_playlist
+                            ? this.addToMyList(item.id, 'schedule')
+                            : this.removeFromMyList(item.id, 'schedule')
+                        }
+                      >
+                        <AntIcon
+                          name={
+                            !item.is_added_to_primary_playlist
+                              ? 'plus'
+                              : 'close'
+                          }
+                          size={sizing.myListButtonSize}
+                          color={colors.pianoteRed}
+                        />
+                      </TouchableOpacity>
                       <TouchableOpacity
                         style={{marginLeft: 10}}
                         onPress={() => {

@@ -26,7 +26,7 @@ export default class WelcomeBack extends React.Component {
     };
   }
 
-  async changeColor(number) {
+  async changePage(number) {
     let index = Math.round(number.nativeEvent.contentOffset.x / width);
     if (index === 0) {
       this.setState({page: 1});
@@ -169,7 +169,7 @@ export default class WelcomeBack extends React.Component {
             }}
             pagingEnabled={true}
             scrollEnabled={this.state.canScroll}
-            onMomentumScrollEnd={e => this.changeColor(e)}
+            onMomentumScrollEnd={e => this.changePage(e)}
             showsHorizontalScrollIndicator={false}
           >
             {this.renderFirstPage()}

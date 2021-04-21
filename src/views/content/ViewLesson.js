@@ -49,7 +49,7 @@ import {
 } from '../../services/UserActions';
 import ArrowLeft from 'Pianote2/src/assets/img/svgs/arrowLeft';
 import Resources from 'Pianote2/src/assets/img/svgs/resources';
-import VideoPlayerSong from './VideoPlayerSong';
+import Assignment from './Assignment';
 import {NetworkContext} from '../../context/NetworkProvider';
 import methodService from '../../services/method.service';
 import {goBack, navigate} from '../../../AppNavigator';
@@ -58,7 +58,7 @@ const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
-export default class VideoPlayer extends React.Component {
+export default class ViewLesson extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -1031,7 +1031,7 @@ export default class VideoPlayer extends React.Component {
           <View style={{flex: 1, backgroundColor: colors.mainBackground}}>
             <View key={'belowVideo'} style={{flex: 1}}>
               {this.state.selectedAssignment ? (
-                <VideoPlayerSong
+                <Assignment
                   onSeek={time => this.video?.onSeek?.(time)}
                   assignment={this.state.selectedAssignment}
                   assignmentProgress={this.state.selectedAssignment.progress}
@@ -1065,18 +1065,12 @@ export default class VideoPlayer extends React.Component {
                   showsVerticalScrollIndicator={false}
                   contentInsetAdjustmentBehavior={'never'}
                   onScroll={({nativeEvent}) => {
-                    if (
-                      Platform.OS === 'android' &&
-                      this.isCloseToBottom(nativeEvent)
-                    ) {
+                    if (!isiOS && this.isCloseToBottom(nativeEvent)) {
                       this.loadMoreComments();
                     }
                   }}
                   onMomentumScrollEnd={({nativeEvent}) => {
-                    if (
-                      Platform.OS === 'ios' &&
-                      this.isCloseToBottom(nativeEvent)
-                    ) {
+                    if (isiOS && this.isCloseToBottom(nativeEvent)) {
                       this.loadMoreComments();
                     }
                   }}
@@ -1093,7 +1087,7 @@ export default class VideoPlayer extends React.Component {
                     <View style={{height: 5}} />
                     <Text
                       style={{
-                        fontSize: sizing.titleVideoPlayer,
+                        fontSize: sizing.titleViewLesson,
                         marginTop: 10,
                         marginBottom: 5,
                         fontFamily: 'OpenSans-Bold',
@@ -1607,13 +1601,7 @@ export default class VideoPlayer extends React.Component {
           />
         )}
         {!this.state.selectedAssignment && !this.state.showMakeComment && (
-          <View
-            style={[
-              {
-                backgroundColor: colors.mainBackground,
-              },
-            ]}
-          >
+          <View style={{backgroundColor: colors.mainBackground}}>
             <View
               style={{
                 backgroundColor: colors.mainBackground,
@@ -1638,12 +1626,12 @@ export default class VideoPlayer extends React.Component {
                 />
               )}
             </View>
-            <View style={{height: 5}} />
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-evenly',
+                marginTop: 5,
                 paddingVertical: 5,
                 paddingHorizontal: 10,
                 marginBottom: DeviceInfo.hasNotch() ? 20 : 0,
@@ -1798,8 +1786,7 @@ export default class VideoPlayer extends React.Component {
                   {
                     showResDownload: false,
                   },
-                  () =>
-                    Platform.OS === 'ios' ? (this.modalDismissed = res) : res(),
+                  () => (isiOS ? (this.modalDismissed = res) : res()),
                 ),
               );
             }}

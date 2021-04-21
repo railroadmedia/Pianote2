@@ -33,8 +33,7 @@ export default class GradientFeature extends React.Component {
           width: '100%',
           position: 'absolute',
           zIndex: isNaN(zIndex) ? 2 : zIndex,
-          elevation:
-            Platform.OS === 'android' ? (isNaN(elevation) ? 2 : elevation) : 0,
+          elevation: !isiOS ? (isNaN(elevation) ? 2 : elevation) : 0,
         }}
       >
         <LinearGradient

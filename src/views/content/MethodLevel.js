@@ -168,7 +168,7 @@ export default class MethodLevel extends React.Component {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
 
-    if (Platform.OS === 'ios') {
+    if (isiOS) {
       if (onTablet) this.setState({isLandscape});
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
@@ -273,31 +273,28 @@ export default class MethodLevel extends React.Component {
                   },
                 ]}
               >
-                <View style={{flex: 1, flexDirection: 'row'}}>
-                  <View style={{flex: 0.5}} />
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'flex-end',
+                    flexDirection: 'row',
+                  }}
+                >
                   <TouchableOpacity
                     style={{
-                      flex: 0.5,
+                      paddingRight: 10,
                       alignItems: 'center',
                     }}
                     onPress={() => {
                       this.toggleMyList();
                     }}
                   >
-                    <View style={[styles.centerContent]}>
-                      {!this.state.isAddedToList ? (
-                        <AntIcon
-                          name={'plus'}
-                          size={sizing.myListButtonSize}
-                          color={colors.pianoteRed}
-                        />
-                      ) : (
-                        <AntIcon
-                          name={'close'}
-                          size={sizing.myListButtonSize}
-                          color={colors.pianoteRed}
-                        />
-                      )}
+                    <View style={styles.centerContent}>
+                      <AntIcon
+                        name={!this.state.isAddedToList ? 'plus' : 'close'}
+                        size={sizing.myListButtonSize}
+                        color={colors.pianoteRed}
+                      />
                     </View>
                     <Text
                       style={{
@@ -324,17 +321,23 @@ export default class MethodLevel extends React.Component {
                       if (this.state.isCompleted) {
                         this.setState({showRestartCourse: true});
                       } else {
-                        navigate('VIDEOPLAYER', {
+                        navigate('VIEWLESSON', {
                           url: this.state.bannerNextLessonUrl,
                         });
                       }
                     }}
                   />
                 </View>
-                <View style={{flex: 1, flexDirection: 'row'}}>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'flex-start',
+                    flexDirection: 'row',
+                  }}
+                >
                   <TouchableOpacity
                     style={{
-                      flex: 0.5,
+                      paddingLeft: 15,
                       alignItems: 'center',
                     }}
                     onPress={() => {
@@ -439,7 +442,7 @@ export default class MethodLevel extends React.Component {
             progress={this.state.progress}
             type="LEVEL"
             onNextLesson={() =>
-              navigate('VIDEOPLAYER', {
+              navigate('VIEWLESSON', {
                 url: this.state.nextLesson.post.mobile_app_url,
               })
             }

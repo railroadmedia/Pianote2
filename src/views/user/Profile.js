@@ -250,14 +250,14 @@ export default class Profile extends React.Component {
 
   openNotification = notification => {
     if (notification.type === 'new content releases') {
-      navigate('VIDEOPLAYER', {
+      navigate('VIEWLESSON', {
         url: notification.content.mobile_app_url,
       });
     } else if (
       notification.type === 'lesson comment reply' ||
       notification.type === 'lesson comment liked'
     ) {
-      navigate('VIDEOPLAYER', {
+      navigate('VIEWLESSON', {
         comment: notification.comment,
         url: notification.content.mobile_app_url,
       });

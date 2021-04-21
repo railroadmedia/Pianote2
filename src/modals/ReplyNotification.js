@@ -182,10 +182,9 @@ export default class ReplyNotification extends React.Component {
             <View style={{flex: 1}} />
             <View style={localStyles.removeContainer}>
               <TouchableOpacity
-                style={styles.container}
+                style={[styles.container, {justifyContent: 'center'}]}
                 onPress={() => this.props.removeNotification(this.props.data)}
               >
-                <View style={{flex: 1}} />
                 <View style={localStyles.crossContainer}>
                   <EntypoIcon
                     name={'cross'}
@@ -201,17 +200,15 @@ export default class ReplyNotification extends React.Component {
                     Remove this notification
                   </Text>
                 </View>
-                <View style={{flex: 1}} />
               </TouchableOpacity>
             </View>
             <View style={localStyles.muteContainer}>
               <TouchableOpacity
-                style={styles.container}
+                style={[styles.container, {justifyContent: 'center'}]}
                 onPress={() =>
                   this.props.turnOfffNotifications(this.state.statusChange)
                 }
               >
-                <View style={{flex: 1}} />
                 <View style={localStyles.notificationContainer}>
                   <IonIcon
                     name={'ios-notifications-outline'}
@@ -228,7 +225,6 @@ export default class ReplyNotification extends React.Component {
                     {messageDict[this.props.data.type][3]}
                   </Text>
                 </View>
-                <View style={{flex: 1}} />
               </TouchableOpacity>
             </View>
           </View>

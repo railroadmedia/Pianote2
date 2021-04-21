@@ -64,13 +64,11 @@ export default class CustomSwitch extends React.Component {
           style={[
             styles.centerContent,
             {
-              height: '100%',
-              width: '100%',
+              flex: 1,
               justifyContent: 'center',
             },
           ]}
         >
-          <View style={{flex: 1}} />
           <View style={{flexDirection: 'row'}}>
             <Animated.View style={{flex: this.state.leftMargin}} />
             <View
@@ -101,7 +99,6 @@ export default class CustomSwitch extends React.Component {
             </View>
             <Animated.View style={{flex: this.state.rightMargin}} />
           </View>
-          <View style={{flex: 1}} />
         </TouchableOpacity>
       </View>
     );

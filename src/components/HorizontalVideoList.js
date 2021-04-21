@@ -183,7 +183,7 @@ export default class HorizontalVideoList extends React.Component {
         });
       case 'song':
         if (content.lesson_count === 1)
-          return navigate('VIDEOPLAYER', {
+          return navigate('VIEWLESSON', {
             id: content.currentLessonId,
           });
         return navigate('PATHOVERVIEW', {
@@ -204,7 +204,7 @@ export default class HorizontalVideoList extends React.Component {
           isMethod: true,
         });
       case 'learning-path-lesson':
-        return navigate('VIDEOPLAYER', {
+        return navigate('VIEWLESSON', {
           url: content.mobile_app_url,
         });
       case 'pack':
@@ -216,11 +216,11 @@ export default class HorizontalVideoList extends React.Component {
           url: content.mobile_app_url,
         });
       case 'pack-bundle-lesson':
-        return navigate('VIDEOPLAYER', {
+        return navigate('VIEWLESSON', {
           url: content.mobile_app_url,
         });
       default:
-        return navigate('VIDEOPLAYER', {
+        return navigate('VIEWLESSON', {
           id: content.id,
         });
     }
@@ -589,7 +589,7 @@ export default class HorizontalVideoList extends React.Component {
                   ) : null}
                 </View>
 
-                {Platform.OS === 'ios' ? (
+                {isiOS ? (
                   <FastImage
                     style={[
                       localStyles.imageIOS,
@@ -659,30 +659,22 @@ export default class HorizontalVideoList extends React.Component {
                     </Text>
                   </View>
                 </View>
-                {this.props.isLive &&
-                  (!item.isAddedToList ? (
-                    <TouchableOpacity
-                      onPress={() => this.addToMyList(item.id)}
-                      style={{paddingRight: 2.5}}
-                    >
-                      <AntIcon
-                        name={'plus'}
-                        size={sizing.myListButtonSize}
-                        color={colors.pianoteRed}
-                      />
-                    </TouchableOpacity>
-                  ) : (
-                    <TouchableOpacity
-                      style={{paddingRight: 2.5}}
-                      onPress={() => this.removeFromMyList(item.id)}
-                    >
-                      <AntIcon
-                        name={'close'}
-                        size={sizing.myListButtonSize}
-                        color={colors.pianoteRed}
-                      />
-                    </TouchableOpacity>
-                  ))}
+                {this.props.isLive && (
+                  <TouchableOpacity
+                    onPress={() =>
+                      !item.isAddedToList
+                        ? this.addToMyList(item.id)
+                        : this.removeFromMyList(item.id)
+                    }
+                    style={{paddingRight: 2.5}}
+                  >
+                    <AntIcon
+                      name={!item.isAddedToList ? 'plus' : 'close'}
+                      size={sizing.myListButtonSize}
+                      color={colors.pianoteRed}
+                    />
+                  </TouchableOpacity>
+                )}
                 {new Date(item.publishedOn) > new Date() ||
                 this.props.isLive ? (
                   <TouchableOpacity

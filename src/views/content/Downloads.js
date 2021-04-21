@@ -85,11 +85,11 @@ export default class Downloads extends React.Component {
           })),
       });
     } else if (item?.lesson.type === 'learning-path-lesson') {
-      navigate('VIDEOPLAYER', {
+      navigate('VIEWLESSON', {
         url: item.lesson.mobile_app_url,
       });
     } else {
-      navigate('VIDEOPLAYER', {
+      navigate('VIEWLESSON', {
         id: item.id,
       });
     }
@@ -141,7 +141,7 @@ export default class Downloads extends React.Component {
             ListEmptyComponent={() => (
               <Text
                 style={{
-                  padding: 10 * 1.5,
+                  padding: 15,
                   color: 'white',
                   textAlign: 'center',
                   fontSize: onTablet ? 20 : 12,

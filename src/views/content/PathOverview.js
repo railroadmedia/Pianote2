@@ -87,7 +87,7 @@ export default class PathOverview extends React.Component {
   orientationListener = o => {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
-    if (Platform.OS === 'ios') {
+    if (isiOS) {
       if (onTablet) this.setState({isLandscape});
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
@@ -236,12 +236,12 @@ export default class PathOverview extends React.Component {
   goToLesson(lesson) {
     if (lesson) {
       if (this.state.isMethod) {
-        return navigate('VIDEOPLAYER', {
+        return navigate('VIEWLESSON', {
           url: lesson,
           parentId: this.state.data?.id,
         });
       }
-      return navigate('VIDEOPLAYER', {
+      return navigate('VIEWLESSON', {
         id: lesson,
         parentId: this.state.data?.id,
       });
@@ -301,7 +301,7 @@ export default class PathOverview extends React.Component {
                 fontFamily: 'OpenSans-Bold',
                 color: 'white',
                 textAlign: 'center',
-                fontSize: sizing.titleVideoPlayer,
+                fontSize: sizing.titleViewLesson,
                 marginTop: 10,
               }}
             >
@@ -348,19 +348,11 @@ export default class PathOverview extends React.Component {
                 onPress={() => this.toggleMyList(this.state.data.id)}
               >
                 <View style={[styles.centerContent, {flexDirection: 'row'}]}>
-                  {!this.state.isAddedToList ? (
-                    <AntIcon
-                      name={'plus'}
-                      size={sizing.myListButtonSize}
-                      color={colors.pianoteRed}
-                    />
-                  ) : (
-                    <AntIcon
-                      name={'close'}
-                      size={sizing.myListButtonSize}
-                      color={colors.pianoteRed}
-                    />
-                  )}
+                  <AntIcon
+                    name={!this.state.isAddedToList ? 'plus' : 'close'}
+                    size={sizing.myListButtonSize}
+                    color={colors.pianoteRed}
+                  />
                 </View>
                 <Text
                   style={{
@@ -842,12 +834,8 @@ export default class PathOverview extends React.Component {
           />
         )}
         <Modal
-          key={'restartCourse'}
           isVisible={this.state.showRestartCourse}
-          style={{
-            margin: 0,
-            flex: 1,
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

@@ -72,7 +72,7 @@ export default class Foundations extends React.Component {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
 
-    if (Platform.OS === 'ios') {
+    if (isiOS) {
       if (onTablet) this.setState({isLandscape});
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
@@ -188,7 +188,7 @@ export default class Foundations extends React.Component {
   }
 
   goToLesson(url) {
-    return navigate('VIDEOPLAYER', {url});
+    return navigate('VIEWLESSON', {url});
   }
 
   getSquareHeight = () => {
@@ -354,7 +354,6 @@ export default class Foundations extends React.Component {
                     },
                   ]}
                 >
-                  <View style={{flex: 1}} />
                   <View
                     style={[
                       styles.centerContent,
@@ -418,7 +417,6 @@ export default class Foundations extends React.Component {
                       XP
                     </Text>
                   </View>
-                  <View style={{flex: 1}} />
                 </View>
                 <View
                   style={[
@@ -514,7 +512,7 @@ export default class Foundations extends React.Component {
             item={this.state.nextLesson}
             isMethod={true}
             progress={this.state.progress}
-            type="FOUNDATIONS"
+            type={'FOUNDATIONS'}
             onNextLesson={() =>
               this.goToLesson(this.state.nextLesson.post.mobile_app_url)
             }

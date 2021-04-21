@@ -62,7 +62,7 @@ class Packs extends React.Component {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
 
-    if (Platform.OS === 'ios') {
+    if (isiOS) {
       if (onTablet) this.setState({isLandscape});
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
@@ -243,7 +243,7 @@ class Packs extends React.Component {
                         if (this.state.headerPackCompleted) {
                           this.setState({showRestartCourse: true});
                         } else {
-                          navigate('VIDEOPLAYER', {
+                          navigate('VIEWLESSON', {
                             url: this.state.headerPackNextLessonUrl,
                           });
                         }

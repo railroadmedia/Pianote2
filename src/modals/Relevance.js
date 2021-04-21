@@ -131,7 +131,6 @@ export default class Relevance extends React.Component {
                 <Text style={localStyles.cancel}>Cancel</Text>
               </View>
             </TouchableOpacity>
-            <View style={{height: '5%'}} />
           </View>
         </View>
       </View>
@@ -156,6 +155,7 @@ const localStyles = StyleSheet.create({
   },
   cancel: {
     marginLeft: 10,
+    marginBottom: '5%',
     fontSize: DeviceInfo.isTablet() ? 18 : 14,
     fontFamily: 'OpenSans-Regular',
     color: 'white',

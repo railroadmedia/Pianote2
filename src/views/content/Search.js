@@ -528,7 +528,6 @@ export default class Search extends React.Component {
               )}
               {!this.state.isLoadingAll && this.state.noResults && (
                 <View
-                  key={'noResults'}
                   style={{
                     flex: 1,
                     borderTopWidth: 1,

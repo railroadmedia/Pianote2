@@ -52,7 +52,7 @@ class Settings extends React.Component {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     const userData = await getUserData();
     let {isAppleAppSubscriber, isGoogleAppSubscriber} = userData;
-    if (Platform.OS === 'ios') {
+    if (isiOS) {
       if (isAppleAppSubscriber) {
         Alert.alert(
           'Manage Subscription',
@@ -132,7 +132,7 @@ class Settings extends React.Component {
           'All purchases restored',
         );
       }
-      if (Platform.OS === 'android') {
+      if (!isiOS) {
         purchases = purchases.map(m => {
           return {
             purchase_token: m.purchaseToken,
@@ -159,7 +159,7 @@ class Settings extends React.Component {
         return Alert.alert(
           'Restore',
           `This ${
-            Platform.OS === 'ios' ? 'Apple' : 'Google'
+            isiOS ? 'Apple' : 'Google'
           } account is already linked to another Pianote account. Please login with that account.`,
           [{text: 'OK'}],
           {cancelable: false},
@@ -230,7 +230,6 @@ class Settings extends React.Component {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            key={'notificationSettings'}
             onPress={() => {
               navigate('NOTIFICATIONSETTINGS');
             }}
@@ -272,7 +271,6 @@ class Settings extends React.Component {
           </TouchableOpacity>
 
           <TouchableOpacity
-            key={'restorePurchase'}
             onPress={this.restorePurchase}
             style={[styles.centerContent, localStyles.container]}
           >

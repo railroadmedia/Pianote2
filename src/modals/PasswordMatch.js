@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
-  Dimensions,
 } from 'react-native';
 
 export default class PasswordMatch extends React.Component {

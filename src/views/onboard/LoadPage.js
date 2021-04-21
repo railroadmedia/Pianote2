@@ -97,7 +97,7 @@ class LoadPage extends React.Component {
             return navigationService.decideWhereToRedirect();
           } else if (lessonUrl && commentId) {
             // if lesson or comment notification go to video
-            reset('VIDEOPLAYER', {url: lessonUrl, commentId});
+            reset('VIEWLESSON', {url: lessonUrl, commentId});
           } else if (global.loadedFromNotification) {
             // if going to profile page
             reset('PROFILE');

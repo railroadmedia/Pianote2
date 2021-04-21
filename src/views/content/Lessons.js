@@ -473,7 +473,7 @@ class Lessons extends React.Component {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
 
-    if (Platform.OS === 'ios') {
+    if (isiOS) {
       if (onTablet) this.setState({isLandscape});
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
@@ -543,9 +543,9 @@ class Lessons extends React.Component {
                   width: '100%',
                   zIndex: 2,
                   elevation: 2,
+                  justifyContent: 'flex-end',
                 }}
               >
-                <View style={{flex: 0.9}} />
                 <View style={{flexDirection: 'row', alignSelf: 'center'}}>
                   <FastImage
                     style={{
@@ -564,7 +564,8 @@ class Lessons extends React.Component {
                     {
                       flexDirection: 'row',
                       alignItems: 'center',
-                      marginBottom: '1%',
+                      marginBottom: '8.5%',
+                      justifyContent: 'center',
                     },
                   ]}
                 >
@@ -585,7 +586,7 @@ class Lessons extends React.Component {
                           if (!this.context.isConnected)
                             return this.context.showNoConnectionAlert();
                           if (this.state.methodNextLessonUrl) {
-                            navigate('VIDEOPLAYER', {
+                            navigate('VIEWLESSON', {
                               url: this.state.methodNextLessonUrl,
                             });
                           }
@@ -822,7 +823,7 @@ class Lessons extends React.Component {
                             </View>
                           </View>
                           <View style={{width: '100%'}}>
-                            {Platform.OS === 'ios' ? (
+                            {isiOS ? (
                               <FastImage
                                 style={{
                                   width: '100%',
@@ -906,34 +907,27 @@ class Lessons extends React.Component {
                               </Text>
                             </View>
                           </View>
-                          {!this.state.liveLesson[0]
-                            .is_added_to_primary_playlist ? (
-                            <TouchableOpacity
-                              onPress={() =>
-                                this.addToMyList(this.state.liveLesson[0]?.id)
+                          <TouchableOpacity
+                            onPress={() => {
+                              !this.state.liveLesson[0]
+                                .is_added_to_primary_playlist
+                                ? this.addToMyList(this.state.liveLesson[0]?.id)
+                                : this.removeFromMyList(
+                                    this.state.liveLesson[0]?.id,
+                                  );
+                            }}
+                          >
+                            <AntIcon
+                              name={
+                                !this.state.liveLesson[0]
+                                  .is_added_to_primary_playlist
+                                  ? 'plus'
+                                  : 'close'
                               }
-                            >
-                              <AntIcon
-                                name={'plus'}
-                                size={sizing.myListButtonSize}
-                                color={colors.pianoteRed}
-                              />
-                            </TouchableOpacity>
-                          ) : (
-                            <TouchableOpacity
-                              onPress={() =>
-                                this.removeFromMyList(
-                                  this.state.liveLesson[0]?.id,
-                                )
-                              }
-                            >
-                              <AntIcon
-                                name={'close'}
-                                size={sizing.myListButtonSize}
-                                color={colors.pianoteRed}
-                              />
-                            </TouchableOpacity>
-                          )}
+                              size={sizing.myListButtonSize}
+                              color={colors.pianoteRed}
+                            />
+                          </TouchableOpacity>
                           <TouchableOpacity
                             style={{paddingRight: 5}}
                             onPress={() => {
@@ -960,7 +954,7 @@ class Lessons extends React.Component {
                         onPress={() => navigate('LIVE')}
                       >
                         <View style={{width: '100%'}}>
-                          {Platform.OS === 'ios' ? (
+                          {isiOS ? (
                             <FastImage
                               style={{
                                 width: '100%',
@@ -1218,7 +1212,7 @@ class Lessons extends React.Component {
             </View>
           </ScrollView>
         ) : (
-          <ActivityIndicator size="small" style={{flex: 1}} color={'white'} />
+          <ActivityIndicator size={'small'} style={{flex: 1}} color={'white'} />
         )}
         <Modal
           isVisible={this.state.showRestartCourse}

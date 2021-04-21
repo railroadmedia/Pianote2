@@ -76,7 +76,6 @@ export default class Support extends React.Component {
           }}
         >
           <View
-            key={'header'}
             style={[
               styles.centerContent,
               {
@@ -122,12 +121,7 @@ export default class Support extends React.Component {
             </Text>
             <View style={{flex: 0.33}} />
           </View>
-
-          <ScrollView
-            key={'contentContainer'}
-            style={{flex: 1}}
-            contentContainerStyle={{flexGrow: 1}}
-          >
+          <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
             <View style={{height: '15%'}} />
             <TouchableOpacity
               onPress={() => this.onIntercomPress()}

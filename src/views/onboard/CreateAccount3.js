@@ -58,7 +58,7 @@ export default class CreateAccount3 extends React.Component {
     };
   }
 
-  changeColor = number => {
+  changePage = number => {
     let index = Math.round(number.nativeEvent.contentOffset.x / width);
     if (index == 0) {
       this.setState({page: 1});
@@ -91,10 +91,9 @@ export default class CreateAccount3 extends React.Component {
           data.append('file', {
             name: response.fileName || 'avatar',
             type: response.type,
-            uri:
-              Platform.OS == 'ios'
-                ? response.uri.replace('file://', '')
-                : 'file://' + response.path,
+            uri: isiOS
+              ? response.uri.replace('file://', '')
+              : 'file://' + response.path,
           });
           data.append('target', response.fileName || 'avatar');
 
@@ -240,14 +239,14 @@ export default class CreateAccount3 extends React.Component {
             scrollEnabled={this.state.canScroll}
             onMomentumScrollEnd={e => {
               this.setState({pageNum: e});
-              this.changeColor(e);
+              this.changePage(e);
             }}
             contentContainerStyle={{flexGrow: 1}}
           >
             <View style={styles.centerContent}>
               <View style={[styles.centerContent, localStyles.container1]}>
                 <TouchableOpacity
-                  onPress={() => this.changeColor(this.state.pageNum - 1)}
+                  onPress={() => this.changePage(this.state.pageNum - 1)}
                   style={{
                     paddingLeft: 10,
                     height: '100%',
@@ -277,7 +276,7 @@ export default class CreateAccount3 extends React.Component {
                 }}
               >
                 <KeyboardAvoidingView
-                  behavior={Platform.OS == 'ios' ? 'height' : ''}
+                  behavior={isiOS ? 'height' : ''}
                   style={{flex: 1, alignItems: 'center'}}
                 >
                   <View style={{flex: 0.45}} />
@@ -326,7 +325,7 @@ export default class CreateAccount3 extends React.Component {
                       style={{
                         color: 'black',
                         fontFamily: 'OpenSans-Regular',
-                        fontSize: sizing.titleVideoPlayer,
+                        fontSize: sizing.titleViewLesson,
                         flex: 1,
                       }}
                     />
@@ -376,7 +375,7 @@ export default class CreateAccount3 extends React.Component {
                       <Text
                         style={{
                           fontFamily: 'RobotoCondensed-Bold',
-                          fontSize: sizing.titleVideoPlayer,
+                          fontSize: sizing.titleViewLesson,
                           color:
                             this.state.displayName.length == 0
                               ? '#fb1b2f'
@@ -550,7 +549,7 @@ export default class CreateAccount3 extends React.Component {
                     <Text
                       style={{
                         fontFamily: 'OpenSans-Bold',
-                        fontSize: sizing.titleVideoPlayer,
+                        fontSize: sizing.titleViewLesson,
                         textAlign: 'center',
                       }}
                     >
@@ -677,7 +676,7 @@ export default class CreateAccount3 extends React.Component {
                       <Text
                         style={{
                           fontFamily: 'RobotoCondensed-Bold',
-                          fontSize: sizing.titleVideoPlayer,
+                          fontSize: sizing.titleViewLesson,
                           color:
                             this.state.imageURI.length == 0
                               ? '#fb1b2f'
@@ -776,7 +775,7 @@ export default class CreateAccount3 extends React.Component {
                       <Text
                         style={{
                           fontFamily: 'OpenSans-Bold',
-                          fontSize: sizing.titleVideoPlayer,
+                          fontSize: sizing.titleViewLesson,
                           color: '#fb1b2f',
                         }}
                       >
@@ -1205,7 +1204,7 @@ export default class CreateAccount3 extends React.Component {
                   <Text
                     style={{
                       fontFamily: 'OpenSans-Bold',
-                      fontSize: sizing.titleVideoPlayer,
+                      fontSize: sizing.titleViewLesson,
                       color: '#fb1b2f',
                     }}
                   >
@@ -1225,7 +1224,7 @@ export default class CreateAccount3 extends React.Component {
                 style={{
                   fontFamily: 'OpenSans-Bold',
                   textAlign: 'center',
-                  fontSize: sizing.titleVideoPlayer,
+                  fontSize: sizing.titleViewLesson,
                   justifyContent: 'center',
                 }}
               >
@@ -1279,7 +1278,7 @@ export default class CreateAccount3 extends React.Component {
                   style={{
                     fontFamily: 'OpenSans-Bold',
                     paddingVertical: 15,
-                    fontSize: sizing.titleVideoPlayer,
+                    fontSize: sizing.titleViewLesson,
                     textAlign: 'center',
                   }}
                 >

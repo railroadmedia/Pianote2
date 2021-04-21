@@ -45,7 +45,7 @@ export default class Login extends React.Component {
     };
   }
 
-  changeColor(number) {
+  changePage(number) {
     number = Math.round(number.nativeEvent.contentOffset.x / width);
     if (number === 0) {
       this.setState({page: 1});
@@ -74,9 +74,7 @@ export default class Login extends React.Component {
 
   iapConnectionError = () => {
     Alert.alert(
-      `Connection to ${
-        Platform.OS === 'ios' ? 'app store' : 'play store'
-      } refused`,
+      `Connection to ${isiOS ? 'app store' : 'play store'} refused`,
       'Please try again later.',
       [{text: 'OK'}],
       {
@@ -99,7 +97,7 @@ export default class Login extends React.Component {
     this.loadingRef?.toggleLoading();
     purchases = await RNIap.getPurchaseHistory();
     if (purchases.some(p => skus.includes(p.productId))) {
-      if (Platform.OS === 'android') {
+      if (!isiOS) {
         purchases = purchases.map(p => ({
           purchase_token: p.purchaseToken,
           package_name: 'com.pianote2',
@@ -120,7 +118,7 @@ export default class Login extends React.Component {
         this.subscriptionExists.toggle(
           `Signup Blocked`,
           `You cannot create multiple pianote accounts under the same ${
-            Platform.OS === 'ios' ? 'apple' : 'google'
+            isiOS ? 'apple' : 'google'
           } account.`,
         );
         this.setState({signupAlertText: 'Restore'});
@@ -148,8 +146,7 @@ export default class Login extends React.Component {
         });
       if (
         !restoreResponse.email &&
-        ((Platform.OS === 'android' && restoreResponse.purchase) ||
-          (Platform.OS === 'ios' && purchases[0]))
+        ((!isiOS && restoreResponse.purchase) || (isiOS && purchases[0]))
       ) {
         let purchase = restoreResponse.purchase || purchases[0];
         const product = await RNIap.getSubscriptions([
@@ -803,7 +800,7 @@ export default class Login extends React.Component {
               this.myScroll = ref;
             }}
             pagingEnabled={true}
-            onMomentumScrollEnd={e => this.changeColor(e)}
+            onMomentumScrollEnd={e => this.changePage(e)}
             style={{flex: 1}}
           >
             {this.renderFirstPage()}

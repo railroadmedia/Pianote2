@@ -15,22 +15,18 @@ export default class StartIcon extends React.Component {
       if (onTablet) {
         if (this.props.isMethod) {
           return 30;
-        } else {
-          return 25;
         }
-      } else {
-        return 20;
+        return 25;
       }
+      return 20;
     } else {
       if (onTablet) {
         if (this.props.isMethod) {
           return 17.5;
-        } else {
-          return 15;
         }
-      } else {
-        return 12.5;
+        return 15;
       }
+      return 12.5;
     }
   };
 

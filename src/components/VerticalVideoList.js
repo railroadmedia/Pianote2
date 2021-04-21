@@ -179,7 +179,7 @@ export default class VerticalVideoList extends React.Component {
         });
       case 'song':
         if (content.lesson_count === 1)
-          return navigate('VIDEOPLAYER', {
+          return navigate('VIEWLESSON', {
             id: content.currentLessonId,
           });
         return navigate('PATHOVERVIEW', {
@@ -206,7 +206,7 @@ export default class VerticalVideoList extends React.Component {
           isFoundations: true,
         });
       case 'learning-path-lesson':
-        return navigate('VIDEOPLAYER', {
+        return navigate('VIEWLESSON', {
           url: content.mobile_app_url,
         });
       case 'pack':
@@ -218,11 +218,11 @@ export default class VerticalVideoList extends React.Component {
           url: content.mobile_app_url,
         });
       case 'pack-bundle-lesson':
-        return navigate('VIDEOPLAYER', {
+        return navigate('VIEWLESSON', {
           url: content.mobile_app_url,
         });
       default:
-        return navigate('VIDEOPLAYER', {
+        return navigate('VIEWLESSON', {
           id: content.id,
         });
     }
@@ -396,14 +396,14 @@ export default class VerticalVideoList extends React.Component {
                       marginBottom: 5,
                       color: 'white',
                       fontFamily: 'RobotoCondensed-Bold',
-                      fontSize: sizing.titleVideoPlayer,
+                      fontSize: sizing.titleViewLesson,
                     }}
                   >
                     LEVEL {index + 1}
                   </Text>
                 </View>
               )}
-              {Platform.OS === 'ios' ? (
+              {isiOS ? (
                 <FastImage
                   style={{
                     flex: 1,

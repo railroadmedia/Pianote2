@@ -155,179 +155,168 @@ export default class Schedule extends React.Component {
           barStyle={'light-content'}
         />
         <Text style={styles.contentPageHeader}>{this.state.title}</Text>
-        <View style={{flex: 1}}>
-          <FlatList
-            data={this.state.items}
-            extraData={this.state}
-            keyExtractor={item => item.id.toString()}
-            style={styles.mainContainer}
-            ListHeaderComponent={() => (
+        <FlatList
+          data={this.state.items}
+          extraData={this.state}
+          keyExtractor={item => item.id.toString()}
+          style={styles.mainContainer}
+          ListHeaderComponent={() => (
+            <Text
+              style={{
+                paddingLeft: 10,
+                paddingTop: 10,
+                color: colors.secondBackground,
+                fontSize: onTablet ? 14 : 12,
+              }}
+            >
+              {month[this.state.month]}
+            </Text>
+          )}
+          ListEmptyComponent={() =>
+            this.state.isLoading ? (
+              <ActivityIndicator
+                size={'small'}
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+                color={colors.secondBackground}
+              />
+            ) : (
               <Text
                 style={{
-                  paddingLeft: 10,
-                  paddingTop: 10,
-                  color: colors.secondBackground,
-                  fontSize: onTablet ? 14 : 12,
+                  padding: 10,
+                  color: 'white',
+                  textAlign: 'left',
+                  fontSize: onTablet ? 16 : 14,
                 }}
               >
-                {month[this.state.month]}
+                Sorry, there are no upcoming events!
               </Text>
-            )}
-            ListEmptyComponent={() =>
-              this.state.isLoading ? (
-                <ActivityIndicator
-                  size={'small'}
+            )
+          }
+          renderItem={({item}) => {
+            let type = item.lesson ? 'lesson' : 'overview';
+            return (
+              <TouchableOpacity
+                style={{
+                  padding: 10,
+                  flexDirection: 'row',
+                  height: 80,
+                }}
+              >
+                <View
+                  style={[
+                    styles.centerContent,
+                    {
+                      width: '26%',
+                      aspectRatio: 16 / 9,
+                      backgroundColor: 'black',
+                      borderRadius: 10,
+                      marginRight: 10,
+                    },
+                  ]}
+                >
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontSize: sizing.descriptionText,
+                      color: 'white',
+                      textAlign: 'left',
+                      fontFamily: 'OpenSans-Bold',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {day[item.timeData.day]} {item.timeData.date}
+                  </Text>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontSize: sizing.descriptionText,
+                      color: 'white',
+                      textAlign: 'left',
+                      fontFamily: 'OpenSans-Regular',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {item.timeData.hours}:
+                    {item.timeData.minutes == 0 ? '00' : item.timeData.minutes}
+                    {' ' + item.timeData.amPM}
+                  </Text>
+                </View>
+                <View
                   style={{
                     flex: 1,
                     justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                  color={colors.secondBackground}
-                />
-              ) : (
-                <Text
-                  style={{
-                    padding: 10,
-                    color: 'white',
-                    textAlign: 'left',
-                    fontSize: onTablet ? 16 : 14,
                   }}
                 >
-                  Sorry, there are no upcoming events!
-                </Text>
-              )
-            }
-            renderItem={({item}) => {
-              let type = item.lesson ? 'lesson' : 'overview';
-              return (
-                <TouchableOpacity
-                  style={{
-                    padding: 10,
-                    flexDirection: 'row',
-                    height: 80,
-                  }}
-                >
-                  <View
-                    style={[
-                      styles.centerContent,
-                      {
-                        width: '26%',
-                        aspectRatio: 16 / 9,
-                        backgroundColor: 'black',
-                        borderRadius: 10,
-                        marginRight: 10,
-                      },
-                    ]}
-                  >
-                    <Text
-                      numberOfLines={1}
-                      style={{
-                        fontSize: sizing.descriptionText,
-                        color: 'white',
-                        textAlign: 'left',
-                        fontFamily: 'OpenSans-Bold',
-                        textAlign: 'center',
-                      }}
-                    >
-                      {day[item.timeData.day]} {item.timeData.date}
-                    </Text>
-                    <Text
-                      numberOfLines={1}
-                      style={{
-                        fontSize: sizing.descriptionText,
-                        color: 'white',
-                        textAlign: 'left',
-                        fontFamily: 'OpenSans-Regular',
-                        textAlign: 'center',
-                      }}
-                    >
-                      {item.timeData.hours}:
-                      {item.timeData.minutes == 0
-                        ? '00'
-                        : item.timeData.minutes}
-                      {' ' + item.timeData.amPM}
-                    </Text>
-                  </View>
-                  <View
+                  <Text
                     style={{
-                      flex: 1,
-                      justifyContent: 'center',
+                      fontSize: sizing.videoTitleText,
+                      marginBottom: 2,
+                      color: 'white',
+                      fontFamily: 'OpenSans-Bold',
                     }}
                   >
-                    <Text
-                      style={{
-                        fontSize: sizing.videoTitleText,
-                        marginBottom: 2,
-                        color: 'white',
-                        fontFamily: 'OpenSans-Bold',
-                      }}
-                    >
-                      {item.title}
-                    </Text>
-                    <Text
-                      numberOfLines={1}
-                      style={{
-                        fontSize: sizing.descriptionText,
-                        color: colors.secondBackground,
-                        textAlign: 'left',
-                        fontFamily: 'OpenSans-Regular',
-                      }}
-                    >
-                      {this.changeType(item.type)}
-                    </Text>
-                  </View>
-                  <View
-                    style={[
-                      styles.centerContent,
-                      {
-                        paddingLeft: 20,
-                        flexDirection: 'row',
-                      },
-                    ]}
+                    {item.title}
+                  </Text>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontSize: sizing.descriptionText,
+                      color: colors.secondBackground,
+                      textAlign: 'left',
+                      fontFamily: 'OpenSans-Regular',
+                    }}
                   >
-                    {!item.is_added_to_primary_playlist ? (
-                      <TouchableOpacity
-                        onPress={() => this.addToMyList(item.id)}
-                      >
-                        <AntIcon
-                          name={'plus'}
-                          size={sizing.myListButtonSize}
-                          color={colors.pianoteRed}
-                        />
-                      </TouchableOpacity>
-                    ) : (
-                      <TouchableOpacity
-                        onPress={() => this.removeFromMyList(item.id)}
-                      >
-                        <AntIcon
-                          name={'close'}
-                          size={sizing.myListButtonSize}
-                          color={colors.pianoteRed}
-                        />
-                      </TouchableOpacity>
-                    )}
-
-                    <TouchableOpacity
-                      style={{marginLeft: 10}}
-                      onPress={() => {
-                        this.addToCalendarLessonTitle = item.title;
-                        this.addToCalendatLessonPublishDate =
-                          item.live_event_start_time;
-                        this.setState({addToCalendarModal: true});
-                      }}
-                    >
-                      <FontIcon
-                        size={sizing.infoButtonSize}
-                        name={'calendar-plus'}
-                        color={colors.pianoteRed}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </TouchableOpacity>
-              );
-            }}
-          />
-        </View>
+                    {this.changeType(item.type)}
+                  </Text>
+                </View>
+                <View
+                  style={[
+                    styles.centerContent,
+                    {
+                      paddingLeft: 20,
+                      flexDirection: 'row',
+                    },
+                  ]}
+                >
+                  <TouchableOpacity
+                    onPress={() =>
+                      !item.is_added_to_primary_playlist
+                        ? this.addToMyList(item.id)
+                        : this.removeFromMyList(item.id)
+                    }
+                  >
+                    <AntIcon
+                      name={
+                        !item.is_added_to_primary_playlist ? 'plus' : 'close'
+                      }
+                      size={sizing.myListButtonSize}
+                      color={colors.pianoteRed}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{marginLeft: 10}}
+                    onPress={() => {
+                      this.addToCalendarLessonTitle = item.title;
+                      this.addToCalendatLessonPublishDate =
+                        item.live_event_start_time;
+                      this.setState({addToCalendarModal: true});
+                    }}
+                  >
+                    <FontIcon
+                      size={sizing.infoButtonSize}
+                      name={'calendar-plus'}
+                      color={colors.pianoteRed}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </TouchableOpacity>
+            );
+          }}
+        />
         <Modal
           isVisible={this.state.addToCalendarModal}
           style={styles.modalContainer}

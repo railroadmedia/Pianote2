@@ -244,7 +244,6 @@ class MyList extends React.Component {
                 In Progress
               </Text>
             </View>
-            <View style={{flex: 0.85}} />
             <View style={[styles.centerContent, {flex: 0.15}]}>
               <EntypoIcon
                 name={'chevron-thin-right'}
@@ -282,7 +281,6 @@ class MyList extends React.Component {
                 Completed
               </Text>
             </View>
-            <View style={{flex: 0.85}} />
             <View style={[styles.centerContent, {flex: 0.15}]}>
               <EntypoIcon
                 name={'chevron-thin-right'}

@@ -212,7 +212,7 @@ export default class SinglePack extends React.Component {
 
   navigate = row => {
     if (this.state.isDisplayingLessons) {
-      navigate('VIDEOPLAYER', {
+      navigate('VIEWLESSON', {
         url: row.mobile_app_url,
       });
     } else {
@@ -238,7 +238,7 @@ export default class SinglePack extends React.Component {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
-    if (Platform.OS === 'ios') {
+    if (isiOS) {
       if (onTablet) this.setState({isLandscape});
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
@@ -350,20 +350,12 @@ export default class SinglePack extends React.Component {
                         this.toggleMyList();
                       }}
                     >
-                      <View style={[styles.centerContent]}>
-                        {!this.state.isAddedToList ? (
-                          <AntIcon
-                            name={'plus'}
-                            size={sizing.myListButtonSize}
-                            color={colors.pianoteRed}
-                          />
-                        ) : (
-                          <AntIcon
-                            name={'close'}
-                            size={sizing.myListButtonSize}
-                            color={colors.pianoteRed}
-                          />
-                        )}
+                      <View style={styles.centerContent}>
+                        <AntIcon
+                          name={!this.state.isAddedToList ? 'plus' : 'close'}
+                          size={sizing.myListButtonSize}
+                          color={colors.pianoteRed}
+                        />
                       </View>
                       <Text
                         style={{
@@ -389,7 +381,7 @@ export default class SinglePack extends React.Component {
                         if (this.state.isCompleted) {
                           this.setState({showRestartCourse: true});
                         } else {
-                          navigate('VIDEOPLAYER', {
+                          navigate('VIEWLESSON', {
                             url: this.state.nextLessonUrl,
                           });
                         }
@@ -699,8 +691,7 @@ export default class SinglePack extends React.Component {
                   {
                     showResDownload: false,
                   },
-                  () =>
-                    Platform.OS === 'ios' ? (this.modalDismissed = res) : res(),
+                  () => (isiOS ? (this.modalDismissed = res) : res()),
                 ),
               );
             }}

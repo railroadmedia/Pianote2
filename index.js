@@ -55,7 +55,7 @@ PushNotification.configure({
         } else if (commentId || mobile_app_url) {
           global.notifNavigation = true;
 
-          navigate('VIDEOPLAYER', {
+          navigate('VIEWLESSON', {
             commentId,
             url: mobile_app_url,
           });
@@ -112,7 +112,7 @@ global.sizing = {
   descriptionText: onTablet ? 16 : 12,
   infoButtonSize: onTablet ? 22.5 : 17.5,
   myListButtonSize: onTablet ? 28 : 22,
-  titleVideoPlayer: onTablet ? 24 : 18,
+  titleViewLesson: onTablet ? 24 : 18,
   videoTitleText: onTablet ? 16 : 14,
   verticalListTitleSmall: onTablet ? 18 : 14,
 };

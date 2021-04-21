@@ -76,7 +76,7 @@ export default class Method extends React.Component {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
 
-    if (Platform.OS === 'ios') {
+    if (isiOS) {
       if (onTablet) this.setState({isLandscape});
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
@@ -161,11 +161,8 @@ export default class Method extends React.Component {
 
   onRestartMethod = async () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-
     this.setState({items: [], showRestartCourse: false});
-
     await resetProgress(this.state.id);
-
     this.setState(
       {
         methodIsStarted: false,
@@ -194,15 +191,14 @@ export default class Method extends React.Component {
   }
 
   goToLesson(url) {
-    return navigate('VIDEOPLAYER', {url});
+    return navigate('VIEWLESSON', {url});
   }
 
   getSquareHeight = () => {
     if (onTablet) {
       return 150;
-    } else {
-      return width * 0.26;
     }
+    return width * 0.26;
   };
 
   render() {
