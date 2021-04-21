@@ -25,6 +25,7 @@ const timingAnim = {
 export default ({ route: { params } }) => {
   forumService.tryCall = params.tryCall;
   forumService.rootUrl = params.rootUrl;
+  forumService.NetworkContext = params.NetworkContext;
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
