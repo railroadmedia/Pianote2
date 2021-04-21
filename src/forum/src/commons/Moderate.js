@@ -30,7 +30,7 @@ export default class Moderate extends React.Component {
   onReport = () =>
     this.close(() => {
       if (!this.connection) return;
-      forums.reportMessage(this.props.id);
+      forumService.reportMessage(this.props.id);
       this.setState({ optionsVisible: true, reportVisible: true }, () =>
         setTimeout(this.close, 2000)
       );
@@ -39,7 +39,7 @@ export default class Moderate extends React.Component {
   onDelete = () =>
     this.close(() => {
       if (!this.connection) return;
-      forums.deleteMessage(this.props.id);
+      forumService.deleteMessage(this.props.id);
       this.setState({ optionsVisible: true, deleteVisible: true });
     });
 
