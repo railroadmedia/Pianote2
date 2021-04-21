@@ -1,7 +1,9 @@
 /**
- * PROPS: comment, showReplyIcon, styles
+ * PROPS: comment, showReplyIcon, onEdit, onDelete
  * comment: comment to be displayed
  * showReplyIcon: variable that tells the component if it should display 'View replies' label
+ * onEdit(): simple navigation to 'Edit' page
+ * onDelete(): callback after delete called (for refreshing comments)
  * use it like:
 * <Comment
     showReplyIcon={true}
@@ -39,7 +41,10 @@ import {
 import moment from 'moment';
 
 import RNVideo from 'react-native-video';
-import { more, like, likeOn, replies } from '../assets/svgs';
+
+import Moderate from './Moderate';
+
+import { like, likeOn, replies } from '../assets/svgs';
 
 const fallbackProfilePicUri =
   'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2000px-No_image_available.svg.png';
@@ -177,7 +182,12 @@ export default class Comment extends React.PureComponent {
                 </TouchableOpacity>
               )}
             </View>
-            {/* {more({ width: 15, height: 5, fill: appColor })} */}
+            <Moderate
+              id={comment.id}
+              appColor={appColor}
+              onEdit={this.props.onEdit}
+              onDelete={this.props.onDelete}
+            />
           </View>
         </View>
       </View>
