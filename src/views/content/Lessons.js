@@ -11,12 +11,12 @@ import {
   Dimensions,
   ImageBackground,
   TouchableOpacity,
-  Text
+  Text,
 } from 'react-native';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import Modal from 'react-native-modal';
-import { bindActionCreators } from 'redux';
-import { ContentModel } from '@musora/models';
+import {bindActionCreators} from 'redux';
+import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -26,7 +26,7 @@ import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import Orientation from 'react-native-orientation-locker';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
-import { watchersListener } from 'MusoraChat';
+import {watchersListener} from 'MusoraChat';
 import DeviceInfo from 'react-native-device-info';
 import StartIcon from '../../components/StartIcon';
 import ResetIcon from '../../components/ResetIcon';
@@ -38,24 +38,19 @@ import GradientFeature from '../../components/GradientFeature';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
 import methodService from '../../services/method.service.js';
-import {
-  getStartedContent,
-  getLiveContent,
-  getAllContent
-} from '../../services/GetContent';
-import { addToMyList, removeFromMyList } from '../../services/UserActions';
+import {getStartedContent, getAllContent} from '../../services/GetContent';
+import {addToMyList, removeFromMyList} from '../../services/UserActions';
 import RestartCourse from '../../modals/RestartCourse';
-import Live from '../../modals/Live';
 import AddToCalendar from '../../modals/AddToCalendar';
-import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
-import { NetworkContext } from '../../context/NetworkProvider';
-import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
+import {cacheAndWriteLessons} from '../../redux/LessonsCacheActions';
+import {NetworkContext} from '../../context/NetworkProvider';
+import {navigate, refreshOnFocusListener} from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
-const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
   const paddingToBottom = 20;
   return (
     layoutMeasurement.height + contentOffset.y >=
@@ -67,7 +62,7 @@ class Lessons extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    let { lessonsCache } = props;
+    let {lessonsCache} = props;
     this.state = {
       progressLessons: [],
       allLessons: [],
@@ -80,28 +75,24 @@ class Lessons extends React.Component {
       xp: '',
       rank: '',
       currentLesson: [],
-      liveLesson: [],
-      timeDiffLive: {}, // time variables on live experience
       addToCalendarModal: false,
       methodId: 0,
       methodIsStarted: false,
       methodIsCompleted: false,
       methodNextLessonUrl: null,
       showRestartCourse: false,
-      showLive: false,
       lessonsStarted: true,
       refreshing: !lessonsCache,
       refreshControl: true,
-      liveViewers: undefined,
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width,
-      ...this.initialValidData(lessonsCache, true)
+      ...this.initialValidData(lessonsCache, true),
     };
   }
 
   componentDidMount = () => {
     let deepFilters = decodeURIComponent(this.props.route?.params?.url).split(
-      '?'
+      '?',
     )[1];
     this.filterQuery = deepFilters && `&${deepFilters}`;
     Orientation.addDeviceOrientationListener(this.orientationListener);
@@ -110,7 +101,7 @@ class Lessons extends React.Component {
       'rank',
       'profileURI',
       'methodIsStarted',
-      'methodIsCompleted'
+      'methodIsCompleted',
     ]).then(data => {
       this.setState({
         xp: data[0][1],
@@ -119,11 +110,10 @@ class Lessons extends React.Component {
         methodIsStarted:
           typeof data[3][1] !== null ? JSON.parse(data[3][1]) : false,
         methodIsCompleted:
-          typeof data[4][1] !== null ? JSON.parse(data[4][1]) : false
+          typeof data[4][1] !== null ? JSON.parse(data[4][1]) : false,
       });
     });
 
-    this.getLiveContent();
     this.getContent();
     messaging().requestPermission();
     this.refreshOnFocusListener = refreshOnFocusListener.call(this);
@@ -146,79 +136,25 @@ class Lessons extends React.Component {
         '',
         this.state.currentSort,
         this.state.page,
-        this.filterQuery
+        this.filterQuery,
       ),
-      getStartedContent('')
+      getStartedContent(''),
     ]);
 
     this.metaFilters = content?.[1]?.meta?.filterOptions;
     this.props.cacheAndWriteLessons({
       all: content[1],
       method: content[0],
-      inProgress: content[2]
+      inProgress: content[2],
     });
 
     this.setState(
       this.initialValidData({
         all: content[1],
         method: content[0],
-        inProgress: content[2]
-      })
+        inProgress: content[2],
+      }),
     );
-  }
-
-  async getLiveContent() {
-    let content = [await getLiveContent()];
-    let [{ apiKey, chatChannelName, userId, token }] = content;
-    
-    watchersListener(apiKey, chatChannelName, userId, token, liveViewers => this.setState({ liveViewers })).then(rwl => (this.removeWatchersListener = rwl));
-
-    let timeNow = Math.floor(Date.now() / 1000);
-    let timeLive = new Date(content[0].live_event_start_time + ' UTC').getTime() / 1000;
-    let timeDiff = timeLive - timeNow;
-    let hours = Math.floor(timeDiff / 3600)
-    let minutes = Math.floor((timeDiff - hours*3600)/60)
-    let seconds = timeDiff - hours*3600 - minutes*60
-    
-    if(timeDiff < 4*3600) {
-      this.setState({
-        liveLesson: content,
-        timeDiffLive: {
-          timeDiff,
-          hours,
-          minutes,
-          seconds,
-        }
-      });
-
-      if (!content[0].isLive) {
-        this.interval = setInterval(() => this.timer(), 1000);
-      }
-    }
-  }
-
-  async timer() {
-    let timeNow = Math.floor(Date.now() / 1000);
-    let timeLive = new Date(this.state.liveLesson[0].live_event_start_time + ' UTC').getTime() / 1000;
-    let timeDiff = timeLive - timeNow;
-    let hours = Math.floor(timeDiff / 3600)
-    let minutes = Math.floor((timeDiff - hours*3600)/60)
-    let seconds = timeDiff - hours*3600 - minutes*60
-
-    this.setState({
-      timeDiffLive: {
-        timeDiff,
-        hours,
-        minutes,
-        seconds,
-      }
-    });
-
-    if (timeDiff < 0) {
-      // if time ran out show reminder, get rid of timer
-      this.setState({ showLive: true });
-      clearInterval(this.interval);
-    }
   }
 
   changeType = word => {
@@ -245,21 +181,21 @@ class Lessons extends React.Component {
   initialValidData = (content, fromCache) => {
     try {
       if (!content) return {};
-      let { method } = content;
+      let {method} = content;
       let allVideos = this.setData(
         content.all.data.map(data => {
           return new ContentModel(data);
-        })
+        }),
       );
 
       let inprogressVideos = this.setData(
         content.inProgress.data.map(data => {
           return new ContentModel(data);
-        })
+        }),
       );
       AsyncStorage.multiSet([
         ['methodIsStarted', method.started.toString()],
-        ['methodIsCompleted', method.completed.toString()]
+        ['methodIsCompleted', method.completed.toString()],
       ]);
       return {
         methodId: method.id,
@@ -274,7 +210,7 @@ class Lessons extends React.Component {
         isPaging: false,
         lessonsStarted: inprogressVideos.length !== 0,
         refreshing: false,
-        refreshControl: fromCache
+        refreshControl: fromCache,
       };
     } catch (e) {
       return {};
@@ -289,18 +225,18 @@ class Lessons extends React.Component {
 
     await AsyncStorage.multiSet([
       ['methodIsStarted', response.started.toString()],
-      ['methodIsCompleted', response.completed.toString()]
+      ['methodIsCompleted', response.completed.toString()],
     ]);
     this.setState({
       methodId: response.id,
       methodIsStarted: response.started,
       methodIsCompleted: response.completed,
-      methodNextLessonUrl: response.banner_button_url
+      methodNextLessonUrl: response.banner_button_url,
     });
   };
 
   getAllLessons = async () => {
-    this.setState({ filtering: true });
+    this.setState({filtering: true});
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -310,7 +246,7 @@ class Lessons extends React.Component {
         '',
         this.state.currentSort,
         this.state.page,
-        this.filterQuery
+        this.filterQuery,
       );
       this.metaFilters = response?.meta?.filterOptions;
       const newContent = await response.data.map(data => {
@@ -323,7 +259,7 @@ class Lessons extends React.Component {
         outVideos:
           items.length == 0 || response.data.length < 20 ? true : false,
         filtering: false,
-        isPaging: false
+        isPaging: false,
       });
     } catch (error) {}
   };
@@ -360,7 +296,7 @@ class Lessons extends React.Component {
         isAddedToList: newContent[i].isAddedToList,
         isStarted: newContent[i].isStarted,
         isCompleted: newContent[i].isCompleted,
-        progress_percent: newContent[i].post.progress_percent
+        progress_percent: newContent[i].post.progress_percent,
       });
     }
     return items;
@@ -375,9 +311,9 @@ class Lessons extends React.Component {
       {
         methodIsStarted: false,
         methodIsCompleted: false,
-        showRestartCourse: false
+        showRestartCourse: false,
       },
-      () => this.getMethod()
+      () => this.getMethod(),
     );
   };
 
@@ -417,16 +353,16 @@ class Lessons extends React.Component {
         outVideos: false,
         isPaging: true,
         allLessons: [],
-        page: 0
+        page: 0,
       },
-      () => this.getAllLessons()
+      () => this.getAllLessons(),
     );
   };
 
   getVideos = () => {
     // change page before getting more lessons if paging
     if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () => this.getAllLessons());
+      this.setState({page: this.state.page + 1}, () => this.getAllLessons());
     }
   };
 
@@ -434,37 +370,15 @@ class Lessons extends React.Component {
     const eventConfig = {
       title: this.addToCalendarLessonTitle,
       startDate: new Date(this.addToCalendatLessonPublishDate),
-      endDate: new Date(this.addToCalendatLessonPublishDate)
+      endDate: new Date(this.addToCalendatLessonPublishDate),
     };
     AddCalendarEvent.presentEventCreatingDialog(eventConfig)
       .then(eventInfo => {
         this.addToCalendarLessonTitle = '';
         this.addToCalendatLessonPublishDate = '';
-        this.setState({ addToCalendarModal: false });
+        this.setState({addToCalendarModal: false});
       })
       .catch(e => {});
-  };
-
-  addToMyList = contentID => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-
-    this.state.liveLesson[0].is_added_to_primary_playlist = true;
-    this.setState({ liveLesson: this.state.liveLesson });
-
-    addToMyList(contentID);
-  };
-
-  removeFromMyList = contentID => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-
-    this.state.liveLesson[0].is_added_to_primary_playlist = false;
-    this.setState({ liveLesson: this.state.liveLesson });
-
-    removeFromMyList(contentID);
   };
 
   handleScroll = event => {
@@ -476,9 +390,9 @@ class Lessons extends React.Component {
       this.setState(
         {
           page: this.state.page + 1,
-          isPaging: true
+          isPaging: true,
         },
-        () => this.getAllLessons()
+        () => this.getAllLessons(),
       );
     }
   };
@@ -489,9 +403,9 @@ class Lessons extends React.Component {
         refreshControl: true,
         inprogressVideos: [],
         allLessons: [],
-        page: 1
+        page: 1,
       },
-      this.getContent
+      this.getContent,
     );
   }
 
@@ -500,10 +414,10 @@ class Lessons extends React.Component {
     let isLandscape = o.indexOf('LAND') >= 0;
 
     if (Platform.OS === 'ios') {
-      if (onTablet) this.setState({ isLandscape });
+      if (onTablet) this.setState({isLandscape});
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
-        if (isAutoRotateOn && onTablet) this.setState({ isLandscape });
+        if (isAutoRotateOn && onTablet) this.setState({isLandscape});
       });
     }
   };
@@ -535,14 +449,14 @@ class Lessons extends React.Component {
                 refreshing={isiOS ? false : this.state.refreshControl}
               />
             }
-            onScroll={({ nativeEvent }) => {
+            onScroll={({nativeEvent}) => {
               onTablet ? '' : this.handleScroll(nativeEvent);
             }}
             scrollEventThrottle={400}
           >
             {isiOS && this.state.refreshControl && (
               <ActivityIndicator
-                size='small'
+                size="small"
                 style={styles.activityIndicator}
                 color={colors.pianoteGrey}
               />
@@ -552,7 +466,7 @@ class Lessons extends React.Component {
               style={{
                 width: '100%',
                 aspectRatio: this.getAspectRatio(),
-                justifyContent: 'flex-end'
+                justifyContent: 'flex-end',
               }}
               source={require('Pianote2/src/assets/img/imgs/lisamethod.png')}
             >
@@ -568,17 +482,17 @@ class Lessons extends React.Component {
                   height: '100%',
                   width: '100%',
                   zIndex: 2,
-                  elevation: 2
+                  elevation: 2,
                 }}
               >
-                <View style={{ flex: 0.9 }} />
-                <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                <View style={{flex: 0.9}} />
+                <View style={{flexDirection: 'row', alignSelf: 'center'}}>
                   <FastImage
                     style={{
                       width: '85%',
                       height: onTablet ? 100 : 60,
                       alignSelf: 'center',
-                      marginBottom: onTablet ? '2%' : '4%'
+                      marginBottom: onTablet ? '2%' : '4%',
                     }}
                     source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
                     resizeMode={FastImage.resizeMode.contain}
@@ -590,21 +504,21 @@ class Lessons extends React.Component {
                     {
                       flexDirection: 'row',
                       alignItems: 'center',
-                      marginBottom: '1%'
-                    }
+                      marginBottom: '1%',
+                    },
                   ]}
                 >
-                  <View style={{ flex: 1 }} />
+                  <View style={{flex: 1}} />
                   <View
                     style={{
-                      width: onTablet ? 200 : '45%'
+                      width: onTablet ? 200 : '45%',
                     }}
                   >
                     {this.state.methodIsCompleted ? (
                       <ResetIcon
                         pressed={() =>
                           this.setState({
-                            showRestartCourse: true
+                            showRestartCourse: true,
                           })
                         }
                       />
@@ -616,7 +530,7 @@ class Lessons extends React.Component {
                           }
                           if (this.state.methodNextLessonUrl)
                             navigate('VIDEOPLAYER', {
-                              url: this.state.methodNextLessonUrl
+                              url: this.state.methodNextLessonUrl,
                             });
                         }}
                       />
@@ -628,32 +542,32 @@ class Lessons extends React.Component {
                           }
                           if (this.state.methodNextLessonUrl)
                             navigate('VIDEOPLAYER', {
-                              url: this.state.methodNextLessonUrl
+                              url: this.state.methodNextLessonUrl,
                             });
                         }}
                       />
                     )}
                   </View>
-                  <View style={onTablet ? { width: 10 } : { flex: 0.5 }} />
+                  <View style={onTablet ? {width: 10} : {flex: 0.5}} />
                   <View
                     style={{
-                      width: onTablet ? 200 : '45%'
+                      width: onTablet ? 200 : '45%',
                     }}
                   >
                     <MoreInfoIcon
                       pressed={() => {
                         navigate('METHOD', {
                           methodIsStarted: this.state.methodIsStarted,
-                          methodIsCompleted: this.state.methodIsCompleted
+                          methodIsCompleted: this.state.methodIsCompleted,
                         });
                       }}
                     />
                   </View>
-                  <View style={{ flex: 1 }} />
+                  <View style={{flex: 1}} />
                 </View>
               </View>
             </ImageBackground>
-            <View style={{ marginTop: 10 / 2 }}>
+            <View style={{marginTop: 10 / 2}}>
               <HorizontalVideoList
                 hideFilterButton={true}
                 isMethod={true}
@@ -661,511 +575,13 @@ class Lessons extends React.Component {
                 seeAll={() =>
                   navigate('SEEALL', {
                     title: 'Continue',
-                    parent: 'Lessons'
+                    parent: 'Lessons',
                   })
                 }
                 showType={true}
                 items={this.state.progressLessons}
               />
-              <View style={{ height: 10 / 2 }} />
-              {this.state.liveLesson.length > 0 &&
-                this.state.timeDiffLive.timeDiff < 3600 * 4 && (
-                  // if there is a live lesson && it is less than 4 hours away
-                  <>
-                    <Text
-                      numberOfLines={1}
-                      style={{
-                        textAlign: 'left',
-                        fontSize: DeviceInfo.isTablet() ? 20 : 16,
-                        fontFamily: 'RobotoCondensed-Bold',
-                        paddingTop: 5,
-                        paddingBottom: 15,
-                        color: 'white',
-                        paddingLeft: 10
-                      }}
-                    >
-                      LIVE
-                    </Text>
-                    {this.state.timeDiffLive.timeDiff > 0 ? (
-                      // prod: > 0
-                      // live lesson has time to countdown
-                      <View
-                        style={{
-                          width: Dimensions.get('window').width - 10,
-                          paddingLeft: 10
-                        }}
-                      >
-                        <TouchableOpacity 
-                          onPress={() => navigate('LIVE')}
-                          style={{ width: '100%' }}
-                        >
-                          <View
-                            style={[
-                              styles.centerContent,
-                              {
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                width: '100%',
-                                height: '100%',
-                                zIndex: 1
-                              }
-                            ]}
-                          >
-                            <View
-                              style={[
-                                styles.centerContent,
-                                {
-                                  height: '100%',
-                                  width: '100%',
-                                  borderRadius: 10
-                                }
-                              ]}
-                            >
-                              <LinearGradient
-                                colors={[
-                                  'transparent',
-                                  'rgba(20, 20, 20, 0.5)',
-                                  'rgba(0, 0, 0, 1)'
-                                ]}
-                                style={{
-                                  borderRadius: 0,
-                                  width: '100%',
-                                  height: '100%',
-                                  position: 'absolute',
-                                  left: 0,
-                                  bottom: 0
-                                }}
-                              />
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  position: 'absolute',
-                                  fontSize: onTablet ? 16 : 12,
-                                  left: 5,
-                                  top: 10
-                                }}
-                              >
-                                UPCOMING EVENT
-                              </Text>
-                              <Text>
-                                <View>
-                                  <Text
-                                    style={{
-                                      color: 'white',
-                                      fontFamily: 'OpenSans-Bold',
-                                      fontSize: onTablet ? 60 : 40,
-                                      textAlign: 'center'
-                                    }}
-                                  >
-                                    {this.state.timeDiffLive?.hours}
-                                  </Text>
-                                  <Text
-                                    style={{
-                                      color: 'white',
-                                      fontFamily: 'OpenSans-Bold',
-                                      top: 0,
-                                      textAlign: 'center'
-                                    }}
-                                  >
-                                    HOURS
-                                  </Text>
-                                </View>
-                                <View>
-                                  <Text
-                                    style={{
-                                      color: 'white',
-                                      fontFamily: 'OpenSans-Bold',
-                                      fontSize: onTablet ? 60 : 40
-                                    }}
-                                  >
-                                    {' '}
-                                    :{' '}
-                                  </Text>
-                                  <Text
-                                    style={{
-                                      color: 'white',
-                                      fontFamily: 'OpenSans-Bold',
-                                      top: 0,
-                                      textAlign: 'center',
-                                      color: 'transparent'
-                                    }}
-                                  >
-                                    h
-                                  </Text>
-                                </View>
-                                <View>
-                                  <Text
-                                    style={{
-                                      color: 'white',
-                                      fontFamily: 'OpenSans-Bold',
-                                      fontSize: onTablet ? 60 : 40,
-                                      textAlign: 'center'
-                                    }}
-                                  >
-                                    {this.state.timeDiffLive?.minutes}
-                                  </Text>
-                                  <Text
-                                    style={{
-                                      color: 'white',
-                                      fontFamily: 'OpenSans-Bold',
-                                      top: 0,
-                                      textAlign: 'center'
-                                    }}
-                                  >
-                                    MINUTES
-                                  </Text>
-                                </View>
-                                <View>
-                                  <Text
-                                    style={{
-                                      color: 'white',
-                                      fontFamily: 'OpenSans-Bold',
-                                      fontSize: onTablet ? 60 : 40
-                                    }}
-                                  >
-                                    {' '}
-                                    :{' '}
-                                  </Text>
-                                  <Text
-                                    style={{
-                                      color: 'white',
-                                      fontFamily: 'OpenSans-Bold',
-                                      top: 0,
-                                      textAlign: 'center',
-                                      color: 'transparent'
-                                    }}
-                                  >
-                                    h
-                                  </Text>
-                                </View>
-                                <View>
-                                  <Text
-                                    style={{
-                                      color: 'white',
-                                      fontFamily: 'OpenSans-Bold',
-                                      fontSize: onTablet ? 60 : 40,
-                                      textAlign: 'center',
-                                    }}
-                                  >
-                                    {this.state.timeDiffLive?.seconds}
-                                  </Text>
-                                  <Text
-                                    style={{
-                                      color: 'white',
-                                      fontFamily: 'OpenSans-Bold',
-                                      top: 0,
-                                      textAlign: 'center',
-                                    }}
-                                  >
-                                    SECONDS
-                                  </Text>
-                                </View>
-                              </Text>
-                            </View>
-                          </View>
-                          <View style={{ width: '100%' }}>
-                            {Platform.OS === 'ios' ? (
-                              <FastImage
-                                style={{
-                                  width: '100%',
-                                  borderRadius: 7.5,
-                                  aspectRatio: 16 / 9
-                                }}
-                                source={{
-                                  uri:
-                                    this.state.liveLesson[0].thumbnail_url !==
-                                    'TBD'
-                                      ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                          (Dimensions.get('window').width -
-                                            20) *
-                                            2
-                                        )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
-                                          this.state.liveLesson[0].thumbnail_url
-                                        }`
-                                      : fallbackThumb
-                                }}
-                                resizeMode={FastImage.resizeMode.cover}
-                              />
-                            ) : (
-                              <Image
-                                style={{
-                                  width: '100%',
-                                  borderRadius: 7.5,
-                                  aspectRatio: 16 / 9
-                                }}
-                                resizeMode='cover'
-                                source={{
-                                  uri:
-                                    this.state.liveLesson[0].thumbnail_url !==
-                                    'TBD'
-                                      ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                          (Dimensions.get('window').width -
-                                            20) *
-                                            2
-                                        )},ar_16:9},fl_lossy,q_auto:eco,c_fill,g_face/${
-                                          this.state.liveLesson[0].thumbnail_url
-                                        }`
-                                      : fallbackThumb
-                                }}
-                              />
-                            )}
-                          </View>
-                        </TouchableOpacity>
-                        <View
-                          style={{
-                            width: '100%',
-                            paddingVertical: 10,
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center'
-                          }}
-                        >
-                          <View style={{ width: '80%' }}>
-                            <Text
-                              numberOfLines={1}
-                              ellipsizeMode='tail'
-                              style={{
-                                fontSize: DeviceInfo.isTablet() ? 16 : 14,
-                                fontFamily: 'OpenSans-Bold',
-                                color: 'white'
-                              }}
-                            >
-                              Pianote Live Stream
-                            </Text>
-                            <View style={{ flexDirection: 'row' }}>
-                              <Text
-                                numberOfLines={1}
-                                style={{
-                                  fontFamily: 'OpenSans-Regular',
-                                  color: colors.pianoteGrey,
-
-                                  fontSize: sizing.descriptionText
-                                }}
-                              >
-                                {this.changeType(this.state.liveLesson[0].instructors)}
-                              </Text>
-                            </View>
-                          </View>
-                          {!this.state.liveLesson[0]
-                            .is_added_to_primary_playlist ? (
-                            <TouchableOpacity
-                              onPress={() =>
-                                this.addToMyList(this.state.liveLesson[0]?.id)
-                              }
-                            >
-                              <AntIcon
-                                name={'plus'}
-                                size={sizing.myListButtonSize}
-                                color={colors.pianoteRed}
-                              />
-                            </TouchableOpacity>
-                          ) : (
-                            <TouchableOpacity
-                              onPress={() =>
-                                this.removeFromMyList(this.state.liveLesson[0]?.id)
-                              }
-                            >
-                              <AntIcon
-                                name={'close'}
-                                size={sizing.myListButtonSize}
-                                color={colors.pianoteRed}
-                              />
-                            </TouchableOpacity>
-                          )}
-                          <TouchableOpacity
-                            style={{ paddingRight: 5 }}
-                            onPress={() => {
-                              this.addToCalendarLessonTitle = this.state.liveLesson[0].title;
-                              this.addToCalendatLessonPublishDate = this.state.liveLesson[0].live_event_start_time;
-                              this.setState({ addToCalendarModal: true });
-                            }}
-                          >
-                            <FontIcon
-                              size={sizing.infoButtonSize}
-                              name={'calendar-plus'}
-                              color={colors.pianoteRed}
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-                    ) : (
-                      // else if time ran out switch to live
-                      <TouchableOpacity
-                        style={{
-                          width: Dimensions.get('window').width - 10,
-                          paddingLeft: 10
-                        }}
-                        onPress={() => navigate('LIVE')}
-                      >
-                        <View style={{ width: '100%' }}>
-                          {Platform.OS === 'ios' ? (
-                            <FastImage
-                              style={{
-                                width: '100%',
-                                borderRadius: 7.5,
-                                aspectRatio: 16 / 9
-                              }}
-                              source={{
-                                uri:
-                                  this.state.liveLesson[0].thumbnail_url !==
-                                  'TBD'
-                                    ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                        (Dimensions.get('window').width - 20) *
-                                          2
-                                      )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
-                                        this.state.liveLesson[0].thumbnail_url
-                                      }`
-                                    : fallbackThumb
-                              }}
-                              resizeMode={FastImage.resizeMode.cover}
-                            />
-                          ) : (
-                            <Image
-                              style={{
-                                width: '100%',
-                                borderRadius: 7.5,
-                                aspectRatio: 16 / 9
-                              }}
-                              resizeMode='cover'
-                              source={{
-                                uri:
-                                  this.state.liveLesson[0].thumbnail_url !==
-                                  'TBD'
-                                    ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                        (Dimensions.get('window').width - 20) *
-                                          2
-                                      )},ar_16:9},fl_lossy,q_auto:eco,c_fill,g_face/${
-                                        this.state.liveLesson[0].thumbnail_url
-                                      }`
-                                    : fallbackThumb
-                              }}
-                            />
-                          )}
-                        </View>
-                        <View
-                          style={{
-                            width: '100%',
-                            paddingVertical: 10,
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center'
-                          }}
-                        >
-                          <View style={{ width: '80%' }}>
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                width: 80,
-                                marginBottom: 5,
-                                marginTop: 2
-                              }}
-                            >
-                              <View
-                                style={{
-                                  borderRadius: onTablet ? 5 : 3,
-                                  backgroundColor: 'red',
-                                  paddingHorizontal: onTablet ? 7.5 : 5
-                                }}
-                              >
-                                <Text
-                                  numberOfLines={1}
-                                  ellipsizeMode='tail'
-                                  style={{
-                                    fontSize: onTablet ? 16 : 14,
-                                    fontFamily: 'OpenSans-Regular',
-                                    color: 'white'
-                                  }}
-                                >
-                                  LIVE
-                                </Text>
-                              </View>
-                              <View
-                                style={{
-                                  paddingHorizontal: 10,
-                                  flexDirection: 'row'
-                                }}
-                              >
-                                <View style={{ justifyContent: 'center' }}>
-                                  <PasswordVisible
-                                    height={onTablet ? 22 : 18}
-                                    width={onTablet ? 22 : 18}
-                                    fill={'white'}
-                                  />
-                                </View>
-                                <View style={{ justifyContent: 'center' }}>
-                                  <Text
-                                    numberOfLines={1}
-                                    style={{
-                                      fontSize: DeviceInfo.isTablet() ? 14 : 12,
-                                      fontFamily: 'OpenSans-Regular',
-                                      color: 'white',
-                                      paddingLeft: 5
-                                    }}
-                                  >
-                                    {this.state.liveViewers}
-                                  </Text>
-                                </View>
-                              </View>
-                            </View>
-                            <Text
-                              numberOfLines={1}
-                              ellipsizeMode='tail'
-                              style={{
-                                fontSize: DeviceInfo.isTablet() ? 16 : 14,
-                                fontFamily: 'OpenSans-Bold',
-                                color: 'white'
-                              }}
-                            >
-                              Pianote Live Stream
-                            </Text>
-                            <View style={{ flexDirection: 'row' }}>
-                              <Text
-                                numberOfLines={1}
-                                style={{
-                                  fontFamily: 'OpenSans-Regular',
-                                  color: colors.pianoteGrey,
-
-                                  fontSize: sizing.descriptionText
-                                }}
-                              >
-                                {this.changeType(
-                                  this.state.liveLesson[0].instructors
-                                )}
-                              </Text>
-                            </View>
-                          </View>
-                          {!this.state.liveLesson[0]
-                            .is_added_to_primary_playlist ? (
-                            <TouchableOpacity
-                              onPress={() => this.addToMyList(this.state.liveLesson[0]?.id)}
-                              style={{ paddingRight: 2.5, paddingBottom: 25 }}
-                            >
-                              <AntIcon
-                                name={'plus'}
-                                size={sizing.myListButtonSize}
-                                color={colors.pianoteRed}
-                              />
-                            </TouchableOpacity>
-                          ) : (
-                            <TouchableOpacity
-                              style={{ paddingRight: 2.5, paddingBottom: 25 }}
-                              onPress={() => this.removeFromMyList(this.state.liveLesson[0]?.id)}
-                            >
-                              <AntIcon
-                                name={'close'}
-                                size={sizing.myListButtonSize}
-                                color={colors.pianoteRed}
-                              />
-                            </TouchableOpacity>
-                          )}
-                        </View>
-                      </TouchableOpacity>
-                    )}
-                  </>
-                )}
-              <View style={{ height: 10 / 2 }} />
+              <View style={{height: 10 / 2}} />
               {onTablet ? (
                 <HorizontalVideoList
                   isMethod={true}
@@ -1175,7 +591,7 @@ class Lessons extends React.Component {
                   seeAll={() =>
                     navigate('SEEALL', {
                       title: 'All Lessons',
-                      parent: 'Lessons'
+                      parent: 'Lessons',
                     })
                   }
                   hideFilterButton={false}
@@ -1189,13 +605,13 @@ class Lessons extends React.Component {
                         {
                           allLessons: [],
                           outVideos: false,
-                          page: 1
+                          page: 1,
                         },
                         () => {
                           this.filterQuery = filters;
                           this.getAllLessons().then(res);
-                        }
-                      )
+                        },
+                      ),
                     )
                   }
                   outVideos={this.state.outVideos} // if paging and out of videos
@@ -1206,9 +622,9 @@ class Lessons extends React.Component {
                       this.setState(
                         {
                           page: this.state.page + 1,
-                          isPaging: true
+                          isPaging: true,
                         },
-                        () => this.getAllLessons()
+                        () => this.getAllLessons(),
                       );
                     }
                   }}
@@ -1235,13 +651,13 @@ class Lessons extends React.Component {
                         {
                           allLessons: [],
                           outVideos: false,
-                          page: 1
+                          page: 1,
                         },
                         () => {
                           this.filterQuery = filters;
                           this.getAllLessons().then(res);
-                        }
-                      )
+                        },
+                      ),
                     )
                   }
                   imageWidth={width * 0.26} // image width
@@ -1252,7 +668,7 @@ class Lessons extends React.Component {
             </View>
           </ScrollView>
         ) : (
-          <ActivityIndicator size='small' style={{ flex: 1 }} color={'white'} />
+          <ActivityIndicator size="small" style={{flex: 1}} color={'white'} />
         )}
         <Modal
           isVisible={this.state.showRestartCourse}
@@ -1262,35 +678,16 @@ class Lessons extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
-          onBackButtonPress={() => this.setState({ showRestartCourse: false })}
+          onBackButtonPress={() => this.setState({showRestartCourse: false})}
         >
           <RestartCourse
             hideRestartCourse={() =>
               this.setState({
-                showRestartCourse: false
+                showRestartCourse: false,
               })
             }
-            type='method'
+            type="method"
             onRestart={() => this.onRestartMethod()}
-          />
-        </Modal>
-        <Modal
-          isVisible={this.state.showLive}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
-        >
-          <Live
-            numViewers={this.state.liveViewers}
-            liveLesson={this.state.liveLesson}
-            hideLive={() => {
-              this.setState({
-                showLive: false
-              });
-            }}
           />
         </Modal>
         <Modal
@@ -1303,9 +700,7 @@ class Lessons extends React.Component {
           hasBackdrop={true}
         >
           <AddToCalendar
-            hideAddToCalendar={() =>
-              this.setState({ addToCalendarModal: false })
-            }
+            hideAddToCalendar={() => this.setState({addToCalendarModal: false})}
             addEventToCalendar={() => {
               this.addEventToCalendar();
             }}
@@ -1316,8 +711,8 @@ class Lessons extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({ lessonsCache: state.lessonsCache });
+const mapStateToProps = state => ({lessonsCache: state.lessonsCache});
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheAndWriteLessons }, dispatch);
+  bindActionCreators({cacheAndWriteLessons}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Lessons);

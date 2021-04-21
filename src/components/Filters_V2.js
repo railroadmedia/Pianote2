@@ -8,16 +8,16 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 
 import DeviceInfo from 'react-native-device-info';
 import FastImage from 'react-native-fast-image';
-import { SafeAreaView } from 'react-navigation';
+import {SafeAreaView} from 'react-navigation';
 
 import ExpandableView from './ExpandableView';
 
-import { NetworkContext } from '../context/NetworkProvider';
+import {NetworkContext} from '../context/NetworkProvider';
 
 import ArrowLeft from '../assets/img/svgs/arrowLeft';
 import Filters from '../assets/img/svgs/filters';
@@ -46,7 +46,7 @@ export default class Filters_V2 extends React.Component {
     loading: true,
     showModal: false,
     styleHeight: 0,
-    topicHeight: 0
+    topicHeight: 0,
   };
 
   constructor(props) {
@@ -98,13 +98,13 @@ export default class Filters_V2 extends React.Component {
         if (deepFilters[0] === 'instructor')
           this.appliedFilters.instructors = this.props.meta?.instructor
             ?.filter(i =>
-              deepFilters.slice(1).some(si => parseInt(si) === i.id)
+              deepFilters.slice(1).some(si => parseInt(si) === i.id),
             )
             .map(i => ({
               id: i.id,
               name: i.fields?.find(f => f.key === 'name')?.value,
               headShotPic: i.data?.find(d => d.key === 'head_shot_picture_url')
-                ?.value
+                ?.value,
             }));
       });
     }
@@ -116,9 +116,7 @@ export default class Filters_V2 extends React.Component {
     instructorNames = [];
     if (this.state.showModal) {
       setTimeout(() => {
-        let {
-          meta: { topic, style, instructor, difficulty } = {}
-        } = this.props;
+        let {meta: {topic, style, instructor, difficulty} = {}} = this.props;
         if (topic) topicKeys = this.props.meta.topic?.map(t => t.toUpperCase());
         if (style) styleKeys = this.props.meta.style?.map(s => s.toUpperCase());
         if (!difficulties) difficulties = difficulty;
@@ -127,9 +125,9 @@ export default class Filters_V2 extends React.Component {
             id: i.id,
             name: i.fields?.find(f => f.key === 'name')?.value,
             headShotPic: i.data?.find(d => d.key === 'head_shot_picture_url')
-              ?.value
+              ?.value,
           }));
-        this.setState({ loading: false });
+        this.setState({loading: false});
       }, 0);
     } else this.props.onApply();
   };
@@ -139,10 +137,10 @@ export default class Filters_V2 extends React.Component {
     if (this.appliedFilters.level)
       filterQuery += `&required_fields[]=difficulty,${this.appliedFilters.level}`;
     this.appliedFilters.topics?.map(
-      t => (filterQuery += `&included_fields[]=topic,${encodeURIComponent(t)}`)
+      t => (filterQuery += `&included_fields[]=topic,${encodeURIComponent(t)}`),
     );
     this.appliedFilters.styles?.map(
-      s => (filterQuery += `&included_fields[]=style,${encodeURIComponent(s)}`)
+      s => (filterQuery += `&included_fields[]=style,${encodeURIComponent(s)}`),
     );
     if (this.appliedFilters.progress)
       filterQuery += `&required_user_states[]=${
@@ -161,7 +159,7 @@ export default class Filters_V2 extends React.Component {
           : 'scheduled&future'
       }`;
     this.appliedFilters.instructors?.map(
-      i => (filterQuery += `&included_fields[]=instructor,${i.id}`)
+      i => (filterQuery += `&included_fields[]=instructor,${i.id}`),
     );
     return filterQuery;
   }
@@ -174,8 +172,8 @@ export default class Filters_V2 extends React.Component {
           style={[
             fStyles.textAppliedFilters,
             {
-              fontFamily: 'RobotoCondensed-Bold'
-            }
+              fontFamily: 'RobotoCondensed-Bold',
+            },
           ]}
         >
           FILTERS APPLIED
@@ -185,7 +183,7 @@ export default class Filters_V2 extends React.Component {
           .map(af =>
             typeof af === 'object'
               ? af.map(nameOrDefault => nameOrDefault.name || nameOrDefault)
-              : af
+              : af,
           )
           .map(af => (typeof af === 'object' ? af.join(', ') : af))
           .join(' / ')}
@@ -201,17 +199,17 @@ export default class Filters_V2 extends React.Component {
   toggleModal = force => {
     if (!this.connection()) return;
     this.setState(
-      ({ showModal }) => ({
+      ({showModal}) => ({
         loading: true,
-        showModal: typeof force === 'boolean' ? force : !showModal
+        showModal: typeof force === 'boolean' ? force : !showModal,
       }),
       () => {
         this.initFilters();
         if (this.state.showModal)
           this.originalFilters = JSON.parse(
-            JSON.stringify(this.appliedFilters)
+            JSON.stringify(this.appliedFilters),
           );
-      }
+      },
     );
   };
 
@@ -227,14 +225,14 @@ export default class Filters_V2 extends React.Component {
       filterType === 'instructors'
         ? new RegExp(
             this.appliedFilters[filterType].map(i => i.name).join('|'),
-            'i'
+            'i',
           )
         : new RegExp(this.appliedFilters[filterType].join('|'), 'i');
     this.appliedFilters[filterType] = regex.test(item.name || item)
       ? this.appliedFilters[filterType].filter(
           f =>
             (f.name?.toLowerCase() || f.toLowerCase()) !=
-            (item.name?.toLowerCase() || item.toLowerCase())
+            (item.name?.toLowerCase() || item.toLowerCase()),
         )
       : this.appliedFilters[filterType].concat(item);
     if (!this.appliedFilters[filterType].length)
@@ -245,21 +243,21 @@ export default class Filters_V2 extends React.Component {
 
   apply = () => {
     if (!this.connection()) return;
-    this.setState({ loading: true }, async () => {
+    this.setState({loading: true}, async () => {
       await this.props.onApply();
       this.initFilters();
     });
   };
 
   render() {
-    let { disabled } = this.props;
-    let { content_type } = this.props.meta || {};
+    let {disabled} = this.props;
+    let {content_type} = this.props.meta || {};
     let {
-      state: { showModal, topicHeight, styleHeight, loading }
+      state: {showModal, topicHeight, styleHeight, loading},
     } = this;
     return (
       <>
-        <View style={disabled ? { opacity: 0.3 } : { opacity: 1 }}>
+        <View style={disabled ? {opacity: 0.3} : {opacity: 1}}>
           <TouchableOpacity
             disabled={disabled}
             onPress={this.toggleModal}
@@ -272,7 +270,7 @@ export default class Filters_V2 extends React.Component {
           visible={showModal}
           animationType={'fade'}
           onRequestClose={this.toggleModal}
-          onBackButtonPress={() => this.setState({ showModal: false })}
+          onBackButtonPress={() => this.setState({showModal: false})}
         >
           <SafeAreaView style={fStyles.safeAreaTitleContainer}>
             <TouchableOpacity
@@ -288,7 +286,7 @@ export default class Filters_V2 extends React.Component {
                   this.appliedFilters = JSON.parse(of);
                   this.apply();
                 }
-                this.setState({ showModal: false });
+                this.setState({showModal: false});
               }}
             >
               <Text style={fStyles.textTitle}>Filter</Text>
@@ -297,7 +295,7 @@ export default class Filters_V2 extends React.Component {
           </SafeAreaView>
           {loading ? (
             <ActivityIndicator
-              size='large'
+              size="large"
               animating={true}
               color={'#fb1b2f'}
               style={fStyles.container}
@@ -318,7 +316,7 @@ export default class Filters_V2 extends React.Component {
                     style={{
                       marginTop: 10,
                       flexWrap: 'wrap',
-                      flexDirection: 'row'
+                      flexDirection: 'row',
                     }}
                   >
                     {topicKeys.map((topic, i) => (
@@ -340,7 +338,7 @@ export default class Filters_V2 extends React.Component {
                             topicHeight
                               ? {
                                   ...fStyles.touchableBorderedSelected,
-                                  height: topicHeight
+                                  height: topicHeight,
                                 }
                               : fStyles.touchableBorderedSelected
                           }
@@ -348,7 +346,7 @@ export default class Filters_V2 extends React.Component {
                             topicHeight
                               ? {
                                   ...fStyles.touchableBordered,
-                                  height: topicHeight
+                                  height: topicHeight,
                                 }
                               : fStyles.touchableBordered
                           }
@@ -357,8 +355,8 @@ export default class Filters_V2 extends React.Component {
                           }
                           onLayout={({
                             nativeEvent: {
-                              layout: { height }
-                            }
+                              layout: {height},
+                            },
                           }) => {
                             this.topicsRenders++;
                             this.tallestTopic =
@@ -366,7 +364,7 @@ export default class Filters_V2 extends React.Component {
                                 ? height
                                 : this.tallestTopic;
                             if (this.topicsRenders === topicKeys.length)
-                              this.setState({ topicHeight: this.tallestTopic });
+                              this.setState({topicHeight: this.tallestTopic});
                           }}
                         />
                       </View>
@@ -383,7 +381,7 @@ export default class Filters_V2 extends React.Component {
                     style={{
                       marginTop: 10,
                       flexWrap: 'wrap',
-                      flexDirection: 'row'
+                      flexDirection: 'row',
                     }}
                   >
                     {styleKeys.map((style, i) => (
@@ -405,7 +403,7 @@ export default class Filters_V2 extends React.Component {
                             styleHeight
                               ? {
                                   ...fStyles.touchableBorderedSelected,
-                                  height: styleHeight
+                                  height: styleHeight,
                                 }
                               : fStyles.touchableBorderedSelected
                           }
@@ -413,7 +411,7 @@ export default class Filters_V2 extends React.Component {
                             styleHeight
                               ? {
                                   ...fStyles.touchableBordered,
-                                  height: styleHeight
+                                  height: styleHeight,
                                 }
                               : fStyles.touchableBordered
                           }
@@ -422,8 +420,8 @@ export default class Filters_V2 extends React.Component {
                           }
                           onLayout={({
                             nativeEvent: {
-                              layout: { height }
-                            }
+                              layout: {height},
+                            },
                           }) => {
                             this.stylesRenders++;
                             this.tallestStyle =
@@ -431,7 +429,7 @@ export default class Filters_V2 extends React.Component {
                                 ? height
                                 : this.tallestStyle;
                             if (this.stylesRenders === styleKeys.length)
-                              this.setState({ styleHeight: this.tallestStyle });
+                              this.setState({styleHeight: this.tallestStyle});
                           }}
                         />
                       </View>
@@ -456,7 +454,7 @@ export default class Filters_V2 extends React.Component {
             </ScrollView>
           )}
           <SafeAreaView
-            forceInset={{ bottom: 'always' }}
+            forceInset={{bottom: 'always'}}
             style={fStyles.safeAreaBottomContainer}
           >
             <TouchableOpacity
@@ -486,9 +484,9 @@ export default class Filters_V2 extends React.Component {
 }
 
 class SkillSection extends React.PureComponent {
-  state = { level: 'ALL' };
+  state = {level: 'ALL'};
 
-  onPanResponderMove = (_, { moveX }) => {
+  onPanResponderMove = (_, {moveX}) => {
     if (moveX > this.levelBarWidth || moveX < 0) return;
     let skillBarSection = this.levelBarWidth / 9;
     let level = Math.round(moveX / skillBarSection);
@@ -496,15 +494,15 @@ class SkillSection extends React.PureComponent {
     Animated.timing(this.skillLevelDotTranslateX, {
       duration: 0,
       useNativeDriver: true,
-      toValue: level * skillBarSection - (level ? 8 : 0)
+      toValue: level * skillBarSection - (level ? 8 : 0),
     }).start();
     Animated.timing(this.skillLevelBarTranslateX, {
       duration: 0,
       useNativeDriver: true,
-      toValue: level * skillBarSection - this.levelBarWidth
+      toValue: level * skillBarSection - this.levelBarWidth,
     }).start();
     this.props.appliedFilters.level = level + 1;
-    this.setState({ level: level + 1 });
+    this.setState({level: level + 1});
   };
 
   pResponder = PanResponder.create({
@@ -515,9 +513,8 @@ class SkillSection extends React.PureComponent {
     },
     onPanResponderTerminationRequest: () => false,
     onStartShouldSetPanResponderCapture: () => false,
-    onPanResponderGrant: (_, { dx, dy }) =>
-      Math.abs(dx) > 2 || Math.abs(dy) > 2,
-    onPanResponderMove: this.onPanResponderMove
+    onPanResponderGrant: (_, {dx, dy}) => Math.abs(dx) > 2 || Math.abs(dy) > 2,
+    onPanResponderMove: this.onPanResponderMove,
   }).panHandlers;
 
   levelBarWidth = 0;
@@ -564,50 +561,50 @@ class SkillSection extends React.PureComponent {
   onAllLevel = () => {
     difficulties = undefined;
     this.setState(
-      ({ level }) => ({
-        level: level === 'ALL' ? 1 : 'ALL'
+      ({level}) => ({
+        level: level === 'ALL' ? 1 : 'ALL',
       }),
       () => {
         this.state.level === 'ALL'
           ? delete this.props.appliedFilters.level
           : (this.props.appliedFilters.level = 1);
         this.props.onApply();
-      }
+      },
     );
     Animated.timing(this.skillLevelDotTranslateX, {
       duration: 0,
       useNativeDriver: true,
-      toValue: 0
+      toValue: 0,
     }).start();
     Animated.timing(this.skillLevelBarTranslateX, {
       duration: 0,
       useNativeDriver: true,
-      toValue: -this.levelBarWidth
+      toValue: -this.levelBarWidth,
     }).start();
   };
 
   render() {
-    let { level } = this.state;
+    let {level} = this.state;
     return (
       <View style={fStyles.filterSection}>
         <Text style={fStyles.sectionTitleText}>SET YOUR SKILL LEVEL</Text>
         <Text style={fStyles.levelText}>LEVEL {level}</Text>
-        <View {...this.pResponder} style={{ justifyContent: 'center' }}>
+        <View {...this.pResponder} style={{justifyContent: 'center'}}>
           <View
             style={fStyles.skillSectionsContainer}
             testID={'SkillSectionSliderContainer'}
             onLayout={({
               nativeEvent: {
-                layout: { width }
-              }
+                layout: {width},
+              },
             }) => {
               this.levelBarWidth = width;
               if (this.props.appliedFilters.level) {
                 this.skillLevelDotTranslateX.setValue(
-                  (width / 9) * (this.props.appliedFilters.level - 1) - 8
+                  (width / 9) * (this.props.appliedFilters.level - 1) - 8,
                 );
                 this.skillLevelBarTranslateX.setValue(
-                  -width + (width / 9) * (this.props.appliedFilters.level - 1)
+                  -width + (width / 9) * (this.props.appliedFilters.level - 1),
                 );
               } else this.skillLevelBarTranslateX.setValue(width);
             }}
@@ -621,21 +618,21 @@ class SkillSection extends React.PureComponent {
                   borderTopRightRadius: i === 8 ? 2.5 : 0,
                   borderBottomLeftRadius: i === 0 ? 2.5 : 0,
                   borderBottomRightRadius: i === 8 ? 2.5 : 0,
-                  opacity: difficulties?.includes(`${i + 1}`) ? 1 : 0.3
+                  opacity: difficulties?.includes(`${i + 1}`) ? 1 : 0.3,
                 }}
               />
             ))}
             <Animated.View
               style={{
                 ...fStyles.skillSectionBar,
-                transform: [{ translateX: this.skillLevelBarTranslateX }]
+                transform: [{translateX: this.skillLevelBarTranslateX}],
               }}
             />
           </View>
           <Animated.View
             style={{
               ...fStyles.skillSectionDot,
-              transform: [{ translateX: this.skillLevelDotTranslateX }]
+              transform: [{translateX: this.skillLevelDotTranslateX}],
             }}
           />
         </View>
@@ -649,7 +646,7 @@ class SkillSection extends React.PureComponent {
               ? {
                   ...fStyles.touchableAll,
                   backgroundColor: '#fb1b2f',
-                  borderColor: 'transparent'
+                  borderColor: 'transparent',
                 }
               : fStyles.touchableAll
           }
@@ -659,7 +656,7 @@ class SkillSection extends React.PureComponent {
               level === 'ALL'
                 ? {
                     ...fStyles.touchableTextBordered,
-                    color: 'white'
+                    color: 'white',
                   }
                 : fStyles.touchableTextBordered
             }
@@ -673,7 +670,7 @@ class SkillSection extends React.PureComponent {
 }
 
 class TouchableFiller extends React.Component {
-  state = { selected: false };
+  state = {selected: false};
 
   constructor(props) {
     super(props);
@@ -681,20 +678,20 @@ class TouchableFiller extends React.Component {
       this.state.selected = props.appliedFilters[props.filterType].some(
         af =>
           (af.name?.toLowerCase() || af.toLowerCase()) ===
-          (props.item.name?.toLowerCase() || props.item.toLowerCase())
+          (props.item.name?.toLowerCase() || props.item.toLowerCase()),
       );
   }
 
   toggleItem = () =>
     this.setState(
-      ({ selected }) => ({ selected: !selected }),
-      () => this.props.toggleItem(this.props.filterType, this.props.item)
+      ({selected}) => ({selected: !selected}),
+      () => this.props.toggleItem(this.props.filterType, this.props.item),
     );
 
   render() {
-    let { item } = this.props;
-    let { selected } = this.props;
-    if (selected === undefined) ({ selected } = this.state);
+    let {item} = this.props;
+    let {selected} = this.props;
+    if (selected === undefined) ({selected} = this.state);
     return (
       <TouchableOpacity
         onPress={this.toggleItem}
@@ -723,35 +720,35 @@ class TouchableFiller extends React.Component {
 }
 
 class InstructorsSection extends React.Component {
-  state = { instructorLetters: [] };
+  state = {instructorLetters: []};
 
   toggleItem = (filterType, item) => {
     if (filterType === 'instructorLetters') {
-      this.setState(({ instructorLetters }) => ({
+      this.setState(({instructorLetters}) => ({
         instructorLetters: instructorLetters.includes(item)
           ? instructorLetters.filter(il => il != item)
-          : instructorLetters.concat(item)
+          : instructorLetters.concat(item),
       }));
     } else this.props.toggleItem(filterType, item);
   };
 
   render() {
-    let { instructorLetters } = this.state;
+    let {instructorLetters} = this.state;
     return (
       <View style={fStyles.filterSectionNoPadding}>
         <ExpandableView
           processType={'RAM'}
           titleStyle={fStyles.sectionTitleText}
-          dropStyle={{ height: undefined }}
+          dropStyle={{height: undefined}}
           title={'CHOOSE YOUR PIANO TEACHER'}
           iconColor={fStyles.sectionTitleText.color}
-          expandableContStyle={{ paddingVertical: 25 }}
+          expandableContStyle={{paddingVertical: 25}}
         >
           <Text style={fStyles.expandableDetails}>
             Instructors will only appear here if they have Drumeo lessons that
             fit your skill and topic filters.
           </Text>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
             {alphabet.map((a, i) => (
               <View style={fStyles.touchableContainerInstructorLetter} key={i}>
                 <TouchableFiller
@@ -772,8 +769,8 @@ class InstructorsSection extends React.Component {
               </View>
             ))}
           </View>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-            {instructorNames.map(({ id, name, headShotPic }) => (
+          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+            {instructorNames.map(({id, name, headShotPic}) => (
               <View
                 key={id}
                 testID={`TouchableFillerInstructorNameContainer${id}`}
@@ -781,11 +778,11 @@ class InstructorsSection extends React.Component {
                   !instructorLetters.length ||
                   instructorLetters.some(il => il === name[0])
                     ? fStyles.touchableContainerInstructor
-                    : { width: 0, height: 0 }
+                    : {width: 0, height: 0}
                 }
               >
                 <TouchableFiller
-                  item={{ id, name }}
+                  item={{id, name}}
                   filterType={'instructors'}
                   toggleItem={this.toggleItem}
                   appliedFilters={this.props.appliedFilters}
@@ -799,7 +796,7 @@ class InstructorsSection extends React.Component {
                   <FastImage
                     style={fStyles.touchableInstructorPic}
                     source={{
-                      uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,ar_1,c_fill,g_face/${headShotPic}`
+                      uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,ar_1,c_fill,g_face/${headShotPic}`,
                     }}
                   />
                 </TouchableFiller>
@@ -813,7 +810,7 @@ class InstructorsSection extends React.Component {
 }
 
 class ProgressSection extends React.Component {
-  state = { selected: 'ALL' };
+  state = {selected: 'ALL'};
 
   constructor(props) {
     super(props);
@@ -824,13 +821,13 @@ class ProgressSection extends React.Component {
 
   toggleItem = (_, item) =>
     this.setState(
-      ({ selected }) => ({
-        selected: selected && selected === item ? 'ALL' : item
+      ({selected}) => ({
+        selected: selected && selected === item ? 'ALL' : item,
       }),
       () =>
         this.state.selected && this.state.selected != 'ALL'
           ? (this.props.appliedFilters.progress = [this.state.selected])
-          : delete this.props.appliedFilters.progress
+          : delete this.props.appliedFilters.progress,
     );
 
   render() {
@@ -839,12 +836,12 @@ class ProgressSection extends React.Component {
         <ExpandableView
           processType={'RAM'}
           title={'CHOOSE YOUR PROGRESS'}
-          dropStyle={{ height: undefined }}
+          dropStyle={{height: undefined}}
           titleStyle={fStyles.sectionTitleText}
           iconColor={fStyles.sectionTitleText.color}
-          expandableContStyle={{ paddingVertical: 25 }}
+          expandableContStyle={{paddingVertical: 25}}
         >
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
             {progressTypes.map((p, i) => (
               <View key={i} style={fStyles.touchableBorderedContainerProgress}>
                 <TouchableFiller
@@ -875,7 +872,7 @@ class StatusSection extends React.Component {
 
   tallestStatus = 0;
 
-  state = { selected: 'ALL', statusHeight: 0 };
+  state = {selected: 'ALL', statusHeight: 0};
 
   constructor(props) {
     super(props);
@@ -885,17 +882,17 @@ class StatusSection extends React.Component {
 
   toggleItem = (_, item) =>
     this.setState(
-      ({ selected }) => ({
-        selected: selected && selected === item ? 'ALL' : item
+      ({selected}) => ({
+        selected: selected && selected === item ? 'ALL' : item,
       }),
       () =>
         this.state.selected && this.state.selected != 'ALL'
           ? (this.props.appliedFilters.status = [this.state.selected])
-          : delete this.props.appliedFilters.status
+          : delete this.props.appliedFilters.status,
     );
 
   render() {
-    let { statusHeight } = this.state;
+    let {statusHeight} = this.state;
     return (
       <View style={fStyles.filterSection}>
         <Text style={fStyles.sectionTitleText}>CHOOSE YOUR EVENT STATUS</Text>
@@ -903,7 +900,7 @@ class StatusSection extends React.Component {
           style={{
             marginTop: 10,
             flexWrap: 'wrap',
-            flexDirection: 'row'
+            flexDirection: 'row',
           }}
         >
           {statusKeys.map((status, i) => (
@@ -920,7 +917,7 @@ class StatusSection extends React.Component {
                   statusHeight
                     ? {
                         ...fStyles.touchableBorderedSelected,
-                        height: statusHeight
+                        height: statusHeight,
                       }
                     : fStyles.touchableBorderedSelected
                 }
@@ -928,7 +925,7 @@ class StatusSection extends React.Component {
                   statusHeight
                     ? {
                         ...fStyles.touchableBordered,
-                        height: statusHeight
+                        height: statusHeight,
                       }
                     : fStyles.touchableBordered
                 }
@@ -937,15 +934,15 @@ class StatusSection extends React.Component {
                 }
                 onLayout={({
                   nativeEvent: {
-                    layout: { height }
-                  }
+                    layout: {height},
+                  },
                 }) => {
                   this.statusRenders++;
                   this.tallestStatus =
                     this.tallestStatus < height ? height : this.tallestStatus;
                   if (this.statusRenders === statusKeys.length)
                     this.setState({
-                      statusHeight: this.tallestStatus
+                      statusHeight: this.tallestStatus,
                     });
                 }}
               />
@@ -963,21 +960,21 @@ const fStyles = StyleSheet.create({
     borderColor: '#fb1b2f',
     borderRadius: 15,
     borderWidth: 1,
-    padding: 5
+    padding: 5,
   },
   textAppliedFilters: {
     color: '#445f73',
     flex: 1,
     fontFamily: 'RobotoCondensed-Regular',
     paddingBottom: 5,
-    textTransform: 'uppercase'
+    textTransform: 'uppercase',
   },
   safeAreaTitleContainer: {
-    backgroundColor: '#081826'
+    backgroundColor: '#081826',
   },
   touchableTitleContainer: {
     justifyContent: 'center',
-    padding: 15
+    padding: 15,
   },
   textTitle: {
     color: 'white',
@@ -987,65 +984,65 @@ const fStyles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     textAlign: 'center',
-    textTransform: 'capitalize'
+    textTransform: 'capitalize',
   },
   container: {
     backgroundColor: '#00101d',
-    flex: 1
+    flex: 1,
   },
   filterSection: {
     borderBottomColor: '#081826',
     borderBottomWidth: 1,
     paddingHorizontal: 15,
-    paddingVertical: 25
+    paddingVertical: 25,
   },
   filterSectionNoPadding: {
     borderBottomColor: '#081826',
     borderBottomWidth: 1,
     paddingHorizontal: 15,
-    paddingVertical: 0
+    paddingVertical: 0,
   },
   sectionTitleText: {
     color: '#445f73',
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: isTablet ? 22 : 20
+    fontSize: isTablet ? 22 : 20,
   },
   skillSectionsContainer: {
     borderRadius: 2.5,
     flexDirection: 'row',
     marginVertical: 15,
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   skillSection: {
     backgroundColor: '#445f73',
     flex: 0.2,
     height: 5,
-    marginHorizontal: 1
+    marginHorizontal: 1,
   },
   skillSectionBar: {
     backgroundColor: '#fb1b2f',
     borderRadius: 2.5,
     height: 5,
     position: 'absolute',
-    width: '100%'
+    width: '100%',
   },
   skillSectionDot: {
     backgroundColor: '#fb1b2f',
     borderRadius: 8,
     height: 16,
     position: 'absolute',
-    width: 16
+    width: 16,
   },
   levelText: {
     color: 'white',
     fontFamily: 'OpenSans-Semibold',
     fontSize: isTablet ? 32 : 30,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   levelDescriptionText: {
     color: 'white',
     padding: 10,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   touchableAll: {
     alignSelf: 'center',
@@ -1054,22 +1051,22 @@ const fStyles = StyleSheet.create({
     borderWidth: 1,
     justifyContent: 'center',
     padding: 10,
-    paddingHorizontal: 50
+    paddingHorizontal: 50,
   },
   touchableBorderedContainer: {
     padding: 3,
-    width: `${100 / (isTablet ? 5 : 3)}%`
+    width: `${100 / (isTablet ? 5 : 3)}%`,
   },
   touchableBorderedContainerProgress: {
     flex: 1,
-    padding: 3
+    padding: 3,
   },
   touchableBordered: {
     borderColor: '#445f73',
     borderRadius: 50,
     borderWidth: 1,
     justifyContent: 'center',
-    padding: 10
+    padding: 10,
   },
   touchableBorderedSelected: {
     backgroundColor: '#fb1b2f',
@@ -1077,38 +1074,38 @@ const fStyles = StyleSheet.create({
     borderRadius: 50,
     borderWidth: 1,
     justifyContent: 'center',
-    padding: 10
+    padding: 10,
   },
   touchableTextBordered: {
     color: '#445f73',
     fontFamily: 'OpenSans-Semibold',
     fontSize: isTablet ? 12 : 10,
     textAlign: 'center',
-    textTransform: 'uppercase'
+    textTransform: 'uppercase',
   },
   touchableTextBorderedSelected: {
     color: 'white',
     fontFamily: 'OpenSans-Semibold',
     fontSize: isTablet ? 12 : 10,
     textAlign: 'center',
-    textTransform: 'uppercase'
+    textTransform: 'uppercase',
   },
   expandableDetails: {
     color: '#445f73',
     fontFamily: 'OpenSans',
     fontSize: isTablet ? 14 : 12,
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   touchableContainerInstructorLetter: {
     padding: 3,
-    width: `${Math.round(10000 / (isTablet ? 13 : 9)) / 100}%`
+    width: `${Math.round(10000 / (isTablet ? 13 : 9)) / 100}%`,
   },
   touchableInstructorLetter: {
     aspectRatio: 1,
     borderColor: '#445f73',
     borderRadius: 100,
     borderWidth: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   touchableInstructorLetterSelected: {
     aspectRatio: 1,
@@ -1116,45 +1113,45 @@ const fStyles = StyleSheet.create({
     borderColor: '#fb1b2f',
     borderRadius: 100,
     borderWidth: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   touchableTextInstructorLetter: {
     color: '#445f73',
     textAlign: 'center',
-    fontFamily: 'OpenSans-Semibold'
+    fontFamily: 'OpenSans-Semibold',
   },
   touchableTextInstructorLetterSelected: {
     color: 'white',
     textAlign: 'center',
-    fontFamily: 'OpenSans-Semibold'
+    fontFamily: 'OpenSans-Semibold',
   },
   touchableContainerInstructor: {
     padding: 5,
-    width: `${100 / (isTablet ? 8 : 4)}%`
+    width: `${100 / (isTablet ? 8 : 4)}%`,
   },
   touchableInstructorPic: {
     aspectRatio: 1,
     borderRadius: 100,
-    width: '50%'
+    width: '50%',
   },
-  touchableInstructor: { alignItems: 'center' },
+  touchableInstructor: {alignItems: 'center'},
   touchableInstructorSelected: {
     alignItems: 'center',
-    backgroundColor: '#fb1b2f'
+    backgroundColor: '#fb1b2f',
   },
   touchableTextInstructor: {
     color: '#445f73',
     textAlign: 'center',
-    fontFamily: 'OpenSans-Semibold'
+    fontFamily: 'OpenSans-Semibold',
   },
   touchableTextInstructorSelected: {
     color: 'white',
     textAlign: 'center',
-    fontFamily: 'OpenSans-Semibold'
+    fontFamily: 'OpenSans-Semibold',
   },
   safeAreaBottomContainer: {
     backgroundColor: '#00101d',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   touchableDoneAndApply: {
     backgroundColor: '#fb1b2f',
@@ -1163,14 +1160,14 @@ const fStyles = StyleSheet.create({
     margin: 20,
     marginVertical: 10,
     paddingVertical: 15,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   touchableTextDoneAndApply: {
     color: 'white',
     fontFamily: 'RobotoCondensed-Bold',
     textAlign: 'center',
     fontSize: isTablet ? 15 : 12.5,
-    fontFamily: 'RobotoCondensed-Bold'
+    fontFamily: 'RobotoCondensed-Bold',
   },
   touchableReset: {
     borderColor: 'white',
@@ -1182,13 +1179,13 @@ const fStyles = StyleSheet.create({
     marginVertical: 10,
     marginLeft: 0,
     padding: 0,
-    paddingVertical: 15
+    paddingVertical: 15,
   },
   touchableTextReset: {
     color: 'white',
     fontFamily: 'RobotoCondensed-Bold',
     textAlign: 'center',
     fontSize: isTablet ? 15 : 12.5,
-    fontFamily: 'RobotoCondensed-Bold'
-  }
+    fontFamily: 'RobotoCondensed-Bold',
+  },
 });

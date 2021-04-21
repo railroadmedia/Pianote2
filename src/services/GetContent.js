@@ -21,7 +21,7 @@ export async function getAllContent(type, sort, page, filters = '') {
       difficulty: [],
       instructor: [],
       style: [],
-      topic: []
+      topic: [],
     };
   }
   if (typeof response.meta.filterOptions.artist == 'undefined') {
@@ -46,35 +46,13 @@ export async function getAllContent(type, sort, page, filters = '') {
   return response;
 }
 
-export async function getLiveContent() {
-  return (response = await commonService.tryCall(
-    `${commonService.rootUrl}/musora-api/live-event?`,'GET'
-    // ?forced-content-id=275886
-    // ?forced-upcoming-content-id=275886
-  ));
-}
-
-export async function getScheduleContent() {
-  return (response = await commonService.tryCall(
-    `${commonService.rootUrl}//musora-api/schedule`,
-    'GET'
-  ));
-}
-
-export async function getLiveScheduleContent() {
-  return (response = await commonService.tryCall(
-    `${commonService.rootUrl}//musora-api/live-schedule`,
-    'GET'
-  ));
-}
-
 export async function getStartedContent(type) {
   if (type == '') {
     type =
       'learning-path-lesson&included_types[]=course&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=podcasts&included_types[]=pack-bundle-lesson';
   }
   return commonService.tryCall(
-    `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=-progress&statuses[]=published&limit=40&page=1&included_types[]=${type}&required_user_states[]=started`
+    `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=-progress&statuses[]=published&limit=40&page=1&included_types[]=${type}&required_user_states[]=started`,
   );
 }
 
@@ -114,12 +92,12 @@ export async function seeAllContent(contentType, type, page, filters = '') {
 
 export async function getContentById(contentID) {
   return commonService.tryCall(
-    `${commonService.rootUrl}/railcontent/content/${contentID}`
+    `${commonService.rootUrl}/railcontent/content/${contentID}`,
   );
 }
 
 export async function getStudentFocusTypes() {
   return commonService.tryCall(
-    `${commonService.rootUrl}/api/railcontent/shows`
+    `${commonService.rootUrl}/api/railcontent/shows`,
   );
 }
