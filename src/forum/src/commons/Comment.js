@@ -37,10 +37,9 @@ import {
   TouchableOpacity
 } from 'react-native';
 import moment from 'moment';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons.js';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+
 import RNVideo from 'react-native-video';
+import { more, like, likeOn, replies } from '../assets/svgs';
 
 const fallbackProfilePicUri =
   'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2000px-No_image_available.svg.png';
@@ -150,11 +149,9 @@ export default class Comment extends React.PureComponent {
                   onPress={() => this.likeOrDislikeComment(comment.id)}
                   style={{ marginRight: 10 }}
                 >
-                  <AntIcon
-                    name={isLiked ? 'like1' : 'like2'}
-                    size={20}
-                    color={appColor}
-                  />
+                  {isLiked
+                    ? likeOn({ height: 20, width: 20, fill: appColor })
+                    : like({ height: 20, width: 20, fill: appColor })}
                 </TouchableOpacity>
 
                 {likeCount > 0 && (
@@ -176,19 +173,11 @@ export default class Comment extends React.PureComponent {
                   onPress={() => this.setState({ showReplies: true })}
                   style={styles.replyIconBtn}
                 >
-                  <MaterialIcon
-                    name={'comment-text-outline'}
-                    size={20}
-                    color={appColor}
-                  />
+                  {replies({ height: 20, width: 20, fill: appColor })}
                 </TouchableOpacity>
               )}
             </View>
-            <EntypoIcon
-              name={'dots-three-horizontal'}
-              size={20}
-              color={appColor}
-            />
+            {/* {more({ width: 15, height: 5, fill: appColor })} */}
           </View>
         </View>
       </View>
