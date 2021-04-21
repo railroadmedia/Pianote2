@@ -226,9 +226,9 @@ export default class Live extends React.Component {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert()
 
     if(type == 'live') {
-      this.state.items.find(item => item.id == contentID).is_added_to_primary_playlist = false;
-    } else {
       this.state.liveLesson[0].is_added_to_primary_playlist = false;
+    } else {
+      this.state.items.find(item => item.id == contentID).is_added_to_primary_playlist = false;
     }
 
     this.setState({ 
@@ -528,7 +528,7 @@ export default class Live extends React.Component {
                       ) : (
                         <TouchableOpacity
                           onPress={() =>
-                            this.removeFromMyList(this.state.liveLesson[0]?.id)
+                            this.removeFromMyList(this.state.liveLesson[0]?.id, 'live')
                           }
                         >
                           <AntIcon
@@ -699,7 +699,7 @@ export default class Live extends React.Component {
                         ) : (
                           <TouchableOpacity
                             style={{ paddingRight: 2.5, paddingBottom: 25 }}
-                            onPress={() => this.removeFromMyList(this.state.liveLesson[0].id)}
+                            onPress={() => this.removeFromMyList(this.state.liveLesson[0].id, 'live')}
                           >
                             <AntIcon
                               name={'close'}
@@ -895,7 +895,7 @@ export default class Live extends React.Component {
                         </TouchableOpacity>
                       ) : (
                         <TouchableOpacity
-                          onPress={() => this.removeFromMyList(item.id)}
+                          onPress={() => this.removeFromMyList(item.id, 'schedule')}
                         >
                           <AntIcon
                             name={'close'}
