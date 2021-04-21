@@ -1,14 +1,12 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import forumService from '../services/forum.service';
-
 let styles;
 export default class Discussion extends React.Component {
   constructor(props) {
     super(props);
-    let { isDark } = props.route.params;
-    Discussion.contextType = forumService.NetworkContext;
+    let { isDark, NetworkContext } = props.route.params;
+    Discussion.contextType = NetworkContext;
     styles = setStyles(isDark);
   }
 

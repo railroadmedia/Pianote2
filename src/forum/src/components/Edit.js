@@ -27,8 +27,6 @@ export default class Edit extends React.Component {
     this.props.navigation.goBack();
   };
 
-  cancel = () => {};
-
   render() {
     let { isDark, appColor } = this.props.route.params;
     return (
