@@ -486,7 +486,12 @@ class Lessons extends React.Component {
                 }}
               >
                 <View style={{flex: 0.9}} />
-                <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignSelf: 'center',
+                  }}
+                >
                   <FastImage
                     style={{
                       width: '85%',
@@ -567,22 +572,25 @@ class Lessons extends React.Component {
                 </View>
               </View>
             </ImageBackground>
-            <View style={{marginTop: 10 / 2}}>
-              <HorizontalVideoList
-                hideFilterButton={true}
-                isMethod={true}
-                Title={'IN PROGRESS'}
-                seeAll={() =>
-                  navigate('SEEALL', {
-                    title: 'Continue',
-                    parent: 'Lessons',
-                  })
-                }
-                showType={true}
-                items={this.state.progressLessons}
-              />
-              <View style={{height: 10 / 2}} />
-              {onTablet ? (
+            {this.state.progressLessons.length > 0 && (
+              <View style={{marginTop: 5}}>
+                <HorizontalVideoList
+                  hideFilterButton={true}
+                  isMethod={true}
+                  Title={'IN PROGRESS'}
+                  seeAll={() =>
+                    navigate('SEEALL', {
+                      title: 'Continue',
+                      parent: 'Lessons',
+                    })
+                  }
+                  showType={true}
+                  items={this.state.progressLessons}
+                />
+              </View>
+            )}
+            {onTablet ? (
+              <View style={{marginTop: 5}}>
                 <HorizontalVideoList
                   isMethod={true}
                   items={this.state.allLessons}
@@ -629,7 +637,9 @@ class Lessons extends React.Component {
                     }
                   }}
                 />
-              ) : (
+              </View>
+            ) : (
+              <View style={{marginTop: 5}}>
                 <VerticalVideoList
                   isMethod={true}
                   items={this.state.allLessons}
@@ -664,8 +674,8 @@ class Lessons extends React.Component {
                   outVideos={this.state.outVideos} // if paging and out of videos
                   getVideos={() => this.getVideos()}
                 />
-              )}
-            </View>
+              </View>
+            )}
           </ScrollView>
         ) : (
           <ActivityIndicator size="small" style={{flex: 1}} color={'white'} />
