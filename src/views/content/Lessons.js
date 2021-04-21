@@ -265,7 +265,6 @@ class Lessons extends React.Component {
                     return new ContentModel(data);
                 }),
             );
-            console.log(inprogressVideos);
             AsyncStorage.multiSet([
                 ['methodIsStarted', method.started.toString()],
                 ['methodIsCompleted', method.completed.toString()],
@@ -707,19 +706,21 @@ class Lessons extends React.Component {
                             </View>
                         </ImageBackground>
                         <View style={{marginTop: 10 / 2}}>
-                            <HorizontalVideoList
-                                hideFilterButton={true}
-                                isMethod={true}
-                                Title={'IN PROGRESS'}
-                                seeAll={() =>
-                                    navigate('SEEALL', {
-                                        title: 'Continue',
-                                        parent: 'Lessons',
-                                    })
-                                }
-                                showType={true}
-                                items={this.state.progressLessons}
-                            />
+                            {this.state.progressLessons.length > 0 && (
+                                <HorizontalVideoList
+                                    hideFilterButton={true}
+                                    isMethod={true}
+                                    Title={'IN PROGRESS'}
+                                    seeAll={() =>
+                                        navigate('SEEALL', {
+                                            title: 'Continue',
+                                            parent: 'Lessons',
+                                        })
+                                    }
+                                    showType={true}
+                                    items={this.state.progressLessons}
+                                />
+                            )}
                             <View style={{height: 10 / 2}} />
                             {this.state.liveLesson.length > 0 &&
                                 this.state.timeDiffLive.timeDiff < 3600 * 4 && (
