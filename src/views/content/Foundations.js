@@ -82,9 +82,8 @@ export default class Foundations extends React.Component {
   };
 
   getContent = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+
     const response = new ContentModel(
       await foundationsService.getFoundation('foundations-2019'),
     );
@@ -151,28 +150,18 @@ export default class Foundations extends React.Component {
   };
 
   toggleLike = () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    if (this.state.isLiked) {
-      unlikeContent(this.state.id);
-    } else {
-      likeContent(this.state.id);
-    }
-    this.setState({
-      isLiked: !this.state.isLiked,
-    });
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    this.state.isLiked
+      ? unlikeContent(this.state.id)
+      : likeContent(this.state.id);
+    this.setState({isLiked: !this.state.isLiked});
   };
 
   onRestartMethod = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
 
     this.setState({items: [], showRestartCourse: false});
-
     await resetProgress(this.state.id);
-
     this.setState(
       {
         isStarted: false,
@@ -205,9 +194,8 @@ export default class Foundations extends React.Component {
   getSquareHeight = () => {
     if (onTablet) {
       return 150;
-    } else {
-      return width * 0.26;
     }
+    return width * 0.26;
   };
 
   render() {

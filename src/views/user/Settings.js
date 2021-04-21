@@ -49,9 +49,7 @@ class Settings extends React.Component {
   }
 
   manageSubscriptions = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     const userData = await getUserData();
     let {isAppleAppSubscriber, isGoogleAppSubscriber} = userData;
     if (Platform.OS === 'ios') {

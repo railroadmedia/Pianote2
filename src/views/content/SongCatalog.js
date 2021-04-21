@@ -121,9 +121,7 @@ class SongCatalog extends React.Component {
 
   getAllSongs = async loadMore => {
     this.setState({filtering: true});
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = await getAllContent(
       'song',
       this.state.currentSort,

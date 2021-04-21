@@ -14,7 +14,7 @@ export default class CustomSwitch extends React.Component {
   }
 
   click() {
-    if (this.state.clicked == false) {
+    if (!this.state.clicked) {
       setTimeout(() => this.setState({clicked: true}), 200);
       Animated.parallel([
         Animated.timing(this.state.leftMargin, {

@@ -68,14 +68,11 @@ class Lessons extends React.Component {
       currentSort: 'newest',
       page: 1,
       outVideos: false,
-      isPaging: false, // scrolling more
-      filtering: false, // filtering
-      profileImage: '',
-      xp: '',
-      rank: '',
+      isPaging: false,
+      filtering: false,
       currentLesson: [],
       liveLesson: [],
-      timeDiffLive: {}, // time variables on live experience
+      timeDiffLive: {},
       addToCalendarModal: false,
       methodId: 0,
       methodIsStarted: false,
@@ -99,23 +96,16 @@ class Lessons extends React.Component {
     )[1];
     this.filterQuery = deepFilters && `&${deepFilters}`;
     Orientation.addDeviceOrientationListener(this.orientationListener);
-    AsyncStorage.multiGet([
-      'totalXP',
-      'rank',
-      'profileURI',
-      'methodIsStarted',
-      'methodIsCompleted',
-    ]).then(data => {
-      this.setState({
-        xp: data[0][1],
-        rank: data[1][1],
-        profileImage: data[2][1],
-        methodIsStarted:
-          typeof data[3][1] !== null ? JSON.parse(data[3][1]) : false,
-        methodIsCompleted:
-          typeof data[4][1] !== null ? JSON.parse(data[4][1]) : false,
-      });
-    });
+    AsyncStorage.multiGet(['methodIsStarted', 'methodIsCompleted']).then(
+      data => {
+        this.setState({
+          methodIsStarted:
+            typeof data[0][1] !== null ? JSON.parse(data[0][1]) : false,
+          methodIsCompleted:
+            typeof data[1][1] !== null ? JSON.parse(data[1][1]) : false,
+        });
+      },
+    );
 
     this.getLiveContent();
     this.getContent();
@@ -130,9 +120,7 @@ class Lessons extends React.Component {
   }
 
   async getContent() {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
 
     let content = await Promise.all([
       methodService.getMethod(),
@@ -188,9 +176,8 @@ class Lessons extends React.Component {
         },
       });
 
-      if (!content[0].isLive) {
+      if (!content[0].isLive)
         this.interval = setInterval(() => this.timer(), 1000);
-      }
     }
   }
 
@@ -282,9 +269,8 @@ class Lessons extends React.Component {
   };
 
   getMethod = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+
     const response = await methodService.getMethod();
 
     await AsyncStorage.multiSet([
@@ -301,9 +287,7 @@ class Lessons extends React.Component {
 
   getAllLessons = async () => {
     this.setState({filtering: true});
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
 
     try {
       let response = await getAllContent(
@@ -367,9 +351,7 @@ class Lessons extends React.Component {
   }
 
   onRestartMethod = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     resetProgress(this.state.methodId);
     this.setState(
       {
@@ -410,7 +392,6 @@ class Lessons extends React.Component {
   };
 
   changeSort = async currentSort => {
-    // change sort
     await this.setState(
       {
         currentSort,
@@ -424,7 +405,6 @@ class Lessons extends React.Component {
   };
 
   getVideos = () => {
-    // change page before getting more lessons if paging
     if (!this.state.outVideos) {
       this.setState({page: this.state.page + 1}, () => this.getAllLessons());
     }
@@ -446,24 +426,18 @@ class Lessons extends React.Component {
   };
 
   addToMyList = contentID => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-
-    this.state.liveLesson[0].is_added_to_primary_playlist = true;
-    this.setState({liveLesson: this.state.liveLesson});
-
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    let liveLesson = Object.assign([], this.state.liveLesson);
+    liveLesson[0].is_added_to_primary_playlist = true;
+    this.setState({liveLesson});
     addToMyList(contentID);
   };
 
   removeFromMyList = contentID => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-
-    this.state.liveLesson[0].is_added_to_primary_playlist = false;
-    this.setState({liveLesson: this.state.liveLesson});
-
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    let liveLesson = Object.assign([], this.state.liveLesson);
+    liveLesson[0].is_added_to_primary_playlist = false;
+    this.setState({liveLesson});
     removeFromMyList(contentID);
   };
 

@@ -55,9 +55,7 @@ export default class NotificationSettings extends React.Component {
   }
 
   changeNotificationStatus = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
 
     try {
       const body = {

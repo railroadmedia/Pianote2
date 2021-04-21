@@ -69,9 +69,7 @@ export default class SeeAll extends React.Component {
   }
 
   async getAllLessons(loadMore) {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = null;
     if (this.state.parent === 'My List') {
       // use my list API call when navigating to see all from my list

@@ -133,7 +133,7 @@ class LoadPage extends React.Component {
               });
             }
           }
-        } else if (!res.success || loggedIn == false || loggedIn == 'false') {
+        } else if (!res.success || !loggedIn || loggedIn == 'false') {
           // is not logged in
           if (resetKey) return reset('RESETPASSWORD', {resetKey, email});
           return reset('LOGIN');

@@ -118,7 +118,7 @@ export default class NewMembership extends React.Component {
           // finish transaction
           await RNIap.finishTransaction(purchase, false);
           // if new user no pack only then create account
-          if (this.state.newUser === 'SIGNUP' && global.isPackOnly == false) {
+          if (this.state.newUser === 'SIGNUP' && !global.isPackOnly) {
             navigate('CREATEACCOUNT3', {
               data: {
                 email: this.state.email,
@@ -207,8 +207,7 @@ export default class NewMembership extends React.Component {
               style={{position: 'absolute', left: 15, padding: 5}}
               onPress={() => {
                 if (onTablet) Orientation.unlockAllOrientations();
-                this.props.route?.params?.type == 'SIGNUP' ||
-                global.isPackOnly == true
+                this.props.route?.params?.type == 'SIGNUP' || global.isPackOnly
                   ? goBack()
                   : navigate('LOGINCREDENTIALS');
               }}

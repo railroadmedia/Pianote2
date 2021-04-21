@@ -118,9 +118,7 @@ export default class CreateAccount3 extends React.Component {
   };
 
   setName = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     if (this.state.displayName.length > 0) {
       Keyboard.dismiss();
       // check if valid
@@ -144,9 +142,7 @@ export default class CreateAccount3 extends React.Component {
   };
 
   createAccount = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     if (this.state.page === 1) {
       this.myScroll.scrollTo({
         x: width,

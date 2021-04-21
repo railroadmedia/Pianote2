@@ -79,12 +79,9 @@ export default class SinglePack extends React.Component {
   }
 
   getBundle = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     // get bundles
     const response = await packsService.getPack(this.state.url);
-    console.log(response);
     const newContent = new ContentModel(response);
     const lessons = newContent.post.lessons.map(rl => {
       return new ContentModel(rl);
@@ -188,7 +185,6 @@ export default class SinglePack extends React.Component {
   decideExtension = url => {
     const lastDot = url.lastIndexOf('.');
     const extension = url.substr(lastDot + 1).toLowerCase();
-
     return extension;
   };
 
@@ -199,9 +195,7 @@ export default class SinglePack extends React.Component {
   };
 
   async resetProgress() {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     await resetProgress(this.state.id);
     this.setState({showRestartCourse: false, refreshing: true}, () =>
       this.getBundle(),
@@ -209,17 +203,11 @@ export default class SinglePack extends React.Component {
   }
 
   toggleMyList = () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    if (this.state.isAddedToList) {
-      removeFromMyList(this.state.id);
-    } else {
-      addToMyList(this.state.id);
-    }
-    this.setState({
-      isAddedToList: !this.state.isAddedToList,
-    });
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    this.state.isAddedToList
+      ? removeFromMyList(this.state.id)
+      : addToMyList(this.state.id);
+    this.setState({isAddedToList: !this.state.isAddedToList});
   };
 
   navigate = row => {
@@ -243,7 +231,6 @@ export default class SinglePack extends React.Component {
   getAspectRatio() {
     if (onTablet && this.state.isLandscape) return 3;
     if (onTablet && !this.state.isLandscape) return 2;
-
     return 1.8;
   }
 

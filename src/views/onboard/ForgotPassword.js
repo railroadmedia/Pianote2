@@ -44,9 +44,7 @@ export default class ForgotPassword extends React.Component {
   }
 
   forgotPassword = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     this.loadingRef?.toggleLoading();
     this.textInput.clear();
     const response = await forgotPass(this.state.email);

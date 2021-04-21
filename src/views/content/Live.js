@@ -209,32 +209,37 @@ export default class Live extends React.Component {
 
   addToMyList = async (contentID, type) => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-
     if (type == 'live') {
-      this.state.liveLesson[0].is_added_to_primary_playlist = true;
+      let liveLesson = Object.assign([], this.state.liveLesson);
+      liveLesson[0].is_added_to_primary_playlist = true;
+      this.setState({liveLesson});
     } else {
-      this.state.items.find(
-        item => item.id == contentID,
-      ).is_added_to_primary_playlist = true;
+      for (i in this.state.items) {
+        if (this.state.items[i].id == contentID) {
+          let items = Object.assign([], this.state.items);
+          items[i].is_added_to_primary_playlist = true;
+          this.setState({items});
+        }
+      }
     }
-
-    this.setState({
-      items: this.state.items,
-      liveLesson: this.state.liveLesson,
-    });
 
     addToMyList(contentID);
   };
 
   removeFromMyList = (contentID, type) => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-
     if (type == 'live') {
-      this.state.items.find(
-        item => item.id == contentID,
-      ).is_added_to_primary_playlist = false;
+      let liveLesson = Object.assign([], this.state.liveLesson);
+      liveLesson[0].is_added_to_primary_playlist = false;
+      this.setState({liveLesson});
     } else {
-      this.state.liveLesson[0].is_added_to_primary_playlist = false;
+      for (i in this.state.items) {
+        if (this.state.items[i].id == contentID) {
+          let items = Object.assign([], this.state.items);
+          items[i].is_added_to_primary_playlist = false;
+          this.setState({items});
+        }
+      }
     }
 
     this.setState({
@@ -262,7 +267,7 @@ export default class Live extends React.Component {
               flex: 1,
             }}
           >
-            {/* COUNTDOWN or LIVE */}
+            {/* COUNTDOWN or LIVE SCREEN */}
             <>
               {this.state.timeDiffLive.timeDiff > 0 &&
               this.state.timeDiffLive.timeDiff < 3600 * 4 ? (

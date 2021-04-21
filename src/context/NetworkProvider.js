@@ -1,10 +1,10 @@
 import React from 'react';
 import NetInfo from '@react-native-community/netinfo';
-import { Alert } from 'react-native';
+import {Alert} from 'react-native';
 
 export const NetworkContext = React.createContext({
   isConnected: true,
-  showNoConnectionAlert: () => {}
+  showNoConnectionAlert: () => {},
 });
 
 export default class NetworkProvider extends React.PureComponent {
@@ -14,14 +14,14 @@ export default class NetworkProvider extends React.PureComponent {
       return Alert.alert(
         'No internet or data connection.',
         `You can still access the lessons you have downloaded in your 'Downloads' area`,
-        [{ text: 'OK', onPress: () => (this.alertPresent = false) }],
-        { cancelable: false }
+        [{text: 'OK', onPress: () => (this.alertPresent = false)}],
+        {cancelable: false},
       );
     };
 
     this.state = {
       isConnected: null,
-      showNoConnectionAlert: this.showNoConnectionAlert
+      showNoConnectionAlert: this.showNoConnectionAlert,
     };
   }
 
@@ -34,8 +34,7 @@ export default class NetworkProvider extends React.PureComponent {
   }
 
   handleConnectivityChange = state => {
-    global.isConnected = state.isConnected;
-    this.setState({ isConnected: state.isConnected });
+    this.setState({isConnected: state.isConnected});
   };
 
   render() {

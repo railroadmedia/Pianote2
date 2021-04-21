@@ -70,9 +70,7 @@ export default class MethodLevel extends React.Component {
   }
 
   getContent = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = await methodService.getMethodContent(
       this.props.route?.params.url,
     );
@@ -130,14 +128,10 @@ export default class MethodLevel extends React.Component {
   };
 
   toggleMyList = () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    if (this.state.isAddedToList) {
-      removeFromMyList(this.state.id);
-    } else {
-      addToMyList(this.state.id);
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    this.state.isAddedToList
+      ? removeFromMyList(this.state.id)
+      : addToMyList(this.state.id);
     this.setState(state => ({isAddedToList: !state.isAddedToList}));
   };
 
@@ -148,9 +142,7 @@ export default class MethodLevel extends React.Component {
   };
 
   onRestartLevel = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     await resetProgress(this.state.id);
     this.setState(
       {

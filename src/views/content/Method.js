@@ -86,9 +86,7 @@ export default class Method extends React.Component {
   };
 
   getContent = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     const response = new ContentModel(await methodService.getMethod());
     const newContent = response.post.levels.map(data => {
       return new ContentModel(data);
@@ -152,23 +150,17 @@ export default class Method extends React.Component {
   };
 
   toggleLike = () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    if (this.state.isLiked) {
-      unlikeContent(this.state.id);
-    } else {
-      likeContent(this.state.id);
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    this.state.isLiked
+      ? unlikeContent(this.state.id)
+      : likeContent(this.state.id);
     this.setState({
       isLiked: !this.state.isLiked,
     });
   };
 
   onRestartMethod = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
 
     this.setState({items: [], showRestartCourse: false});
 

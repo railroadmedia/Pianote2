@@ -86,33 +86,29 @@ export default class VerticalVideoList extends React.Component {
   };
 
   addToMyList = contentID => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     for (i in this.state.items) {
       if (this.state.items[i].id == contentID) {
-        this.state.items[i].isAddedToList = true;
+        let items = Object.assign([], this.state.items);
+        items[i].isAddedToList = true;
+        this.setState({items});
       }
     }
     addToMyList(contentID);
-    this.setState({items: this.state.items});
   };
 
   removeFromMyList = contentID => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     for (i in this.state.items) {
       if (this.state.items[i].id == contentID) {
-        this.state.items[i].isAddedToList = false;
+        let items = Object.assign([], this.state.items);
+        items[i].isAddedToList = false;
+        this.setState({items});
       }
     }
     removeFromMyList(contentID);
     // if on my list page and user removes then delete item from listview
-    if (this.props.type == 'MYLIST') {
-      this.props.removeItem(contentID);
-    }
-    this.setState({items: this.state.items});
+    if (this.props.type == 'MYLIST') this.props.removeItem(contentID);
   };
 
   changeType = word => {
@@ -133,18 +129,17 @@ export default class VerticalVideoList extends React.Component {
   };
 
   like = contentID => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     for (i in this.state.items) {
       if (this.state.items[i].id == contentID) {
-        this.state.items[i].isLiked = !this.state.items[i].isLiked;
-        this.state.items[i].like_count = this.state.items[i].isLiked
-          ? this.state.items[i].like_count + 1
-          : this.state.items[i].like_count - 1;
+        let items = Object.assign([], this.state.items);
+        items[i].isLiked = !items[i].isLiked;
+        items[i].like_count = items[i].isLiked
+          ? items[i].like_count + 1
+          : items[i].like_count - 1;
+        this.setState({items});
       }
     }
-    this.setState({items: this.state.items});
   };
 
   addEventToCalendar = () => {

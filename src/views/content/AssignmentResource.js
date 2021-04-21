@@ -13,7 +13,6 @@ export default class AssignmentResource extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.panResponder = PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
       onStartShouldSetPanResponder: () => true,

@@ -113,9 +113,7 @@ class Packs extends React.Component {
   };
 
   onRestartPack = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     await resetProgress(this.state.id);
     this.setState({refreshing: true, showRestartCourse: false}, () =>
       this.getData(),

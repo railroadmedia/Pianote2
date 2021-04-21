@@ -442,9 +442,7 @@ export default class VideoPlayer extends React.Component {
   }
 
   likeComment = async id => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let comments = [...this.state.comments];
     let comment = comments?.find(f => f.id === id);
     if (comment) {
@@ -476,9 +474,7 @@ export default class VideoPlayer extends React.Component {
   };
 
   deleteComment = id => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let {comments} = this.state;
     this.allCommentsNum -= 1;
     this.setState({
@@ -700,9 +696,7 @@ export default class VideoPlayer extends React.Component {
   };
 
   async onResetProgress() {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let {selectedAssignment, id} = this.state;
     id = selectedAssignment ? selectedAssignment.id : id;
     let res = await resetProgress(id);
@@ -733,9 +727,7 @@ export default class VideoPlayer extends React.Component {
   }
 
   async onComplete(id) {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let incompleteAssignments;
     let {assignmentList, nextLesson} = this.state;
     if (id !== this.state.id) {
@@ -783,14 +775,10 @@ export default class VideoPlayer extends React.Component {
   }
 
   likeOrDislikeLesson = () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    if (this.state.isLiked) {
-      unlikeContent(this.state.id);
-    } else {
-      likeContent(this.state.id);
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    this.state.isLiked
+      ? unlikeContent(this.state.id)
+      : likeContent(this.state.id);
     this.setState({
       isLiked: !this.state.isLiked,
       likes: this.state.isLiked ? this.state.likes - 1 : this.state.likes + 1,
@@ -798,18 +786,11 @@ export default class VideoPlayer extends React.Component {
   };
 
   toggleMyList = () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    if (this.state.isAddedToMyList) {
-      removeFromMyList(this.state.id);
-    } else {
-      addToMyList(this.state.id);
-    }
-
-    this.setState({
-      isAddedToMyList: !this.state.isAddedToMyList,
-    });
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    this.state.isAddedToMyList
+      ? removeFromMyList(this.state.id)
+      : addToMyList(this.state.id);
+    this.setState({isAddedToMyList: !this.state.isAddedToMyList});
   };
 
   renderAssignments() {
@@ -1421,7 +1402,7 @@ export default class VideoPlayer extends React.Component {
                           >
                             {this.allCommentsNum + ' COMMENTS'}
                           </Text>
-                          {global.isConnected && (
+                          {this.context.isConnected && (
                             <TouchableOpacity
                               onPress={() =>
                                 this.setState({showCommentSort: true})

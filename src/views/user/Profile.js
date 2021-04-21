@@ -132,9 +132,7 @@ export default class Profile extends React.Component {
   async getNotifications(loadMore) {
     console.log('Load more: ', loadMore);
 
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
 
     if (loadMore) this.page++;
     else this.page = 1;
@@ -194,9 +192,7 @@ export default class Profile extends React.Component {
   };
 
   removeNotification = async notificationId => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     this.setState(state => ({
       notifications: state.notifications.filter(c => c.id !== notificationId),
     }));
@@ -234,9 +230,7 @@ export default class Profile extends React.Component {
   };
 
   turnOfffNotifications = async data => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     this.setState(data);
     try {
       let response = await commonService.tryCall(

@@ -71,9 +71,7 @@ export default class ProfileSettings extends React.Component {
   }
 
   changePassword = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     const email = await AsyncStorage.getItem('email');
 
     const {response, error} = await userForgotPassword({email});
@@ -82,9 +80,7 @@ export default class ProfileSettings extends React.Component {
   };
 
   changeName = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     // check if display name available
     let response = await fetch(
       `${commonService.rootUrl}/usora/is-display-name-unique?display_name=${this.state.displayName}`,
@@ -107,9 +103,7 @@ export default class ProfileSettings extends React.Component {
   };
 
   changeImage = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
 
     const data = new FormData();
 

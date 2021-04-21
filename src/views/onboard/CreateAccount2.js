@@ -39,9 +39,7 @@ export default class CreateAccount extends React.Component {
   }
 
   savePassword = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     if (this.state.password == this.state.confirmPassword) {
       if (this.state.password.length > 7) {
         if (this.props.route?.params?.purchase) {

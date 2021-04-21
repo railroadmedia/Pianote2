@@ -38,9 +38,7 @@ export default class CreateAccount extends React.Component {
   }
 
   verifyEmail = () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     if (this.state.email.length > 0) {
       let email = encodeURIComponent(this.state.email);
       fetch(`${commonService.rootUrl}/usora/api/is-email-unique?email=${email}`)

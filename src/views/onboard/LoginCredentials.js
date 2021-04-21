@@ -84,9 +84,7 @@ export default class LoginCredentials extends React.Component {
   };
 
   login = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
 
     Keyboard.dismiss();
     this.loadingRef?.toggleLoading(true);

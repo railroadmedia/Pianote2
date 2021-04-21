@@ -97,9 +97,7 @@ export default class PathOverview extends React.Component {
   };
 
   getItems = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let res;
     if (this.state.isFoundations) {
       res = await foundationsService.getUnit(this.state.data.mobile_app_url);
@@ -157,22 +155,12 @@ export default class PathOverview extends React.Component {
   };
 
   toggleMyList = id => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     if (id === this.state.data.id) {
-      if (this.state.isAddedToList) {
-        removeFromMyList(id);
-      } else {
-        addToMyList(id);
-      }
+      this.state.isAddedToList ? removeFromMyList(id) : addToMyList(id);
     } else {
       const lesson = this.state.items.find(f => f.id === id);
-      if (lesson.isAddedToList) {
-        removeFromMyList(id);
-      } else {
-        addToMyList(id);
-      }
+      lesson.isAddedToList ? removeFromMyList(id) : addToMyList(id);
     }
 
     this.setState(state => ({
@@ -190,14 +178,10 @@ export default class PathOverview extends React.Component {
   };
 
   toggleLike = () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    if (this.state.isLiked) {
-      unlikeContent(this.state.data.id);
-    } else {
-      likeContent(this.state.data.id);
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    this.state.isLiked
+      ? unlikeContent(this.state.data.id)
+      : likeContent(this.state.data.id);
     this.setState({
       isLiked: !this.state.isLiked,
       likeCount: this.state.isLiked
@@ -207,9 +191,7 @@ export default class PathOverview extends React.Component {
   };
 
   onRestartCourse = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     resetProgress(this.state.data.id);
     this.setState(
       {

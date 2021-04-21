@@ -113,47 +113,42 @@ export default class HorizontalVideoList extends React.Component {
   }
 
   addToMyList = contentID => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    // change data structure
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     for (i in this.state.items) {
       if (this.state.items[i].id == contentID) {
-        this.state.items[i].isAddedToList = true;
+        let items = Object.assign([], this.state.items);
+        items[i].isAddedToList = true;
+        this.setState({items});
       }
     }
-    this.setState({items: this.state.items});
-
     addToMyList(contentID);
   };
 
   removeFromMyList = contentID => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     for (i in this.state.items) {
       if (this.state.items[i].id == contentID) {
-        this.state.items[i].isAddedToList = false;
+        let items = Object.assign([], this.state.items);
+        items[i].isAddedToList = false;
+        this.setState({items});
       }
     }
-    this.setState({items: this.state.items});
     removeFromMyList(contentID);
   };
 
   like = contentID => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
 
     for (i in this.state.items) {
       if (this.state.items[i].id == contentID) {
-        this.state.items[i].isLiked = !this.state.items[i].isLiked;
-        this.state.items[i].like_count = this.state.items[i].isLiked
-          ? this.state.items[i].like_count + 1
-          : this.state.items[i].like_count - 1;
+        let items = Object.assign([], this.state.items);
+        items[i].isLiked = !items[i].isLiked;
+        items[i].like_count = items[i].isLiked
+          ? items[i].like_count + 1
+          : items[i].like_count - 1;
+        this.setState({items});
       }
     }
-    this.setState({items: this.state.items});
   };
 
   changeType = word => {
@@ -334,60 +329,60 @@ export default class HorizontalVideoList extends React.Component {
                 <>
                   {!this.props.hideFilterButton && (
                     <>
-                      <View style={{flex: 1}} />
-                      <TouchableOpacity
-                        style={[
-                          styles.centerContent,
-                          {
-                            flexDirection: 'row',
-                            marginRight: 5,
-                          },
-                        ]}
-                        onPress={() => {
-                          this.setState({
-                            showRelevance: !this.state.showRelevance,
-                          });
-                        }}
-                      >
+                      <>
                         <View style={{flex: 1}} />
-                        <Text
+                        <TouchableOpacity
                           style={[
-                            localStyles.seeAllText,
+                            styles.centerContent,
                             {
-                              paddingRight: 5,
-                              fontSize: sizing.descriptionText,
+                              flexDirection: 'row',
+                              marginRight: 5,
                             },
                           ]}
+                          onPress={() => {
+                            this.setState({
+                              showRelevance: !this.state.showRelevance,
+                            });
+                          }}
                         >
-                          {onTablet
-                            ? sortDict[this.props.currentSort].charAt(0) +
-                              sortDict[this.props.currentSort]
-                                .substring(1)
-                                .toLowerCase()
-                            : sortDict[this.props.currentSort]}
-                        </Text>
-                        <View>
-                          <FontIcon
-                            size={onTablet ? 18 : 14}
-                            name={'sort-amount-down'}
-                            color={colors.pianoteRed}
-                          />
-                        </View>
-                        <View style={{flex: 1}} />
-                      </TouchableOpacity>
+                          <View style={{flex: 1}} />
+                          <Text
+                            style={[
+                              localStyles.seeAllText,
+                              {
+                                paddingRight: 5,
+                                fontSize: sizing.descriptionText,
+                              },
+                            ]}
+                          >
+                            {onTablet
+                              ? sortDict[this.props.currentSort].charAt(0) +
+                                sortDict[this.props.currentSort]
+                                  .substring(1)
+                                  .toLowerCase()
+                              : sortDict[this.props.currentSort]}
+                          </Text>
+                          <View>
+                            <FontIcon
+                              size={onTablet ? 18 : 14}
+                              name={'sort-amount-down'}
+                              color={colors.pianoteRed}
+                            />
+                          </View>
+                          <View style={{flex: 1}} />
+                        </TouchableOpacity>
+                      </>
+                      <View style={{marginRight: 10}}>
+                        <Filters_V2
+                          disabled={this.state.isPaging}
+                          onApply={() =>
+                            this.props.applyFilters?.(this.filters?.filterQuery)
+                          }
+                          meta={this.props.filters}
+                          reference={r => (this.filters = r)}
+                        />
+                      </View>
                     </>
-                  )}
-                  {!this.props.hideFilterButton && (
-                    <View style={{marginRight: 10}}>
-                      <Filters_V2
-                        disabled={this.state.isPaging}
-                        onApply={() =>
-                          this.props.applyFilters?.(this.filters?.filterQuery)
-                        }
-                        meta={this.props.filters}
-                        reference={r => (this.filters = r)}
-                      />
-                    </View>
                   )}
                 </>
               )}
@@ -397,7 +392,6 @@ export default class HorizontalVideoList extends React.Component {
         {this.filters?.filterAppliedText}
         <FlatList
           numColumns={this.props.isTile ? 3 : 1}
-          scrollEnabled={!this.props.isLive}
           data={this.state.items}
           extraData={this.state}
           horizontal={this.props.isTile ? false : true}

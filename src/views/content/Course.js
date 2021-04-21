@@ -64,9 +64,8 @@ class Course extends React.Component {
   }
 
   async getContent() {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+
     let content = await Promise.all([
       getAllContent(
         'course',
@@ -120,9 +119,7 @@ class Course extends React.Component {
   };
 
   getAllCourses = async loadMore => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = await getAllContent(
       'course',
       this.state.currentSort,
@@ -193,7 +190,6 @@ class Course extends React.Component {
   };
 
   getVideos = async () => {
-    // change page before getting more lessons if paging
     if (!this.state.outVideos) {
       this.setState({page: this.state.page + 1}, () =>
         this.getAllCourses(true),

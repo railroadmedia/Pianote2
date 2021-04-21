@@ -145,9 +145,7 @@ class StudentFocusShow extends React.Component {
 
   getAllLessons = async isLoadingMore => {
     this.setState({filtering: true});
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = await getAllContent(
       this.props.route?.params?.type,
       this.state.currentSort,

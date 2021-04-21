@@ -68,16 +68,14 @@ export default class ContentModal extends React.Component {
   addToMyList = contentID => {
     if (this.props.data.description !== 'TBD') {
       this.props.addToMyList(contentID);
-      this.state.isAddedToList = true;
-      this.setState({isAddedToList: this.state.isAddedToList});
+      this.setState({isAddedToList: true});
       addToMyList(contentID);
     }
   };
 
   removeFromMyList = contentID => {
     this.props.removeFromMyList(contentID);
-    this.state.isAddedToList = false;
-    this.setState({isAddedToList: this.state.isAddedToList});
+    this.setState({isAddedToList: false});
     removeFromMyList(contentID);
   };
 
@@ -100,11 +98,9 @@ export default class ContentModal extends React.Component {
 
   like = contentID => {
     if (this.props.data.description !== 'TBD') {
-      this.state.isLiked = !this.state.isLiked;
-      this.state.like_count = Number(this.state.like_count) + 1;
       this.setState({
-        isLiked: this.state.isLiked,
-        like_count: this.state.like_count,
+        isLiked: !this.state.isLiked,
+        like_count: Number(this.state.like_count) + 1,
       });
       this.props.like(contentID);
       likeContent(contentID);
@@ -112,11 +108,9 @@ export default class ContentModal extends React.Component {
   };
 
   unlike = contentID => {
-    this.state.isLiked = !this.state.isLiked;
-    this.state.like_count = Number(this.state.like_count) - 1;
     this.setState({
-      isLiked: this.state.isLiked,
-      like_count: this.state.like_count,
+      isLiked: !this.state.isLiked,
+      like_count: Number(this.state.like_count) - 1,
     });
     this.props.like(contentID);
     unlikeContent(contentID);
