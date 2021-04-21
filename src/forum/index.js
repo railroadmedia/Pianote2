@@ -8,7 +8,8 @@ import {
 import { createStackNavigator } from '@react-navigation/stack';
 
 import CreateDiscussion from './src/components/CreateDiscussion';
-import Discussions from './src/components/Discussions';
+import Forums from './src/components/Forums';
+import Topic from './src/components/Topic';
 import Edit from './src/components/Edit';
 
 import { arrowLeft } from './src/assets/svgs';
@@ -61,9 +62,15 @@ export default ({ route: { params } }) => {
         })}
       >
         <Stack.Screen
-          name='Discussions'
-          component={Discussions}
+          name='Forums'
+          component={Forums}
           options={{ title: 'Forums' }}
+          initialParams={params}
+        />
+        <Stack.Screen
+          name='Topic'
+          component={Topic}
+          options={{ title: 'Topic' }}
           initialParams={params}
         />
         <Stack.Screen
