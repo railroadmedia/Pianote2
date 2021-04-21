@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 import forumService from '../services/forum.service';
 
@@ -41,6 +41,18 @@ export default class DiscussionCard extends React.Component {
     return { borderColor, userTagIcon };
   }
 
+  get lastPostTime() {
+    let dif = new Date() - this.props.data.lastPost.date;
+    if (dif < 120 * 1000) return `1 Minute Ago`;
+    if (dif < 60 * 1000 * 60)
+      return `${(dif / 1000 / 60).toFixed()} Minutes Ago`;
+    if (dif < 60 * 1000 * 60 * 2) return `1 Hour Ago`;
+    if (dif < 60 * 1000 * 60 * 24)
+      return `${(dif / 1000 / 60 / 60).toFixed()} Hours Ago`;
+    if (dif < 60 * 1000 * 60 * 48) return `1 Day Ago`;
+    return `${(dif / 1000 / 60 / 60 / 24).toFixed()} Days Ago`;
+  }
+
   render() {
     let {
       user,
@@ -52,7 +64,7 @@ export default class DiscussionCard extends React.Component {
     } = this.props.data;
     let { borderColor, userTagIcon } = this.userBorderColor;
     return (
-      <View>
+      <View style={{ flexDirection: 'row' }}>
         <View
           style={{
             borderRadius: 99,
@@ -79,6 +91,11 @@ export default class DiscussionCard extends React.Component {
             {userTagIcon?.({ height: 5, fill: 'white' })}
           </View>
         </View>
+        <Text>
+          {title}
+          {'\n'}
+          <Text>{this.lastPostTime}</Text>
+        </Text>
       </View>
     );
   }
