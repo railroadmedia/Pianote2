@@ -22,46 +22,26 @@ export default class ContentModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      type:
-        typeof this.props.data.type !== 'undefined' ? this.props.data.type : '',
-      thumbnail:
-        typeof this.props.data.thumbnail !== 'undefined'
-          ? this.props.data.thumbnail
-          : '',
-      title:
-        typeof this.props.data.title !== 'undefined'
-          ? this.props.data.title
-          : '',
-      artist:
-        typeof this.props.data.artist !== 'undefined'
-          ? this.props.data.artist
-          : '',
-      description:
-        typeof this.props.data.description !== 'undefined'
-          ? this.props.data.description
-          : '',
-      bundle_count:
-        typeof this.props.data.bundle_count !== 'undefined'
-          ? this.props.data.bundle_count
-          : 0,
-      lesson_count:
-        typeof this.props.data.lesson_count !== 'undefined'
-          ? this.props.data.lesson_count
-          : 0,
-      xp: typeof this.props.data.xp !== 'undefined' ? this.props.data.xp : 0,
-      id: typeof this.props.data.id !== 'undefined' ? this.props.data.id : 0,
-      isLiked:
-        typeof this.props.data.isLiked !== 'undefined'
-          ? this.props.data.isLiked
-          : false,
-      like_count:
-        typeof this.props.data.like_count !== 'undefined'
-          ? this.props.data.like_count
-          : 0,
-      isAddedToList:
-        typeof this.props.data.isAddedToList !== 'undefined'
-          ? this.props.data.isAddedToList
-          : false,
+      type: this.props.data.type ? this.props.data.type : '',
+      thumbnail: this.props.data.thumbnail ? this.props.data.thumbnail : '',
+      title: this.props.data.title ? this.props.data.title : '',
+      artist: this.props.data.artist ? this.props.data.artist : '',
+      description: this.props.data.description
+        ? this.props.data.description
+        : '',
+      bundle_count: this.props.data.bundle_count
+        ? this.props.data.bundle_count
+        : 0,
+      lesson_count: this.props.data.lesson_count
+        ? this.props.data.lesson_count
+        : 0,
+      xp: this.props.data.xp ? this.props.data.xp : 0,
+      id: this.props.data.id ? this.props.data.id : 0,
+      isLiked: this.props.data.isLiked ? this.props.data.isLiked : false,
+      like_count: this.props.data.like_count ? this.props.data.like_count : 0,
+      isAddedToList: this.props.data.isAddedToList
+        ? this.props.data.isAddedToList
+        : false,
     };
   }
 
@@ -150,8 +130,12 @@ export default class ContentModal extends React.Component {
             <Text numberOfLines={5} style={localStyles.description}>
               {this.state.description}
             </Text>
-            <View style={[styles.centerContent, {flexDirection: 'row'}]}>
-              <View style={{flex: 1}} />
+            <View
+              style={[
+                styles.centerContent,
+                {flexDirection: 'row', justifyContent: 'center'},
+              ]}
+            >
               {(this.state.bundle_count > 1 || this.state.lesson_count > 1) && (
                 <View
                   style={[
@@ -183,7 +167,6 @@ export default class ContentModal extends React.Component {
                 <Text style={localStyles.xp}>{this.state.xp}</Text>
                 <Text style={localStyles.XPtext}>XP</Text>
               </View>
-              <View style={{flex: 1}} />
             </View>
             <View style={localStyles.button}>
               <TouchableOpacity

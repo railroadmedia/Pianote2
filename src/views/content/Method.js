@@ -353,10 +353,10 @@ export default class Method extends React.Component {
                     {
                       flex: 0.22,
                       flexDirection: 'row',
+                      justifyContent: 'center',
                     },
                   ]}
                 >
-                  <View style={{flex: 1}} />
                   <View
                     style={[
                       styles.centerContent,
@@ -418,7 +418,6 @@ export default class Method extends React.Component {
                       XP
                     </Text>
                   </View>
-                  <View style={{flex: 1}} />
                 </View>
                 <View
                   style={[
@@ -445,7 +444,6 @@ export default class Method extends React.Component {
                       },
                     ]}
                   >
-                    <View style={{flex: 1}} />
                     <MaterialIcon
                       name={'replay'}
                       size={onTablet ? 28 : 20}

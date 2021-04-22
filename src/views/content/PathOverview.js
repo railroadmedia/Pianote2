@@ -338,12 +338,16 @@ export default class PathOverview extends React.Component {
               },
             ]}
           >
-            <View style={{flex: 1, flexDirection: 'row'}}>
-              <View style={{flex: 0.5}} />
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+              }}
+            >
               <TouchableOpacity
                 style={{
-                  flex: 0.5,
-                  alignItems: 'center',
+                  paddingHorizontal: 10,
                 }}
                 onPress={() => this.toggleMyList(this.state.data.id)}
               >
@@ -388,11 +392,16 @@ export default class PathOverview extends React.Component {
                 }}
               />
             </View>
-            <View style={{flex: 1, flexDirection: 'row'}}>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+              }}
+            >
               <TouchableOpacity
                 style={{
-                  flex: 0.5,
-                  alignItems: 'center',
+                  paddingHorizontal: 15,
                 }}
                 onPress={() => {
                   this.setState({
@@ -417,7 +426,6 @@ export default class PathOverview extends React.Component {
                   Info
                 </Text>
               </TouchableOpacity>
-              <View style={{flex: 0.5}} />
             </View>
           </View>
         </View>
@@ -426,7 +434,7 @@ export default class PathOverview extends React.Component {
           <View
             style={[
               {
-                paddingHorizontal: 10 * 2,
+                paddingHorizontal: 20,
               },
               this.state.isLandscape
                 ? {marginHorizontal: '10%'}
@@ -768,7 +776,6 @@ export default class PathOverview extends React.Component {
                   ]}
                 >
                   <View style={{width: '80%'}}>
-                    <View style={{flex: 1}} />
                     <Text
                       numberOfLines={1}
                       style={{
@@ -797,7 +804,6 @@ export default class PathOverview extends React.Component {
                       {Math.floor(item.duration / 60)}{' '}
                       {Math.floor(item.duration / 60) == 1 ? 'min' : 'mins'}
                     </Text>
-                    <View style={{flex: 1}} />
                   </View>
 
                   <TouchableOpacity onPress={() => this.toggleMyList(item.id)}>

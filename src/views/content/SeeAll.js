@@ -192,7 +192,7 @@ export default class SeeAll extends React.Component {
 
   getArtist = newContent => {
     if (newContent.post.type == 'song') {
-      if (typeof newContent.post.artist !== 'undefined') {
+      if (newContent.post.artist) {
         return newContent.post.artist;
       } else {
         for (i in newContent.post.fields) {

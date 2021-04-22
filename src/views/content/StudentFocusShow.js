@@ -210,7 +210,7 @@ class StudentFocusShow extends React.Component {
 
   getArtist = newContent => {
     if (newContent.post.type == 'song') {
-      if (typeof newContent.post.artist !== 'undefined') {
+      if (newContent.post.artist) {
         return newContent.post.artist;
       } else {
         for (i in newContent.post.fields) {
@@ -309,6 +309,7 @@ class StudentFocusShow extends React.Component {
                 width: '100%',
                 alignItems: 'center',
                 justifyContent: 'center',
+                marginBottom: 25,
               }}
             >
               <FastImage
@@ -326,7 +327,6 @@ class StudentFocusShow extends React.Component {
               />
             </View>
           </View>
-          <View style={{height: 25}} />
           <VerticalVideoList
             items={this.state.allLessons}
             title={'EPISODES'}

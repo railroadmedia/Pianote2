@@ -339,12 +339,16 @@ export default class SinglePack extends React.Component {
                     },
                   ]}
                 >
-                  <View style={{flex: 1, flexDirection: 'row'}}>
-                    <View style={{flex: 0.5}} />
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: 'row',
+                      justifyContent: 'flex-end',
+                    }}
+                  >
                     <TouchableOpacity
                       style={{
-                        flex: 0.5,
-                        alignItems: 'center',
+                        paddingHorizontal: 10,
                       }}
                       onPress={() => {
                         this.toggleMyList();
@@ -388,11 +392,16 @@ export default class SinglePack extends React.Component {
                       }}
                     />
                   </View>
-                  <View style={{flex: 1, flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: 'row',
+                      justifyContent: 'flex-start',
+                    }}
+                  >
                     <TouchableOpacity
                       style={{
-                        flex: 0.5,
-                        alignItems: 'center',
+                        paddingHorizontal: 15,
                       }}
                       onPress={() => {
                         this.setState({
@@ -422,7 +431,6 @@ export default class SinglePack extends React.Component {
                         Info
                       </Text>
                     </TouchableOpacity>
-                    <View style={{flex: 0.5}} />
                   </View>
                 </View>
               </View>

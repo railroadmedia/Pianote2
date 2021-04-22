@@ -21,7 +21,6 @@ import Loading from '../../components/Loading';
 import Orientation from 'react-native-orientation-locker';
 import {navigate} from '../../../AppNavigator.js';
 
-const isNotch = DeviceInfo.hasNotch();
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
@@ -267,22 +266,22 @@ export default class Login extends React.Component {
           backgroundColor: 'rgba(23, 26, 26, 1)',
         }}
       >
-        <View
+        <SafeAreaView
           style={{
             position: 'absolute',
-            top: isNotch ? '3%' : '1%',
+            top: 0,
             zIndex: 3,
             elevation: 3,
             width: '100%',
           }}
         >
           <Pianote
-            height={onTablet ? 80 : 100}
+            height={onTablet ? 80 : 60}
             width={onTablet ? 200 : 120}
             fill={'#fb1b2f'}
             style={{alignSelf: 'center'}}
           />
-        </View>
+        </SafeAreaView>
         <GradientFeature
           color={'grey'}
           opacity={1}
@@ -363,22 +362,22 @@ export default class Login extends React.Component {
   renderSecondPage() {
     return (
       <View style={{flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)'}}>
-        <View
+        <SafeAreaView
           style={{
             position: 'absolute',
-            top: isNotch ? '3%' : '1%',
+            top: 0,
             zIndex: 2,
             elevation: 3,
             width: '100%',
           }}
         >
           <Pianote
-            height={onTablet ? 80 : 100}
+            height={onTablet ? 80 : 60}
             width={onTablet ? 200 : 120}
             fill={'#fb1b2f'}
             style={{alignSelf: 'center'}}
           />
-        </View>
+        </SafeAreaView>
         <GradientFeature
           color={'grey'}
           opacity={1}
@@ -472,22 +471,22 @@ export default class Login extends React.Component {
   renderThirdpage() {
     return (
       <View style={{flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)'}}>
-        <View
+        <SafeAreaView
           style={{
             position: 'absolute',
-            top: isNotch ? '3%' : '1%',
+            top: 0,
             zIndex: 2,
             elevation: 3,
             width: '100%',
           }}
         >
           <Pianote
-            height={onTablet ? 80 : 100}
+            height={onTablet ? 80 : 60}
             width={onTablet ? 200 : 120}
             fill={'#fb1b2f'}
             style={{alignSelf: 'center'}}
           />
-        </View>
+        </SafeAreaView>
         <GradientFeature
           color={'grey'}
           opacity={1}
@@ -580,22 +579,22 @@ export default class Login extends React.Component {
   renderFourthPage() {
     return (
       <View style={{flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)'}}>
-        <View
+        <SafeAreaView
           style={{
             position: 'absolute',
-            top: isNotch ? '3%' : '1.5%',
+            top: 0,
             zIndex: 2,
             elevation: 3,
             width: '100%',
           }}
         >
           <Pianote
-            height={onTablet ? 80 : 100}
+            height={onTablet ? 80 : 60}
             width={onTablet ? 200 : 120}
             fill={'#fb1b2f'}
             style={{alignSelf: 'center'}}
           />
-        </View>
+        </SafeAreaView>
         <GradientFeature
           color={'grey'}
           opacity={1}
@@ -690,22 +689,22 @@ export default class Login extends React.Component {
   renderFifthPage() {
     return (
       <View style={{flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)'}}>
-        <View
+        <SafeAreaView
           style={{
             position: 'absolute',
-            top: isNotch ? '3%' : '1%',
+            top: 0,
             zIndex: 4,
             elevation: 4,
             width: '100%',
           }}
         >
           <Pianote
-            height={onTablet ? 80 : 100}
+            height={onTablet ? 80 : 60}
             width={onTablet ? 200 : 120}
             fill={'#fb1b2f'}
             style={{alignSelf: 'center'}}
           />
-        </View>
+        </SafeAreaView>
         <GradientFeature
           color={'grey'}
           opacity={1}

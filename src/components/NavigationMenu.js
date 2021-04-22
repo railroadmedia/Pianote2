@@ -198,17 +198,16 @@ export default class NavigationMenu extends React.Component {
                 width: onTablet ? 80 : 65,
                 marginTop: 10,
                 borderRadius: 500,
+                justifyContent: 'center',
               },
             ]}
           >
-            <View style={{flex: 1}} />
             <FeatherIcon
               size={onTablet ? 65 : 50}
               name={'x'}
               color={'white'}
               style={{borderRadius: 500}}
             />
-            <View style={{flex: 1}} />
           </TouchableOpacity>
         </View>
       </View>

@@ -377,7 +377,6 @@ export default class Terms extends React.Component {
               support@pianote.com.
             </Text>
           </Text>
-          <View style={{height: 25}} />
         </ScrollView>
       </SafeAreaView>
     );
@@ -404,6 +403,7 @@ const localStyles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
     paddingHorizontal: 15,
+    paddingBottom: 25,
   },
   subtitle: {
     paddingBottom: 5,

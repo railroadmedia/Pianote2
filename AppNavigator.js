@@ -33,7 +33,6 @@ import ForgotPassword from './src/views/onboard/ForgotPassword';
 import NewMembership from './src/views/onboard/NewMembership';
 import CreateAccount from './src/views/onboard/CreateAccount';
 import SupportSignUp from './src/views/onboard/SupportSignUp';
-import WelcomeBack from './src/views/onboard/WelcomeBack';
 import LoadPage from './src/views/onboard/LoadPage';
 import Login from './src/views/onboard/Login';
 import ResetPassword from './src/views/onboard/ResetPassword';
@@ -93,7 +92,7 @@ export default () => (
   <NetworkProvider>
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
-        // initialRouteName={LoadPage}
+        //initialRouteName={Login}
         headerMode={'screen'}
         mode={'card'}
         keyboardHandlingEnabled={false}
@@ -150,7 +149,6 @@ export default () => (
         />
         <Stack.Screen name="CREATEACCOUNT" component={CreateAccount} />
         <Stack.Screen name="NEWMEMBERSHIP" component={NewMembership} />
-        <Stack.Screen name="WELCOMEBACK" component={WelcomeBack} />
         <Stack.Screen name="RESETPASSWORD" component={ResetPassword} />
         {/* user */}
         <Stack.Screen

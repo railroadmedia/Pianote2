@@ -34,6 +34,7 @@ export default class NextVideo extends React.Component {
             : colors.secondBackground,
           borderBottomWidth: 0.5,
           marginBottom: 7.5,
+          paddingBottom: 5,
         }}
       >
         <View style={{width: '100%'}}>
@@ -134,11 +135,7 @@ export default class NextVideo extends React.Component {
                 Mins
               </Text>
             </View>
-            <View
-              onPress={() => {}}
-              style={[styles.centerContent, localStyles.play]}
-            >
-              <View style={{flex: 1}} />
+            <View style={[styles.centerContent, localStyles.play]}>
               <EntypoIcon
                 name={'controller-play'}
                 size={onTablet ? 35 : 22.5}
@@ -187,6 +184,7 @@ const localStyles = StyleSheet.create({
   play: {
     flex: 1,
     flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   titleTextContainer: {
     paddingHorizontal: 10,

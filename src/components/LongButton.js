@@ -92,11 +92,11 @@ export default class StartIcon extends React.Component {
           ]}
         >
           {this.whatIcon()}
-          <View style={{flex: 0.025}} />
           <Text
             style={[
               styles.buttonText,
               {
+                marginLeft: '2.5%',
                 fontSize: this.sizing('font'),
               },
             ]}

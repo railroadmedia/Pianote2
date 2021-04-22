@@ -125,108 +125,127 @@ export default class ReplyNotification extends React.Component {
           />
         </View>
         <View style={localStyles.container}>
-          <View style={styles.container}>
-            <View style={[styles.centerContent, localStyles.profileContainer]}>
-              <View style={styles.centerContent}>
-                <View style={localStyles.profileContainer2}>
-                  {messageDict[this.props.data.type][2] == 'red' && (
-                    <View
-                      style={[styles.centerContent, localStyles.videoContainer]}
-                    >
-                      <FontAwesome
-                        size={sizing.infoButtonSize}
-                        color={'white'}
-                        name={'video-camera'}
-                      />
-                    </View>
-                  )}
-                  {messageDict[this.props.data.type][2] == 'orange' && (
-                    <View
-                      style={[styles.centerContent, localStyles.chatContainer]}
-                    >
-                      <Chat
-                        height={sizing.infoButtonSize}
-                        width={sizing.infoButtonSize}
-                        fill={'white'}
-                      />
-                    </View>
-                  )}
-                  {messageDict[this.props.data.type][2] == 'blue' && (
-                    <View
-                      style={[styles.centerContent, localStyles.likeContainer]}
-                    >
-                      <AntIcon
-                        size={sizing.infoButtonSize}
-                        color={'white'}
-                        name={'like1'}
-                      />
-                    </View>
-                  )}
-                  <FastImage
-                    style={localStyles.image}
-                    source={{
-                      uri:
-                        this.state.profileImage !== ''
-                          ? this.state.profileImage
-                          : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png',
-                    }}
-                    resizeMode={FastImage.resizeMode.cover}
-                  />
+          <View
+            style={
+              (styles.container,
+              {width: '100%', justifyContent: 'space-between'})
+            }
+          >
+            <>
+              <View
+                style={[styles.centerContent, localStyles.profileContainer]}
+              >
+                <View style={styles.centerContent}>
+                  <View style={localStyles.profileContainer2}>
+                    {messageDict[this.props.data.type][2] == 'red' && (
+                      <View
+                        style={[
+                          styles.centerContent,
+                          localStyles.videoContainer,
+                        ]}
+                      >
+                        <FontAwesome
+                          size={sizing.infoButtonSize}
+                          color={'white'}
+                          name={'video-camera'}
+                        />
+                      </View>
+                    )}
+                    {messageDict[this.props.data.type][2] == 'orange' && (
+                      <View
+                        style={[
+                          styles.centerContent,
+                          localStyles.chatContainer,
+                        ]}
+                      >
+                        <Chat
+                          height={sizing.infoButtonSize}
+                          width={sizing.infoButtonSize}
+                          fill={'white'}
+                        />
+                      </View>
+                    )}
+                    {messageDict[this.props.data.type][2] == 'blue' && (
+                      <View
+                        style={[
+                          styles.centerContent,
+                          localStyles.likeContainer,
+                        ]}
+                      >
+                        <AntIcon
+                          size={sizing.infoButtonSize}
+                          color={'white'}
+                          name={'like1'}
+                        />
+                      </View>
+                    )}
+                    <FastImage
+                      style={localStyles.image}
+                      source={{
+                        uri:
+                          this.state.profileImage !== ''
+                            ? this.state.profileImage
+                            : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png',
+                      }}
+                      resizeMode={FastImage.resizeMode.cover}
+                    />
+                  </View>
                 </View>
               </View>
-            </View>
-            <Text style={localStyles.replyUser}>
-              <Text style={localStyles.user}>{this.state.user}</Text>{' '}
-              {this.state.type}
-            </Text>
-            <View style={{flex: 1}} />
-            <View style={localStyles.removeContainer}>
-              <TouchableOpacity
-                style={[styles.container, {justifyContent: 'center'}]}
-                onPress={() => this.props.removeNotification(this.props.data)}
-              >
-                <View style={localStyles.crossContainer}>
-                  <EntypoIcon
-                    name={'cross'}
-                    size={sizing.myListButtonSize * 1.2}
-                    color={colors.pianoteRed}
-                  />
-                  <Text
-                    style={[
-                      localStyles.removeText,
-                      {fontSize: sizing.descriptionText},
-                    ]}
-                  >
-                    Remove this notification
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View style={localStyles.muteContainer}>
-              <TouchableOpacity
-                style={[styles.container, {justifyContent: 'center'}]}
-                onPress={() =>
-                  this.props.turnOfffNotifications(this.state.statusChange)
-                }
-              >
-                <View style={localStyles.notificationContainer}>
-                  <IonIcon
-                    name={'ios-notifications-outline'}
-                    size={sizing.myListButtonSize}
-                    color={colors.pianoteRed}
-                  />
-                  <Text
-                    style={[
-                      localStyles.removeText,
-                      {fontSize: sizing.descriptionText},
-                    ]}
-                  >
-                    Turn {this.state.notificationStatus ? 'off' : 'on'}{' '}
-                    {messageDict[this.props.data.type][3]}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+              <Text style={localStyles.replyUser}>
+                <Text style={localStyles.user}>{this.state.user}</Text>{' '}
+                {this.state.type}
+              </Text>
+            </>
+            <>
+              <View style={localStyles.removeContainer}>
+                <TouchableOpacity
+                  style={[styles.container, {justifyContent: 'center'}]}
+                  onPress={() => this.props.removeNotification(this.props.data)}
+                >
+                  <View style={localStyles.crossContainer}>
+                    <EntypoIcon
+                      name={'cross'}
+                      size={sizing.myListButtonSize * 1.2}
+                      color={colors.pianoteRed}
+                    />
+                    <Text
+                      style={[
+                        localStyles.removeText,
+                        {fontSize: sizing.descriptionText},
+                      ]}
+                    >
+                      Remove this notification
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+              <View style={localStyles.muteContainer}>
+                <TouchableOpacity
+                  style={[styles.container, {justifyContent: 'center'}]}
+                  onPress={() =>
+                    this.props.turnOfffNotifications(this.state.statusChange)
+                  }
+                >
+                  <View style={localStyles.notificationContainer}>
+                    <IonIcon
+                      name={'ios-notifications-outline'}
+                      size={sizing.myListButtonSize}
+                      color={colors.pianoteRed}
+                    />
+                    <Text
+                      style={[
+                        localStyles.removeText,
+                        {fontSize: sizing.descriptionText},
+                      ]}
+                    >
+                      Turn {this.state.notificationStatus ? 'off' : 'on'}{' '}
+                      {messageDict[this.props.data.type][3]}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </>
           </View>
         </View>
       </View>

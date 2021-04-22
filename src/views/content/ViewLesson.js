@@ -1083,38 +1083,31 @@ export default class ViewLesson extends React.Component {
                   }
                   style={{flex: 1, backgroundColor: colors.mainBackground}}
                 >
-                  <View key={'lessonTitle'}>
-                    <View style={{height: 5}} />
-                    <Text
-                      style={{
-                        fontSize: sizing.titleViewLesson,
-                        marginTop: 10,
-                        marginBottom: 5,
-                        fontFamily: 'OpenSans-Bold',
-                        textAlign: 'center',
-                        color: 'white',
-                        paddingHorizontal: 10,
-                      }}
-                    >
-                      {this.state.lessonTitle}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: sizing.descriptionText,
-                        fontFamily: 'OpenSans-Regular',
-                        textAlign: 'center',
-                        color: colors.secondBackground,
-                        paddingBottom: 20,
-                      }}
-                    >
-                      {this.renderTagsDependingOnContentType()}
-                    </Text>
-                  </View>
-                  <View
+                  <Text
                     style={{
+                      fontSize: sizing.titleViewLesson,
+                      marginTop: 15,
+                      marginBottom: 5,
+                      fontFamily: 'OpenSans-Bold',
+                      textAlign: 'center',
+                      color: 'white',
                       paddingHorizontal: 10,
                     }}
                   >
+                    {this.state.lessonTitle}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: sizing.descriptionText,
+                      fontFamily: 'OpenSans-Regular',
+                      textAlign: 'center',
+                      color: colors.secondBackground,
+                      paddingBottom: 20,
+                    }}
+                  >
+                    {this.renderTagsDependingOnContentType()}
+                  </Text>
+                  <View style={{paddingHorizontal: 10}}>
                     <View
                       style={{
                         flex: 1,
@@ -1127,7 +1120,6 @@ export default class ViewLesson extends React.Component {
                         onPress={this.likeOrDislikeLesson}
                         style={{flex: 1, alignItems: 'center'}}
                       >
-                        <View style={{flex: 1}} />
                         <AntIcon
                           name={this.state.isLiked ? 'like1' : 'like2'}
                           size={sizing.infoButtonSize}
@@ -1148,7 +1140,6 @@ export default class ViewLesson extends React.Component {
                         onPress={this.toggleMyList}
                         style={{flex: 1, alignItems: 'center'}}
                       >
-                        <View style={{flex: 1}} />
                         <AntIcon
                           name={this.state.isAddedToMyList ? 'close' : 'plus'}
                           size={sizing.myListButtonSize}
@@ -1174,7 +1165,6 @@ export default class ViewLesson extends React.Component {
                           }
                           style={{flex: 1, alignItems: 'center'}}
                         >
-                          <View style={{flex: 1}} />
                           <Resources
                             height={sizing.infoButtonSize}
                             width={sizing.infoButtonSize}
@@ -1239,7 +1229,6 @@ export default class ViewLesson extends React.Component {
                           alignItems: 'center',
                         }}
                       >
-                        <View style={{flex: 1}} />
                         <AntIcon
                           name={
                             this.state.showInfo ? 'infocirlce' : 'infocirlceo'
@@ -1340,24 +1329,25 @@ export default class ViewLesson extends React.Component {
                       </View>
                     </View>
                   )}
-                  <View style={{height: 10}} />
                   {this.state.relatedLessons.length > 0 && (
-                    <VerticalVideoList
-                      title={'RELATED LESSONS'}
-                      items={this.state.relatedLessons}
-                      type={'LESSONS'}
-                      isLoading={this.state.isLoadingAll}
-                      showTitleOnly={true}
-                      showFilter={true}
-                      showType={false}
-                      showArtist={false}
-                      showSort={false}
-                      showLength={true}
-                      imageWidth={(onTablet ? 0.2 : 0.28) * width}
-                      navigator={row =>
-                        this.switchLesson(row.id, row.mobile_app_url)
-                      }
-                    />
+                    <View style={{marginTop: 10}}>
+                      <VerticalVideoList
+                        title={'RELATED LESSONS'}
+                        items={this.state.relatedLessons}
+                        type={'LESSONS'}
+                        isLoading={this.state.isLoadingAll}
+                        showTitleOnly={true}
+                        showFilter={true}
+                        showType={false}
+                        showArtist={false}
+                        showSort={false}
+                        showLength={true}
+                        imageWidth={(onTablet ? 0.2 : 0.28) * width}
+                        navigator={row =>
+                          this.switchLesson(row.id, row.mobile_app_url)
+                        }
+                      />
+                    </View>
                   )}
 
                   <View

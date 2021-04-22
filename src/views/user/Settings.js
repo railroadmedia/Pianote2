@@ -214,15 +214,16 @@ class Settings extends React.Component {
               navigate('PROFILESETTINGS');
             }}
           >
-            <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
-              <FeatherIcon
-                name={'user'}
-                size={onTablet ? 30 : 20}
-                color={colors.pianoteRed}
-              />
+            <View style={{flexDirection: 'row'}}>
+              <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
+                <FeatherIcon
+                  name={'user'}
+                  size={onTablet ? 30 : 20}
+                  color={colors.pianoteRed}
+                />
+              </View>
+              <Text style={localStyles.settingsText}>Profile Settings</Text>
             </View>
-            <Text style={localStyles.settingsText}>Profile Settings</Text>
-            <View style={{flex: 1}} />
             <AntIcon
               name={'right'}
               size={onTablet ? 30 : 20}
@@ -235,15 +236,18 @@ class Settings extends React.Component {
             }}
             style={[styles.centerContent, localStyles.container]}
           >
-            <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
-              <IonIcon
-                name={'ios-notifications-outline'}
-                color={colors.pianoteRed}
-                size={onTablet ? 35 : 27.5}
-              />
+            <View style={{flexDirection: 'row'}}>
+              <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
+                <IonIcon
+                  name={'ios-notifications-outline'}
+                  color={colors.pianoteRed}
+                  size={onTablet ? 35 : 27.5}
+                />
+              </View>
+              <Text style={localStyles.settingsText}>
+                Notification Settings
+              </Text>
             </View>
-            <Text style={localStyles.settingsText}>Notification Settings</Text>
-            <View style={{flex: 1}} />
             <AntIcon
               name={'right'}
               size={onTablet ? 30 : 20}
@@ -254,35 +258,36 @@ class Settings extends React.Component {
             style={[styles.centerContent, localStyles.container]}
             onPress={this.manageSubscriptions}
           >
-            <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
-              <AntIcon
-                name={'folder1'}
-                size={onTablet ? 30 : 20}
-                color={colors.pianoteRed}
-              />
+            <View style={{flexDirection: 'row'}}>
+              <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
+                <AntIcon
+                  name={'folder1'}
+                  size={onTablet ? 30 : 20}
+                  color={colors.pianoteRed}
+                />
+              </View>
+              <Text style={localStyles.settingsText}>Manage Subscriptions</Text>
             </View>
-            <Text style={localStyles.settingsText}>Manage Subscriptions</Text>
-            <View style={{flex: 1}} />
             <AntIcon
               name={'right'}
               size={onTablet ? 30 : 20}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
-
           <TouchableOpacity
             onPress={this.restorePurchase}
             style={[styles.centerContent, localStyles.container]}
           >
-            <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
-              <AntIcon
-                name={'creditcard'}
-                size={onTablet ? 30 : 20}
-                color={colors.pianoteRed}
-              />
+            <View style={{flexDirection: 'row'}}>
+              <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
+                <AntIcon
+                  name={'creditcard'}
+                  size={onTablet ? 30 : 20}
+                  color={colors.pianoteRed}
+                />
+              </View>
+              <Text style={localStyles.settingsText}>Restore Purchases</Text>
             </View>
-            <Text style={localStyles.settingsText}>Restore Purchases</Text>
-            <View style={{flex: 1}} />
             <AntIcon
               name={'right'}
               size={onTablet ? 30 : 20}
@@ -295,15 +300,16 @@ class Settings extends React.Component {
               navigate('SUPPORT');
             }}
           >
-            <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
-              <FontIcon
-                name={'support'}
-                size={onTablet ? 30 : 20}
-                color={colors.pianoteRed}
-              />
+            <View style={{flexDirection: 'row'}}>
+              <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
+                <FontIcon
+                  name={'support'}
+                  size={onTablet ? 30 : 20}
+                  color={colors.pianoteRed}
+                />
+              </View>
+              <Text style={localStyles.settingsText}>Support</Text>
             </View>
-            <Text style={localStyles.settingsText}>Support</Text>
-            <View style={{flex: 1}} />
             <AntIcon
               name={'right'}
               size={onTablet ? 30 : 20}
@@ -316,15 +322,16 @@ class Settings extends React.Component {
               navigate('TERMS');
             }}
           >
-            <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
-              <AntIcon
-                name={'form'}
-                size={onTablet ? 30 : 20}
-                color={colors.pianoteRed}
-              />
+            <View style={{flexDirection: 'row'}}>
+              <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
+                <AntIcon
+                  name={'form'}
+                  size={onTablet ? 30 : 20}
+                  color={colors.pianoteRed}
+                />
+              </View>
+              <Text style={localStyles.settingsText}>Terms of Use</Text>
             </View>
-            <Text style={localStyles.settingsText}>Terms of Use</Text>
-            <View style={{flex: 1}} />
             <AntIcon
               name={'right'}
               size={onTablet ? 30 : 20}
@@ -337,15 +344,16 @@ class Settings extends React.Component {
               navigate('PRIVACYPOLICY');
             }}
           >
-            <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
-              <FontIcon
-                name={'shield'}
-                color={colors.pianoteRed}
-                size={onTablet ? 32.5 : 22.5}
-              />
+            <View style={{flexDirection: 'row'}}>
+              <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
+                <FontIcon
+                  name={'shield'}
+                  color={colors.pianoteRed}
+                  size={onTablet ? 32.5 : 22.5}
+                />
+              </View>
+              <Text style={localStyles.settingsText}>Privacy Policy</Text>
             </View>
-            <Text style={localStyles.settingsText}>Privacy Policy</Text>
-            <View style={{flex: 1}} />
             <AntIcon
               name={'right'}
               size={onTablet ? 30 : 20}
@@ -358,15 +366,16 @@ class Settings extends React.Component {
               this.setState({showLogOut: true});
             }}
           >
-            <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
-              <AntIcon
-                name={'poweroff'}
-                color={colors.pianoteRed}
-                size={onTablet ? 30 : 20}
-              />
+            <View style={{flexDirection: 'row'}}>
+              <View style={[styles.centerContent, {width: onTablet ? 70 : 50}]}>
+                <AntIcon
+                  name={'poweroff'}
+                  color={colors.pianoteRed}
+                  size={onTablet ? 30 : 20}
+                />
+              </View>
+              <Text style={localStyles.settingsText}>Log Out</Text>
             </View>
-            <Text style={localStyles.settingsText}>Log Out</Text>
-            <View style={{flex: 1}} />
             <AntIcon
               name={'right'}
               size={onTablet ? 30 : 20}
@@ -460,6 +469,7 @@ const localStyles = StyleSheet.create({
     borderBottomWidth: 1,
     flexDirection: 'row',
     paddingRight: 10,
+    justifyContent: 'space-between',
   },
   settingsText: {
     fontFamily: 'OpenSans-Regular',

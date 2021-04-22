@@ -368,7 +368,6 @@ export default class MethodLevel extends React.Component {
                       Info
                     </Text>
                   </TouchableOpacity>
-                  <View style={{flex: 0.5}} />
                 </View>
               </View>
             </View>

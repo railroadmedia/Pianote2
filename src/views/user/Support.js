@@ -122,7 +122,6 @@ export default class Support extends React.Component {
             <View style={{flex: 0.33}} />
           </View>
           <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
-            <View style={{height: '15%'}} />
             <TouchableOpacity
               onPress={() => this.onIntercomPress()}
               style={[styles.centerContent, localStyles.button]}
@@ -138,7 +137,6 @@ export default class Support extends React.Component {
                 LIVE CHAT SUPPORT
               </Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               onPress={() => Linking.openURL('mailto:support@musora.com')}
               style={[styles.centerContent, localStyles.button]}
@@ -154,7 +152,6 @@ export default class Support extends React.Component {
                 EMAIL SUPPORT
               </Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               onPress={() => Linking.openURL(`tel:${'18004398921'}`)}
               style={[styles.centerContent, localStyles.button]}
@@ -170,7 +167,6 @@ export default class Support extends React.Component {
                 PHONE SUPPORT
               </Text>
             </TouchableOpacity>
-
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
@@ -184,7 +180,6 @@ export default class Support extends React.Component {
             >
               EMAIL
             </Text>
-
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
@@ -196,7 +191,6 @@ export default class Support extends React.Component {
             >
               support@musora.com
             </Text>
-
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
@@ -209,7 +203,6 @@ export default class Support extends React.Component {
             >
               PHONE
             </Text>
-
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
@@ -221,7 +214,6 @@ export default class Support extends React.Component {
             >
               1-800-439-8921
             </Text>
-
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
@@ -248,5 +240,6 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#fb1b2f',
     alignSelf: 'center',
     marginVertical: 5,
+    marginTop: '15%',
   },
 });

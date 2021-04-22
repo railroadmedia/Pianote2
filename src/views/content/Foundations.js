@@ -443,7 +443,6 @@ export default class Foundations extends React.Component {
                       },
                     ]}
                   >
-                    <View style={{flex: 1}} />
                     <MaterialIcon
                       name={'replay'}
                       size={onTablet ? 28 : 20}

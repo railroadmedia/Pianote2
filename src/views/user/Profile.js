@@ -358,9 +358,9 @@ export default class Profile extends React.Component {
                     <Text style={localStyles.redXpRank}>XP</Text>
                     <Text style={localStyles.whiteXpRank}>{this.state.xp}</Text>
                   </TouchableOpacity>
-                  <View style={{width: 60}} />
                   <TouchableOpacity
                     onPress={() => this.setState({showXpRank: true})}
+                    style={{marginLeft: 60}}
                   >
                     <Text style={localStyles.redXpRank}>RANK</Text>
                     <Text style={localStyles.whiteXpRank}>

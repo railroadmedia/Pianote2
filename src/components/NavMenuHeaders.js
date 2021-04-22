@@ -39,6 +39,7 @@ export default class NavMenuHeaders extends React.Component {
             flexDirection: 'row',
             width: '100%',
             padding: 10,
+            justifyContent: 'space-between',
           }}
         >
           <TouchableOpacity
@@ -54,7 +55,7 @@ export default class NavMenuHeaders extends React.Component {
           >
             <Pianote fill={'#fb1b2f'} />
           </TouchableOpacity>
-          <View style={{flex: 1}} />
+
           <View style={{flexDirection: 'row'}}>
             <TouchableOpacity
               style={[
@@ -82,9 +83,7 @@ export default class NavMenuHeaders extends React.Component {
                   fontSize: onTablet ? 20 : 14,
                   fontFamily: 'OpenSans-ExtraBold',
                   color:
-                    this.props.currentPage == 'LESSONS'
-                      ? 'white'
-                      : this.props.isMethod
+                    this.props.currentPage == 'LESSONS' || this.props.isMethod
                       ? 'white'
                       : colors.secondBackground,
                 }}
@@ -95,9 +94,7 @@ export default class NavMenuHeaders extends React.Component {
                 <EntypoIcon
                   name={'chevron-down'}
                   color={
-                    this.props.currentPage == 'LESSONS'
-                      ? 'white'
-                      : this.props.isMethod
+                    this.props.currentPage == 'LESSONS' || this.props.isMethod
                       ? 'white'
                       : colors.secondBackground
                   }
@@ -125,9 +122,7 @@ export default class NavMenuHeaders extends React.Component {
                   fontSize: onTablet ? 20 : 14,
                   fontFamily: 'OpenSans-ExtraBold',
                   color:
-                    this.props.currentPage == 'PACKS'
-                      ? 'white'
-                      : this.props.isMethod
+                    this.props.currentPage == 'PACKS' || this.props.isMethod
                       ? 'white'
                       : colors.secondBackground,
                 }}
@@ -151,9 +146,7 @@ export default class NavMenuHeaders extends React.Component {
                   fontFamily: 'OpenSans-Regular',
                   fontFamily: 'OpenSans-ExtraBold',
                   color:
-                    this.props.currentPage == 'MYLIST'
-                      ? 'white'
-                      : this.props.isMethod
+                    this.props.currentPage == 'MYLIST' || this.props.isMethod
                       ? 'white'
                       : colors.secondBackground,
                 }}
