@@ -13,11 +13,21 @@ export default class Forums extends React.Component {
   }
 
   render() {
+    let { isDark } = this.props.route.params;
     return (
       <>
         <DiscussionCard
+          onNavigate={() =>
+            this.props.navigation.navigate('Discussion', {
+              title: 'Introd Yourself'
+            })
+          }
+          isDark={isDark}
           data={{
-            title: 'Title',
+            pinned: true,
+            title: 'Introd Yourself',
+            topicName: 'General',
+            repliesNo: 70,
             lastPost: {
               date: new Date(
                 'Wed Apr 19 2021 17:57:00 GMT+0300 (Eastern European Summer Time)'
@@ -27,6 +37,7 @@ export default class Forums extends React.Component {
               }
             },
             user: {
+              accessLevelName: 'coach',
               avatarUrl:
                 'https://d2vyvo0tyx8ig5.cloudfront.net/avatars/d1dfa3b0-28e5-4042-b6f4-b78c8063c663-1618221945-149628.jpg'
             }
