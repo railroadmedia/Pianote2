@@ -1,5 +1,5 @@
 /**
- * PROPS: comment, showReplyIcon, onEdit, onDelete
+ * PROPS: comment, showReplyIcon, onEdit, onDelete, appColor, isDark
  * comment: comment to be displayed
  * showReplyIcon: variable that tells the component if it should display 'View replies' label
  * onEdit(): simple navigation to 'Edit' page
@@ -26,7 +26,6 @@
     }}
     appColor={appColor}
     isDark={isDark}
-    NetworkContext={Discussions.contextType}
   />
  */
 import React from 'react';
@@ -45,13 +44,14 @@ import RNVideo from 'react-native-video';
 import Moderate from './Moderate';
 
 import { like, likeOn, replies } from '../assets/svgs';
+import forumService from '../services/forum.service';
 
 const fallbackProfilePicUri =
   'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2000px-No_image_available.svg.png';
 const windowWidth = Dimensions.get('window').width;
 const maxFontMultiplier =
   windowWidth < 375 ? 1 : windowWidth < 1024 ? 1.35 : 1.8;
-
+let styles;
 export default class Comment extends React.PureComponent {
   state = {
     isLiked: null,
@@ -62,11 +62,17 @@ export default class Comment extends React.PureComponent {
 
   constructor(props) {
     super(props);
-    let { NetworkContext, isDark } = props;
-    Comment.contextType = NetworkContext;
+    let { isDark } = props;
+    Comment.contextType = forumService.NetworkContext;
+
     styles = setStyles(isDark);
     this.state.isLiked = props.comment.is_liked;
     this.state.likeCount = props.comment.like_count;
+  }
+
+  get connection() {
+    if (this.context.isConnected) return true;
+    this.context.showNoConnectionAlert();
   }
 
   parseXpValue(xp) {
@@ -79,11 +85,23 @@ export default class Comment extends React.PureComponent {
     return xp;
   }
 
-  likeOrDislikeComment = id => {};
+  likeOrDislikeComment = id => {
+    if (!this.connection) return;
 
-  goToReplies = () => {};
-
-  deleteComment = id => {};
+    if (id === this.props.comment.id) {
+      let { likeCount, isLiked } = this.state;
+      if (isLiked) {
+        likeCount--;
+        isLiked = false;
+        forumService.likeComment(id);
+      } else {
+        likeCount++;
+        isLiked = true;
+        forumService.disLikeComment(id);
+      }
+      this.setState({ likeCount, isLiked });
+    }
+  };
 
   render() {
     let { isLiked, likeCount, containerWidth } = this.state;
@@ -94,7 +112,7 @@ export default class Comment extends React.PureComponent {
 
     return (
       <View style={styles.commentContainer}>
-        <View>
+        <View style={{ paddingHorizontal: 10 }}>
           <Image source={{ uri: profilePicUri }} style={styles.userImage} />
           <Text
             maxFontSizeMultiplier={maxFontMultiplier}
@@ -175,7 +193,9 @@ export default class Comment extends React.PureComponent {
               {showReplyIcon && (
                 <TouchableOpacity
                   testID='replyBtn'
-                  onPress={() => this.setState({ showReplies: true })}
+                  onPress={() =>
+                    this.props.goToReplies(comment, isDark, appColor)
+                  }
                   style={styles.replyIconBtn}
                 >
                   {replies({ height: 20, width: 20, fill: appColor })}
@@ -199,7 +219,7 @@ let setStyles = isDark =>
   StyleSheet.create({
     commentContainer: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      padding: 10,
       backgroundColor: isDark ? '#00101D' : '#F7F9FC'
     },
     xpStyle: {

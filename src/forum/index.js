@@ -16,6 +16,7 @@ import Edit from './src/components/Edit';
 import { arrowLeft } from './src/assets/svgs';
 
 import forumService from './src/services/forum.service';
+import Replies from './src/components/Replies';
 
 const Stack = createStackNavigator();
 
@@ -90,6 +91,12 @@ export default ({ route: { params } }) => {
           name='Discussion'
           component={Discussion}
           options={({ route: { params } }) => ({ title: params.title })}
+          initialParams={params}
+        />
+        <Stack.Screen
+          name='Replies'
+          component={Replies}
+          options={{ title: 'Replies' }}
           initialParams={params}
         />
       </Stack.Navigator>

@@ -29,6 +29,15 @@ export default {
     );
     /*******/
     return this.tryCall(`${this.rootUrl}/TBD`);
+  },
+  likeComment: function (id) {
+    return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { id });
+  },
+  disLikeComment: function (id) {
+    return this.tryCall(`${this.rootUrl}/TBD`, 'DELETE', { id });
+  },
+  addReply: function (reply) {
+    return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { reply });
   }
 };
 
