@@ -6,7 +6,7 @@ const fallbackProfilePicUri =
 const windowWidth = Dimensions.get('window').width;
 const maxFontMultiplier =
   windowWidth < 375 ? 1 : windowWidth < 1024 ? 1.35 : 1.8;
-
+let styles;
 export default class CommentInput extends React.PureComponent {
   state = {
     commentText: ''
@@ -29,39 +29,40 @@ export default class CommentInput extends React.PureComponent {
         />
         <TextInput
           maxFontSizeMultiplier={maxFontMultiplier}
-          multiline={true}
-          autoFocus={true}
           autoCapitalize={'sentences'}
           autoCorrect={false}
           spellCheck={true}
+          returnKeyType={'go'}
           style={styles.textInput}
           ref={r => (this.input = r)}
           placeholder='Add reply...'
           placeholderTextColor={isDark ? '#FFFFFF' : '#00101D'}
           value={this.state.commentText}
-          onLayout={e => this.input.focus()}
           onChangeText={commentText => this.setState({ commentText })}
-          onSubmitEditing={() => onSubmit(this.state.commentText)}
+          onSubmitEditing={() => {
+            onSubmit(this.state.commentText);
+            this.setState({ commentText: '' });
+          }}
         />
       </View>
     );
   }
 }
 
-let setStyles = isDark =>
+const setStyles = isDark =>
   StyleSheet.create({
     container: {
       backgroundColor: isDark ? '#00101D' : '#F7F9FC',
       flexDirection: 'row',
-      borderColor: 'red',
-      borderWidth: 1
+      padding: 10
     },
     userImage: {
       backgroundColor: 'transparent',
       height: 38,
       aspectRatio: 1,
       borderRadius: 18,
-      alignSelf: 'center'
+      alignSelf: 'center',
+      marginHorizontal: 10
     },
     textInput: {
       color: isDark ? '#FFFFFF' : '#00101D',
