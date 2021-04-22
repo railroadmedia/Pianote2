@@ -83,38 +83,24 @@ export default class Forums extends React.Component {
     return (
       <>
         <View style={styles.headerContainer}>
-          <TouchableOpacity
-            style={[
-              styles.headerTOpacity,
-              tab ? {} : { borderColor: appColor }
-            ]}
-          >
-            <Text
-              onPress={() => this.setState({ tab: 0 })}
+          {['Topics', 'Followed'].map((t, i) => (
+            <TouchableOpacity
               style={[
-                styles.headerText,
-                tab ? {} : { color: isDark ? 'white' : 'black' }
+                styles.headerTOpacity,
+                tab === i ? { borderColor: appColor } : {}
               ]}
             >
-              Topics
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.headerTOpacity,
-              tab ? { borderColor: appColor } : {}
-            ]}
-          >
-            <Text
-              onPress={() => this.setState({ tab: 1 })}
-              style={[
-                styles.headerText,
-                tab ? { color: isDark ? 'white' : 'black' } : {}
-              ]}
-            >
-              Followed
-            </Text>
-          </TouchableOpacity>
+              <Text
+                onPress={() => this.setState({ tab: i })}
+                style={[
+                  styles.headerText,
+                  tab === i ? { color: isDark ? 'white' : 'black' } : {}
+                ]}
+              >
+                {t}
+              </Text>
+            </TouchableOpacity>
+          ))}
         </View>
         {loading ? (
           <ActivityIndicator
@@ -126,6 +112,7 @@ export default class Forums extends React.Component {
         ) : (
           <View style={{ flex: 1 }}>
             <FlatList
+              key={tab}
               windowSize={10}
               data={this[tab ? 'followed' : 'topics']}
               style={styles.fList}
