@@ -121,10 +121,14 @@ export default class Support extends React.Component {
             </Text>
             <View style={{flex: 0.33}} />
           </View>
-          <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
+          <ScrollView style={{flex: 1}}>
             <TouchableOpacity
               onPress={() => this.onIntercomPress()}
-              style={[styles.centerContent, localStyles.button]}
+              style={[
+                styles.centerContent,
+                localStyles.button,
+                {marginTop: '15%'},
+              ]}
             >
               <Text
                 style={{
@@ -240,6 +244,5 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#fb1b2f',
     alignSelf: 'center',
     marginVertical: 5,
-    marginTop: '15%',
   },
 });

@@ -48,7 +48,6 @@ class LoadPage extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    this.state = {};
   }
 
   async componentDidMount() {

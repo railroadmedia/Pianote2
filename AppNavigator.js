@@ -133,13 +133,6 @@ export default () => (
         }}
       >
         {/* onboard */}
-        <Stack.Screen name="LOADPAGE" component={LoadPage} />
-        <Stack.Screen name="LOGIN" component={Login} />
-        <Stack.Screen name="MEMBERSHIPEXPIRED" component={MembershipExpired} />
-        <Stack.Screen name="LOGINCREDENTIALS" component={LoginCredentials} />
-        <Stack.Screen name="SUPPORTSIGNUP" component={SupportSignUp} />
-        <Stack.Screen name="FORGOTPASSWORD" component={ForgotPassword} />
-        <Stack.Screen name="CREATEACCOUNT2" component={CreateAccount2} />
         <Stack.Screen
           name="CREATEACCOUNT3"
           component={CreateAccount3}
@@ -147,6 +140,14 @@ export default () => (
             gestureEnabled: false,
           }}
         />
+        <Stack.Screen name="LOADPAGE" component={LoadPage} />
+        <Stack.Screen name="LOGIN" component={Login} />
+        <Stack.Screen name="MEMBERSHIPEXPIRED" component={MembershipExpired} />
+        <Stack.Screen name="LOGINCREDENTIALS" component={LoginCredentials} />
+        <Stack.Screen name="SUPPORTSIGNUP" component={SupportSignUp} />
+        <Stack.Screen name="FORGOTPASSWORD" component={ForgotPassword} />
+        <Stack.Screen name="CREATEACCOUNT2" component={CreateAccount2} />
+
         <Stack.Screen name="CREATEACCOUNT" component={CreateAccount} />
         <Stack.Screen name="NEWMEMBERSHIP" component={NewMembership} />
         <Stack.Screen name="RESETPASSWORD" component={ResetPassword} />

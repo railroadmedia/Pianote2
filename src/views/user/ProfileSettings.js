@@ -143,9 +143,7 @@ export default class ProfileSettings extends React.Component {
         maxWidth: 1000,
       },
       response => {
-        if (response.didCancel) {
-        } else if (response.error) {
-        } else {
+        if (!response.didCancel && !response.error) {
           this.setState({
             imageURI: response.uri,
             imageType: response.type,

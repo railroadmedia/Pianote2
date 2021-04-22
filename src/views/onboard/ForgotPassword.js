@@ -123,7 +123,6 @@ export default class ForgotPassword extends React.Component {
                     Piano Lessons Experience.
                   </Text>
                 </View>
-
                 <TextInput
                   ref={ref => {
                     this.textInput = ref;
@@ -135,7 +134,6 @@ export default class ForgotPassword extends React.Component {
                   onChangeText={email => this.setState({email})}
                   style={localStyles.email}
                 />
-
                 <TouchableHighlight
                   underlayColor={'transparent'}
                   onPress={() => {

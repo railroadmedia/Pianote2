@@ -139,7 +139,7 @@ export default class CreateAccount extends React.Component {
               <View />
             </TouchableOpacity>
             <ScrollView
-              style={{flex: 1}}
+              style={{flex: 1, marginBottom: 40}}
               keyboardShouldPersistTaps="handled"
               contentInsetAdjustmentBehavior="never"
               contentContainerStyle={this.state.scrollViewContentFlex}
@@ -148,7 +148,6 @@ export default class CreateAccount extends React.Component {
                 <Text style={localStyles.createPasswordText}>
                   Create a password
                 </Text>
-                <View style={{height: 7.5}} />
                 <View style={localStyles.passInput}>
                   <TextInput
                     autoCorrect={false}
@@ -194,11 +193,9 @@ export default class CreateAccount extends React.Component {
                     )}
                   </TouchableOpacity>
                 </View>
-                <View style={{height: 27.5}} />
-                <Text style={localStyles.createPasswordText}>
+                <Text style={[localStyles.createPasswordText, {marginTop: 25}]}>
                   Confirm password
                 </Text>
-                <View style={{height: 7.5}} />
                 <View style={localStyles.passInput}>
                   <TextInput
                     style={localStyles.textinput}
@@ -246,8 +243,7 @@ export default class CreateAccount extends React.Component {
                     )}
                   </TouchableOpacity>
                 </View>
-                <View style={{height: 10}} />
-                <Text style={localStyles.characters}>
+                <Text style={[localStyles.characters, {marginTop: 10}]}>
                   Use at least 8 characters
                 </Text>
                 <TouchableOpacity
@@ -287,9 +283,7 @@ export default class CreateAccount extends React.Component {
                   </Text>
                 </TouchableOpacity>
               </View>
-              <View style={{marginBottom: 40}}>
-                <CreateAccountStepCounter step={2} />
-              </View>
+              <CreateAccountStepCounter step={2} />
             </ScrollView>
             <Modal
               isVisible={this.state.showPasswordMatch}
@@ -340,6 +334,7 @@ const localStyles = StyleSheet.create({
   },
   passInput: {
     borderRadius: 100,
+    marginTop: 7.5,
     marginHorizontal: 15,
     justifyContent: 'center',
     backgroundColor: 'white',

@@ -44,7 +44,6 @@ export default class CreateAccount extends React.Component {
       fetch(`${commonService.rootUrl}/usora/api/is-email-unique?email=${email}`)
         .then(response => response.json())
         .then(response => {
-          console.log(response);
           if (response?.exists) {
             this.setState({showCheckEmail: true});
           } else if (
@@ -99,7 +98,6 @@ export default class CreateAccount extends React.Component {
               >
                 Create Account
               </Text>
-              <View />
             </TouchableOpacity>
             <ScrollView
               style={{flex: 1}}
@@ -115,9 +113,7 @@ export default class CreateAccount extends React.Component {
                     autoCorrect={false}
                     autoCapitalize={'none'}
                     onBlur={() =>
-                      this.setState({
-                        scrollViewContentFlex: {flex: 1},
-                      })
+                      this.setState({scrollViewContentFlex: {flex: 1}})
                     }
                     onFocus={() =>
                       this.setState({

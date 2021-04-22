@@ -230,15 +230,9 @@ export default class LoginCredentials extends React.Component {
                 </View>
                 <TextInput
                   onBlur={() =>
-                    this.setState({
-                      scrollViewContentFlex: {flex: 1},
-                    })
+                    this.setState({scrollViewContentFlex: {flex: 1}})
                   }
-                  onFocus={() =>
-                    this.setState({
-                      scrollViewContentFlex: {},
-                    })
-                  }
+                  onFocus={() => this.setState({scrollViewContentFlex: {}})}
                   autoCorrect={false}
                   value={this.state.email}
                   autoCapitalize={'none'}

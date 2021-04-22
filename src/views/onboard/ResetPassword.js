@@ -36,29 +36,29 @@ export default class ResetPassword extends React.Component {
 
   savePassword = async () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    if (this.state.password == this.state.confirmPassword) {
-      if (this.state.password.length > 7) {
-        const {email, resetKey} = this.props.route?.params;
-        let res = await changePassword(
-          email.replace('%40', '@'),
-          this.state.password,
-          resetKey,
-        );
-        await AsyncStorage.removeItem('resetKey');
-        console.log(res);
-        if (res.success) {
-          if (res.token) {
-            token = res.token;
-            await AsyncStorage.multiSet([
-              ['loggedIn', 'true'],
-              ['email', email],
-              ['password', this.state.password],
-            ]);
-          }
-          this.alert.toggle(res.title, res.message);
-        } else {
-          this.alert.toggle('Something went wrong.', res.message);
+    if (
+      this.state.password == this.state.confirmPassword &&
+      this.state.password.length > 7
+    ) {
+      const {email, resetKey} = this.props.route?.params;
+      let res = await changePassword(
+        email.replace('%40', '@'),
+        this.state.password,
+        resetKey,
+      );
+      await AsyncStorage.removeItem('resetKey');
+      if (res.success) {
+        if (res.token) {
+          token = res.token;
+          await AsyncStorage.multiSet([
+            ['loggedIn', 'true'],
+            ['email', email],
+            ['password', this.state.password],
+          ]);
         }
+        this.alert.toggle(res.title, res.message);
+      } else {
+        this.alert.toggle('Something went wrong.', res.message);
       }
     }
   };

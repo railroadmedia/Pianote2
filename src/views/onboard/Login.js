@@ -792,12 +792,9 @@ export default class Login extends React.Component {
       >
         <View style={{flex: 1}}>
           <StatusBar backgroundColor="black" barStyle="light-content" />
-
           <ScrollView
             horizontal={true}
-            ref={ref => {
-              this.myScroll = ref;
-            }}
+            ref={ref => (this.myScroll = ref)}
             pagingEnabled={true}
             onMomentumScrollEnd={e => this.changePage(e)}
             style={{flex: 1}}

@@ -44,7 +44,6 @@ export default class SoundSlice extends React.Component {
                   zIndex: 10,
                 }}
               >
-                <View style={{flex: 1}} />
                 <TouchableOpacity
                   onPress={() => {
                     this.props.hideSoundSlice();
