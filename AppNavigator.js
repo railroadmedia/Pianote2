@@ -36,6 +36,7 @@ import SupportSignUp from './src/views/onboard/SupportSignUp';
 import LoadPage from './src/views/onboard/LoadPage';
 import Login from './src/views/onboard/Login';
 import ResetPassword from './src/views/onboard/ResetPassword';
+
 // user
 import NotificationSettings from './src/views/user/NotificationSettings';
 import ProfileSettings from './src/views/user/ProfileSettings';
@@ -92,7 +93,6 @@ export default () => (
   <NetworkProvider>
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
-        //initialRouteName={Login}
         headerMode={'screen'}
         mode={'card'}
         keyboardHandlingEnabled={false}
@@ -102,44 +102,10 @@ export default () => (
           gestureResponseDistance: {
             horizontal: Dimensions.get('window').width,
           },
-
-          // cardShadowEnabled: false,
-          // cardOverlayEnabled: false,
-          // cardStyle: { backgroundColor: 'transparent' },
-          // transitionSpec: {
-          //   duration: 300,
-          //   easing: Easing.out(Easing.poly(4)),
-          //   timing: Animated.timing,
-          //   useNativeDriver: true
-          // },
           transitionSpec: {open: timingAnim, close: timingAnim},
-          // screenInterpolator: sceneProps => {
-          //   const { layout, position, scene } = sceneProps;
-          //   const { index } = scene;
-
-          //   const width = layout.initWidth;
-          //   const translateX = position.interpolate({
-          //     inputRange: [index - 1, index, index + 1],
-          //     outputRange: [width, 0, 0]
-          //   });
-
-          //   const opacity = position.interpolate({
-          //     inputRange: [index - 1, index - 0.99, index],
-          //     outputRange: [0, 1, 1]
-          //   });
-
-          //   return { opacity, transform: [{ translateX }] };
-          // }
         }}
       >
         {/* onboard */}
-        <Stack.Screen
-          name="CREATEACCOUNT3"
-          component={CreateAccount3}
-          options={{
-            gestureEnabled: false,
-          }}
-        />
         <Stack.Screen name="LOADPAGE" component={LoadPage} />
         <Stack.Screen name="LOGIN" component={Login} />
         <Stack.Screen name="MEMBERSHIPEXPIRED" component={MembershipExpired} />
@@ -147,7 +113,11 @@ export default () => (
         <Stack.Screen name="SUPPORTSIGNUP" component={SupportSignUp} />
         <Stack.Screen name="FORGOTPASSWORD" component={ForgotPassword} />
         <Stack.Screen name="CREATEACCOUNT2" component={CreateAccount2} />
-
+        <Stack.Screen
+          name="CREATEACCOUNT3"
+          component={CreateAccount3}
+          options={{gestureEnabled: false}}
+        />
         <Stack.Screen name="CREATEACCOUNT" component={CreateAccount} />
         <Stack.Screen name="NEWMEMBERSHIP" component={NewMembership} />
         <Stack.Screen name="RESETPASSWORD" component={ResetPassword} />

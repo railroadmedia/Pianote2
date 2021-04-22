@@ -1,7 +1,6 @@
 import React from 'react';
 import {Linking, View, Dimensions, Platform} from 'react-native';
 import {connect} from 'react-redux';
-import Modal from 'react-native-modal';
 import {Download_V2} from 'RNDownload';
 import {bindActionCreators} from 'redux';
 import SplashScreen from 'react-native-splash-screen';
@@ -17,7 +16,6 @@ import {cachePodcasts} from '../../redux/PodcastsCacheActions';
 import {cacheQuickTips} from '../../redux/QuickTipsCacheActions';
 import {cacheStudentFocus} from '../../redux/StudentFocusCacheActions';
 import Pianote from '../../assets/img/svgs/pianote';
-import NoConnection from '../../modals/NoConnection';
 import {NetworkContext} from '../../context/NetworkProvider';
 import RNFetchBlob from 'rn-fetch-blob';
 import commonService from '../../services/common.service';
@@ -202,22 +200,6 @@ class LoadPage extends React.Component {
             fill={'#fb1b2f'}
           />
         </View>
-        <Modal
-          isVisible={this.state.showNoConnection}
-          style={[styles.centerContent, styles.modalContainer]}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
-        >
-          <NoConnection
-            hideNoConnection={() => {
-              this.setState({showNoConnection: false}),
-                this.handleNoConnection();
-            }}
-          />
-        </Modal>
       </View>
     );
   }
