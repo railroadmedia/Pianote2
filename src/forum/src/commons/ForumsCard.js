@@ -3,20 +3,28 @@ import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
 import forumService from '../services/forum.service';
 
-import { pin, coach, team, edge, lifetime, arrowRight } from '../assets/svgs';
+import {
+  pin,
+  coach,
+  team,
+  edge,
+  lifetime,
+  arrowRight,
+  post
+} from '../assets/svgs';
 
 let styles;
-export default class DiscussionCard extends React.Component {
+export default class ForumsCard extends React.Component {
   constructor(props) {
     super(props);
     let { isDark } = props;
-    DiscussionCard.contextType = forumService.NetworkContext;
+    ForumsCard.contextType = forumService.NetworkContext;
     styles = setStyles(isDark);
   }
 
   get userBorderColor() {
     let borderColor, userTagIcon;
-    switch (this.props.data.user.accessLevelName) {
+    switch (this.props.data.user?.accessLevelName) {
       case 'edge': {
         borderColor = appColor;
         userTagIcon = edge;
@@ -56,7 +64,16 @@ export default class DiscussionCard extends React.Component {
   render() {
     let {
       isDark,
-      data: { user, title, pinned, lastPost, topicName, repliesNo }
+      data: {
+        user,
+        title,
+        pinned,
+        lastPost,
+        postsNo,
+        topicName,
+        repliesNo,
+        image
+      }
     } = this.props;
     let { borderColor, userTagIcon } = this.userBorderColor;
     return (
@@ -66,13 +83,13 @@ export default class DiscussionCard extends React.Component {
       >
         <View style={{ ...styles.imgContainer, borderColor }}>
           <Image
-            source={{ uri: user.avatarUrl }}
-            style={{ flex: 1, aspectRatio: 1 }}
+            source={{ uri: image || user.avatarUrl }}
+            style={{ height: 60, aspectRatio: 1 }}
           />
           <View
             style={{ ...styles.userTagContainer, backgroundColor: borderColor }}
           >
-            {userTagIcon?.({ height: 10, fill: 'white' })}
+            {userTagIcon?.({ height: 8, fill: 'white' })}
           </View>
         </View>
         <View style={{ paddingHorizontal: 10, flex: 1 }}>
@@ -86,9 +103,15 @@ export default class DiscussionCard extends React.Component {
             <Text style={{ fontWeight: '900' }}>{this.lastPostTime}</Text> By{' '}
             <Text style={{ fontWeight: '900' }}>{lastPost.user.name}</Text>
           </Text>
-          <Text style={styles.topicName}>
-            {topicName} - {repliesNo}
-          </Text>
+          {repliesNo ? (
+            <Text style={styles.topicName}>
+              {topicName} - {repliesNo} Replies
+            </Text>
+          ) : (
+            <Text style={styles.topicName}>
+              {post({ height: 10, fill: '#445F74' })} {postsNo} Posts
+            </Text>
+          )}
         </View>
         {arrowRight({ height: 10, fill: isDark ? 'white' : 'black' })}
       </TouchableOpacity>
@@ -101,13 +124,20 @@ let setStyles = isDark =>
       flexDirection: 'row',
       backgroundColor: isDark ? '#081825' : 'white',
       alignItems: 'center',
-      padding: 10
+      padding: 10,
+      margin: 15,
+      marginBottom: 0,
+      borderRadius: 5,
+      elevation: 5,
+      shadowColor: 'black',
+      shadowOffset: { width: 3, height: 4 },
+      shadowOpacity: 1,
+      shadowRadius: 4
     },
     imgContainer: {
-      borderRadius: 99,
+      borderRadius: 32,
       overflow: 'hidden',
-      borderWidth: 2,
-      height: '100%'
+      borderWidth: 2
     },
     userTagContainer: {
       width: '100%',
@@ -115,7 +145,8 @@ let setStyles = isDark =>
       position: 'absolute',
       bottom: 0,
       lineHeight: 10,
-      alignItems: 'center'
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     title: {
       fontFamily: 'OpenSans',

@@ -1,10 +1,32 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native';
 
-import DiscussionCard from '../commons/DiscussionCard';
+import ForumsCard from '../commons/ForumsCard';
+
+import forumService from '../services/forum.service';
+
+import { pencil } from '../assets/svgs';
 
 let styles;
 export default class Forums extends React.Component {
+  followedPage = 1;
+  topicsPage = 1;
+  followed = [];
+  topics = [];
+  state = {
+    loadingMoreFollowed: false,
+    loadingMoreTopics: false,
+    tab: 0,
+    loading: true,
+    createDiscussionHeight: 0
+  };
   constructor(props) {
     super(props);
     let { isDark, NetworkContext } = props.route.params;
@@ -12,39 +34,193 @@ export default class Forums extends React.Component {
     styles = setStyles(isDark);
   }
 
+  componentDidMount() {
+    Promise.all([forumService.getTopics(), forumService.getFollowed()]).then(
+      ([topics, followed]) => {
+        this.topics = topics;
+        this.followed = followed;
+        this.setState({ loading: false });
+      }
+    );
+  }
+
+  renderFLItem = ({ item }) => (
+    <ForumsCard
+      onNavigate={() =>
+        this.props.navigation.navigate(
+          this.state.tab ? 'Discussion' : 'Topic',
+          {
+            title: item.title
+          }
+        )
+      }
+      isDark={this.props.route.params.isDark}
+      data={item}
+    />
+  );
+
+  loadMore = () => {
+    let { tab } = this.state;
+    this.setState({ [`loadingMore${tab ? 'Followed' : 'Topics'}`]: true }, () =>
+      forumService[tab ? 'getFollowed' : 'getTopics'](
+        ++this[`${tab ? 'followed' : 'topics'}Page`]
+      ).then(r => {
+        this[tab ? 'followed' : 'topics'].push(...r);
+        this.setState({ [`loadingMore${tab ? 'Followed' : 'Topics'}`]: false });
+      })
+    );
+  };
+
   render() {
-    let { isDark } = this.props.route.params;
+    let {
+      loadingMoreFollowed,
+      loadingMoreTopics,
+      tab,
+      loading,
+      createDiscussionHeight
+    } = this.state;
+    let { isDark, appColor, BottomNavigator } = this.props.route.params;
     return (
       <>
-        <DiscussionCard
-          onNavigate={() =>
-            this.props.navigation.navigate('Discussion', {
-              title: 'Introd Yourself'
-            })
-          }
-          isDark={isDark}
-          data={{
-            pinned: true,
-            title: 'Introd Yourself',
-            topicName: 'General',
-            repliesNo: 70,
-            lastPost: {
-              date: new Date(
-                'Wed Apr 19 2021 17:57:00 GMT+0300 (Eastern European Summer Time)'
-              ),
-              user: {
-                name: 'Me'
+        <View style={styles.headerContainer}>
+          <TouchableOpacity
+            style={[
+              styles.headerTOpacity,
+              tab ? {} : { borderColor: appColor }
+            ]}
+          >
+            <Text
+              onPress={() => this.setState({ tab: 0 })}
+              style={[
+                styles.headerText,
+                tab ? {} : { color: isDark ? 'white' : 'black' }
+              ]}
+            >
+              Topics
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.headerTOpacity,
+              tab ? { borderColor: appColor } : {}
+            ]}
+          >
+            <Text
+              onPress={() => this.setState({ tab: 1 })}
+              style={[
+                styles.headerText,
+                tab ? { color: isDark ? 'white' : 'black' } : {}
+              ]}
+            >
+              Followed
+            </Text>
+          </TouchableOpacity>
+        </View>
+        {loading ? (
+          <ActivityIndicator
+            size='large'
+            color={isDark ? 'white' : 'black'}
+            animating={true}
+            style={styles.loading}
+          />
+        ) : (
+          <View style={{ flex: 1 }}>
+            <FlatList
+              windowSize={10}
+              data={this[tab ? 'followed' : 'topics']}
+              style={styles.fList}
+              initialNumToRender={1}
+              maxToRenderPerBatch={10}
+              onEndReachedThreshold={0.01}
+              removeClippedSubviews={true}
+              keyboardShouldPersistTaps='handled'
+              renderItem={this.renderFLItem}
+              onEndReached={this.loadMore}
+              keyExtractor={item => item.id.toString()}
+              ListEmptyComponent={
+                <Text style={styles.emptyList}>
+                  {tab ? 'You are not following any threads. ' : 'No topics'}
+                </Text>
               }
-            },
-            user: {
-              accessLevelName: 'coach',
-              avatarUrl:
-                'https://d2vyvo0tyx8ig5.cloudfront.net/avatars/d1dfa3b0-28e5-4042-b6f4-b78c8063c663-1618221945-149628.jpg'
-            }
-          }}
-        />
+              ListFooterComponent={
+                <ActivityIndicator
+                  size='small'
+                  color={isDark ? 'white' : 'black'}
+                  animating={tab ? loadingMoreFollowed : loadingMoreTopics}
+                  style={{
+                    padding: 15,
+                    marginBottom: createDiscussionHeight
+                  }}
+                />
+              }
+            />
+            <TouchableOpacity
+              onLayout={({ nativeEvent: { layout } }) =>
+                this.setState({ createDiscussionHeight: layout.height + 15 })
+              }
+              onPress={() => this.props.navigation.navigate('CreateDiscussion')}
+              style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}
+            >
+              {pencil({ height: 10, fill: 'white' })}
+              <Text style={styles.bottomText}>CREATE A DISCUSSION</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        <BottomNavigator />
       </>
     );
   }
 }
-let setStyles = isDark => StyleSheet.create({});
+let setStyles = isDark =>
+  StyleSheet.create({
+    headerContainer: {
+      paddingHorizontal: 15,
+      flexDirection: 'row',
+      backgroundColor: isDark ? '#00101D' : 'white'
+    },
+    headerTOpacity: {
+      paddingVertical: 15,
+      marginRight: 15,
+      borderBottomWidth: 2,
+      borderColor: isDark ? '#00101D' : 'white'
+    },
+    headerText: {
+      fontFamily: 'OpenSans',
+      fontSize: 20,
+      fontWeight: '700',
+      color: '#445F74'
+    },
+    fList: {
+      flex: 1,
+      backgroundColor: isDark ? '#00101D' : 'white'
+    },
+    loading: {
+      flex: 1,
+      backgroundColor: isDark ? '#00101D' : 'white',
+      alignItems: 'center'
+    },
+    emptyList: {
+      color: isDark ? '#445F74' : 'black',
+      fontFamily: 'OpenSans',
+      padding: 15
+    },
+    bottomTOpacity: {
+      padding: 15,
+      width: '70%',
+      maxWidth: 300,
+      position: 'absolute',
+      borderRadius: 99,
+      bottom: 15,
+      alignSelf: 'center',
+      justifyContent: 'center',
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+    bottomText: {
+      fontFamily: 'RobotoCondensed-Regular',
+      color: 'white',
+      fontWeight: '700',
+      fontSize: 18,
+      marginLeft: 10
+    }
+  });

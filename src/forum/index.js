@@ -71,7 +71,7 @@ export default ({ route: { params } }) => {
         <Stack.Screen
           name='Topic'
           component={Topic}
-          options={{ title: 'Topic' }}
+          options={({ route: { params } }) => ({ title: params.title })}
           initialParams={params}
         />
         <Stack.Screen
