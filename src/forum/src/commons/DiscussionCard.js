@@ -1,9 +1,9 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
 import forumService from '../services/forum.service';
 
-import { pin, coach, team, edge, lifetime } from '../assets/svgs';
+import { pin, coach, team, edge, lifetime, arrowRight } from '../assets/svgs';
 
 let styles;
 export default class DiscussionCard extends React.Component {
@@ -55,49 +55,86 @@ export default class DiscussionCard extends React.Component {
 
   render() {
     let {
-      user,
-      title,
-      pinned,
-      lastPost,
-      topicName,
-      repliesNo
-    } = this.props.data;
+      isDark,
+      data: { user, title, pinned, lastPost, topicName, repliesNo }
+    } = this.props;
     let { borderColor, userTagIcon } = this.userBorderColor;
     return (
-      <View style={{ flexDirection: 'row' }}>
-        <View
-          style={{
-            borderRadius: 99,
-            overflow: 'hidden',
-            borderWidth: 2,
-            borderColor
-          }}
-        >
+      <TouchableOpacity
+        style={styles.container}
+        onPress={this.props.onNavigate}
+      >
+        <View style={{ ...styles.imgContainer, borderColor }}>
           <Image
             source={{ uri: user.avatarUrl }}
-            style={{ height: 31, aspectRatio: 1 }}
+            style={{ flex: 1, aspectRatio: 1 }}
           />
           <View
-            style={{
-              width: '100%',
-              height: 5,
-              backgroundColor: borderColor,
-              position: 'absolute',
-              bottom: 0,
-              lineHeight: 5,
-              alignItems: 'center'
-            }}
+            style={{ ...styles.userTagContainer, backgroundColor: borderColor }}
           >
-            {userTagIcon?.({ height: 5, fill: 'white' })}
+            {userTagIcon?.({ height: 10, fill: 'white' })}
           </View>
         </View>
-        <Text>
-          {title}
-          {'\n'}
-          <Text>{this.lastPostTime}</Text>
-        </Text>
-      </View>
+        <View style={{ paddingHorizontal: 10, flex: 1 }}>
+          <Text style={styles.title}>
+            {pinned && pin({ width: 10, fill: isDark ? 'white' : 'black' })}
+            {pinned && ' '}
+            {title}
+          </Text>
+          <Text style={styles.lastPost}>
+            Last Post{' '}
+            <Text style={{ fontWeight: '900' }}>{this.lastPostTime}</Text> By{' '}
+            <Text style={{ fontWeight: '900' }}>{lastPost.user.name}</Text>
+          </Text>
+          <Text style={styles.topicName}>
+            {topicName} - {repliesNo}
+          </Text>
+        </View>
+        {arrowRight({ height: 10, fill: isDark ? 'white' : 'black' })}
+      </TouchableOpacity>
     );
   }
 }
-let setStyles = isDark => StyleSheet.create({});
+let setStyles = isDark =>
+  StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      backgroundColor: isDark ? '#081825' : 'white',
+      alignItems: 'center',
+      padding: 10
+    },
+    imgContainer: {
+      borderRadius: 99,
+      overflow: 'hidden',
+      borderWidth: 2,
+      height: '100%'
+    },
+    userTagContainer: {
+      width: '100%',
+      height: 10,
+      position: 'absolute',
+      bottom: 0,
+      lineHeight: 10,
+      alignItems: 'center'
+    },
+    title: {
+      fontFamily: 'OpenSans',
+      color: isDark ? 'white' : 'black',
+      fontSize: 20,
+      fontWeight: '900'
+    },
+    lastPost: {
+      fontFamily: 'OpenSans',
+      fontWeight: '100',
+      color: '#445F74',
+      fontSize: 14,
+      fontStyle: 'italic',
+      paddingVertical: 5
+    },
+    topicName: {
+      fontFamily: 'OpenSans',
+      color: '#445F74',
+      fontSize: 14,
+      fontWeight: '100'
+    }
+  });

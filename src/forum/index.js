@@ -9,6 +9,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import CreateDiscussion from './src/components/CreateDiscussion';
 import Forums from './src/components/Forums';
+import Discussion from './src/components/Discussion';
 import Topic from './src/components/Topic';
 import Edit from './src/components/Edit';
 
@@ -83,6 +84,12 @@ export default ({ route: { params } }) => {
           name='Edit'
           component={Edit}
           options={{ title: 'Edit Reply' }}
+          initialParams={params}
+        />
+        <Stack.Screen
+          name='Discussion'
+          component={Discussion}
+          options={({ route: { params } }) => ({ title: params.title })}
           initialParams={params}
         />
       </Stack.Navigator>
