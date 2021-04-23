@@ -57,11 +57,13 @@ export default class Live extends React.Component {
                   borderRadius: 500
                 }}
                 source={{
-                  uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                    (Dimensions.get('window').width - 20) * 2
-                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
-                    this.props.liveLesson[0]?.thumbnail_url
-                  }`
+                  uri: this.props.liveLesson[0].thumbnail_url
+                    ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                        (Dimensions.get('window').width - 20) * 2
+                      )},ar_16:9},fl_lossy,q_auto:eco,c_fill,g_face/${
+                        this.props.liveLesson[0].thumbnail_url
+                      }`
+                    : fallbackThumb
                 }}
                 resizeMode={FastImage.resizeMode.cover}
               />
@@ -94,7 +96,7 @@ export default class Live extends React.Component {
                   fontFamily: 'OpenSans-Bold',
                   position: 'absolute',
                   fontSize: onTablet ? 16 : 14,
-                  marginTop: 20,
+                  marginTop: 20
                 }}
               >
                 {this.changeType(this.props.liveLesson[0]?.instructors)}
@@ -118,8 +120,7 @@ export default class Live extends React.Component {
                 { justifyContent: 'center', marginTop: 0 }
               ]}
               onPress={() => {
-                navigate('LIVE'), 
-                this.props.hideLive();
+                navigate('LIVE'), this.props.hideLive();
               }}
             >
               <Text style={[styles.modalButtonText, localStyles.watchText]}>
