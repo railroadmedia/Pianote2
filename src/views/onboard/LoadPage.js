@@ -30,7 +30,7 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import RNFetchBlob from 'rn-fetch-blob';
 import commonService from '../../services/common.service';
 import navigationService from '../../services/navigation.service';
-import { currentScene, navigate, reset } from '../../../AppNavigator';
+import { navigate, reset } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =

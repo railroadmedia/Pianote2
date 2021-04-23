@@ -637,7 +637,7 @@ export default class Live extends React.Component {
                       <View
                         style={{
                           width: '100%',
-                          padding: 10,
+                          paddingHorizontal: 10,
                           flexDirection: 'row',
                           justifyContent: 'space-between',
                           alignItems: 'center'
@@ -648,7 +648,6 @@ export default class Live extends React.Component {
                             style={{
                               flexDirection: 'row',
                               width: 80,
-                              marginBottom: 5,
                               marginTop: 2
                             }}
                           >
@@ -663,7 +662,7 @@ export default class Live extends React.Component {
                                 numberOfLines={1}
                                 ellipsizeMode='tail'
                                 style={{
-                                  fontSize: onTablet ? 16 : 14,
+                                  fontSize: onTablet ? 14 : 12,
                                   fontFamily: 'OpenSans-Regular',
                                   color: 'white'
                                 }}
@@ -703,13 +702,13 @@ export default class Live extends React.Component {
                         {!this.state.liveLesson[0]
                           .is_added_to_primary_playlist ? (
                           <TouchableOpacity
+                            style={{ paddingRight: 2.5, paddingVertical: 5 }}
                             onPress={() =>
                               this.addToMyList(
                                 this.state.liveLesson[0].id,
                                 'live'
                               )
                             }
-                            style={{ paddingRight: 2.5, paddingBottom: 25 }}
                           >
                             <AntIcon
                               name={'plus'}
@@ -719,7 +718,7 @@ export default class Live extends React.Component {
                           </TouchableOpacity>
                         ) : (
                           <TouchableOpacity
-                            style={{ paddingRight: 2.5, paddingBottom: 25 }}
+                            style={{ paddingRight: 2.5, paddingBottom: 5 }}
                             onPress={() =>
                               this.removeFromMyList(
                                 this.state.liveLesson[0].id,
