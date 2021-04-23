@@ -131,7 +131,7 @@ android {
         applicationId "com.pianote2"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 83
+        versionCode 84
         versionName "1.2.1"
         multiDexEnabled true
     }

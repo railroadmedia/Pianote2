@@ -48,8 +48,15 @@ export async function getAllContent(type, sort, page, filters = '') {
 
 export async function getLiveContent() {
   return (response = await commonService.tryCall(
-    `${commonService.rootUrl}/musora-api/live-event`,
+    `${
+      'https://staging.drumeo.com/laravel/public' /*commonService.rootUrl*/
+    }/musora-api/live-event?forced-content-id=281204`,
     'GET'
+
+    // ?forced-content-id=275886
+    // ?forced-upcoming-content-id=275886
+    // `${commonService.rootUrl}/musora-api/live-event`,
+    // 'GET'
     // ?forced-content-id=275886
     // ?forced-upcoming-content-id=275886
   ));

@@ -26,11 +26,11 @@ import Pianote from '../../assets/img/svgs/pianote';
 
 import NoConnection from '../../modals/NoConnection';
 
-import { NetworkContext } from '../../context/NetworkProvider';
 import RNFetchBlob from 'rn-fetch-blob';
+import { navigate, reset } from '../../../AppNavigator';
 import commonService from '../../services/common.service';
+import { NetworkContext } from '../../context/NetworkProvider';
 import navigationService from '../../services/navigation.service';
-import { currentScene, navigate, reset } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -80,7 +80,6 @@ class LoadPage extends React.Component {
       }, {});
       await AsyncStorage.removeItem('resetKey');
       const { email, resetKey, password, loggedIn, forumUrl } = data;
-
       if (!this.context.isConnected) {
         if (loggedIn && !global.loadedFromNotification) {
           return navigate('DOWNLOADS');
