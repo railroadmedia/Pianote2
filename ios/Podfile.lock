@@ -335,7 +335,7 @@ PODS:
     - React-Core
   - react-native-viewpager (3.3.1):
     - React
-  - react-native-webview (11.3.1):
+  - react-native-webview (11.2.1):
     - React-Core
   - React-RCTActionSheet (0.63.4):
     - React-Core/RCTActionSheetHeaders (= 0.63.4)
@@ -707,8 +707,8 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 5e777e6640fa060405cc7632447b6c5ca5af4742
   FirebaseInstanceID: 53140c03b9f6136f890d7901399f85a4c90ab2d0
   FirebaseMessaging: 5f83f200a251c44f647f36cb43e557be09889e8d
-  Folly: b73c3869541e86821df3c387eb0af5f65addfab4
-  glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
+  Folly: aeb27d02cdff07ca01f8a8a5a6dd5bcaf6be6f70
+  glog: 2ad46e202fbaa5641fceb4b2af37dcd88fd8762d
   google-cast-sdk-no-bluetooth: 815df973d547e06a90768f4a72220950cd32d8cb
   GoogleAppMeasurement: 120eec8803fe65a4a7475fb3d3d59a61d0e1a866
   GoogleDataTransport: 8b0e733ea77c9218778e5a9e34ba9508b8328939
@@ -743,7 +743,7 @@ SPEC CHECKSUMS:
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-video: 0c9eb61b06ef78b6e2598e1159743de1d82b6e9e
   react-native-viewpager: 248267e605c2d4edd26924da7f15032d57ac0b75
-  react-native-webview: 30f048378c6cee522ed9bbbedbc34acb21e58188
+  react-native-webview: dbe6c1ad149740f0e2d84a963f1d3c3e77f2d99c
   React-RCTActionSheet: 89a0ca9f4a06c1f93c26067af074ccdce0f40336
   React-RCTAnimation: 1bde3ecc0c104c55df246eda516e0deb03c4e49b
   React-RCTBlob: a97d378b527740cc667e03ebfa183a75231ab0f0
