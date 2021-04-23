@@ -1,9 +1,9 @@
-import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
-import {updateFcmToken} from 'Pianote2/src/services/notification.service.js';
+import { getToken } from 'Pianote2/src/services/UserDataAuth.js';
+import { updateFcmToken } from 'Pianote2/src/services/notification.service.js';
 
 export let cache = {};
 export default {
-  rootUrl: 'https://staging.pianote.com',
+  rootUrl: 'https://www.pianote.com',
   tryCall: async function (url, method, body) {
     try {
       //
@@ -11,10 +11,10 @@ export default {
       let headers = body
         ? {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           }
         : {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`
           };
 
       // URL calling --> change to https
@@ -27,7 +27,7 @@ export default {
       let response = await fetch(newUrl, {
         body,
         headers,
-        method: method || 'GET',
+        method: method || 'GET'
       });
       let json = await response.json();
       // if error, get new token call again
@@ -39,14 +39,14 @@ export default {
         // remake headers w new GLOBAL TOKEN
         let headers = {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         };
 
         // new call
         let res = await fetch(newUrl, {
           body,
           headers,
-          method: method || 'GET',
+          method: method || 'GET'
         });
 
         // return new call
@@ -58,8 +58,8 @@ export default {
     } catch (error) {
       return {
         title: 'Something went wrong...',
-        message: `Pianote is down, we are working on a fix and it should be back shortly, thank you for your patience.`,
+        message: `Pianote is down, we are working on a fix and it should be back shortly, thank you for your patience.`
       };
     }
-  },
+  }
 };
