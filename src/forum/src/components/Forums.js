@@ -50,7 +50,9 @@ export default class Forums extends React.Component {
         this.props.navigation.navigate(
           this.state.tab ? 'Discussion' : 'Topic',
           {
-            title: item.title
+            title: item.title,
+            isDark: this.props.route.params.isDark,
+            appColor: this.props.route.params.appColor
           }
         )
       }

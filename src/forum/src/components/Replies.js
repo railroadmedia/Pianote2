@@ -60,6 +60,8 @@ export default class Replies extends React.Component {
               showReplyIcon={false}
               isDark={isDark}
               appColor={appColor}
+              onEdit={() => navigate('Edit')}
+              onDelete={() => {}}
             />
 
             <View style={styles.titleContainer}>
@@ -78,6 +80,8 @@ export default class Replies extends React.Component {
                 showReplyIcon={false}
                 isDark={isDark}
                 appColor={appColor}
+                onEdit={() => navigate('Edit')}
+                onDelete={() => {}}
               />
             ))}
           </ScrollView>
