@@ -26,6 +26,7 @@ import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import { MusoraChat, watchersListener } from 'MusoraChat';
 import { getLiveScheduleContent } from '../../services/GetContent';
+import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import {
   removeAllMessages,
   toggleBlockStudent
@@ -316,13 +317,28 @@ export default class Live extends React.Component {
                               bottom: 0
                             }}
                           />
+                          <TouchableOpacity
+                            style={{
+                              position: 'absolute',
+                              padding: 10,
+                              left: 0,
+                              top: 0
+                            }}
+                            onPress={() => goBack()}
+                          >
+                            <Back
+                              width={backButtonSize}
+                              height={backButtonSize}
+                              fill={'white'}
+                            />
+                          </TouchableOpacity>
                           <Text
                             style={{
                               color: 'white',
                               fontFamily: 'OpenSans-Bold',
                               position: 'absolute',
                               fontSize: onTablet ? 16 : 12,
-                              left: 5,
+                              right: 5,
                               top: 10
                             }}
                           >
