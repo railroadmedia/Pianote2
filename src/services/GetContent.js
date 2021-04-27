@@ -51,7 +51,6 @@ export async function getLiveContent() {
     `${commonService.rootUrl}/musora-api/live-event`,
     'GET'
     // ?forced-content-id=299539
-    // ?forced-content-id=299539
     // ?forced-upcoming-content-id=275886
   ));
 }
