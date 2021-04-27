@@ -60,7 +60,11 @@ export default class Live extends React.Component {
                   height: 150,
                   borderRadius: 500
                 }}
-                source={{ uri: this.props.liveLesson[0].thumbnail_url }}
+                source={{
+                  uri: this.props.liveLesson[0].thumbnail_url
+                    ? this.props.liveLesson[0].thumbnail_url
+                    : fallbackThumb
+                }}
                 resizeMode={FastImage.resizeMode.cover}
               />
               <View
