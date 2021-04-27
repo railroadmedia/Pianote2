@@ -182,6 +182,7 @@ export default class NavigationMenu extends React.Component {
         ]}
       >
         <ScrollView
+          indicatorStyle={'white'}
           showsVerticalScrollIndicator={true}
           style={{
             flex: 1,

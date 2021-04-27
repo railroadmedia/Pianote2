@@ -886,11 +886,7 @@ class Lessons extends React.Component {
                               }}
                               source={{
                                 uri: this.state.liveLesson[0].thumbnail_url
-                                  ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                      (Dimensions.get('window').width - 20) * 2
-                                    )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
-                                      this.state.liveLesson[0].thumbnail_url
-                                    }`
+                                  ? this.state.liveLesson[0].thumbnail_url
                                   : fallbackThumb
                               }}
                               resizeMode={FastImage.resizeMode.cover}
@@ -1009,7 +1005,7 @@ class Lessons extends React.Component {
                         width: Dimensions.get('window').width - 10,
                         paddingLeft: 10
                       }}
-                      onPress={() => navigate('LIVE')}
+                      onPress={() => this.setState({ showLive: true })}
                     >
                       <View style={{ width: '100%' }}>
                         {Platform.OS == 'ios' ? (
@@ -1021,11 +1017,7 @@ class Lessons extends React.Component {
                             }}
                             source={{
                               uri: this.state.liveLesson[0].thumbnail_url
-                                ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                    (Dimensions.get('window').width - 20) * 2
-                                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
-                                    this.state.liveLesson[0].thumbnail_url
-                                  }`
+                                ? this.state.liveLesson[0].thumbnail_url
                                 : fallbackThumb
                             }}
                             resizeMode={FastImage.resizeMode.cover}

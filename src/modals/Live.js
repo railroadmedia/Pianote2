@@ -22,6 +22,10 @@ export default class Live extends React.Component {
     };
   }
 
+  componentDidMount() {
+    console.log(this.props.liveLesson[0].thumbnail_url);
+  }
+
   changeType = word => {
     if (!word) return;
 
@@ -56,15 +60,7 @@ export default class Live extends React.Component {
                   height: 150,
                   borderRadius: 500
                 }}
-                source={{
-                  uri: this.props.liveLesson[0].thumbnail_url
-                    ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                        (Dimensions.get('window').width - 20) * 2
-                      )},ar_16:9},fl_lossy,q_auto:eco,c_fill,g_face/${
-                        this.props.liveLesson[0].thumbnail_url
-                      }`
-                    : fallbackThumb
-                }}
+                source={{ uri: this.props.liveLesson[0].thumbnail_url }}
                 resizeMode={FastImage.resizeMode.cover}
               />
               <View
