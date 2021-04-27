@@ -182,10 +182,11 @@ export default class NavigationMenu extends React.Component {
         ]}
       >
         <ScrollView
-          showsVerticalScrollIndicator={false}
+          showsVerticalScrollIndicator={true}
           style={{
             flex: 1,
-            maxHeight: (height / 10) * 7
+            maxHeight: (height / 10) * 7,
+            width: '100%'
           }}
         >
           {this.lessonNav()}
