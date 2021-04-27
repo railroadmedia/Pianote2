@@ -6,7 +6,7 @@ import {
   View,
   Platform,
   StatusBar,
-  TextInput,
+  Image,
   StyleSheet,
   Text,
   FlatList,
@@ -65,7 +65,7 @@ export default class Live extends React.Component {
       isLoadingAll: true,
       isLive: false,
       items: [], // for scheduled live events
-      liveLesson: [], // the lesson
+      liveLesson: [],
       month: '',
       addToCalendarModal: false,
       liveViewers: 0
@@ -259,7 +259,8 @@ export default class Live extends React.Component {
     } = this.content;
     return (
       <>
-        {this.state.liveLesson.length > 0 ? (
+        {this.state.liveLesson.length > 0 &&
+        this.state.timeDiffLive.timeDiff < 1800 ? (
           <View
             style={{
               backgroundColor: colors.mainBackground,
@@ -268,8 +269,8 @@ export default class Live extends React.Component {
           >
             {/* COUNTDOWN or LIVE */}
             <>
-              {this.state.timeDiffLive.timeDiff > 0 &&
-              this.state.timeDiffLive.timeDiff < 3600 * 4 ? (
+              {this.state.timeDiffLive.timeDiff > 0 ? (
+                // UPCOMING EVENT (< 30 mins)
                 <>
                   <SafeAreaView
                     style={{
@@ -453,11 +454,7 @@ export default class Live extends React.Component {
                             }}
                             source={{
                               uri: this.state.liveLesson[0].thumbnail_url
-                                ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                    (Dimensions.get('window').width - 20) * 2
-                                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
-                                    this.state.liveLesson[0].thumbnail_url
-                                  }`
+                                ? this.state.liveLesson[0].thumbnail_url
                                 : fallbackThumb
                             }}
                             resizeMode={FastImage.resizeMode.cover}
@@ -472,11 +469,7 @@ export default class Live extends React.Component {
                             resizeMode='cover'
                             source={{
                               uri: this.state.liveLesson[0].thumbnail_url
-                                ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                    (Dimensions.get('window').width - 20) * 2
-                                  )},ar_16:9},fl_lossy,q_auto:eco,c_fill,g_face/${
-                                    this.state.liveLesson[0].thumbnail_url
-                                  }`
+                                ? this.state.liveLesson[0].thumbnail_url
                                 : fallbackThumb
                             }}
                           />
@@ -552,6 +545,7 @@ export default class Live extends React.Component {
                           />
                         </TouchableOpacity>
                       )}
+                      {/* 
                       <TouchableOpacity
                         style={{ paddingRight: 5 }}
                         onPress={() => {
@@ -566,10 +560,12 @@ export default class Live extends React.Component {
                           color={colors.pianoteRed}
                         />
                       </TouchableOpacity>
+                       */}
                     </View>
                   </SafeAreaView>
                 </>
               ) : (
+                // LIVE PLAYER (0 minutes)
                 <>
                   {this.state.isLoadingAll ? (
                     <View style={{ backgroundColor: 'black' }}>

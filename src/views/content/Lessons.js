@@ -1005,7 +1005,7 @@ class Lessons extends React.Component {
                         width: Dimensions.get('window').width - 10,
                         paddingLeft: 10
                       }}
-                      onPress={() => this.setState({ showLive: true })}
+                      onPress={() => navigate('LIVE')}
                     >
                       <View style={{ width: '100%' }}>
                         {Platform.OS == 'ios' ? (
@@ -1027,8 +1027,7 @@ class Lessons extends React.Component {
                             style={{
                               width: '100%',
                               borderRadius: 7.5,
-                              aspectRatio: 16 / 9,
-                              backgroundColor: 'green'
+                              aspectRatio: 16 / 9
                             }}
                             resizeMode='cover'
                             source={{
