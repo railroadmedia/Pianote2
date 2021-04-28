@@ -79,7 +79,7 @@ export default class Moderate extends React.Component {
           {moderate({ width: 15, fill: appColor })}
         </TouchableOpacity>
         <Modal
-          animationType={'slide'}
+          animationType={'fade'}
           onRequestClose={() => this.close()}
           supportedOrientations={['portrait', 'landscape']}
           transparent={true}
