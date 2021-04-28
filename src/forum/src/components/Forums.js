@@ -56,7 +56,9 @@ export default class Forums extends React.Component {
     <ForumsCard
       onNavigate={() =>
         this.navigate(this.state.tab ? 'Discussion' : 'Topic', {
-          title: item.title
+          title: item.title,
+          isDark: this.props.route.params.isDark,
+          appColor: this.props.route.params.appColor
         })
       }
       isDark={this.props.route.params.isDark}

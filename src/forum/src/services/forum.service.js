@@ -2,6 +2,9 @@ export const setForumService = function (options) {
   // setting tryCall, rootUrl, NetworkContext etc
   Object.assign(this, options);
 };
+export const getDiscussions = function () {
+  return new Promise(res => res(discussions));
+};
 export const getTopic = function (page = 1) {
   /* TBR */
   return new Promise(res =>
@@ -107,3 +110,76 @@ const mocks = {
     }
   }))
 };
+
+const discussions = [
+  {
+    comment:
+      'I love this song! Thanks for removing the double treble clef but I am missing the version which is one octave higher. It sounds better in my eyes/ ears. :-) Please please please publish a second full score version. Or am I doing something wrong? Thanks so much!',
+    content_id: 298776,
+    created_on: '2021-04-20 19:22:43',
+    id: 187599,
+    is_liked: false,
+    like_count: 1,
+    replies: [
+      {
+        comment:
+          'This song is awesome, I totally agree!For the full score, I think that this is something that we can look at adding some time in the future. :) ',
+        created_on: '2021-04-20 20:25:02',
+        id: 187607,
+        is_liked: false,
+        like_count: 0,
+        user: {
+          display_name: 'Sam Vesely',
+          xp: '0',
+          rank: 'Casual',
+          access_level: 'team',
+          'fields.profile_picture_image_url':
+            'https://d2vyvo0tyx8ig5.cloudfront.net/avatars/344840_1609278236577-1609278354-344840.jpg'
+        }
+      }
+    ],
+    user: {
+      display_name: 'Richard Unger',
+      'fields.profile_picture_image_url':
+        'https://d2vyvo0tyx8ig5.cloudfront.net/avatars/411372_1609944384220-1609944386-411372.jpg',
+      xp: '0',
+      rank: 'Casual'
+    },
+    user_id: 411372
+  },
+  {
+    comment:
+      'Just started to learn this song, just to check, bar 23 is F chord right? Love this song..',
+    content_id: 298776,
+    created_on: '2021-04-20 19:22:43',
+    id: 187599,
+    is_liked: false,
+    like_count: 5,
+    replies: [],
+    user: {
+      display_name: 'Maggie',
+      'fields.profile_picture_image_url':
+        'https://d2vyvo0tyx8ig5.cloudfront.net/avatars/417188_1615416395888-1615416399-417188.jpg',
+      xp: '0',
+      rank: 'Casual'
+    },
+    user_id: 411372
+  },
+  {
+    comment:
+      "This song is kind of challenging somehow but I understand am just new on the keyboard someone's attention please thanks ",
+    content_id: 298776,
+    created_on: '2021-04-20 19:22:43',
+    id: 187599,
+    is_liked: true,
+    like_count: 1,
+    user: {
+      display_name: '"ankundachristof98187"',
+      'fields.profile_picture_image_url':
+        'https://d2vyvo0tyx8ig5.cloudfront.net/avatars/411372_1609944384220-1609944386-411372.jpg',
+      xp: '0',
+      rank: 'Casual'
+    },
+    user_id: 411372
+  }
+];
