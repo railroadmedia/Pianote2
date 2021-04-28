@@ -32,7 +32,7 @@ export default ({
   }
 }) => {
   const networkContext = useContext(NetworkContext);
-  setForumService({ tryCall, rootUrl, networkContext });
+  setForumService({ tryCall, rootUrl, networkContext, NetworkContext });
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
