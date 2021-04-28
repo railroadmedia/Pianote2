@@ -1,14 +1,14 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import forumService from '../services/forum.service';
+import { NetworkContext } from '../services/forum.service';
 
 let styles;
 export default class MediaPicker extends React.Component {
   constructor(props) {
     super(props);
     let { isDark } = props.route.params;
-    MediaPicker.contextType = forumService.NetworkContext;
+    MediaPicker.contextType = NetworkContext;
     styles = setStyles(isDark);
   }
 

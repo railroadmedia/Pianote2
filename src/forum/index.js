@@ -15,7 +15,7 @@ import Edit from './src/components/Edit';
 
 import { arrowLeft } from './src/assets/svgs';
 
-import forumService from './src/services/forum.service';
+import { setForumService } from './src/services/forum.service';
 import Replies from './src/components/Replies';
 
 const Stack = createStackNavigator();
@@ -25,10 +25,13 @@ const timingAnim = {
   config: { duration: 250, easing: Easing.out(Easing.circle) }
 };
 
-export default ({ route: { params } }) => {
-  forumService.tryCall = params.tryCall;
-  forumService.rootUrl = params.rootUrl;
-  forumService.NetworkContext = params.NetworkContext;
+export default ({
+  route: {
+    params,
+    params: { tryCall, rootUrl, NetworkContext }
+  }
+}) => {
+  setForumService({ tryCall, rootUrl, NetworkContext });
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

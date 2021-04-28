@@ -1,70 +1,156 @@
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import Comment from '../commons/Comment';
+import {
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  Text,
+  ActivityIndicator
+} from 'react-native';
 
+import ForumsCard from '../commons/ForumsCard';
+
+import { getTopic } from '../services/forum.service';
+
+import { pencil } from '../assets/svgs';
+
+let styles;
 export default class Topic extends React.Component {
-  static contextType;
+  page = 1;
+  discussions = [];
+
+  state = {
+    loading: true,
+    loadingMore: false,
+    createDiscussionHeight: 0
+  };
+
   constructor(props) {
     super(props);
-    Topic.contextType = props.route.params.NetworkContext;
+    let { isDark, NetworkContext } = props.route.params;
+    Topic.contextType = NetworkContext;
+    styles = setStyles(isDark);
   }
+
+  componentDidMount() {
+    getTopic().then(discussions => {
+      this.discussions = discussions;
+      this.setState({ loading: false });
+    });
+  }
+
+  get connection() {
+    if (this.context.isConnected) return true;
+    this.context.showNoConnectionAlert();
+  }
+
+  navigate = (route, params) =>
+    this.connection && this.props.navigation.navigate(route, params);
+
+  renderFLItem = ({ item }) => (
+    <ForumsCard
+      onNavigate={() => this.navigate('Discussion', { title: item.title })}
+      isDark={this.props.route.params.isDark}
+      data={item}
+    />
+  );
+
+  loadMore = () => {
+    if (!this.context.isConnected) return;
+    this.setState({ loadingMore: true }, () =>
+      getTopic(++this.page).then(discussions => {
+        this.discussions.push(...discussions);
+        this.setState({ loadingMore: false });
+      })
+    );
+  };
+
   render() {
-    let {
-      route: {
-        params: { isDark, BottomNavigator, appColor }
-      },
-      navigation: { navigate, goBack }
-    } = this.props;
-    return (
+    let { loading, loadingMore, createDiscussionHeight } = this.state;
+    let { isDark, appColor } = this.props.route.params;
+    return loading ? (
+      <ActivityIndicator
+        size='large'
+        color={isDark ? 'white' : 'black'}
+        animating={true}
+        style={styles.loading}
+      />
+    ) : (
       <>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: isDark ? '#00101d' : 'white',
-            padding: 15
-          }}
+        <FlatList
+          windowSize={10}
+          data={this.discussions}
+          style={styles.fList}
+          initialNumToRender={1}
+          maxToRenderPerBatch={10}
+          onEndReachedThreshold={0.01}
+          removeClippedSubviews={true}
+          keyboardShouldPersistTaps='handled'
+          renderItem={this.renderFLItem}
+          onEndReached={this.loadMore}
+          keyExtractor={item => item.id.toString()}
+          ListEmptyComponent={
+            <Text style={styles.emptyList}>There are no threads</Text>
+          }
+          ListFooterComponent={
+            <ActivityIndicator
+              size='small'
+              color={isDark ? 'white' : 'black'}
+              animating={loadingMore}
+              style={{
+                padding: 15,
+                marginBottom: createDiscussionHeight
+              }}
+            />
+          }
+        />
+        <TouchableOpacity
+          onLayout={({ nativeEvent: { layout } }) =>
+            this.setState({ createDiscussionHeight: layout.height + 15 })
+          }
+          onPress={() => this.navigate('CreateDiscussion')}
+          style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}
         >
-          <Comment
-            showReplyIcon={true}
-            comment={{
-              id: 1234,
-              is_liked: false,
-              like_count: 1,
-              user: {
-                'fields.profile_picture_image_url':
-                  'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2000px-No_image_available.svg.png',
-                xp: 1000,
-                display_name: 'Harold Pierce',
-                xp_level: 'Master'
-              },
-              created_on: '2020/02/04 09:00',
-              image: 'https://d1923uyy6spedc.cloudfront.net/9-4-0.png',
-              video:
-                'https://player.vimeo.com/external/535073657.sd.mp4?s=e87212d62e9076fcab98191fe6e42838fc395a49&profile_id=164&oauth2_token_id=1284792283',
-              comment:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. "
-            }}
-            appColor={appColor}
-            isDark={isDark}
-            NetworkContext={Topic.contextType}
-            onEdit={() => navigate('Edit')}
-            onDelete={() => {}}
-          />
-          <TouchableOpacity
-            style={{ padding: 50, backgroundColor: 'blue' }}
-            onPress={() => navigate('CreateDiscussion')}
-          />
-          <TouchableOpacity
-            style={{ padding: 50, backgroundColor: 'black' }}
-            onPress={goBack}
-          />
-          <TouchableOpacity
-            style={{ padding: 50, backgroundColor: 'green' }}
-            onPress={() => navigate('Edit', { text: 'aa' })}
-          />
-        </View>
-        {!!BottomNavigator && <BottomNavigator currentPage={'Forum'} />}
+          {pencil({ height: 10, fill: 'white' })}
+          <Text style={styles.bottomText}>CREATE A DISCUSSION</Text>
+        </TouchableOpacity>
       </>
     );
   }
 }
+
+let setStyles = isDark =>
+  StyleSheet.create({
+    fList: {
+      flex: 1,
+      backgroundColor: isDark ? '#00101D' : 'white'
+    },
+    loading: {
+      flex: 1,
+      backgroundColor: isDark ? '#00101D' : 'white',
+      alignItems: 'center'
+    },
+    emptyList: {
+      color: isDark ? '#445F74' : 'black',
+      fontFamily: 'OpenSans',
+      padding: 15
+    },
+    bottomTOpacity: {
+      padding: 15,
+      width: '70%',
+      maxWidth: 300,
+      position: 'absolute',
+      borderRadius: 99,
+      bottom: 15,
+      alignSelf: 'center',
+      justifyContent: 'center',
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+    bottomText: {
+      fontFamily: 'RobotoCondensed-Regular',
+      color: 'white',
+      fontWeight: '700',
+      fontSize: 18,
+      marginLeft: 10
+    }
+  });

@@ -10,7 +10,7 @@ import {
 
 import ForumsCard from '../commons/ForumsCard';
 
-import forumService from '../services/forum.service';
+import { getFollowed, getTopics } from '../services/forum.service';
 
 import { pencil } from '../assets/svgs';
 
@@ -20,6 +20,7 @@ export default class Forums extends React.Component {
   topicsPage = 1;
   followed = [];
   topics = [];
+
   state = {
     loadingMoreFollowed: false,
     loadingMoreTopics: false,
@@ -27,6 +28,7 @@ export default class Forums extends React.Component {
     loading: true,
     createDiscussionHeight: 0
   };
+
   constructor(props) {
     super(props);
     let { isDark, NetworkContext } = props.route.params;
@@ -35,24 +37,27 @@ export default class Forums extends React.Component {
   }
 
   componentDidMount() {
-    Promise.all([forumService.getTopics(), forumService.getFollowed()]).then(
-      ([topics, followed]) => {
-        this.topics = topics;
-        this.followed = followed;
-        this.setState({ loading: false });
-      }
-    );
+    Promise.all([getTopics(), getFollowed()]).then(([topics, followed]) => {
+      this.topics = topics;
+      this.followed = followed;
+      this.setState({ loading: false });
+    });
   }
+
+  get connection() {
+    if (this.context.isConnected) return true;
+    this.context.showNoConnectionAlert();
+  }
+
+  navigate = (route, params) =>
+    this.connection && this.props.navigation.navigate(route, params);
 
   renderFLItem = ({ item }) => (
     <ForumsCard
       onNavigate={() =>
-        this.props.navigation.navigate(
-          this.state.tab ? 'Discussion' : 'Topic',
-          {
-            title: item.title
-          }
-        )
+        this.navigate(this.state.tab ? 'Discussion' : 'Topic', {
+          title: item.title
+        })
       }
       isDark={this.props.route.params.isDark}
       data={item}
@@ -60,14 +65,17 @@ export default class Forums extends React.Component {
   );
 
   loadMore = () => {
+    if (!this.context.isConnected) return;
     let { tab } = this.state;
     this.setState({ [`loadingMore${tab ? 'Followed' : 'Topics'}`]: true }, () =>
-      forumService[tab ? 'getFollowed' : 'getTopics'](
-        ++this[`${tab ? 'followed' : 'topics'}Page`]
-      ).then(r => {
-        this[tab ? 'followed' : 'topics'].push(...r);
-        this.setState({ [`loadingMore${tab ? 'Followed' : 'Topics'}`]: false });
-      })
+      tab
+        ? getFollowed
+        : getTopics(++this[`${tab ? 'followed' : 'topics'}Page`]).then(r => {
+            this[tab ? 'followed' : 'topics'].push(...r);
+            this.setState({
+              [`loadingMore${tab ? 'Followed' : 'Topics'}`]: false
+            });
+          })
     );
   };
 
@@ -85,13 +93,13 @@ export default class Forums extends React.Component {
         <View style={styles.headerContainer}>
           {['Topics', 'Followed'].map((t, i) => (
             <TouchableOpacity
+              onPress={() => this.setState({ tab: i })}
               style={[
                 styles.headerTOpacity,
                 tab === i ? { borderColor: appColor } : {}
               ]}
             >
               <Text
-                onPress={() => this.setState({ tab: i })}
                 style={[
                   styles.headerText,
                   tab === i ? { color: isDark ? 'white' : 'black' } : {}
@@ -145,7 +153,7 @@ export default class Forums extends React.Component {
               onLayout={({ nativeEvent: { layout } }) =>
                 this.setState({ createDiscussionHeight: layout.height + 15 })
               }
-              onPress={() => this.props.navigation.navigate('CreateDiscussion')}
+              onPress={() => this.navigate('CreateDiscussion')}
               style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}
             >
               {pencil({ height: 10, fill: 'white' })}
