@@ -2,6 +2,9 @@ export const setForumService = function (options) {
   // setting tryCall, rootUrl, NetworkContext etc
   Object.assign(this, options);
 };
+export const NetworkContext = function () {
+  return this.NetworkContext;
+};
 export const getDiscussions = function () {
   return new Promise(res => res(discussions));
 };

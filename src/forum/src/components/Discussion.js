@@ -24,7 +24,7 @@ export default class Discussion extends React.Component {
   constructor(props) {
     super(props);
     let { isDark, appColor } = props.route.params;
-    Discussion.contextType = NetworkContext;
+    Discussion.contextType = NetworkContext();
 
     styles = setStyles(isDark, appColor);
   }
