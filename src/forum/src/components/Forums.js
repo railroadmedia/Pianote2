@@ -11,7 +11,7 @@ import {
 
 import ForumsCard from '../commons/ForumsCard';
 
-import { getFollowed, getTopics } from '../services/forum.service';
+import { getFollowed, getTopics, connection } from '../services/forum.service';
 
 import { pencil } from '../assets/svgs';
 
@@ -35,7 +35,6 @@ export default class Forums extends React.Component {
   constructor(props) {
     super(props);
     let { isDark, NetworkContext } = props.route.params;
-    Forums.contextType = NetworkContext;
     styles = setStyles(isDark);
   }
 
@@ -47,13 +46,8 @@ export default class Forums extends React.Component {
     });
   }
 
-  get connection() {
-    if (this.context.isConnected) return true;
-    this.context.showNoConnectionAlert();
-  }
-
   navigate = (route, params) =>
-    this.connection && this.props.navigation.navigate(route, params);
+    connection(true) && this.props.navigation.navigate(route, params);
 
   renderFLItem = ({ item }) => (
     <ForumsCard
@@ -70,7 +64,7 @@ export default class Forums extends React.Component {
   );
 
   loadMore = () => {
-    if (!this.context.isConnected) return;
+    if (!connection()) return;
     let { tab } = this.state;
     let fORt = tab ? 'followed' : 'topics';
     this.setState({ [`${fORt}LoadingMore`]: true }, () =>
@@ -82,7 +76,7 @@ export default class Forums extends React.Component {
   };
 
   refresh = () => {
-    if (!this.context.isConnected) return;
+    if (!connection()) return;
     let { tab } = this.state;
     let fORt = tab ? 'followed' : 'topics';
     this.setState({ [`${fORt}Refreshing`]: true }, () =>

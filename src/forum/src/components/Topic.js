@@ -10,7 +10,7 @@ import {
 
 import ForumsCard from '../commons/ForumsCard';
 
-import { getTopic } from '../services/forum.service';
+import { getTopic, connection } from '../services/forum.service';
 
 import { pencil } from '../assets/svgs';
 
@@ -29,7 +29,6 @@ export default class Topic extends React.Component {
   constructor(props) {
     super(props);
     let { isDark, NetworkContext } = props.route.params;
-    Topic.contextType = NetworkContext;
     styles = setStyles(isDark);
   }
 
@@ -40,13 +39,8 @@ export default class Topic extends React.Component {
     });
   }
 
-  get connection() {
-    if (this.context.isConnected) return true;
-    this.context.showNoConnectionAlert();
-  }
-
   navigate = (route, params) =>
-    this.connection && this.props.navigation.navigate(route, params);
+    connection(true) && this.props.navigation.navigate(route, params);
 
   renderFLItem = ({ item }) => (
     <ForumsCard
@@ -57,7 +51,7 @@ export default class Topic extends React.Component {
   );
 
   loadMore = () => {
-    if (!this.context.isConnected) return;
+    if (!connection()) return;
     this.setState({ loadingMore: true }, () =>
       getTopic(++this.page).then(discussions => {
         this.discussions.push(...discussions);
@@ -67,7 +61,7 @@ export default class Topic extends React.Component {
   };
 
   refresh = () => {
-    if (!this.context.isConnected) return;
+    if (!connection()) return;
     this.setState({ refreshing: true }, () =>
       getTopic((this.page = 1)).then(discussions => {
         this.discussions = discussions;

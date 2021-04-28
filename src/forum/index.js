@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   Easing,
   KeyboardAvoidingView,
@@ -31,7 +31,8 @@ export default ({
     params: { tryCall, rootUrl, NetworkContext }
   }
 }) => {
-  setForumService({ tryCall, rootUrl, NetworkContext });
+  const networkContext = useContext(NetworkContext);
+  setForumService({ tryCall, rootUrl, networkContext });
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
