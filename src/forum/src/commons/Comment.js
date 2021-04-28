@@ -45,7 +45,7 @@ export default class Comment extends React.PureComponent {
   constructor(props) {
     super(props);
     let { isDark } = props;
-    Comment.contextType = NetworkContext;
+    Comment.contextType = NetworkContext();
 
     styles = setStyles(isDark);
     this.state.isLiked = props.comment.is_liked;

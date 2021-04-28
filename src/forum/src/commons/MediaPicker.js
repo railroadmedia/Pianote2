@@ -8,7 +8,7 @@ export default class MediaPicker extends React.Component {
   constructor(props) {
     super(props);
     let { isDark } = props.route.params;
-    MediaPicker.contextType = NetworkContext;
+    MediaPicker.contextType = NetworkContext();
     styles = setStyles(isDark);
   }
 

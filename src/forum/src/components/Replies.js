@@ -28,7 +28,7 @@ export default class Replies extends React.Component {
     super(props);
     const { isDark, comment } = props.route.params;
     styles = setStyles(isDark);
-    Replies.contextType = NetworkContext;
+    Replies.contextType = NetworkContext();
 
     this.state.comment = comment;
   }

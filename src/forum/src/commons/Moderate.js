@@ -23,7 +23,7 @@ export default class Moderate extends React.Component {
 
   constructor(props) {
     super(props);
-    Moderate.contextType = NetworkContext;
+    Moderate.contextType = NetworkContext();
   }
 
   get connection() {
