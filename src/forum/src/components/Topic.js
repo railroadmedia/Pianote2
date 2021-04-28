@@ -4,7 +4,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   Text,
-  ActivityIndicator
+  ActivityIndicator,
+  RefreshControl
 } from 'react-native';
 
 import ForumsCard from '../commons/ForumsCard';
@@ -21,7 +22,8 @@ export default class Topic extends React.Component {
   state = {
     loading: true,
     loadingMore: false,
-    createDiscussionHeight: 0
+    createDiscussionHeight: 0,
+    refreshing: false
   };
 
   constructor(props) {
@@ -64,8 +66,23 @@ export default class Topic extends React.Component {
     );
   };
 
+  refresh = () => {
+    if (!this.context.isConnected) return;
+    this.setState({ refreshing: true }, () =>
+      getTopic((this.page = 1)).then(discussions => {
+        this.discussions = discussions;
+        this.setState({ refreshing: false });
+      })
+    );
+  };
+
   render() {
-    let { loading, loadingMore, createDiscussionHeight } = this.state;
+    let {
+      loading,
+      loadingMore,
+      createDiscussionHeight,
+      refreshing
+    } = this.state;
     let { isDark, appColor } = this.props.route.params;
     return loading ? (
       <ActivityIndicator
@@ -100,6 +117,14 @@ export default class Topic extends React.Component {
                 padding: 15,
                 marginBottom: createDiscussionHeight
               }}
+            />
+          }
+          refreshControl={
+            <RefreshControl
+              colors={[isDark ? 'white' : 'black']}
+              tintColor={isDark ? 'white' : 'black'}
+              onRefresh={this.refresh}
+              refreshing={refreshing}
             />
           }
         />
