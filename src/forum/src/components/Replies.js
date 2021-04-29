@@ -12,7 +12,7 @@ import { SafeAreaView } from 'react-navigation';
 
 import Comment from '../commons/Comment';
 import CommentInput from '../commons/CommentInput';
-import { NetworkContext, addReply } from '../services/forum.service';
+import { addReply, connection } from '../services/forum.service';
 
 const windowWidth = Dimensions.get('window').width;
 const maxFontMultiplier =
@@ -28,19 +28,12 @@ export default class Replies extends React.Component {
     super(props);
     const { isDark, comment } = props.route.params;
     styles = setStyles(isDark);
-    Replies.contextType = NetworkContext();
 
     this.state.comment = comment;
   }
 
-  get connection() {
-    if (this.context.isConnected) return true;
-    this.context.showNoConnectionAlert();
-  }
-
   addReply = async replyText => {
-    if (!this.connection) return;
-    addReply(replyText);
+    connection(true) && addReply(replyText);
   };
 
   render() {

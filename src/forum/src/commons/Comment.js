@@ -23,9 +23,9 @@ import Moderate from './Moderate';
 
 import { like, likeOn, replies } from '../assets/svgs';
 import {
-  NetworkContext,
   likeComment,
-  disLikeComment
+  disLikeComment,
+  connection
 } from '../services/forum.service';
 
 const fallbackProfilePicUri =
@@ -45,16 +45,10 @@ export default class Comment extends React.PureComponent {
   constructor(props) {
     super(props);
     let { isDark } = props;
-    Comment.contextType = NetworkContext();
 
     styles = setStyles(isDark);
     this.state.isLiked = props.comment.is_liked;
     this.state.likeCount = props.comment.like_count;
-  }
-
-  get connection() {
-    if (this.context.isConnected) return true;
-    this.context.showNoConnectionAlert();
   }
 
   parseXpValue(xp) {
@@ -68,20 +62,20 @@ export default class Comment extends React.PureComponent {
   }
 
   likeOrDislikeComment = id => {
-    if (!this.connection) return;
-
-    if (id === this.props.comment.id) {
-      let { likeCount, isLiked } = this.state;
-      if (isLiked) {
-        likeCount--;
-        isLiked = false;
-        likeComment(id);
-      } else {
-        likeCount++;
-        isLiked = true;
-        disLikeComment(id);
+    if (connection(true)) {
+      if (id === this.props.comment.id) {
+        let { likeCount, isLiked } = this.state;
+        if (isLiked) {
+          likeCount--;
+          isLiked = false;
+          likeComment(id);
+        } else {
+          likeCount++;
+          isLiked = true;
+          disLikeComment(id);
+        }
+        this.setState({ likeCount, isLiked });
       }
-      this.setState({ likeCount, isLiked });
     }
   };
 

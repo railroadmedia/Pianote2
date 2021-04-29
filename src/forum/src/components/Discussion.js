@@ -10,9 +10,9 @@ import { SafeAreaView } from 'react-navigation';
 import Comment from '../commons/Comment';
 import CommentInput from '../commons/CommentInput';
 import {
-  NetworkContext,
   getDiscussions,
-  addReply
+  addReply,
+  connection
 } from '../services/forum.service';
 
 let styles;
@@ -24,7 +24,6 @@ export default class Discussion extends React.Component {
   constructor(props) {
     super(props);
     let { isDark, appColor } = props.route.params;
-    Discussion.contextType = NetworkContext();
 
     styles = setStyles(isDark, appColor);
   }
@@ -33,28 +32,23 @@ export default class Discussion extends React.Component {
     this.getDiscussions();
   }
 
-  get connection() {
-    if (this.context.isConnected) return true;
-    this.context.showNoConnectionAlert();
-  }
-
   async getDiscussions() {
-    if (!this.connection) return;
-
-    let discussions = await getDiscussions();
-    this.setState({ discussions, refreshing: false });
+    if (connection(true)) {
+      let discussions = await getDiscussions();
+      this.setState({ discussions, refreshing: false });
+    }
   }
 
   refresh() {
-    if (!this.connection) return;
-
-    this.setState({ refreshing: true }, () => this.getDiscussions());
+    if (connection(true)) {
+      this.setState({ refreshing: true }, () => this.getDiscussions());
+    }
   }
 
   addDiscussion(discussion) {
-    if (!this.connection) return;
-
-    addReply(discussion);
+    if (connection(true)) {
+      addReply(discussion);
+    }
   }
 
   render() {
