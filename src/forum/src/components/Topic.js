@@ -52,7 +52,7 @@ export default class Topic extends React.Component {
           />
           <TouchableOpacity
             style={{ padding: 50, backgroundColor: 'blue' }}
-            onPress={() => navigate('CreateDiscussion')}
+            onPress={() => navigate('CreateDiscussion', { isDark, appColor })}
           />
           <TouchableOpacity
             style={{ padding: 50, backgroundColor: 'black' }}

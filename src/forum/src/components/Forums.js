@@ -147,7 +147,12 @@ export default class Forums extends React.Component {
               onLayout={({ nativeEvent: { layout } }) =>
                 this.setState({ createDiscussionHeight: layout.height + 15 })
               }
-              onPress={() => this.props.navigation.navigate('CreateDiscussion')}
+              onPress={() =>
+                this.props.navigation.navigate('CreateDiscussion', {
+                  isDark,
+                  appColor
+                })
+              }
               style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}
             >
               {pencil({ height: 10, fill: 'white' })}
