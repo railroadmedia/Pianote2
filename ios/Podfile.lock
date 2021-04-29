@@ -328,6 +328,8 @@ PODS:
     - React-Core
   - react-native-splash-screen (3.2.0):
     - React
+  - react-native-tracking-transparency (0.1.0):
+    - React
   - react-native-video (5.1.0-alpha8):
     - React-Core
     - react-native-video/Video (= 5.1.0-alpha8)
@@ -511,6 +513,7 @@ DEPENDENCIES:
   - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
+  - react-native-tracking-transparency (from `../node_modules/react-native-tracking-transparency`)
   - react-native-video (from `../node_modules/react-native-video`)
   - "react-native-viewpager (from `../node_modules/@react-native-community/viewpager`)"
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -626,6 +629,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
+  react-native-tracking-transparency:
+    :path: "../node_modules/react-native-tracking-transparency"
   react-native-video:
     :path: "../node_modules/react-native-video"
   react-native-viewpager:
@@ -741,6 +746,7 @@ SPEC CHECKSUMS:
   react-native-orientation-locker: 47aaa55d59bfc1613804dc22f159e6bb1cca5f30
   react-native-safe-area-context: e471852c5ed67eea4b10c5d9d43c1cebae3b231d
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
+  react-native-tracking-transparency: 8729fa81ffc6789fda5a70819bf8cb212fcd9ee8
   react-native-video: 0c9eb61b06ef78b6e2598e1159743de1d82b6e9e
   react-native-viewpager: 248267e605c2d4edd26924da7f15032d57ac0b75
   react-native-webview: dbe6c1ad149740f0e2d84a963f1d3c3e77f2d99c
