@@ -22,7 +22,11 @@ import RNVideo from 'react-native-video';
 import Moderate from './Moderate';
 
 import { like, likeOn, replies } from '../assets/svgs';
-import forumService from '../services/forum.service';
+import {
+  NetworkContext,
+  likeComment,
+  disLikeComment
+} from '../services/forum.service';
 
 const fallbackProfilePicUri =
   'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2000px-No_image_available.svg.png';
@@ -41,7 +45,7 @@ export default class Comment extends React.PureComponent {
   constructor(props) {
     super(props);
     let { isDark } = props;
-    Comment.contextType = forumService.NetworkContext;
+    Comment.contextType = NetworkContext();
 
     styles = setStyles(isDark);
     this.state.isLiked = props.comment.is_liked;
@@ -71,11 +75,11 @@ export default class Comment extends React.PureComponent {
       if (isLiked) {
         likeCount--;
         isLiked = false;
-        forumService.likeComment(id);
+        likeComment(id);
       } else {
         likeCount++;
         isLiked = true;
-        forumService.disLikeComment(id);
+        disLikeComment(id);
       }
       this.setState({ likeCount, isLiked });
     }

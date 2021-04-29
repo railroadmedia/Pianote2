@@ -2,6 +2,7 @@ import React from 'react';
 import {
   ActivityIndicator,
   FlatList,
+  RefreshControl,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -10,7 +11,7 @@ import {
 
 import ForumsCard from '../commons/ForumsCard';
 
-import forumService from '../services/forum.service';
+import { getFollowed, getTopics, connection } from '../services/forum.service';
 
 import { pencil } from '../assets/svgs';
 
@@ -20,41 +21,42 @@ export default class Forums extends React.Component {
   topicsPage = 1;
   followed = [];
   topics = [];
+
   state = {
-    loadingMoreFollowed: false,
-    loadingMoreTopics: false,
+    followedLoadingMore: false,
+    topicsLoadingMore: false,
     tab: 0,
     loading: true,
-    createDiscussionHeight: 0
+    createDiscussionHeight: 0,
+    followedRefreshing: false,
+    topicsRefreshing: false
   };
+
   constructor(props) {
     super(props);
     let { isDark, NetworkContext } = props.route.params;
-    Forums.contextType = NetworkContext;
     styles = setStyles(isDark);
   }
 
   componentDidMount() {
-    Promise.all([forumService.getTopics(), forumService.getFollowed()]).then(
-      ([topics, followed]) => {
-        this.topics = topics;
-        this.followed = followed;
-        this.setState({ loading: false });
-      }
-    );
+    Promise.all([getTopics(), getFollowed()]).then(([topics, followed]) => {
+      this.topics = topics;
+      this.followed = followed;
+      this.setState({ loading: false });
+    });
   }
+
+  navigate = (route, params) =>
+    connection(true) && this.props.navigation.navigate(route, params);
 
   renderFLItem = ({ item }) => (
     <ForumsCard
       onNavigate={() =>
-        this.props.navigation.navigate(
-          this.state.tab ? 'Discussion' : 'Topic',
-          {
-            title: item.title,
-            isDark: this.props.route.params.isDark,
-            appColor: this.props.route.params.appColor
-          }
-        )
+        this.navigate(this.state.tab ? 'Discussion' : 'Topic', {
+          title: item.title,
+          isDark: this.props.route.params.isDark,
+          appColor: this.props.route.params.appColor
+        })
       }
       isDark={this.props.route.params.isDark}
       data={item}
@@ -62,24 +64,38 @@ export default class Forums extends React.Component {
   );
 
   loadMore = () => {
+    if (!connection()) return;
     let { tab } = this.state;
-    this.setState({ [`loadingMore${tab ? 'Followed' : 'Topics'}`]: true }, () =>
-      forumService[tab ? 'getFollowed' : 'getTopics'](
-        ++this[`${tab ? 'followed' : 'topics'}Page`]
-      ).then(r => {
-        this[tab ? 'followed' : 'topics'].push(...r);
-        this.setState({ [`loadingMore${tab ? 'Followed' : 'Topics'}`]: false });
+    let fORt = tab ? 'followed' : 'topics';
+    this.setState({ [`${fORt}LoadingMore`]: true }, () =>
+      (tab ? getFollowed : getTopics)(++this[`${fORt}Page`]).then(r => {
+        this[fORt].push(...r);
+        this.setState({ [`${fORt}LoadingMore`]: false });
+      })
+    );
+  };
+
+  refresh = () => {
+    if (!connection()) return;
+    let { tab } = this.state;
+    let fORt = tab ? 'followed' : 'topics';
+    this.setState({ [`${fORt}Refreshing`]: true }, () =>
+      (tab ? getFollowed : getTopics)((this[`${fORt}Page`] = 1)).then(r => {
+        this[fORt] = r;
+        this.setState({ [`${fORt}Refreshing`]: false });
       })
     );
   };
 
   render() {
     let {
-      loadingMoreFollowed,
-      loadingMoreTopics,
+      followedLoadingMore,
+      topicsLoadingMore,
       tab,
       loading,
-      createDiscussionHeight
+      createDiscussionHeight,
+      topicsRefreshing,
+      followedRefreshing
     } = this.state;
     let { isDark, appColor, BottomNavigator } = this.props.route.params;
     return (
@@ -87,13 +103,14 @@ export default class Forums extends React.Component {
         <View style={styles.headerContainer}>
           {['Topics', 'Followed'].map((t, i) => (
             <TouchableOpacity
+              key={t}
+              onPress={() => this.setState({ tab: i })}
               style={[
                 styles.headerTOpacity,
                 tab === i ? { borderColor: appColor } : {}
               ]}
             >
               <Text
-                onPress={() => this.setState({ tab: i })}
                 style={[
                   styles.headerText,
                   tab === i ? { color: isDark ? 'white' : 'black' } : {}
@@ -135,11 +152,19 @@ export default class Forums extends React.Component {
                 <ActivityIndicator
                   size='small'
                   color={isDark ? 'white' : 'black'}
-                  animating={tab ? loadingMoreFollowed : loadingMoreTopics}
+                  animating={tab ? followedLoadingMore : topicsLoadingMore}
                   style={{
                     padding: 15,
                     marginBottom: createDiscussionHeight
                   }}
+                />
+              }
+              refreshControl={
+                <RefreshControl
+                  colors={[isDark ? 'white' : 'black']}
+                  tintColor={isDark ? 'white' : 'black'}
+                  onRefresh={this.refresh}
+                  refreshing={tab ? followedRefreshing : topicsRefreshing}
                 />
               }
             />

@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Modal, TouchableOpacity, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { file, image, video } from '../assets/svgs';
+import { NetworkContext } from '../services/forum.service';
 
 let styles;
 export default class MediaPicker extends React.Component {

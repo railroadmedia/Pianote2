@@ -1,8 +1,6 @@
 import React from 'react';
 import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
-import forumService from '../services/forum.service';
-
 import {
   pin,
   coach,
@@ -18,7 +16,6 @@ export default class ForumsCard extends React.Component {
   constructor(props) {
     super(props);
     let { isDark } = props;
-    ForumsCard.contextType = forumService.NetworkContext;
     styles = setStyles(isDark);
   }
 
@@ -103,15 +100,12 @@ export default class ForumsCard extends React.Component {
             <Text style={{ fontWeight: '900' }}>{this.lastPostTime}</Text> By{' '}
             <Text style={{ fontWeight: '900' }}>{lastPost.user.name}</Text>
           </Text>
-          {repliesNo ? (
-            <Text style={styles.topicName}>
-              {topicName} - {repliesNo} Replies
-            </Text>
-          ) : (
-            <Text style={styles.topicName}>
-              {post({ height: 10, fill: '#445F74' })} {postsNo} Posts
-            </Text>
-          )}
+          <Text style={styles.topicName}>
+            {repliesNo
+              ? `${topicName} - ${repliesNo} Replies`
+              : post({ height: 10, fill: '#445F74' })}
+            {!repliesNo && ` ${postsNo} Posts`}
+          </Text>
         </View>
         {arrowRight({ height: 10, fill: isDark ? 'white' : 'black' })}
       </TouchableOpacity>

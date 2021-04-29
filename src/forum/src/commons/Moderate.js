@@ -10,7 +10,11 @@ import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { SafeAreaView } from 'react-navigation';
 
-import forumService from '../services/forum.service';
+import {
+  NetworkContext,
+  reportMessage,
+  deleteMessage
+} from '../services/forum.service';
 
 import { moderate, info } from '../assets/svgs';
 
@@ -19,7 +23,7 @@ export default class Moderate extends React.Component {
 
   constructor(props) {
     super(props);
-    Moderate.contextType = forumService.NetworkContext;
+    Moderate.contextType = NetworkContext();
   }
 
   get connection() {
@@ -30,7 +34,7 @@ export default class Moderate extends React.Component {
   onReport = () =>
     this.close(() => {
       if (!this.connection) return;
-      forumService.reportMessage(this.props.id);
+      reportMessage(this.props.id);
       this.setState({ optionsVisible: true, reportVisible: true }, () =>
         setTimeout(this.close, 2000)
       );
@@ -39,7 +43,7 @@ export default class Moderate extends React.Component {
   onDelete = () =>
     this.close(() => {
       if (!this.connection) return;
-      forumService.deleteMessage(this.props.id);
+      deleteMessage(this.props.id);
       this.setState({ optionsVisible: true, deleteVisible: true });
     });
 
@@ -75,7 +79,7 @@ export default class Moderate extends React.Component {
           {moderate({ width: 15, fill: appColor })}
         </TouchableOpacity>
         <Modal
-          animationType={'slide'}
+          animationType={'fade'}
           onRequestClose={() => this.close()}
           supportedOrientations={['portrait', 'landscape']}
           transparent={true}

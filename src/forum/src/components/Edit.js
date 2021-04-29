@@ -8,7 +8,7 @@ import {
   View
 } from 'react-native';
 
-import forumService from '../services/forum.service';
+import { updateMessage } from '../services/forum.service';
 
 let styles;
 export default class Edit extends React.Component {
@@ -22,7 +22,7 @@ export default class Edit extends React.Component {
 
   save = () => {
     let { text } = this.state;
-    forumService.updateMessage(text);
+    updateMessage(text);
     this.props.onSave?.(text);
     this.props.navigation.goBack();
   };

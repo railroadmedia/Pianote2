@@ -1,47 +1,67 @@
-export default {
-  updateMessage: function (message) {
-    return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { message });
-  },
-  deleteMessage: function (id) {
-    return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { id });
-  },
-  reportMessage: function (id) {
-    return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { id });
-  },
-  getTopics: function (page = 1) {
-    /* TBR */
-    return new Promise(res =>
-      setTimeout(
-        () => res(mocks.topics.slice((page - 1) * 10, page * 10)),
-        4000
-      )
-    );
-    /*******/
-    return this.tryCall(`${this.rootUrl}/TBD`);
-  },
-  getFollowed: function (page = 1) {
-    /* TBR */
-    return new Promise(res =>
-      setTimeout(
-        () => res(mocks.followed.slice((page - 1) * 10, page * 10)),
-        4000
-      )
-    );
-    /*******/
-    return this.tryCall(`${this.rootUrl}/TBD`);
-  },
-  getDiscussions: function () {
-    return new Promise(res => res(discussions));
-  },
-  likeComment: function (id) {
-    return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { id });
-  },
-  disLikeComment: function (id) {
-    return this.tryCall(`${this.rootUrl}/TBD`, 'DELETE', { id });
-  },
-  addReply: function (reply) {
-    return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { reply });
-  }
+export const setForumService = function (options) {
+  // setting tryCall, rootUrl, NetworkContext etc
+  Object.assign(this, options);
+};
+export const connection = function (alert) {
+  if (this.networkContext.isConnected) return true;
+  if (alert) this.networkContext.showNoConnectionAlert();
+};
+export const networkContext = function () {
+  return this.networkContext;
+};
+export const NetworkContext = function () {
+  return this.NetworkContext;
+};
+export const getDiscussions = function () {
+  return new Promise(res => res(discussions));
+};
+export const getTopic = function (page = 1) {
+  /* TBR */
+  return new Promise(res =>
+    setTimeout(
+      () => res(mocks.discussions.slice((page - 1) * 10, page * 10)),
+      2000
+    )
+  );
+  /*******/
+  return this.tryCall(`${this.rootUrl}/TBD`);
+};
+export const getTopics = function (page = 1) {
+  /* TBR */
+  return new Promise(res =>
+    setTimeout(() => res(mocks.topics.slice((page - 1) * 10, page * 10)), 2000)
+  );
+  /*******/
+  return this.tryCall(`${this.rootUrl}/TBD`);
+};
+export const getFollowed = function (page = 1) {
+  /* TBR */
+  return new Promise(res =>
+    setTimeout(
+      () => res(mocks.discussions.slice((page - 1) * 10, page * 10)),
+      2000
+    )
+  );
+  /*******/
+  return this.tryCall(`${this.rootUrl}/TBD`);
+};
+export const likeComment = function (id) {
+  return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { id });
+};
+export const disLikeComment = function (id) {
+  return this.tryCall(`${this.rootUrl}/TBD`, 'DELETE', { id });
+};
+export const updateMessage = function (message) {
+  return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { message });
+};
+export const deleteMessage = function (id) {
+  return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { id });
+};
+export const reportMessage = function (id) {
+  return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { id });
+};
+export const addReply = function (reply) {
+  return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { reply });
 };
 
 const mocks = {
@@ -69,7 +89,7 @@ const mocks = {
     image:
       'https://d2vyvo0tyx8ig5.cloudfront.net/avatars/d1dfa3b0-28e5-4042-b6f4-b78c8063c663-1618221945-149628.jpg'
   })),
-  followed: [
+  discussions: [
     { title: 'Introducing Yourself', pinned: true },
     { title: 'Name that tune' },
     { title: 'The Weekly Weekend Chord Progression Challenge' },
