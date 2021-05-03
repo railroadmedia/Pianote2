@@ -25,7 +25,7 @@ import commonService from '../../services/common.service.js';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import Loading from '../../components/Loading.js';
 import { goBack, reset } from '../../../AppNavigator.js';
-import { isNameUnique } from '../../services/UserDataAuth.js';
+import { isNameUnique, avatarUpload } from '../../services/UserDataAuth.js';
 
 const isTablet = DeviceInfo.isTablet();
 
@@ -102,14 +102,7 @@ export default class ProfileSettings extends React.Component {
     });
     data.append('target', this.state.imageName);
     if (this.state.imageURI !== '') {
-      let response = await fetch(
-        `${commonService.rootUrl}/musora-api/avatar/upload`,
-        {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${token}` },
-          body: data
-        }
-      );
+      let response = await avatarUpload(data);
       if (response.status == 413) {
         this.setState({ showProfileImage: true });
         return;

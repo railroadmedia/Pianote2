@@ -91,6 +91,17 @@ export async function getUserData() {
   } catch (error) {}
 }
 
+export async function avatarUpload(data) {
+  return commonService.tryCall(
+    `${commonService.rootUrl}/musora-api/avatar/upload`,
+    {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: data
+    }
+  );
+}
+
 export async function forgotPass(emailAddress) {
   return commonService.tryCall(
     `${commonService.rootUrl}/musora-api/forgot?email=${emailAddress}`,

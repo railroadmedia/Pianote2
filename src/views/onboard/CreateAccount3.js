@@ -29,7 +29,7 @@ import { NetworkContext } from '../../context/NetworkProvider.js';
 import Orientation from 'react-native-orientation-locker';
 import Loading from '../../components/Loading';
 import { reset } from '../../../AppNavigator';
-import { isNameUnique } from '../../services/UserDataAuth';
+import { isNameUnique, avatarUpload } from '../../services/UserDataAuth';
 
 var data = new FormData();
 
@@ -170,15 +170,7 @@ export default class CreateAccount3 extends React.Component {
         // if has image
         if (data._parts.length > 0) {
           // upload file
-          let response = await fetch(
-            `${commonService.rootUrl}/musora-api/avatar/upload`,
-            {
-              method: 'POST',
-              headers: { Authorization: `Bearer ${token}` },
-              body: data
-            }
-          );
-
+          let response = await avatarUpload(data);
           // if image is too large
           if (response.status == 413) {
             this.setState({ showProfileImage: true });
