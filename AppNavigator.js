@@ -100,7 +100,7 @@ export default () => (
           headerShown: false,
           gestureEnabled: true,
           gestureResponseDistance: {
-            //horizontal: Dimensions.get('window').width,
+            horizontal: Dimensions.get('window').width
           },
           transitionSpec: { open: timingAnim, close: timingAnim }
         }}

@@ -17,7 +17,6 @@ const width =
 export default class NextVideo extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
   }
 
   render = () => {

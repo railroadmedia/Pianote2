@@ -13,11 +13,6 @@ import { logOut } from '../services/UserDataAuth';
 import { reset } from '../../AppNavigator';
 
 export default class LogOut extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   logOut = () => {
     logOut();
     Intercom.logout();

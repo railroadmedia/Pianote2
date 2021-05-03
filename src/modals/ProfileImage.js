@@ -8,11 +8,6 @@ import {
 } from 'react-native';
 
 export default class ProfileImage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   render = () => {
     return (
       <TouchableWithoutFeedback

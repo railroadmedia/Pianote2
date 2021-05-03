@@ -7,16 +7,11 @@ import IdleTimerManager from 'react-native-idle-timer';
 export default class SoundSlice extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
   }
 
-  componentDidMount() {
-    IdleTimerManager.setIdleTimerDisabled(true);
-  }
+  componentDidMount = () => IdleTimerManager.setIdleTimerDisabled(true);
 
-  componentWillUnmount() {
-    IdleTimerManager.setIdleTimerDisabled(false);
-  }
+  componentWillUnmount = () => IdleTimerManager.setIdleTimerDisabled(false);
 
   render = () => {
     return (

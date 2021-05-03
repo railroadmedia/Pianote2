@@ -16,11 +16,6 @@ const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
 export default class LessonComplete extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   changeType = word => {
     word = word.replace(/[- )(]/g, ' ').split(' ');
     let string = '';

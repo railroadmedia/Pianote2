@@ -8,11 +8,6 @@ import {
 } from 'react-native';
 
 export default class PasswordMatch extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   render = () => {
     return (
       <TouchableWithoutFeedback

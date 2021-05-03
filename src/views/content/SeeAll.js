@@ -49,9 +49,9 @@ export default class SeeAll extends React.Component {
       page: 1,
       outVideos: false,
       refreshing: false,
-      isLoadingAll: true, // all lessons
-      isPaging: false, // scrolling more
-      filtering: false // filtering
+      isLoadingAll: true,
+      isPaging: false,
+      filtering: false
     };
   }
 

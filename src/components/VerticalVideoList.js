@@ -4,7 +4,6 @@ import {
   Text,
   ActivityIndicator,
   TouchableOpacity,
-  Platform,
   Image
 } from 'react-native';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';

@@ -3,7 +3,6 @@ import {
   View,
   Text,
   Modal,
-  Platform,
   TextInput,
   TouchableOpacity,
   ActivityIndicator,

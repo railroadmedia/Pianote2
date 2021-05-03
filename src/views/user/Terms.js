@@ -13,11 +13,6 @@ import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';
 
 export default class Terms extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   render() {
     return (
       <SafeAreaView style={{ flex: 1 }}>

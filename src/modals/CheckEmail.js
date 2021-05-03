@@ -10,11 +10,6 @@ import DeviceInfo from 'react-native-device-info';
 import { navigate } from '../../AppNavigator';
 
 export default class CheckEmail extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   render = () => {
     return (
       <TouchableWithoutFeedback

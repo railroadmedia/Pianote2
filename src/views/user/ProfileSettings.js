@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   TextInput,
   StatusBar,
-  StyleSheet
+  StyleSheet,
+  Dimensions
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Modal from 'react-native-modal';
@@ -26,13 +27,6 @@ import { NetworkContext } from '../../context/NetworkProvider.js';
 import Loading from '../../components/Loading.js';
 import { goBack, reset } from '../../../AppNavigator.js';
 import { isNameUnique } from '../../services/UserDataAuth.js';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 export default class ProfileSettings extends React.Component {
   static contextType = NetworkContext;

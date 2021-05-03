@@ -4,11 +4,6 @@ import { BlurView } from '@react-native-community/blur';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 
 export default class AssignmentComplete extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   render = () => {
     return (
       <BlurView style={styles.container} blurAmount={5}>
@@ -30,7 +25,7 @@ export default class AssignmentComplete extends React.Component {
                 localStyles.assignmentCompleteContainer
               ]}
             >
-              <Text style={[styles.modalHeaderText]}>Assignment Complete</Text>
+              <Text style={styles.modalHeaderText}>Assignment Complete</Text>
             </View>
             <View>
               <Text style={[styles.modalBodyText, localStyles.congratsText]}>

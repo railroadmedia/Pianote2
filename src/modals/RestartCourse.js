@@ -9,11 +9,6 @@ import {
 import DeviceInfo from 'react-native-device-info';
 
 export default class RestartCourse extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   changeType = word => {
     word = word.replace(/[- )(]/g, ' ').split(' ');
     let string = '';

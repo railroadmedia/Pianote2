@@ -44,9 +44,6 @@ const cache = [
 ];
 class LoadPage extends React.Component {
   static contextType = NetworkContext;
-  constructor(props) {
-    super(props);
-  }
 
   async componentDidMount() {
     Download_V2.resumeAll()?.then(async () => {
@@ -84,7 +81,7 @@ class LoadPage extends React.Component {
         // get token
         const res = await getToken(email, password);
         if (res == 500) {
-          this.setState({ showNoConnection: true });
+          return this.context.showNoConnectionAlert();
         } else if (res.success) {
           updateFcmToken();
           await AsyncStorage.multiSet([['loggedIn', 'true']]);
@@ -201,23 +198,6 @@ class LoadPage extends React.Component {
             fill={'#fb1b2f'}
           />
         </View>
-        <Modal
-          isVisible={this.state.showNoConnection}
-          style={[styles.centerContent, styles.modalContainer]}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
-          onBackButtonPress={() => this.setState({ showNoConnection: false })}
-        >
-          <NoConnection
-            hideNoConnection={() => {
-              this.setState({ showNoConnection: false }),
-                this.handleNoConnection();
-            }}
-          />
-        </Modal>
       </View>
     );
   }

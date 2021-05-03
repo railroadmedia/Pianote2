@@ -10,11 +10,6 @@ import DeviceInfo from 'react-native-device-info';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
 
 export default class AddToCalendar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   render = () => {
     return (
       <TouchableWithoutFeedback

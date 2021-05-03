@@ -7,7 +7,6 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 export default class StartIcon extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
   }
 
   sizing = type => {

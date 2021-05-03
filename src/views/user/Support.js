@@ -16,11 +16,6 @@ import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';
 
 export default class Support extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   componentDidMount = async () => {
     const userData = await getUserData();
     await Intercom.registerIdentifiedUser({
