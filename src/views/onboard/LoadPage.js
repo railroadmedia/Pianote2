@@ -61,7 +61,7 @@ class LoadPage extends React.Component {
   }
 
   async componentDidMount() {
-    requestTrackingPermission();
+    //requestTrackingPermission();
 
     Download_V2.resumeAll()?.then(async () => {
       this.loadCache();
