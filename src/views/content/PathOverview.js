@@ -182,7 +182,7 @@ export default class PathOverview extends React.Component {
     });
   };
 
-  onRestartCourse = async () => {
+  onRestartCourse = () => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }

@@ -107,28 +107,24 @@ export default class NewMembership extends React.Component {
       );
 
       if (response.meta) {
-        try {
-          await AsyncStorage.multiSet([
-            ['email', this.state.email],
-            ['password', this.state.password]
-          ]);
-        } catch (e) {}
-        try {
-          // finish transaction
-          await RNIap.finishTransaction(purchase, false);
-          // if new user no pack only then create account
-          if (this.state.newUser === 'SIGNUP' && !global.isPackOnly) {
-            navigate('CREATEACCOUNT3', {
-              data: {
-                email: this.state.email,
-                password: this.state.password,
-                plan: ''
-              }
-            });
-          } else {
-            navigate('LOADPAGE');
-          }
-        } catch (e) {}
+        await AsyncStorage.multiSet([
+          ['email', this.state.email],
+          ['password', this.state.password]
+        ]);
+        // finish transaction
+        await RNIap.finishTransaction(purchase, false);
+        // if new user no pack only then create account
+        if (this.state.newUser === 'SIGNUP' && !global.isPackOnly) {
+          navigate('CREATEACCOUNT3', {
+            data: {
+              email: this.state.email,
+              password: this.state.password,
+              plan: ''
+            }
+          });
+        } else {
+          navigate('LOADPAGE');
+        }
       } else {
         let { title, detail } = response.errors[0];
         Alert.alert(title, detail, [{ text: 'OK' }], {

@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   KeyboardAvoidingView,
-  BackHandler
+  BackHandler,
+  SafeAreaView
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
@@ -356,7 +357,7 @@ export default class ViewLesson extends React.Component {
     else this.resetState(id, url);
   }
 
-  likeComment = async id => {
+  likeComment = id => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let comments = [...this.state.comments];
     let comment = comments?.find(f => f.id === id);
@@ -374,7 +375,7 @@ export default class ViewLesson extends React.Component {
     }
   };
 
-  makeComment = async () => {
+  makeComment = () => {
     if (!this.state.comment) return this.setState({ showMakeComment: false });
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     this.setState({ comment: '', isLoadingComm: true, showMakeComment: false });
@@ -1533,15 +1534,14 @@ export default class ViewLesson extends React.Component {
                 />
               )}
             </View>
-            <View
+            <SafeAreaView
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-evenly',
                 marginTop: 5,
                 paddingVertical: 5,
-                paddingHorizontal: 10,
-                marginBottom: DeviceInfo.hasNotch() ? 20 : 0
+                marginHorizontal: 5
               }}
             >
               <TouchableOpacity
@@ -1635,7 +1635,7 @@ export default class ViewLesson extends React.Component {
                   }
                 />
               </TouchableOpacity>
-            </View>
+            </SafeAreaView>
           </View>
         )}
 

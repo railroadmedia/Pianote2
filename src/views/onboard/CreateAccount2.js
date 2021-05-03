@@ -52,17 +52,12 @@ export default class CreateAccount extends React.Component {
           );
           console.log(response);
           if (response.meta) {
-            try {
-              await AsyncStorage.multiSet([
-                ['email', encodeURIComponent(this.state.email)],
-                ['password', encodeURIComponent(this.state.password)]
-              ]);
-            } catch (e) {
-              console.log(e);
-            }
+            await AsyncStorage.multiSet([
+              ['email', encodeURIComponent(this.state.email)],
+              ['password', encodeURIComponent(this.state.password)]
+            ]);
 
             let userData = await getUserData();
-
             let currentDate = new Date().getTime() / 1000;
             let userExpDate =
               new Date(userData.expirationDate).getTime() / 1000;

@@ -146,7 +146,7 @@ class StudentFocusShow extends React.Component {
     }));
   };
 
-  changeSort = async currentSort => {
+  changeSort = currentSort => {
     this.setState(
       {
         currentSort,
@@ -159,7 +159,7 @@ class StudentFocusShow extends React.Component {
     );
   };
 
-  handleScroll = async event => {
+  handleScroll = event => {
     if (
       isCloseToBottom(event) &&
       !this.state.isPaging &&

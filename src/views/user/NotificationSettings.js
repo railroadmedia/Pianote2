@@ -57,34 +57,28 @@ export default class NotificationSettings extends React.Component {
   changeNotificationStatus = async () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
 
-    try {
-      const body = {
-        data: {
-          type: 'user',
-          attributes: {
-            notifications_summary_frequency_minutes: this.state
-              .notifications_summary_frequency_minutes,
-            notify_on_forum_post_like: this.state.notify_on_forum_post_like,
-            notify_on_forum_post_reply: this.state.notify_on_forum_post_reply,
-            notify_on_lesson_comment_like: this.state
-              .notify_on_lesson_comment_like,
-            notify_on_lesson_comment_reply: this.state
-              .notify_on_lesson_comment_reply,
-            notify_weekly_update: this.state.notify_weekly_update
-          }
+    const body = {
+      data: {
+        type: 'user',
+        attributes: {
+          notifications_summary_frequency_minutes: this.state
+            .notifications_summary_frequency_minutes,
+          notify_on_forum_post_like: this.state.notify_on_forum_post_like,
+          notify_on_forum_post_reply: this.state.notify_on_forum_post_reply,
+          notify_on_lesson_comment_like: this.state
+            .notify_on_lesson_comment_like,
+          notify_on_lesson_comment_reply: this.state
+            .notify_on_lesson_comment_reply,
+          notify_weekly_update: this.state.notify_weekly_update
         }
-      };
+      }
+    };
 
-      let response = await commonService.tryCall(
-        `${commonService.rootUrl}/usora/api/profile/update`,
-        'POST',
-        body
-      );
-
-      console.log('response to change notification: ', response);
-    } catch (error) {
-      console.log('ERROR: ', error);
-    }
+    await commonService.tryCall(
+      `${commonService.rootUrl}/usora/api/profile/update`,
+      'POST',
+      body
+    );
   };
 
   render() {

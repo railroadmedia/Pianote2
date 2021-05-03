@@ -14,7 +14,7 @@ import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';
 
 export default class SupportSignUp extends React.Component {
-  componentDidMount = async () => Intercom.registerUnidentifiedUser();
+  componentDidMount = () => Intercom.registerUnidentifiedUser();
 
   onIntercomPress = () => Intercom.displayMessenger();
 

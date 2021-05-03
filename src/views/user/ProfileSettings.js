@@ -100,35 +100,33 @@ export default class ProfileSettings extends React.Component {
       uri: this.state.imageURI
     });
     data.append('target', this.state.imageName);
-    try {
-      if (this.state.imageURI !== '') {
-        let response = await fetch(
-          `${commonService.rootUrl}/musora-api/avatar/upload`,
-          {
-            method: 'POST',
-            headers: { Authorization: `Bearer ${token}` },
-            body: data
-          }
-        );
-        if (response.status == 413) {
-          this.setState({ showProfileImage: true });
-          return;
+    if (this.state.imageURI !== '') {
+      let response = await fetch(
+        `${commonService.rootUrl}/musora-api/avatar/upload`,
+        {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+          body: data
         }
-        let url = await response.json();
-        if (url.data[0].url) {
-          await commonService.tryCall(
-            `${commonService.rootUrl}/musora-api/profile/update`,
-            'POST',
-            { file: url == '' ? url : url.data[0].url }
-          );
-          await AsyncStorage.setItem(
-            'profileURI',
-            url == '' ? url : url.data[0].url
-          );
-          reset('PROFILE');
-        }
+      );
+      if (response.status == 413) {
+        this.setState({ showProfileImage: true });
+        return;
       }
-    } catch (error) {}
+      let url = await response.json();
+      if (url.data[0].url) {
+        await commonService.tryCall(
+          `${commonService.rootUrl}/musora-api/profile/update`,
+          'POST',
+          { file: url == '' ? url : url.data[0].url }
+        );
+        await AsyncStorage.setItem(
+          'profileURI',
+          url == '' ? url : url.data[0].url
+        );
+        reset('PROFILE');
+      }
+    }
   };
 
   chooseImage = async () => {

@@ -52,7 +52,7 @@ export default class Foundations extends React.Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     Orientation.addDeviceOrientationListener(this.orientationListener);
     this.getContent();
   }

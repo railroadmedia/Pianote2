@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
+import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 const sortOptions = [
@@ -27,11 +26,10 @@ export default class CommentSort extends React.Component {
             onPress={() => this.props.hideCommentSort()}
           />
         </View>
-        <View
+        <SafeAreaView
           style={{
             width: '100%',
-            backgroundColor: '#00101d',
-            paddingBottom: DeviceInfo.hasNotch() ? 30 : 0
+            backgroundColor: '#00101d'
           }}
         >
           {sortOptions.map((sortOption, index) => (
@@ -96,7 +94,7 @@ export default class CommentSort extends React.Component {
               Cancel
             </Text>
           </TouchableOpacity>
-        </View>
+        </SafeAreaView>
       </View>
     );
   };

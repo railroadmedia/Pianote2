@@ -7,7 +7,6 @@ import {
   Dimensions,
   ScrollView
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NetworkContext } from '../context/NetworkProvider';
@@ -73,7 +72,7 @@ export default class NavigationMenu extends React.Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     AsyncStorage.multiGet(['methodIsStarted', 'methodIsCompleted']).then(data =>
       this.setState({
         methodIsStarted:
@@ -219,8 +218,6 @@ const localStyles = StyleSheet.create({
   navContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: DeviceInfo.hasNotch() ? 50 : 30,
-    paddingBottom: DeviceInfo.hasNotch() ? 30 : 10
+    alignItems: 'center'
   }
 });

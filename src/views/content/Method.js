@@ -60,7 +60,7 @@ export default class Method extends React.Component {
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     Orientation.addDeviceOrientationListener(this.orientationListener);
     this.getContent();
   }

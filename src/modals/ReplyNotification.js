@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import DeviceInfo from 'react-native-device-info';
 import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
@@ -71,18 +77,6 @@ export default class ReplyNotification extends React.Component {
     let userData = await getUserData();
     let statusChange = null;
 
-    this.setState({
-      notify_on_lesson_comment_reply: userData?.notify_on_lesson_comment_reply,
-      notify_on_lesson_comment_like: userData?.notify_on_lesson_comment_like,
-      notify_on_forum_post_reply: userData?.notify_on_forum_post_reply,
-      notify_on_forum_post_like: userData?.notify_on_forum_post_like,
-      notifications_summary_frequency_minutes:
-        userData?.notifications_summary_frequency_minutes,
-      notify_on_forum_followed_thread_reply:
-        userData?.notify_on_forum_followed_thread_reply,
-      notify_weekly_update: userData?.notify_weekly_update
-    });
-
     if (this.state.type == 'replied to your comment.') {
       statusChange = {
         notify_on_lesson_comment_reply: !this.state
@@ -111,7 +105,18 @@ export default class ReplyNotification extends React.Component {
       };
     }
 
-    this.setState({ statusChange });
+    this.setState({
+      statusChange,
+      notify_on_lesson_comment_reply: userData?.notify_on_lesson_comment_reply,
+      notify_on_lesson_comment_like: userData?.notify_on_lesson_comment_like,
+      notify_on_forum_post_reply: userData?.notify_on_forum_post_reply,
+      notify_on_forum_post_like: userData?.notify_on_forum_post_like,
+      notifications_summary_frequency_minutes:
+        userData?.notifications_summary_frequency_minutes,
+      notify_on_forum_followed_thread_reply:
+        userData?.notify_on_forum_followed_thread_reply,
+      notify_weekly_update: userData?.notify_weekly_update
+    });
   };
 
   render = () => {
@@ -123,7 +128,7 @@ export default class ReplyNotification extends React.Component {
             style={styles.container}
           />
         </View>
-        <View style={localStyles.container}>
+        <SafeAreaView style={localStyles.container}>
           <View
             style={
               (styles.container,
@@ -246,7 +251,7 @@ export default class ReplyNotification extends React.Component {
               </View>
             </>
           </View>
-        </View>
+        </SafeAreaView>
       </View>
     );
   };
@@ -335,7 +340,6 @@ const localStyles = StyleSheet.create({
   muteContainer: {
     height: DeviceInfo.isTablet() ? 70 : 50,
     width: '100%',
-    marginBottom: DeviceInfo.hasNotch() ? 20 : 0,
     borderTopWidth: 0.5,
     borderTopColor: '#445f73'
   },

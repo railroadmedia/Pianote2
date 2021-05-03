@@ -5,9 +5,9 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
-  Dimensions
+  Dimensions,
+  SafeAreaView
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import Modal from 'react-native-modal';
 import SoundSlice from '../../components/SoundSlice.js';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -237,7 +237,7 @@ export default class Assignment extends React.Component {
           )}
         </ScrollView>
         {!this.state.hideTitles && this.context.isConnected && (
-          <View
+          <SafeAreaView
             style={{
               backgroundColor: colors.mainBackground,
               paddingVertical: 10
@@ -276,7 +276,6 @@ export default class Assignment extends React.Component {
               style={[
                 styles.centerContent,
                 {
-                  marginBottom: DeviceInfo.hasNotch() ? 20 : 0,
                   backgroundColor: '#fb1b2f',
                   width: '90%',
                   alignSelf: 'center',
@@ -297,7 +296,7 @@ export default class Assignment extends React.Component {
                   : 'COMPLETE ASSIGNMENT'}
               </Text>
             </TouchableOpacity>
-          </View>
+          </SafeAreaView>
         )}
         <Modal
           isVisible={this.state.showSoundSlice}

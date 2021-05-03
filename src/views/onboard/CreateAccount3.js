@@ -71,7 +71,7 @@ export default class CreateAccount3 extends React.Component {
     }
   };
 
-  typingDisplayName = async displayName => {
+  typingDisplayName = displayName => {
     this.setState({ displayName });
   };
 
@@ -169,37 +169,35 @@ export default class CreateAccount3 extends React.Component {
       try {
         // if has image
         if (data._parts.length > 0) {
-          try {
-            // upload file
-            let response = await fetch(
-              `${commonService.rootUrl}/musora-api/avatar/upload`,
-              {
-                method: 'POST',
-                headers: { Authorization: `Bearer ${token}` },
-                body: data
-              }
-            );
-
-            // if image is too large
-            if (response.status == 413) {
-              this.setState({ showProfileImage: true });
-              return;
+          // upload file
+          let response = await fetch(
+            `${commonService.rootUrl}/musora-api/avatar/upload`,
+            {
+              method: 'POST',
+              headers: { Authorization: `Bearer ${token}` },
+              body: data
             }
+          );
 
-            // get data back, put image URL & display name in user details
-            url = await response.json();
-            await commonService.tryCall(
-              `${commonService.rootUrl}/musora-api/profile/update`,
-              'POST',
-              {
-                file: url?.data?.[0]?.url,
-                display_name: this.state.displayName
-              }
-            );
+          // if image is too large
+          if (response.status == 413) {
+            this.setState({ showProfileImage: true });
+            return;
+          }
 
-            // send to loadpage to update asyncstorage with new data
-            reset('LOADPAGE');
-          } catch (e) {}
+          // get data back, put image URL & display name in user details
+          url = await response.json();
+          await commonService.tryCall(
+            `${commonService.rootUrl}/musora-api/profile/update`,
+            'POST',
+            {
+              file: url?.data?.[0]?.url,
+              display_name: this.state.displayName
+            }
+          );
+
+          // send to loadpage to update asyncstorage with new data
+          reset('LOADPAGE');
         } else {
           await commonService.tryCall(
             `${commonService.rootUrl}/musora-api/profile/update`,

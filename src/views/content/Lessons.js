@@ -178,7 +178,7 @@ class Lessons extends React.Component {
     }
   }
 
-  async timer() {
+  timer() {
     let timeNow = Math.floor(Date.now() / 1000);
     let timeLive =
       new Date(
@@ -276,24 +276,21 @@ class Lessons extends React.Component {
   getAllLessons = async () => {
     this.setState({ filtering: true });
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    let response = await getAllContent(
+      '',
+      this.state.currentSort,
+      this.state.page,
+      this.filterQuery
+    );
+    this.metaFilters = response?.meta?.filterOptions;
+    let items = response.data;
 
-    try {
-      let response = await getAllContent(
-        '',
-        this.state.currentSort,
-        this.state.page,
-        this.filterQuery
-      );
-      this.metaFilters = response?.meta?.filterOptions;
-      let items = response.data;
-
-      this.setState({
-        allLessons: [...this.state.allLessons, ...items],
-        outVideos: items.length == 0 || items.length < 10 ? true : false,
-        filtering: false,
-        isPaging: false
-      });
-    } catch (error) {}
+    this.setState({
+      allLessons: [...this.state.allLessons, ...items],
+      outVideos: items.length == 0 || items.length < 10 ? true : false,
+      filtering: false,
+      isPaging: false
+    });
   };
 
   onRestartMethod = async () => {

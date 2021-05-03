@@ -94,7 +94,7 @@ export default class Profile extends React.Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     getUserData().then(userData => {
       this.setState({
         xp: this.changeXP(userData?.totalXp),
@@ -118,10 +118,7 @@ export default class Profile extends React.Component {
   }
 
   async getNotifications(loadMore) {
-    console.log('Load more: ', loadMore);
-
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-
     if (loadMore) this.page++;
     else this.page = 1;
     let notifications = await getnotifications(this.page);
@@ -166,7 +163,6 @@ export default class Profile extends React.Component {
   }
 
   changeXP = num => {
-    console.log(num);
     if (num !== '') {
       num = Number(num);
       if (num < 10000) {
@@ -180,7 +176,7 @@ export default class Profile extends React.Component {
     }
   };
 
-  removeNotification = async notificationId => {
+  removeNotification = notificationId => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     this.setState(state => ({
       notifications: state.notifications.filter(c => c.id !== notificationId)
@@ -188,7 +184,7 @@ export default class Profile extends React.Component {
     removeNotification(notificationId);
   };
 
-  checkNotificationTypeStatus = async item => {
+  checkNotificationTypeStatus = item => {
     let type = messageDict[item.type][0];
     if (type == 'replied to your comment.') {
       this.setState({
@@ -218,23 +214,19 @@ export default class Profile extends React.Component {
     }
   };
 
-  turnOfffNotifications = async data => {
+  turnOfffNotifications = data => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     this.setState(data);
-    try {
-      let response = await commonService.tryCall(
-        `${commonService.rootUrl}/usora/api/profile/update`,
-        'PATCH',
-        {
-          data: {
-            type: 'user',
-            attributes: data
-          }
+    commonService.tryCall(
+      `${commonService.rootUrl}/usora/api/profile/update`,
+      'PATCH',
+      {
+        data: {
+          type: 'user',
+          attributes: data
         }
-      );
-    } catch (error) {
-      console.log('ERROR: ', error);
-    }
+      }
+    );
   };
 
   openNotification = notification => {
@@ -251,7 +243,6 @@ export default class Profile extends React.Component {
         url: notification.content.mobile_app_url
       });
     } else {
-      console.log('LINKING URL: ', notification.url);
       Linking.openURL(notification.url);
     }
   };

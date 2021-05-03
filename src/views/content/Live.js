@@ -142,7 +142,7 @@ export default class Live extends React.Component {
     }
   }
 
-  async timer() {
+  timer() {
     let timeNow = Math.floor(Date.now() / 1000);
     let timeLive =
       new Date(
@@ -200,7 +200,7 @@ export default class Live extends React.Component {
       .catch(e => {});
   };
 
-  addToMyList = async (contentID, type) => {
+  addToMyList = (contentID, type) => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     if (type == 'live') {
       let liveLesson = Object.assign([], this.state.liveLesson);

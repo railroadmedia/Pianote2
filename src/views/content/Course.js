@@ -87,25 +87,20 @@ class Course extends React.Component {
   }
 
   initialValidData = (content, fromCache) => {
-    try {
-      let allVideos = content.all.data;
+    let allVideos = content.all.data;
+    let inprogressVideos = content.inProgress.data;
 
-      let inprogressVideos = content.inProgress.data;
-
-      return {
-        allCourses: allVideos,
-        progressCourses: inprogressVideos,
-        refreshing: false,
-        refreshControl: fromCache,
-        outVideos:
-          allVideos.length == 0 || content.all.data.length < 10 ? true : false,
-        filtering: false,
-        isPaging: false,
-        page: 1
-      };
-    } catch (e) {
-      return {};
-    }
+    return {
+      allCourses: allVideos,
+      progressCourses: inprogressVideos,
+      refreshing: false,
+      refreshControl: fromCache,
+      outVideos:
+        allVideos.length == 0 || content.all.data.length < 10 ? true : false,
+      filtering: false,
+      isPaging: false,
+      page: 1
+    };
   };
 
   getAllCourses = async loadMore => {

@@ -4,21 +4,17 @@ import commonService from './common.service';
 import { Platform } from 'react-native';
 
 export async function likeContent(contentID) {
-  let x = await commonService.tryCall(
+  return await commonService.tryCall(
     `${commonService.rootUrl}/api/railcontent/content-like?content_id=${contentID}`,
     'PUT'
   );
 }
 
 export async function unlikeContent(contentID) {
-  try {
-    return await commonService.tryCall(
-      `${commonService.rootUrl}/api/railcontent/content-like?content_id=${contentID}`,
-      'DELETE'
-    );
-  } catch (error) {
-    return new Error(error);
-  }
+  return await commonService.tryCall(
+    `${commonService.rootUrl}/api/railcontent/content-like?content_id=${contentID}`,
+    'DELETE'
+  );
 }
 
 export async function addToMyList(contentID) {
@@ -43,25 +39,21 @@ export async function resetProgress(contentID) {
 }
 
 export async function markComplete(contentID) {
-  try {
-    let response = await commonService.tryCall(
-      `${
-        commonService.rootUrl
-      }/musora-api/complete?content_id=${contentID}&device_type=${
-        Platform.OS === 'ios' ? 'ios' : 'android'
-      }`,
-      'PUT'
-    );
-    let userData = await getUserData();
+  let response = await commonService.tryCall(
+    `${
+      commonService.rootUrl
+    }/musora-api/complete?content_id=${contentID}&device_type=${
+      Platform.OS === 'ios' ? 'ios' : 'android'
+    }`,
+    'PUT'
+  );
+  let userData = await getUserData();
 
-    await AsyncStorage.multiSet([
-      ['totalXP', userData.totalXp.toString()],
-      ['rank', userData.xpRank.toString()]
-    ]);
-    return response;
-  } catch (error) {
-    return new Error(error);
-  }
+  await AsyncStorage.multiSet([
+    ['totalXP', userData.totalXp.toString()],
+    ['rank', userData.xpRank.toString()]
+  ]);
+  return response;
 }
 
 export async function updateUserDetails(picture, name, phoneNr, firebaseToken) {

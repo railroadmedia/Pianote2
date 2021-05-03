@@ -100,7 +100,7 @@ class MyList extends React.Component {
     });
   };
 
-  handleScroll = async event => {
+  handleScroll = event => {
     if (
       isCloseToBottom(event) &&
       !this.state.isPaging &&

@@ -144,7 +144,7 @@ export default class LoginCredentials extends React.Component {
     this.loadingRef?.toggleLoading();
     try {
       const purchases = await RNIap.getAvailablePurchases();
-      console.log(purchases);
+
       if (!purchases.length) {
         this.loadingRef?.toggleLoading();
         return this.customModal.toggle(
