@@ -5,13 +5,13 @@ import {
   TouchableOpacity,
   ScrollView,
   Linking,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Intercom from 'react-native-intercom';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
-import {SafeAreaView} from 'react-navigation';
-import {goBack} from '../../../AppNavigator';
+import { SafeAreaView } from 'react-navigation';
+import { goBack } from '../../../AppNavigator';
 
 export default class SupportSignUp extends React.Component {
   componentDidMount = async () => {
@@ -25,7 +25,7 @@ export default class SupportSignUp extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
-        <View style={{flex: 0.08}}>
+        <View style={{ flex: 0.08 }}>
           <View
             style={[
               styles.centerContent,
@@ -35,8 +35,8 @@ export default class SupportSignUp extends React.Component {
                 paddingLeft: 5,
                 bottom: 10,
                 height: 50,
-                width: 50,
-              },
+                width: 50
+              }
             ]}
           >
             <TouchableOpacity
@@ -45,8 +45,8 @@ export default class SupportSignUp extends React.Component {
                 styles.centerContent,
                 {
                   height: '100%',
-                  width: '100%',
-                },
+                  width: '100%'
+                }
               ]}
             >
               <Back
@@ -56,21 +56,21 @@ export default class SupportSignUp extends React.Component {
               />
             </TouchableOpacity>
           </View>
-          <View style={{flex: 0.66}} />
+          <View style={{ flex: 0.66 }} />
           <Text
-            style={[styles.childHeaderText, {color: colors.secondBackground}]}
+            style={[styles.childHeaderText, { color: colors.secondBackground }]}
           >
             Support
           </Text>
-          <View style={{flex: 0.33}} />
+          <View style={{ flex: 0.33 }} />
         </View>
-        <ScrollView style={{flex: 1}}>
+        <ScrollView style={{ flex: 1 }}>
           <TouchableOpacity
             onPress={() => this.onIntercomPress()}
             style={[
               styles.centerContent,
               localStyles.button,
-              {marginTop: '30%'},
+              { marginTop: '30%' }
             ]}
           >
             <Text style={localStyles.buttonText}>LIVE CHAT SUPPORT</Text>
@@ -97,7 +97,7 @@ export default class SupportSignUp extends React.Component {
               color: colors.secondBackground,
               textAlign: 'center',
               padding: 10,
-              paddingTop: 20,
+              paddingTop: 20
             }}
           >
             EMAIL
@@ -108,7 +108,7 @@ export default class SupportSignUp extends React.Component {
               fontSize: onTablet ? 18 : 14,
               textAlign: 'center',
               color: 'white',
-              padding: 5,
+              padding: 5
             }}
           >
             support@musora.com
@@ -120,7 +120,7 @@ export default class SupportSignUp extends React.Component {
               opacity: 0.8,
               color: colors.secondBackground,
               textAlign: 'center',
-              padding: 10,
+              padding: 10
             }}
           >
             PHONE
@@ -131,7 +131,7 @@ export default class SupportSignUp extends React.Component {
               fontSize: onTablet ? 18 : 14,
               textAlign: 'center',
               color: 'white',
-              padding: 5,
+              padding: 5
             }}
           >
             1-800-439-8921
@@ -142,7 +142,7 @@ export default class SupportSignUp extends React.Component {
               fontSize: onTablet ? 18 : 14,
               textAlign: 'center',
               color: 'white',
-              padding: 5,
+              padding: 5
             }}
           >
             1-604-855-7605
@@ -159,12 +159,12 @@ const localStyles = StyleSheet.create({
     borderRadius: 200,
     backgroundColor: '#fb1b2f',
     alignSelf: 'center',
-    marginVertical: 5,
+    marginVertical: 5
   },
   buttonText: {
     fontFamily: 'RobotoCondensed-Bold',
     fontSize: DeviceInfo.isTablet() ? 20 : 16,
     color: 'white',
-    paddingVertical: 15,
-  },
+    paddingVertical: 15
+  }
 });

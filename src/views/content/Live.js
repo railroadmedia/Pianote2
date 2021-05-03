@@ -10,7 +10,7 @@ import {
   Dimensions,
   ActivityIndicator,
   BackHandler,
-  SafeAreaView,
+  SafeAreaView
 } from 'react-native';
 import Video from 'RNVideoEnhanced';
 import Modal from 'react-native-modal';
@@ -20,21 +20,21 @@ import NavigationBar from '../../components/NavigationBar.js';
 import FastImage from 'react-native-fast-image';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import LinearGradient from 'react-native-linear-gradient';
-import {MusoraChat, watchersListener} from 'MusoraChat';
-import {getLiveScheduleContent} from '../../services/GetContent';
+import { MusoraChat, watchersListener } from 'MusoraChat';
+import { getLiveScheduleContent } from '../../services/GetContent';
 import {
   removeAllMessages,
-  toggleBlockStudent,
+  toggleBlockStudent
 } from '../../services/UserActions';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import ArrowLeft from 'Pianote2/src/assets/img/svgs/arrowLeft';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import AddToCalendar from '../../modals/AddToCalendar';
-import {addToMyList, removeFromMyList} from '../../services/UserActions';
+import { addToMyList, removeFromMyList } from '../../services/UserActions';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import {NetworkContext} from '../../context/NetworkProvider';
-import {goBack} from '../../../AppNavigator';
-import {getLiveContent} from 'Pianote2/src/services/GetContent';
+import { NetworkContext } from '../../context/NetworkProvider';
+import { goBack } from '../../../AppNavigator';
+import { getLiveContent } from 'Pianote2/src/services/GetContent';
 
 const day = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
 const month = [
@@ -49,7 +49,7 @@ const month = [
   'September',
   'October',
   'November',
-  'December',
+  'December'
 ];
 
 export default class Live extends React.Component {
@@ -64,7 +64,7 @@ export default class Live extends React.Component {
       isLive: false,
       addToCalendarModal: false,
       liveViewers: 0,
-      month: '',
+      month: ''
     };
   }
 
@@ -82,7 +82,7 @@ export default class Live extends React.Component {
       let amPM = 'AM';
 
       if (this.state.month == '' && d instanceof Date && !isNaN(d.valueOf())) {
-        this.setState({month: d.getMonth()});
+        this.setState({ month: d.getMonth() });
       }
       if (d.getHours() > 11) {
         amPM = 'PM';
@@ -94,14 +94,14 @@ export default class Live extends React.Component {
         day: d.getDay(),
         date: d.getDate(),
         month: d.getMonth(),
-        amPM,
+        amPM
       };
     }
 
     this.setState({
       items: response,
       isLoadingAll: false,
-      isLive: this.state.liveLesson[0]?.isLive,
+      isLive: this.state.liveLesson[0]?.isLive
     });
   };
 
@@ -113,9 +113,9 @@ export default class Live extends React.Component {
     let content = [await getLiveContent()];
     this.content = content[0];
 
-    let [{apiKey, chatChannelName, userId, token}] = content;
+    let [{ apiKey, chatChannelName, userId, token }] = content;
     watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
-      this.setState({liveViewers}),
+      this.setState({ liveViewers })
     ).then(rwl => (this.removeWatchersListener = rwl));
 
     let timeNow = Math.floor(Date.now() / 1000);
@@ -133,8 +133,8 @@ export default class Live extends React.Component {
           timeDiff,
           hours,
           minutes,
-          seconds,
-        },
+          seconds
+        }
       });
 
       if (!content[0].isLive) {
@@ -147,7 +147,7 @@ export default class Live extends React.Component {
     let timeNow = Math.floor(Date.now() / 1000);
     let timeLive =
       new Date(
-        this.state.liveLesson[0].live_event_start_time + ' UTC',
+        this.state.liveLesson[0].live_event_start_time + ' UTC'
       ).getTime() / 1000;
     let timeDiff = timeLive - timeNow;
     let hours = Math.floor(timeDiff / 3600);
@@ -159,13 +159,13 @@ export default class Live extends React.Component {
         timeDiff,
         hours,
         minutes,
-        seconds,
-      },
+        seconds
+      }
     });
 
     if (timeDiff < 0) {
       // if time ran out show reminder, get rid of timer
-      this.setState({isLive: true});
+      this.setState({ isLive: true });
       clearInterval(this.interval);
     }
   }
@@ -196,13 +196,13 @@ export default class Live extends React.Component {
     const eventConfig = {
       title: this.addToCalendarLessonTitle,
       startDate: new Date(this.addToCalendatLessonPublishDate),
-      endDate: new Date(this.addToCalendatLessonPublishDate),
+      endDate: new Date(this.addToCalendatLessonPublishDate)
     };
     AddCalendarEvent.presentEventCreatingDialog(eventConfig)
       .then(eventInfo => {
         this.addToCalendarLessonTitle = '';
         this.addToCalendatLessonPublishDate = '';
-        this.setState({addToCalendarModal: false});
+        this.setState({ addToCalendarModal: false });
       })
       .catch(e => {});
   };
@@ -212,13 +212,13 @@ export default class Live extends React.Component {
     if (type == 'live') {
       let liveLesson = Object.assign([], this.state.liveLesson);
       liveLesson[0].is_added_to_primary_playlist = true;
-      this.setState({liveLesson});
+      this.setState({ liveLesson });
     } else {
       for (i in this.state.items) {
         if (this.state.items[i].id == contentID) {
           let items = Object.assign([], this.state.items);
           items[i].is_added_to_primary_playlist = true;
-          this.setState({items});
+          this.setState({ items });
         }
       }
     }
@@ -231,20 +231,20 @@ export default class Live extends React.Component {
     if (type == 'live') {
       let liveLesson = Object.assign([], this.state.liveLesson);
       liveLesson[0].is_added_to_primary_playlist = false;
-      this.setState({liveLesson});
+      this.setState({ liveLesson });
     } else {
       for (i in this.state.items) {
         if (this.state.items[i].id == contentID) {
           let items = Object.assign([], this.state.items);
           items[i].is_added_to_primary_playlist = false;
-          this.setState({items});
+          this.setState({ items });
         }
       }
     }
 
     this.setState({
       items: this.state.items,
-      liveLesson: this.state.liveLesson,
+      liveLesson: this.state.liveLesson
     });
 
     removeFromMyList(contentID);
@@ -256,7 +256,7 @@ export default class Live extends React.Component {
       chatChannelName,
       questionsChannelName,
       userId,
-      token,
+      token
     } = this.content;
     return (
       <>
@@ -264,7 +264,7 @@ export default class Live extends React.Component {
           <View
             style={{
               backgroundColor: colors.mainBackground,
-              flex: 1,
+              flex: 1
             }}
           >
             {/* COUNTDOWN or LIVE SCREEN */}
@@ -274,10 +274,10 @@ export default class Live extends React.Component {
                 <>
                   <SafeAreaView
                     style={{
-                      width: Dimensions.get('window').width,
+                      width: Dimensions.get('window').width
                     }}
                   >
-                    <View style={{width: '100%'}}>
+                    <View style={{ width: '100%' }}>
                       <View
                         style={[
                           styles.centerContent,
@@ -287,8 +287,8 @@ export default class Live extends React.Component {
                             left: 0,
                             width: '100%',
                             height: '100%',
-                            zIndex: 1,
-                          },
+                            zIndex: 1
+                          }
                         ]}
                       >
                         <View
@@ -297,15 +297,15 @@ export default class Live extends React.Component {
                             {
                               height: '100%',
                               width: '100%',
-                              borderRadius: 10,
-                            },
+                              borderRadius: 10
+                            }
                           ]}
                         >
                           <LinearGradient
                             colors={[
                               'transparent',
                               'rgba(20, 20, 20, 0.5)',
-                              'rgba(0, 0, 0, 1)',
+                              'rgba(0, 0, 0, 1)'
                             ]}
                             style={{
                               borderRadius: 0,
@@ -313,7 +313,7 @@ export default class Live extends React.Component {
                               height: '100%',
                               position: 'absolute',
                               left: 0,
-                              bottom: 0,
+                              bottom: 0
                             }}
                           />
                           <Text
@@ -323,7 +323,7 @@ export default class Live extends React.Component {
                               position: 'absolute',
                               fontSize: onTablet ? 16 : 12,
                               left: 5,
-                              top: 10,
+                              top: 10
                             }}
                           >
                             UPCOMING EVENT
@@ -335,7 +335,7 @@ export default class Live extends React.Component {
                                   color: 'white',
                                   fontFamily: 'OpenSans-Bold',
                                   fontSize: onTablet ? 60 : 40,
-                                  textAlign: 'center',
+                                  textAlign: 'center'
                                 }}
                               >
                                 {this.state.timeDiffLive?.hours}
@@ -345,7 +345,7 @@ export default class Live extends React.Component {
                                   color: 'white',
                                   fontFamily: 'OpenSans-Bold',
                                   top: 0,
-                                  textAlign: 'center',
+                                  textAlign: 'center'
                                 }}
                               >
                                 HOURS
@@ -356,7 +356,7 @@ export default class Live extends React.Component {
                                 style={{
                                   color: 'white',
                                   fontFamily: 'OpenSans-Bold',
-                                  fontSize: onTablet ? 60 : 40,
+                                  fontSize: onTablet ? 60 : 40
                                 }}
                               >
                                 {' '}
@@ -368,7 +368,7 @@ export default class Live extends React.Component {
                                   fontFamily: 'OpenSans-Bold',
                                   top: 0,
                                   textAlign: 'center',
-                                  color: 'transparent',
+                                  color: 'transparent'
                                 }}
                               >
                                 h
@@ -380,7 +380,7 @@ export default class Live extends React.Component {
                                   color: 'white',
                                   fontFamily: 'OpenSans-Bold',
                                   fontSize: onTablet ? 60 : 40,
-                                  textAlign: 'center',
+                                  textAlign: 'center'
                                 }}
                               >
                                 {this.state.timeDiffLive?.minutes}
@@ -390,7 +390,7 @@ export default class Live extends React.Component {
                                   color: 'white',
                                   fontFamily: 'OpenSans-Bold',
                                   top: 0,
-                                  textAlign: 'center',
+                                  textAlign: 'center'
                                 }}
                               >
                                 MINUTES
@@ -401,7 +401,7 @@ export default class Live extends React.Component {
                                 style={{
                                   color: 'white',
                                   fontFamily: 'OpenSans-Bold',
-                                  fontSize: onTablet ? 60 : 40,
+                                  fontSize: onTablet ? 60 : 40
                                 }}
                               >
                                 {' '}
@@ -413,7 +413,7 @@ export default class Live extends React.Component {
                                   fontFamily: 'OpenSans-Bold',
                                   top: 0,
                                   textAlign: 'center',
-                                  color: 'transparent',
+                                  color: 'transparent'
                                 }}
                               >
                                 h
@@ -425,7 +425,7 @@ export default class Live extends React.Component {
                                   color: 'white',
                                   fontFamily: 'OpenSans-Bold',
                                   fontSize: onTablet ? 60 : 40,
-                                  textAlign: 'center',
+                                  textAlign: 'center'
                                 }}
                               >
                                 {this.state.timeDiffLive?.seconds}
@@ -435,7 +435,7 @@ export default class Live extends React.Component {
                                   color: 'white',
                                   fontFamily: 'OpenSans-Bold',
                                   top: 0,
-                                  textAlign: 'center',
+                                  textAlign: 'center'
                                 }}
                               >
                                 SECONDS
@@ -444,23 +444,23 @@ export default class Live extends React.Component {
                           </Text>
                         </View>
                       </View>
-                      <View style={{width: '100%'}}>
+                      <View style={{ width: '100%' }}>
                         {isiOS ? (
                           <FastImage
                             style={{
                               width: '100%',
                               borderRadius: 7.5,
-                              aspectRatio: 16 / 9,
+                              aspectRatio: 16 / 9
                             }}
                             source={{
                               uri:
                                 this.state.liveLesson[0].thumbnail_url !== 'TBD'
                                   ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                      (Dimensions.get('window').width - 20) * 2,
+                                      (Dimensions.get('window').width - 20) * 2
                                     )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
                                       this.state.liveLesson[0].thumbnail_url
                                     }`
-                                  : fallbackThumb,
+                                  : fallbackThumb
                             }}
                             resizeMode={FastImage.resizeMode.cover}
                           />
@@ -469,18 +469,18 @@ export default class Live extends React.Component {
                             style={{
                               width: '100%',
                               borderRadius: 7.5,
-                              aspectRatio: 16 / 9,
+                              aspectRatio: 16 / 9
                             }}
-                            resizeMode="cover"
+                            resizeMode='cover'
                             source={{
                               uri:
                                 this.state.liveLesson[0].thumbnail_url !== 'TBD'
                                   ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                      (Dimensions.get('window').width - 20) * 2,
+                                      (Dimensions.get('window').width - 20) * 2
                                     )},ar_16:9},fl_lossy,q_auto:eco,c_fill,g_face/${
                                       this.state.liveLesson[0].thumbnail_url
                                     }`
-                                  : fallbackThumb,
+                                  : fallbackThumb
                             }}
                           />
                         )}
@@ -492,33 +492,33 @@ export default class Live extends React.Component {
                         padding: 10,
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        alignItems: 'center',
+                        alignItems: 'center'
                       }}
                     >
-                      <View style={{width: '80%'}}>
+                      <View style={{ width: '80%' }}>
                         <Text
                           numberOfLines={1}
-                          ellipsizeMode="tail"
+                          ellipsizeMode='tail'
                           style={{
                             fontSize: DeviceInfo.isTablet() ? 16 : 14,
                             fontFamily: 'OpenSans-Bold',
-                            color: 'white',
+                            color: 'white'
                           }}
                         >
                           Pianote Live Stream
                         </Text>
-                        <View style={{flexDirection: 'row'}}>
+                        <View style={{ flexDirection: 'row' }}>
                           <Text
                             numberOfLines={1}
                             style={{
                               fontFamily: 'OpenSans-Regular',
                               color: colors.pianoteGrey,
 
-                              fontSize: sizing.descriptionText,
+                              fontSize: sizing.descriptionText
                             }}
                           >
                             {this.changeType(
-                              this.state.liveLesson[0].instructors,
+                              this.state.liveLesson[0].instructors
                             )}
                           </Text>
                         </View>
@@ -528,11 +528,11 @@ export default class Live extends React.Component {
                           !this.state.liveLesson[0].is_added_to_primary_playlist
                             ? this.addToMyList(
                                 this.state.liveLesson[0]?.id,
-                                'live',
+                                'live'
                               )
                             : this.removeFromMyList(
                                 this.state.liveLesson[0]?.id,
-                                'live',
+                                'live'
                               )
                         }
                       >
@@ -548,11 +548,11 @@ export default class Live extends React.Component {
                         />
                       </TouchableOpacity>
                       <TouchableOpacity
-                        style={{paddingRight: 5}}
+                        style={{ paddingRight: 5 }}
                         onPress={() => {
                           this.addToCalendarLessonTitle = this.state.liveLesson[0].title;
                           this.addToCalendatLessonPublishDate = this.state.liveLesson[0].live_event_start_time;
-                          this.setState({addToCalendarModal: true});
+                          this.setState({ addToCalendarModal: true });
                         }}
                       >
                         <FontIcon
@@ -567,11 +567,11 @@ export default class Live extends React.Component {
               ) : (
                 <>
                   {this.state.isLoadingAll ? (
-                    <View style={{backgroundColor: 'black'}}>
+                    <View style={{ backgroundColor: 'black' }}>
                       <View
                         style={{
                           aspectRatio: 16 / 9,
-                          justifyContent: 'center',
+                          justifyContent: 'center'
                         }}
                       >
                         <TouchableOpacity
@@ -581,7 +581,7 @@ export default class Live extends React.Component {
                             left: 0,
                             padding: 15,
                             position: 'absolute',
-                            justifyContent: 'center',
+                            justifyContent: 'center'
                           }}
                         >
                           <ArrowLeft
@@ -590,7 +590,7 @@ export default class Live extends React.Component {
                             fill={'white'}
                           />
                         </TouchableOpacity>
-                        <ActivityIndicator size="large" color="#ffffff" />
+                        <ActivityIndicator size='large' color='#ffffff' />
                       </View>
                     </View>
                   ) : (
@@ -614,7 +614,7 @@ export default class Live extends React.Component {
                           beforeTimerCursorBackground: colors.pianoteRed,
                           settings: {
                             cancel: {
-                              color: 'black',
+                              color: 'black'
                             },
                             separatorColor: 'rgb(230, 230, 230)',
                             background: 'white',
@@ -622,9 +622,9 @@ export default class Live extends React.Component {
                             downloadIcon: {
                               width: 20,
                               height: 20,
-                              fill: colors.pianoteRed,
-                            },
-                          },
+                              fill: colors.pianoteRed
+                            }
+                          }
                         }}
                       />
                       <View
@@ -633,32 +633,32 @@ export default class Live extends React.Component {
                           padding: 10,
                           flexDirection: 'row',
                           justifyContent: 'space-between',
-                          alignItems: 'center',
+                          alignItems: 'center'
                         }}
                       >
-                        <View style={{width: '80%'}}>
+                        <View style={{ width: '80%' }}>
                           <View
                             style={{
                               flexDirection: 'row',
                               width: 80,
                               marginBottom: 5,
-                              marginTop: 2,
+                              marginTop: 2
                             }}
                           >
                             <View
                               style={{
                                 borderRadius: onTablet ? 5 : 3,
                                 backgroundColor: 'red',
-                                paddingHorizontal: onTablet ? 7.5 : 5,
+                                paddingHorizontal: onTablet ? 7.5 : 5
                               }}
                             >
                               <Text
                                 numberOfLines={1}
-                                ellipsizeMode="tail"
+                                ellipsizeMode='tail'
                                 style={{
                                   fontSize: onTablet ? 16 : 14,
                                   fontFamily: 'OpenSans-Regular',
-                                  color: 'white',
+                                  color: 'white'
                                 }}
                               >
                                 LIVE
@@ -667,24 +667,24 @@ export default class Live extends React.Component {
                             <View
                               style={{
                                 paddingHorizontal: 10,
-                                flexDirection: 'row',
+                                flexDirection: 'row'
                               }}
                             >
-                              <View style={{justifyContent: 'center'}}>
+                              <View style={{ justifyContent: 'center' }}>
                                 <PasswordVisible
                                   height={onTablet ? 22 : 18}
                                   width={onTablet ? 22 : 18}
                                   fill={'white'}
                                 />
                               </View>
-                              <View style={{justifyContent: 'center'}}>
+                              <View style={{ justifyContent: 'center' }}>
                                 <Text
                                   numberOfLines={1}
                                   style={{
                                     fontSize: DeviceInfo.isTablet() ? 14 : 12,
                                     fontFamily: 'OpenSans-Regular',
                                     color: 'white',
-                                    paddingLeft: 5,
+                                    paddingLeft: 5
                                   }}
                                 >
                                   {this.state.liveViewers}
@@ -699,14 +699,14 @@ export default class Live extends React.Component {
                               .is_added_to_primary_playlist
                               ? this.addToMyList(
                                   this.state.liveLesson[0].id,
-                                  'live',
+                                  'live'
                                 )
                               : this.removeFromMyList(
                                   this.state.liveLesson[0].id,
-                                  'live',
+                                  'live'
                                 )
                           }
-                          style={{paddingRight: 2.5, paddingBottom: 25}}
+                          style={{ paddingRight: 2.5, paddingBottom: 25 }}
                         >
                           <AntIcon
                             name={
@@ -727,10 +727,10 @@ export default class Live extends React.Component {
 
               {/* CHAT */}
               <SafeAreaView
-                forceInset={{bottom: 'never'}}
+                forceInset={{ bottom: 'never' }}
                 style={{
                   backgroundColor: colors.mainBackground,
-                  flex: 1,
+                  flex: 1
                 }}
               >
                 {!this.state.isLoadingAll ? (
@@ -742,7 +742,7 @@ export default class Live extends React.Component {
                     onRemoveAllMessages={removeAllMessages}
                     onToggleBlockStudent={toggleBlockStudent}
                     questionsId={questionsChannelName}
-                    user={{id: `${userId}`, gsToken: token}}
+                    user={{ id: `${userId}`, gsToken: token }}
                   />
                 ) : (
                   <ActivityIndicator
@@ -750,7 +750,7 @@ export default class Live extends React.Component {
                     style={{
                       flex: 1,
                       justifyContent: 'center',
-                      alignItems: 'center',
+                      alignItems: 'center'
                     }}
                     color={colors.secondBackground}
                   />
@@ -777,7 +777,7 @@ export default class Live extends React.Component {
                     paddingLeft: 10,
                     paddingTop: 10,
                     color: colors.secondBackground,
-                    fontSize: onTablet ? 14 : 12,
+                    fontSize: onTablet ? 14 : 12
                   }}
                 >
                   {month[this.state.month]}
@@ -790,7 +790,7 @@ export default class Live extends React.Component {
                     style={{
                       flex: 1,
                       justifyContent: 'center',
-                      alignItems: 'center',
+                      alignItems: 'center'
                     }}
                     color={colors.secondBackground}
                   />
@@ -800,21 +800,21 @@ export default class Live extends React.Component {
                       paddingLeft: 10,
                       color: 'white',
                       textAlign: 'left',
-                      fontSize: onTablet ? 16 : 14,
+                      fontSize: onTablet ? 16 : 14
                     }}
                   >
                     Sorry, there are no upcoming events!
                   </Text>
                 )
               }
-              renderItem={({item}) => {
+              renderItem={({ item }) => {
                 let type = item.lesson ? 'lesson' : 'overview';
                 return (
                   <TouchableOpacity
                     style={{
                       padding: 10,
                       flexDirection: 'row',
-                      height: 80,
+                      height: 80
                     }}
                   >
                     <View
@@ -825,8 +825,8 @@ export default class Live extends React.Component {
                           aspectRatio: 16 / 9,
                           backgroundColor: 'black',
                           borderRadius: 10,
-                          marginRight: 10,
-                        },
+                          marginRight: 10
+                        }
                       ]}
                     >
                       <Text
@@ -836,7 +836,7 @@ export default class Live extends React.Component {
                           color: 'white',
                           textAlign: 'left',
                           fontFamily: 'OpenSans-Bold',
-                          textAlign: 'center',
+                          textAlign: 'center'
                         }}
                       >
                         {day[item.timeData.day]} {item.timeData.date}
@@ -848,7 +848,7 @@ export default class Live extends React.Component {
                           color: 'white',
                           textAlign: 'left',
                           fontFamily: 'OpenSans-Regular',
-                          textAlign: 'center',
+                          textAlign: 'center'
                         }}
                       >
                         {item.timeData.hours}:
@@ -861,7 +861,7 @@ export default class Live extends React.Component {
                     <View
                       style={{
                         flex: 1,
-                        justifyContent: 'center',
+                        justifyContent: 'center'
                       }}
                     >
                       <Text
@@ -869,7 +869,7 @@ export default class Live extends React.Component {
                           fontSize: sizing.videoTitleText,
                           marginBottom: 2,
                           color: 'white',
-                          fontFamily: 'OpenSans-Bold',
+                          fontFamily: 'OpenSans-Bold'
                         }}
                       >
                         {item.title}
@@ -880,7 +880,7 @@ export default class Live extends React.Component {
                           fontSize: sizing.descriptionText,
                           color: colors.secondBackground,
                           textAlign: 'left',
-                          fontFamily: 'OpenSans-Regular',
+                          fontFamily: 'OpenSans-Regular'
                         }}
                       >
                         {this.changeType(item.type)}
@@ -891,8 +891,8 @@ export default class Live extends React.Component {
                         styles.centerContent,
                         {
                           paddingLeft: 20,
-                          flexDirection: 'row',
-                        },
+                          flexDirection: 'row'
+                        }
                       ]}
                     >
                       <TouchableOpacity
@@ -913,12 +913,12 @@ export default class Live extends React.Component {
                         />
                       </TouchableOpacity>
                       <TouchableOpacity
-                        style={{marginLeft: 10}}
+                        style={{ marginLeft: 10 }}
                         onPress={() => {
                           this.addToCalendarLessonTitle = item.title;
                           this.addToCalendatLessonPublishDate =
                             item.live_event_start_time;
-                          this.setState({addToCalendarModal: true});
+                          this.setState({ addToCalendarModal: true });
                         }}
                       >
                         <FontIcon
@@ -943,7 +943,7 @@ export default class Live extends React.Component {
             >
               <AddToCalendar
                 hideAddToCalendar={() =>
-                  this.setState({addToCalendarModal: false})
+                  this.setState({ addToCalendarModal: false })
                 }
                 addEventToCalendar={() => {
                   this.addEventToCalendar();

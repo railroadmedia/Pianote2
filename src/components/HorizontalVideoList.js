@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   Image,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import DeviceInfo from 'react-native-device-info';
@@ -19,14 +19,14 @@ import FastImage from 'react-native-fast-image';
 import AddToCalendar from '../modals/AddToCalendar';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import Relevance from '../modals/Relevance';
-import {addToMyList, removeFromMyList} from '../services/UserActions';
+import { addToMyList, removeFromMyList } from '../services/UserActions';
 import ContentModal from '../modals/ContentModal';
-import {NetworkContext} from '../context/NetworkProvider';
+import { NetworkContext } from '../context/NetworkProvider';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 import Filters_V2 from './Filters_V2';
 import Orientation from 'react-native-orientation-locker';
-import {navigate} from '../../AppNavigator';
+import { navigate } from '../../AppNavigator';
 
 let greaterWDim;
 const windowDim = Dimensions.get('window');
@@ -37,7 +37,7 @@ const sortDict = {
   oldest: 'OLDEST',
   popularity: 'POPULAR',
   trending: 'TRENDING',
-  relevance: 'RELEVANCE',
+  relevance: 'RELEVANCE'
 };
 
 export default class HorizontalVideoList extends React.Component {
@@ -51,7 +51,7 @@ export default class HorizontalVideoList extends React.Component {
       showRelevance: false,
       outVideos: this.props.outVideos,
       isLoading: false,
-      items: this.props.items,
+      items: this.props.items
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
@@ -63,39 +63,41 @@ export default class HorizontalVideoList extends React.Component {
   componentWillReceiveProps = props => {
     if (props.isPaging !== this.state.isPaging) {
       if (!this.state.isLoading) {
-        this.setState({isPaging: props.isPaging});
+        this.setState({ isPaging: props.isPaging });
       }
     }
     if (props.outVideos !== this.state.outVideos) {
-      this.setState({outVideos: props.outVideos});
+      this.setState({ outVideos: props.outVideos });
     }
     if (props.isLoading !== this.state.isLoading) {
       this.setState({
         isLoading: props.isLoading,
-        items: [...this.state.items, ...props.items],
+        items: [...this.state.items, ...props.items]
       });
     } else if (props.items !== this.state.items) {
       this.setState({
-        items: props.items,
+        items: props.items
       });
     }
   };
 
   componentDidUpdate(prevProps) {
-    let {items: pItems} = prevProps;
+    let { items: pItems } = prevProps;
     let myListStatusChanged, progressChanged;
     if (this.props.items.length !== pItems.length) progressChanged = true;
     else if (
       this.props.items.some(item =>
         pItems.some(
           pItem =>
-            item.id === pItem.id && item.isAddedToList !== pItem.isAddedToList,
-        ),
+            item.id === pItem.id &&
+            item.is_added_to_primary_playlist !==
+              pItem.is_added_to_primary_playlist
+        )
       )
     )
       myListStatusChanged = true;
     if (progressChanged || myListStatusChanged)
-      this.setState({items: this.props.items});
+      this.setState({ items: this.props.items });
   }
 
   _onOrientationDidChange = () => {
@@ -118,7 +120,7 @@ export default class HorizontalVideoList extends React.Component {
       if (this.state.items[i].id == contentID) {
         let items = Object.assign([], this.state.items);
         items[i].isAddedToList = true;
-        this.setState({items});
+        this.setState({ items });
       }
     }
     addToMyList(contentID);
@@ -130,7 +132,7 @@ export default class HorizontalVideoList extends React.Component {
       if (this.state.items[i].id == contentID) {
         let items = Object.assign([], this.state.items);
         items[i].isAddedToList = false;
-        this.setState({items});
+        this.setState({ items });
       }
     }
     removeFromMyList(contentID);
@@ -146,7 +148,7 @@ export default class HorizontalVideoList extends React.Component {
         items[i].like_count = items[i].isLiked
           ? items[i].like_count + 1
           : items[i].like_count - 1;
-        this.setState({items});
+        this.setState({ items });
       }
     }
   };
@@ -179,49 +181,49 @@ export default class HorizontalVideoList extends React.Component {
     switch (content.type) {
       case 'course':
         return navigate('PATHOVERVIEW', {
-          data: content,
+          data: content
         });
       case 'song':
         if (content.lesson_count === 1)
-          return navigate('VIEWLESSON', {
-            id: content.currentLessonId,
+          return navigate('VIDEOPLAYER', {
+            id: content.lessons?.[0]?.id
           });
         return navigate('PATHOVERVIEW', {
-          data: content,
+          data: content
         });
       case 'learning-path':
         return navigate('METHOD', {
-          url: content.mobile_app_url,
+          url: content.mobile_app_url
         });
       case 'learning-path-level':
         return navigate('METHODLEVEL', {
           url: content.mobile_app_url,
-          level: index + 1,
+          level: index + 1
         });
       case 'learning-path-course':
         return navigate('PATHOVERVIEW', {
           data: content,
-          isMethod: true,
+          isMethod: true
         });
       case 'learning-path-lesson':
         return navigate('VIEWLESSON', {
-          url: content.mobile_app_url,
+          url: content.mobile_app_url
         });
       case 'pack':
         return navigate('SINGLEPACK', {
-          url: content.mobile_app_url,
+          url: content.mobile_app_url
         });
       case 'pack-bundle':
         return navigate('SINGLEPACK', {
-          url: content.mobile_app_url,
+          url: content.mobile_app_url
         });
       case 'pack-bundle-lesson':
         return navigate('VIEWLESSON', {
-          url: content.mobile_app_url,
+          url: content.mobile_app_url
         });
       default:
         return navigate('VIEWLESSON', {
-          id: content.id,
+          id: content.id
         });
     }
   };
@@ -230,13 +232,13 @@ export default class HorizontalVideoList extends React.Component {
     const eventConfig = {
       title: this.addToCalendarLessonTitle,
       startDate: new Date(this.addToCalendatLessonPublishDate),
-      endDate: new Date(this.addToCalendatLessonPublishDate),
+      endDate: new Date(this.addToCalendatLessonPublishDate)
     };
     AddCalendarEvent.presentEventCreatingDialog(eventConfig)
       .then(eventInfo => {
         this.addToCalendarLessonTitle = '';
         this.addToCalendatLessonPublishDate = '';
-        this.setState({addToCalendarModal: false});
+        this.setState({ addToCalendarModal: false });
       })
       .catch(e => {});
   };
@@ -254,11 +256,11 @@ export default class HorizontalVideoList extends React.Component {
             {
               flex: 1,
               marginHorizontal: 40,
-              flexDirection: 'row',
-            },
+              flexDirection: 'row'
+            }
           ]}
         >
-          <View style={{flex: 3}} />
+          <View style={{ flex: 3 }} />
           <ActivityIndicator
             size={onTablet ? 'large' : 'small'}
             animating={true}
@@ -266,7 +268,7 @@ export default class HorizontalVideoList extends React.Component {
               this.props.isMethod ? colors.pianoteGrey : colors.secondBackground
             }
           />
-          <View style={{flex: 0.7}} />
+          <View style={{ flex: 0.7 }} />
         </View>
       );
     } else {
@@ -274,10 +276,10 @@ export default class HorizontalVideoList extends React.Component {
         <View
           style={{
             width: width,
-            height: '100%',
+            height: '100%'
           }}
         >
-          <View style={{flex: 1}} />
+          <View style={{ flex: 1 }} />
           <ActivityIndicator
             size={onTablet ? 'large' : 'small'}
             animating={true}
@@ -285,7 +287,7 @@ export default class HorizontalVideoList extends React.Component {
               this.props.isMethod ? colors.pianoteGrey : colors.secondBackground
             }
           />
-          <View style={{flex: 1}} />
+          <View style={{ flex: 1 }} />
         </View>
       );
     }
@@ -306,14 +308,14 @@ export default class HorizontalVideoList extends React.Component {
 
   render = () => {
     return (
-      <View style={{marginLeft: 10}}>
+      <View style={{ marginLeft: 10 }}>
         <View style={localStyles.titleContain}>
           <Text
             style={[
               localStyles.title,
               {
-                color: this.props.isMethod ? 'white' : colors.secondBackground,
-              },
+                color: this.props.isMethod ? 'white' : colors.secondBackground
+              }
             ]}
           >
             {this.props.Title}
@@ -330,29 +332,29 @@ export default class HorizontalVideoList extends React.Component {
                   {!this.props.hideFilterButton && (
                     <>
                       <>
-                        <View style={{flex: 1}} />
+                        <View style={{ flex: 1 }} />
                         <TouchableOpacity
                           style={[
                             styles.centerContent,
                             {
                               flexDirection: 'row',
-                              marginRight: 5,
-                            },
+                              marginRight: 5
+                            }
                           ]}
                           onPress={() => {
                             this.setState({
-                              showRelevance: !this.state.showRelevance,
+                              showRelevance: !this.state.showRelevance
                             });
                           }}
                         >
-                          <View style={{flex: 1}} />
+                          <View style={{ flex: 1 }} />
                           <Text
                             style={[
                               localStyles.seeAllText,
                               {
                                 paddingRight: 5,
-                                fontSize: sizing.descriptionText,
-                              },
+                                fontSize: sizing.descriptionText
+                              }
                             ]}
                           >
                             {onTablet
@@ -369,10 +371,10 @@ export default class HorizontalVideoList extends React.Component {
                               color={colors.pianoteRed}
                             />
                           </View>
-                          <View style={{flex: 1}} />
+                          <View style={{ flex: 1 }} />
                         </TouchableOpacity>
                       </>
-                      <View style={{marginRight: 10}}>
+                      <View style={{ marginRight: 10 }}>
                         <Filters_V2
                           disabled={this.state.isPaging}
                           onApply={() =>
@@ -395,7 +397,7 @@ export default class HorizontalVideoList extends React.Component {
           data={this.state.items}
           extraData={this.state}
           horizontal={this.props.isTile ? false : true}
-          style={{width: '100%'}}
+          style={{ width: '100%' }}
           showsHorizontalScrollIndicator={false}
           onEndReached={() => {
             this.props.callEndReached ? this.props.reachedEnd() : null;
@@ -403,23 +405,23 @@ export default class HorizontalVideoList extends React.Component {
           onEndReachedThreshold={1}
           ListFooterComponent={() => this.listFooter()}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({item, index}) => (
+          renderItem={({ item, index }) => (
             <TouchableOpacity
               style={{
                 width: this.decideWidth(),
                 marginRight: 10,
-                marginBottom: this.props.isTile ? 10 : 0,
+                marginBottom: this.props.isTile ? 10 : 0
               }}
               onLongPress={() => {
                 this.setState({
                   showModal: true,
-                  item,
+                  item
                 });
               }}
               delayLongPress={250}
               onPress={() => this.navigate(item, index)}
             >
-              <View style={{width: '100%'}}>
+              <View style={{ width: '100%' }}>
                 <View style={[styles.centerContent, localStyles.progressItem]}>
                   {this.props.isLive ? (
                     <View
@@ -428,15 +430,15 @@ export default class HorizontalVideoList extends React.Component {
                         {
                           height: '100%',
                           width: '100%',
-                          borderRadius: 10,
-                        },
+                          borderRadius: 10
+                        }
                       ]}
                     >
                       <LinearGradient
                         colors={[
                           'transparent',
                           'rgba(20, 20, 20, 0.7)',
-                          'rgba(0, 0, 0, 1)',
+                          'rgba(0, 0, 0, 1)'
                         ]}
                         style={{
                           borderRadius: 0,
@@ -444,7 +446,7 @@ export default class HorizontalVideoList extends React.Component {
                           height: '100%',
                           position: 'absolute',
                           left: 0,
-                          bottom: 0,
+                          bottom: 0
                         }}
                       />
                       <Text
@@ -454,7 +456,7 @@ export default class HorizontalVideoList extends React.Component {
                           position: 'absolute',
                           fontSize: onTablet ? 16 : 12,
                           left: 5,
-                          top: 10,
+                          top: 10
                         }}
                       >
                         UPCOMING EVENT
@@ -466,7 +468,7 @@ export default class HorizontalVideoList extends React.Component {
                               color: 'white',
                               fontFamily: 'OpenSans-Bold',
                               fontSize: onTablet ? 60 : 40,
-                              textAlign: 'center',
+                              textAlign: 'center'
                             }}
                           >
                             02
@@ -476,7 +478,7 @@ export default class HorizontalVideoList extends React.Component {
                               color: 'white',
                               fontFamily: 'OpenSans-Bold',
                               top: 0,
-                              textAlign: 'center',
+                              textAlign: 'center'
                             }}
                           >
                             HOURS
@@ -487,7 +489,7 @@ export default class HorizontalVideoList extends React.Component {
                             style={{
                               color: 'white',
                               fontFamily: 'OpenSans-Bold',
-                              fontSize: onTablet ? 60 : 40,
+                              fontSize: onTablet ? 60 : 40
                             }}
                           >
                             {' '}
@@ -499,7 +501,7 @@ export default class HorizontalVideoList extends React.Component {
                               fontFamily: 'OpenSans-Bold',
                               top: 0,
                               textAlign: 'center',
-                              color: 'transparent',
+                              color: 'transparent'
                             }}
                           >
                             h
@@ -511,7 +513,7 @@ export default class HorizontalVideoList extends React.Component {
                               color: 'white',
                               fontFamily: 'OpenSans-Bold',
                               fontSize: onTablet ? 60 : 40,
-                              textAlign: 'center',
+                              textAlign: 'center'
                             }}
                           >
                             42
@@ -521,7 +523,7 @@ export default class HorizontalVideoList extends React.Component {
                               color: 'white',
                               fontFamily: 'OpenSans-Bold',
                               top: 0,
-                              textAlign: 'center',
+                              textAlign: 'center'
                             }}
                           >
                             MINUTES
@@ -532,7 +534,7 @@ export default class HorizontalVideoList extends React.Component {
                             style={{
                               color: 'white',
                               fontFamily: 'OpenSans-Bold',
-                              fontSize: onTablet ? 60 : 40,
+                              fontSize: onTablet ? 60 : 40
                             }}
                           >
                             {' '}
@@ -544,7 +546,7 @@ export default class HorizontalVideoList extends React.Component {
                               fontFamily: 'OpenSans-Bold',
                               top: 0,
                               textAlign: 'center',
-                              color: 'transparent',
+                              color: 'transparent'
                             }}
                           >
                             h
@@ -556,7 +558,7 @@ export default class HorizontalVideoList extends React.Component {
                               color: 'white',
                               fontFamily: 'OpenSans-Bold',
                               fontSize: onTablet ? 60 : 40,
-                              textAlign: 'center',
+                              textAlign: 'center'
                             }}
                           >
                             02
@@ -566,7 +568,7 @@ export default class HorizontalVideoList extends React.Component {
                               color: 'white',
                               fontFamily: 'OpenSans-Bold',
                               top: 0,
-                              textAlign: 'center',
+                              textAlign: 'center'
                             }}
                           >
                             SECONDS
@@ -574,13 +576,13 @@ export default class HorizontalVideoList extends React.Component {
                         </View>
                       </Text>
                     </View>
-                  ) : item.isStarted ? (
+                  ) : item.started ? (
                     <Progress
                       height={onTablet ? 55 : 45}
                       width={onTablet ? 55 : 45}
                       fill={'white'}
                     />
-                  ) : item.isCompleted ? (
+                  ) : item.completed ? (
                     <ApprovedTeacher
                       height={onTablet ? 70 : 55}
                       width={onTablet ? 70 : 55}
@@ -593,19 +595,19 @@ export default class HorizontalVideoList extends React.Component {
                   <FastImage
                     style={[
                       localStyles.imageIOS,
-                      {aspectRatio: this.props.isSquare ? 1 : 16 / 9},
+                      { aspectRatio: this.props.isSquare ? 1 : 16 / 9 }
                     ]}
                     source={{
                       uri:
                         item.thumbnail && item.thumbnail !== 'TBD'
                           ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                              this.decideWidth() * 2,
+                              this.decideWidth() * 2
                             )},ar_${
                               this.props.isSquare ? '1' : '16:9'
                             },fl_lossy,q_auto:eco,c_fill,g_face/${
                               item.thumbnail
                             }`
-                          : fallbackThumb,
+                          : fallbackThumb
                     }}
                     resizeMode={FastImage.resizeMode.cover}
                   />
@@ -613,30 +615,30 @@ export default class HorizontalVideoList extends React.Component {
                   <Image
                     style={[
                       localStyles.imageIOS,
-                      {aspectRatio: this.props.isSquare ? 1 : 16 / 9},
+                      { aspectRatio: this.props.isSquare ? 1 : 16 / 9 }
                     ]}
-                    resizeMode="cover"
+                    resizeMode='cover'
                     source={{
                       uri:
                         item.thumbnail && item.thumbnail !== 'TBD'
                           ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                              this.decideWidth() * 2,
+                              this.decideWidth() * 2
                             )},ar_${
                               this.props.isSquare ? '1' : '16:9'
                             },fl_lossy,q_auto:eco,c_fill,g_face/${
                               item.thumbnail
                             }`
-                          : fallbackThumb,
+                          : fallbackThumb
                     }}
                   />
                 )}
               </View>
 
               <View style={localStyles.videoTitle}>
-                <View style={{width: '85%'}}>
+                <View style={{ width: '85%' }}>
                   <Text
                     numberOfLines={1}
-                    ellipsizeMode="tail"
+                    ellipsizeMode='tail'
                     style={localStyles.videoTitleText}
                   >
                     {this.props.isLive ? 'Pianote Live Stream' : item.title}
@@ -650,12 +652,12 @@ export default class HorizontalVideoList extends React.Component {
                           ? colors.pianoteGrey
                           : colors.secondBackground,
 
-                        fontSize: sizing.descriptionText,
+                        fontSize: sizing.descriptionText
                       }}
                     >
                       {this.props.showType && this.changeType(item.type)}
                       {this.props.showType && '/ '}
-                      {item.artist}
+                      {item.artist || item.instructors?.join(', ')}
                     </Text>
                   </View>
                 </View>
@@ -666,7 +668,7 @@ export default class HorizontalVideoList extends React.Component {
                         ? this.addToMyList(item.id)
                         : this.removeFromMyList(item.id)
                     }
-                    style={{paddingRight: 2.5}}
+                    style={{ paddingRight: 2.5 }}
                   >
                     <AntIcon
                       name={!item.isAddedToList ? 'plus' : 'close'}
@@ -678,11 +680,11 @@ export default class HorizontalVideoList extends React.Component {
                 {new Date(item.publishedOn) > new Date() ||
                 this.props.isLive ? (
                   <TouchableOpacity
-                    style={{paddingRight: 5}}
+                    style={{ paddingRight: 5 }}
                     onPress={() => {
                       this.addToCalendarLessonTitle = item.title;
                       this.addToCalendatLessonPublishDate = item.publishedOn;
-                      this.setState({addToCalendarModal: true});
+                      this.setState({ addToCalendarModal: true });
                     }}
                   >
                     <FontIcon
@@ -691,10 +693,10 @@ export default class HorizontalVideoList extends React.Component {
                       color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
-                ) : !item.isAddedToList ? (
+                ) : !item.is_added_to_primary_playlist ? (
                   <TouchableOpacity
                     onPress={() => this.addToMyList(item.id)}
-                    style={{paddingRight: 2.5}}
+                    style={{ paddingRight: 2.5 }}
                   >
                     <AntIcon
                       name={'plus'}
@@ -704,7 +706,7 @@ export default class HorizontalVideoList extends React.Component {
                   </TouchableOpacity>
                 ) : (
                   <TouchableOpacity
-                    style={{paddingRight: 2.5}}
+                    style={{ paddingRight: 2.5 }}
                     onPress={() => this.removeFromMyList(item.id)}
                   >
                     <AntIcon
@@ -726,10 +728,11 @@ export default class HorizontalVideoList extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showModal: false })}
         >
           <ContentModal
             data={this.state.item}
-            hideContentModal={() => this.setState({showModal: false})}
+            hideContentModal={() => this.setState({ showModal: false })}
             like={contentID => this.like(contentID)}
             addToMyList={contentID => this.addToMyList(contentID)}
             removeFromMyList={contentID => this.removeFromMyList(contentID)}
@@ -743,9 +746,12 @@ export default class HorizontalVideoList extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ addToCalendarModal: false })}
         >
           <AddToCalendar
-            hideAddToCalendar={() => this.setState({addToCalendarModal: false})}
+            hideAddToCalendar={() =>
+              this.setState({ addToCalendarModal: false })
+            }
             addEventToCalendar={() => {
               this.addEventToCalendar();
             }}
@@ -761,10 +767,11 @@ export default class HorizontalVideoList extends React.Component {
           hasBackdrop={false}
           backdropColor={'white'}
           backdropOpacity={0.79}
+          onBackButtonPress={() => this.setState({ showRelevance: false })}
         >
           <Relevance
             hideRelevance={() => {
-              this.setState({showRelevance: false});
+              this.setState({ showRelevance: false });
             }}
             isMethod={this.props.isMethod}
             currentSort={this.props.currentSort}
@@ -782,20 +789,20 @@ const localStyles = StyleSheet.create({
   title: {
     fontSize: DeviceInfo.isTablet() ? 20 : 16,
     fontFamily: 'RobotoCondensed-Bold',
-    paddingVertical: 5,
+    paddingVertical: 5
   },
   seeAllText: {
     textAlign: 'right',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: '#fb1b2f',
-    paddingRight: 10,
+    paddingRight: 10
   },
   titleContain: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 10
   },
   progressItem: {
     position: 'absolute',
@@ -803,25 +810,25 @@ const localStyles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: '100%',
-    zIndex: 1,
+    zIndex: 1
   },
   imageIOS: {
     width: '100%',
-    borderRadius: 7.5,
+    borderRadius: 7.5
   },
   videoTitle: {
     width: '100%',
     paddingVertical: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   videoTitleText: {
     fontSize: DeviceInfo.isTablet() ? 16 : 14,
     fontFamily: 'OpenSans-Bold',
-    color: 'white',
+    color: 'white'
   },
   typeContainer: {
-    flexDirection: 'row',
-  },
+    flexDirection: 'row'
+  }
 });

@@ -4,7 +4,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 
 export default class DisplayName extends React.Component {
@@ -38,8 +38,8 @@ export default class DisplayName extends React.Component {
                 style={[
                   styles.modalButtonText,
                   {
-                    color: '#fb1b2f',
-                  },
+                    color: '#fb1b2f'
+                  }
                 ]}
               >
                 TRY AGAIN
@@ -57,23 +57,23 @@ const localStyles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(0,0,0,.5)',
+    backgroundColor: 'rgba(0,0,0,.5)'
   },
   titleContainer: {
     backgroundColor: 'white',
     borderRadius: 15,
-    margin: 20,
+    margin: 20
   },
   displayText: {
     paddingHorizontal: 20,
-    marginTop: 10,
+    marginTop: 10
   },
   pleaseTryAgain: {
     paddingHorizontal: 20,
-    marginVertical: 5,
+    marginVertical: 5
   },
   tryAgainContainer: {
     paddingHorizontal: 20,
-    marginVertical: 20,
-  },
+    marginVertical: 20
+  }
 });

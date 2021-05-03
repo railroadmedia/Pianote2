@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
@@ -8,7 +8,7 @@ export default class Relevance extends React.Component {
     super(props);
     this.state = {
       currentSort: this.props.currentSort, // 'newest', ‘oldest’, NOT YET: ‘popularity’, ‘trending’ and ‘relevance’
-      background: this.props.isMethod ? '#4C5253' : '#445f73',
+      background: this.props.isMethod ? '#4C5253' : '#445f73'
     };
   }
 
@@ -27,7 +27,7 @@ export default class Relevance extends React.Component {
               width: '100%',
               backgroundColor: this.props.isMethod
                 ? 'black'
-                : colors.mainBackground,
+                : colors.mainBackground
             }}
           >
             <TouchableOpacity
@@ -37,8 +37,8 @@ export default class Relevance extends React.Component {
                   borderBottomColor: this.props.isMethod
                     ? colors.pianoteGrey
                     : '#445f73',
-                  borderBottomWidth: 0.25,
-                },
+                  borderBottomWidth: 0.25
+                }
               ]}
               onPress={() => {
                 this.props.hideRelevance(), this.props.changeSort('newest');
@@ -65,8 +65,8 @@ export default class Relevance extends React.Component {
                       color:
                         this.state.currentSort == 'newest'
                           ? 'white'
-                          : this.state.background,
-                    },
+                          : this.state.background
+                    }
                   ]}
                 >
                   Newest First
@@ -80,8 +80,8 @@ export default class Relevance extends React.Component {
                   borderBottomColor: this.props.isMethod
                     ? colors.pianoteGrey
                     : '#445f73',
-                  borderBottomWidth: 0.25,
-                },
+                  borderBottomWidth: 0.25
+                }
               ]}
               onPress={() => {
                 this.props.hideRelevance(), this.props.changeSort('oldest');
@@ -108,8 +108,8 @@ export default class Relevance extends React.Component {
                       color:
                         this.state.currentSort == 'oldest'
                           ? 'white'
-                          : this.state.background,
-                    },
+                          : this.state.background
+                    }
                   ]}
                 >
                   Oldest First
@@ -141,23 +141,23 @@ export default class Relevance extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     minHeight: DeviceInfo.isTablet() ? '20%' : '25%',
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   word: {
     marginLeft: 10,
     fontSize: DeviceInfo.isTablet() ? 18 : 14,
-    fontFamily: 'OpenSans-Regular',
+    fontFamily: 'OpenSans-Regular'
   },
   button: {
     flex: 0.4,
     paddingLeft: '5%',
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   cancel: {
     marginLeft: 10,
     marginBottom: '5%',
     fontSize: DeviceInfo.isTablet() ? 18 : 14,
     fontFamily: 'OpenSans-Regular',
-    color: 'white',
-  },
+    color: 'white'
+  }
 });

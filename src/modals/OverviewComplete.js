@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import {BlurView} from '@react-native-community/blur';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { BlurView } from '@react-native-community/blur';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 
 export default class OverviewComplete extends React.Component {
@@ -41,7 +41,7 @@ export default class OverviewComplete extends React.Component {
                 color={'#fb1b2f'}
               />
             </View>
-            <View style={[styles.centerContent, {padding: 5}]}>
+            <View style={[styles.centerContent, { padding: 5 }]}>
               <Text style={[styles.modalHeaderText]}>
                 {this.changeType(this.props.type).toUpperCase()}
                 {'\n'}Complete
@@ -68,19 +68,19 @@ const localStyles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     marginHorizontal: 30,
-    paddingVertical: 30,
+    paddingVertical: 30
   },
   congrats: {
     textAlign: 'center',
     marginVertical: 5,
-    marginHorizontal: 20,
+    marginHorizontal: 20
   },
   title: {
     marginHorizontal: 20,
     marginBottom: 15,
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   xp: {
-    color: '#fb1b2f',
-  },
+    color: '#fb1b2f'
+  }
 });

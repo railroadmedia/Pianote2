@@ -1,26 +1,26 @@
 import React from 'react';
-import {Linking, View, Dimensions, Platform} from 'react-native';
-import {connect} from 'react-redux';
-import {Download_V2} from 'RNDownload';
-import {bindActionCreators} from 'redux';
+import { Linking, View, Dimensions, Platform } from 'react-native';
+import { connect } from 'react-redux';
+import { Download_V2 } from 'RNDownload';
+import { bindActionCreators } from 'redux';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-community/async-storage';
-import {getToken, getUserData} from '../../services/UserDataAuth';
-import {notif, updateFcmToken} from '../../services/notification.service';
-import {cachePacks} from '../../redux/PacksCacheActions';
-import {cacheSongs} from '../../redux/SongsCacheActions';
-import {cacheMyList} from '../../redux/MyListCacheActions';
-import {cacheCourses} from '../../redux/CoursesCacheActions';
-import {cacheLessons} from '../../redux/LessonsCacheActions';
-import {cachePodcasts} from '../../redux/PodcastsCacheActions';
-import {cacheQuickTips} from '../../redux/QuickTipsCacheActions';
-import {cacheStudentFocus} from '../../redux/StudentFocusCacheActions';
+import { getToken, getUserData } from '../../services/UserDataAuth';
+import { notif, updateFcmToken } from '../../services/notification.service';
+import { cachePacks } from '../../redux/PacksCacheActions';
+import { cacheSongs } from '../../redux/SongsCacheActions';
+import { cacheMyList } from '../../redux/MyListCacheActions';
+import { cacheCourses } from '../../redux/CoursesCacheActions';
+import { cacheLessons } from '../../redux/LessonsCacheActions';
+import { cachePodcasts } from '../../redux/PodcastsCacheActions';
+import { cacheQuickTips } from '../../redux/QuickTipsCacheActions';
+import { cacheStudentFocus } from '../../redux/StudentFocusCacheActions';
 import Pianote from '../../assets/img/svgs/pianote';
-import {NetworkContext} from '../../context/NetworkProvider';
+import { NetworkContext } from '../../context/NetworkProvider';
 import RNFetchBlob from 'rn-fetch-blob';
 import commonService from '../../services/common.service';
 import navigationService from '../../services/navigation.service';
-import {navigate, reset} from '../../../AppNavigator';
+import { navigate, reset } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -40,7 +40,7 @@ const cache = [
   'cacheCourses',
   'cachePodcasts',
   'cacheQuickTips',
-  'cacheStudentFocus',
+  'cacheStudentFocus'
 ];
 class LoadPage extends React.Component {
   static contextType = NetworkContext;
@@ -59,7 +59,7 @@ class LoadPage extends React.Component {
           'resetKey',
           'email',
           'password',
-          'forumUrl',
+          'forumUrl'
         ])
       ).reduce((i, j) => {
         i[j[0]] = j[1] === 'true' ? true : j[1] === 'false' ? false : j[1];
@@ -67,7 +67,7 @@ class LoadPage extends React.Component {
         return i;
       }, {});
       await AsyncStorage.removeItem('resetKey');
-      const {email, resetKey, password, loggedIn, forumUrl} = data;
+      const { email, resetKey, password, loggedIn, forumUrl } = data;
 
       if (!this.context.isConnected) {
         if (loggedIn && !global.loadedFromNotification) {
@@ -78,29 +78,30 @@ class LoadPage extends React.Component {
         // if no connection and logged in
       } else if (!loggedIn && !global.loadedFromNotification) {
         // if not logged in
-        if (resetKey) return reset('RESETPASSWORD', {resetKey, email});
+        if (resetKey) return reset('RESETPASSWORD', { resetKey, email });
         return reset('LOGIN');
       } else {
         // get token
         const res = await getToken(email, password);
         if (res == 500) {
-          this.setState({showNoConnection: true});
+          this.setState({ showNoConnection: true });
         } else if (res.success) {
           updateFcmToken();
           await AsyncStorage.multiSet([['loggedIn', 'true']]);
           let userData = await getUserData();
-          let {lessonUrl, commentId} = notif;
+
+          let { lessonUrl, commentId } = notif;
           if (commonService.urlToOpen) {
             return navigationService.decideWhereToRedirect();
           } else if (lessonUrl && commentId) {
             // if lesson or comment notification go to video
-            reset('VIEWLESSON', {url: lessonUrl, commentId});
+            reset('VIEWLESSON', { url: lessonUrl, commentId });
           } else if (global.loadedFromNotification) {
             // if going to profile page
             reset('PROFILE');
           } else if (resetKey) {
             // go to reset pass
-            reset('RESETPASSWORD', {resetKey, email});
+            reset('RESETPASSWORD', { resetKey, email });
           } else {
             if (forumUrl) {
               // if user got a forum related notification
@@ -126,13 +127,13 @@ class LoadPage extends React.Component {
               navigate('MEMBERSHIPEXPIRED', {
                 email: this.state.email,
                 password: this.state.password,
-                token: res.token,
+                token: res.token
               });
             }
           }
         } else if (!res.success || !loggedIn || loggedIn == 'false') {
           // is not logged in
-          if (resetKey) return reset('RESETPASSWORD', {resetKey, email});
+          if (resetKey) return reset('RESETPASSWORD', { resetKey, email });
           return reset('LOGIN');
         }
       }
@@ -140,7 +141,7 @@ class LoadPage extends React.Component {
   }
 
   loadCache = () => {
-    let {dirs} = RNFetchBlob.fs;
+    let { dirs } = RNFetchBlob.fs;
     cache.map(c => {
       RNFetchBlob.fs
         .readFile(`${dirs.LibraryDir || dirs.DocumentDir}/${c}`, 'utf8')
@@ -165,8 +166,8 @@ class LoadPage extends React.Component {
           styles.centerContent,
           {
             flex: 1,
-            alignSelf: 'stretch',
-          },
+            alignSelf: 'stretch'
+          }
         ]}
       >
         <View
@@ -180,8 +181,8 @@ class LoadPage extends React.Component {
               width: '100%',
               zIndex: 4,
               elevation: Platform.OS == 'android' ? 4 : 0,
-              backgroundColor: 'black',
-            },
+              backgroundColor: 'black'
+            }
           ]}
         >
           <Pianote
@@ -200,6 +201,23 @@ class LoadPage extends React.Component {
             fill={'#fb1b2f'}
           />
         </View>
+        <Modal
+          isVisible={this.state.showNoConnection}
+          style={[styles.centerContent, styles.modalContainer]}
+          animation={'slideInUp'}
+          animationInTiming={250}
+          animationOutTiming={250}
+          coverScreen={true}
+          hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showNoConnection: false })}
+        >
+          <NoConnection
+            hideNoConnection={() => {
+              this.setState({ showNoConnection: false }),
+                this.handleNoConnection();
+            }}
+          />
+        </Modal>
       </View>
     );
   }
@@ -214,9 +232,9 @@ const mapDispatchToProps = dispatch =>
       cacheCourses,
       cachePodcasts,
       cacheQuickTips,
-      cacheStudentFocus,
+      cacheStudentFocus
     },
-    dispatch,
+    dispatch
   );
 
 export default connect(null, mapDispatchToProps)(LoadPage);

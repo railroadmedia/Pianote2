@@ -6,11 +6,10 @@ import {
   TouchableOpacity,
   RefreshControl,
   Dimensions,
-  ImageBackground,
+  ImageBackground
 } from 'react-native';
 import Modal from 'react-native-modal';
-import {SafeAreaView} from 'react-navigation';
-import {ContentModel} from '@musora/models';
+import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
@@ -24,11 +23,11 @@ import VerticalVideoList from '../../components/VerticalVideoList';
 import {
   addToMyList,
   removeFromMyList,
-  resetProgress,
+  resetProgress
 } from '../../services/UserActions';
-import {NetworkContext} from '../../context/NetworkProvider';
+import { NetworkContext } from '../../context/NetworkProvider';
 import methodService from '../../services/method.service';
-import {goBack, navigate} from '../../../AppNavigator';
+import { goBack, navigate } from '../../../AppNavigator';
 
 let greaterWDim;
 const windowDim = Dimensions.get('window');
@@ -55,7 +54,7 @@ export default class MethodLevel extends React.Component {
       url: '',
       description: '',
       isLandscape:
-        Dimensions.get('window').height < Dimensions.get('window').width,
+        Dimensions.get('window').height < Dimensions.get('window').width
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
@@ -72,59 +71,22 @@ export default class MethodLevel extends React.Component {
   getContent = async () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = await methodService.getMethodContent(
-      this.props.route?.params.url,
+      this.props.route?.params.url
     );
-    const newContent = response.courses.map(data => {
-      return new ContentModel(data);
-    });
-    response = new ContentModel(response);
-    try {
-      let items = [];
-      for (let i in newContent) {
-        items.push({
-          title: newContent[i].getField('title'),
-          thumbnail: newContent[i].getData('thumbnail_url'),
-          type: newContent[i].type,
-          publishedOn:
-            newContent[i].publishedOn.slice(0, 10) +
-            'T' +
-            newContent[i].publishedOn.slice(11, 16),
-          id: newContent[i].id,
-          isAddedToList: newContent[i].isAddedToList,
-          isStarted: newContent[i].isStarted,
-          isCompleted: newContent[i].isCompleted,
-          progress_percent: newContent[i].post.progress_percent,
-          mobile_app_url: newContent[i].post.mobile_app_url,
-          levelNum: response.post.level_number,
-        });
-      }
 
-      this.setState({
-        items: items,
-        nextLesson: response.post.next_lesson
-          ? new ContentModel(response.post.next_lesson)
-          : null,
-        isLoadingAll: false,
-        id: response.id,
-        bannerNextLessonUrl: response.post.banner_button_url,
-        isStarted: response.isStarted,
-        isCompleted: response.isCompleted,
-        description: response
-          .getData('description')
-          .replace(/(<([^>]+)>)/g, '')
-          .replace(/&nbsp;/g, '')
-          .replace(/&amp;/g, '&')
-          .replace(/&#039;/g, "'")
-          .replace(/&quot;/g, '"')
-          .replace(/&gt;/g, '>')
-          .replace(/&lt;/g, '<'),
-        isAddedToList: response.isAddedToList,
-        progress: response.post.progress_percent,
-        refreshing: false,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    this.setState({
+      items: response.courses,
+      nextLesson: response.next_lesson,
+      isLoadingAll: false,
+      id: response.id,
+      bannerNextLessonUrl: response.banner_button_url,
+      isStarted: response.started,
+      isCompleted: response.completed,
+      description: response.description,
+      isAddedToList: response.is_added_to_primary_playlist,
+      progress: response.progress_percent,
+      refreshing: false
+    });
   };
 
   toggleMyList = () => {
@@ -132,11 +94,11 @@ export default class MethodLevel extends React.Component {
     this.state.isAddedToList
       ? removeFromMyList(this.state.id)
       : addToMyList(this.state.id);
-    this.setState(state => ({isAddedToList: !state.isAddedToList}));
+    this.setState(state => ({ isAddedToList: !state.isAddedToList }));
   };
 
   refresh = () => {
-    this.setState({refreshing: true}, () => {
+    this.setState({ refreshing: true }, () => {
       this.getContent();
     });
   };
@@ -150,11 +112,11 @@ export default class MethodLevel extends React.Component {
         isStarted: false,
         isCompleted: false,
         showRestartCourse: false,
-        refreshing: true,
+        refreshing: true
       },
       () => {
         this.getContent();
-      },
+      }
     );
   };
 
@@ -169,10 +131,10 @@ export default class MethodLevel extends React.Component {
     let isLandscape = o.indexOf('LAND') >= 0;
 
     if (isiOS) {
-      if (onTablet) this.setState({isLandscape});
+      if (onTablet) this.setState({ isLandscape });
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
-        if (isAutoRotateOn && onTablet) this.setState({isLandscape});
+        if (isAutoRotateOn && onTablet) this.setState({ isLandscape });
       });
     }
   };
@@ -181,7 +143,7 @@ export default class MethodLevel extends React.Component {
     return (
       <SafeAreaView
         style={styles.methodContainer}
-        forceInset={{bottom: 'never'}}
+        forceInset={{ bottom: 'never' }}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -206,8 +168,8 @@ export default class MethodLevel extends React.Component {
                 borderRadius: 100,
                 left: 10,
                 top: 10,
-                zIndex: 4,
-              },
+                zIndex: 4
+              }
             ]}
           >
             <Back
@@ -221,7 +183,7 @@ export default class MethodLevel extends React.Component {
             style={{
               width: '100%',
               aspectRatio: this.getAspectRatio(),
-              justifyContent: 'flex-end',
+              justifyContent: 'flex-end'
             }}
             source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
           >
@@ -229,7 +191,7 @@ export default class MethodLevel extends React.Component {
               colors={[
                 'transparent',
                 'rgba(20, 20, 20, 0.5)',
-                'rgba(0, 0, 0, 1)',
+                'rgba(0, 0, 0, 1)'
               ]}
               style={{
                 borderRadius: 0,
@@ -237,7 +199,7 @@ export default class MethodLevel extends React.Component {
                 height: '100%',
                 position: 'absolute',
                 left: 0,
-                bottom: 0,
+                bottom: 0
               }}
             />
             <View
@@ -247,7 +209,7 @@ export default class MethodLevel extends React.Component {
                 width: '100%',
                 zIndex: 5,
                 elevation: 5,
-                opacity: 1,
+                opacity: 1
               }}
             >
               <View style={styles.centerContent}>
@@ -256,7 +218,7 @@ export default class MethodLevel extends React.Component {
                     width: '75%',
                     height: onTablet ? 100 : 60,
                     alignSelf: 'center',
-                    marginBottom: onTablet ? '2%' : '4%',
+                    marginBottom: onTablet ? '2%' : '4%'
                   }}
                   source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
                   resizeMode={FastImage.resizeMode.contain}
@@ -269,21 +231,21 @@ export default class MethodLevel extends React.Component {
                     marginBottom: 10,
                     width: '100%',
                     flexDirection: 'row',
-                    alignItems: 'center',
-                  },
+                    alignItems: 'center'
+                  }
                 ]}
               >
                 <View
                   style={{
                     flex: 1,
                     justifyContent: 'flex-end',
-                    flexDirection: 'row',
+                    flexDirection: 'row'
                   }}
                 >
                   <TouchableOpacity
                     style={{
                       paddingRight: 10,
-                      alignItems: 'center',
+                      alignItems: 'center'
                     }}
                     onPress={() => {
                       this.toggleMyList();
@@ -300,14 +262,14 @@ export default class MethodLevel extends React.Component {
                       style={{
                         fontFamily: 'OpenSans-Regular',
                         color: 'white',
-                        fontSize: sizing.descriptionText,
+                        fontSize: sizing.descriptionText
                       }}
                     >
                       {this.state.isAddedToList ? 'Added' : 'My List'}
                     </Text>
                   </TouchableOpacity>
                 </View>
-                <View style={{width: '50%'}}>
+                <View style={{ width: '50%' }}>
                   <LongButton
                     isMethod={true}
                     type={
@@ -319,10 +281,10 @@ export default class MethodLevel extends React.Component {
                     }
                     pressed={() => {
                       if (this.state.isCompleted) {
-                        this.setState({showRestartCourse: true});
+                        this.setState({ showRestartCourse: true });
                       } else {
                         navigate('VIEWLESSON', {
-                          url: this.state.bannerNextLessonUrl,
+                          url: this.state.bannerNextLessonUrl
                         });
                       }
                     }}
@@ -332,22 +294,22 @@ export default class MethodLevel extends React.Component {
                   style={{
                     flex: 1,
                     justifyContent: 'flex-start',
-                    flexDirection: 'row',
+                    flexDirection: 'row'
                   }}
                 >
                   <TouchableOpacity
                     style={{
                       paddingLeft: 15,
-                      alignItems: 'center',
+                      alignItems: 'center'
                     }}
                     onPress={() => {
                       this.setState({
-                        showInfo: !this.state.showInfo,
+                        showInfo: !this.state.showInfo
                       });
                     }}
                   >
                     <View
-                      style={[styles.centerContent, {flexDirection: 'row'}]}
+                      style={[styles.centerContent, { flexDirection: 'row' }]}
                     >
                       <AntIcon
                         name={
@@ -362,7 +324,7 @@ export default class MethodLevel extends React.Component {
                         fontFamily: 'OpenSans-Regular',
                         color: 'white',
                         marginTop: 2,
-                        fontSize: sizing.descriptionText,
+                        fontSize: sizing.descriptionText
                       }}
                     >
                       Info
@@ -376,7 +338,7 @@ export default class MethodLevel extends React.Component {
             <View
               style={{
                 width: '100%',
-                paddingHorizontal: this.state.isLandscape ? '10%' : 15,
+                paddingHorizontal: this.state.isLandscape ? '10%' : 15
               }}
             >
               <Text
@@ -386,7 +348,7 @@ export default class MethodLevel extends React.Component {
                   fontSize: sizing.descriptionText,
                   paddingHorizontal: 10,
                   color: 'white',
-                  textAlign: 'center',
+                  textAlign: 'center'
                 }}
               >
                 {this.state.description}
@@ -397,7 +359,7 @@ export default class MethodLevel extends React.Component {
             style={{
               paddingHorizontal: this.state.isLandscape ? '10%' : 0,
               marginBottom: 10,
-              marginTop: onTablet ? 40 : 30,
+              marginTop: onTablet ? 40 : 30
             }}
           >
             <VerticalVideoList
@@ -423,14 +385,15 @@ export default class MethodLevel extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showRestartCourse: false })}
         >
           <RestartCourse
             hideRestartCourse={() => {
               this.setState({
-                showRestartCourse: false,
+                showRestartCourse: false
               });
             }}
-            type="level"
+            type='level'
             onRestart={() => this.onRestartLevel()}
           />
         </Modal>
@@ -439,10 +402,10 @@ export default class MethodLevel extends React.Component {
             isMethod={true}
             item={this.state.nextLesson}
             progress={this.state.progress}
-            type="LEVEL"
+            type='LEVEL'
             onNextLesson={() =>
-              navigate('VIEWLESSON', {
-                url: this.state.nextLesson.post.mobile_app_url,
+              navigate('VIDEOPLAYER', {
+                url: this.state.nextLesson.mobile_app_url
               })
             }
           />

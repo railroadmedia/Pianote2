@@ -4,12 +4,11 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import {ContentModel} from '@musora/models';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -34,15 +33,15 @@ export default class NextVideo extends React.Component {
             : colors.secondBackground,
           borderBottomWidth: 0.5,
           marginBottom: 7.5,
-          paddingBottom: 5,
+          paddingBottom: 5
         }}
       >
-        <View style={{width: '100%'}}>
+        <View style={{ width: '100%' }}>
           <View style={localStyles.container}>
             <View
               style={{
                 flex: this.props.progress / 100,
-                backgroundColor: colors.pianoteRed,
+                backgroundColor: colors.pianoteRed
               }}
             />
             <View
@@ -50,7 +49,7 @@ export default class NextVideo extends React.Component {
                 flex: 1 - this.props.progress / 100,
                 backgroundColor: this.props.isMethod
                   ? colors.pianoteGrey
-                  : colors.secondBackground,
+                  : colors.secondBackground
               }}
             />
           </View>
@@ -64,7 +63,7 @@ export default class NextVideo extends React.Component {
                 fontFamily: 'RobotoCondensed-Bold',
                 color: this.props.isMethod
                   ? colors.pianoteGrey
-                  : colors.secondBackground,
+                  : colors.secondBackground
               }}
             >
               YOUR NEXT LESSON
@@ -76,8 +75,8 @@ export default class NextVideo extends React.Component {
                   fontSize: sizing.descriptionText,
                   color: this.props.isMethod
                     ? colors.pianoteGrey
-                    : colors.secondBackground,
-                },
+                    : colors.secondBackground
+                }
               ]}
             >
               {this.props.type.charAt(0) +
@@ -87,17 +86,17 @@ export default class NextVideo extends React.Component {
           </View>
           <View style={localStyles.videoContainer}>
             <View
-              style={{justifyContent: 'center'}}
+              style={{ justifyContent: 'center' }}
               underlayColor={'transparent'}
             >
               <FastImage
                 style={localStyles.image}
                 source={{
                   uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                    width * 0.24 * 2,
-                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${this.props.item.getData(
-                    'thumbnail_url',
-                  )}`,
+                    width * 0.24 * 2
+                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
+                    this.props.item.thumbnail_url
+                  }`
                 }}
                 resizeMode={FastImage.resizeMode.cover}
               />
@@ -106,10 +105,10 @@ export default class NextVideo extends React.Component {
               <Text
                 style={[
                   localStyles.videoTitle,
-                  {fontSize: sizing.descriptionText},
+                  { fontSize: sizing.descriptionText }
                 ]}
               >
-                {this.props.item.getField('title')}
+                {this.props.item.title}
               </Text>
               <Text
                 numberOfLines={2}
@@ -121,16 +120,12 @@ export default class NextVideo extends React.Component {
                     textAlign: 'left',
                     color: this.props.isMethod
                       ? colors.pianoteGrey
-                      : colors.secondBackground,
-                  },
+                      : colors.secondBackground
+                  }
                 ]}
               >
-                {this.props.item.post.fields?.find(f => f.key === 'video')
-                  ? Math.round(
-                      new ContentModel(
-                        this.props.item.getFieldMulti('video')[0],
-                      )?.getField('length_in_seconds') / 60,
-                    )
+                {this.props.item.length_in_seconds
+                  ? Math.round(this.props.item.length_in_seconds / 60)
                   : 0}{' '}
                 Mins
               </Text>
@@ -152,42 +147,42 @@ export default class NextVideo extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    height: 1.5,
+    height: 1.5
   },
   nextLesson: {
     marginTop: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 10,
+    paddingHorizontal: 10
   },
   typeText: {
     fontFamily: 'OpenSans-Regular',
-    textAlign: 'right',
+    textAlign: 'right'
   },
   videoContainer: {
     flexDirection: 'row',
-    paddingHorizontal: 10,
+    paddingHorizontal: 10
   },
   image: {
     width: DeviceInfo.isTablet()
       ? Dimensions.get('window').width * 0.15
       : Dimensions.get('window').width * 0.225,
     aspectRatio: 16 / 9,
-    borderRadius: 5,
+    borderRadius: 5
   },
   videoTitle: {
     textAlign: 'left',
     fontWeight: 'bold',
     fontFamily: 'OpenSans-Regular',
-    color: 'white',
+    color: 'white'
   },
   play: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
   },
   titleTextContainer: {
     paddingHorizontal: 10,
-    alignSelf: 'center',
-  },
+    alignSelf: 'center'
+  }
 });

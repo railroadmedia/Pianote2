@@ -7,12 +7,11 @@ import {
   Dimensions,
   ImageBackground,
   StatusBar,
-  FlatList,
+  FlatList
 } from 'react-native';
-import {SafeAreaView} from 'react-navigation';
-import {ContentModel} from '@musora/models';
+import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
-import {Download_V2} from 'RNDownload';
+import { Download_V2 } from 'RNDownload';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -23,19 +22,19 @@ import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 import RestartCourse from '../../modals/RestartCourse';
 import contentService from '../../services/content.service';
-import {NetworkContext} from '../../context/NetworkProvider';
+import { NetworkContext } from '../../context/NetworkProvider';
 import {
   addToMyList,
   likeContent,
   removeFromMyList,
   resetProgress,
-  unlikeContent,
+  unlikeContent
 } from '../../services/UserActions';
 import methodService from '../../services/method.service';
 import foundationsService from '../../services/foundations.service';
 import NextVideo from '../../components/NextVideo';
-import {ScrollView} from 'react-native-gesture-handler';
-import {goBack, navigate} from '../../../AppNavigator';
+import { ScrollView } from 'react-native-gesture-handler';
+import { goBack, navigate } from '../../../AppNavigator';
 
 let greaterWDim;
 const windowDim = Dimensions.get('window');
@@ -47,14 +46,14 @@ export default class PathOverview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: props.route?.params?.data,
+      id: props.route?.params?.data?.id,
+      mobile_app_url: props.route?.params?.data?.mobile_app_url,
       items: props.route?.params?.items || [],
       isAddedToList: props.route?.params?.data?.isAddedToList,
       thumbnail: props.route?.params?.data?.thumbnail,
-      artist:
-        typeof props.route?.params?.data?.artist == 'object'
-          ? props.route?.params?.data?.artist.join(', ')
-          : props.route?.params?.data?.artist,
+      description: props.route?.params?.data?.description,
+      title: props.route?.params?.data?.title,
+      artist: '',
       isMethod: props.route?.params?.isMethod,
       isFoundations: props.route?.params?.isFoundations,
       xp: props.route?.params?.data?.total_xp,
@@ -73,7 +72,7 @@ export default class PathOverview extends React.Component {
       bannerNextLessonUrl: '',
       type: '',
       isLandscape:
-        Dimensions.get('window').height < Dimensions.get('window').width,
+        Dimensions.get('window').height < Dimensions.get('window').width
     };
     greaterWDim = fullHeight < fullWidth ? fullHeight : fullWidth;
   }
@@ -88,10 +87,10 @@ export default class PathOverview extends React.Component {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
     if (isiOS) {
-      if (onTablet) this.setState({isLandscape});
+      if (onTablet) this.setState({ isLandscape });
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
-        if (isAutoRotateOn && onTablet) this.setState({isLandscape});
+        if (isAutoRotateOn && onTablet) this.setState({ isLandscape });
       });
     }
   };
@@ -100,118 +99,113 @@ export default class PathOverview extends React.Component {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let res;
     if (this.state.isFoundations) {
-      res = await foundationsService.getUnit(this.state.data.mobile_app_url);
+      res = await foundationsService.getUnit(this.state.mobile_app_url);
     } else if (this.state.isMethod) {
-      res = await methodService.getMethodContent(
-        this.state.data.mobile_app_url,
-      );
+      res = await methodService.getMethodContent(this.state.mobile_app_url);
     } else {
-      res = await contentService.getContent(this.state.data.id);
+      res = await contentService.getContent(this.state.id);
     }
     this.setState({
+      id: res.id,
+      mobile_app_url: res.mobile_app_url,
       likeCount: res.like_count,
       isLiked: res.is_liked_by_current_user,
       isAddedToList: res.is_added_to_primary_playlist,
-      totalLength: res.length_in_seconds,
+      totalLength: res.total_length_in_seconds,
       started: res.started,
       completed: res.completed,
-      nextLesson: res.next_lesson ? new ContentModel(res.next_lesson) : null,
+      nextLesson: res.next_lesson,
       levelNum: res.level_position + '.' + res.course_position,
       progress: res.progress_percent,
-      difficulty: res.fields.find(f => f.key === 'difficulty')?.value,
-      thumbnail: res.data.find(f => f.key === 'thumbnail_url')?.value,
-      xp: res.total_xp,
+      difficulty: res.difficulty,
+      thumbnail: res.thumbnail_url,
+      description: res.description,
+      title: res.title,
+      xp: res.xp,
       type: res.type,
       bannerNextLessonUrl: res.banner_button_url,
-      artist:
-        res.type === 'song'
-          ? res.fields.find(f => f.key === 'artist')?.value
-          : new ContentModel(
-              res.fields.find(f => f.key === 'instructor')?.value,
-            )?.getField('name'),
+      artist: res.artist,
+      instructor: res.instructor,
+      isLoadingAll: false,
       refreshing: false,
-      items:
-        res?.lessons?.map(l => {
-          l = new ContentModel(l);
-          let duration = l.post.fields.find(f => f.key === 'video')
-            ? new ContentModel(l.getFieldMulti('video')[0])?.getField(
-                'length_in_seconds',
-              )
-            : 0;
-          return {
-            title: l.getField('title'),
-            thumbnail: l.getData('thumbnail_url'),
-            type: l.type,
-            id: l.id,
-            mobile_app_url: l.post.mobile_app_url,
-            duration: duration < 60 ? 60 : duration,
-            isAddedToList: l.isAddedToList,
-            isStarted: l.isStarted,
-            isCompleted: l.isCompleted,
-            progress_percent: l.post.progress_percent,
-          };
-        }) || [],
+      items: res.lessons
     });
   };
 
   toggleMyList = id => {
-    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    if (id === this.state.data.id) {
-      this.state.isAddedToList ? removeFromMyList(id) : addToMyList(id);
+    if (!this.context.isConnected) {
+      return this.context.showNoConnectionAlert();
+    }
+    if (id === this.state.id) {
+      if (this.state.isAddedToList) {
+        removeFromMyList(id);
+      } else {
+        addToMyList(id);
+      }
     } else {
       const lesson = this.state.items.find(f => f.id === id);
-      lesson.isAddedToList ? removeFromMyList(id) : addToMyList(id);
+      if (lesson.is_added_to_primary_playlist) {
+        removeFromMyList(id);
+      } else {
+        addToMyList(id);
+      }
     }
 
     this.setState(state => ({
       isAddedToList:
-        id === state.data.id ? !state.isAddedToList : state.isAddedToList,
+        id === state.id ? !state.isAddedToList : state.isAddedToList,
       items: state.items.map(c =>
         c.id === id
           ? {
               ...c,
-              isAddedToList: !c.isAddedToList,
+              is_added_to_primary_playlist: !c.is_added_to_primary_playlist
             }
-          : c,
-      ),
+          : c
+      )
     }));
   };
 
   toggleLike = () => {
-    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    this.state.isLiked
-      ? unlikeContent(this.state.data.id)
-      : likeContent(this.state.data.id);
+    if (!this.context.isConnected) {
+      return this.context.showNoConnectionAlert();
+    }
+    if (this.state.isLiked) {
+      unlikeContent(this.state.id);
+    } else {
+      likeContent(this.state.id);
+    }
     this.setState({
       isLiked: !this.state.isLiked,
       likeCount: this.state.isLiked
         ? this.state.likeCount - 1
-        : this.state.likeCount + 1,
+        : this.state.likeCount + 1
     });
   };
 
   onRestartCourse = async () => {
-    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    resetProgress(this.state.data.id);
+    if (!this.context.isConnected) {
+      return this.context.showNoConnectionAlert();
+    }
+    resetProgress(this.state.id);
     this.setState(
       {
         started: false,
         completed: false,
         showRestartCourse: false,
-        refreshing: true,
+        refreshing: true
       },
-      () => this.getItems(),
+      () => this.getItems()
     );
   };
 
   refresh = () => {
-    this.setState({refreshing: true}, () => {
+    this.setState({ refreshing: true }, () => {
       this.getItems();
     });
   };
 
   formatDifficulty() {
-    const {difficulty} = this.state;
+    const { difficulty } = this.state;
     try {
       let text = '';
       if (difficulty) {
@@ -238,37 +232,37 @@ export default class PathOverview extends React.Component {
       if (this.state.isMethod) {
         return navigate('VIEWLESSON', {
           url: lesson,
-          parentId: this.state.data?.id,
+          parentId: this.state.id
         });
       }
       return navigate('VIEWLESSON', {
         id: lesson,
-        parentId: this.state.data?.id,
+        parentId: this.state.id
       });
     }
   }
 
   renderHeader = () => {
-    let {thumbnail} = this.state;
+    let { thumbnail } = this.state;
     return (
-      <View style={{marginBottom: '4%'}}>
+      <View style={{ marginBottom: '4%' }}>
         <ImageBackground
-          resizeMethod="resize"
+          resizeMethod='resize'
           style={{
             width: '100%',
             aspectRatio: this.getAspectRatio(),
-            resizeMode: 'cover',
+            resizeMode: 'cover'
           }}
           source={{
             uri: thumbnail?.includes('https')
               ? `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
-                  width,
+                  width
                 )},ar_${this.getAspectRatio()},${
                   this.state.isMethod && !this.state.isFoundations
                     ? 'c_pad,g_south'
                     : 'c_fill,g_face'
                 }/${this.state.thumbnail}`
-              : thumbnail,
+              : thumbnail
           }}
         >
           <TouchableOpacity
@@ -282,8 +276,8 @@ export default class PathOverview extends React.Component {
                 borderRadius: 100,
                 left: 10,
                 top: 10,
-                zIndex: 4,
-              },
+                zIndex: 4
+              }
             ]}
           >
             <Back
@@ -293,7 +287,9 @@ export default class PathOverview extends React.Component {
             />
           </TouchableOpacity>
         </ImageBackground>
-        <View style={[this.state.isLandscape ? {marginHorizontal: '10%'} : {}]}>
+        <View
+          style={[this.state.isLandscape ? { marginHorizontal: '10%' } : {}]}
+        >
           {!this.state.isMethod && (
             <Text
               numberOfLines={2}
@@ -302,10 +298,10 @@ export default class PathOverview extends React.Component {
                 color: 'white',
                 textAlign: 'center',
                 fontSize: sizing.titleViewLesson,
-                marginTop: 10,
+                marginTop: 10
               }}
             >
-              {this.state.data.title}
+              {this.state.title}
             </Text>
           )}
           <Text
@@ -318,11 +314,16 @@ export default class PathOverview extends React.Component {
                   : colors.secondBackground,
                 textAlign: 'center',
                 fontSize: sizing.descriptionText,
-                paddingVertical: onTablet ? 20 : 10,
-              },
+                paddingVertical: onTablet ? 20 : 10
+              }
             ]}
           >
-            {this.state.artist?.toUpperCase()} |{' '}
+            {this.state.artist?.toUpperCase() ||
+              this.state.instructor
+                ?.map(i => i.name)
+                .join(', ')
+                .toUpperCase()}
+            |{' '}
             {this.state.isMethod && !this.state.isFoundations
               ? 'LEVEL ' + this.state.levelNum
               : this.formatDifficulty()}{' '}
@@ -334,24 +335,24 @@ export default class PathOverview extends React.Component {
               {
                 width: '100%',
                 flexDirection: 'row',
-                alignItems: 'center',
-              },
+                alignItems: 'center'
+              }
             ]}
           >
             <View
               style={{
                 flex: 1,
                 flexDirection: 'row',
-                justifyContent: 'flex-end',
+                justifyContent: 'flex-end'
               }}
             >
               <TouchableOpacity
                 style={{
-                  paddingHorizontal: 10,
+                  paddingHorizontal: 10
                 }}
-                onPress={() => this.toggleMyList(this.state.data.id)}
+                onPress={() => this.toggleMyList(this.state.id)}
               >
-                <View style={[styles.centerContent, {flexDirection: 'row'}]}>
+                <View style={[styles.centerContent, { flexDirection: 'row' }]}>
                   <AntIcon
                     name={!this.state.isAddedToList ? 'plus' : 'close'}
                     size={sizing.myListButtonSize}
@@ -362,14 +363,14 @@ export default class PathOverview extends React.Component {
                   style={{
                     fontFamily: 'OpenSans-Regular',
                     color: 'white',
-                    fontSize: sizing.descriptionText,
+                    fontSize: sizing.descriptionText
                   }}
                 >
                   {this.state.isAddedToList ? 'Added' : 'My List'}
                 </Text>
               </TouchableOpacity>
             </View>
-            <View style={{width: '50%'}}>
+            <View style={{ width: '50%' }}>
               <LongButton
                 isMethod={true}
                 type={
@@ -381,12 +382,12 @@ export default class PathOverview extends React.Component {
                 }
                 pressed={() => {
                   if (this.state.completed) {
-                    this.setState({showRestartCourse: true});
+                    this.setState({ showRestartCourse: true });
                   } else {
                     this.goToLesson(
                       this.state.isMethod
                         ? this.state.bannerNextLessonUrl
-                        : this.state.nextLesson?.id,
+                        : this.state.nextLesson?.id
                     );
                   }
                 }}
@@ -396,20 +397,20 @@ export default class PathOverview extends React.Component {
               style={{
                 flex: 1,
                 flexDirection: 'row',
-                justifyContent: 'flex-start',
+                justifyContent: 'flex-start'
               }}
             >
               <TouchableOpacity
                 style={{
-                  paddingHorizontal: 15,
+                  paddingHorizontal: 15
                 }}
                 onPress={() => {
                   this.setState({
-                    showInfo: !this.state.showInfo,
+                    showInfo: !this.state.showInfo
                   });
                 }}
               >
-                <View style={[styles.centerContent, {flexDirection: 'row'}]}>
+                <View style={[styles.centerContent, { flexDirection: 'row' }]}>
                   <AntIcon
                     name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
                     size={sizing.infoButtonSize}
@@ -420,7 +421,7 @@ export default class PathOverview extends React.Component {
                   style={{
                     fontFamily: 'OpenSans-Regular',
                     color: 'white',
-                    fontSize: sizing.descriptionText,
+                    fontSize: sizing.descriptionText
                   }}
                 >
                   Info
@@ -434,28 +435,28 @@ export default class PathOverview extends React.Component {
           <View
             style={[
               {
-                paddingHorizontal: 20,
+                paddingHorizontal: 20
               },
               this.state.isLandscape
-                ? {marginHorizontal: '10%'}
-                : {width: '100%'},
+                ? { marginHorizontal: '10%' }
+                : { width: '100%' }
             ]}
           >
-            {this.state.data.description !== 'TBD' && (
+            {!!this.state.description && (
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
                   marginTop: '5%',
                   fontSize: sizing.descriptionText,
                   color: 'white',
-                  textAlign: 'center',
+                  textAlign: 'center'
                 }}
               >
-                {this.state.data.description}
+                {this.state.description}
               </Text>
             )}
-            <View style={{paddingHorizontal: '20%'}}>
-              <View style={[styles.centerContent, {flexDirection: 'row'}]}>
+            <View style={{ paddingHorizontal: '20%' }}>
+              <View style={[styles.centerContent, { flexDirection: 'row' }]}>
                 <Text
                   style={{
                     flex: 1,
@@ -463,7 +464,7 @@ export default class PathOverview extends React.Component {
                     textAlign: 'center',
                     color: 'white',
                     fontFamily: 'OpenSans-Bold',
-                    marginTop: 10,
+                    marginTop: 10
                   }}
                 >
                   {this.state.items.length}
@@ -474,7 +475,7 @@ export default class PathOverview extends React.Component {
                       textAlign: 'center',
                       color: 'white',
                       fontFamily: 'OpenSans-Regular',
-                      marginTop: 5,
+                      marginTop: 5
                     }}
                   >
                     Lessons
@@ -487,7 +488,7 @@ export default class PathOverview extends React.Component {
                     textAlign: 'center',
                     color: 'white',
                     fontFamily: 'OpenSans-Bold',
-                    marginTop: 10,
+                    marginTop: 10
                   }}
                 >
                   {Math.floor(this.state.totalLength / 60)}
@@ -498,7 +499,7 @@ export default class PathOverview extends React.Component {
                       textAlign: 'center',
                       color: 'white',
                       fontFamily: 'OpenSans-Regular',
-                      marginTop: 10,
+                      marginTop: 10
                     }}
                   >
                     Mins
@@ -511,7 +512,7 @@ export default class PathOverview extends React.Component {
                     textAlign: 'center',
                     color: 'white',
                     fontFamily: 'OpenSans-Bold',
-                    marginTop: 10,
+                    marginTop: 10
                   }}
                 >
                   {this.state.xp}
@@ -522,7 +523,7 @@ export default class PathOverview extends React.Component {
                       textAlign: 'center',
                       color: 'white',
                       fontFamily: 'OpenSans-Regular',
-                      marginTop: 10,
+                      marginTop: 10
                     }}
                   >
                     XP
@@ -535,8 +536,8 @@ export default class PathOverview extends React.Component {
                   {
                     flexDirection: 'row',
                     marginTop: 20,
-                    marginBottom: onTablet ? '2%' : '4%',
-                  },
+                    marginBottom: onTablet ? '2%' : '4%'
+                  }
                 ]}
               >
                 <TouchableOpacity
@@ -544,8 +545,8 @@ export default class PathOverview extends React.Component {
                   style={[
                     styles.centerContent,
                     {
-                      flex: 1,
-                    },
+                      flex: 1
+                    }
                   ]}
                 >
                   <Text
@@ -554,7 +555,7 @@ export default class PathOverview extends React.Component {
                       textAlign: 'center',
                       color: 'white',
                       fontFamily: 'OpenSans-Regular',
-                      marginTop: 5,
+                      marginTop: 5
                     }}
                   >
                     <AntIcon
@@ -568,18 +569,15 @@ export default class PathOverview extends React.Component {
                 </TouchableOpacity>
                 <Download_V2
                   entity={{
-                    id: this.state.data.id,
-                    content: contentService.getContent(
-                      this.state.data.id,
-                      true,
-                    ),
+                    id: this.state.id,
+                    content: contentService.getContent(this.state.id, true)
                   }}
                   styles={{
                     flex: 1,
-                    touchable: {flex: 1},
+                    touchable: { flex: 1 },
                     iconSize: {
                       width: sizing.myListButtonSize,
-                      height: sizing.myListButtonSize,
+                      height: sizing.myListButtonSize
                     },
                     iconDownloadColor: colors.pianoteRed,
                     activityIndicatorColor: colors.pianoteRed,
@@ -588,7 +586,7 @@ export default class PathOverview extends React.Component {
                       color: '#ffffff',
                       fontSize: sizing.descriptionText,
                       fontFamily: 'OpenSans-Regular',
-                      marginTop: 0,
+                      marginTop: 0
                     },
                     alert: {
                       alertTextMessageFontFamily: 'OpenSans-Regular',
@@ -600,21 +598,21 @@ export default class PathOverview extends React.Component {
                       alertTouchableDeleteBackground: colors.pianoteRed,
                       alertBackground: 'white',
                       alertTouchableTextDeleteFontFamily: 'OpenSans-Bold',
-                      alertTouchableTextCancelFontFamily: 'OpenSans-Bold',
-                    },
+                      alertTouchableTextCancelFontFamily: 'OpenSans-Bold'
+                    }
                   }}
                 />
                 <TouchableOpacity
                   onPress={() => {
                     this.setState({
-                      showRestartCourse: true,
+                      showRestartCourse: true
                     });
                   }}
                   style={[
                     styles.centerContent,
                     {
-                      flex: 1,
-                    },
+                      flex: 1
+                    }
                   ]}
                 >
                   <Text
@@ -623,7 +621,7 @@ export default class PathOverview extends React.Component {
                       textAlign: 'center',
                       color: 'white',
                       fontFamily: 'OpenSans-Regular',
-                      marginTop: 5,
+                      marginTop: 5
                     }}
                   >
                     <MaterialIcon
@@ -644,15 +642,15 @@ export default class PathOverview extends React.Component {
   };
 
   render() {
-    const {isMethod, items, refreshing, isLandscape, nextLesson} = this.state;
+    const { isMethod, items, refreshing, isLandscape, nextLesson } = this.state;
     return (
       <SafeAreaView
-        forceInset={{top: onTablet ? 'never' : 'never'}}
+        forceInset={{ top: onTablet ? 'never' : 'never' }}
         style={[
           {
             flex: 1,
-            backgroundColor: isMethod ? 'black' : colors.mainBackground,
-          },
+            backgroundColor: isMethod ? 'black' : colors.mainBackground
+          }
         ]}
       >
         <StatusBar
@@ -679,14 +677,14 @@ export default class PathOverview extends React.Component {
               marginBottom: 10,
               alignSelf: 'center',
               paddingHorizontal: onTablet ? 0 : 10,
-              width: '100%',
+              width: '100%'
             }}
             numColumns={onTablet ? 3 : 1}
             data={items}
-            keyboardShouldPersistTaps="handled"
+            keyboardShouldPersistTaps='handled'
             keyExtractor={content => content.id.toString()}
             removeClippedSubviews={true}
-            renderItem={({item, index}) => (
+            renderItem={({ item, index }) => (
               <TouchableOpacity
                 onPress={() =>
                   this.goToLesson(isMethod ? item.mobile_app_url : item.id)
@@ -697,31 +695,31 @@ export default class PathOverview extends React.Component {
                       ? `${isLandscape ? 86 / 3 : 94 / 3}%` // 86 = 100 - 10(=marginRight) - 4(=2*marginleft); 94 = 100 - 2(=marginRight) - 4 (=2*marginLeft)
                       : '100%',
                     paddingVertical: 3.5,
-                    flexDirection: onTablet ? 'column' : 'row',
+                    flexDirection: onTablet ? 'column' : 'row'
                   },
                   isLandscape && index % 3 === 2
-                    ? {marginRight: '10%'}
-                    : {marginRight: '2%'},
+                    ? { marginRight: '10%' }
+                    : { marginRight: '2%' }
                 ]}
               >
                 <ImageBackground
-                  imageStyle={{borderRadius: 5}}
+                  imageStyle={{ borderRadius: 5 }}
                   style={{
                     width: onTablet ? '100%' : width * 0.26,
-                    aspectRatio: 16 / 9,
+                    aspectRatio: 16 / 9
                   }}
                   source={{
-                    uri: item.thumbnail?.includes('https')
+                    uri: item.thumbnail_url?.includes('https')
                       ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                          width,
+                          width
                         )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
-                          item.thumbnail
+                          item.thumbnail_url
                         }`
-                      : item.thumbnail,
+                      : item.thumbnail_url
                   }}
-                  resizeMode="cover"
+                  resizeMode='cover'
                 >
-                  {item.isCompleted && (
+                  {item.completed && (
                     <View
                       style={{
                         position: 'absolute',
@@ -732,7 +730,7 @@ export default class PathOverview extends React.Component {
                         borderRadius: 5,
                         zIndex: 1,
                         opacity: 0.2,
-                        backgroundColor: colors.pianoteRed,
+                        backgroundColor: colors.pianoteRed
                       }}
                     />
                   )}
@@ -746,17 +744,17 @@ export default class PathOverview extends React.Component {
                         left: 0,
                         width: '100%',
                         aspectRatio: 16 / 9,
-                        zIndex: 2,
-                      },
+                        zIndex: 2
+                      }
                     ]}
                   >
-                    {item.isStarted ? (
+                    {item.started ? (
                       <Progress
                         height={onTablet ? 60 : 35}
                         width={onTablet ? 60 : 35}
                         fill={'white'}
                       />
-                    ) : item.isCompleted ? (
+                    ) : item.completed ? (
                       <ApprovedTeacher
                         height={onTablet ? 70 : 45}
                         width={onTablet ? 70 : 45}
@@ -770,12 +768,12 @@ export default class PathOverview extends React.Component {
                     {
                       flexDirection: 'row',
                       alignItems: 'center',
-                      justifyContent: 'space-between',
+                      justifyContent: 'space-between'
                     },
-                    onTablet ? {width: '100%'} : {flex: 1},
+                    onTablet ? { width: '100%' } : { flex: 1 }
                   ]}
                 >
-                  <View style={{width: '80%'}}>
+                  <View style={{ width: '80%' }}>
                     <Text
                       numberOfLines={1}
                       style={{
@@ -784,7 +782,7 @@ export default class PathOverview extends React.Component {
                         fontFamily: 'OpenSans-Bold',
                         color: 'white',
                         paddingHorizontal: onTablet ? 0 : 5,
-                        marginTop: onTablet ? 10 : 2.5,
+                        marginTop: onTablet ? 10 : 2.5
                       }}
                     >
                       {item.title}
@@ -798,17 +796,23 @@ export default class PathOverview extends React.Component {
                           : colors.secondBackground,
                         textAlign: 'left',
                         fontFamily: 'OpenSans-Regular',
-                        paddingHorizontal: onTablet ? 0 : 5,
+                        paddingHorizontal: onTablet ? 0 : 5
                       }}
                     >
-                      {Math.floor(item.duration / 60)}{' '}
-                      {Math.floor(item.duration / 60) == 1 ? 'min' : 'mins'}
+                      {item.length_in_seconds
+                        ? Math.floor(item.length_in_seconds / 60)
+                        : 0}{' '}
+                      {Math.floor(item.length_in_seconds / 60) == 1
+                        ? 'min'
+                        : 'mins'}
                     </Text>
                   </View>
 
                   <TouchableOpacity onPress={() => this.toggleMyList(item.id)}>
                     <AntIcon
-                      name={item.isAddedToList ? 'close' : 'plus'}
+                      name={
+                        item.is_added_to_primary_playlist ? 'close' : 'plus'
+                      }
                       size={sizing.myListButtonSize}
                       color={colors.pianoteRed}
                     />
@@ -831,9 +835,7 @@ export default class PathOverview extends React.Component {
             }
             onNextLesson={() =>
               this.goToLesson(
-                this.state.isMethod
-                  ? nextLesson.post?.mobile_app_url
-                  : nextLesson.id,
+                this.state.isMethod ? nextLesson.mobile_app_url : nextLesson.id
               )
             }
             isMethod={isMethod}
@@ -847,11 +849,12 @@ export default class PathOverview extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showRestartCourse: false })}
         >
           <RestartCourse
             hideRestartCourse={() => {
               this.setState({
-                showRestartCourse: false,
+                showRestartCourse: false
               });
             }}
             type={this.state.type}

@@ -6,27 +6,26 @@ import {
   ScrollView,
   Dimensions,
   RefreshControl,
-  ActivityIndicator,
+  ActivityIndicator
 } from 'react-native';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {ContentModel} from '@musora/models';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import FastImage from 'react-native-fast-image';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
-import {SafeAreaView} from 'react-navigation';
-import {NetworkContext} from '../../context/NetworkProvider';
+import { SafeAreaView } from 'react-navigation';
+import { NetworkContext } from '../../context/NetworkProvider';
 import NavigationBar from '../../components/NavigationBar';
 import VerticalVideoList from '../../components/VerticalVideoList';
-import {getAllContent, getStudentFocusTypes} from '../../services/GetContent';
-import {cacheAndWritePodcasts} from '../../redux/PodcastsCacheActions';
-import {cacheAndWriteQuickTips} from '../../redux/QuickTipsCacheActions';
-import {goBack, refreshOnFocusListener} from '../../../AppNavigator';
+import { getAllContent, getStudentFocusTypes } from '../../services/GetContent';
+import { cacheAndWritePodcasts } from '../../redux/PodcastsCacheActions';
+import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
+import { goBack, refreshOnFocusListener } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
-const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
   return (
     layoutMeasurement.height + contentOffset.y >=
@@ -52,8 +51,8 @@ class StudentFocusShow extends React.Component {
         props.route?.params?.type == 'quick-tips'
           ? props.quickTipsCache
           : props.podcastsCache,
-        true,
-      ),
+        true
+      )
     };
   }
 
@@ -74,8 +73,8 @@ class StudentFocusShow extends React.Component {
         this.props.route?.params?.type,
         this.state.currentSort,
         this.state.page,
-        this.filterQuery,
-      ),
+        this.filterQuery
+      )
     ]);
     this.metaFilters = content?.[1]?.meta?.filterOptions;
     this.props[
@@ -84,52 +83,31 @@ class StudentFocusShow extends React.Component {
         : 'cacheAndWritePodcasts'
     ]({
       all: content[1],
-      thumbnail: content[0],
+      thumbnail: content[0]
     });
     this.setState(
       this.initialValidData({
         all: content[1],
-        thumbnail: content[0],
-      }),
+        thumbnail: content[0]
+      })
     );
   };
 
   initialValidData = (content, fromCache) => {
     try {
-      const newContent = content.all.data.map(data => {
-        return new ContentModel(data);
-      });
-
-      let items = [];
-      for (let i in newContent) {
-        items.push({
-          title: newContent[i].getField('title'),
-          artist: this.getArtist(newContent[i]),
-          thumbnail: newContent[i].getData('thumbnail_url'),
-          publishedOn:
-            newContent[i].publishedOn.slice(0, 10) +
-            'T' +
-            newContent[i].publishedOn.slice(11, 16),
-          type: newContent[i].post.type,
-          id: newContent[i].id,
-          isAddedToList: newContent[i].isAddedToList,
-          isStarted: newContent[i].isStarted,
-          isCompleted: newContent[i].isCompleted,
-          progress_percent: newContent[i].post.progress_percent,
-        });
-      }
+      const newContent = content.all.data;
 
       return {
         thumbnailUrl:
           content.thumbnail[this.props.route?.params?.type]?.thumbnailUrl,
-        allLessons: items,
+        allLessons: newContent,
         outVideos:
-          items.length == 0 || content.all.data.length < 20 ? true : false,
-        page: this.state?.page + 1 || 1,
+          newContent.length == 0 || newContent.length < 10 ? true : false,
+        page: 1,
         isLoadingAll: false,
         refreshing: fromCache,
         filtering: false,
-        isPaging: false,
+        isPaging: false
       };
     } catch (e) {
       return {};
@@ -139,50 +117,32 @@ class StudentFocusShow extends React.Component {
   async getStudentFocus() {
     let studentFocus = await getStudentFocusTypes();
     this.setState({
-      thumbnailUrl: studentFocus[this.props.route?.params?.type].thumbnailUrl,
+      thumbnailUrl: studentFocus[this.props.route?.params?.type].thumbnailUrl
     });
   }
 
   getAllLessons = async isLoadingMore => {
-    this.setState({filtering: true});
+    this.setState({ filtering: true });
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = await getAllContent(
       this.props.route?.params?.type,
       this.state.currentSort,
       this.state.page,
-      this.filterQuery,
+      this.filterQuery
     );
     this.metaFilters = response?.meta?.filterOptions;
-    const newContent = await response.data.map(data => {
-      return new ContentModel(data);
-    });
+    const newContent = response.data;
 
-    let items = [];
-    for (let i in newContent) {
-      items.push({
-        title: newContent[i].getField('title'),
-        artist: this.getArtist(newContent[i]),
-        thumbnail: newContent[i].getData('thumbnail_url'),
-        publishedOn:
-          newContent[i].publishedOn.slice(0, 10) +
-          'T' +
-          newContent[i].publishedOn.slice(11, 16),
-        type: newContent[i].post.type,
-        id: newContent[i].id,
-        isAddedToList: newContent[i].isAddedToList,
-        isStarted: newContent[i].isStarted,
-        isCompleted: newContent[i].isCompleted,
-        progress_percent: newContent[i].post.progress_percent,
-      });
-    }
     this.setState(state => ({
-      allLessons: isLoadingMore ? state.allLessons.concat(items) : items,
-      outVideos: items.length == 0 || response.data.length < 20 ? true : false,
-      page: this.state.page + 1,
+      allLessons: isLoadingMore
+        ? state.allLessons.concat(newContent)
+        : newContent,
+      outVideos:
+        newContent.length == 0 || newContent.length < 10 ? true : false,
       isLoadingAll: false,
       refreshing: false,
       filtering: false,
-      isPaging: false,
+      isPaging: false
     }));
   };
 
@@ -193,43 +153,10 @@ class StudentFocusShow extends React.Component {
         outVideos: false,
         isPaging: false,
         allLessons: [],
-        page: 1,
+        page: 1
       },
-      () => this.getAllLessons(),
+      () => this.getAllLessons()
     );
-  };
-
-  getVideos = async () => {
-    // change page before getting more lessons if paging
-    if (!this.state.outVideos) {
-      this.setState({page: this.state.page + 1}, () =>
-        this.getAllLessons(true),
-      );
-    }
-  };
-
-  getArtist = newContent => {
-    if (newContent.post.type == 'song') {
-      if (newContent.post.artist) {
-        return newContent.post.artist;
-      } else {
-        for (i in newContent.post.fields) {
-          if (newContent.post.fields[i].key == 'artist') {
-            return newContent.post.fields[i].value;
-          }
-        }
-      }
-    } else {
-      try {
-        if (newContent.getField('instructor') !== 'TBD') {
-          return newContent.getField('instructor').fields[0].value;
-        } else {
-          return newContent.getField('instructor').name;
-        }
-      } catch (error) {
-        return '';
-      }
-    }
   };
 
   handleScroll = async event => {
@@ -241,16 +168,16 @@ class StudentFocusShow extends React.Component {
       this.setState(
         {
           page: this.state.page + 1,
-          isPaging: true,
+          isPaging: true
         },
-        () => this.getAllLessons(true),
+        () => this.getAllLessons(true)
       );
     }
   };
 
   refresh = () => {
-    this.setState({refreshing: true, page: 1, outVideos: false}, () =>
-      this.getAllLessons(),
+    this.setState({ refreshing: true, page: 1, outVideos: false }, () =>
+      this.getAllLessons()
     );
   };
 
@@ -258,9 +185,9 @@ class StudentFocusShow extends React.Component {
     return (
       <SafeAreaView
         forceInset={{
-          bottom: 'never',
+          bottom: 'never'
         }}
-        style={{flex: 1, backgroundColor: colors.mainBackground}}
+        style={{ flex: 1, backgroundColor: colors.mainBackground }}
       >
         <StatusBar
           backgroundColor={colors.mainBackground}
@@ -269,8 +196,8 @@ class StudentFocusShow extends React.Component {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
-          style={{flex: 1, backgroundColor: colors.mainBackground}}
-          onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
+          style={{ flex: 1, backgroundColor: colors.mainBackground }}
+          onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
           refreshControl={
             <RefreshControl
               tint={'transparent'}
@@ -279,20 +206,20 @@ class StudentFocusShow extends React.Component {
               refreshing={isiOS ? false : this.state.refreshing}
             />
           }
-          style={{flex: 1}}
+          style={{ flex: 1 }}
         >
           {isiOS && this.state.refreshing && (
             <ActivityIndicator
-              size="small"
-              style={{padding: 10}}
+              size='small'
+              style={{ padding: 10 }}
               color={colors.secondBackground}
             />
           )}
-          <View key={'imageContainer'} style={{width: '100%'}}>
+          <View key={'imageContainer'} style={{ width: '100%' }}>
             <TouchableOpacity
               onPress={() => goBack()}
               style={{
-                padding: 15,
+                padding: 15
               }}
             >
               <Back
@@ -309,7 +236,7 @@ class StudentFocusShow extends React.Component {
                 width: '100%',
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginBottom: 25,
+                marginBottom: 25
               }}
             >
               <FastImage
@@ -320,9 +247,9 @@ class StudentFocusShow extends React.Component {
                   aspectRatio: 1,
                   borderRadius: 10,
                   borderColor: colors.thirdBackground,
-                  borderWidth: 5,
+                  borderWidth: 5
                 }}
-                source={{uri: this.state.thumbnailUrl}}
+                source={{ uri: this.state.thumbnailUrl }}
                 resizeMode={FastImage.resizeMode.stretch}
               />
             </View>
@@ -347,7 +274,6 @@ class StudentFocusShow extends React.Component {
             changeSort={sort => this.changeSort(sort)}
             imageWidth={(onTablet ? 0.225 : 0.3) * width}
             outVideos={this.state.outVideos}
-            getVideos={() => this.getVideos()}
             applyFilters={filters =>
               new Promise(res =>
                 this.setState(
@@ -355,13 +281,13 @@ class StudentFocusShow extends React.Component {
                     allLessons: [],
                     outVideos: false,
                     page: 1,
-                    filters,
+                    filters
                   },
                   () => {
                     this.filterQuery = filters;
                     this.getAllLessons().then(res);
-                  },
-                ),
+                  }
+                )
               )
             }
           />
@@ -373,9 +299,12 @@ class StudentFocusShow extends React.Component {
 }
 const mapStateToProps = state => ({
   podcastsCache: state.podcastsCache,
-  quickTipsCache: state.quickTipsCache,
+  quickTipsCache: state.quickTipsCache
 });
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({cacheAndWriteQuickTips, cacheAndWritePodcasts}, dispatch);
+  bindActionCreators(
+    { cacheAndWriteQuickTips, cacheAndWritePodcasts },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentFocusShow);

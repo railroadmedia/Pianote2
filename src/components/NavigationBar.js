@@ -1,15 +1,15 @@
 import React from 'react';
 import FastImage from 'react-native-fast-image';
-import {View, TouchableOpacity, StyleSheet} from 'react-native';
-import {SafeAreaView} from 'react-navigation';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import DeviceInfo from 'react-native-device-info';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {NetworkContext} from '../context/NetworkProvider';
-import {navigate} from '../../AppNavigator';
+import { NetworkContext } from '../context/NetworkProvider';
+import { navigate } from '../../AppNavigator';
 
 export default class NavigationBar extends React.Component {
   static contextType = NetworkContext;
@@ -20,14 +20,14 @@ export default class NavigationBar extends React.Component {
       secondaryColor: this.props.isMethod
         ? colors.pianoteGrey
         : colors.secondBackground,
-      primaryColor: this.props.isMethod ? colors.pianoteRed : 'white',
+      primaryColor: this.props.isMethod ? colors.pianoteRed : 'white'
     };
   }
 
   componentDidMount = async () => {
     let profileImage = await AsyncStorage.getItem('profileURI');
     this.setState({
-      profileImage: profileImage || '',
+      profileImage: profileImage || ''
     });
   };
 
@@ -52,9 +52,9 @@ export default class NavigationBar extends React.Component {
             borderRadius: 100,
             backgroundColor: this.props.isMethod
               ? colors.pianoteGrey
-              : colors.secondBackground,
+              : colors.secondBackground
           }}
-          source={{uri: this.state.profileImage}}
+          source={{ uri: this.state.profileImage }}
           resizeMode={FastImage.resizeMode.cover}
         />
       );
@@ -68,15 +68,13 @@ export default class NavigationBar extends React.Component {
           left: 'never',
           right: 'never',
           top: 'never',
-          bottom: this.props.pad ? 'never' : 'always',
+          bottom: this.props.pad ? 'never' : 'always'
         }}
         style={{
-          backgroundColor: this.props.isMethod
-            ? 'black'
-            : colors.mainBackground,
+          backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground
         }}
       >
-        <View style={{justifyContent: 'center'}}>
+        <View style={{ justifyContent: 'center' }}>
           <View style={localStyles.navContainer}>
             <TouchableOpacity
               onPress={() => {
@@ -145,8 +143,8 @@ export default class NavigationBar extends React.Component {
                       this.props.currentPage == 'PROFILE' &&
                       this.state.profileImage.length > 0
                         ? 'white'
-                        : 'transparent',
-                  },
+                        : 'transparent'
+                  }
                 ]}
               >
                 {this.profile()}
@@ -164,13 +162,13 @@ const localStyles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 2.25,
     height: DeviceInfo.isTablet() ? 40 : 30,
-    width: DeviceInfo.isTablet() ? 40 : 30,
+    width: DeviceInfo.isTablet() ? 40 : 30
   },
   navContainer: {
     alignSelf: 'stretch',
     padding: 10,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignContent: 'space-around',
-  },
+    alignContent: 'space-around'
+  }
 });

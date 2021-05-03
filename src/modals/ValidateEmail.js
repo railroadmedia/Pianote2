@@ -4,7 +4,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 
 export default class ValidateEmail extends React.Component {
@@ -47,27 +47,27 @@ const localStyles = StyleSheet.create({
     borderRadius: 15,
     paddingBottom: 5,
     paddingTop: 20,
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   title: {
     paddingHorizontal: 20,
-    marginBottom: 10,
+    marginBottom: 10
   },
   loginContainer: {
     borderRadius: 45,
     backgroundColor: '#fb1b2f',
     marginHorizontal: 20,
-    marginVertical: 5,
+    marginVertical: 5
   },
   loginText: {
     color: 'white',
-    paddingVertical: 10,
+    paddingVertical: 10
   },
   tryAgain: {
     paddingHorizontal: 20,
-    marginVertical: 10,
+    marginVertical: 10
   },
   tryAgainText: {
-    color: '#fb1b2f',
-  },
+    color: '#fb1b2f'
+  }
 });

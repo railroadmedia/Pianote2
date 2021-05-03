@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, SafeAreaView, TouchableOpacity} from 'react-native';
-import {WebView} from 'react-native-webview';
+import { View, SafeAreaView, TouchableOpacity } from 'react-native';
+import { WebView } from 'react-native-webview';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import IdleTimerManager from 'react-native-idle-timer';
 
@@ -23,25 +23,25 @@ export default class SoundSlice extends React.Component {
       <SafeAreaView
         style={{
           flexDirection: 'row',
-          backgroundColor: 'black',
+          backgroundColor: 'black'
         }}
-        forceInset={{top: 'always'}}
+        forceInset={{ top: 'always' }}
       >
         <View style={styles.container}>
           <View
             style={{
               height: '100%',
               width: '100%',
-              backgroundColor: 'white',
+              backgroundColor: 'white'
             }}
           >
-            <View style={{height: '20%'}}>
+            <View style={{ height: '20%' }}>
               <View
                 style={{
                   position: 'absolute',
                   top: onTablet ? 20 : 10,
                   left: onTablet ? 20 : 10,
-                  zIndex: 10,
+                  zIndex: 10
                 }}
               >
                 <TouchableOpacity
@@ -51,7 +51,7 @@ export default class SoundSlice extends React.Component {
                   style={{
                     height: '100%',
                     width: '100%',
-                    zIndex: 10,
+                    zIndex: 10
                   }}
                 >
                   <FeatherIcon
@@ -63,7 +63,7 @@ export default class SoundSlice extends React.Component {
               </View>
             </View>
             <WebView
-              style={{flex: 1}}
+              style={{ flex: 1 }}
               javaScriptEnabled={true}
               domStorageEnabled={true}
               startInLoadingState={true}
@@ -77,7 +77,7 @@ export default class SoundSlice extends React.Component {
                 }/${
                   this.props.slug
                 }/embed/?api=1&scroll_type=2&branding=0&enable_mixer=0`,
-                headers: {referer: 'https://www.drumeo.com/'},
+                headers: { referer: 'https://www.drumeo.com/' }
               }}
               injectedJavaScript={`
                               setTimeout(() => {

@@ -5,13 +5,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
-  ScrollView,
+  ScrollView
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
-import {NetworkContext} from '../context/NetworkProvider';
-import {navigate} from '../../AppNavigator';
+import { NetworkContext } from '../context/NetworkProvider';
+import { navigate } from '../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const height =
@@ -19,48 +19,48 @@ const height =
 const navigationOptions = [
   {
     title: 'Home',
-    navigator: 'LESSONS',
+    navigator: 'LESSONS'
   },
   {
     title: 'Method',
-    navigator: 'METHOD',
+    navigator: 'METHOD'
   },
   {
     title: 'Foundations',
-    navigator: 'FOUNDATIONS',
+    navigator: 'FOUNDATIONS'
   },
   {
     title: 'Courses',
-    navigator: 'COURSE',
+    navigator: 'COURSE'
   },
   {
     title: 'Songs',
-    navigator: 'SONGCATALOG',
+    navigator: 'SONGCATALOG'
   },
   {
     title: 'Quick Tips',
-    navigator: 'STUDENTFOCUSSHOW',
+    navigator: 'STUDENTFOCUSSHOW'
   },
   {
     title: 'Student Focus',
-    navigator: 'STUDENTFOCUSCATALOG',
+    navigator: 'STUDENTFOCUSCATALOG'
   },
   {
     title: 'Live',
-    navigator: 'LIVE',
+    navigator: 'LIVE'
   },
   {
     title: 'Schedule',
-    navigator: 'SCHEDULE',
+    navigator: 'SCHEDULE'
   },
   {
     title: 'Podcasts',
-    navigator: 'STUDENTFOCUSSHOW',
+    navigator: 'STUDENTFOCUSSHOW'
   },
   {
     title: 'Bootcamps',
-    navigator: 'STUDENTFOCUSSHOW',
-  },
+    navigator: 'STUDENTFOCUSSHOW'
+  }
 ];
 
 export default class NavigationMenu extends React.Component {
@@ -69,7 +69,7 @@ export default class NavigationMenu extends React.Component {
     super(props);
     this.state = {
       methodIsStarted: false,
-      methodIsCompleted: false,
+      methodIsCompleted: false
     };
   }
 
@@ -79,8 +79,8 @@ export default class NavigationMenu extends React.Component {
         methodIsStarted:
           typeof data[0][1] !== null ? JSON.parse(data[0][1]) : false,
         methodIsCompleted:
-          typeof data[1][1] !== null ? JSON.parse(data[1][1]) : false,
-      }),
+          typeof data[1][1] !== null ? JSON.parse(data[1][1]) : false
+      })
     );
   }
 
@@ -97,29 +97,29 @@ export default class NavigationMenu extends React.Component {
               if (nav.title === 'Method') {
                 navigate('METHOD', {
                   methodIsStarted: this.state.methodIsStarted,
-                  methodIsCompleted: this.state.methodIsCompleted,
+                  methodIsCompleted: this.state.methodIsCompleted
                 });
               } else if (nav.title === 'Quick Tips') {
                 navigate(nav.navigator, {
-                  type: 'quick-tips',
+                  type: 'quick-tips'
                 });
               } else if (nav.title === 'Podcasts') {
                 navigate(nav.navigator, {
-                  type: 'podcasts',
+                  type: 'podcasts'
                 });
               } else if (nav.title === 'Bootcamps') {
                 navigate(nav.navigator, {
-                  type: 'boot-camps',
+                  type: 'boot-camps'
                 });
               } else if (nav.title === 'Live') {
                 navigate(nav.navigator, {
                   title: nav.title,
-                  parent: 'live',
+                  parent: 'live'
                 });
               } else if (nav.title === 'Schedule') {
                 return navigate(nav.navigator, {
                   title: nav.title,
-                  parent: 'SCHEDULE',
+                  parent: 'SCHEDULE'
                 });
               } else {
                 navigate(nav.navigator);
@@ -128,8 +128,8 @@ export default class NavigationMenu extends React.Component {
             style={[
               styles.centerContent,
               {
-                height: height / 10,
-              },
+                height: height / 10
+              }
             ]}
           >
             <Text
@@ -153,7 +153,7 @@ export default class NavigationMenu extends React.Component {
                       : 30
                     : onTablet
                     ? 25
-                    : 20,
+                    : 20
               }}
             >
               {nav.title}
@@ -172,20 +172,20 @@ export default class NavigationMenu extends React.Component {
           {
             backgroundColor: this.props.isMethod
               ? 'black'
-              : colors.mainBackground,
-          },
+              : colors.mainBackground
+          }
         ]}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{
             flex: 1,
-            maxHeight: (height / 10) * 7,
+            maxHeight: (height / 10) * 7
           }}
         >
           {this.lessonNav()}
         </ScrollView>
-        <View style={{alignSelf: 'center'}}>
+        <View style={{ alignSelf: 'center' }}>
           <TouchableOpacity
             onPress={() => {
               this.props.onClose(false);
@@ -198,15 +198,15 @@ export default class NavigationMenu extends React.Component {
                 width: onTablet ? 80 : 65,
                 marginTop: 10,
                 borderRadius: 500,
-                justifyContent: 'center',
-              },
+                justifyContent: 'center'
+              }
             ]}
           >
             <FeatherIcon
               size={onTablet ? 65 : 50}
               name={'x'}
               color={'white'}
-              style={{borderRadius: 500}}
+              style={{ borderRadius: 500 }}
             />
           </TouchableOpacity>
         </View>
@@ -221,6 +221,6 @@ const localStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: DeviceInfo.hasNotch() ? 50 : 30,
-    paddingBottom: DeviceInfo.hasNotch() ? 30 : 10,
-  },
+    paddingBottom: DeviceInfo.hasNotch() ? 30 : 10
+  }
 });

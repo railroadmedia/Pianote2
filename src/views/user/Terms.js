@@ -5,12 +5,12 @@ import {
   Text,
   TouchableOpacity,
   StatusBar,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
-import {SafeAreaView} from 'react-navigation';
-import {goBack} from '../../../AppNavigator';
+import { SafeAreaView } from 'react-navigation';
+import { goBack } from '../../../AppNavigator';
 
 export default class Terms extends React.Component {
   constructor(props) {
@@ -20,10 +20,10 @@ export default class Terms extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{ flex: 1 }}>
         <StatusBar backgroundColor={'#ffffff'} barStyle={'dark-content'} />
         <View style={localStyles.header}>
-          <TouchableOpacity onPress={() => goBack()} style={{flex: 1}}>
+          <TouchableOpacity onPress={() => goBack()} style={{ flex: 1 }}>
             <Back
               width={backButtonSize}
               height={backButtonSize}
@@ -31,7 +31,7 @@ export default class Terms extends React.Component {
             />
           </TouchableOpacity>
           <Text style={localStyles.title}>Terms of Service</Text>
-          <View style={{flex: 1}} />
+          <View style={{ flex: 1 }} />
         </View>
         <ScrollView style={localStyles.scrollContainer}>
           <Text style={[styles.text, localStyles.subtitle]}>
@@ -86,7 +86,7 @@ export default class Terms extends React.Component {
             <Text
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               support@pianote.com
@@ -109,7 +109,7 @@ export default class Terms extends React.Component {
             <Text
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               support@pianote.com
@@ -126,7 +126,7 @@ export default class Terms extends React.Component {
             <Text
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               support@pianote.com
@@ -240,7 +240,7 @@ export default class Terms extends React.Component {
             <Text
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               support@pianote.com
@@ -371,7 +371,7 @@ export default class Terms extends React.Component {
             <Text
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               support@pianote.com.
@@ -386,29 +386,29 @@ export default class Terms extends React.Component {
 const localStyles = StyleSheet.create({
   mainSub: {
     fontSize: 18,
-    fontStyle: 'italic',
+    fontStyle: 'italic'
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
+    padding: 10
   },
   title: {
     fontWeight: Platform.OS == 'android' ? 'bold' : '800',
     fontSize: DeviceInfo.isTablet() ? 28 : 20,
     alignSelf: 'center',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   scrollContainer: {
     flex: 1,
     paddingHorizontal: 15,
-    paddingBottom: 25,
+    paddingBottom: 25
   },
   subtitle: {
     paddingBottom: 5,
     marginTop: 25,
     fontWeight: 'bold',
-    marginBottom: 0,
-  },
+    marginBottom: 0
+  }
 });

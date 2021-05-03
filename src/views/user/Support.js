@@ -5,15 +5,15 @@ import {
   Linking,
   TouchableOpacity,
   ScrollView,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import Intercom from 'react-native-intercom';
-import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
+import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import DeviceInfo from 'react-native-device-info';
-import {SafeAreaView} from 'react-navigation';
-import {goBack} from '../../../AppNavigator';
+import { SafeAreaView } from 'react-navigation';
+import { goBack } from '../../../AppNavigator';
 
 export default class Support extends React.Component {
   constructor(props) {
@@ -24,7 +24,7 @@ export default class Support extends React.Component {
   componentDidMount = async () => {
     const userData = await getUserData();
     await Intercom.registerIdentifiedUser({
-      userId: 'musora_' + userData.id.toString(),
+      userId: 'musora_' + userData.id.toString()
     });
     await Intercom.updateUser({
       email: userData.email,
@@ -32,16 +32,16 @@ export default class Support extends React.Component {
       user_id: 'musora_' + userData.id.toString(),
       name: userData.display_name,
       custom_attributes: {
-        app_build_number: '0.0.' + DeviceInfo.getBuildNumber(),
-      },
+        app_build_number: '0.0.' + DeviceInfo.getBuildNumber()
+      }
     });
     Intercom.addEventListener(
       Intercom.Notifications.UNREAD_COUNT,
-      this.onUnreadChange,
+      this.onUnreadChange
     );
     Intercom.addEventListener(
       Intercom.Notifications.WINDOW_DID_HIDE,
-      this.onUnreadChange,
+      this.onUnreadChange
     );
     Intercom.handlePushMessage();
   };
@@ -49,11 +49,11 @@ export default class Support extends React.Component {
   componentWillUnmount() {
     Intercom.removeEventListener(
       Intercom.Notifications.UNREAD_COUNT,
-      this.onUnreadChange,
+      this.onUnreadChange
     );
     Intercom.removeEventListener(
       Intercom.Notifications.WINDOW_DID_HIDE,
-      this.onUnreadChange,
+      this.onUnreadChange
     );
   }
 
@@ -72,15 +72,15 @@ export default class Support extends React.Component {
           style={{
             flex: 1,
             alignSelf: 'stretch',
-            backgroundColor: colors.mainBackground,
+            backgroundColor: colors.mainBackground
           }}
         >
           <View
             style={[
               styles.centerContent,
               {
-                flex: 0.1,
-              },
+                flex: 0.1
+              }
             ]}
           >
             <View
@@ -92,8 +92,8 @@ export default class Support extends React.Component {
                   paddingLeft: 10,
                   bottom: 0,
                   height: 50,
-                  width: 50,
-                },
+                  width: 50
+                }
               ]}
             >
               <TouchableOpacity
@@ -102,8 +102,8 @@ export default class Support extends React.Component {
                   styles.centerContent,
                   {
                     height: '100%',
-                    width: '100%',
-                  },
+                    width: '100%'
+                  }
                 ]}
               >
                 <Back
@@ -113,21 +113,24 @@ export default class Support extends React.Component {
                 />
               </TouchableOpacity>
             </View>
-            <View style={{flex: 0.66}} />
+            <View style={{ flex: 0.66 }} />
             <Text
-              style={[styles.childHeaderText, {color: colors.secondBackground}]}
+              style={[
+                styles.childHeaderText,
+                { color: colors.secondBackground }
+              ]}
             >
               Support
             </Text>
-            <View style={{flex: 0.33}} />
+            <View style={{ flex: 0.33 }} />
           </View>
-          <ScrollView style={{flex: 1}}>
+          <ScrollView style={{ flex: 1 }}>
             <TouchableOpacity
               onPress={() => this.onIntercomPress()}
               style={[
                 styles.centerContent,
                 localStyles.button,
-                {marginTop: '15%'},
+                { marginTop: '15%' }
               ]}
             >
               <Text
@@ -135,7 +138,7 @@ export default class Support extends React.Component {
                   fontFamily: 'RobotoCondensed-Bold',
                   fontSize: onTablet ? 20 : 16,
                   color: 'white',
-                  paddingVertical: 15,
+                  paddingVertical: 15
                 }}
               >
                 LIVE CHAT SUPPORT
@@ -150,7 +153,7 @@ export default class Support extends React.Component {
                   fontFamily: 'RobotoCondensed-Bold',
                   fontSize: onTablet ? 20 : 16,
                   color: 'white',
-                  paddingVertical: 15,
+                  paddingVertical: 15
                 }}
               >
                 EMAIL SUPPORT
@@ -165,7 +168,7 @@ export default class Support extends React.Component {
                   fontFamily: 'RobotoCondensed-Bold',
                   fontSize: onTablet ? 20 : 16,
                   color: 'white',
-                  paddingVertical: 15,
+                  paddingVertical: 15
                 }}
               >
                 PHONE SUPPORT
@@ -179,7 +182,7 @@ export default class Support extends React.Component {
                 color: colors.secondBackground,
                 textAlign: 'center',
                 padding: 10,
-                paddingTop: 20,
+                paddingTop: 20
               }}
             >
               EMAIL
@@ -190,7 +193,7 @@ export default class Support extends React.Component {
                 fontSize: onTablet ? 18 : 14,
                 textAlign: 'center',
                 color: 'white',
-                padding: 5,
+                padding: 5
               }}
             >
               support@musora.com
@@ -202,7 +205,7 @@ export default class Support extends React.Component {
                 opacity: 0.8,
                 color: colors.secondBackground,
                 textAlign: 'center',
-                padding: 10,
+                padding: 10
               }}
             >
               PHONE
@@ -213,7 +216,7 @@ export default class Support extends React.Component {
                 fontSize: onTablet ? 18 : 14,
                 textAlign: 'center',
                 color: 'white',
-                padding: 5,
+                padding: 5
               }}
             >
               1-800-439-8921
@@ -224,7 +227,7 @@ export default class Support extends React.Component {
                 fontSize: onTablet ? 18 : 14,
                 textAlign: 'center',
                 color: 'white',
-                padding: 5,
+                padding: 5
               }}
             >
               1-604-855-7605
@@ -243,6 +246,6 @@ const localStyles = StyleSheet.create({
     borderRadius: 200,
     backgroundColor: '#fb1b2f',
     alignSelf: 'center',
-    marginVertical: 5,
-  },
+    marginVertical: 5
+  }
 });

@@ -5,19 +5,18 @@ import {
   ScrollView,
   Dimensions,
   RefreshControl,
-  ActivityIndicator,
+  ActivityIndicator
 } from 'react-native';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {ContentModel} from '@musora/models';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
-import {getStartedContent, getAllContent} from '../../services/GetContent';
-import {NetworkContext} from '../../context/NetworkProvider';
-import {cacheAndWriteSongs} from '../../redux/SongsCacheActions';
-import {navigate, refreshOnFocusListener} from '../../../AppNavigator';
+import { getStartedContent, getAllContent } from '../../services/GetContent';
+import { NetworkContext } from '../../context/NetworkProvider';
+import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
+import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -25,7 +24,7 @@ const width =
 const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 
-const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
   return (
     layoutMeasurement.height + contentOffset.y >=
@@ -37,7 +36,7 @@ class SongCatalog extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    let {songsCache} = props;
+    let { songsCache } = props;
     this.state = {
       progressSongs: [],
       allSongs: [],
@@ -49,13 +48,13 @@ class SongCatalog extends React.Component {
       started: true,
       refreshing: true,
       refreshControl: false,
-      ...this.initialValidData(songsCache, true),
+      ...this.initialValidData(songsCache, true)
     };
   }
 
   componentDidMount() {
     let deepFilters = decodeURIComponent(this.props.route?.params?.url).split(
-      '?',
+      '?'
     )[1];
     this.filterQuery = deepFilters && `&${deepFilters}`;
     this.getContent();
@@ -73,46 +72,39 @@ class SongCatalog extends React.Component {
         'song',
         this.state.currentSort,
         this.state.page,
-        this.filterQuery,
+        this.filterQuery
       ),
-      getStartedContent('song'),
+      getStartedContent('song', 1)
     ]);
+
     this.metaFilters = content?.[0]?.meta?.filterOptions;
     this.props.cacheAndWriteSongs({
       all: content[0],
-      inProgress: content[1],
+      inProgress: content[1]
     });
     this.setState(
       this.initialValidData({
         all: content[0],
-        inProgress: content[1],
-      }),
+        inProgress: content[1]
+      })
     );
   }
 
   initialValidData = (content, fromCache) => {
     try {
-      let allVideos = this.setData(
-        content.all.data.map(data => {
-          return new ContentModel(data);
-        }),
-      );
+      let allVideos = content.all.data;
 
-      let inprogressVideos = this.setData(
-        content.inProgress.data.map(data => {
-          return new ContentModel(data);
-        }),
-      );
+      let inprogressVideos = content.inProgress.data;
       return {
         allSongs: allVideos,
         outVideos:
-          allVideos.length == 0 || content.all.data.length < 20 ? true : false,
+          allVideos.length == 0 || content.all.data.length < 10 ? true : false,
         filtering: false,
         isPaging: false,
         progressSongs: inprogressVideos,
         started: inprogressVideos.length !== 0,
         refreshing: false,
-        refreshControl: fromCache,
+        refreshControl: fromCache
       };
     } catch (e) {
       return {};
@@ -120,67 +112,26 @@ class SongCatalog extends React.Component {
   };
 
   getAllSongs = async loadMore => {
-    this.setState({filtering: true});
+    this.setState({ filtering: true });
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = await getAllContent(
       'song',
       this.state.currentSort,
       this.state.page,
-      this.filterQuery,
+      this.filterQuery
     );
     this.metaFilters = response?.meta?.filterOptions;
 
-    const newContent = await response.data.map(data => {
-      return new ContentModel(data);
-    });
-
-    let items = this.setData(newContent);
-
     this.setState(state => ({
-      allSongs: loadMore ? state.allSongs.concat(items) : items,
-      outVideos: items.length == 0 || response.data.length < 20 ? true : false,
+      allSongs: loadMore ? state.allSongs.concat(response.data) : response.data,
+      outVideos:
+        response.data.length == 0 || response.data.length < 10 ? true : false,
       filtering: false,
       refreshControl: false,
       isPaging: false,
-      refreshing: false,
+      refreshing: false
     }));
   };
-
-  setData(newContent) {
-    let items = [];
-    for (let i in newContent) {
-      items.push({
-        title: newContent[i].getField('title'),
-        artist: newContent[i].getField('artist'),
-        thumbnail: newContent[i].getData('thumbnail_url'),
-        type: newContent[i].post.type,
-        publishedOn:
-          newContent[i].publishedOn.slice(0, 10) +
-          'T' +
-          newContent[i].publishedOn.slice(11, 16),
-        description: newContent[i]
-          .getData('description')
-          .replace(/(<([^>]+)>)/g, '')
-          .replace(/&nbsp;/g, '')
-          .replace(/&amp;/g, '&')
-          .replace(/&#039;/g, "'")
-          .replace(/&quot;/g, '"')
-          .replace(/&gt;/g, '>')
-          .replace(/&lt;/g, '<'),
-        xp: newContent[i].post.xp,
-        id: newContent[i].post.id,
-        currentLessonId: newContent[i].post?.song_part_id,
-        lesson_count: newContent[i].post.lesson_count,
-        like_count: newContent[i].post.like_count,
-        isLiked: newContent[i].post.is_liked_by_current_user,
-        isAddedToList: newContent[i].isAddedToList,
-        isStarted: newContent[i].isStarted,
-        isCompleted: newContent[i].isCompleted,
-        progress_percent: newContent[i].post.progress_percent,
-      });
-    }
-    return items;
-  }
 
   changeSort = currentSort => {
     this.setState(
@@ -189,16 +140,10 @@ class SongCatalog extends React.Component {
         currentSort,
         outVideos: false,
         isPaging: false,
-        page: 1,
+        page: 1
       },
-      () => this.getAllSongs(),
+      () => this.getAllSongs()
     );
-  };
-
-  getVideos = () => {
-    if (!this.state.outVideos) {
-      this.setState({page: this.state.page + 1}, () => this.getAllSongs(true));
-    }
   };
 
   handleScroll = event => {
@@ -210,9 +155,9 @@ class SongCatalog extends React.Component {
       this.setState(
         {
           page: this.state.page + 1,
-          isPaging: true,
+          isPaging: true
         },
-        () => this.getAllSongs(true),
+        () => this.getAllSongs(true)
       );
     }
   };
@@ -221,9 +166,9 @@ class SongCatalog extends React.Component {
     this.setState(
       {
         refreshControl: true,
-        page: 1,
+        page: 1
       },
-      () => this.getContent(),
+      () => this.getContent()
     );
   }
 
@@ -243,7 +188,7 @@ class SongCatalog extends React.Component {
             showsVerticalScrollIndicator={false}
             contentInsetAdjustmentBehavior={'never'}
             scrollEventThrottle={400}
-            onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
+            onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
             refreshControl={
               <RefreshControl
                 tintColor={'transparent'}
@@ -255,7 +200,7 @@ class SongCatalog extends React.Component {
           >
             {isiOS && this.state.refreshControl && (
               <ActivityIndicator
-                size="small"
+                size='small'
                 style={styles.ActivityIndicator}
                 color={colors.secondBackground}
               />
@@ -269,7 +214,7 @@ class SongCatalog extends React.Component {
                   seeAll={() =>
                     navigate('SEEALL', {
                       title: 'Continue',
-                      parent: 'Songs',
+                      parent: 'Songs'
                     })
                   }
                   isSquare={true}
@@ -305,21 +250,21 @@ class SongCatalog extends React.Component {
                     {
                       allSongs: [],
                       outVideos: false,
-                      page: 1,
+                      page: 1
                     },
                     () => {
                       this.filterQuery = filters;
                       this.getAllSongs().then(res);
-                    },
-                  ),
+                    }
+                  )
                 )
               }
             />
           </ScrollView>
         ) : (
           <ActivityIndicator
-            size="large"
-            style={{flex: 1}}
+            size='large'
+            style={{ flex: 1 }}
             color={colors.secondBackground}
           />
         )}
@@ -328,8 +273,8 @@ class SongCatalog extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({songsCache: state.songsCache});
+const mapStateToProps = state => ({ songsCache: state.songsCache });
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({cacheAndWriteSongs}, dispatch);
+  bindActionCreators({ cacheAndWriteSongs }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SongCatalog);

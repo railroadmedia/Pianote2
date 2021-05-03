@@ -8,18 +8,17 @@ import {
   ActivityIndicator,
   Dimensions,
   ImageBackground,
-  StatusBar,
+  StatusBar
 } from 'react-native';
 import Modal from 'react-native-modal';
-import {Download_V2} from 'RNDownload';
-import {SafeAreaView} from 'react-navigation';
-import {ContentModel} from '@musora/models';
+import { Download_V2 } from 'RNDownload';
+import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Orientation from 'react-native-orientation-locker';
-import {DownloadResources} from 'RNDownload';
+import { DownloadResources } from 'RNDownload';
 import LongButton from '../../components/LongButton';
 import NavigationBar from '../../components/NavigationBar';
 import GradientFeature from '../../components/GradientFeature';
@@ -29,11 +28,11 @@ import packsService from '../../services/packs.service';
 import {
   addToMyList,
   removeFromMyList,
-  resetProgress,
+  resetProgress
 } from '../../services/UserActions';
-import {NetworkContext} from '../../context/NetworkProvider';
+import { NetworkContext } from '../../context/NetworkProvider';
 import Resources from 'Pianote2/src/assets/img/svgs/resources';
-import {goBack, navigate, push} from '../../../AppNavigator';
+import { goBack, navigate, push } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -64,7 +63,7 @@ export default class SinglePack extends React.Component {
       resources: null,
       showResDownload: false,
       isLandscape:
-        Dimensions.get('window').height < Dimensions.get('window').width,
+        Dimensions.get('window').height < Dimensions.get('window').width
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
@@ -82,72 +81,39 @@ export default class SinglePack extends React.Component {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     // get bundles
     const response = await packsService.getPack(this.state.url);
-    const newContent = new ContentModel(response);
-    const lessons = newContent.post.lessons.map(rl => {
-      return new ContentModel(rl);
-    });
     // if more than one bundle then display bundles otherwise show videos
-    if (newContent.post.bundle_count > 1)
-      this.setState({isDisplayingLessons: false});
-    let items = [];
-    try {
-      for (let i in lessons) {
-        items.push({
-          title: lessons[i].getField('title'),
-          type: lessons[i].post.type,
-          thumbnail: lessons[i].getData('thumbnail_url'),
-          id: lessons[i].id,
-          publishedOn:
-            lessons[i].publishedOn.slice(0, 10) +
-            'T' +
-            lessons[i].publishedOn.slice(11, 16),
-          duration:
-            newContent.post.bundle_count > 1
-              ? 0
-              : new ContentModel(
-                  lessons[i].getFieldMulti('video')[0],
-                )?.getField('length_in_seconds'),
+    if (response.bundle_number > 1)
+      this.setState({ isDisplayingLessons: false });
 
-          isAddedToList: lessons[i].isAddedToList,
-          isStarted: lessons[i].isStarted,
-          isCompleted: lessons[i].isCompleted,
-          progress_percent: lessons[i].post.progress_percent,
-          mobile_app_url: lessons[i].post.mobile_app_url,
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
     this.setState(
       {
-        id: newContent.id,
-        isAddedToList: newContent.isAddedToList,
-        thumbnail:
-          newContent.post.thumbnail_url || newContent.getData('thumbnail_url'),
-        title: newContent.getField('title'),
-        logo: newContent.post.pack_logo,
-        description: newContent.getData('description'),
-        isStarted: newContent.isStarted,
-        isCompleted: newContent.isCompleted,
-        xp: newContent.xp,
-        videos: items,
-        nextLessonUrl: newContent.post.next_lesson_mobile_app_url,
+        id: response.id,
+        isAddedToList: response.is_added_to_primary_playlist,
+        thumbnail: response.thumbnail_url || response.thumbnail,
+        title: response.title,
+        logo: response.pack_logo,
+        description: response.description,
+        isStarted: response.started,
+        isCompleted: response.completed,
+        xp: response.total_xp,
+        videos: response.bundles || response.lessons,
+        nextLessonUrl: response.next_lesson?.mobile_app_url,
         isLoadingAll: false,
         refreshing: false,
-        resources: newContent.post.resources
-          ? Object.keys(newContent.post.resources).map(key => {
-              return newContent.post.resources[key];
+        resources: response.resources
+          ? Object.keys(response.resources).map(key => {
+              return response.resources[key];
             })
-          : null,
+          : null
       },
       () => {
         if (this.state.resources) this.createResourcesArr();
-      },
+      }
     );
   };
 
   createResourcesArr() {
-    const {resources} = this.state;
+    const { resources } = this.state;
     const extensions = ['mp3', 'pdf', 'zip'];
 
     resources?.forEach(resource => {
@@ -157,7 +123,7 @@ export default class SinglePack extends React.Component {
         fetch(resource.resource_url)
           .then(res => {
             extension = this.getExtensionByType(
-              res?.headers?.map['content-type'],
+              res?.headers?.map['content-type']
             );
             this.setState({
               resources: this.state.resources.map(r =>
@@ -165,18 +131,18 @@ export default class SinglePack extends React.Component {
                   ? {
                       ...r,
                       extension,
-                      wasWithoutExtension: true,
+                      wasWithoutExtension: true
                     }
-                  : r,
-              ),
+                  : r
+              )
             });
           })
           .catch(e => {});
       } else {
         this.setState({
           resources: this.state.resources.map(r =>
-            r.resource_id === resource.resource_id ? {...r, extension} : r,
-          ),
+            r.resource_id === resource.resource_id ? { ...r, extension } : r
+          )
         });
       }
     });
@@ -197,8 +163,8 @@ export default class SinglePack extends React.Component {
   async resetProgress() {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     await resetProgress(this.state.id);
-    this.setState({showRestartCourse: false, refreshing: true}, () =>
-      this.getBundle(),
+    this.setState({ showRestartCourse: false, refreshing: true }, () =>
+      this.getBundle()
     );
   }
 
@@ -207,23 +173,23 @@ export default class SinglePack extends React.Component {
     this.state.isAddedToList
       ? removeFromMyList(this.state.id)
       : addToMyList(this.state.id);
-    this.setState({isAddedToList: !this.state.isAddedToList});
+    this.setState({ isAddedToList: !this.state.isAddedToList });
   };
 
   navigate = row => {
     if (this.state.isDisplayingLessons) {
       navigate('VIEWLESSON', {
-        url: row.mobile_app_url,
+        url: row.mobile_app_url
       });
     } else {
       push('SINGLEPACK', {
-        url: row.mobile_app_url,
+        url: row.mobile_app_url
       });
     }
   };
 
   refresh = () => {
-    this.setState({refreshing: true}, () => {
+    this.setState({ refreshing: true }, () => {
       this.getBundle();
     });
   };
@@ -239,10 +205,10 @@ export default class SinglePack extends React.Component {
     let isLandscape = o.indexOf('LAND') >= 0;
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
     if (isiOS) {
-      if (onTablet) this.setState({isLandscape});
+      if (onTablet) this.setState({ isLandscape });
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
-        if (isAutoRotateOn && onTablet) this.setState({isLandscape});
+        if (isAutoRotateOn && onTablet) this.setState({ isLandscape });
       });
     }
   };
@@ -251,9 +217,9 @@ export default class SinglePack extends React.Component {
     return (
       <SafeAreaView
         forceInset={{
-          bottom: 'never',
+          bottom: 'never'
         }}
-        style={[styles.container, {backgroundColor: colors.mainBackground}]}
+        style={[styles.container, { backgroundColor: colors.mainBackground }]}
       >
         <StatusBar
           backgroundColor={colors.mainBackground}
@@ -261,7 +227,7 @@ export default class SinglePack extends React.Component {
         />
         {!this.state.isLoadingAll ? (
           <ScrollView
-            style={{backgroundColor: colors.mainBackground}}
+            style={{ backgroundColor: colors.mainBackground }}
             showsVerticalScrollIndicator={false}
             contentInsetAdjustmentBehavior={'never'}
             refreshControl={
@@ -284,8 +250,8 @@ export default class SinglePack extends React.Component {
                   position: 'absolute',
                   left: 10,
                   top: 10,
-                  zIndex: 4,
-                },
+                  zIndex: 4
+                }
               ]}
             >
               <Back
@@ -299,12 +265,12 @@ export default class SinglePack extends React.Component {
               style={{
                 width: '100%',
                 aspectRatio: this.getAspectRatio(),
-                justifyContent: 'flex-end',
+                justifyContent: 'flex-end'
               }}
               source={{
                 uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
-                  greaterWDim * 2,
-                )},ar_16:9,c_fill,g_face/${this.state.thumbnail}`,
+                  greaterWDim * 2
+                )},ar_16:9,c_fill,g_face/${this.state.thumbnail}`
               }}
             >
               <GradientFeature
@@ -316,16 +282,18 @@ export default class SinglePack extends React.Component {
                 elevation={0}
               />
               <View
-                style={this.state.isLandscape ? {marginHorizontal: '10%'} : {}}
+                style={
+                  this.state.isLandscape ? { marginHorizontal: '10%' } : {}
+                }
               >
                 <FastImage
                   style={{
                     height: greaterWDim / 15,
                     width: '100%',
                     zIndex: 1,
-                    marginBottom: onTablet ? '2%' : '4%',
+                    marginBottom: onTablet ? '2%' : '4%'
                   }}
-                  source={{uri: this.state.logo}}
+                  source={{ uri: this.state.logo }}
                   resizeMode={FastImage.resizeMode.contain}
                 />
                 <View
@@ -335,20 +303,20 @@ export default class SinglePack extends React.Component {
                       marginBottom: 10,
                       width: '100%',
                       flexDirection: 'row',
-                      alignItems: 'center',
-                    },
+                      alignItems: 'center'
+                    }
                   ]}
                 >
                   <View
                     style={{
                       flex: 1,
                       flexDirection: 'row',
-                      justifyContent: 'flex-end',
+                      justifyContent: 'flex-end'
                     }}
                   >
                     <TouchableOpacity
                       style={{
-                        paddingHorizontal: 10,
+                        paddingHorizontal: 10
                       }}
                       onPress={() => {
                         this.toggleMyList();
@@ -365,14 +333,14 @@ export default class SinglePack extends React.Component {
                         style={{
                           fontFamily: 'OpenSans-Regular',
                           color: 'white',
-                          fontSize: sizing.descriptionText,
+                          fontSize: sizing.descriptionText
                         }}
                       >
                         {this.state.isAddedToList ? 'Added' : 'My List'}
                       </Text>
                     </TouchableOpacity>
                   </View>
-                  <View style={{width: '50%'}}>
+                  <View style={{ width: '50%' }}>
                     <LongButton
                       type={
                         this.state.isCompleted
@@ -383,10 +351,10 @@ export default class SinglePack extends React.Component {
                       }
                       pressed={() => {
                         if (this.state.isCompleted) {
-                          this.setState({showRestartCourse: true});
+                          this.setState({ showRestartCourse: true });
                         } else {
                           navigate('VIEWLESSON', {
-                            url: this.state.nextLessonUrl,
+                            url: this.state.nextLessonUrl
                           });
                         }
                       }}
@@ -396,21 +364,21 @@ export default class SinglePack extends React.Component {
                     style={{
                       flex: 1,
                       flexDirection: 'row',
-                      justifyContent: 'flex-start',
+                      justifyContent: 'flex-start'
                     }}
                   >
                     <TouchableOpacity
                       style={{
-                        paddingHorizontal: 15,
+                        paddingHorizontal: 15
                       }}
                       onPress={() => {
                         this.setState({
-                          showInfo: !this.state.showInfo,
+                          showInfo: !this.state.showInfo
                         });
                       }}
                     >
                       <View
-                        style={[styles.centerContent, {flexDirection: 'row'}]}
+                        style={[styles.centerContent, { flexDirection: 'row' }]}
                       >
                         <AntIcon
                           name={
@@ -425,7 +393,7 @@ export default class SinglePack extends React.Component {
                           fontFamily: 'OpenSans-Regular',
                           color: 'white',
                           marginTop: 2,
-                          fontSize: sizing.descriptionText,
+                          fontSize: sizing.descriptionText
                         }}
                       >
                         Info
@@ -441,7 +409,7 @@ export default class SinglePack extends React.Component {
                   alignSelf: 'center',
                   backgroundColor: colors.mainBackground,
                   marginHorizontal: this.state.isLandscape ? '10%' : 10,
-                  marginTop: '2%',
+                  marginTop: '2%'
                 }}
               >
                 <Text
@@ -452,17 +420,17 @@ export default class SinglePack extends React.Component {
                     paddingHorizontal: 10,
 
                     color: 'white',
-                    textAlign: 'center',
+                    textAlign: 'center'
                   }}
                 >
                   {this.state.description}
                 </Text>
 
-                <View style={{paddingHorizontal: '25%'}}>
+                <View style={{ paddingHorizontal: '25%' }}>
                   <View
                     style={[
                       styles.centerContent,
-                      {flexDirection: 'row', marginTop: '2%'},
+                      { flexDirection: 'row', marginTop: '2%' }
                     ]}
                   >
                     <Text
@@ -472,7 +440,7 @@ export default class SinglePack extends React.Component {
                         textAlign: 'center',
                         color: 'white',
                         fontFamily: 'OpenSans-Bold',
-                        marginTop: 10,
+                        marginTop: 10
                       }}
                     >
                       {this.state.videos.length}
@@ -483,7 +451,7 @@ export default class SinglePack extends React.Component {
                           textAlign: 'center',
                           color: 'white',
                           fontFamily: 'OpenSans-Regular',
-                          marginTop: 5,
+                          marginTop: 5
                         }}
                       >
                         Lessons
@@ -496,7 +464,7 @@ export default class SinglePack extends React.Component {
                         textAlign: 'center',
                         color: 'white',
                         fontFamily: 'OpenSans-Bold',
-                        marginTop: 10,
+                        marginTop: 10
                       }}
                     >
                       {this.state.xp}
@@ -507,7 +475,7 @@ export default class SinglePack extends React.Component {
                           textAlign: 'center',
                           color: 'white',
                           fontFamily: 'OpenSans-Regular',
-                          marginTop: 5,
+                          marginTop: 5
                         }}
                       >
                         XP
@@ -519,22 +487,22 @@ export default class SinglePack extends React.Component {
                       styles.centerContent,
                       {
                         flexDirection: 'row',
-                        marginTop: '10%',
-                      },
+                        marginTop: '10%'
+                      }
                     ]}
                   >
                     {(this.state.id == 262875 ? false : true) && (
                       <Download_V2
                         entity={{
                           id: this.state.id,
-                          content: packsService.getPack(this.state.url, true),
+                          content: packsService.getPack(this.state.url, true)
                         }}
                         styles={{
                           flex: this.state.id == 262875 ? 1 : 0,
-                          touchable: {flex: 1},
+                          touchable: { flex: 1 },
                           iconSize: {
                             width: sizing.myListButtonSize,
-                            height: sizing.myListButtonSize,
+                            height: sizing.myListButtonSize
                           },
                           iconDownloadColor: colors.pianoteRed,
                           activityIndicatorColor: colors.pianoteRed,
@@ -543,7 +511,7 @@ export default class SinglePack extends React.Component {
                             color: '#ffffff',
                             fontSize: sizing.descriptionText,
                             fontFamily: 'OpenSans-Regular',
-                            marginTop: 5,
+                            marginTop: 5
                           },
                           alert: {
                             alertTextMessageFontFamily: 'OpenSans-Regular',
@@ -555,19 +523,19 @@ export default class SinglePack extends React.Component {
                             alertTouchableDeleteBackground: colors.pianoteRed,
                             alertBackground: 'white',
                             alertTouchableTextDeleteFontFamily: 'OpenSans-Bold',
-                            alertTouchableTextCancelFontFamily: 'OpenSans-Bold',
-                          },
+                            alertTouchableTextCancelFontFamily: 'OpenSans-Bold'
+                          }
                         }}
                       />
                     )}
                     <TouchableOpacity
                       style={{
                         alignItems: 'center',
-                        flex: 1,
+                        flex: 1
                       }}
                       onPress={() => {
                         this.setState({
-                          showRestartCourse: true,
+                          showRestartCourse: true
                         });
                       }}
                     >
@@ -582,7 +550,7 @@ export default class SinglePack extends React.Component {
                           textAlign: 'center',
                           color: 'white',
                           fontFamily: 'OpenSans-Regular',
-                          marginTop: 5,
+                          marginTop: 5
                         }}
                       >
                         Restart
@@ -592,12 +560,12 @@ export default class SinglePack extends React.Component {
                       <TouchableOpacity
                         onPress={() =>
                           this.setState({
-                            showResDownload: true,
+                            showResDownload: true
                           })
                         }
                         style={{
                           flex: 1,
-                          alignItems: 'center',
+                          alignItems: 'center'
                         }}
                       >
                         <Resources
@@ -611,7 +579,7 @@ export default class SinglePack extends React.Component {
                             textAlign: 'center',
                             color: 'white',
                             fontFamily: 'OpenSans-Regular',
-                            marginTop: 5,
+                            marginTop: 5
                           }}
                         >
                           Resources
@@ -626,7 +594,7 @@ export default class SinglePack extends React.Component {
               style={{
                 paddingHorizontal: this.state.isLandscape ? '10%' : 0,
                 marginBottom: 10,
-                marginTop: onTablet ? '4%' : '8%',
+                marginTop: onTablet ? '4%' : '8%'
               }}
             >
               <VerticalVideoList
@@ -651,8 +619,8 @@ export default class SinglePack extends React.Component {
               styles.centerContent,
               {
                 flex: 1,
-                backgroundColor: colors.mainBackground,
-              },
+                backgroundColor: colors.mainBackground
+              }
             ]}
           >
             <ActivityIndicator
@@ -670,26 +638,37 @@ export default class SinglePack extends React.Component {
           style={[
             styles.modalContainer,
             {
-              justifyContent: 'flex-end',
-            },
+              justifyContent: 'flex-end'
+            }
           ]}
           animation={'slideInUp'}
           animationInTiming={350}
           animationOutTiming={350}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() =>
+            new Promise(res =>
+              this.setState(
+                {
+                  showResDownload: false
+                },
+                () =>
+                  Platform.OS === 'ios' ? (this.modalDismissed = res) : res()
+              )
+            )
+          }
         >
           <DownloadResources
             styles={{
               container: {
                 backgroundColor: colors.mainBackground,
-                width: '100%',
+                width: '100%'
               },
               touchableTextResourceNameFontFamily: 'OpenSans',
               touchableTextResourceExtensionFontFamily: 'OpenSans',
               touchableTextResourceCancelFontFamily: 'OpenSans',
               borderColor: colors.secondBackground,
-              color: '#ffffff',
+              color: '#ffffff'
             }}
             resources={this.state.resources}
             lessonTitle={this.state.title}
@@ -697,10 +676,10 @@ export default class SinglePack extends React.Component {
               new Promise(res =>
                 this.setState(
                   {
-                    showResDownload: false,
+                    showResDownload: false
                   },
-                  () => (isiOS ? (this.modalDismissed = res) : res()),
-                ),
+                  () => (isiOS ? (this.modalDismissed = res) : res())
+                )
               );
             }}
           />
@@ -711,21 +690,22 @@ export default class SinglePack extends React.Component {
           isVisible={this.state.showRestartCourse}
           style={{
             margin: 0,
-            flex: 1,
+            flex: 1
           }}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showRestartCourse: false })}
         >
           <RestartCourse
             hideRestartCourse={() => {
               this.setState({
-                showRestartCourse: false,
+                showRestartCourse: false
               });
             }}
-            type="pack"
+            type='pack'
             onRestart={() => this.resetProgress()}
           />
         </Modal>

@@ -7,21 +7,21 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
-import {SafeAreaView} from 'react-navigation';
+import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import Back from '../../assets/img/svgs/back';
 import CheckEmail from '../../modals/CheckEmail.js';
 import ValidateEmail from '../../modals/ValidateEmail.js';
 import GradientFeature from '../../components/GradientFeature.js';
-import commonService from '../../services/common.service.js';
-import {NetworkContext} from '../../context/NetworkProvider.js';
+import { NetworkContext } from '../../context/NetworkProvider.js';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
 import Orientation from 'react-native-orientation-locker';
 import DeviceInfo from 'react-native-device-info';
-import {navigate} from '../../../AppNavigator';
+import { navigate } from '../../../AppNavigator';
+import { isEmailUnique } from '../../services/UserDataAuth';
 
 export default class CreateAccount extends React.Component {
   static contextType = NetworkContext;
@@ -33,41 +33,36 @@ export default class CreateAccount extends React.Component {
       showCheckEmail: false,
       showValidateEmail: false,
       email: '',
-      scrollViewContentFlex: {flex: 1},
+      scrollViewContentFlex: { flex: 1 }
     };
   }
 
-  verifyEmail = () => {
-    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+  verifyEmail = async () => {
+    if (!this.context.isConnected) {
+      return this.context.showNoConnectionAlert();
+    }
     if (this.state.email.length > 0) {
       let email = encodeURIComponent(this.state.email);
-      fetch(`${commonService.rootUrl}/usora/api/is-email-unique?email=${email}`)
-        .then(response => response.json())
-        .then(response => {
-          if (response?.exists) {
-            this.setState({showCheckEmail: true});
-          } else if (
-            response?.errors?.email ==
-            'The email must be a valid email address.'
-          ) {
-            this.setState({showValidateEmail: true});
-          } else {
-            navigate('CREATEACCOUNT2', {
-              email: this.state.email,
-              purchase: this.props.route?.params?.purchase,
-            });
-          }
-        })
-        .catch(error => {
-          console.log('API Error: ', error);
+      let response = await isEmailUnique(email);
+      if (response?.exists) {
+        this.setState({ showCheckEmail: true });
+      } else if (
+        response?.errors?.email == 'The email must be a valid email address.'
+      ) {
+        this.setState({ showValidateEmail: true });
+      } else {
+        navigate('CREATEACCOUNT2', {
+          email: this.state.email,
+          purchase: this.props.route?.params?.purchase
         });
+      }
     }
   };
 
   render() {
     return (
       <FastImage
-        style={{flex: 1}}
+        style={{ flex: 1 }}
         resizeMode={FastImage.resizeMode.cover}
         source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
       >
@@ -79,9 +74,9 @@ export default class CreateAccount extends React.Component {
           height={'100%'}
           borderRadius={0}
         />
-        <SafeAreaView style={{flex: 1}}>
+        <SafeAreaView style={{ flex: 1 }}>
           <KeyboardAvoidingView
-            style={{flex: 1}}
+            style={{ flex: 1 }}
             behavior={`${isiOS ? 'padding' : ''}`}
           >
             <TouchableOpacity
@@ -100,24 +95,24 @@ export default class CreateAccount extends React.Component {
               </Text>
             </TouchableOpacity>
             <ScrollView
-              style={{flex: 1}}
-              keyboardShouldPersistTaps="handled"
-              contentInsetAdjustmentBehavior="never"
+              style={{ flex: 1 }}
+              keyboardShouldPersistTaps='handled'
+              contentInsetAdjustmentBehavior='never'
               contentContainerStyle={this.state.scrollViewContentFlex}
             >
               <View style={localStyles.emailContainer}>
-                <View id="placeholder" />
-                <View style={{justifyContent: 'center'}}>
+                <View id='placeholder' />
+                <View style={{ justifyContent: 'center' }}>
                   <Text style={localStyles.emailText}>What's your email?</Text>
                   <TextInput
                     autoCorrect={false}
                     autoCapitalize={'none'}
                     onBlur={() =>
-                      this.setState({scrollViewContentFlex: {flex: 1}})
+                      this.setState({ scrollViewContentFlex: { flex: 1 } })
                     }
                     onFocus={() =>
                       this.setState({
-                        scrollViewContentFlex: {},
+                        scrollViewContentFlex: {}
                       })
                     }
                     keyboardAppearance={'dark'}
@@ -128,7 +123,7 @@ export default class CreateAccount extends React.Component {
                         ? 'visible-password'
                         : 'email-address'
                     }
-                    onChangeText={email => this.setState({email})}
+                    onChangeText={email => this.setState({ email })}
                     style={localStyles.textInput}
                   />
 
@@ -143,8 +138,8 @@ export default class CreateAccount extends React.Component {
                         backgroundColor:
                           this.state.email.length > 0
                             ? '#fb1b2f'
-                            : 'transparent',
-                      },
+                            : 'transparent'
+                      }
                     ]}
                   >
                     <Text
@@ -156,8 +151,8 @@ export default class CreateAccount extends React.Component {
                           fontFamily: 'RobotoCondensed-Bold',
                           fontSize: onTablet ? 20 : 14,
                           textAlign: 'center',
-                          padding: 10,
-                        },
+                          padding: 10
+                        }
                       ]}
                     >
                       NEXT
@@ -175,13 +170,14 @@ export default class CreateAccount extends React.Component {
               animationOutTiming={350}
               coverScreen={true}
               hasBackdrop={true}
+              onBackButtonPress={() => this.setState({ showCheckEmail: false })}
             >
               <CheckEmail
-                hideCheckEmail={() => {
+                hideCheckEmail={() =>
                   this.setState({
-                    showCheckEmail: false,
-                  });
-                }}
+                    showCheckEmail: false
+                  })
+                }
               />
             </Modal>
             <Modal
@@ -192,11 +188,14 @@ export default class CreateAccount extends React.Component {
               animationOutTiming={350}
               coverScreen={true}
               hasBackdrop={true}
+              onBackButtonPress={() =>
+                this.setState({ showValidateEmail: false })
+              }
             >
               <ValidateEmail
                 hideValidateEmail={() => {
                   this.setState({
-                    showValidateEmail: false,
+                    showValidateEmail: false
                   });
                 }}
               />
@@ -213,30 +212,30 @@ const localStyles = StyleSheet.create({
     padding: 15,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-between'
   },
   emailContainer: {
     flex: 1,
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: 20
   },
   emailText: {
     fontFamily: 'OpenSans-Bold',
     fontSize: DeviceInfo.isTablet() ? 24 : 16,
     textAlign: 'left',
     color: 'white',
-    paddingLeft: 15,
+    paddingLeft: 15
   },
   createAccountText: {
     color: 'white',
-    fontSize: DeviceInfo.isTablet() ? 36 : 24,
+    fontSize: DeviceInfo.isTablet() ? 36 : 24
   },
   container: {
     backgroundColor: 'white',
     borderRadius: 15,
     margin: 20,
     height: 200,
-    width: '80%',
+    width: '80%'
   },
   textInput: {
     padding: 15,
@@ -246,13 +245,13 @@ const localStyles = StyleSheet.create({
     marginHorizontal: 15,
     fontSize: DeviceInfo.isTablet() ? 20 : 14,
     backgroundColor: 'white',
-    fontFamily: 'OpenSans-Regular',
+    fontFamily: 'OpenSans-Regular'
   },
   verifyContainer: {
     marginBottom: 20,
     borderWidth: 2,
     borderRadius: 50,
     alignSelf: 'center',
-    borderColor: '#fb1b2f',
-  },
+    borderColor: '#fb1b2f'
+  }
 });

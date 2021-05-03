@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import DeviceInfo from 'react-native-device-info';
 import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
@@ -7,40 +7,40 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
+import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
 
 const messageDict = {
   'lesson comment reply': [
     'replied to your comment.',
     true,
     'orange',
-    'comment reply notifications',
+    'comment reply notifications'
   ],
   'lesson comment liked': [
     'liked your comment.',
     true,
     'blue',
-    'comment like notifications',
+    'comment like notifications'
   ],
   'forum post reply': [
     'replied to your forum post.',
     true,
     'orange',
-    'forum post reply notifications',
+    'forum post reply notifications'
   ],
   'forum post liked': [
     'liked your forum post.',
     true,
     'blue',
-    'forum post like notifications',
+    'forum post like notifications'
   ],
   'forum post in followed thread': [
     'post in followed thread.',
     false,
     'orange',
-    'forum post reply notifications',
+    'forum post reply notifications'
   ],
-  'new content releases': ['', false, 'red', 'new release notifications'],
+  'new content releases': ['', false, 'red', 'new release notifications']
 };
 
 export default class ReplyNotification extends React.Component {
@@ -63,7 +63,7 @@ export default class ReplyNotification extends React.Component {
       notify_on_lesson_comment_like: false,
       notify_on_lesson_comment_reply: false,
       notify_weekly_update: false,
-      statusChange: false,
+      statusChange: false
     };
   }
 
@@ -80,39 +80,38 @@ export default class ReplyNotification extends React.Component {
         userData?.notifications_summary_frequency_minutes,
       notify_on_forum_followed_thread_reply:
         userData?.notify_on_forum_followed_thread_reply,
-      notify_weekly_update: userData?.notify_weekly_update,
+      notify_weekly_update: userData?.notify_weekly_update
     });
 
     if (this.state.type == 'replied to your comment.') {
       statusChange = {
         notify_on_lesson_comment_reply: !this.state
-          .notify_on_lesson_comment_reply,
+          .notify_on_lesson_comment_reply
       };
     } else if (this.state.type == 'liked your comment.') {
       statusChange = {
-        notify_on_lesson_comment_like: !this.state
-          .notify_on_lesson_comment_like,
+        notify_on_lesson_comment_like: !this.state.notify_on_lesson_comment_like
       };
     } else if (this.state.type == 'replied to your forum post.') {
       statusChange = {
-        notify_on_forum_post_reply: !this.state.notify_on_forum_post_reply,
+        notify_on_forum_post_reply: !this.state.notify_on_forum_post_reply
       };
     } else if (this.state.type == 'liked your forum post.') {
       statusChange = {
-        notify_on_forum_post_like: !this.state.notify_on_forum_post_like,
+        notify_on_forum_post_like: !this.state.notify_on_forum_post_like
       };
     } else if (this.state.type == 'post in followed thread.') {
       statusChange = {
         notify_on_forum_followed_thread_reply: !this.state
-          .notify_on_forum_followed_thread_reply,
+          .notify_on_forum_followed_thread_reply
       };
     } else if (this.state.type == '') {
       statusChange = {
-        notify_weekly_update: !this.state.notify_weekly_update,
+        notify_weekly_update: !this.state.notify_weekly_update
       };
     }
 
-    this.setState({statusChange});
+    this.setState({ statusChange });
   };
 
   render = () => {
@@ -128,7 +127,7 @@ export default class ReplyNotification extends React.Component {
           <View
             style={
               (styles.container,
-              {width: '100%', justifyContent: 'space-between'})
+              { width: '100%', justifyContent: 'space-between' })
             }
           >
             <>
@@ -141,7 +140,7 @@ export default class ReplyNotification extends React.Component {
                       <View
                         style={[
                           styles.centerContent,
-                          localStyles.videoContainer,
+                          localStyles.videoContainer
                         ]}
                       >
                         <FontAwesome
@@ -155,7 +154,7 @@ export default class ReplyNotification extends React.Component {
                       <View
                         style={[
                           styles.centerContent,
-                          localStyles.chatContainer,
+                          localStyles.chatContainer
                         ]}
                       >
                         <Chat
@@ -169,7 +168,7 @@ export default class ReplyNotification extends React.Component {
                       <View
                         style={[
                           styles.centerContent,
-                          localStyles.likeContainer,
+                          localStyles.likeContainer
                         ]}
                       >
                         <AntIcon
@@ -185,7 +184,7 @@ export default class ReplyNotification extends React.Component {
                         uri:
                           this.state.profileImage !== ''
                             ? this.state.profileImage
-                            : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png',
+                            : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
                       }}
                       resizeMode={FastImage.resizeMode.cover}
                     />
@@ -200,7 +199,7 @@ export default class ReplyNotification extends React.Component {
             <>
               <View style={localStyles.removeContainer}>
                 <TouchableOpacity
-                  style={[styles.container, {justifyContent: 'center'}]}
+                  style={[styles.container, { justifyContent: 'center' }]}
                   onPress={() => this.props.removeNotification(this.props.data)}
                 >
                   <View style={localStyles.crossContainer}>
@@ -212,7 +211,7 @@ export default class ReplyNotification extends React.Component {
                     <Text
                       style={[
                         localStyles.removeText,
-                        {fontSize: sizing.descriptionText},
+                        { fontSize: sizing.descriptionText }
                       ]}
                     >
                       Remove this notification
@@ -222,7 +221,7 @@ export default class ReplyNotification extends React.Component {
               </View>
               <View style={localStyles.muteContainer}>
                 <TouchableOpacity
-                  style={[styles.container, {justifyContent: 'center'}]}
+                  style={[styles.container, { justifyContent: 'center' }]}
                   onPress={() =>
                     this.props.turnOfffNotifications(this.state.statusChange)
                   }
@@ -236,7 +235,7 @@ export default class ReplyNotification extends React.Component {
                     <Text
                       style={[
                         localStyles.removeText,
-                        {fontSize: sizing.descriptionText},
+                        { fontSize: sizing.descriptionText }
                       ]}
                     >
                       Turn {this.state.notificationStatus ? 'off' : 'on'}{' '}
@@ -256,18 +255,18 @@ export default class ReplyNotification extends React.Component {
 const localStyles = StyleSheet.create({
   profileContainer: {
     flexDirection: 'row',
-    paddingVertical: 30,
+    paddingVertical: 30
   },
   container: {
     width: '100%',
     flexDirection: 'row',
-    backgroundColor: '#00101d',
+    backgroundColor: '#00101d'
   },
   profileContainer2: {
     height: DeviceInfo.isTablet() ? 120 : 80,
     width: DeviceInfo.isTablet() ? 120 : 80,
     borderRadius: 100,
-    backgroundColor: '#445f73',
+    backgroundColor: '#445f73'
   },
   videoContainer: {
     position: 'absolute',
@@ -277,7 +276,7 @@ const localStyles = StyleSheet.create({
     width: DeviceInfo.isTablet() ? 40 : 30,
     backgroundColor: 'red',
     borderRadius: 100,
-    zIndex: 5,
+    zIndex: 5
   },
   chatContainer: {
     position: 'absolute',
@@ -287,7 +286,7 @@ const localStyles = StyleSheet.create({
     width: DeviceInfo.isTablet() ? 40 : 30,
     backgroundColor: 'orange',
     borderRadius: 100,
-    zIndex: 5,
+    zIndex: 5
   },
   likeContainer: {
     position: 'absolute',
@@ -297,52 +296,52 @@ const localStyles = StyleSheet.create({
     width: DeviceInfo.isTablet() ? 40 : 30,
     backgroundColor: 'blue',
     borderRadius: 100,
-    zIndex: 5,
+    zIndex: 5
   },
   image: {
     flex: 1,
-    borderRadius: 100,
+    borderRadius: 100
   },
   replyUser: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
     paddingBottom: 20,
     textAlign: 'center',
-    color: '#445f73',
+    color: '#445f73'
   },
   user: {
     fontFamily: 'OpenSans-Bold',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   removeText: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: '#445f73',
-    paddingLeft: 10,
+    paddingLeft: 10
   },
   crossContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '100%',
+    width: '100%'
   },
   removeContainer: {
     height: DeviceInfo.isTablet() ? 70 : 50,
     width: '100%',
     borderTopWidth: 0.5,
     paddingLeft: 10,
-    borderTopColor: '#445f73',
+    borderTopColor: '#445f73'
   },
   muteContainer: {
     height: DeviceInfo.isTablet() ? 70 : 50,
     width: '100%',
     marginBottom: DeviceInfo.hasNotch() ? 20 : 0,
     borderTopWidth: 0.5,
-    borderTopColor: '#445f73',
+    borderTopColor: '#445f73'
   },
   notificationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 10,
-  },
+    paddingLeft: 10
+  }
 });

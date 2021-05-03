@@ -7,12 +7,11 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ScrollView,
-  Platform,
   Dimensions,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import {SafeAreaView} from 'react-navigation';
+import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import ImagePicker from 'react-native-image-picker';
@@ -26,10 +25,11 @@ import LearningPaths from 'Pianote2/src/assets/img/svgs/learningPaths.svg';
 import ProfileImage from '../../modals/ProfileImage.js';
 import DisplayName from '../../modals/DisplayName.js';
 import commonService from '../../services/common.service.js';
-import {NetworkContext} from '../../context/NetworkProvider.js';
+import { NetworkContext } from '../../context/NetworkProvider.js';
 import Orientation from 'react-native-orientation-locker';
 import Loading from '../../components/Loading';
-import {reset} from '../../../AppNavigator';
+import { reset } from '../../../AppNavigator';
+import { isNameUnique } from '../../services/UserDataAuth';
 
 var data = new FormData();
 
@@ -54,25 +54,25 @@ export default class CreateAccount3 extends React.Component {
       displayName: '',
       imageURI: '',
       email: props.route?.params?.email,
-      password: props.route?.params?.password,
+      password: props.route?.params?.password
     };
   }
 
   changePage = number => {
     let index = Math.round(number.nativeEvent.contentOffset.x / width);
     if (index == 0) {
-      this.setState({page: 1});
+      this.setState({ page: 1 });
     } else if (index == 1) {
-      this.setState({page: 2, canScroll: false});
+      this.setState({ page: 2, canScroll: false });
     } else if (index == 2) {
-      this.setState({page: 3, canScroll: true});
+      this.setState({ page: 3, canScroll: true });
     } else if (index == 3) {
-      this.setState({page: 4});
+      this.setState({ page: 4 });
     }
   };
 
   typingDisplayName = async displayName => {
-    this.setState({displayName});
+    this.setState({ displayName });
   };
 
   chooseImage = async () => {
@@ -81,8 +81,8 @@ export default class CreateAccount3 extends React.Component {
         tintColor: '#147efb',
         storageOptions: {
           skipBackup: true,
-          path: 'images',
-        },
+          path: 'images'
+        }
       },
       response => {
         if (!response.didCancel && !response.error) {
@@ -91,16 +91,16 @@ export default class CreateAccount3 extends React.Component {
             type: response.type,
             uri: isiOS
               ? response.uri.replace('file://', '')
-              : 'file://' + response.path,
+              : 'file://' + response.path
           });
           data.append('target', response.fileName || 'avatar');
           this.setState({
             response,
             imageURI: response.uri,
-            showImage: true,
+            showImage: true
           });
         }
-      },
+      }
     );
   };
 
@@ -109,7 +109,7 @@ export default class CreateAccount3 extends React.Component {
     this.setState({
       imageURI: '',
       showImage: false,
-      response: null,
+      response: null
     });
   };
 
@@ -117,21 +117,20 @@ export default class CreateAccount3 extends React.Component {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     if (this.state.displayName.length > 0) {
       Keyboard.dismiss();
-      let response = await fetch(
-        `${commonService.rootUrl}/usora/api/is-display-name-unique?display_name=${this.state.displayName}`,
-      );
-      response = await response.json();
+      // check if valid
+      let response = await isNameUnique(this.state.displayName);
+
       if (response.unique) {
         this.myScroll.scrollTo({
           x: width,
           y: 0,
-          animated: true,
+          animated: true
         });
         this.setState({
-          page: 2,
+          page: 2
         });
       } else {
-        this.setState({showDisplayName: true});
+        this.setState({ showDisplayName: true });
       }
     }
   };
@@ -142,26 +141,26 @@ export default class CreateAccount3 extends React.Component {
       this.myScroll.scrollTo({
         x: width,
         y: 0,
-        animated: true,
+        animated: true
       });
-      this.setState({page: 2, canScroll: false});
+      this.setState({ page: 2, canScroll: false });
     } else if (this.state.page === 2) {
       this.myScroll.scrollTo({
         x: width * 2,
         y: 0,
-        animated: true,
+        animated: true
       });
       this.setState({
         page: 3,
-        canScroll: true,
+        canScroll: true
       });
     } else if (this.state.page === 3) {
       this.myScroll.scrollTo({
         x: width * 3,
         y: 0,
-        animated: true,
+        animated: true
       });
-      this.setState({page: 4});
+      this.setState({ page: 4 });
     } else {
       this.loadingRef?.toggleLoading();
       // if there is profile image upload it
@@ -173,29 +172,29 @@ export default class CreateAccount3 extends React.Component {
           try {
             // upload file
             let response = await fetch(
-              `${commonService.rootUrl}/api/avatar/upload`,
+              `${commonService.rootUrl}/musora-api/avatar/upload`,
               {
                 method: 'POST',
-                headers: {Authorization: `Bearer ${token}`},
-                body: data,
-              },
+                headers: { Authorization: `Bearer ${token}` },
+                body: data
+              }
             );
 
             // if image is too large
             if (response.status == 413) {
-              this.setState({showProfileImage: true});
+              this.setState({ showProfileImage: true });
               return;
             }
 
             // get data back, put image URL & display name in user details
             url = await response.json();
             await commonService.tryCall(
-              `${commonService.rootUrl}/api/profile/update`,
+              `${commonService.rootUrl}/musora-api/profile/update`,
               'POST',
               {
                 file: url?.data?.[0]?.url,
-                display_name: this.state.displayName,
-              },
+                display_name: this.state.displayName
+              }
             );
 
             // send to loadpage to update asyncstorage with new data
@@ -203,12 +202,12 @@ export default class CreateAccount3 extends React.Component {
           } catch (e) {}
         } else {
           await commonService.tryCall(
-            `${commonService.rootUrl}/api/profile/update`,
+            `${commonService.rootUrl}/musora-api/profile/update`,
             'POST',
             {
               file: url?.data?.[0]?.url,
-              display_name: this.state.displayName,
-            },
+              display_name: this.state.displayName
+            }
           );
 
           // send to loadpage to update asyncstorage with new data
@@ -223,20 +222,20 @@ export default class CreateAccount3 extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{ flex: 1 }}>
         <ScrollView
           horizontal={true}
           ref={ref => {
             this.myScroll = ref;
           }}
-          keyboardShouldPersistTaps="handled"
+          keyboardShouldPersistTaps='handled'
           pagingEnabled={true}
           scrollEnabled={this.state.canScroll}
           onMomentumScrollEnd={e => {
-            this.setState({pageNum: e});
+            this.setState({ pageNum: e });
             this.changePage(e);
           }}
-          contentContainerStyle={{flexGrow: 1}}
+          contentContainerStyle={{ flexGrow: 1 }}
         >
           <View style={styles.centerContent}>
             <View style={[styles.centerContent, localStyles.container1]}>
@@ -244,7 +243,7 @@ export default class CreateAccount3 extends React.Component {
                 onPress={() => this.changePage(this.state.pageNum - 1)}
                 style={{
                   paddingLeft: 10,
-                  flex: 1,
+                  flex: 1
                 }}
               />
               <Text
@@ -252,8 +251,8 @@ export default class CreateAccount3 extends React.Component {
                   styles.modalHeaderText,
                   {
                     fontSize: onTablet ? 36 : 24,
-                    fontFamily: 'OpenSans-Bold',
-                  },
+                    fontFamily: 'OpenSans-Bold'
+                  }
                 ]}
               >
                 Create Account
@@ -263,19 +262,19 @@ export default class CreateAccount3 extends React.Component {
               style={{
                 height: '90%',
                 width: width,
-                zIndex: 3,
+                zIndex: 3
               }}
             >
               <KeyboardAvoidingView
                 behavior={isiOS ? 'height' : ''}
-                style={{flex: 1, alignItems: 'center'}}
+                style={{ flex: 1, alignItems: 'center' }}
               >
                 <View
                   style={{
                     marginBottom: 2,
                     flexDirection: 'row',
                     paddingLeft: 20,
-                    marginTop: '45%',
+                    marginTop: '45%'
                   }}
                 >
                   <Text
@@ -283,12 +282,12 @@ export default class CreateAccount3 extends React.Component {
                       fontFamily: 'OpenSans-Bold',
                       fontSize: DeviceInfo.isTablet() ? 24 : 16,
                       textAlign: 'left',
-                      paddingVertical: 10,
+                      paddingVertical: 10
                     }}
                   >
                     Add a display name
                   </Text>
-                  <View style={{flex: 1}} />
+                  <View style={{ flex: 1 }} />
                 </View>
                 <View
                   style={{
@@ -300,7 +299,7 @@ export default class CreateAccount3 extends React.Component {
                     paddingLeft: onTablet ? 20 : 10,
                     flexDirection: 'row',
                     borderWidth: 1,
-                    borderColor: '#c2c2c2',
+                    borderColor: '#c2c2c2'
                   }}
                 >
                   <TextInput
@@ -317,7 +316,7 @@ export default class CreateAccount3 extends React.Component {
                       color: 'black',
                       fontFamily: 'OpenSans-Regular',
                       fontSize: sizing.titleViewLesson,
-                      flex: 1,
+                      flex: 1
                     }}
                   />
                 </View>
@@ -325,14 +324,14 @@ export default class CreateAccount3 extends React.Component {
                   style={{
                     width: width,
                     paddingLeft: 20,
-                    marginTop: 10,
+                    marginTop: 10
                   }}
                 >
                   <Text
                     style={{
                       fontFamily: 'OpenSans-Regular',
                       fontSize: sizing.descriptionText,
-                      textAlign: 'left',
+                      textAlign: 'left'
                     }}
                   >
                     This appears on your Pianote profile and comments.
@@ -349,7 +348,7 @@ export default class CreateAccount3 extends React.Component {
                       this.state.displayName.length == 0
                         ? 'transparent'
                         : '#fb1b2f',
-                    borderWidth: 1,
+                    borderWidth: 1
                   }}
                 >
                   <TouchableOpacity
@@ -359,8 +358,8 @@ export default class CreateAccount3 extends React.Component {
                       {
                         height: '100%',
                         width: '100%',
-                        flexDirection: 'row',
-                      },
+                        flexDirection: 'row'
+                      }
                     ]}
                   >
                     <Text
@@ -370,7 +369,7 @@ export default class CreateAccount3 extends React.Component {
                         color:
                           this.state.displayName.length == 0
                             ? '#fb1b2f'
-                            : 'white',
+                            : 'white'
                       }}
                     >
                       NEXT
@@ -382,11 +381,11 @@ export default class CreateAccount3 extends React.Component {
                     height: '3.5%',
                     marginTop: 20,
                     marginBottom: 30,
-                    flexDirection: 'row',
+                    flexDirection: 'row'
                   }}
                 >
-                  <View style={{justifyContent: 'center'}}>
-                    <View style={{flexDirection: 'row'}}>
+                  <View style={{ justifyContent: 'center' }}>
+                    <View style={{ flexDirection: 'row' }}>
                       <View
                         style={{
                           height: 10,
@@ -395,12 +394,12 @@ export default class CreateAccount3 extends React.Component {
                           backgroundColor:
                             this.state.page == 1 ? '#fb1b2f' : 'transparent',
                           borderWidth: 1,
-                          borderColor: '#fb1b2f',
+                          borderColor: '#fb1b2f'
                         }}
                       />
                       <View
                         style={{
-                          width: 10,
+                          width: 10
                         }}
                       />
                       <View
@@ -411,12 +410,12 @@ export default class CreateAccount3 extends React.Component {
                           backgroundColor:
                             this.state.page == 2 ? '#fb1b2f' : 'transparent',
                           borderWidth: 1,
-                          borderColor: '#fb1b2f',
+                          borderColor: '#fb1b2f'
                         }}
                       />
                       <View
                         style={{
-                          width: 10,
+                          width: 10
                         }}
                       />
                       <View
@@ -427,12 +426,12 @@ export default class CreateAccount3 extends React.Component {
                           backgroundColor:
                             this.state.page == 3 ? '#fb1b2f' : 'transparent',
                           borderWidth: 1,
-                          borderColor: '#fb1b2f',
+                          borderColor: '#fb1b2f'
                         }}
                       />
                       <View
                         style={{
-                          width: 10,
+                          width: 10
                         }}
                       />
                       <View
@@ -443,7 +442,7 @@ export default class CreateAccount3 extends React.Component {
                           backgroundColor:
                             this.state.page == 4 ? '#fb1b2f' : 'transparent',
                           borderWidth: 1,
-                          borderColor: '#fb1b2f',
+                          borderColor: '#fb1b2f'
                         }}
                       />
                     </View>
@@ -463,26 +462,26 @@ export default class CreateAccount3 extends React.Component {
               <DisplayName
                 hideDisplayName={() => {
                   this.setState({
-                    showDisplayName: false,
+                    showDisplayName: false
                   });
                 }}
               />
             </Modal>
           </View>
           <View style={styles.centerContent}>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <TouchableOpacity
                 onPress={() => {
                   this.myScroll.scrollTo({
                     x: 0,
                     y: 0,
-                    animated: true,
+                    animated: true
                   });
                 }}
                 style={{
                   paddingLeft: 15,
                   flex: 1,
-                  justifyContent: 'center',
+                  justifyContent: 'center'
                 }}
               >
                 <Back
@@ -496,13 +495,13 @@ export default class CreateAccount3 extends React.Component {
                   styles.modalHeaderText,
                   {
                     fontSize: onTablet ? 36 : 24,
-                    fontFamily: 'OpenSans-Bold',
-                  },
+                    fontFamily: 'OpenSans-Bold'
+                  }
                 ]}
               >
                 Create Account
               </Text>
-              <View style={{flex: 1, paddingRight: 15}} />
+              <View style={{ flex: 1, paddingRight: 15 }} />
             </View>
             <View
               style={{
@@ -510,27 +509,27 @@ export default class CreateAccount3 extends React.Component {
                 height: '90%',
                 width: width,
                 zIndex: 3,
-                elevation: 3,
+                elevation: 3
               }}
             >
               <View
                 style={{
                   flex: 1,
-                  alignItems: 'center',
+                  alignItems: 'center'
                 }}
               >
                 <View
                   style={{
                     flexDirection: 'row',
                     paddingVertical: 10,
-                    marginTop: '20%',
+                    marginTop: '20%'
                   }}
                 >
                   <Text
                     style={{
                       fontFamily: 'OpenSans-Bold',
                       fontSize: sizing.titleViewLesson,
-                      textAlign: 'center',
+                      textAlign: 'center'
                     }}
                   >
                     Add a profile picture
@@ -542,7 +541,7 @@ export default class CreateAccount3 extends React.Component {
                     width: '100%',
                     marginTop: 10,
                     flexDirection: 'row',
-                    justifyContent: 'center',
+                    justifyContent: 'center'
                   }}
                 >
                   <TouchableOpacity
@@ -553,8 +552,8 @@ export default class CreateAccount3 extends React.Component {
                         height: height * 0.17125,
                         width: height * 0.17125,
                         borderRadius: 500,
-                        backgroundColor: '#fb1b2f',
-                      },
+                        backgroundColor: '#fb1b2f'
+                      }
                     ]}
                   >
                     {this.state.showImage && (
@@ -564,10 +563,10 @@ export default class CreateAccount3 extends React.Component {
                           height: '100%',
                           width: '100%',
                           borderRadius: 500,
-                          zIndex: 5,
+                          zIndex: 5
                         }}
                         source={{
-                          uri: this.state.imageURI,
+                          uri: this.state.imageURI
                         }}
                         resizeMode={FastImage.resizeMode.cover}
                       />
@@ -585,8 +584,8 @@ export default class CreateAccount3 extends React.Component {
                             top: '4%',
                             backgroundColor: '#0090d3',
                             borderRadius: 500,
-                            zIndex: 5,
-                          },
+                            zIndex: 5
+                          }
                         ]}
                       >
                         <X fill={'white'} height={'50%'} width={'50%'} />
@@ -603,14 +602,14 @@ export default class CreateAccount3 extends React.Component {
                   style={{
                     width: width,
                     paddingTop: 20,
-                    paddingBottom: 40,
+                    paddingBottom: 40
                   }}
                 >
                   <Text
                     style={{
                       fontFamily: 'OpenSans-Regular',
                       fontSize: sizing.descriptionText,
-                      textAlign: 'center',
+                      textAlign: 'center'
                     }}
                   >
                     This appears on your Pianote profile and comments.
@@ -626,7 +625,7 @@ export default class CreateAccount3 extends React.Component {
                       this.state.imageURI.length == 0
                         ? 'transparent'
                         : '#fb1b2f',
-                    borderWidth: 1,
+                    borderWidth: 1
                   }}
                 >
                   <TouchableOpacity
@@ -635,11 +634,11 @@ export default class CreateAccount3 extends React.Component {
                       this.myScroll.scrollTo({
                         x: width * 2,
                         y: 0,
-                        animated: true,
+                        animated: true
                       });
                       this.setState({
                         page: 3,
-                        canScroll: true,
+                        canScroll: true
                       });
                     }}
                     style={[
@@ -647,8 +646,8 @@ export default class CreateAccount3 extends React.Component {
                       {
                         height: '100%',
                         width: '100%',
-                        flexDirection: 'row',
-                      },
+                        flexDirection: 'row'
+                      }
                     ]}
                   >
                     <Text
@@ -656,7 +655,7 @@ export default class CreateAccount3 extends React.Component {
                         fontFamily: 'RobotoCondensed-Bold',
                         fontSize: sizing.titleViewLesson,
                         color:
-                          this.state.imageURI.length == 0 ? '#fb1b2f' : 'white',
+                          this.state.imageURI.length == 0 ? '#fb1b2f' : 'white'
                       }}
                     >
                       NEXT
@@ -668,11 +667,11 @@ export default class CreateAccount3 extends React.Component {
                     height: '3.5%',
                     marginTop: '50%',
                     flexDirection: 'row',
-                    marginBottom: 30,
+                    marginBottom: 30
                   }}
                 >
-                  <View style={{justifyContent: 'center'}}>
-                    <View style={{flexDirection: 'row'}}>
+                  <View style={{ justifyContent: 'center' }}>
+                    <View style={{ flexDirection: 'row' }}>
                       <View
                         style={{
                           height: 10,
@@ -681,12 +680,12 @@ export default class CreateAccount3 extends React.Component {
                           backgroundColor:
                             this.state.page == 1 ? '#fb1b2f' : 'transparent',
                           borderWidth: 1,
-                          borderColor: '#fb1b2f',
+                          borderColor: '#fb1b2f'
                         }}
                       />
                       <View
                         style={{
-                          width: 10,
+                          width: 10
                         }}
                       />
                       <View
@@ -697,12 +696,12 @@ export default class CreateAccount3 extends React.Component {
                           backgroundColor:
                             this.state.page == 2 ? '#fb1b2f' : 'transparent',
                           borderWidth: 1,
-                          borderColor: '#fb1b2f',
+                          borderColor: '#fb1b2f'
                         }}
                       />
                       <View
                         style={{
-                          width: 10,
+                          width: 10
                         }}
                       />
                       <View
@@ -713,12 +712,12 @@ export default class CreateAccount3 extends React.Component {
                           backgroundColor:
                             this.state.page == 3 ? '#fb1b2f' : 'transparent',
                           borderWidth: 1,
-                          borderColor: '#fb1b2f',
+                          borderColor: '#fb1b2f'
                         }}
                       />
                       <View
                         style={{
-                          width: 10,
+                          width: 10
                         }}
                       />
                       <View
@@ -729,7 +728,7 @@ export default class CreateAccount3 extends React.Component {
                           backgroundColor:
                             this.state.page == 4 ? '#fb1b2f' : 'transparent',
                           borderWidth: 1,
-                          borderColor: '#fb1b2f',
+                          borderColor: '#fb1b2f'
                         }}
                       />
                     </View>
@@ -738,7 +737,7 @@ export default class CreateAccount3 extends React.Component {
                 <View
                   style={{
                     width: width,
-                    alignItems: 'center',
+                    alignItems: 'center'
                   }}
                 >
                   <TouchableOpacity onPress={() => this.createAccount()}>
@@ -746,7 +745,7 @@ export default class CreateAccount3 extends React.Component {
                       style={{
                         fontFamily: 'OpenSans-Bold',
                         fontSize: sizing.titleViewLesson,
-                        color: '#fb1b2f',
+                        color: '#fb1b2f'
                       }}
                     >
                       SKIP
@@ -767,7 +766,7 @@ export default class CreateAccount3 extends React.Component {
               <ProfileImage
                 hideProfileImage={() => {
                   this.setState({
-                    showProfileImage: false,
+                    showProfileImage: false
                   });
                 }}
               />
@@ -784,7 +783,7 @@ export default class CreateAccount3 extends React.Component {
               <DisplayName
                 hideDisplayName={() => {
                   this.setState({
-                    showDisplayName: false,
+                    showDisplayName: false
                   });
                 }}
               />
@@ -794,14 +793,14 @@ export default class CreateAccount3 extends React.Component {
             style={{
               height: height,
               width: width,
-              zIndex: 2,
+              zIndex: 2
             }}
           >
             <Text
               style={{
                 fontFamily: 'OpenSans-Bold',
                 textAlign: 'center',
-                fontSize: sizing.myListButtonSize,
+                fontSize: sizing.myListButtonSize
               }}
             >
               Here's what is included{'\n'}in the Pianote App!
@@ -810,7 +809,7 @@ export default class CreateAccount3 extends React.Component {
               style={{
                 height: '4%',
                 borderBottomColor: '#dbdbdb',
-                borderBottomWidth: 0.75,
+                borderBottomWidth: 0.75
               }}
             />
             <View
@@ -820,20 +819,20 @@ export default class CreateAccount3 extends React.Component {
                 alignSelf: 'stretch',
                 flexDirection: 'row',
                 borderBottomColor: '#dbdbdb',
-                borderBottomWidth: 0.75,
+                borderBottomWidth: 0.75
               }}
             >
-              <View style={{flex: 0.3}}>
-                <View style={{flex: 1}} />
+              <View style={{ flex: 0.3 }}>
+                <View style={{ flex: 1 }} />
                 <View
                   style={[
                     styles.centerContent,
                     {
-                      flexDirection: 'row',
-                    },
+                      flexDirection: 'row'
+                    }
                   ]}
                 >
-                  <View style={{flex: 1}} />
+                  <View style={{ flex: 1 }} />
                   <View
                     style={[
                       styles.centerContent,
@@ -842,8 +841,8 @@ export default class CreateAccount3 extends React.Component {
                         height: width * 0.15,
                         padding: 30,
                         borderRadius: 200,
-                        backgroundColor: '#fb1b2f',
-                      },
+                        backgroundColor: '#fb1b2f'
+                      }
                     ]}
                   >
                     <LearningPaths
@@ -852,20 +851,20 @@ export default class CreateAccount3 extends React.Component {
                       fill={'white'}
                     />
                   </View>
-                  <View style={{flex: 1}} />
+                  <View style={{ flex: 1 }} />
                 </View>
-                <View style={{flex: 1}} />
+                <View style={{ flex: 1 }} />
               </View>
               <View
                 style={{
-                  flex: 0.7,
+                  flex: 0.7
                 }}
               >
-                <View style={{flex: 1}} />
+                <View style={{ flex: 1 }} />
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Bold',
-                    fontSize: sizing.myListButtonSize,
+                    fontSize: sizing.myListButtonSize
                   }}
                 >
                   Learning Path
@@ -874,12 +873,12 @@ export default class CreateAccount3 extends React.Component {
                   style={{
                     fontFamily: 'OpenSans-Regular',
                     fontSize: onTablet ? 20 : 16,
-                    marginTop: 5,
+                    marginTop: 5
                   }}
                 >
                   Guided lessons covering{'\n'}every topic along the way.
                 </Text>
-                <View style={{flex: 1}} />
+                <View style={{ flex: 1 }} />
               </View>
             </View>
             <View
@@ -889,20 +888,20 @@ export default class CreateAccount3 extends React.Component {
                 alignSelf: 'stretch',
                 flexDirection: 'row',
                 borderBottomColor: '#dbdbdb',
-                borderBottomWidth: 0.75,
+                borderBottomWidth: 0.75
               }}
             >
-              <View style={{flex: 0.3}}>
-                <View style={{flex: 1}} />
+              <View style={{ flex: 0.3 }}>
+                <View style={{ flex: 1 }} />
                 <View
                   style={[
                     styles.centerContent,
                     {
-                      flexDirection: 'row',
-                    },
+                      flexDirection: 'row'
+                    }
                   ]}
                 >
-                  <View style={{flex: 1}} />
+                  <View style={{ flex: 1 }} />
                   <View
                     style={[
                       styles.centerContent,
@@ -910,26 +909,26 @@ export default class CreateAccount3 extends React.Component {
                         width: width * 0.15,
                         height: width * 0.15,
                         borderRadius: 200,
-                        backgroundColor: '#fb1b2f',
-                      },
+                        backgroundColor: '#fb1b2f'
+                      }
                     ]}
                   >
                     <Courses height={width * 0.07} width={200} fill={'white'} />
                   </View>
-                  <View style={{flex: 1}} />
+                  <View style={{ flex: 1 }} />
                 </View>
-                <View style={{flex: 1}} />
+                <View style={{ flex: 1 }} />
               </View>
               <View
                 style={{
-                  flex: 0.7,
+                  flex: 0.7
                 }}
               >
-                <View style={{flex: 1}} />
+                <View style={{ flex: 1 }} />
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Bold',
-                    fontSize: sizing.myListButtonSize,
+                    fontSize: sizing.myListButtonSize
                   }}
                 >
                   Courses
@@ -938,12 +937,12 @@ export default class CreateAccount3 extends React.Component {
                   style={{
                     fontFamily: 'OpenSans-Regular',
                     fontSize: onTablet ? 20 : 16,
-                    marginTop: 5,
+                    marginTop: 5
                   }}
                 >
                   Series of short lessons{'\n'}based on a single topic.
                 </Text>
-                <View style={{flex: 1}} />
+                <View style={{ flex: 1 }} />
               </View>
             </View>
             <View
@@ -953,20 +952,20 @@ export default class CreateAccount3 extends React.Component {
                 alignSelf: 'stretch',
                 flexDirection: 'row',
                 borderBottomColor: '#dbdbdb',
-                borderBottomWidth: 0.75,
+                borderBottomWidth: 0.75
               }}
             >
-              <View style={{flex: 0.3}}>
-                <View style={{flex: 1}} />
+              <View style={{ flex: 0.3 }}>
+                <View style={{ flex: 1 }} />
                 <View
                   style={[
                     styles.centerContent,
                     {
-                      flexDirection: 'row',
-                    },
+                      flexDirection: 'row'
+                    }
                   ]}
                 >
-                  <View style={{flex: 1}} />
+                  <View style={{ flex: 1 }} />
                   <View
                     style={[
                       styles.centerContent,
@@ -974,26 +973,26 @@ export default class CreateAccount3 extends React.Component {
                         width: width * 0.15,
                         height: width * 0.15,
                         borderRadius: 200,
-                        backgroundColor: '#fb1b2f',
-                      },
+                        backgroundColor: '#fb1b2f'
+                      }
                     ]}
                   >
                     <Songs height={width * 0.085} width={200} fill={'white'} />
                   </View>
-                  <View style={{flex: 1}} />
+                  <View style={{ flex: 1 }} />
                 </View>
-                <View style={{flex: 1}} />
+                <View style={{ flex: 1 }} />
               </View>
               <View
                 style={{
-                  flex: 0.7,
+                  flex: 0.7
                 }}
               >
-                <View style={{flex: 1}} />
+                <View style={{ flex: 1 }} />
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Bold',
-                    fontSize: sizing.myListButtonSize,
+                    fontSize: sizing.myListButtonSize
                   }}
                 >
                   Songs
@@ -1002,12 +1001,12 @@ export default class CreateAccount3 extends React.Component {
                   style={{
                     fontFamily: 'OpenSans-Regular',
                     marginTop: 5,
-                    fontSize: onTablet ? 20 : 16,
+                    fontSize: onTablet ? 20 : 16
                   }}
                 >
                   Famous songs with note-{'\n'}for-note transcriptions.
                 </Text>
-                <View style={{flex: 1}} />
+                <View style={{ flex: 1 }} />
               </View>
             </View>
             <View
@@ -1017,20 +1016,20 @@ export default class CreateAccount3 extends React.Component {
                 alignSelf: 'stretch',
                 flexDirection: 'row',
                 borderBottomColor: '#dbdbdb',
-                borderBottomWidth: 0.75,
+                borderBottomWidth: 0.75
               }}
             >
-              <View style={{flex: 0.3}}>
-                <View style={{flex: 1}} />
+              <View style={{ flex: 0.3 }}>
+                <View style={{ flex: 1 }} />
                 <View
                   style={[
                     styles.centerContent,
                     {
-                      flexDirection: 'row',
-                    },
+                      flexDirection: 'row'
+                    }
                   ]}
                 >
-                  <View style={{flex: 1}} />
+                  <View style={{ flex: 1 }} />
                   <View
                     style={[
                       styles.centerContent,
@@ -1038,26 +1037,26 @@ export default class CreateAccount3 extends React.Component {
                         width: width * 0.15,
                         height: width * 0.15,
                         borderRadius: 200,
-                        backgroundColor: '#fb1b2f',
-                      },
+                        backgroundColor: '#fb1b2f'
+                      }
                     ]}
                   >
                     <Support height={width * 0.1} width={200} fill={'white'} />
                   </View>
-                  <View style={{flex: 1}} />
+                  <View style={{ flex: 1 }} />
                 </View>
-                <View style={{flex: 1}} />
+                <View style={{ flex: 1 }} />
               </View>
               <View
                 style={{
-                  flex: 0.7,
+                  flex: 0.7
                 }}
               >
-                <View style={{flex: 1}} />
+                <View style={{ flex: 1 }} />
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Bold',
-                    fontSize: sizing.myListButtonSize,
+                    fontSize: sizing.myListButtonSize
                   }}
                 >
                   Support
@@ -1066,24 +1065,24 @@ export default class CreateAccount3 extends React.Component {
                   style={{
                     fontFamily: 'OpenSans-Regular',
                     fontSize: onTablet ? 20 : 16,
-                    marginTop: 5,
+                    marginTop: 5
                   }}
                 >
                   Get personal support{'\n'}from real piano teachers.
                 </Text>
-                <View style={{flex: 1}} />
+                <View style={{ flex: 1 }} />
               </View>
             </View>
             <View
               style={{
                 height: '3.5%',
                 marginTop: '5%',
-                flexDirection: 'row',
+                flexDirection: 'row'
               }}
             >
-              <View style={{flex: 1}} />
-              <View style={{justifyContent: 'center'}}>
-                <View style={{flexDirection: 'row'}}>
+              <View style={{ flex: 1 }} />
+              <View style={{ justifyContent: 'center' }}>
+                <View style={{ flexDirection: 'row' }}>
                   <View
                     style={{
                       height: 10,
@@ -1092,12 +1091,12 @@ export default class CreateAccount3 extends React.Component {
                       backgroundColor:
                         this.state.page == 1 ? '#fb1b2f' : 'transparent',
                       borderWidth: 1,
-                      borderColor: '#fb1b2f',
+                      borderColor: '#fb1b2f'
                     }}
                   />
                   <View
                     style={{
-                      width: 10,
+                      width: 10
                     }}
                   />
                   <View
@@ -1108,12 +1107,12 @@ export default class CreateAccount3 extends React.Component {
                       backgroundColor:
                         this.state.page == 2 ? '#fb1b2f' : 'transparent',
                       borderWidth: 1,
-                      borderColor: '#fb1b2f',
+                      borderColor: '#fb1b2f'
                     }}
                   />
                   <View
                     style={{
-                      width: 10,
+                      width: 10
                     }}
                   />
                   <View
@@ -1124,12 +1123,12 @@ export default class CreateAccount3 extends React.Component {
                       backgroundColor:
                         this.state.page == 3 ? '#fb1b2f' : 'transparent',
                       borderWidth: 1,
-                      borderColor: '#fb1b2f',
+                      borderColor: '#fb1b2f'
                     }}
                   />
                   <View
                     style={{
-                      width: 10,
+                      width: 10
                     }}
                   />
                   <View
@@ -1140,18 +1139,18 @@ export default class CreateAccount3 extends React.Component {
                       backgroundColor:
                         this.state.page == 4 ? '#fb1b2f' : 'transparent',
                       borderWidth: 1,
-                      borderColor: '#fb1b2f',
+                      borderColor: '#fb1b2f'
                     }}
                   />
                 </View>
               </View>
-              <View style={{flex: 1}} />
+              <View style={{ flex: 1 }} />
             </View>
             <View
               style={{
                 width: width,
                 alignItems: 'center',
-                marginTop: 30,
+                marginTop: 30
               }}
             >
               <TouchableOpacity
@@ -1163,7 +1162,7 @@ export default class CreateAccount3 extends React.Component {
                   style={{
                     fontFamily: 'OpenSans-Bold',
                     fontSize: sizing.titleViewLesson,
-                    color: '#fb1b2f',
+                    color: '#fb1b2f'
                   }}
                 >
                   SKIP
@@ -1175,7 +1174,7 @@ export default class CreateAccount3 extends React.Component {
             style={{
               height: height,
               width: width,
-              zIndex: 2,
+              zIndex: 2
             }}
           >
             <Text
@@ -1183,7 +1182,7 @@ export default class CreateAccount3 extends React.Component {
                 fontFamily: 'OpenSans-Bold',
                 textAlign: 'center',
                 fontSize: sizing.titleViewLesson,
-                justifyContent: 'center',
+                justifyContent: 'center'
               }}
             >
               You should start with{'\n'}The Pianote Method!
@@ -1192,7 +1191,7 @@ export default class CreateAccount3 extends React.Component {
               style={{
                 height: '4%',
                 borderBottomColor: '#dbdbdb',
-                borderBottomWidth: 0.75,
+                borderBottomWidth: 0.75
               }}
             />
             <View
@@ -1201,31 +1200,31 @@ export default class CreateAccount3 extends React.Component {
                 {
                   height: '57%',
                   width: width,
-                  alignSelf: 'stretch',
-                },
+                  alignSelf: 'stretch'
+                }
               ]}
             >
-              <View style={[styles.centerContent, {flexDirection: 'row'}]}>
-                <View style={{flex: 1}} />
+              <View style={[styles.centerContent, { flexDirection: 'row' }]}>
+                <View style={{ flex: 1 }} />
                 <FastImage
                   style={{
                     height: '17%',
                     width: '65%',
                     borderRadius: 10,
-                    alignSelf: 'stretch',
+                    alignSelf: 'stretch'
                   }}
                   source={require('Pianote2/src/assets/img/imgs/pianote-method-logo.png')}
                   resizeMode={FastImage.resizeMode.contain}
                 />
-                <View style={{flex: 1}} />
+                <View style={{ flex: 1 }} />
               </View>
-              <View style={{flexDirection: 'row', marginTop: 10}}>
+              <View style={{ flexDirection: 'row', marginTop: 10 }}>
                 <FastImage
                   style={{
                     height: (onTablet ? 0.275 : 0.225) * height,
                     width: width * 0.85,
                     borderRadius: 10,
-                    alignSelf: 'stretch',
+                    alignSelf: 'stretch'
                   }}
                   source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
                   resizeMode={FastImage.resizeMode.cover}
@@ -1236,7 +1235,7 @@ export default class CreateAccount3 extends React.Component {
                   fontFamily: 'OpenSans-Bold',
                   paddingVertical: 15,
                   fontSize: sizing.titleViewLesson,
-                  textAlign: 'center',
+                  textAlign: 'center'
                 }}
               >
                 Welcome To{'\n'}The Keyboard
@@ -1246,7 +1245,7 @@ export default class CreateAccount3 extends React.Component {
                   fontFamily: 'OpenSans-Regular',
                   fontSize: sizing.descriptionText,
                   color: 'grey',
-                  textAlign: 'center',
+                  textAlign: 'center'
                 }}
               >
                 Level 1 / Lesson 1 / Lisa Witt
@@ -1256,12 +1255,12 @@ export default class CreateAccount3 extends React.Component {
               style={{
                 height: '3.5%',
                 marginTop: '3%',
-                flexDirection: 'row',
+                flexDirection: 'row'
               }}
             >
-              <View style={{flex: 1}} />
-              <View style={{justifyContent: 'center'}}>
-                <View style={{flexDirection: 'row'}}>
+              <View style={{ flex: 1 }} />
+              <View style={{ justifyContent: 'center' }}>
+                <View style={{ flexDirection: 'row' }}>
                   <View
                     style={{
                       height: 10,
@@ -1270,12 +1269,12 @@ export default class CreateAccount3 extends React.Component {
                       backgroundColor:
                         this.state.page == 1 ? '#fb1b2f' : 'transparent',
                       borderWidth: 1,
-                      borderColor: '#fb1b2f',
+                      borderColor: '#fb1b2f'
                     }}
                   />
                   <View
                     style={{
-                      width: 10,
+                      width: 10
                     }}
                   />
                   <View
@@ -1286,12 +1285,12 @@ export default class CreateAccount3 extends React.Component {
                       backgroundColor:
                         this.state.page == 2 ? '#fb1b2f' : 'transparent',
                       borderWidth: 1,
-                      borderColor: '#fb1b2f',
+                      borderColor: '#fb1b2f'
                     }}
                   />
                   <View
                     style={{
-                      width: 10,
+                      width: 10
                     }}
                   />
                   <View
@@ -1302,12 +1301,12 @@ export default class CreateAccount3 extends React.Component {
                       backgroundColor:
                         this.state.page == 3 ? '#fb1b2f' : 'transparent',
                       borderWidth: 1,
-                      borderColor: '#fb1b2f',
+                      borderColor: '#fb1b2f'
                     }}
                   />
                   <View
                     style={{
-                      width: 10,
+                      width: 10
                     }}
                   />
                   <View
@@ -1318,12 +1317,12 @@ export default class CreateAccount3 extends React.Component {
                       backgroundColor:
                         this.state.page == 4 ? '#fb1b2f' : 'transparent',
                       borderWidth: 1,
-                      borderColor: '#fb1b2f',
+                      borderColor: '#fb1b2f'
                     }}
                   />
                 </View>
               </View>
-              <View style={{flex: 1}} />
+              <View style={{ flex: 1 }} />
             </View>
             <View
               style={{
@@ -1332,10 +1331,10 @@ export default class CreateAccount3 extends React.Component {
                 alignItems: 'center',
                 flexDirection: 'row',
                 marginTop: 15,
-                borderRadius: 30,
+                borderRadius: 30
               }}
             >
-              <View style={{flex: 1}} />
+              <View style={{ flex: 1 }} />
               <TouchableOpacity
                 onPress={() => {
                   this.createAccount();
@@ -1346,21 +1345,21 @@ export default class CreateAccount3 extends React.Component {
                     width: '85%',
                     height: '100%',
                     borderRadius: 30,
-                    backgroundColor: '#fb1b2f',
-                  },
+                    backgroundColor: '#fb1b2f'
+                  }
                 ]}
               >
                 <Text
                   style={{
                     fontFamily: 'RobotoCondensed-Bold',
                     fontSize: onTablet ? 16 : 12,
-                    color: 'white',
+                    color: 'white'
                   }}
                 >
                   GET STARTED
                 </Text>
               </TouchableOpacity>
-              <View style={{flex: 1}} />
+              <View style={{ flex: 1 }} />
             </View>
           </View>
         </ScrollView>
@@ -1376,6 +1375,6 @@ const localStyles = StyleSheet.create({
     borderRadius: 15,
     margin: 20,
     height: 200,
-    width: '80%',
-  },
+    width: '80%'
+  }
 });

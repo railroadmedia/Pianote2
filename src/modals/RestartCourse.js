@@ -4,7 +4,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
@@ -32,7 +32,7 @@ export default class RestartCourse extends React.Component {
   };
 
   render = () => {
-    const {type} = this.props;
+    const { type } = this.props;
     return (
       <TouchableWithoutFeedback
         onPress={() => this.props.hideRestartCourse()}
@@ -84,12 +84,12 @@ const localStyles = StyleSheet.create({
     margin: 50,
     backgroundColor: 'white',
     elevation: 2,
-    paddingTop: 10,
+    paddingTop: 10
   },
   descriptionText: {
     marginTop: 10,
     textAlign: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 20
   },
   restartContainer: {
     backgroundColor: '#fb1b2f',
@@ -98,17 +98,17 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: 20,
     height: DeviceInfo.isTablet() ? 45 : 35,
     alignSelf: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   restartText: {
-    color: 'white',
+    color: 'white'
   },
   cancelContainer: {
     marginTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 20
   },
   cancelText: {
     color: 'grey',
-    marginBottom: 10,
-  },
+    marginBottom: 10
+  }
 });

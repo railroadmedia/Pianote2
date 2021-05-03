@@ -10,22 +10,21 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   KeyboardAvoidingView,
-  BackHandler,
+  BackHandler
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
 import Video from 'RNVideoEnhanced';
 import Modal from 'react-native-modal';
-import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Download_V2, offlineContent, DownloadResources} from 'RNDownload';
+import { Download_V2, offlineContent, DownloadResources } from 'RNDownload';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons.js';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Replies from '../../components/Replies';
 import SoundSlice from '../../components/SoundSlice';
 import VerticalVideoList from '../../components/VerticalVideoList';
@@ -45,14 +44,14 @@ import {
   resetProgress,
   removeFromMyList,
   getMediaSessionId,
-  updateUsersVideoProgress,
+  updateUsersVideoProgress
 } from '../../services/UserActions';
 import ArrowLeft from 'Pianote2/src/assets/img/svgs/arrowLeft';
 import Resources from 'Pianote2/src/assets/img/svgs/resources';
 import Assignment from './Assignment';
-import {NetworkContext} from '../../context/NetworkProvider';
+import { NetworkContext } from '../../context/NetworkProvider';
 import methodService from '../../services/method.service';
-import {goBack, navigate} from '../../../AppNavigator';
+import { goBack, navigate } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -104,7 +103,7 @@ export default class ViewLesson extends React.Component {
       comment: '',
       description: '',
       publishedOn: '',
-      reply: '',
+      reply: ''
     };
   }
 
@@ -115,9 +114,9 @@ export default class ViewLesson extends React.Component {
     this.limit = 10;
     let storage = await Promise.all([
       AsyncStorage.getItem('userId'),
-      AsyncStorage.getItem('profileURI'),
+      AsyncStorage.getItem('profileURI')
     ]);
-    if (storage[1]) this.setState({profileImage: storage[1]});
+    if (storage[1]) this.setState({ profileImage: storage[1] });
     this.userId = JSON.parse(storage[0]);
     this.getContent();
   };
@@ -149,184 +148,102 @@ export default class ViewLesson extends React.Component {
       content = result;
       this.allCommentsNum = result.total_comments;
     }
-    content = new ContentModel(content);
 
-    let relatedLessons = content.post.related_lessons?.map(rl => {
-      return new ContentModel(rl);
-    });
     let al = [];
-    if (content.post.assignments) {
-      let assignments = content.post.assignments.map(assignment => {
-        return new ContentModel(assignment);
-      });
-
-      for (let a in assignments) {
+    if (content.assignments) {
+      for (let i in content.assignments) {
+        let a = content.assignments[i];
         al.push({
-          id: assignments[a].id,
-          title: assignments[a].getField('title'),
-          isCompleted: assignments[a].isCompleted,
-          description: assignments[a]
-            .getData('description')
-            .replace(/(<([^>]+)>)/g, '')
-            .replace(/&nbsp;/g, '')
-            .replace(/&amp;/g, '&')
-            .replace(/&#039;/g, "'")
-            .replace(/&quot;/g, '"')
-            .replace(/&gt;/g, '>')
-            .replace(/&lt;/g, '<'),
-          xp: assignments[a].xp,
-          progress: assignments[a].post.progress_percent,
-          slug: assignments[a].post.fields?.find(
-            f => f.key === 'soundslice_slug',
-          )?.value,
-          timeCodes: assignments[a].post.data
-            .filter(d => d.key === 'timecode')
-            .map(tc => ({value: tc.value})),
-          sheets:
-            assignments[a].post.data
-              .filter(d => d.key === 'sheet_music_image_url')
-              .map(s => ({
-                value: s.value,
-                id: s.id,
-                whRatio: s.whRatio,
-              })) || [],
+          id: a.id,
+          xp: a.xp,
+          index: i,
+          progress:
+            parseInt(Object.values(a.user_progress)?.[0]?.progress_percent) ||
+            0,
+          title: a.title,
+          description: a.description,
+          slug: a.soundslice_slug,
+          sheets: a.sheet_music_image_url,
+          timeCodes: a.timecode
         });
       }
     }
-    let rl = [];
-    if (relatedLessons) {
-      for (let i in relatedLessons) {
-        let duration = relatedLessons[i].post.fields?.find(
-          f => f.key === 'video',
-        )
-          ? new ContentModel(
-              relatedLessons[i].getFieldMulti('video')[0],
-            )?.getField('length_in_seconds')
-          : 0;
-        rl.push({
-          title: relatedLessons[i].getField('title'),
-          thumbnail: relatedLessons[i].getData('thumbnail_url'),
-          type: relatedLessons[i].type,
-          id: relatedLessons[i].id,
-          mobile_app_url: relatedLessons[i].post.mobile_app_url,
-          duration: duration < 60 ? 60 : duration,
-          isAddedToList: relatedLessons[i].isAddedToList,
-          isStarted: relatedLessons[i].isStarted,
-          isCompleted: relatedLessons[i].isCompleted,
-          progress_percent: relatedLessons[i].post.progress_percent,
-        });
-      }
-    }
-    let youtubeId = content.post.fields
-      ?.find(f => f.key === 'video')
-      ?.value?.fields?.find(f => f.key === 'youtube_video_id')?.value;
+
     this.setState(
       {
-        youtubeId,
-        comments: content.post.comments,
+        youtubeId: content.youtube_video_id,
+        comments: content.comments,
         id: content.id,
-        url: content.post.mobile_app_url,
+        url: content.mobile_app_url,
         type: content.type,
-        videoId: content.post.fields?.find(f => f.key === 'video')
-          ? youtubeId
-            ? new ContentModel(content.getFieldMulti('video')[0])?.getField(
-                'youtube_video_id',
-              )
-            : new ContentModel(content.getFieldMulti('video')[0])?.getField(
-                'vimeo_video_id',
-              )
-          : -1,
-        lessonImage: content.getData('thumbnail_url'),
-        lessonTitle: content.getField('title'),
-        style:
-          content.post.type === 'song-part' && content.post.parent
-            ? `${new ContentModel(content.post.parent)
-                .getField('style')
-                .toUpperCase()} | `
-            : '',
+        videoId: content.vimeo_video_id,
+        lessonImage: content.thumbnail_url,
+        lessonTitle: content.title,
+        style: content.style,
         description:
-          content.post.type === 'song-part' && content.post.parent
-            ? new ContentModel(content.post.parent)
-                .getField('instructor')
-                ?.data?.find(d => d.key === 'biography')?.value
-            : content
-                .getData('description')
-                .replace(/(<([^>]+)>)/g, '')
-                .replace(/&nbsp;/g, '')
-                .replace(/&amp;/g, '&')
-                .replace(/&#039;/g, "'")
-                .replace(/&quot;/g, '"')
-                .replace(/&gt;/g, '>')
-                .replace(/&lt;/g, '<'),
-        chapters: content.post.chapters,
-        xp: content.post.total_xp,
-        artist:
-          content.post.type === 'song-part' && content.post.parent
-            ? new ContentModel(content.post.parent).getField('artist')
-            : content.getField('artist'),
-        instructor: content.post.instructors,
+          content.type === 'song-part'
+            ? content.instructor.map(i => i.biography)
+            : content.description,
+        chapters: content.chapters,
+        xp: content.xp,
+        artist: content.artist,
+        instructor: content.instructor,
         isLoadingAll: false,
-        publishedOn: content.publishedOn,
-        relatedLessons: rl,
-        likes: parseInt(content.likeCount),
-        isLiked: content.post.is_liked_by_current_user,
-        lengthInSec: content.post.fields?.find(f => f.key === 'video')
-          ? new ContentModel(content.getFieldMulti('video')[0])?.getField(
-              'length_in_seconds',
-            )
-          : 0,
-        lastWatchedPosInSec: content.post.last_watch_position_in_seconds,
+        publishedOn: content.published_on,
+        relatedLessons: content.related_lessons,
+        likes: parseInt(content.like_count),
+        isLiked: content.is_liked_by_current_user,
+        lengthInSec: content.length_in_seconds,
+        lastWatchedPosInSec: content.last_watch_position_in_seconds,
         progress:
           parseInt(
-            Object.values(content.post.user_progress)?.[0].progress_percent,
+            Object.values(content.user_progress)?.[0].progress_percent
           ) || 0,
-        isAddedToMyList: content.isAddedToList,
-        isStarted: content.isStarted,
+        isAddedToMyList: content.is_added_to_primary_playlist,
+        isStarted: content.started,
         assignmentList: al,
-        nextLesson: content.post.next_lesson
-          ? new ContentModel(content.post.next_lesson)
-          : null,
-        previousLesson: content.post.previous_lesson
-          ? new ContentModel(content.post.previous_lesson)
-          : null,
-        mp3s: content.post.mp3s || [],
-        video_playback_endpoints: content.post.video_playback_endpoints,
-        nextLessonId: content?.post?.next_lesson?.id,
-        previousLessonId: content?.post?.previous_lesson?.id,
-        nextLessonUrl: content?.post?.next_lesson?.mobile_app_url,
-        previousLessonUrl: content?.post?.previous_lesson?.mobile_app_url,
+        nextLesson: content.next_lesson,
+        previousLesson: content.previous_lesson,
+        mp3s: content.mp3s || [],
+        video_playback_endpoints: content.video_playback_endpoints,
+        nextLessonId: content.next_lesson?.id,
+        previousLessonId: content.previous_lesson?.id,
+        nextLessonUrl: content.next_lesson?.mobile_app_url,
+        previousLessonUrl: content.previous_lesson?.mobile_app_url,
         resources:
-          content.post.resources && content.post.resources.length > 0
-            ? Object.keys(content.post.resources).map(key => {
-                return content.post.resources[key];
+          content.resources && content.resources.length > 0
+            ? Object.keys(content.resources).map(key => {
+                return content.resources[key];
               })
-            : undefined,
+            : undefined
       },
       async () => {
         if (this.state.resources) this.createResourcesArr();
         if (!this.state.video_playback_endpoints && !this.state.youtubeId) {
           this.alert?.toggle(
             `We're sorry, there was an issue loading this video, try reloading the lesson.`,
-            `If the problem persists please contact support.`,
+            `If the problem persists please contact support.`
           );
         }
-        const {comment, commentId} = this.props.route?.params;
+        const { comment, commentId } = this.props.route?.params;
         if (comment)
-          this.replies?.toggle(() => this.setState({selectedComment: comment}));
+          this.replies?.toggle(() =>
+            this.setState({ selectedComment: comment })
+          );
         else if (commentId) {
           const comments = (
             await commentsService.getComments(this.state.id, 'Mine')
           ).data;
           const selectedComment = comments?.find(f => f.id == commentId);
           if (selectedComment)
-            this.replies?.toggle(() => this.setState({selectedComment}));
+            this.replies?.toggle(() => this.setState({ selectedComment }));
         }
-      },
+      }
     );
   };
 
   createResourcesArr() {
-    const {resources} = this.state;
+    const { resources } = this.state;
     const extensions = ['mp3', 'pdf', 'zip'];
 
     resources.forEach(resource => {
@@ -336,7 +253,7 @@ export default class ViewLesson extends React.Component {
         fetch(resource.resource_url)
           .then(res => {
             extension = this.getExtensionByType(
-              res?.headers?.map['content-type'],
+              res?.headers?.map['content-type']
             );
             this.setState({
               resources: this.state.resources.map(r =>
@@ -344,18 +261,18 @@ export default class ViewLesson extends React.Component {
                   ? {
                       ...r,
                       extension,
-                      wasWithoutExtension: true,
+                      wasWithoutExtension: true
                     }
-                  : r,
-              ),
+                  : r
+              )
             });
           })
           .catch(e => {});
       } else {
         this.setState({
           resources: this.state.resources.map(r =>
-            r.resource_id === resource.resource_id ? {...r, extension} : r,
-          ),
+            r.resource_id === resource.resource_id ? { ...r, extension } : r
+          )
         });
       }
     });
@@ -375,9 +292,11 @@ export default class ViewLesson extends React.Component {
   };
 
   onBack = () => {
-    const {commentId} = this.props.route?.params;
+    const { commentId } = this.props.route?.params;
     if (commentId) {
       navigate('LESSONS');
+    } else if (this.state.selectedComment) {
+      this.replies?.toggle(() => this.setState({ selectedComment: undefined }));
     } else {
       goBack();
     }
@@ -388,19 +307,17 @@ export default class ViewLesson extends React.Component {
     let comments = await commentsService.getComments(
       id || this.state.id,
       this.state.commentSort,
-      this.limit,
+      this.limit
     );
 
     this.allCommentsNum = comments.meta.totalResults;
     this.setState(state => ({
       comments:
-        this.limit === 10
-          ? comments.data
-          : state.comments.concat(comments.data),
+        this.limit === 10 ? comments.data : state.comments.concat(comments.data)
     }));
   };
 
-  isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+  isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
     const paddingToBottom = 40;
     return (
       layoutMeasurement.height + contentOffset.y >=
@@ -422,9 +339,9 @@ export default class ViewLesson extends React.Component {
         url,
         isLoadingAll: true,
         resources: null,
-        selectedAssignment: null,
+        selectedAssignment: null
       },
-      () => this.getContent(),
+      () => this.getContent()
     );
   }
 
@@ -455,30 +372,30 @@ export default class ViewLesson extends React.Component {
         comment.is_liked = true;
         commentsService.likeComment(id);
       }
-      this.setState({comments});
+      this.setState({ comments });
     }
   };
 
   makeComment = async () => {
-    if (!this.state.comment) return this.setState({showMakeComment: false});
+    if (!this.state.comment) return this.setState({ showMakeComment: false });
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    this.setState({comment: '', isLoadingComm: true, showMakeComment: false});
+    this.setState({ comment: '', isLoadingComm: true, showMakeComment: false });
     commentsService
       .addComment(encodeURIComponent(this.state.comment), this.state.id)
       .then(r =>
-        this.setState(({comments}) => ({
+        this.setState(({ comments }) => ({
           isLoadingComm: false,
-          comments: [r.data[0], ...comments],
-        })),
+          comments: [r.data[0], ...comments]
+        }))
       );
   };
 
   deleteComment = id => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    let {comments} = this.state;
+    let { comments } = this.state;
     this.allCommentsNum -= 1;
     this.setState({
-      comments: comments.filter(c => c.id !== id),
+      comments: comments.filter(c => c.id !== id)
     });
     commentsService.deleteComment(id);
   };
@@ -494,14 +411,14 @@ export default class ViewLesson extends React.Component {
           borderTopWidth: 0.25,
           flexDirection: 'row',
           paddingTop: 10,
-          paddingHorizontal: 10,
+          paddingHorizontal: 10
         }}
       >
         <View
           style={{
             alignItems: 'center',
             justifyContent: 'flex-start',
-            paddingBottom: 10,
+            paddingBottom: 10
           }}
         >
           <FastImage
@@ -509,10 +426,10 @@ export default class ViewLesson extends React.Component {
               height: onTablet ? 60 : 40,
               width: onTablet ? 60 : 40,
               borderRadius: 100,
-              marginTop: 10,
+              marginTop: 10
             }}
             source={{
-              uri: item.user['fields.profile_picture_image_url'],
+              uri: item.user['fields.profile_picture_image_url']
             }}
             resizeMode={FastImage.resizeMode.stretch}
           />
@@ -522,20 +439,20 @@ export default class ViewLesson extends React.Component {
               fontSize: onTablet ? 15 : 12,
               paddingTop: 5,
               fontWeight: 'bold',
-              color: colors.pianoteGrey,
+              color: colors.pianoteGrey
             }}
           >
             {this.changeXP(item.user.xp)}
           </Text>
         </View>
 
-        <View style={{flex: 1, paddingLeft: 10}}>
+        <View style={{ flex: 1, paddingLeft: 10 }}>
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
               fontSize: sizing.descriptionText,
               color: 'white',
-              paddingTop: 10,
+              paddingTop: 10
             }}
           >
             {item.comment}
@@ -547,7 +464,7 @@ export default class ViewLesson extends React.Component {
               fontSize: sizing.descriptionText,
               color: colors.secondBackground,
               paddingTop: 5,
-              paddingBottom: 10,
+              paddingBottom: 10
             }}
           >
             {item.user['display_name']} | {item.user.rank} |{' '}
@@ -556,13 +473,13 @@ export default class ViewLesson extends React.Component {
           <View
             style={{
               paddingBottom: 15,
-              paddingTop: 5,
+              paddingTop: 5
             }}
           >
-            <View style={{flexDirection: 'row'}}>
-              <View style={{flexDirection: 'row', marginRight: 15}}>
+            <View style={{ flexDirection: 'row' }}>
+              <View style={{ flexDirection: 'row', marginRight: 15 }}>
                 <TouchableOpacity
-                  style={{marginRight: 10}}
+                  style={{ marginRight: 10 }}
                   onPress={() => this.likeComment(item.id)}
                 >
                   <AntIcon
@@ -577,7 +494,7 @@ export default class ViewLesson extends React.Component {
                       borderRadius: 40,
                       backgroundColor: colors.notificationColor,
                       alignItems: 'center',
-                      justifyContent: 'center',
+                      justifyContent: 'center'
                     }}
                   >
                     <Text
@@ -585,7 +502,7 @@ export default class ViewLesson extends React.Component {
                         fontFamily: 'OpenSans-Regular',
                         fontSize: sizing.descriptionText,
                         color: colors.pianoteRed,
-                        paddingHorizontal: 5,
+                        paddingHorizontal: 5
                       }}
                     >
                       {item.like_count}{' '}
@@ -594,15 +511,15 @@ export default class ViewLesson extends React.Component {
                   </View>
                 )}
               </View>
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <TouchableOpacity
                   style={{
                     marginRight: 10,
-                    marginLeft: -2.5,
+                    marginLeft: -2.5
                   }}
                   onPress={() =>
                     this.replies?.toggle(() =>
-                      this.setState({selectedComment: item}),
+                      this.setState({ selectedComment: item })
                     )
                   }
                 >
@@ -618,7 +535,7 @@ export default class ViewLesson extends React.Component {
                       borderRadius: 40,
                       backgroundColor: colors.notificationColor,
                       alignItems: 'center',
-                      justifyContent: 'center',
+                      justifyContent: 'center'
                     }}
                   >
                     <Text
@@ -626,7 +543,7 @@ export default class ViewLesson extends React.Component {
                         fontFamily: 'OpenSans-Regular',
                         fontSize: sizing.descriptionText,
                         color: colors.pianoteRed,
-                        paddingHorizontal: 5,
+                        paddingHorizontal: 5
                       }}
                     >
                       {item.replies?.length}{' '}
@@ -637,7 +554,7 @@ export default class ViewLesson extends React.Component {
               </View>
               {this.userId === item.user_id && (
                 <TouchableOpacity
-                  style={{marginLeft: 10}}
+                  style={{ marginLeft: 10 }}
                   onPress={() => this.deleteComment(item.id)}
                 >
                   <AntIcon
@@ -653,7 +570,7 @@ export default class ViewLesson extends React.Component {
             <TouchableOpacity
               onPress={() =>
                 this.replies?.toggle(() =>
-                  this.setState({selectedComment: item}),
+                  this.setState({ selectedComment: item })
                 )
               }
             >
@@ -662,7 +579,7 @@ export default class ViewLesson extends React.Component {
                   fontFamily: 'OpenSans-Regular',
                   fontSize: sizing.descriptionText,
                   color: colors.secondBackground,
-                  marginBottom: 10,
+                  marginBottom: 10
                 }}
               >
                 VIEW {item.replies?.length}{' '}
@@ -690,49 +607,49 @@ export default class ViewLesson extends React.Component {
   };
 
   refresh = () => {
-    this.setState({isLoadingAll: true}, () => {
+    this.setState({ isLoadingAll: true }, () => {
       this.getContent();
     });
   };
 
   async onResetProgress() {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    let {selectedAssignment, id} = this.state;
+    let { selectedAssignment, id } = this.state;
     id = selectedAssignment ? selectedAssignment.id : id;
     let res = await resetProgress(id);
     this.setState(state => ({
       showRestartCourse: false,
       selectedAssignment: state.selectedAssignment
-        ? {...state.selectedAssignment, progress: 0}
+        ? { ...state.selectedAssignment, progress: 0 }
         : undefined,
       assignmentList: !selectedAssignment
         ? state.assignmentList.map(a => ({
             ...a,
-            progress: 0,
+            progress: 0
           }))
         : state.assignmentList.map(a =>
             a.id === id
               ? {
                   ...a,
-                  progress: 0,
+                  progress: 0
                 }
-              : a,
+              : a
           ),
       progress: !selectedAssignment
         ? 0
-        : res[0].type !== 'course'
-        ? res[0].user_progress?.[this.userId]?.progress_percent
-        : state.progress,
+        : res.type !== 'course'
+        ? res.user_progress?.[this.userId]?.progress_percent
+        : state.progress
     }));
   }
 
   async onComplete(id) {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let incompleteAssignments;
-    let {assignmentList, nextLesson} = this.state;
+    let { assignmentList, nextLesson } = this.state;
     if (id !== this.state.id) {
       incompleteAssignments = assignmentList.filter(
-        a => a.progress !== 100 && a.id !== id,
+        a => a.progress !== 100 && a.id !== id
       ).length;
       this.setState(state => ({
         showAssignmentComplete: incompleteAssignments ? true : false,
@@ -742,16 +659,16 @@ export default class ViewLesson extends React.Component {
         progress: incompleteAssignments ? state.progress : 100,
         selectedAssignment: {
           ...this.state.selectedAssignment,
-          progress: 100,
+          progress: 100
         },
         assignmentList: state.assignmentList.map(a =>
           a.id === id
             ? {
                 ...a,
-                progress: 100,
+                progress: 100
               }
-            : a,
-        ),
+            : a
+        )
       }));
     } else {
       this.setState(state => ({
@@ -760,15 +677,16 @@ export default class ViewLesson extends React.Component {
         progress: 100,
         assignmentList: state.assignmentList.map(a => ({
           ...a,
-          progress: 100,
-        })),
+          progress: 100
+        }))
       }));
     }
     let res = await markComplete(id);
-    if (res?.parent?.[0]) {
-      if (res.parent[0].type !== 'course') {
+    if (res?.parent) {
+      if (res.parent.type !== 'course') {
         this.setState({
-          progress: res.parent[0].progress_percent,
+          progress: Object.values(res.parent.user_progress)?.[0]
+            .progress_percent
         });
       }
     }
@@ -781,7 +699,7 @@ export default class ViewLesson extends React.Component {
       : likeContent(this.state.id);
     this.setState({
       isLiked: !this.state.isLiked,
-      likes: this.state.isLiked ? this.state.likes - 1 : this.state.likes + 1,
+      likes: this.state.isLiked ? this.state.likes - 1 : this.state.likes + 1
     });
   };
 
@@ -790,7 +708,7 @@ export default class ViewLesson extends React.Component {
     this.state.isAddedToMyList
       ? removeFromMyList(this.state.id)
       : addToMyList(this.state.id);
-    this.setState({isAddedToMyList: !this.state.isAddedToMyList});
+    this.setState({ isAddedToMyList: !this.state.isAddedToMyList });
   };
 
   renderAssignments() {
@@ -801,7 +719,7 @@ export default class ViewLesson extends React.Component {
           onPress={() => {
             let assignment = row;
             assignment.index = index + 1;
-            this.setState({selectedAssignment: assignment});
+            this.setState({ selectedAssignment: assignment });
           }}
           style={{
             paddingHorizontal: 10,
@@ -810,7 +728,7 @@ export default class ViewLesson extends React.Component {
             borderBottomWidth: 1,
             justifyContent: 'space-between',
             alignItems: 'center',
-            flexDirection: 'row',
+            flexDirection: 'row'
           }}
         >
           <Text
@@ -819,7 +737,7 @@ export default class ViewLesson extends React.Component {
               fontSize: sizing.verticalListTitleSmall,
               color: colors.secondBackground,
               fontFamily: 'RobotoCondensed-Bold',
-              maxWidth: '90%',
+              maxWidth: '90%'
             }}
           >
             {index + 1}. {row.title}
@@ -829,14 +747,14 @@ export default class ViewLesson extends React.Component {
             <AntIcon
               name={'checkcircle'}
               size={onTablet ? 25 : 20}
-              style={{paddingVertical: 5}}
+              style={{ paddingVertical: 5 }}
               color={colors.pianoteRed}
             />
           ) : (
             <EntypoIcon
               name={'chevron-thin-right'}
               size={onTablet ? 25 : 20}
-              style={{paddingVertical: 5}}
+              style={{ paddingVertical: 5 }}
               color={colors.secondBackground}
             />
           )}
@@ -858,7 +776,7 @@ export default class ViewLesson extends React.Component {
       'September',
       'October',
       'November',
-      'December',
+      'December'
     ];
     try {
       let text =
@@ -877,22 +795,23 @@ export default class ViewLesson extends React.Component {
   };
 
   renderTagsDependingOnContentType = () => {
-    let {artist, xp, type, publishedOn, instructor, style} = this.state;
-    if (typeof instructor[0] == 'object') {
-      instructor = [instructor[0]?.fields?.[0]?.value];
-    }
+    let { artist, xp, type, publishedOn, instructor, style } = this.state;
 
     let releaseDate = this.transformDate(publishedOn);
     let releaseDateTag = releaseDate ? `${releaseDate} | ` : '';
+    let styleTag = style ? `${style.toUpperCase()} | ` : '';
     let artistTag = artist ? `${artist.toUpperCase()} | ` : '';
     let xpTag = `${xp || 0} XP`;
     let instructorTag = instructor
-      ? `${instructor.join(',').toUpperCase()} | `
+      ? `${instructor
+          .map(i => i.name)
+          .join(',')
+          .toUpperCase()} | `
       : '';
 
     switch (type) {
       case 'song-part':
-        return artistTag + style + xpTag;
+        return artistTag + styleTag + xpTag;
       case 'song':
         return artistTag + xpTag;
       case 'course-part':
@@ -918,15 +837,15 @@ export default class ViewLesson extends React.Component {
   };
 
   render() {
-    let {id, comments, youtubeId} = this.state;
+    let { id, comments, youtubeId } = this.state;
     return (
       <View
         style={[
           {
             backgroundColor: colors.mainBackground,
             width: '100%',
-            height: '100%',
-          },
+            height: '100%'
+          }
         ]}
       >
         <StatusBar backgroundColor={'black'} barStyle={'light-content'} />
@@ -934,8 +853,8 @@ export default class ViewLesson extends React.Component {
           <>
             {this.state.isLoadingAll ||
             (!this.state.video_playback_endpoints && !youtubeId) ? (
-              <View style={{backgroundColor: 'black'}}>
-                <View style={{aspectRatio: 16 / 9, justifyContent: 'center'}}>
+              <View style={{ backgroundColor: 'black' }}>
+                <View style={{ aspectRatio: 16 / 9, justifyContent: 'center' }}>
                   <TouchableOpacity
                     onPress={() => this.onBack()}
                     style={{
@@ -943,7 +862,7 @@ export default class ViewLesson extends React.Component {
                       left: 0,
                       padding: 15,
                       position: 'absolute',
-                      justifyContent: 'center',
+                      justifyContent: 'center'
                     }}
                   >
                     <ArrowLeft
@@ -952,7 +871,7 @@ export default class ViewLesson extends React.Component {
                       fill={'white'}
                     />
                   </TouchableOpacity>
-                  <ActivityIndicator size="large" color="#ffffff" />
+                  <ActivityIndicator size='large' color='#ffffff' />
                 </View>
               </View>
             ) : (
@@ -974,14 +893,14 @@ export default class ViewLesson extends React.Component {
                   if (this.state.nextLesson)
                     this.switchLesson(
                       this.state.nextLesson.id,
-                      this.state.nextLesson.post.mobile_app_url,
+                      this.state.nextLesson.mobile_app_url
                     );
                 }}
                 goToPreviousLesson={() => {
                   if (this.state.previousLesson)
                     this.switchLesson(
                       this.state.previousLesson.id,
-                      this.state.previousLesson.post.mobile_app_url,
+                      this.state.previousLesson.mobile_app_url
                     );
                 }}
                 onUpdateVideoProgress={async (
@@ -989,7 +908,7 @@ export default class ViewLesson extends React.Component {
                   id,
                   lengthInSec,
                   currentTime,
-                  mediaCategory,
+                  mediaCategory
                 ) => {
                   if (!this.context.isConnected) return;
                   updateUsersVideoProgress(
@@ -998,11 +917,11 @@ export default class ViewLesson extends React.Component {
                         videoId,
                         id,
                         lengthInSec,
-                        mediaCategory,
+                        mediaCategory
                       )
                     )?.session_id.id,
                     currentTime,
-                    lengthInSec,
+                    lengthInSec
                   );
                 }}
                 styles={{
@@ -1010,7 +929,7 @@ export default class ViewLesson extends React.Component {
                   beforeTimerCursorBackground: colors.pianoteRed,
                   settings: {
                     cancel: {
-                      color: 'black',
+                      color: 'black'
                     },
                     separatorColor: 'rgb(230, 230, 230)',
                     background: 'white',
@@ -1018,9 +937,9 @@ export default class ViewLesson extends React.Component {
                     downloadIcon: {
                       width: 20,
                       height: 20,
-                      fill: colors.pianoteRed,
-                    },
-                  },
+                      fill: colors.pianoteRed
+                    }
+                  }
                 }}
               />
             )}
@@ -1028,8 +947,8 @@ export default class ViewLesson extends React.Component {
         )}
 
         {!this.state.isLoadingAll ? (
-          <View style={{flex: 1, backgroundColor: colors.mainBackground}}>
-            <View key={'belowVideo'} style={{flex: 1}}>
+          <View style={{ flex: 1, backgroundColor: colors.mainBackground }}>
+            <View key={'belowVideo'} style={{ flex: 1 }}>
               {this.state.selectedAssignment ? (
                 <Assignment
                   onSeek={time => this.video?.onSeek?.(time)}
@@ -1037,18 +956,18 @@ export default class ViewLesson extends React.Component {
                   assignmentProgress={this.state.selectedAssignment.progress}
                   onAssignmentFullscreen={() =>
                     this.setState({
-                      showVideo: !this.state.showVideo,
+                      showVideo: !this.state.showVideo
                     })
                   }
                   onX={() =>
                     this.setState({
-                      selectedAssignment: null,
+                      selectedAssignment: null
                     })
                   }
                   onCompleteAssignment={() => {
                     if (this.state.selectedAssignment.progress === 100) {
                       this.setState({
-                        showRestartCourse: true,
+                        showRestartCourse: true
                       });
                     } else {
                       this.onComplete(this.state.selectedAssignment.id);
@@ -1060,16 +979,16 @@ export default class ViewLesson extends React.Component {
                   innerRef={ref => {
                     this.scroll = ref;
                   }}
-                  keyboardShouldPersistTaps="handled"
+                  keyboardShouldPersistTaps='handled'
                   removeClippedSubviews={false}
                   showsVerticalScrollIndicator={false}
                   contentInsetAdjustmentBehavior={'never'}
-                  onScroll={({nativeEvent}) => {
+                  onScroll={({ nativeEvent }) => {
                     if (!isiOS && this.isCloseToBottom(nativeEvent)) {
                       this.loadMoreComments();
                     }
                   }}
-                  onMomentumScrollEnd={({nativeEvent}) => {
+                  onMomentumScrollEnd={({ nativeEvent }) => {
                     if (isiOS && this.isCloseToBottom(nativeEvent)) {
                       this.loadMoreComments();
                     }
@@ -1081,7 +1000,7 @@ export default class ViewLesson extends React.Component {
                       onRefresh={() => this.refresh()}
                     />
                   }
-                  style={{flex: 1, backgroundColor: colors.mainBackground}}
+                  style={{ flex: 1, backgroundColor: colors.mainBackground }}
                 >
                   <Text
                     style={{
@@ -1091,7 +1010,7 @@ export default class ViewLesson extends React.Component {
                       fontFamily: 'OpenSans-Bold',
                       textAlign: 'center',
                       color: 'white',
-                      paddingHorizontal: 10,
+                      paddingHorizontal: 10
                     }}
                   >
                     {this.state.lessonTitle}
@@ -1102,23 +1021,23 @@ export default class ViewLesson extends React.Component {
                       fontFamily: 'OpenSans-Regular',
                       textAlign: 'center',
                       color: colors.secondBackground,
-                      paddingBottom: 20,
+                      paddingBottom: 20
                     }}
                   >
                     {this.renderTagsDependingOnContentType()}
                   </Text>
-                  <View style={{paddingHorizontal: 10}}>
+                  <View style={{ paddingHorizontal: 10 }}>
                     <View
                       style={{
                         flex: 1,
                         flexDirection: 'row',
                         justifyContent: 'space-around',
-                        alignContent: 'space-around',
+                        alignContent: 'space-around'
                       }}
                     >
                       <TouchableOpacity
                         onPress={this.likeOrDislikeLesson}
-                        style={{flex: 1, alignItems: 'center'}}
+                        style={{ flex: 1, alignItems: 'center' }}
                       >
                         <AntIcon
                           name={this.state.isLiked ? 'like1' : 'like2'}
@@ -1130,7 +1049,7 @@ export default class ViewLesson extends React.Component {
                             textAlign: 'center',
                             fontSize: sizing.descriptionText,
                             color: 'white',
-                            marginTop: 5,
+                            marginTop: 5
                           }}
                         >
                           {this.state.likes}
@@ -1138,7 +1057,7 @@ export default class ViewLesson extends React.Component {
                       </TouchableOpacity>
                       <TouchableOpacity
                         onPress={this.toggleMyList}
-                        style={{flex: 1, alignItems: 'center'}}
+                        style={{ flex: 1, alignItems: 'center' }}
                       >
                         <AntIcon
                           name={this.state.isAddedToMyList ? 'close' : 'plus'}
@@ -1150,7 +1069,7 @@ export default class ViewLesson extends React.Component {
                             textAlign: 'center',
                             fontSize: sizing.descriptionText,
                             color: 'white',
-                            marginTop: 2,
+                            marginTop: 2
                           }}
                         >
                           {this.state.isAddedToMyList ? 'Added' : 'My List'}
@@ -1160,10 +1079,10 @@ export default class ViewLesson extends React.Component {
                         <TouchableOpacity
                           onPress={() =>
                             this.setState({
-                              showResDownload: true,
+                              showResDownload: true
                             })
                           }
-                          style={{flex: 1, alignItems: 'center'}}
+                          style={{ flex: 1, alignItems: 'center' }}
                         >
                           <Resources
                             height={sizing.infoButtonSize}
@@ -1175,7 +1094,7 @@ export default class ViewLesson extends React.Component {
                               textAlign: 'center',
                               fontSize: sizing.descriptionText,
                               color: 'white',
-                              marginTop: 5,
+                              marginTop: 5
                             }}
                           >
                             Resources
@@ -1188,13 +1107,13 @@ export default class ViewLesson extends React.Component {
                           comments,
                           content: this.props.route?.params?.url
                             ? methodService.getMethodContent(this.state.url)
-                            : contentService.getContent(this.state.id),
+                            : contentService.getContent(this.state.id)
                         }}
                         styles={{
-                          touchable: {flex: 1},
+                          touchable: { flex: 1 },
                           iconSize: {
                             width: sizing.myListButtonSize,
-                            height: sizing.myListButtonSize,
+                            height: sizing.myListButtonSize
                           },
                           iconDownloadColor: colors.pianoteRed,
                           activityIndicatorColor: colors.pianoteRed,
@@ -1202,7 +1121,7 @@ export default class ViewLesson extends React.Component {
                           textStatus: {
                             color: '#ffffff',
                             fontSize: sizing.descriptionText,
-                            fontFamily: 'OpenSans-Regular',
+                            fontFamily: 'OpenSans-Regular'
                           },
                           alert: {
                             alertTextMessageFontFamily: 'OpenSans-Regular',
@@ -1214,19 +1133,19 @@ export default class ViewLesson extends React.Component {
                             alertTouchableDeleteBackground: colors.pianoteRed,
                             alertBackground: 'white',
                             alertTouchableTextDeleteFontFamily: 'OpenSans-Bold',
-                            alertTouchableTextCancelFontFamily: 'OpenSans-Bold',
-                          },
+                            alertTouchableTextCancelFontFamily: 'OpenSans-Bold'
+                          }
                         }}
                       />
                       <TouchableOpacity
                         onPress={() =>
                           this.setState({
-                            showInfo: !this.state.showInfo,
+                            showInfo: !this.state.showInfo
                           })
                         }
                         style={{
                           flex: 1,
-                          alignItems: 'center',
+                          alignItems: 'center'
                         }}
                       >
                         <AntIcon
@@ -1241,7 +1160,7 @@ export default class ViewLesson extends React.Component {
                             textAlign: 'center',
                             fontSize: sizing.descriptionText,
                             color: 'white',
-                            marginTop: 5,
+                            marginTop: 5
                           }}
                         >
                           Info
@@ -1259,7 +1178,7 @@ export default class ViewLesson extends React.Component {
                             fontFamily: 'OpenSans-Regular',
                             fontSize: sizing.descriptionText,
                             textAlign: 'left',
-                            color: 'white',
+                            color: 'white'
                           }}
                         >
                           {this.state.description}
@@ -1268,7 +1187,7 @@ export default class ViewLesson extends React.Component {
                           <TouchableOpacity
                             style={{
                               alignSelf: 'flex-start',
-                              paddingVertical: 5,
+                              paddingVertical: 5
                             }}
                             onPress={() =>
                               this.video?.onSeek?.(item.chapter_timecode)
@@ -1281,13 +1200,13 @@ export default class ViewLesson extends React.Component {
                                 fontSize: sizing.descriptionText,
                                 marginTop: 5,
                                 paddingHorizontal: 10,
-                                textAlign: 'left',
+                                textAlign: 'left'
                               }}
                             >
                               <Text
                                 style={{
                                   color: '#007AFF',
-                                  textDecorationLine: 'underline',
+                                  textDecorationLine: 'underline'
                                 }}
                               >
                                 {this.secondsToTime(item.chapter_timecode)}
@@ -1300,18 +1219,18 @@ export default class ViewLesson extends React.Component {
                     )}
                   </View>
                   {this.state.assignmentList?.length > 0 && (
-                    <View style={{marginTop: 20, marginBottom: 10}}>
+                    <View style={{ marginTop: 20, marginBottom: 10 }}>
                       <View
                         style={{
                           paddingLeft: 10,
-                          paddingBottom: 10,
+                          paddingBottom: 10
                         }}
                       >
                         <Text
                           style={{
                             fontSize: sizing.verticalListTitleSmall,
                             fontFamily: 'RobotoCondensed-Bold',
-                            color: colors.secondBackground,
+                            color: colors.secondBackground
                           }}
                         >
                           ASSIGNMENTS
@@ -1322,7 +1241,7 @@ export default class ViewLesson extends React.Component {
                         style={{
                           width: '100%',
                           borderTopColor: colors.secondBackground,
-                          borderTopWidth: 1,
+                          borderTopWidth: 1
                         }}
                       >
                         {this.renderAssignments()}
@@ -1330,7 +1249,7 @@ export default class ViewLesson extends React.Component {
                     </View>
                   )}
                   {this.state.relatedLessons.length > 0 && (
-                    <View style={{marginTop: 10}}>
+                    <View style={{ marginTop: 10 }}>
                       <VerticalVideoList
                         title={'RELATED LESSONS'}
                         items={this.state.relatedLessons}
@@ -1357,16 +1276,16 @@ export default class ViewLesson extends React.Component {
                         flex: 1,
                         width: '100%',
                         zIndex: 10,
-                        marginTop: 10,
-                      },
+                        marginTop: 10
+                      }
                     ]}
                   >
-                    <View style={{flex: 1}}>
+                    <View style={{ flex: 1 }}>
                       <View
                         style={{
                           width: '100%',
                           backgroundColor: colors.mainBackground,
-                          zIndex: 5,
+                          zIndex: 5
                         }}
                       >
                         <View
@@ -1374,14 +1293,14 @@ export default class ViewLesson extends React.Component {
                             flexDirection: 'row',
                             flex: 1,
                             justifyContent: 'space-between',
-                            paddingHorizontal: 10,
+                            paddingHorizontal: 10
                           }}
                         >
                           <Text
                             style={{
                               fontSize: sizing.verticalListTitleSmall,
                               fontFamily: 'RobotoCondensed-Bold',
-                              color: colors.secondBackground,
+                              color: colors.secondBackground
                             }}
                           >
                             {this.allCommentsNum + ' COMMENTS'}
@@ -1389,7 +1308,7 @@ export default class ViewLesson extends React.Component {
                           {this.context.isConnected && (
                             <TouchableOpacity
                               onPress={() =>
-                                this.setState({showCommentSort: true})
+                                this.setState({ showCommentSort: true })
                               }
                             >
                               <FontIcon
@@ -1406,26 +1325,26 @@ export default class ViewLesson extends React.Component {
                             width: '100%',
                             flexDirection: 'row',
                             paddingHorizontal: 10,
-                            paddingVertical: 20,
+                            paddingVertical: 20
                           }}
                         >
                           <TouchableOpacity
                             onPress={() =>
-                              this.setState({showMakeComment: true})
+                              this.setState({ showMakeComment: true })
                             }
-                            style={{flexDirection: 'row', flex: 1}}
+                            style={{ flexDirection: 'row', flex: 1 }}
                           >
                             <FastImage
                               style={{
                                 height: onTablet ? 60 : 40,
                                 width: onTablet ? 60 : 40,
                                 paddingVertical: 10,
-                                borderRadius: 100,
+                                borderRadius: 100
                               }}
                               source={{
                                 uri:
                                   this.state.profileImage ||
-                                  'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png',
+                                  'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
                               }}
                               resizeMode={FastImage.resizeMode.stretch}
                             />
@@ -1433,7 +1352,7 @@ export default class ViewLesson extends React.Component {
                             <View
                               style={{
                                 flex: 1,
-                                justifyContent: 'center',
+                                justifyContent: 'center'
                               }}
                             >
                               <Text
@@ -1442,7 +1361,7 @@ export default class ViewLesson extends React.Component {
                                   fontFamily: 'OpenSans-Regular',
                                   fontSize: sizing.descriptionText,
                                   color: 'white',
-                                  paddingLeft: 10,
+                                  paddingLeft: 10
                                 }}
                               >
                                 Add a comment...
@@ -1453,8 +1372,8 @@ export default class ViewLesson extends React.Component {
                       </View>
                       {this.state.isLoadingComm && (
                         <ActivityIndicator
-                          size="small"
-                          style={{padding: 10}}
+                          size='small'
+                          style={{ padding: 10 }}
                           color={colors.secondBackground}
                         />
                       )}
@@ -1470,53 +1389,53 @@ export default class ViewLesson extends React.Component {
                 commentsService
                   .addReplyToComment(
                     encodeURIComponent(reply),
-                    this.state.selectedComment.id,
+                    this.state.selectedComment.id
                   )
                   .then(r =>
-                    this.setState(({comments, selectedComment}) => ({
+                    this.setState(({ comments, selectedComment }) => ({
                       comments: comments.map(c =>
                         c.id === selectedComment.id
                           ? {
                               ...c,
-                              replies: [r.data[0], ...c.replies],
+                              replies: [r.data[0], ...c.replies]
                             }
-                          : c,
+                          : c
                       ),
                       selectedComment: {
                         ...selectedComment,
-                        replies: [r.data[0], ...selectedComment.replies],
-                      },
-                    })),
+                        replies: [r.data[0], ...selectedComment.replies]
+                      }
+                    }))
                   )
               }
               deleteReply={id => {
                 commentsService.deleteComment(id);
-                this.setState(({comments, selectedComment}) => ({
+                this.setState(({ comments, selectedComment }) => ({
                   comments: comments.map(c => ({
                     ...c,
-                    replies: c.replies.filter(r => r.id !== id),
+                    replies: c.replies.filter(r => r.id !== id)
                   })),
                   selectedComment: {
                     ...selectedComment,
-                    replies: selectedComment.replies.filter(r => r.id !== id),
-                  },
+                    replies: selectedComment.replies.filter(r => r.id !== id)
+                  }
                 }));
               }}
               deleteComment={id => {
                 commentsService.deleteComment(id);
                 this.setState(
-                  ({comments}) => ({
-                    comments: comments.filter(c => c.id !== id),
+                  ({ comments }) => ({
+                    comments: comments.filter(c => c.id !== id)
                   }),
                   () =>
                     this.replies?.toggle(() =>
-                      this.setState({selectedComment: undefined}),
-                    ),
+                      this.setState({ selectedComment: undefined })
+                    )
                 );
               }}
               toggleCommentLike={(id, action) => {
                 commentsService[action](id);
-                this.setState(({comments, selectedComment}) => ({
+                this.setState(({ comments, selectedComment }) => ({
                   comments: comments.map(c =>
                     c.id === id
                       ? {
@@ -1524,22 +1443,22 @@ export default class ViewLesson extends React.Component {
                           is_liked: !c.is_liked,
                           like_count: c.is_liked
                             ? c.like_count - 1
-                            : c.like_count + 1,
+                            : c.like_count + 1
                         }
-                      : c,
+                      : c
                   ),
                   selectedComment: {
                     ...selectedComment,
                     is_liked: !selectedComment.is_liked,
                     like_count: selectedComment.is_liked
                       ? selectedComment.like_count - 1
-                      : selectedComment.like_count + 1,
-                  },
+                      : selectedComment.like_count + 1
+                  }
                 }));
               }}
               toggleReplyLike={(id, action) => {
                 commentsService[action](id);
-                this.setState(({comments, selectedComment}) => ({
+                this.setState(({ comments, selectedComment }) => ({
                   comments: comments.map(c => ({
                     ...c,
                     replies: c.replies.map(r =>
@@ -1549,10 +1468,10 @@ export default class ViewLesson extends React.Component {
                             is_liked: !r.is_liked,
                             like_count: r.is_liked
                               ? r.like_count - 1
-                              : r.like_count + 1,
+                              : r.like_count + 1
                           }
-                        : r,
-                    ),
+                        : r
+                    )
                   })),
                   selectedComment: {
                     ...selectedComment,
@@ -1563,45 +1482,45 @@ export default class ViewLesson extends React.Component {
                             is_liked: !r.is_liked,
                             like_count: r.is_liked
                               ? r.like_count - 1
-                              : r.like_count + 1,
+                              : r.like_count + 1
                           }
-                        : r,
-                    ),
-                  },
+                        : r
+                    )
+                  }
                 }));
               }}
               close={() =>
                 this.replies.toggle(() =>
-                  this.setState({selectedComment: undefined}),
+                  this.setState({ selectedComment: undefined })
                 )
               }
               ref={r => (this.replies = r)}
               comment={this.state.selectedComment}
               me={{
                 userId: this.userId,
-                profileImage: this.state.profileImage,
+                profileImage: this.state.profileImage
               }}
             />
           </View>
         ) : (
           <ActivityIndicator
-            size="small"
-            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
+            size='small'
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
             color={colors.secondBackground}
           />
         )}
         {!this.state.selectedAssignment && !this.state.showMakeComment && (
-          <View style={{backgroundColor: colors.mainBackground}}>
+          <View style={{ backgroundColor: colors.mainBackground }}>
             <View
               style={{
                 backgroundColor: colors.mainBackground,
                 height: 2,
-                width: '100%',
+                width: '100%'
               }}
             >
               {!!this.state.progress && (
                 <View
-                  testID="progress"
+                  testID='progress'
                   style={[
                     styles.progressBarCompleted,
                     {
@@ -1610,8 +1529,8 @@ export default class ViewLesson extends React.Component {
                       alignItems: 'flex-end',
                       justifyContent: 'center',
                       position: 'relative',
-                      width: this.state.progress + '%',
-                    },
+                      width: this.state.progress + '%'
+                    }
                   ]}
                 />
               )}
@@ -1624,11 +1543,11 @@ export default class ViewLesson extends React.Component {
                 marginTop: 5,
                 paddingVertical: 5,
                 paddingHorizontal: 10,
-                marginBottom: DeviceInfo.hasNotch() ? 20 : 0,
+                marginBottom: DeviceInfo.hasNotch() ? 20 : 0
               }}
             >
               <TouchableOpacity
-                testID="prevBtn"
+                testID='prevBtn'
                 style={{
                   borderRadius: 500,
                   borderWidth: 2,
@@ -1637,20 +1556,20 @@ export default class ViewLesson extends React.Component {
                   marginRight: 10,
                   borderColor: this.state.previousLesson
                     ? colors.pianoteRed
-                    : colors.secondBackground,
+                    : colors.secondBackground
                 }}
                 disabled={!this.state.previousLesson?.id}
                 onPress={() =>
                   this.switchLesson(
                     this.state.previousLesson.id,
-                    this.state.previousLesson.post.mobile_app_url,
+                    this.state.previousLesson.mobile_app_url
                   )
                 }
               >
                 <EntypoIcon
                   name={'chevron-thin-left'}
                   size={onTablet ? 22.5 : 17.5}
-                  style={{padding: 5}}
+                  style={{ padding: 5 }}
                   color={
                     this.state.previousLesson
                       ? colors.pianoteRed
@@ -1666,12 +1585,12 @@ export default class ViewLesson extends React.Component {
                     borderRadius: 500,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    flex: 1,
-                  },
+                    flex: 1
+                  }
                 ]}
                 onPress={() =>
                   this.state.progress === 100
-                    ? this.setState({showRestartCourse: true})
+                    ? this.setState({ showRestartCourse: true })
                     : this.onComplete(this.state.id)
                 }
               >
@@ -1679,7 +1598,7 @@ export default class ViewLesson extends React.Component {
                   style={{
                     color: 'white',
                     fontFamily: 'RobotoCondensed-Bold',
-                    fontSize: sizing.verticalListTitleSmall,
+                    fontSize: sizing.verticalListTitleSmall
                   }}
                 >
                   {this.state.progress === 100
@@ -1688,7 +1607,7 @@ export default class ViewLesson extends React.Component {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                testID="prevBtn"
+                testID='prevBtn'
                 style={{
                   borderRadius: 500,
                   borderWidth: 2,
@@ -1697,20 +1616,20 @@ export default class ViewLesson extends React.Component {
                   marginLeft: 10,
                   borderColor: this.state.nextLesson
                     ? colors.pianoteRed
-                    : colors.secondBackground,
+                    : colors.secondBackground
                 }}
                 disabled={!this.state.nextLesson?.id}
                 onPress={() =>
                   this.switchLesson(
                     this.state.nextLesson.id,
-                    this.state.nextLesson.post.mobile_app_url,
+                    this.state.nextLesson.mobile_app_url
                   )
                 }
               >
                 <EntypoIcon
                   name={'chevron-thin-right'}
                   size={onTablet ? 22.5 : 17.5}
-                  style={{padding: 5}}
+                  style={{ padding: 5 }}
                   color={
                     this.state.nextLesson
                       ? colors.pianoteRed
@@ -1731,12 +1650,15 @@ export default class ViewLesson extends React.Component {
             animationOutTiming={250}
             coverScreen={false}
             hasBackdrop={false}
+            onBackButtonPress={() =>
+              this.setState({ showAssignmentComplete: false })
+            }
           >
             <AssignmentComplete
               title={this.state.selectedAssignment.title}
               xp={this.state.selectedAssignment.xp}
               hideAssignmentComplete={() => {
-                this.setState({showAssignmentComplete: false});
+                this.setState({ showAssignmentComplete: false });
               }}
             />
           </Modal>
@@ -1747,26 +1669,37 @@ export default class ViewLesson extends React.Component {
           style={[
             styles.modalContainer,
             {
-              justifyContent: 'flex-end',
-            },
+              justifyContent: 'flex-end'
+            }
           ]}
           animation={'slideInUp'}
           animationInTiming={350}
           animationOutTiming={350}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() =>
+            new Promise(res =>
+              this.setState(
+                {
+                  showResDownload: false
+                },
+                () =>
+                  Platform.OS === 'ios' ? (this.modalDismissed = res) : res()
+              )
+            )
+          }
         >
           <DownloadResources
             styles={{
               container: {
                 backgroundColor: colors.mainBackground,
-                width: '100%',
+                width: '100%'
               },
               touchableTextResourceNameFontFamily: 'OpenSans',
               touchableTextResourceExtensionFontFamily: 'OpenSans',
               touchableTextResourceCancelFontFamily: 'OpenSans',
               borderColor: colors.secondBackground,
-              color: '#ffffff',
+              color: '#ffffff'
             }}
             resources={this.state.resources}
             lessonTitle={this.state.lessonTitle}
@@ -1774,10 +1707,10 @@ export default class ViewLesson extends React.Component {
               new Promise(res =>
                 this.setState(
                   {
-                    showResDownload: false,
+                    showResDownload: false
                   },
-                  () => (isiOS ? (this.modalDismissed = res) : res()),
-                ),
+                  () => (isiOS ? (this.modalDismissed = res) : res())
+                )
               );
             }}
           />
@@ -1793,6 +1726,9 @@ export default class ViewLesson extends React.Component {
               animationOutTiming={250}
               coverScreen={true}
               hasBackdrop={true}
+              onBackButtonPress={() =>
+                this.setState({ showLessonComplete: false })
+              }
             >
               <LessonComplete
                 completedLessonImg={this.state.lessonImage}
@@ -1801,14 +1737,14 @@ export default class ViewLesson extends React.Component {
                 type={this.state.type}
                 nextLesson={this.state.nextLesson}
                 hideLessonComplete={() => {
-                  this.setState({showLessonComplete: false});
+                  this.setState({ showLessonComplete: false });
                 }}
                 onGoToNext={() => {
-                  this.setState({showLessonComplete: false});
+                  this.setState({ showLessonComplete: false });
                   if (this.state.nextLesson) {
                     this.switchLesson(
                       this.state.nextLesson.id,
-                      this.state.nextLesson.post.mobile_app_url,
+                      this.state.nextLesson.mobile_app_url
                     );
                   }
                 }}
@@ -1822,10 +1758,13 @@ export default class ViewLesson extends React.Component {
               animationOutTiming={250}
               coverScreen={true}
               hasBackdrop={true}
+              onBackButtonPress={() =>
+                this.setState({ showRestartCourse: false })
+              }
             >
               <RestartCourse
                 hideRestartCourse={() =>
-                  this.setState({showRestartCourse: false})
+                  this.setState({ showRestartCourse: false })
                 }
                 type={
                   this.state.selectedAssignment ? 'assignment' : this.state.type
@@ -1841,6 +1780,9 @@ export default class ViewLesson extends React.Component {
               animationOutTiming={250}
               coverScreen={true}
               hasBackdrop={true}
+              onBackButtonPress={() =>
+                this.setState({ showOverviewComplete: false })
+              }
             >
               <OverviewComplete
                 title={this.state.lessonTitle}
@@ -1852,7 +1794,7 @@ export default class ViewLesson extends React.Component {
                 }
                 hideOverviewComplete={() => {
                   this.setState({
-                    showOverviewComplete: false,
+                    showOverviewComplete: false
                   });
                 }}
                 onGoToNext={() => {}}
@@ -1871,14 +1813,15 @@ export default class ViewLesson extends React.Component {
           hasBackdrop={false}
           backdropColor={'white'}
           backdropOpacity={0.79}
+          onBackButtonPress={() => this.setState({ showCommentSort: false })}
         >
           <CommentSort
             hideCommentSort={() => {
-              this.setState({showCommentSort: false});
+              this.setState({ showCommentSort: false });
             }}
             currentSort={this.state.commentSort}
             changeSort={commentSort => {
-              this.setState({commentSort}, () => {
+              this.setState({ commentSort }, () => {
                 this.limit = 10;
                 this.fetchComments();
               });
@@ -1893,11 +1836,12 @@ export default class ViewLesson extends React.Component {
           animationOutTiming={350}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showSoundSlice: false })}
         >
           <SoundSlice
             hideSoundSlice={() => {
               this.setState({
-                showSoundSlice: false,
+                showSoundSlice: false
               });
             }}
           />
@@ -1913,7 +1857,7 @@ export default class ViewLesson extends React.Component {
               style={{
                 marginTop: 10,
                 borderRadius: 50,
-                backgroundColor: colors.pianoteRed,
+                backgroundColor: colors.pianoteRed
               }}
             >
               <Text
@@ -1922,8 +1866,8 @@ export default class ViewLesson extends React.Component {
                   {
                     padding: 15,
                     fontSize: 15,
-                    color: '#ffffff',
-                  },
+                    color: '#ffffff'
+                  }
                 ]}
               >
                 RELOAD LESSON
@@ -1944,15 +1888,15 @@ export default class ViewLesson extends React.Component {
             coverScreen={false}
             hasBackdrop={true}
             transparent={true}
-            onBackdropPress={() => this.setState({showMakeComment: false})}
+            onBackdropPress={() => this.setState({ showMakeComment: false })}
           >
             <TouchableOpacity
-              style={{flex: 1}}
-              onPress={() => this.setState({showMakeComment: false})}
+              style={{ flex: 1 }}
+              onPress={() => this.setState({ showMakeComment: false })}
             >
               <KeyboardAvoidingView
                 behavior={`${isiOS ? 'padding' : ''}`}
-                style={{flex: 1, justifyContent: 'flex-end'}}
+                style={{ flex: 1, justifyContent: 'flex-end' }}
               >
                 <View
                   style={{
@@ -1961,7 +1905,7 @@ export default class ViewLesson extends React.Component {
                     padding: 10,
                     alignItems: 'center',
                     borderTopWidth: 0.5,
-                    borderTopColor: colors.secondBackground,
+                    borderTopColor: colors.secondBackground
                   }}
                 >
                   <FastImage
@@ -1970,12 +1914,12 @@ export default class ViewLesson extends React.Component {
                       width: onTablet ? 60 : 40,
                       paddingVertical: 10,
                       borderRadius: 100,
-                      marginRight: 10,
+                      marginRight: 10
                     }}
                     source={{
                       uri:
                         this.state.profileImage ||
-                        'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png',
+                        'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
                     }}
                     resizeMode={FastImage.resizeMode.stretch}
                   />
@@ -1988,20 +1932,20 @@ export default class ViewLesson extends React.Component {
                       flex: 1,
                       backgroundColor: colors.mainBackground,
                       color: colors.secondBackground,
-                      paddingVertical: 10,
+                      paddingVertical: 10
                     }}
                     onSubmitEditing={() => {
                       this.makeComment();
                     }}
                     returnKeyType={'go'}
-                    onChangeText={comment => this.setState({comment})}
+                    onChangeText={comment => this.setState({ comment })}
                     placeholder={'Add a comment'}
                     placeholderTextColor={colors.secondBackground}
                   />
                   <TouchableOpacity
                     style={{
                       marginBottom: Platform.OS == 'android' ? 10 : 0,
-                      marginLeft: 20,
+                      marginLeft: 20
                     }}
                     onPress={() => this.makeComment()}
                   >

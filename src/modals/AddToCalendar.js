@@ -4,7 +4,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
@@ -27,7 +27,7 @@ export default class AddToCalendar extends React.Component {
               style={[
                 styles.modalHeaderText,
                 localStyles.addToCalendar,
-                {marginTop: 10},
+                { marginTop: 10 }
               ]}
             >
               Add To Calendar
@@ -43,13 +43,16 @@ export default class AddToCalendar extends React.Component {
               style={localStyles.calendarIcon}
             />
             <TouchableOpacity
-              style={[localStyles.confirmAddition, {justifyContent: 'center'}]}
+              style={[
+                localStyles.confirmAddition,
+                { justifyContent: 'center' }
+              ]}
               onPress={() => this.props.addEventToCalendar()}
             >
               <Text
                 style={[
                   styles.modalButtonText,
-                  localStyles.confirmAdditionText,
+                  localStyles.confirmAdditionText
                 ]}
               >
                 CONFIRM ADDITION
@@ -68,17 +71,17 @@ const localStyles = StyleSheet.create({
     paddingBottom: 15,
     borderRadius: 15,
     margin: 20,
-    paddingVertical: 5,
+    paddingVertical: 5
   },
   addToCalendar: {
     marginTop: 5,
-    paddingHorizontal: 20,
+    paddingHorizontal: 20
   },
   calendarIcon: {
     paddingTop: 7.5,
     alignSelf: 'center',
     paddingHorizontal: 40,
-    marginTop: 10,
+    marginTop: 10
   },
   confirmAddition: {
     marginTop: 15,
@@ -86,9 +89,9 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#fb1b2f',
     marginHorizontal: 40,
     justifyContent: 'center',
-    height: DeviceInfo.isTablet() ? 40 : 30,
+    height: DeviceInfo.isTablet() ? 40 : 30
   },
   confirmAdditionText: {
-    color: 'white',
-  },
+    color: 'white'
+  }
 });

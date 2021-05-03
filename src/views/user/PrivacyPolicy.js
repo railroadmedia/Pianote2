@@ -6,12 +6,12 @@ import {
   TouchableOpacity,
   StatusBar,
   StyleSheet,
-  Linking,
+  Linking
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
-import {SafeAreaView} from 'react-navigation';
-import {goBack} from '../../../AppNavigator';
+import { SafeAreaView } from 'react-navigation';
+import { goBack } from '../../../AppNavigator';
 
 export default class PrivacyPolicy extends React.Component {
   constructor(props) {
@@ -21,10 +21,10 @@ export default class PrivacyPolicy extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{ flex: 1 }}>
         <StatusBar backgroundColor={'#ffffff'} barStyle={'dark-content'} />
         <View style={localStyles.header}>
-          <TouchableOpacity onPress={() => goBack()} style={{flex: 1}}>
+          <TouchableOpacity onPress={() => goBack()} style={{ flex: 1 }}>
             <Back
               width={backButtonSize}
               height={backButtonSize}
@@ -32,7 +32,7 @@ export default class PrivacyPolicy extends React.Component {
             />
           </TouchableOpacity>
           <Text style={localStyles.title}>Privacy Policy</Text>
-          <View style={{flex: 1}} />
+          <View style={{ flex: 1 }} />
         </View>
         <ScrollView style={localStyles.scrollContainer}>
           <Text style={[styles.text, localStyles.subtitle]}>
@@ -60,7 +60,7 @@ export default class PrivacyPolicy extends React.Component {
               style={[
                 styles.text,
                 localStyles.subtitle,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               {' '}
@@ -71,7 +71,7 @@ export default class PrivacyPolicy extends React.Component {
             style={[
               styles.text,
               localStyles.subtitle,
-              {textAlign: 'center', fontSize: 18},
+              { textAlign: 'center', fontSize: 18 }
             ]}
           >
             Definitions
@@ -141,7 +141,7 @@ export default class PrivacyPolicy extends React.Component {
             style={[
               styles.text,
               localStyles.subtitle,
-              {textAlign: 'center', fontSize: 18},
+              { textAlign: 'center', fontSize: 18 }
             ]}
           >
             Information Collection and Use
@@ -474,12 +474,12 @@ export default class PrivacyPolicy extends React.Component {
             <Text
               onPress={() =>
                 Linking.openURL(
-                  'http://www.google.com/intl/en/policies/privacy/',
+                  'http://www.google.com/intl/en/policies/privacy/'
                 )
               }
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               http://www.google.com/intl/en/policies/privacy/
@@ -510,7 +510,7 @@ export default class PrivacyPolicy extends React.Component {
               }
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               http://www.google.com/settings/ads
@@ -525,7 +525,7 @@ export default class PrivacyPolicy extends React.Component {
               }
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               https://tools.google.com/dlpage/gaoptout
@@ -540,12 +540,12 @@ export default class PrivacyPolicy extends React.Component {
             <Text
               onPress={() =>
                 Linking.openURL(
-                  'http://www.google.com/intl/en/policies/privacy/',
+                  'http://www.google.com/intl/en/policies/privacy/'
                 )
               }
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               http://www.google.com/intl/en/policies/privacy/
@@ -564,7 +564,7 @@ export default class PrivacyPolicy extends React.Component {
               }
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               https://www.facebook.com/help/164968693837950
@@ -579,7 +579,7 @@ export default class PrivacyPolicy extends React.Component {
               }
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               https://www.facebook.com/help/568137493302217
@@ -596,7 +596,7 @@ export default class PrivacyPolicy extends React.Component {
               }
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               http://www.aboutads.info/choices/
@@ -606,7 +606,7 @@ export default class PrivacyPolicy extends React.Component {
               onPress={() => Linking.openURL('http://youradchoices.ca/')}
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               http://youradchoices.ca/
@@ -618,7 +618,7 @@ export default class PrivacyPolicy extends React.Component {
               }
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               http://www.youronlinechoices.eu/
@@ -634,7 +634,7 @@ export default class PrivacyPolicy extends React.Component {
               }
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               https://www.facebook.com/privacy/explanation
@@ -655,12 +655,12 @@ export default class PrivacyPolicy extends React.Component {
             <Text
               onPress={() =>
                 Linking.openURL(
-                  'http://www.google.com/intl/en/policies/privacy/',
+                  'http://www.google.com/intl/en/policies/privacy/'
                 )
               }
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               http://www.google.com/intl/en/policies/privacy/
@@ -675,7 +675,7 @@ export default class PrivacyPolicy extends React.Component {
               }
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               https://www.facebook.com/privacy/explanation
@@ -687,12 +687,12 @@ export default class PrivacyPolicy extends React.Component {
             <Text
               onPress={() =>
                 Linking.openURL(
-                  'https://www.intercom.com/legal/terms-and-policies',
+                  'https://www.intercom.com/legal/terms-and-policies'
                 )
               }
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               https://www.intercom.com/legal/terms-and-policies
@@ -707,7 +707,7 @@ export default class PrivacyPolicy extends React.Component {
               }
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               https://www.maropost.com/privacy-policy/
@@ -722,7 +722,7 @@ export default class PrivacyPolicy extends React.Component {
               }
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               https://stripe.com/en-ca/privacy
@@ -734,12 +734,12 @@ export default class PrivacyPolicy extends React.Component {
             <Text
               onPress={() =>
                 Linking.openURL(
-                  'https://www.paypal.com/ca/webapps/mpp/ua/privacy-full?locale.x=en_CA',
+                  'https://www.paypal.com/ca/webapps/mpp/ua/privacy-full?locale.x=en_CA'
                 )
               }
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               https://www.paypal.com/ca/webapps/mpp/ua/privacy-full?locale.x=en_CA
@@ -754,7 +754,7 @@ export default class PrivacyPolicy extends React.Component {
               }
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               https://admin.typeform.com/to/dwk6gt/
@@ -767,7 +767,7 @@ export default class PrivacyPolicy extends React.Component {
               onPress={() => Linking.openURL('https://unbounce.com/privacy/')}
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               https://unbounce.com/privacy/
@@ -782,7 +782,7 @@ export default class PrivacyPolicy extends React.Component {
               }
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               https://www.bonjoro.com/privacy-policy
@@ -852,13 +852,13 @@ export default class PrivacyPolicy extends React.Component {
             <Text
               style={[
                 styles.text,
-                {textDecorationLine: 'underline', color: 'rgb(0,122,255)'},
+                { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
               support@pianote.com.
             </Text>
           </Text>
-          <View style={{height: 25}} />
+          <View style={{ height: 25 }} />
         </ScrollView>
       </SafeAreaView>
     );
@@ -868,33 +868,33 @@ export default class PrivacyPolicy extends React.Component {
 const localStyles = StyleSheet.create({
   mainSub: {
     fontSize: 18,
-    fontStyle: 'italic',
+    fontStyle: 'italic'
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 15,
+    padding: 15
   },
   title: {
     fontWeight: 'bold',
     fontSize: DeviceInfo.isTablet() ? 28 : 20,
     alignSelf: 'center',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   scrollContainer: {
     flex: 1,
-    paddingHorizontal: 15,
+    paddingHorizontal: 15
   },
   subtitle: {
     paddingBottom: 5,
     marginTop: 25,
     fontWeight: 'bold',
-    marginBottom: 0,
+    marginBottom: 0
   },
   contact: {
     marginTop: 20,
     paddingHorizontal: 10,
-    textAlign: 'center',
-  },
+    textAlign: 'center'
+  }
 });

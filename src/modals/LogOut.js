@@ -4,13 +4,13 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-community/async-storage';
 import Intercom from 'react-native-intercom';
-import {logOut} from '../services/UserDataAuth';
-import {reset} from '../../AppNavigator';
+import { logOut } from '../services/UserDataAuth';
+import { reset } from '../../AppNavigator';
 
 export default class LogOut extends React.Component {
   constructor(props) {
@@ -68,17 +68,17 @@ const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     borderRadius: 15,
-    margin: 20,
+    margin: 20
   },
   title: {
     marginTop: 20,
-    paddingHorizontal: 20,
+    paddingHorizontal: 20
   },
   description: {
     paddingHorizontal: 30,
     marginTop: 10,
     marginBottom: 5,
-    fontSize: DeviceInfo.isTablet() ? 18 : 14,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14
   },
   logoutText: {
     backgroundColor: '#fb1b2f',
@@ -87,18 +87,18 @@ const localStyles = StyleSheet.create({
     marginHorizontal: 30,
     fontFamily: 'OpenSans-Bold',
     height: DeviceInfo.isTablet() ? 40 : 30,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   logout: {
     color: 'white',
-    fontSize: DeviceInfo.isTablet() ? 18 : 14,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14
   },
   cancelContainter: {
     paddingHorizontal: 20,
-    marginBottom: 15,
+    marginBottom: 15
   },
   cancel: {
     color: 'grey',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
-  },
+    fontSize: DeviceInfo.isTablet() ? 16 : 12
+  }
 });

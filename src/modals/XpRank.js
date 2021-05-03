@@ -4,7 +4,7 @@ import {
   Text,
   TouchableWithoutFeedback,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import ProgressCircle from 'react-native-progress-circle';
@@ -29,7 +29,7 @@ const ranks = [
   4000000,
   5000000,
   7500000,
-  100000000,
+  100000000
 ];
 
 export default class XpRank extends React.Component {
@@ -39,7 +39,7 @@ export default class XpRank extends React.Component {
       rankProgress: null,
       XP: this.props.xp,
       rank: this.props.rank,
-      nextRank: null,
+      nextRank: null
     };
   }
 
@@ -48,7 +48,7 @@ export default class XpRank extends React.Component {
       if (this.state.XP >= ranks[i] && this.state.XP < ranks[Number(i) + 1]) {
         this.setState({
           nextRank: ranks[Number(i) + 1],
-          rankProgress: (this.state.XP / ranks[Number(i) + 1]) * 100,
+          rankProgress: (this.state.XP / ranks[Number(i) + 1]) * 100
         });
       }
     }
@@ -73,7 +73,7 @@ export default class XpRank extends React.Component {
               <View
                 style={[
                   styles.centerContent,
-                  localStyles.ProgressCircleContainer,
+                  localStyles.ProgressCircleContainer
                 ]}
               >
                 <ProgressCircle
@@ -87,7 +87,7 @@ export default class XpRank extends React.Component {
                   color={'red'}
                   bgColor={'white'}
                 >
-                  <View style={{transform: [{rotate: '45deg'}]}}>
+                  <View style={{ transform: [{ rotate: '45deg' }] }}>
                     <Text style={localStyles.XPtext}>
                       {Number(this.state.XP).toLocaleString()}
                     </Text>
@@ -110,34 +110,34 @@ const localStyles = StyleSheet.create({
   container: {
     borderRadius: 15,
     backgroundColor: 'white',
-    elevation: 10,
+    elevation: 10
   },
   title: {
     paddingHorizontal: 30,
-    marginTop: 15,
+    marginTop: 15
   },
   description: {
     paddingHorizontal: 20,
     marginVertical: 10,
-    fontSize: DeviceInfo.isTablet() ? 18 : 14,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14
   },
   ProgressCircleContainer: {
-    transform: [{rotate: '315deg'}],
+    transform: [{ rotate: '315deg' }]
   },
   XPtext: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: DeviceInfo.isTablet() ? 34 : 26,
+    fontSize: DeviceInfo.isTablet() ? 34 : 26
   },
   rankText: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: DeviceInfo.isTablet() ? 24 : 18,
+    fontSize: DeviceInfo.isTablet() ? 24 : 18
   },
   nextRank: {
     color: 'grey',
     paddingHorizontal: 40,
     marginVertical: 10,
-    fontSize: DeviceInfo.isTablet() ? 18 : 14,
-  },
+    fontSize: DeviceInfo.isTablet() ? 18 : 14
+  }
 });

@@ -6,19 +6,19 @@ import {
   ActivityIndicator,
   ScrollView,
   StatusBar,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import DeviceInfo from 'react-native-device-info';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
-import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
+import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
 import CustomSwitch from 'Pianote2/src/components/CustomSwitch.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import commonService from '../../services/common.service';
-import {NetworkContext} from '../../context/NetworkProvider';
-import {SafeAreaView} from 'react-navigation';
-import {goBack} from '../../../AppNavigator';
+import { NetworkContext } from '../../context/NetworkProvider';
+import { SafeAreaView } from 'react-navigation';
+import { goBack } from '../../../AppNavigator';
 
 export default class NotificationSettings extends React.Component {
   static contextType = NetworkContext;
@@ -32,7 +32,7 @@ export default class NotificationSettings extends React.Component {
       notify_on_lesson_comment_like: false,
       notify_on_lesson_comment_reply: false,
       notify_weekly_update: false,
-      isLoading: true,
+      isLoading: true
     };
   }
 
@@ -49,8 +49,8 @@ export default class NotificationSettings extends React.Component {
         notify_on_lesson_comment_reply:
           userData?.notify_on_lesson_comment_reply,
         notify_weekly_update: userData?.notify_weekly_update,
-        isLoading: false,
-      }),
+        isLoading: false
+      })
     );
   }
 
@@ -70,15 +70,15 @@ export default class NotificationSettings extends React.Component {
               .notify_on_lesson_comment_like,
             notify_on_lesson_comment_reply: this.state
               .notify_on_lesson_comment_reply,
-            notify_weekly_update: this.state.notify_weekly_update,
-          },
-        },
+            notify_weekly_update: this.state.notify_weekly_update
+          }
+        }
       };
 
       let response = await commonService.tryCall(
         `${commonService.rootUrl}/usora/api/profile/update`,
         'POST',
-        body,
+        body
       );
 
       console.log('response to change notification: ', response);
@@ -91,10 +91,10 @@ export default class NotificationSettings extends React.Component {
     return (
       <View style={styles.container}>
         <SafeAreaView
-          forceInset={{top: onTablet ? 'never' : 'always'}}
+          forceInset={{ top: onTablet ? 'never' : 'always' }}
           style={[
             styles.mainContainer,
-            {backgroundColor: colors.thirdBackground},
+            { backgroundColor: colors.thirdBackground }
           ]}
         >
           <StatusBar
@@ -103,12 +103,12 @@ export default class NotificationSettings extends React.Component {
           />
           <View style={localStyles.header}>
             <TouchableOpacity
-              style={{flex: 1}}
+              style={{ flex: 1 }}
               onPress={() => {
                 this.state.currentlyView == 'Profile Settings'
                   ? goBack()
                   : this.setState({
-                      currentlyView: 'Profile Settings',
+                      currentlyView: 'Profile Settings'
                     });
               }}
             >
@@ -121,7 +121,7 @@ export default class NotificationSettings extends React.Component {
             <Text style={[styles.childHeaderText, localStyles.title]}>
               Notification Settings
             </Text>
-            <View style={{flex: 1}} />
+            <View style={{ flex: 1 }} />
           </View>
           {this.state.isLoading && (
             <View style={[styles.centerContent, styles.mainContainer]}>
@@ -145,9 +145,9 @@ export default class NotificationSettings extends React.Component {
                     console.log('bool: ', bool),
                       this.setState(
                         {
-                          notify_weekly_update: bool,
+                          notify_weekly_update: bool
                         },
-                        () => this.changeNotificationStatus(),
+                        () => this.changeNotificationStatus()
                       );
                   }}
                 />
@@ -160,9 +160,9 @@ export default class NotificationSettings extends React.Component {
                   clicked={bool => {
                     this.setState(
                       {
-                        notify_on_lesson_comment_reply: bool,
+                        notify_on_lesson_comment_reply: bool
                       },
-                      () => this.changeNotificationStatus(),
+                      () => this.changeNotificationStatus()
                     );
                   }}
                 />
@@ -174,9 +174,9 @@ export default class NotificationSettings extends React.Component {
                   clicked={bool => {
                     this.setState(
                       {
-                        notify_on_lesson_comment_like: bool,
+                        notify_on_lesson_comment_like: bool
                       },
-                      () => this.changeNotificationStatus(),
+                      () => this.changeNotificationStatus()
                     );
                   }}
                 />
@@ -189,9 +189,9 @@ export default class NotificationSettings extends React.Component {
                   clicked={bool => {
                     this.setState(
                       {
-                        notify_on_forum_post_reply: bool,
+                        notify_on_forum_post_reply: bool
                       },
-                      () => this.changeNotificationStatus(),
+                      () => this.changeNotificationStatus()
                     );
                   }}
                 />
@@ -203,16 +203,16 @@ export default class NotificationSettings extends React.Component {
                   clicked={bool => {
                     this.setState(
                       {
-                        notify_on_forum_post_like: bool,
+                        notify_on_forum_post_like: bool
                       },
-                      () => this.changeNotificationStatus(),
+                      () => this.changeNotificationStatus()
                     );
                   }}
                 />
               </View>
               <View style={localStyles.border} />
               <View style={localStyles.emailNotificationFrequency}>
-                <Text style={[localStyles.text, {paddingVertical: 10}]}>
+                <Text style={[localStyles.text, { paddingVertical: 10 }]}>
                   Email Notification Frequency
                 </Text>
               </View>
@@ -223,9 +223,9 @@ export default class NotificationSettings extends React.Component {
                   onPress={() => {
                     this.setState(
                       {
-                        notifications_summary_frequency_minutes: 1,
+                        notifications_summary_frequency_minutes: 1
                       },
-                      () => this.changeNotificationStatus(),
+                      () => this.changeNotificationStatus()
                     );
                   }}
                   style={[
@@ -237,8 +237,8 @@ export default class NotificationSettings extends React.Component {
                           : colors.secondBackground,
                       borderRadius: 100,
                       width: onTablet ? 35 : 27.5,
-                      height: onTablet ? 35 : 27.5,
-                    },
+                      height: onTablet ? 35 : 27.5
+                    }
                   ]}
                 >
                   {this.state.notifications_summary_frequency_minutes == 1 && (
@@ -264,9 +264,9 @@ export default class NotificationSettings extends React.Component {
                   onPress={() => {
                     this.setState(
                       {
-                        notifications_summary_frequency_minutes: 1440,
+                        notifications_summary_frequency_minutes: 1440
                       },
-                      () => this.changeNotificationStatus(),
+                      () => this.changeNotificationStatus()
                     );
                   }}
                   style={[
@@ -279,8 +279,8 @@ export default class NotificationSettings extends React.Component {
                           : colors.secondBackground,
                       borderRadius: 100,
                       width: onTablet ? 35 : 27.5,
-                      height: onTablet ? 35 : 27.5,
-                    },
+                      height: onTablet ? 35 : 27.5
+                    }
                   ]}
                 >
                   {this.state.notifications_summary_frequency_minutes ==
@@ -308,9 +308,9 @@ export default class NotificationSettings extends React.Component {
                   onPress={() => {
                     this.setState(
                       {
-                        notifications_summary_frequency_minutes: 0,
+                        notifications_summary_frequency_minutes: 0
                       },
-                      () => this.changeNotificationStatus(),
+                      () => this.changeNotificationStatus()
                     );
                   }}
                   style={[
@@ -325,8 +325,8 @@ export default class NotificationSettings extends React.Component {
                           : colors.secondBackground,
                       borderRadius: 100,
                       width: onTablet ? 35 : 27.5,
-                      height: onTablet ? 35 : 27.5,
-                    },
+                      height: onTablet ? 35 : 27.5
+                    }
                   ]}
                 >
                   {(this.state.notifications_summary_frequency_minutes == 0 ||
@@ -356,7 +356,7 @@ export default class NotificationSettings extends React.Component {
         </SafeAreaView>
         <SafeAreaView
           forceInset={'never'}
-          style={[{backgroundColor: colors.mainBackground}]}
+          style={[{ backgroundColor: colors.mainBackground }]}
         ></SafeAreaView>
       </View>
     );
@@ -369,52 +369,52 @@ const localStyles = StyleSheet.create({
     borderRadius: 15,
     margin: 20,
     height: 200,
-    width: '80%',
+    width: '80%'
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#081826',
-    padding: DeviceInfo.isTablet() ? 22.5 : 15,
+    padding: DeviceInfo.isTablet() ? 22.5 : 15
   },
   title: {
     textAlign: 'center',
-    color: '#445f73',
+    color: '#445f73'
   },
   noteTypeContainer: {
     paddingLeft: 10,
     width: '100%',
     justifyContent: 'center',
-    fontSize: DeviceInfo.isTablet() ? 18 : 14,
+    fontSize: DeviceInfo.isTablet() ? 18 : 14
   },
   noteTypeText: {
     marginTop: 10,
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 22 : 16,
     color: '#445f73',
-    paddingVertical: 5,
+    paddingVertical: 5
   },
   textContainer: {
     padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-between'
   },
   text: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 18 : 14,
-    color: '#445f73',
+    color: '#445f73'
   },
   emailNotificationFrequency: {
     paddingLeft: 10,
     paddingTop: 10,
     width: '100%',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   border: {
     height: 20,
     borderBottomColor: '#445f73',
-    borderBottomWidth: 1,
-  },
+    borderBottomWidth: 1
+  }
 });

@@ -4,17 +4,17 @@ import {
   Text,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import {
   likeContent,
   unlikeContent,
   addToMyList,
-  removeFromMyList,
+  removeFromMyList
 } from 'Pianote2/src/services/UserActions.js';
 import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import {Download_V2} from 'RNDownload';
+import { Download_V2 } from 'RNDownload';
 import DeviceInfo from 'react-native-device-info';
 import contentService from '../services/content.service';
 
@@ -22,40 +22,33 @@ export default class ContentModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      type: this.props.data.type ? this.props.data.type : '',
-      thumbnail: this.props.data.thumbnail ? this.props.data.thumbnail : '',
-      title: this.props.data.title ? this.props.data.title : '',
-      artist: this.props.data.artist ? this.props.data.artist : '',
-      description: this.props.data.description
-        ? this.props.data.description
-        : '',
-      bundle_count: this.props.data.bundle_count
-        ? this.props.data.bundle_count
-        : 0,
-      lesson_count: this.props.data.lesson_count
-        ? this.props.data.lesson_count
-        : 0,
-      xp: this.props.data.xp ? this.props.data.xp : 0,
-      id: this.props.data.id ? this.props.data.id : 0,
-      isLiked: this.props.data.isLiked ? this.props.data.isLiked : false,
-      like_count: this.props.data.like_count ? this.props.data.like_count : 0,
-      isAddedToList: this.props.data.isAddedToList
-        ? this.props.data.isAddedToList
-        : false,
+      type: props.data.type || '',
+      thumbnail: props.data.thumbnail_url || '',
+      title: props.data.title || '',
+      artist: props.data.artist || '',
+      instructor: props.data.instructors || '',
+      description: props.data.description || '',
+      bundle_number: props.data.bundle_number || '',
+      lesson_count: props.data.lesson_count || 0,
+      xp: props.data.xp || 0,
+      id: props.data.id || 0,
+      isLiked: props.data.is_liked_by_current_user || false,
+      like_count: props.data.like_count || 0,
+      isAddedToList: props.data.is_added_to_primary_playlist || false
     };
   }
 
   addToMyList = contentID => {
     if (this.props.data.description !== 'TBD') {
       this.props.addToMyList(contentID);
-      this.setState({isAddedToList: true});
+      this.setState({ isAddedToList: true });
       addToMyList(contentID);
     }
   };
 
   removeFromMyList = contentID => {
     this.props.removeFromMyList(contentID);
-    this.setState({isAddedToList: false});
+    this.setState({ isAddedToList: false });
     removeFromMyList(contentID);
   };
 
@@ -80,7 +73,7 @@ export default class ContentModal extends React.Component {
     if (this.props.data.description !== 'TBD') {
       this.setState({
         isLiked: !this.state.isLiked,
-        like_count: Number(this.state.like_count) + 1,
+        like_count: Number(this.state.like_count) + 1
       });
       this.props.like(contentID);
       likeContent(contentID);
@@ -90,7 +83,7 @@ export default class ContentModal extends React.Component {
   unlike = contentID => {
     this.setState({
       isLiked: !this.state.isLiked,
-      like_count: Number(this.state.like_count) - 1,
+      like_count: Number(this.state.like_count) - 1
     });
     this.props.like(contentID);
     unlikeContent(contentID);
@@ -108,16 +101,15 @@ export default class ContentModal extends React.Component {
               <View
                 style={[
                   localStyles.imageContainer,
-                  {aspectRatio: this.state.type == 'song' ? 1 : 16 / 9},
+                  { aspectRatio: this.state.type == 'song' ? 1 : 16 / 9 }
                 ]}
               >
                 <FastImage
                   style={localStyles.image}
                   source={{
                     uri:
-                      this.state.thumbnail == 'TBD'
-                        ? `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,e_grayscale/${fallbackThumb}`
-                        : this.state.thumbnail,
+                      this.state.thumbnail ||
+                      `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,e_grayscale/${fallbackThumb}`
                   }}
                   resizeMode={FastImage.resizeMode.cover}
                 />
@@ -125,43 +117,40 @@ export default class ContentModal extends React.Component {
             </View>
             <Text style={localStyles.title}>{this.state.title}</Text>
             <Text style={localStyles.type}>
-              {this.changeType(this.state.type)}/ {this.state.artist}
+              {this.changeType(this.state.type)}/{' '}
+              {this.state.artist || this.state.instructor}
             </Text>
             <Text numberOfLines={5} style={localStyles.description}>
               {this.state.description}
             </Text>
-            <View
-              style={[
-                styles.centerContent,
-                {flexDirection: 'row', justifyContent: 'center'},
-              ]}
-            >
-              {(this.state.bundle_count > 1 || this.state.lesson_count > 1) && (
+            <View style={[styles.centerContent, { flexDirection: 'row' }]}>
+              <View style={{ flex: 1 }} />
+              {(this.state.bundle_number > 1 ||
+                this.state.lesson_count > 1) && (
                 <View
                   style={[
                     styles.centerContent,
                     {
-                      flex: 1,
-                    },
+                      flex: 1
+                    }
                   ]}
                 >
                   <Text style={localStyles.lessonCount}>
                     {this.state.lesson_count > 1
                       ? this.state.lesson_count
-                      : this.state.bundle_count}
+                      : this.state.bundle_number}
                   </Text>
                   <Text style={localStyles.lessons}>LESSONS</Text>
                 </View>
               )}
-              {(this.state.bundle_count > 1 || this.state.lesson_count > 1) && (
-                <View style={{flex: 0.6}} />
-              )}
+              {(this.state.bundle_number > 1 ||
+                this.state.lesson_count > 1) && <View style={{ flex: 0.6 }} />}
               <View
                 style={[
                   styles.centerContent,
                   {
-                    flex: 1,
-                  },
+                    flex: 1
+                  }
                 ]}
               >
                 <Text style={localStyles.xp}>{this.state.xp}</Text>
@@ -203,20 +192,20 @@ export default class ContentModal extends React.Component {
               <Download_V2
                 entity={{
                   id: this.state.id,
-                  content: contentService.getContent(this.state.id, true),
+                  content: contentService.getContent(this.state.id, true)
                 }}
                 styles={{
                   iconSize: {
                     width: sizing.myListButtonSize,
-                    height: sizing.myListButtonSize,
+                    height: sizing.myListButtonSize
                   },
-                  touchable: {flex: 1},
+                  touchable: { flex: 1 },
                   activityIndicatorColor: colors.pianoteRed,
                   animatedProgressBackground: colors.pianoteRed,
                   textStatus: {
                     color: 'black',
                     fontSize: sizing.descriptionText,
-                    fontFamily: 'OpenSans-Regular',
+                    fontFamily: 'OpenSans-Regular'
                   },
                   alert: {
                     alertTextMessageFontFamily: 'OpenSans-Regular',
@@ -228,8 +217,8 @@ export default class ContentModal extends React.Component {
                     alertTouchableDeleteBackground: colors.pianoteRed,
                     alertBackground: 'white',
                     alertTouchableTextDeleteFontFamily: 'OpenSans-Bold',
-                    alertTouchableTextCancelFontFamily: 'OpenSans-Bold',
-                  },
+                    alertTouchableTextCancelFontFamily: 'OpenSans-Bold'
+                  }
                 }}
               />
             </View>
@@ -246,19 +235,19 @@ const localStyles = StyleSheet.create({
     borderRadius: 10,
     shadowOffset: {
       width: 5,
-      height: 10,
+      height: 10
     },
     shadowColor: 'black',
     shadowOpacity: 0.1,
     elevation: 3,
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   imageContainer: {
     width: '95%',
     backgroundColor: 'white',
     zIndex: 10,
     marginTop: 10,
-    marginHorizontal: 10,
+    marginHorizontal: 10
   },
   title: {
     fontFamily: 'OpenSans-Regular',
@@ -266,68 +255,68 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: DeviceInfo.isTablet() ? 24 : 18,
     textAlign: 'center',
-    marginTop: 5,
+    marginTop: 5
   },
   type: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'center',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: 'grey',
-    marginVertical: 5,
+    marginVertical: 5
   },
   image: {
     flex: 1,
-    borderRadius: 10,
+    borderRadius: 10
   },
   description: {
     marginHorizontal: 10,
     fontFamily: 'OpenSans-Regular',
     paddingHorizontal: 5,
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   myList: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
-    textAlign: 'left',
+    textAlign: 'left'
   },
   likeCount: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
-    textAlign: 'left',
+    textAlign: 'left'
   },
   likeContainer: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   button: {
     flexDirection: 'row',
-    padding: 20,
+    padding: 20
   },
   XPtext: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
     textAlign: 'left',
-    marginTop: 5,
+    marginTop: 5
   },
   xp: {
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
     fontSize: DeviceInfo.isTablet() ? 24 : 18,
     textAlign: 'left',
-    marginTop: 10,
+    marginTop: 10
   },
   lessonCount: {
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
     fontSize: DeviceInfo.isTablet() ? 24 : 18,
     textAlign: 'left',
-    marginTop: 10,
+    marginTop: 10
   },
   lessons: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
     textAlign: 'left',
-    marginTop: 5,
-  },
+    marginTop: 5
+  }
 });

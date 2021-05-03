@@ -10,20 +10,20 @@ import {
   Platform,
   KeyboardAvoidingView,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
-import {SafeAreaView} from 'react-navigation';
+import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import DeviceInfo from 'react-native-device-info';
 import Back from '../../assets/img/svgs/back';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
-import {forgotPass} from '../../services/UserDataAuth';
+import { forgotPass } from '../../services/UserDataAuth';
 import CustomModal from '../../modals/CustomModal';
 import Loading from '../../components/Loading';
-import {openInbox} from 'react-native-email-link';
-import {NetworkContext} from '../../context/NetworkProvider';
-import {goBack, navigate} from '../../../AppNavigator';
+import { openInbox } from 'react-native-email-link';
+import { NetworkContext } from '../../context/NetworkProvider';
+import { goBack, navigate } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -39,7 +39,7 @@ export default class ForgotPassword extends React.Component {
     super(props);
     this.forgotPassword - this.forgotPassword.bind(this);
     this.state = {
-      email: '',
+      email: ''
     };
   }
 
@@ -52,12 +52,12 @@ export default class ForgotPassword extends React.Component {
     if (response.success) {
       this.alertSuccess.toggle(
         'Please check your email',
-        'Follow the instructions sent to your email address to reset your password.',
+        'Follow the instructions sent to your email address to reset your password.'
       );
     } else {
       this.alertError.toggle(
         'Invalid email address.',
-        'There is no user registered with that email address.',
+        'There is no user registered with that email address.'
       );
     }
   };
@@ -65,7 +65,7 @@ export default class ForgotPassword extends React.Component {
   render() {
     return (
       <FastImage
-        style={{flex: 1}}
+        style={{ flex: 1 }}
         resizeMode={FastImage.resizeMode.cover}
         source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
       >
@@ -77,20 +77,20 @@ export default class ForgotPassword extends React.Component {
           height={'100%'}
           borderRadius={0}
         />
-        <SafeAreaView style={{flex: 1}}>
+        <SafeAreaView style={{ flex: 1 }}>
           <KeyboardAvoidingView
-            style={{flex: 1}}
+            style={{ flex: 1 }}
             behavior={`${isiOS ? 'padding' : ''}`}
             keyboardVerticalOffset={Platform.select({
               ios: () => (onTablet ? 0 : -75 * verticalRatio),
-              android: () => 0,
+              android: () => 0
             })()}
           >
             <ScrollView
-              style={{flex: 1}}
-              keyboardShouldPersistTaps="handled"
-              contentInsetAdjustmentBehavior="never"
-              contentContainerStyle={{flex: 1}}
+              style={{ flex: 1 }}
+              keyboardShouldPersistTaps='handled'
+              contentInsetAdjustmentBehavior='never'
+              contentContainerStyle={{ flex: 1 }}
             >
               <View style={localStyles.pianoteContainer}>
                 <View style={localStyles.pianoteInnerContainer}>
@@ -105,7 +105,7 @@ export default class ForgotPassword extends React.Component {
                       alignSelf: 'center',
                       textAlign: 'center',
                       fontFamily: 'OpenSans-Regular',
-                      width: '100%',
+                      width: '100%'
                     }}
                   >
                     The Ultimate Online
@@ -117,7 +117,7 @@ export default class ForgotPassword extends React.Component {
                       alignSelf: 'center',
                       textAlign: 'center',
                       fontFamily: 'OpenSans-Regular',
-                      width: `100%`,
+                      width: `100%`
                     }}
                   >
                     Piano Lessons Experience.
@@ -131,7 +131,7 @@ export default class ForgotPassword extends React.Component {
                   keyboardAppearance={'dark'}
                   placeholderTextColor={'grey'}
                   placeholder={'Email Address'}
-                  onChangeText={email => this.setState({email})}
+                  onChangeText={email => this.setState({ email })}
                   style={localStyles.email}
                 />
                 <TouchableHighlight
@@ -148,8 +148,8 @@ export default class ForgotPassword extends React.Component {
                       borderColor: '#fb1b2f',
                       width: onTablet ? '30%' : '50%',
                       backgroundColor:
-                        this.state.email.length > 0 ? '#fb1b2f' : 'transparent',
-                    },
+                        this.state.email.length > 0 ? '#fb1b2f' : 'transparent'
+                    }
                   ]}
                 >
                   <Text
@@ -157,14 +157,14 @@ export default class ForgotPassword extends React.Component {
                       padding: 10,
                       fontSize: onTablet ? 20 : 14,
                       fontFamily: 'RobotoCondensed-Bold',
-                      color: this.state.email.length > 0 ? 'white' : '#fb1b2f',
+                      color: this.state.email.length > 0 ? 'white' : '#fb1b2f'
                     }}
                   >
                     RESET PASSWORD
                   </Text>
                 </TouchableHighlight>
               </View>
-              <View style={{padding: 10}}>
+              <View style={{ padding: 10 }}>
                 <TouchableOpacity
                   onPress={() => {
                     navigate('LOGINCREDENTIALS');
@@ -185,7 +185,7 @@ export default class ForgotPassword extends React.Component {
             </ScrollView>
             <TouchableOpacity
               onPress={() => goBack()}
-              style={{padding: 15, position: 'absolute'}}
+              style={{ padding: 15, position: 'absolute' }}
             >
               <Back
                 width={backButtonSize}
@@ -215,7 +215,7 @@ export default class ForgotPassword extends React.Component {
                     style={{
                       paddingHorizontal: 15,
                       fontSize: 15,
-                      color: '#ffffff',
+                      color: '#ffffff'
                     }}
                   >
                     GO TO EMAIL
@@ -233,13 +233,13 @@ export default class ForgotPassword extends React.Component {
                     this.alertError.toggle();
                     Linking.openURL('mailto:support@pianote.com');
                   }}
-                  style={{marginTop: 20, alignSelf: 'center'}}
+                  style={{ marginTop: 20, alignSelf: 'center' }}
                 >
                   <Text
                     style={{
                       fontSize: 12,
                       fontFamily: 'OpenSans-Regular',
-                      color: colors.pianoteRed,
+                      color: colors.pianoteRed
                     }}
                   >
                     Still can't log in? Contact support.
@@ -260,18 +260,18 @@ const localStyles = StyleSheet.create({
     borderRadius: 15,
     margin: 20,
     height: 200,
-    width: '80%',
+    width: '80%'
   },
   pianoteContainer: {
     flex: 1,
     marginTop: 40,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   pianoteInnerContainer: {
     alignSelf: 'center',
     alignItems: 'center',
     width: DeviceInfo.isTablet() ? '30%' : '50%',
-    aspectRatio: 177 / 53,
+    aspectRatio: 177 / 53
   },
   email: {
     padding: 15,
@@ -281,14 +281,14 @@ const localStyles = StyleSheet.create({
     fontSize: DeviceInfo.isTablet() ? 20 : 14,
     marginHorizontal: 15,
     backgroundColor: 'white',
-    fontFamily: 'OpenSans-Regular',
+    fontFamily: 'OpenSans-Regular'
   },
   greyText: {
     fontFamily: 'OpenSans-Regular',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: 'grey',
     textAlign: 'center',
-    textDecorationLine: 'underline',
+    textDecorationLine: 'underline'
   },
   goToEmailContainer: {
     backgroundColor: '#fb1b2f',
@@ -296,6 +296,6 @@ const localStyles = StyleSheet.create({
     marginTop: 10,
     height: 50,
     justifyContent: 'center',
-    alignSelf: 'center',
-  },
+    alignSelf: 'center'
+  }
 });

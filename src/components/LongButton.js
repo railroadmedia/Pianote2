@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -77,8 +77,8 @@ export default class StartIcon extends React.Component {
             backgroundColor:
               this.props.type == 'MORE INFO' ? 'transparent' : '#fb1b2f',
             borderColor: this.props.type == 'MORE INFO' ? 'white' : '#fb1b2f',
-            borderWidth: 2,
-          },
+            borderWidth: 2
+          }
         ]}
       >
         <TouchableOpacity
@@ -87,8 +87,8 @@ export default class StartIcon extends React.Component {
             styles.centerContent,
             {
               flex: 1,
-              flexDirection: 'row',
-            },
+              flexDirection: 'row'
+            }
           ]}
         >
           {this.whatIcon()}
@@ -97,8 +97,8 @@ export default class StartIcon extends React.Component {
               styles.buttonText,
               {
                 marginLeft: '2.5%',
-                fontSize: this.sizing('font'),
-              },
+                fontSize: this.sizing('font')
+              }
             ]}
           >
             {this.props.type}
