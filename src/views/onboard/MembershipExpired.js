@@ -139,4 +139,3 @@ const localStyles = StyleSheet.create({
     marginTop: 10
   }
 });
-// borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,

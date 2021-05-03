@@ -5,8 +5,7 @@ import {
   TouchableOpacity,
   FlatList,
   RefreshControl,
-  ActivityIndicator,
-  Dimensions
+  ActivityIndicator
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';

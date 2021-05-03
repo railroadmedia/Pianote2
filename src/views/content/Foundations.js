@@ -4,7 +4,6 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  Platform,
   RefreshControl,
   Dimensions,
   ImageBackground
@@ -21,11 +20,7 @@ import RestartCourse from '../../modals/RestartCourse';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
-import {
-  likeContent,
-  unlikeContent,
-  resetProgress
-} from '../../services/UserActions';
+import { resetProgress } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 import foundationsService from '../../services/foundations.service';
 import { navigate } from '../../../AppNavigator';

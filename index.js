@@ -1,9 +1,12 @@
-/**
- * Index
- */
-import {AppRegistry, Dimensions, Platform, Linking, LogBox} from 'react-native';
+import {
+  AppRegistry,
+  Dimensions,
+  Platform,
+  Linking,
+  LogBox
+} from 'react-native';
 import App from './App';
-import {name as appName} from './app.json';
+import { name as appName } from './app.json';
 import DeviceInfo from 'react-native-device-info';
 
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
@@ -12,10 +15,10 @@ import PushNotification from 'react-native-push-notification';
 import {
   localNotification,
   notif,
-  showNotification,
+  showNotification
 } from './src/services/notification.service';
 import AsyncStorage from '@react-native-community/async-storage';
-import {navigate, reset} from './AppNavigator';
+import { navigate } from './AppNavigator';
 import navigationService from './src/services/navigation.service';
 import commonService from './src/services/common.service';
 
@@ -23,15 +26,15 @@ PushNotification.configure({
   onRegister: () => {},
   requestPermissions: false,
   popInitialNotification: true,
-  permissions: {alert: true, sound: true},
+  permissions: { alert: true, sound: true },
   onNotification: async function ({
-    data: {commentId, mobile_app_url, image, type, uri},
+    data: { commentId, mobile_app_url, image, type, uri },
     finish,
     userInteraction,
     foreground,
     title,
     message,
-    id,
+    id
   }) {
     let isLoggedIn = await AsyncStorage.getItem('loggedIn');
     if (type.includes('forum') && userInteraction) {
@@ -57,14 +60,14 @@ PushNotification.configure({
 
           navigate('VIEWLESSON', {
             commentId,
-            url: mobile_app_url,
+            url: mobile_app_url
           });
         }
       } else {
         showNotification({
-          notification: {body: message, title},
-          data: {commentId, mobile_app_url, image, type, uri},
-          messageId: id,
+          notification: { body: message, title },
+          data: { commentId, mobile_app_url, image, type, uri },
+          messageId: id
         });
       }
     } else {
@@ -77,12 +80,12 @@ PushNotification.configure({
     } else {
       finish();
     }
-  },
+  }
 });
 PushNotification.createChannel({
   channelId: 'pianote-app-channel',
   channelName: 'pianote-app-channel',
-  channelDescription: 'Pianote app channel',
+  channelDescription: 'Pianote app channel'
 });
 localNotification();
 
@@ -106,7 +109,7 @@ global.fallbackThumb =
     thirdBackground: '#081826',
     notificationColor: '#002038',
     pianoteRed: '#fb1b2f',
-    pianoteGrey: '#6e777a',
+    pianoteGrey: '#6e777a'
   });
 global.sizing = {
   descriptionText: onTablet ? 16 : 12,
@@ -114,5 +117,5 @@ global.sizing = {
   myListButtonSize: onTablet ? 28 : 22,
   titleViewLesson: onTablet ? 24 : 18,
   videoTitleText: onTablet ? 16 : 14,
-  verticalListTitleSmall: onTablet ? 18 : 14,
+  verticalListTitleSmall: onTablet ? 18 : 14
 };

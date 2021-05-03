@@ -9,7 +9,6 @@ import {
   Dimensions,
   StatusBar
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
 import RNIap from 'react-native-iap';
 import FastImage from 'react-native-fast-image';

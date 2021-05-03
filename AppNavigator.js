@@ -1,7 +1,7 @@
 import React from 'react';
-import {Dimensions, Easing} from 'react-native';
-import {NavigationContainer, StackActions} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import { Dimensions, Easing } from 'react-native';
+import { NavigationContainer, StackActions } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
 // content
 import StudentFocusCatalog from './src/views/content/StudentFocusCatalog';
@@ -57,7 +57,7 @@ export function navigate(name, params = {}) {
 export function reset(name, params) {
   navigationRef.current?.reset({
     index: 0,
-    routes: [{name, params}],
+    routes: [{ name, params }]
   });
 }
 
@@ -80,13 +80,13 @@ export function goBack() {
 export function refreshOnFocusListener() {
   let reFocused;
   return this.props.navigation?.addListener('focus', () =>
-    reFocused ? this.refresh?.() : (reFocused = true),
+    reFocused ? this.refresh?.() : (reFocused = true)
   );
 }
 
 const timingAnim = {
   animation: 'timing',
-  config: {duration: 250, easing: Easing.out(Easing.circle)},
+  config: { duration: 250, easing: Easing.out(Easing.circle) }
 };
 
 export default () => (
@@ -100,73 +100,73 @@ export default () => (
           headerShown: false,
           gestureEnabled: true,
           gestureResponseDistance: {
-            horizontal: Dimensions.get('window').width,
+            //horizontal: Dimensions.get('window').width,
           },
-          transitionSpec: {open: timingAnim, close: timingAnim},
+          transitionSpec: { open: timingAnim, close: timingAnim }
         }}
       >
         {/* onboard */}
-        <Stack.Screen name="LOADPAGE" component={LoadPage} />
-        <Stack.Screen name="LOGIN" component={Login} />
-        <Stack.Screen name="MEMBERSHIPEXPIRED" component={MembershipExpired} />
-        <Stack.Screen name="LOGINCREDENTIALS" component={LoginCredentials} />
-        <Stack.Screen name="SUPPORTSIGNUP" component={SupportSignUp} />
-        <Stack.Screen name="FORGOTPASSWORD" component={ForgotPassword} />
-        <Stack.Screen name="CREATEACCOUNT2" component={CreateAccount2} />
+        <Stack.Screen name='LOADPAGE' component={LoadPage} />
+        <Stack.Screen name='LOGIN' component={Login} />
+        <Stack.Screen name='MEMBERSHIPEXPIRED' component={MembershipExpired} />
+        <Stack.Screen name='LOGINCREDENTIALS' component={LoginCredentials} />
+        <Stack.Screen name='SUPPORTSIGNUP' component={SupportSignUp} />
+        <Stack.Screen name='FORGOTPASSWORD' component={ForgotPassword} />
+        <Stack.Screen name='CREATEACCOUNT2' component={CreateAccount2} />
         <Stack.Screen
-          name="CREATEACCOUNT3"
+          name='CREATEACCOUNT3'
           component={CreateAccount3}
-          options={{gestureEnabled: false}}
+          options={{ gestureEnabled: false }}
         />
-        <Stack.Screen name="CREATEACCOUNT" component={CreateAccount} />
-        <Stack.Screen name="NEWMEMBERSHIP" component={NewMembership} />
-        <Stack.Screen name="RESETPASSWORD" component={ResetPassword} />
+        <Stack.Screen name='CREATEACCOUNT' component={CreateAccount} />
+        <Stack.Screen name='NEWMEMBERSHIP' component={NewMembership} />
+        <Stack.Screen name='RESETPASSWORD' component={ResetPassword} />
         {/* user */}
         <Stack.Screen
-          name="NOTIFICATIONSETTINGS"
+          name='NOTIFICATIONSETTINGS'
           component={NotificationSettings}
         />
         <Stack.Screen
-          name="PROFILESETTINGS"
+          name='PROFILESETTINGS'
           component={ProfileSettings}
           options={{
-            gestureEnabled: false,
+            gestureEnabled: false
           }}
         />
-        <Stack.Screen name="PRIVACYPOLICY" component={PrivacyPolicy} />
-        <Stack.Screen name="SETTINGS" component={Settings} />
-        <Stack.Screen name="PROFILE" component={Profile} />
-        <Stack.Screen name="SUPPORT" component={Support} />
-        <Stack.Screen name="TERMS" component={Terms} />
+        <Stack.Screen name='PRIVACYPOLICY' component={PrivacyPolicy} />
+        <Stack.Screen name='SETTINGS' component={Settings} />
+        <Stack.Screen name='PROFILE' component={Profile} />
+        <Stack.Screen name='SUPPORT' component={Support} />
+        <Stack.Screen name='TERMS' component={Terms} />
         {/* content */}
         <Stack.Screen
-          name="STUDENTFOCUSCATALOG"
+          name='STUDENTFOCUSCATALOG'
           component={StudentFocusCatalog}
         />
-        <Stack.Screen name="STUDENTFOCUSSHOW" component={StudentFocusShow} />
-        <Stack.Screen name="ASSIGNMENT" component={Assignment} />
-        <Stack.Screen name="METHODLEVEL" component={MethodLevel} />
-        <Stack.Screen name="LIVE" component={Live} />
-        <Stack.Screen name="SCHEDULE" component={Schedule} />
-        <Stack.Screen name="METHOD" component={Method} />
-        <Stack.Screen name="FOUNDATIONS" component={Foundations} />
-        <Stack.Screen name="PATHOVERVIEW" component={PathOverview} />
-        <Stack.Screen name="SONGCATALOG" component={SongCatalog} />
+        <Stack.Screen name='STUDENTFOCUSSHOW' component={StudentFocusShow} />
+        <Stack.Screen name='ASSIGNMENT' component={Assignment} />
+        <Stack.Screen name='METHODLEVEL' component={MethodLevel} />
+        <Stack.Screen name='LIVE' component={Live} />
+        <Stack.Screen name='SCHEDULE' component={Schedule} />
+        <Stack.Screen name='METHOD' component={Method} />
+        <Stack.Screen name='FOUNDATIONS' component={Foundations} />
+        <Stack.Screen name='PATHOVERVIEW' component={PathOverview} />
+        <Stack.Screen name='SONGCATALOG' component={SongCatalog} />
         <Stack.Screen
-          name="VIEWLESSON"
+          name='VIEWLESSON'
           component={ViewLesson}
           options={{
-            gestureEnabled: false,
+            gestureEnabled: false
           }}
         />
-        <Stack.Screen name="SINGLEPACK" component={SinglePack} />
-        <Stack.Screen name="DOWNLOADS" component={Downloads} />
-        <Stack.Screen name="LESSONS" component={Lessons} />
-        <Stack.Screen name="SEEALL" component={SeeAll} />
-        <Stack.Screen name="COURSE" component={Course} />
-        <Stack.Screen name="MYLIST" component={MyList} />
-        <Stack.Screen name="SEARCH" component={Search} />
-        <Stack.Screen name="PACKS" component={Packs} />
+        <Stack.Screen name='SINGLEPACK' component={SinglePack} />
+        <Stack.Screen name='DOWNLOADS' component={Downloads} />
+        <Stack.Screen name='LESSONS' component={Lessons} />
+        <Stack.Screen name='SEEALL' component={SeeAll} />
+        <Stack.Screen name='COURSE' component={Course} />
+        <Stack.Screen name='MYLIST' component={MyList} />
+        <Stack.Screen name='SEARCH' component={Search} />
+        <Stack.Screen name='PACKS' component={Packs} />
       </Stack.Navigator>
     </NavigationContainer>
   </NetworkProvider>
