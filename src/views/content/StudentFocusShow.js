@@ -11,7 +11,7 @@ import {
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import FastImage from 'react-native-fast-image';
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
+import Back from '../../assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
 import { NetworkContext } from '../../context/NetworkProvider';
 import NavigationBar from '../../components/NavigationBar';

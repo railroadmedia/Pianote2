@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
+import ApprovedTeacher from '../assets/img/svgs/approved-teacher.svg';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -19,12 +19,6 @@ export default class LessonComplete extends React.Component {
   changeType = word => {
     word = word.replace(/[- )(]/g, ' ').split(' ');
     let string = '';
-
-    for (let i = 0; i < word.length; i++) {
-      if (word[i] !== 'and') {
-        word[i] = word[i][0].toUpperCase() + word[i].substr(1);
-      }
-    }
 
     for (i in word) {
       string = string + word[i] + ' ';
@@ -56,7 +50,13 @@ export default class LessonComplete extends React.Component {
                 color={'#fb1b2f'}
               />
             </View>
-            <Text style={[styles.modalHeaderText, localStyles.headerText]}>
+            <Text
+              style={[
+                styles.modalHeaderText,
+                localStyles.headerText,
+                { textTransform: 'capitalize' }
+              ]}
+            >
               {this.changeType(type)}
               {'\n'}Complete
             </Text>

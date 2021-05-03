@@ -56,12 +56,6 @@ export default class ContentModal extends React.Component {
     word = word.replace(/[- )(]/g, ' ').split(' ');
     let string = '';
 
-    for (let i = 0; i < word.length; i++) {
-      if (word[i] !== 'and') {
-        word[i] = word[i][0].toUpperCase() + word[i].substr(1);
-      }
-    }
-
     for (i in word) {
       string = string + word[i] + ' ';
     }
@@ -262,7 +256,8 @@ const localStyles = StyleSheet.create({
     textAlign: 'center',
     fontSize: DeviceInfo.isTablet() ? 16 : 12,
     color: 'grey',
-    marginVertical: 5
+    marginVertical: 5,
+    textTransform: 'capitalize'
   },
   image: {
     flex: 1,

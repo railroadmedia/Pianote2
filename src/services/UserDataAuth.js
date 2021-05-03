@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import { Platform } from 'react-native';
 import commonService from './common.service';
 
 export async function getToken(userEmail, userPass, purchases) {

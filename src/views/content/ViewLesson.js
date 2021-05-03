@@ -46,8 +46,8 @@ import {
   getMediaSessionId,
   updateUsersVideoProgress
 } from '../../services/UserActions';
-import ArrowLeft from 'Pianote2/src/assets/img/svgs/arrowLeft';
-import Resources from 'Pianote2/src/assets/img/svgs/resources';
+import ArrowLeft from '../../assets/img/svgs/arrowLeft';
+import Resources from '../../assets/img/svgs/resources';
 import Assignment from './Assignment';
 import { NetworkContext } from '../../context/NetworkProvider';
 import methodService from '../../services/method.service';
@@ -83,7 +83,6 @@ export default class ViewLesson extends React.Component {
       showLessonComplete: false,
       showResDownload: false,
       showVideo: true,
-      isStarted: false,
       isLiked: false,
       isAddedToMyList: false,
       artist: null,
@@ -200,7 +199,6 @@ export default class ViewLesson extends React.Component {
             Object.values(content.user_progress)?.[0].progress_percent
           ) || 0,
         isAddedToMyList: content.is_added_to_primary_playlist,
-        isStarted: content.started,
         assignmentList: al,
         nextLesson: content.next_lesson,
         previousLesson: content.previous_lesson,

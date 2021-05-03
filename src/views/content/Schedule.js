@@ -85,12 +85,6 @@ export default class Schedule extends React.Component {
     word = word.replace(/[- )(]/g, ' ').split(' ');
     let string = '';
 
-    for (let i = 0; i < word.length; i++) {
-      if (word[i] !== 'and') {
-        word[i] = word[i][0].toUpperCase() + word[i].substr(1);
-      }
-    }
-
     for (i in word) {
       string = string + word[i] + ' ';
     }
@@ -267,7 +261,8 @@ export default class Schedule extends React.Component {
                       fontSize: sizing.descriptionText,
                       color: colors.secondBackground,
                       textAlign: 'left',
-                      fontFamily: 'OpenSans-Regular'
+                      fontFamily: 'OpenSans-Regular',
+                      textTransform: 'capitalize'
                     }}
                   >
                     {this.changeType(item.type)}

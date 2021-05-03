@@ -31,7 +31,6 @@ class StudentFocusCatalog extends React.Component {
       studentFocus: [],
       refreshing: true,
       refreshControl: false,
-      started: true,
       ...this.initialValidData(studentFocusCache, true)
     };
   }
@@ -78,8 +77,7 @@ class StudentFocusCatalog extends React.Component {
         progressStudentFocus: newContent,
         studentFocus: shows,
         refreshing: false,
-        refreshControl: fromCache,
-        started: newContent.length !== 0
+        refreshControl: fromCache
       };
     } catch (e) {
       return {};
@@ -151,7 +149,7 @@ class StudentFocusCatalog extends React.Component {
                   />
                 )}
                 <Text style={styles.contentPageHeader}>Student Focus</Text>
-                {this.state.started && (
+                {!!this.state.progressStudentFocus.length && (
                   <View style={styles.mainContainer}>
                     <HorizontalVideoList
                       hideFilterButton={true}

@@ -45,7 +45,6 @@ class SongCatalog extends React.Component {
       outVideos: false,
       isPaging: false,
       filtering: false,
-      started: true,
       refreshing: true,
       refreshControl: false,
       ...this.initialValidData(songsCache, true)
@@ -102,7 +101,6 @@ class SongCatalog extends React.Component {
         filtering: false,
         isPaging: false,
         progressSongs: inprogressVideos,
-        started: inprogressVideos.length !== 0,
         refreshing: false,
         refreshControl: fromCache
       };
@@ -206,7 +204,7 @@ class SongCatalog extends React.Component {
               />
             )}
             <Text style={styles.contentPageHeader}>Songs</Text>
-            {this.state.started && (
+            {!!this.state.progressSongs.length && (
               <View style={styles.mainContainer}>
                 <HorizontalVideoList
                   hideFilterButton={true}

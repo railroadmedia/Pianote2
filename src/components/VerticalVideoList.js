@@ -15,8 +15,8 @@ import { addToMyList, removeFromMyList } from '../services/UserActions';
 import Relevance from '../modals/Relevance';
 import ContentModal from '../modals/ContentModal';
 import GradientFeature from '../components/GradientFeature';
-import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
-import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
+import ApprovedTeacher from '../assets/img/svgs/approved-teacher.svg';
+import Progress from '../assets/img/svgs/progress.svg';
 import { NetworkContext } from '../context/NetworkProvider';
 import AddToCalendar from '../modals/AddToCalendar';
 import Filters_V2 from './Filters_V2';
@@ -113,12 +113,6 @@ export default class VerticalVideoList extends React.Component {
   changeType = word => {
     word = word.replace(/[- )(]/g, ' ').split(' ');
     let string = '';
-
-    for (let i = 0; i < word.length; i++) {
-      if (word[i] !== 'and') {
-        word[i] = word[i][0].toUpperCase() + word[i].substr(1);
-      }
-    }
 
     for (i in word) {
       string = string + word[i] + ' ';
@@ -520,7 +514,8 @@ export default class VerticalVideoList extends React.Component {
                         ? colors.pianoteGrey
                         : colors.secondBackground,
                       textAlign: 'left',
-                      fontFamily: 'OpenSans-Regular'
+                      fontFamily: 'OpenSans-Regular',
+                      textTransform: 'capitalize'
                     }}
                   >
                     {this.changeType(row.type)}/{' '}

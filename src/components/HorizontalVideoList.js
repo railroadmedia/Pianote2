@@ -21,10 +21,9 @@ import Relevance from '../modals/Relevance';
 import { addToMyList, removeFromMyList } from '../services/UserActions';
 import ContentModal from '../modals/ContentModal';
 import { NetworkContext } from '../context/NetworkProvider';
-import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
-import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
+import ApprovedTeacher from '../assets/img/svgs/approved-teacher.svg';
+import Progress from '../assets/img/svgs/progress.svg';
 import Filters_V2 from './Filters_V2';
-import Orientation from 'react-native-orientation-locker';
 import { navigate } from '../../AppNavigator';
 
 let greaterWDim;
@@ -43,7 +42,6 @@ export default class HorizontalVideoList extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    this._onOrientationDidChange = this._onOrientationDidChange.bind(this);
     this.state = {
       showModal: false,
       addToCalendarModal: false,
@@ -53,10 +51,6 @@ export default class HorizontalVideoList extends React.Component {
       items: this.props.items
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
-  }
-
-  componentDidMount() {
-    Orientation.addOrientationListener(this._onOrientationDidChange);
   }
 
   componentWillReceiveProps = props => {
@@ -99,10 +93,6 @@ export default class HorizontalVideoList extends React.Component {
       this.setState({ items: this.props.items });
   }
 
-  _onOrientationDidChange = () => {
-    this.forceUpdate();
-  };
-
   decideWidth() {
     if (onTablet) {
       if (this.props.isSquare) return 125;
@@ -112,6 +102,14 @@ export default class HorizontalVideoList extends React.Component {
       else return ((Dimensions.get('window').width - 30) * 3) / 4;
     }
   }
+
+  toggleMyList = () => {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    this.state.isAddedToList
+      ? removeFromMyList(this.state.id)
+      : addToMyList(this.state.id);
+    this.setState(state => ({ isAddedToList: !state.isAddedToList }));
+  };
 
   addToMyList = contentID => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
@@ -155,12 +153,6 @@ export default class HorizontalVideoList extends React.Component {
   changeType = word => {
     word = word.replace(/[- )(]/g, ' ').split(' ');
     let string = '';
-
-    for (let i = 0; i < word.length; i++) {
-      if (word[i] !== 'and') {
-        word[i] = word[i][0].toUpperCase() + word[i].substr(1);
-      }
-    }
 
     for (i in word) {
       string = string + word[i] + ' ';
@@ -598,7 +590,7 @@ export default class HorizontalVideoList extends React.Component {
                     ]}
                     source={{
                       uri:
-                        item.thumbnail && item.thumbnail !== 'TBD'
+                        item.thumbnail_url && item.thumbnail_url !== 'TBD'
                           ? `https://cdn.musora.com/image/fetch/w_${Math.round(
                               this.decideWidth() * 2
                             )},ar_${
@@ -651,7 +643,8 @@ export default class HorizontalVideoList extends React.Component {
                           ? colors.pianoteGrey
                           : colors.secondBackground,
 
-                        fontSize: sizing.descriptionText
+                        fontSize: sizing.descriptionText,
+                        textTransform: 'capitalize'
                       }}
                     >
                       {this.props.showType && this.changeType(item.type)}

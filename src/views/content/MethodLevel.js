@@ -12,7 +12,7 @@ import Modal from 'react-native-modal';
 import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
+import Back from '../../assets/img/svgs/back.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import Orientation from 'react-native-orientation-locker';
 import LongButton from '../../components/LongButton';

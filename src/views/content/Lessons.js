@@ -17,7 +17,7 @@ import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
-import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
+import PasswordVisible from '../../assets/img/svgs/passwordVisible.svg';
 import Orientation from 'react-native-orientation-locker';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
@@ -211,12 +211,6 @@ class Lessons extends React.Component {
     } catch {}
 
     let string = '';
-
-    for (let i = 0; i < word.length; i++) {
-      if (word[i] !== 'and') {
-        word[i] = word[i][0].toUpperCase() + word[i].substr(1);
-      }
-    }
 
     for (i in word) {
       string = string + word[i];
@@ -745,7 +739,7 @@ class Lessons extends React.Component {
                                 style={{
                                   fontFamily: 'OpenSans-Regular',
                                   color: colors.pianoteGrey,
-
+                                  textTransform: 'capitalize',
                                   fontSize: sizing.descriptionText
                                 }}
                               >
@@ -871,7 +865,7 @@ class Lessons extends React.Component {
                               style={{
                                 fontFamily: 'OpenSans-Regular',
                                 color: colors.pianoteGrey,
-
+                                textTransform: 'capitalize',
                                 fontSize: sizing.descriptionText
                               }}
                             >
@@ -1050,7 +1044,7 @@ class Lessons extends React.Component {
                               style={{
                                 fontFamily: 'OpenSans-Regular',
                                 color: colors.pianoteGrey,
-
+                                textTransform: 'capitalize',
                                 fontSize: sizing.descriptionText
                               }}
                             >

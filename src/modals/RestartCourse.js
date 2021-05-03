@@ -13,12 +13,6 @@ export default class RestartCourse extends React.Component {
     word = word.replace(/[- )(]/g, ' ').split(' ');
     let string = '';
 
-    for (let i = 0; i < word.length; i++) {
-      if (word[i] !== 'and') {
-        word[i] = word[i][0].toUpperCase() + word[i].substr(1);
-      }
-    }
-
     for (i in word) {
       string = string + word[i] + ' ';
     }
@@ -35,14 +29,22 @@ export default class RestartCourse extends React.Component {
       >
         <View style={[styles.centerContent, styles.container]}>
           <View style={localStyles.container}>
-            <Text style={styles.modalHeaderText}>
+            <Text
+              style={[styles.modalHeaderText, { textTransform: 'capitalize' }]}
+            >
               Restart{' '}
               {type == 'method'
                 ? 'method'
                 : 'this ' + this.changeType(type).toLocaleLowerCase()}
               ?
             </Text>
-            <Text style={[styles.modalBodyText, localStyles.descriptionText]}>
+            <Text
+              style={[
+                styles.modalBodyText,
+                localStyles.descriptionText,
+                { textTransform: 'capitalize' }
+              ]}
+            >
               Take{' '}
               {type == 'method'
                 ? 'method '

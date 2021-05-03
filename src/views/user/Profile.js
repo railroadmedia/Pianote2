@@ -16,9 +16,8 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import AsyncStorage from '@react-native-community/async-storage';
-import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
-import Settings from 'Pianote2/src/assets/img/svgs/settings.svg';
+import Chat from '../../assets/img/svgs/chat.svg';
+import Settings from '../../assets/img/svgs/settings.svg';
 import XpRank from '../../modals/XpRank.js';
 import { getUserData } from '../../services/UserDataAuth.js';
 import NavigationBar from '../../components/NavigationBar.js';
@@ -78,7 +77,7 @@ export default class Profile extends React.Component {
     super(props);
     this.state = {
       profileImage: '',
-      xp: '',
+      xp: null,
       notifications: [],
       showXpRank: false,
       showReplyNotification: false,
@@ -95,25 +94,14 @@ export default class Profile extends React.Component {
     };
   }
 
-  componentDidMount() {
-    AsyncStorage.multiGet([
-      'totalXP',
-      'rank',
-      'profileURI',
-      'displayName',
-      'joined'
-    ]).then(data =>
-      this.setState({
-        xp: this.changeXP(data[0][1]),
-        rank: data[1][1],
-        profileImage: data[2][1],
-        username: data[3][1],
-        memberSince: data[4][1]
-      })
-    );
-
+  async componentDidMount() {
     getUserData().then(userData => {
       this.setState({
+        xp: this.changeXP(userData?.totalXp),
+        rank: userData?.xpRank,
+        profileImage: userData?.avatarUrl,
+        username: userData?.display_name,
+        memberSince: '',
         notifications_summary_frequency_minutes:
           userData?.notifications_summary_frequency_minutes,
         notify_on_forum_followed_thread_reply:
@@ -178,6 +166,7 @@ export default class Profile extends React.Component {
   }
 
   changeXP = num => {
+    console.log(num);
     if (num !== '') {
       num = Number(num);
       if (num < 10000) {

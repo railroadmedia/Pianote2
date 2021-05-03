@@ -91,7 +91,8 @@ export default class Live extends React.Component {
                   fontFamily: 'OpenSans-Bold',
                   position: 'absolute',
                   fontSize: onTablet ? 16 : 14,
-                  marginTop: 20
+                  marginTop: 20,
+                  textTransform: 'capitalize'
                 }}
               >
                 {this.changeType(this.props.liveLesson[0]?.instructors)}

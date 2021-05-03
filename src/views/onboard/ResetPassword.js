@@ -12,10 +12,10 @@ import FastImage from 'react-native-fast-image';
 import PasswordMatch from '../../modals/PasswordMatch';
 import { SafeAreaView } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
-import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
-import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
+import GradientFeature from '../../components/GradientFeature.js';
+import PasswordHidden from '../../assets/img/svgs/passwordHidden.svg';
 import Back from '../../assets/img/svgs/back';
-import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
+import PasswordVisible from '../../assets/img/svgs/passwordVisible.svg';
 import CustomModal from '../../modals/CustomModal';
 import { changePassword } from '../../services/UserDataAuth';
 import { NetworkContext } from '../../context/NetworkProvider';
@@ -67,7 +67,7 @@ export default class ResetPassword extends React.Component {
       <FastImage
         style={{ flex: 1 }}
         resizeMode={FastImage.resizeMode.cover}
-        source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
+        source={require('../../assets/img/imgs/backgroundHands.png')}
       >
         <GradientFeature
           zIndex={0}

@@ -8,13 +8,13 @@ import {
   StatusBar,
   StyleSheet
 } from 'react-native';
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
+import Back from '../../assets/img/svgs/back.svg';
 import DeviceInfo from 'react-native-device-info';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
-import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
-import CustomSwitch from 'Pianote2/src/components/CustomSwitch.js';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import { getUserData } from '../../services/UserDataAuth.js';
+import CustomSwitch from '../../components/CustomSwitch.js';
+import NavigationBar from '../../components/NavigationBar.js';
 import commonService from '../../services/common.service';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { SafeAreaView } from 'react-navigation';

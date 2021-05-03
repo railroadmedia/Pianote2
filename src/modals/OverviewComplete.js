@@ -8,12 +8,6 @@ export default class OverviewComplete extends React.Component {
     word = word.replace(/[- )(]/g, ' ').split(' ');
     let string = '';
 
-    for (let i = 0; i < word.length; i++) {
-      if (word[i] !== 'and') {
-        word[i] = word[i][0].toUpperCase() + word[i].substr(1);
-      }
-    }
-
     for (i in word) {
       string = string + word[i] + ' ';
     }
@@ -37,7 +31,12 @@ export default class OverviewComplete extends React.Component {
               />
             </View>
             <View style={[styles.centerContent, { padding: 5 }]}>
-              <Text style={[styles.modalHeaderText]}>
+              <Text
+                style={[
+                  styles.modalHeaderText,
+                  { textTransform: 'capitalize' }
+                ]}
+              >
                 {this.changeType(this.props.type).toUpperCase()}
                 {'\n'}Complete
               </Text>

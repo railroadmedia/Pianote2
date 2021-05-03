@@ -14,7 +14,7 @@ import Modal from 'react-native-modal';
 import { Download_V2 } from 'RNDownload';
 import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
+import Back from '../../assets/img/svgs/back.svg';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Orientation from 'react-native-orientation-locker';
@@ -31,7 +31,7 @@ import {
   resetProgress
 } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
-import Resources from 'Pianote2/src/assets/img/svgs/resources';
+import Resources from '../../assets/img/svgs/resources';
 import { goBack, navigate, push } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');

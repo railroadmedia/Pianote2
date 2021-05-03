@@ -17,7 +17,7 @@ import DeviceInfo from 'react-native-device-info';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import NavigationBar from '../../components/NavigationBar.js';
 import FastImage from 'react-native-fast-image';
-import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
+import PasswordVisible from '../../assets/img/svgs/passwordVisible.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import { MusoraChat, watchersListener } from 'MusoraChat';
 import { getLiveScheduleContent } from '../../services/GetContent';
@@ -26,14 +26,14 @@ import {
   toggleBlockStudent
 } from '../../services/UserActions';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
-import ArrowLeft from 'Pianote2/src/assets/img/svgs/arrowLeft';
+import ArrowLeft from '../../assets/img/svgs/arrowLeft';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import AddToCalendar from '../../modals/AddToCalendar';
 import { addToMyList, removeFromMyList } from '../../services/UserActions';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { goBack } from '../../../AppNavigator';
-import { getLiveContent } from 'Pianote2/src/services/GetContent';
+import { getLiveContent } from '../../../src/services/GetContent';
 
 const day = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
 const month = [
@@ -177,12 +177,6 @@ export default class Live extends React.Component {
     } catch {}
 
     let string = '';
-
-    for (let i = 0; i < word.length; i++) {
-      if (word[i] !== 'and') {
-        word[i] = word[i][0].toUpperCase() + word[i].substr(1);
-      }
-    }
 
     for (i in word) {
       string = string + word[i] + ' ';
@@ -512,7 +506,7 @@ export default class Live extends React.Component {
                             style={{
                               fontFamily: 'OpenSans-Regular',
                               color: colors.pianoteGrey,
-
+                              textTransform: 'capitalize',
                               fontSize: sizing.descriptionText
                             }}
                           >
@@ -879,7 +873,8 @@ export default class Live extends React.Component {
                           fontSize: sizing.descriptionText,
                           color: colors.secondBackground,
                           textAlign: 'left',
-                          fontFamily: 'OpenSans-Regular'
+                          fontFamily: 'OpenSans-Regular',
+                          textTransform: 'capitalize'
                         }}
                       >
                         {this.changeType(item.type)}

@@ -7,12 +7,12 @@ import {
   Platform,
   Alert,
   Dimensions,
-  StatusBar
+  StatusBar,
+  Image
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import RNIap from 'react-native-iap';
-import FastImage from 'react-native-fast-image';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
+import Pianote from '../../assets/img/svgs/pianote.svg';
 import GradientFeature from '../../components/GradientFeature.js';
 import { validateSignUp, restorePurchase } from '../../services/UserDataAuth';
 import CustomModal from '../../modals/CustomModal';
@@ -32,6 +32,25 @@ const skus = Platform.select({
   ]
 });
 let purchases = [];
+const images = {
+  1: [
+    require('Pianote2/src/assets/img/imgs/lisa-foundations.png'),
+    require('Pianote2/src/assets/img/imgs/devices.png')
+  ],
+  2: [
+    require('Pianote2/src/assets/img/imgs/prescreenPractice.png'),
+    require('Pianote2/src/assets/img/imgs/practice.png')
+  ],
+  3: [
+    require('Pianote2/src/assets/img/imgs/prescreenSongs.png'),
+    require('Pianote2/src/assets/img/imgs/favorite-songs.png')
+  ],
+  4: [
+    require('Pianote2/src/assets/img/imgs/prescreenSupport.png'),
+    require('Pianote2/src/assets/img/imgs/support.png')
+  ],
+  5: ['', '']
+};
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -256,68 +275,10 @@ export default class Login extends React.Component {
     );
   }
 
-  renderFirstPage() {
-    return (
-      <View
-        style={{
-          flex: 1,
-          width,
-          backgroundColor: 'rgba(23, 26, 26, 1)'
-        }}
-      >
-        <SafeAreaView
-          style={{
-            position: 'absolute',
-            top: 0,
-            zIndex: 3,
-            elevation: 3,
-            width: '100%'
-          }}
-        >
-          <Pianote
-            height={onTablet ? 80 : 60}
-            width={onTablet ? 200 : 120}
-            fill={'#fb1b2f'}
-            style={{ alignSelf: 'center' }}
-          />
-        </SafeAreaView>
-        <GradientFeature
-          color={'grey'}
-          opacity={1}
-          height={'70%'}
-          borderRadius={0}
-        />
-        <View
-          style={{
-            flex: 0.75,
-            alignSelf: 'stretch'
-          }}
-        >
-          <FastImage
-            style={{ flex: 1 }}
-            source={require('Pianote2/src/assets/img/imgs/lisa-foundations.png')}
-            resizeMode={FastImage.resizeMode.cover}
-          />
-        </View>
-        <View
-          style={{
-            position: 'absolute',
-            bottom: '23%',
-            width: '100%',
-            zIndex: 3,
-            elevation: 3
-          }}
-        >
-          <View style={styles.centerContent}>
-            <FastImage
-              style={{
-                height: onTablet ? 200 : 100,
-                width: '100%'
-              }}
-              source={require('Pianote2/src/assets/img/imgs/devices.png')}
-              resizeMode={FastImage.resizeMode.contain}
-            />
-          </View>
+  renderWords = num => {
+    if (num == 1) {
+      return (
+        <>
           <Text
             style={{
               fontFamily: 'OpenSans-Bold',
@@ -340,80 +301,11 @@ export default class Login extends React.Component {
           >
             Everywhere you go.
           </Text>
-        </View>
-        <View
-          style={{
-            position: 'absolute',
-            bottom: '5.5%',
-            width: '100%',
-            zIndex: 3,
-            elevation: 3
-          }}
-        >
-          {this.renderDots()}
-          <View style={{ height: '20%' }} />
-          {this.renderButtons()}
-        </View>
-      </View>
-    );
-  }
-
-  renderSecondPage() {
-    return (
-      <View style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}>
-        <SafeAreaView
-          style={{
-            position: 'absolute',
-            top: 0,
-            zIndex: 2,
-            elevation: 3,
-            width: '100%'
-          }}
-        >
-          <Pianote
-            height={onTablet ? 80 : 60}
-            width={onTablet ? 200 : 120}
-            fill={'#fb1b2f'}
-            style={{ alignSelf: 'center' }}
-          />
-        </SafeAreaView>
-        <GradientFeature
-          color={'grey'}
-          opacity={1}
-          height={'70%'}
-          borderRadius={0}
-        />
-        <View
-          style={{
-            flex: 0.75,
-            alignSelf: 'stretch'
-          }}
-        >
-          <FastImage
-            style={{ flex: 1 }}
-            source={require('Pianote2/src/assets/img/imgs/prescreenPractice.png')}
-            resizeMode={FastImage.resizeMode.cover}
-          />
-        </View>
-        <View
-          style={{
-            position: 'absolute',
-            bottom: '21.5%',
-            width: '100%',
-            zIndex: 3,
-            elevation: 3
-          }}
-        >
-          <View style={styles.centerContent}>
-            <FastImage
-              style={{
-                height: onTablet ? 200 : 120,
-                width: '90%'
-              }}
-              source={require('Pianote2/src/assets/img/imgs/practice.png')}
-              resizeMode={FastImage.resizeMode.contain}
-            />
-          </View>
+        </>
+      );
+    } else if (num == 2) {
+      return (
+        <>
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
@@ -449,80 +341,11 @@ export default class Login extends React.Component {
             you'll actually play music with step-by-step lessons that will build
             your piano playing foundations!
           </Text>
-        </View>
-        <View
-          style={{
-            position: 'absolute',
-            bottom: '5.5%',
-            width: '100%',
-            zIndex: 3,
-            elevation: 3
-          }}
-        >
-          {this.renderDots()}
-          <View style={{ height: '20%' }} />
-          {this.renderButtons()}
-        </View>
-      </View>
-    );
-  }
-
-  renderThirdpage() {
-    return (
-      <View style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}>
-        <SafeAreaView
-          style={{
-            position: 'absolute',
-            top: 0,
-            zIndex: 2,
-            elevation: 3,
-            width: '100%'
-          }}
-        >
-          <Pianote
-            height={onTablet ? 80 : 60}
-            width={onTablet ? 200 : 120}
-            fill={'#fb1b2f'}
-            style={{ alignSelf: 'center' }}
-          />
-        </SafeAreaView>
-        <GradientFeature
-          color={'grey'}
-          opacity={1}
-          height={'70%'}
-          borderRadius={0}
-        />
-        <View
-          style={{
-            flex: 0.75,
-            alignSelf: 'stretch'
-          }}
-        >
-          <FastImage
-            style={{ flex: 1 }}
-            source={require('Pianote2/src/assets/img/imgs/prescreenSongs.png')}
-            resizeMode={FastImage.resizeMode.cover}
-          />
-        </View>
-        <View
-          style={{
-            position: 'absolute',
-            bottom: '22%',
-            width: '100%',
-            zIndex: 3,
-            elevation: 3
-          }}
-        >
-          <View style={styles.centerContent}>
-            <FastImage
-              style={{
-                height: onTablet ? 200 : 100,
-                width: '100%'
-              }}
-              source={require('Pianote2/src/assets/img/imgs/favorite-songs.png')}
-              resizeMode={FastImage.resizeMode.contain}
-            />
-          </View>
+        </>
+      );
+    } else if (num == 3) {
+      return (
+        <>
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
@@ -557,81 +380,11 @@ export default class Login extends React.Component {
             play-alongs to help you apply specific-skills PLUS breakdowns of
             popular music so you can play your favorite tunes!
           </Text>
-        </View>
-        <View
-          style={{
-            position: 'absolute',
-            bottom: '5.5%',
-            width: '100%',
-            zIndex: 3,
-            elevation: 3
-          }}
-        >
-          {this.renderDots()}
-          <View style={{ height: '20%' }} />
-          {this.renderButtons()}
-        </View>
-      </View>
-    );
-  }
-
-  renderFourthPage() {
-    return (
-      <View style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}>
-        <SafeAreaView
-          style={{
-            position: 'absolute',
-            top: 0,
-            zIndex: 2,
-            elevation: 3,
-            width: '100%'
-          }}
-        >
-          <Pianote
-            height={onTablet ? 80 : 60}
-            width={onTablet ? 200 : 120}
-            fill={'#fb1b2f'}
-            style={{ alignSelf: 'center' }}
-          />
-        </SafeAreaView>
-        <GradientFeature
-          color={'grey'}
-          opacity={1}
-          height={'70%'}
-          borderRadius={0}
-        />
-        <View
-          style={{
-            flex: 0.75,
-            alignSelf: 'stretch'
-          }}
-        >
-          <FastImage
-            style={{ flex: 1 }}
-            source={require('Pianote2/src/assets/img/imgs/prescreenSupport.png')}
-            resizeMode={FastImage.resizeMode.cover}
-          />
-        </View>
-
-        <View
-          style={{
-            position: 'absolute',
-            bottom: '22%',
-            width: '100%',
-            zIndex: 3,
-            elevation: 3
-          }}
-        >
-          <View style={styles.centerContent}>
-            <FastImage
-              style={{
-                height: onTablet ? 200 : 100,
-                width: '100%'
-              }}
-              source={require('Pianote2/src/assets/img/imgs/support.png')}
-              resizeMode={FastImage.resizeMode.contain}
-            />
-          </View>
+        </>
+      );
+    } else if (num == 4) {
+      return (
+        <>
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
@@ -667,120 +420,198 @@ export default class Login extends React.Component {
             access weekly live-streaming video lessons, and connect with
             teachers and students in the community forums!
           </Text>
-        </View>
-        <View
-          style={{
-            position: 'absolute',
-            bottom: '5.5%',
-            width: '100%',
-            zIndex: 3,
-            elevation: 3
-          }}
-        >
-          {this.renderDots()}
-          <View style={{ height: '20%' }} />
-          {this.renderButtons()}
-        </View>
-      </View>
-    );
-  }
-
-  renderFifthPage() {
-    return (
-      <View style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}>
-        <SafeAreaView
-          style={{
-            position: 'absolute',
-            top: 0,
-            zIndex: 4,
-            elevation: 4,
-            width: '100%'
-          }}
-        >
-          <Pianote
-            height={onTablet ? 80 : 60}
-            width={onTablet ? 200 : 120}
-            fill={'#fb1b2f'}
-            style={{ alignSelf: 'center' }}
-          />
-        </SafeAreaView>
-        <GradientFeature
-          color={'grey'}
-          opacity={1}
-          height={'30%'}
-          borderRadius={0}
-        />
-        <View
-          style={[
-            styles.centerContent,
-            {
-              flex: 1,
-              backgroundColor: 'rgba(23, 26, 26, 1)',
-              alignSelf: 'stretch',
-              zIndex: 3,
-              marginBottom: 20
-            }
-          ]}
-        >
-          <View
-            style={[
-              styles.centerContent,
-              {
-                width: '100%',
-                zIndex: 3,
-                elevation: 3
-              }
-            ]}
+        </>
+      );
+    } else if (num == 5) {
+      return (
+        <>
+          <Text
+            style={{
+              fontFamily: 'OpenSans-Regular',
+              fontSize: onTablet ? 32 : 24,
+              padding: 5,
+              textAlign: 'center',
+              color: 'white'
+            }}
           >
+            Always know
             <Text
               style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: onTablet ? 32 : 24,
+                fontFamily: 'OpenSans-Bold',
                 padding: 5,
                 textAlign: 'center',
                 color: 'white'
               }}
             >
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Bold',
-                  padding: 5,
-                  textAlign: 'center',
-                  color: 'white'
-                }}
-              >
-                Not a Member?
-              </Text>
+              {' exactly '}
             </Text>
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                paddingHorizontal: 20,
-                fontSize: onTablet ? 24 : 16,
-                textAlign: 'center',
-                color: 'grey'
-              }}
-            >
-              Try it for free for 7-days when you click the sign up button below
-              to set up your Pianote account.
-            </Text>
+            what to practice.
+          </Text>
+          <Text
+            style={{
+              fontFamily: 'OpenSans-Regular',
+              padding: 5,
+              fontSize: onTablet ? 24 : 16,
+              textAlign: 'center',
+              color: 'grey'
+            }}
+          >
+            Unlike "video game" learning where you only learn what keys to hit,
+            you'll actually play music with step-by-step lessons that will build
+            your piano playing foundations!
+          </Text>
+        </>
+      );
+    }
+  };
+
+  renderPage(num) {
+    if (num == 5) {
+      return (
+        <View
+          style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}
+        >
+          <SafeAreaView
+            style={{
+              position: 'absolute',
+              top: 0,
+              zIndex: 4,
+              elevation: 4,
+              width: '100%'
+            }}
+          >
+            <Pianote
+              height={onTablet ? 80 : 60}
+              width={onTablet ? 200 : 120}
+              fill={'#fb1b2f'}
+              style={{ alignSelf: 'center' }}
+            />
+          </SafeAreaView>
+          <GradientFeature
+            color={'grey'}
+            opacity={1}
+            height={'30%'}
+            borderRadius={0}
+          />
+          <View
+            style={[
+              styles.centerContent,
+              {
+                flex: 1,
+                backgroundColor: 'rgba(23, 26, 26, 1)',
+                alignSelf: 'stretch',
+                zIndex: 3,
+                marginBottom: 20
+              }
+            ]}
+          >
+            <View
+              style={[
+                styles.centerContent,
+                {
+                  width: '100%',
+                  zIndex: 3,
+                  elevation: 3
+                }
+              ]}
+            />
+            {this.renderWords(num)}
+          </View>
+          <View
+            style={{
+              position: 'absolute',
+              bottom: '5.5%',
+              width: '100%',
+              zIndex: 3,
+              elevation: 3
+            }}
+          >
+            {this.renderDots()}
+            <View style={{ height: '20%' }} />
+            {this.renderButtons()}
           </View>
         </View>
+      );
+    } else {
+      return (
         <View
           style={{
-            position: 'absolute',
-            bottom: '5.5%',
-            width: '100%',
-            zIndex: 3,
-            elevation: 3
+            flex: 1,
+            width,
+            backgroundColor: 'rgba(23, 26, 26, 1)'
           }}
         >
-          {this.renderDots()}
-          <View style={{ height: '20%' }} />
-          {this.renderButtons()}
+          <SafeAreaView
+            style={{
+              position: 'absolute',
+              top: 0,
+              zIndex: 3,
+              elevation: 3,
+              width: '100%'
+            }}
+          >
+            <Pianote
+              height={onTablet ? 80 : 60}
+              width={onTablet ? 200 : 120}
+              fill={'#fb1b2f'}
+              style={{ alignSelf: 'center' }}
+            />
+          </SafeAreaView>
+          <GradientFeature
+            color={'grey'}
+            opacity={1}
+            height={'70%'}
+            borderRadius={0}
+          />
+          <View
+            style={{
+              flex: 0.75,
+              alignSelf: 'stretch'
+            }}
+          >
+            <Image
+              style={{ height: '100%', width: '100%' }}
+              source={images[num][0]}
+              resizeMode={'cover'}
+            />
+          </View>
+          <View
+            style={{
+              position: 'absolute',
+              bottom: '23%',
+              width: '100%',
+              zIndex: 3,
+              elevation: 3
+            }}
+          >
+            <View style={styles.centerContent}>
+              <Image
+                style={{
+                  height: onTablet ? 200 : 100,
+                  width: '100%'
+                }}
+                source={images[num][1]}
+                resizeMode={'contain'}
+              />
+              {this.renderWords(num)}
+            </View>
+          </View>
+          <View
+            style={{
+              position: 'absolute',
+              bottom: '5.5%',
+              width: '100%',
+              zIndex: 3,
+              elevation: 3
+            }}
+          >
+            {this.renderDots()}
+            <View style={{ height: '20%' }} />
+            {this.renderButtons()}
+          </View>
         </View>
-      </View>
-    );
+      );
+    }
   }
 
   render() {
@@ -798,11 +629,11 @@ export default class Login extends React.Component {
             onMomentumScrollEnd={e => this.changePage(e)}
             style={{ flex: 1 }}
           >
-            {this.renderFirstPage()}
-            {this.renderSecondPage()}
-            {this.renderThirdpage()}
-            {this.renderFourthPage()}
-            {this.renderFifthPage()}
+            {this.renderPage(1)}
+            {this.renderPage(2)}
+            {this.renderPage(3)}
+            {this.renderPage(4)}
+            {this.renderPage(5)}
           </ScrollView>
           <Loading
             ref={ref => {

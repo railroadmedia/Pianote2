@@ -42,7 +42,6 @@ class Course extends React.Component {
       page: 1,
       outVideos: false,
       isPaging: false,
-      started: true,
       refreshing: true,
       refreshControl: false,
       ...this.initialValidData(coursesCache, true)
@@ -102,8 +101,7 @@ class Course extends React.Component {
           allVideos.length == 0 || content.all.data.length < 10 ? true : false,
         filtering: false,
         isPaging: false,
-        page: 1,
-        started: inprogressVideos.length !== 0
+        page: 1
       };
     } catch (e) {
       return {};
@@ -191,7 +189,7 @@ class Course extends React.Component {
               />
             )}
             <Text style={styles.contentPageHeader}>Courses</Text>
-            {this.state.started && (
+            {!!this.state.progressCourses.length && (
               <HorizontalVideoList
                 hideFilterButton={true}
                 Title={'CONTINUE'}

@@ -9,7 +9,7 @@ import {
   Linking
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
+import Back from '../../assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';
 

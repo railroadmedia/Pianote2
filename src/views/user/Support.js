@@ -7,10 +7,10 @@ import {
   ScrollView,
   StyleSheet
 } from 'react-native';
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
+import Back from '../../assets/img/svgs/back.svg';
 import Intercom from 'react-native-intercom';
-import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import { getUserData } from '../../services/UserDataAuth.js';
+import NavigationBar from '../../components/NavigationBar.js';
 import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';

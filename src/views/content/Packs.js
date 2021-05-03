@@ -87,13 +87,13 @@ class Packs extends React.Component {
       isLoading: false,
       refreshing: fromCache,
       showRestartCourse: false,
-      id: content?.topHeaderPack.id,
-      headerPackImg: content?.topHeaderPack.thumbnail,
-      headerPackLogo: content?.topHeaderPack.pack_logo,
-      headerPackUrl: content?.topHeaderPack.mobile_app_url,
-      headerPackCompleted: content?.topHeaderPack.completed,
-      headerPackStarted: content?.topHeaderPack.started,
-      headerPackNextLessonUrl: content?.topHeaderPack.next_lesson_url
+      id: content?.topHeaderPack?.id,
+      headerPackImg: content?.topHeaderPack?.thumbnail,
+      headerPackLogo: content?.topHeaderPack?.pack_logo,
+      headerPackUrl: content?.topHeaderPack?.mobile_app_url,
+      headerPackCompleted: content?.topHeaderPack?.completed,
+      headerPackStarted: content?.topHeaderPack?.started,
+      headerPackNextLessonUrl: content?.topHeaderPack?.next_lesson_url
     };
   };
 

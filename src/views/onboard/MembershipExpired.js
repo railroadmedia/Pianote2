@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import DeviceInfo from 'react-native-device-info';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
+import Pianote from '../../assets/img/svgs/pianote.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
