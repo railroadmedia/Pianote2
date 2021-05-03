@@ -15,6 +15,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
 
+const isTablet = DeviceInfo.isTablet();
 const messageDict = {
   'lesson comment reply': [
     'replied to your comment.',
@@ -268,8 +269,8 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#00101d'
   },
   profileContainer2: {
-    height: DeviceInfo.isTablet() ? 120 : 80,
-    width: DeviceInfo.isTablet() ? 120 : 80,
+    height: isTablet ? 120 : 80,
+    width: isTablet ? 120 : 80,
     borderRadius: 100,
     backgroundColor: '#445f73'
   },
@@ -277,8 +278,8 @@ const localStyles = StyleSheet.create({
     position: 'absolute',
     bottom: -5,
     right: -5,
-    height: DeviceInfo.isTablet() ? 40 : 30,
-    width: DeviceInfo.isTablet() ? 40 : 30,
+    height: isTablet ? 40 : 30,
+    width: isTablet ? 40 : 30,
     backgroundColor: 'red',
     borderRadius: 100,
     zIndex: 5
@@ -287,8 +288,8 @@ const localStyles = StyleSheet.create({
     position: 'absolute',
     bottom: -5,
     right: -5,
-    height: DeviceInfo.isTablet() ? 40 : 30,
-    width: DeviceInfo.isTablet() ? 40 : 30,
+    height: isTablet ? 40 : 30,
+    width: isTablet ? 40 : 30,
     backgroundColor: 'orange',
     borderRadius: 100,
     zIndex: 5
@@ -297,8 +298,8 @@ const localStyles = StyleSheet.create({
     position: 'absolute',
     bottom: -5,
     right: -5,
-    height: DeviceInfo.isTablet() ? 40 : 30,
-    width: DeviceInfo.isTablet() ? 40 : 30,
+    height: isTablet ? 40 : 30,
+    width: isTablet ? 40 : 30,
     backgroundColor: 'blue',
     borderRadius: 100,
     zIndex: 5
@@ -309,19 +310,19 @@ const localStyles = StyleSheet.create({
   },
   replyUser: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    fontSize: isTablet ? 16 : 12,
     paddingBottom: 20,
     textAlign: 'center',
     color: '#445f73'
   },
   user: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    fontSize: isTablet ? 16 : 12,
     textAlign: 'center'
   },
   removeText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    fontSize: isTablet ? 16 : 12,
     color: '#445f73',
     paddingLeft: 10
   },
@@ -331,14 +332,14 @@ const localStyles = StyleSheet.create({
     width: '100%'
   },
   removeContainer: {
-    height: DeviceInfo.isTablet() ? 70 : 50,
+    height: isTablet ? 70 : 50,
     width: '100%',
     borderTopWidth: 0.5,
     paddingLeft: 10,
     borderTopColor: '#445f73'
   },
   muteContainer: {
-    height: DeviceInfo.isTablet() ? 70 : 50,
+    height: isTablet ? 70 : 50,
     width: '100%',
     borderTopWidth: 0.5,
     borderTopColor: '#445f73'

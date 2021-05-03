@@ -35,6 +35,8 @@ import { goBack, navigate, reset } from '../../../AppNavigator';
 import commonService from '../../services/common.service';
 import navigationService from '../../services/navigation.service';
 
+const isTablet = DeviceInfo.isTablet();
+
 export default class LoginCredentials extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
@@ -431,7 +433,7 @@ const localStyles = StyleSheet.create({
   pianoteInnerContainer: {
     alignSelf: 'center',
     alignItems: 'center',
-    width: DeviceInfo.isTablet() ? '30%' : '45%',
+    width: isTablet ? '30%' : '45%',
     aspectRatio: 177 / 53
   },
   email: {
@@ -440,13 +442,13 @@ const localStyles = StyleSheet.create({
     color: 'black',
     borderRadius: 100,
     marginHorizontal: 15,
-    fontSize: DeviceInfo.isTablet() ? 20 : 14,
+    fontSize: isTablet ? 20 : 14,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
   greyText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    fontSize: isTablet ? 16 : 12,
     color: 'grey',
     textAlign: 'center',
     textDecorationLine: 'underline'
@@ -485,7 +487,7 @@ const localStyles = StyleSheet.create({
     padding: 15,
     color: 'black',
     marginRight: 45,
-    fontSize: DeviceInfo.isTablet() ? 20 : 14,
+    fontSize: isTablet ? 20 : 14,
     fontFamily: 'OpenSans-Regular'
   }
 });

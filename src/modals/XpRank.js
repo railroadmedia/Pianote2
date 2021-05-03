@@ -9,6 +9,7 @@ import {
 import DeviceInfo from 'react-native-device-info';
 import ProgressCircle from 'react-native-progress-circle';
 
+const isTablet = DeviceInfo.isTablet();
 const ranks = [
   0,
   100,
@@ -119,7 +120,7 @@ const localStyles = StyleSheet.create({
   description: {
     paddingHorizontal: 20,
     marginVertical: 10,
-    fontSize: DeviceInfo.isTablet() ? 18 : 14
+    fontSize: isTablet ? 18 : 14
   },
   ProgressCircleContainer: {
     transform: [{ rotate: '315deg' }]
@@ -127,17 +128,17 @@ const localStyles = StyleSheet.create({
   XPtext: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: DeviceInfo.isTablet() ? 34 : 26
+    fontSize: isTablet ? 34 : 26
   },
   rankText: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: DeviceInfo.isTablet() ? 24 : 18
+    fontSize: isTablet ? 24 : 18
   },
   nextRank: {
     color: 'grey',
     paddingHorizontal: 40,
     marginVertical: 10,
-    fontSize: DeviceInfo.isTablet() ? 18 : 14
+    fontSize: isTablet ? 18 : 14
   }
 });

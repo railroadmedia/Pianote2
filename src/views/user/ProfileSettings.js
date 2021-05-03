@@ -6,8 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
   StatusBar,
-  StyleSheet,
-  Dimensions
+  StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Modal from 'react-native-modal';
@@ -27,6 +26,8 @@ import { NetworkContext } from '../../context/NetworkProvider.js';
 import Loading from '../../components/Loading.js';
 import { goBack, reset } from '../../../AppNavigator.js';
 import { isNameUnique } from '../../services/UserDataAuth.js';
+
+const isTablet = DeviceInfo.isTablet();
 
 export default class ProfileSettings extends React.Component {
   static contextType = NetworkContext;
@@ -387,7 +388,7 @@ export default class ProfileSettings extends React.Component {
 const localStyles = StyleSheet.create({
   settingsText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 20 : 16,
+    fontSize: isTablet ? 20 : 16,
     color: '#445f73'
   },
   myProfileSettings: {
@@ -397,14 +398,14 @@ const localStyles = StyleSheet.create({
     padding: 15
   },
   save: {
-    fontSize: DeviceInfo.isTablet() ? 20 : 14,
+    fontSize: isTablet ? 20 : 14,
     fontFamily: 'OpenSans-Bold',
     color: '#fb1b2f',
     textAlign: 'right',
     alignSelf: 'flex-end'
   },
   displayContainer: {
-    height: DeviceInfo.isTablet() ? 70 : 50,
+    height: isTablet ? 70 : 50,
     width: '100%',
     borderBottomColor: '#445f73',
     borderBottomWidth: 1,
@@ -415,7 +416,7 @@ const localStyles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   profilePhoto: {
-    height: DeviceInfo.isTablet() ? 70 : 50,
+    height: isTablet ? 70 : 50,
     width: '100%',
     borderBottomColor: '#445f73',
     borderBottomWidth: 1,
@@ -427,12 +428,12 @@ const localStyles = StyleSheet.create({
     fontFamily: 'OpenSans-Regular',
     paddingHorizontal: 10,
     width: '100%',
-    fontSize: DeviceInfo.isTablet() ? 20 : 16,
+    fontSize: isTablet ? 20 : 16,
     color: '#445f73'
   },
   text: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 18 : 14,
+    fontSize: isTablet ? 18 : 14,
     paddingVertical: '2%',
     paddingHorizontal: 10,
     color: '#445f73'
@@ -442,7 +443,7 @@ const localStyles = StyleSheet.create({
     marginTop: 10
   },
   image: {
-    width: DeviceInfo.isTablet() ? 200 : 150,
+    width: isTablet ? 200 : 150,
     aspectRatio: 1,
     borderRadius: 200,
     marginTop: 25
@@ -456,7 +457,7 @@ const localStyles = StyleSheet.create({
   },
   imageText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 18 : 14,
+    fontSize: isTablet ? 18 : 14,
     paddingVertical: 30,
     paddingHorizontal: 20,
     color: '#445f73',
@@ -464,8 +465,8 @@ const localStyles = StyleSheet.create({
   },
   imageContainer: {
     alignSelf: 'center',
-    height: DeviceInfo.isTablet() ? 90 : 70,
-    width: DeviceInfo.isTablet() ? 90 : 70,
+    height: isTablet ? 90 : 70,
+    width: isTablet ? 90 : 70,
     borderRadius: 500,
     borderColor: '#445f73',
     borderWidth: 2

@@ -25,6 +25,7 @@ import { openInbox } from 'react-native-email-link';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { goBack, navigate } from '../../../AppNavigator';
 
+const isTablet = DeviceInfo.isTablet();
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
@@ -270,7 +271,7 @@ const localStyles = StyleSheet.create({
   pianoteInnerContainer: {
     alignSelf: 'center',
     alignItems: 'center',
-    width: DeviceInfo.isTablet() ? '30%' : '50%',
+    width: isTablet ? '30%' : '50%',
     aspectRatio: 177 / 53
   },
   email: {
@@ -278,14 +279,14 @@ const localStyles = StyleSheet.create({
     marginVertical: 20,
     color: 'black',
     borderRadius: 100,
-    fontSize: DeviceInfo.isTablet() ? 20 : 14,
+    fontSize: isTablet ? 20 : 14,
     marginHorizontal: 15,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
   greyText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    fontSize: isTablet ? 16 : 12,
     color: 'grey',
     textAlign: 'center',
     textDecorationLine: 'underline'

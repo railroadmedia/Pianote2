@@ -23,6 +23,8 @@ import DeviceInfo from 'react-native-device-info';
 import { navigate } from '../../../AppNavigator';
 import { isEmailUnique } from '../../services/UserDataAuth';
 
+const isTablet = DeviceInfo.isTablet();
+
 export default class CreateAccount extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
@@ -221,14 +223,14 @@ const localStyles = StyleSheet.create({
   },
   emailText: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: DeviceInfo.isTablet() ? 24 : 16,
+    fontSize: isTablet ? 24 : 16,
     textAlign: 'left',
     color: 'white',
     paddingLeft: 15
   },
   createAccountText: {
     color: 'white',
-    fontSize: DeviceInfo.isTablet() ? 36 : 24
+    fontSize: isTablet ? 36 : 24
   },
   container: {
     backgroundColor: 'white',
@@ -243,7 +245,7 @@ const localStyles = StyleSheet.create({
     color: 'black',
     borderRadius: 100,
     marginHorizontal: 15,
-    fontSize: DeviceInfo.isTablet() ? 20 : 14,
+    fontSize: isTablet ? 20 : 14,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },

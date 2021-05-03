@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-
+const isTablet = DeviceInfo.isTablet();
 export default class Relevance extends React.Component {
   constructor(props) {
     super(props);
@@ -140,12 +140,12 @@ export default class Relevance extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    minHeight: DeviceInfo.isTablet() ? '20%' : '25%',
+    minHeight: isTablet ? '20%' : '25%',
     flexDirection: 'row'
   },
   word: {
     marginLeft: 10,
-    fontSize: DeviceInfo.isTablet() ? 18 : 14,
+    fontSize: isTablet ? 18 : 14,
     fontFamily: 'OpenSans-Regular'
   },
   button: {
@@ -156,7 +156,7 @@ const localStyles = StyleSheet.create({
   cancel: {
     marginLeft: 10,
     marginBottom: '5%',
-    fontSize: DeviceInfo.isTablet() ? 18 : 14,
+    fontSize: isTablet ? 18 : 14,
     fontFamily: 'OpenSans-Regular',
     color: 'white'
   }

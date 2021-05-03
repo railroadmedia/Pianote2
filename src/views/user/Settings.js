@@ -4,7 +4,6 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  Platform,
   Alert,
   StatusBar,
   StyleSheet,
@@ -38,6 +37,8 @@ import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
 import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
 import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
 import { goBack, navigate, reset } from '../../../AppNavigator.js';
+
+const isTablet = DeviceInfo.isTablet();
 
 class Settings extends React.Component {
   static contextType = NetworkContext;
@@ -480,7 +481,7 @@ class Settings extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    height: DeviceInfo.isTablet() ? 70 : 50,
+    height: isTablet ? 70 : 50,
     width: '100%',
     borderBottomColor: '#445f73',
     borderBottomWidth: 1,
@@ -490,7 +491,7 @@ const localStyles = StyleSheet.create({
   },
   settingsText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 20 : 16,
+    fontSize: isTablet ? 20 : 16,
     color: '#445f73'
   },
   header: {
@@ -502,14 +503,14 @@ const localStyles = StyleSheet.create({
   appText: {
     marginTop: 10,
     textAlign: 'center',
-    fontSize: DeviceInfo.isTablet() ? 18 : 12
+    fontSize: isTablet ? 18 : 12
   },
   buildText: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'center',
     color: '#445f73',
     marginTop: 10,
-    fontSize: DeviceInfo.isTablet() ? 18 : 12
+    fontSize: isTablet ? 18 : 12
   }
 });
 const mapDispatchToProps = dispatch =>

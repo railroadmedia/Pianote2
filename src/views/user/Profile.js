@@ -31,6 +31,7 @@ import {
 import { SafeAreaView } from 'react-navigation';
 import { navigate } from '../../../AppNavigator.js';
 
+const isTablet = DeviceInfo.isTablet();
 const messageDict = {
   'lesson comment reply': [
     'replied to your comment.',
@@ -587,8 +588,8 @@ const localStyles = StyleSheet.create({
     borderRadius: 250,
     borderWidth: 2,
     borderColor: '#fb1b2f',
-    height: DeviceInfo.isTablet() ? 200 : 150,
-    width: DeviceInfo.isTablet() ? 200 : 150,
+    height: isTablet ? 200 : 150,
+    width: isTablet ? 200 : 150,
     aspectRatio: 1,
     marginBottom: 20,
     marginTop: 10
@@ -597,10 +598,10 @@ const localStyles = StyleSheet.create({
     position: 'absolute',
     zIndex: 10,
     elevation: 10,
-    top: DeviceInfo.isTablet() ? -20 : -15,
-    right: DeviceInfo.isTablet() ? -20 : -15,
-    height: DeviceInfo.isTablet() ? 40 : 30,
-    width: DeviceInfo.isTablet() ? 40 : 30,
+    top: isTablet ? -20 : -15,
+    right: isTablet ? -20 : -15,
+    height: isTablet ? 40 : 30,
+    width: isTablet ? 40 : 30,
     borderRadius: 100,
     borderColor: '#fb1b2f',
     borderWidth: 1
@@ -619,7 +620,7 @@ const localStyles = StyleSheet.create({
   },
   memberSinceText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    fontSize: isTablet ? 16 : 12,
     textAlign: 'center',
     color: '#445f73'
   },
@@ -637,13 +638,13 @@ const localStyles = StyleSheet.create({
   },
   redXpRank: {
     color: '#fb1b2f',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    fontSize: isTablet ? 16 : 12,
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center'
   },
   whiteXpRank: {
     color: 'white',
-    fontSize: DeviceInfo.isTablet() ? 26 : 20,
+    fontSize: isTablet ? 26 : 20,
     fontFamily: 'OpenSans-ExtraBold',
     textAlign: 'center'
   },
@@ -656,7 +657,7 @@ const localStyles = StyleSheet.create({
   },
   noNotificationText: {
     fontFamily: 'OpenSans-ExtraBold',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    fontSize: isTablet ? 16 : 12,
     textAlign: 'left',
     paddingLeft: 10,
     color: 'white'
@@ -674,25 +675,25 @@ const localStyles = StyleSheet.create({
     position: 'absolute',
     bottom: -5,
     right: -5,
-    height: DeviceInfo.isTablet() ? 35 : 25,
-    width: DeviceInfo.isTablet() ? 35 : 25,
+    height: isTablet ? 35 : 25,
+    width: isTablet ? 35 : 25,
     borderRadius: 100,
     zIndex: 5
   },
   boldNotificationText: {
     fontFamily: 'OpenSans-ExtraBold',
-    fontSize: DeviceInfo.isTablet() ? 16 : 14,
+    fontSize: isTablet ? 16 : 14,
     color: 'white'
   },
   messageTypeText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    fontSize: isTablet ? 16 : 12,
     color: 'white'
   },
   createdAtText: {
     marginTop: 1,
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    fontSize: isTablet ? 16 : 12,
     color: '#445f73'
   },
   threeDotsContainer: {

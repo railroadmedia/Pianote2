@@ -24,6 +24,8 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
 import { goBack, navigate } from '../../../AppNavigator';
 
+const isTablet = DeviceInfo.isTablet();
+
 export default class CreateAccount extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
@@ -317,7 +319,7 @@ const localStyles = StyleSheet.create({
   },
   createAccountText: {
     color: 'white',
-    fontSize: DeviceInfo.isTablet() ? 36 : 24
+    fontSize: isTablet ? 36 : 24
   },
   createPasswordContainer: {
     flex: 1,
@@ -326,7 +328,7 @@ const localStyles = StyleSheet.create({
   },
   createPasswordText: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: DeviceInfo.isTablet() ? 24 : 16,
+    fontSize: isTablet ? 24 : 16,
     textAlign: 'left',
     color: 'white',
     paddingLeft: 15
@@ -343,7 +345,7 @@ const localStyles = StyleSheet.create({
     color: 'black',
     borderRadius: 100,
     marginHorizontal: 15,
-    fontSize: DeviceInfo.isTablet() ? 20 : 14,
+    fontSize: isTablet ? 20 : 14,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
@@ -366,7 +368,7 @@ const localStyles = StyleSheet.create({
   characters: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'left',
-    fontSize: DeviceInfo.isTablet() ? 18 : 14,
+    fontSize: isTablet ? 18 : 14,
     color: 'white',
     paddingLeft: 15,
     marginBottom: 40

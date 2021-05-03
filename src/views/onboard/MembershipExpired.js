@@ -13,7 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
 import { navigate } from '../../../AppNavigator';
-
+const isTablet = DeviceInfo.isTablet();
 export default class MembershipExpired extends React.Component {
   constructor(props) {
     super(props);
@@ -104,7 +104,7 @@ const localStyles = StyleSheet.create({
     height: '70%'
   },
   buttonText: {
-    fontSize: DeviceInfo.isTablet() ? 24 : 16,
+    fontSize: isTablet ? 24 : 16,
     textAlign: 'center',
     color: 'white',
     fontFamily: 'RobotoCondensed-Bold',
@@ -113,19 +113,19 @@ const localStyles = StyleSheet.create({
   pianoteContainer: {
     alignSelf: 'center',
     alignItems: 'center',
-    width: DeviceInfo.isTablet() ? '20%' : '30%',
+    width: isTablet ? '20%' : '30%',
     aspectRatio: 177 / 53 //svg's viewbox viewBox="0 0 177 53"
   },
   title: {
     fontFamily: 'OpenSans-ExtraBold',
-    fontSize: DeviceInfo.isTablet() ? 32 : 24,
+    fontSize: isTablet ? 32 : 24,
     padding: 10,
     textAlign: 'center',
     color: 'white'
   },
   description: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 22 : 16,
+    fontSize: isTablet ? 22 : 16,
     paddingBottom: 25,
     paddingHorizontal: 10,
     textAlign: 'center',

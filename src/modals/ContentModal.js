@@ -17,7 +17,7 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import { Download_V2 } from 'RNDownload';
 import DeviceInfo from 'react-native-device-info';
 import contentService from '../services/content.service';
-
+const isTablet = DeviceInfo.isTablet();
 export default class ContentModal extends React.Component {
   constructor(props) {
     super(props);
@@ -247,14 +247,14 @@ const localStyles = StyleSheet.create({
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
     paddingHorizontal: 10,
-    fontSize: DeviceInfo.isTablet() ? 24 : 18,
+    fontSize: isTablet ? 24 : 18,
     textAlign: 'center',
     marginTop: 5
   },
   type: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'center',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    fontSize: isTablet ? 16 : 12,
     color: 'grey',
     marginVertical: 5,
     textTransform: 'capitalize'
@@ -267,17 +267,17 @@ const localStyles = StyleSheet.create({
     marginHorizontal: 10,
     fontFamily: 'OpenSans-Regular',
     paddingHorizontal: 5,
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    fontSize: isTablet ? 16 : 12,
     textAlign: 'center'
   },
   myList: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    fontSize: isTablet ? 16 : 12,
     textAlign: 'left'
   },
   likeCount: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    fontSize: isTablet ? 16 : 12,
     textAlign: 'left'
   },
   likeContainer: {
@@ -290,27 +290,27 @@ const localStyles = StyleSheet.create({
   },
   XPtext: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    fontSize: isTablet ? 16 : 12,
     textAlign: 'left',
     marginTop: 5
   },
   xp: {
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
-    fontSize: DeviceInfo.isTablet() ? 24 : 18,
+    fontSize: isTablet ? 24 : 18,
     textAlign: 'left',
     marginTop: 10
   },
   lessonCount: {
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
-    fontSize: DeviceInfo.isTablet() ? 24 : 18,
+    fontSize: isTablet ? 24 : 18,
     textAlign: 'left',
     marginTop: 10
   },
   lessons: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    fontSize: isTablet ? 16 : 12,
     textAlign: 'left',
     marginTop: 5
   }

@@ -10,7 +10,7 @@ import {
 import FastImage from 'react-native-fast-image';
 import DeviceInfo from 'react-native-device-info';
 import { navigate } from 'Pianote2/AppNavigator';
-
+const isTablet = DeviceInfo.isTablet();
 export default class Live extends React.Component {
   constructor(props) {
     super(props);
@@ -151,7 +151,7 @@ const localStyles = StyleSheet.create({
   live: {
     marginTop: 15,
     paddingHorizontal: 30,
-    fontSize: DeviceInfo.isTablet() ? 14 : 12
+    fontSize: isTablet ? 14 : 12
   },
   calendarIcon: {
     paddingTop: 7.5,
@@ -165,7 +165,7 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#fb1b2f',
     marginHorizontal: 70,
     justifyContent: 'center',
-    height: DeviceInfo.isTablet() ? 40 : 30
+    height: isTablet ? 40 : 30
   },
   cancelButton: {
     marginTop: 5,
@@ -175,7 +175,7 @@ const localStyles = StyleSheet.create({
     borderColor: '#fb1b2f',
     marginHorizontal: 70,
     justifyContent: 'center',
-    height: DeviceInfo.isTablet() ? 40 : 30
+    height: isTablet ? 40 : 30
   },
   watchText: {
     color: 'white'

@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Intercom from 'react-native-intercom';
 import { logOut } from '../services/UserDataAuth';
 import { reset } from '../../AppNavigator';
-
+const isTablet = DeviceInfo.isTablet();
 export default class LogOut extends React.Component {
   logOut = () => {
     logOut();
@@ -72,7 +72,7 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: 30,
     marginTop: 10,
     marginBottom: 5,
-    fontSize: DeviceInfo.isTablet() ? 18 : 14
+    fontSize: isTablet ? 18 : 14
   },
   logoutText: {
     backgroundColor: '#fb1b2f',
@@ -80,12 +80,12 @@ const localStyles = StyleSheet.create({
     marginVertical: 15,
     marginHorizontal: 30,
     fontFamily: 'OpenSans-Bold',
-    height: DeviceInfo.isTablet() ? 40 : 30,
+    height: isTablet ? 40 : 30,
     textAlign: 'center'
   },
   logout: {
     color: 'white',
-    fontSize: DeviceInfo.isTablet() ? 18 : 14
+    fontSize: isTablet ? 18 : 14
   },
   cancelContainter: {
     paddingHorizontal: 20,
@@ -93,6 +93,6 @@ const localStyles = StyleSheet.create({
   },
   cancel: {
     color: 'grey',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12
+    fontSize: isTablet ? 16 : 12
   }
 });

@@ -20,6 +20,8 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';
 
+const isTablet = DeviceInfo.isTablet();
+
 export default class NotificationSettings extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
@@ -370,7 +372,7 @@ const localStyles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#081826',
-    padding: DeviceInfo.isTablet() ? 22.5 : 15
+    padding: isTablet ? 22.5 : 15
   },
   title: {
     textAlign: 'center',
@@ -380,12 +382,12 @@ const localStyles = StyleSheet.create({
     paddingLeft: 10,
     width: '100%',
     justifyContent: 'center',
-    fontSize: DeviceInfo.isTablet() ? 18 : 14
+    fontSize: isTablet ? 18 : 14
   },
   noteTypeText: {
     marginTop: 10,
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 22 : 16,
+    fontSize: isTablet ? 22 : 16,
     color: '#445f73',
     paddingVertical: 5
   },
@@ -397,7 +399,7 @@ const localStyles = StyleSheet.create({
   },
   text: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 18 : 14,
+    fontSize: isTablet ? 18 : 14,
     color: '#445f73'
   },
   emailNotificationFrequency: {
