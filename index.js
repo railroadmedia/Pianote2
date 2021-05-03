@@ -36,7 +36,7 @@ PushNotification.configure({
     message,
     id
   }) {
-    let isLoggedIn = await AsyncStorage.getItem('loggedIn');
+    let email = await AsyncStorage.getItem('email');
     if (type.includes('forum') && userInteraction) {
       // if the type is forum, link to website forums
       if (foreground) {
@@ -46,7 +46,7 @@ PushNotification.configure({
       }
     }
 
-    if (token || isLoggedIn) {
+    if (token || email) {
       // if logged in with token
       if ((isiOS || (!isiOS && userInteraction)) && !type.includes('forum')) {
         if (type.includes('aggregated')) {

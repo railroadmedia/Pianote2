@@ -98,7 +98,6 @@ export default class LoginCredentials extends React.Component {
       // store user data
       updateFcmToken();
       await AsyncStorage.multiSet([
-        ['loggedIn', 'true'],
         ['email', this.state.email],
         ['password', this.state.password]
       ]);

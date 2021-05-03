@@ -332,10 +332,9 @@ export default class Profile extends React.Component {
                     <FastImage
                       style={localStyles.profileImageBackground}
                       source={{
-                        uri:
-                          this.state.profileImage !== ''
-                            ? this.state.profileImage
-                            : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                        uri: this.state.profileImage
+                          ? this.state.profileImage
+                          : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
                       }}
                       resizeMode={FastImage.resizeMode.cover}
                     />

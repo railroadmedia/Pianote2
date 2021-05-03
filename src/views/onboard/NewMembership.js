@@ -109,7 +109,6 @@ export default class NewMembership extends React.Component {
       if (response.meta) {
         try {
           await AsyncStorage.multiSet([
-            ['loggedIn', 'true'],
             ['email', this.state.email],
             ['password', this.state.password]
           ]);

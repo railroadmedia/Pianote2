@@ -54,7 +54,6 @@ export default class CreateAccount extends React.Component {
           if (response.meta) {
             try {
               await AsyncStorage.multiSet([
-                ['loggedIn', 'true'],
                 ['email', encodeURIComponent(this.state.email)],
                 ['password', encodeURIComponent(this.state.password)]
               ]);

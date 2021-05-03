@@ -64,16 +64,16 @@ class LoadPage extends React.Component {
         return i;
       }, {});
       await AsyncStorage.removeItem('resetKey');
-      const { email, resetKey, password, loggedIn, forumUrl } = data;
+      const { email, resetKey, password, forumUrl } = data;
 
       if (!this.context.isConnected) {
-        if (loggedIn && !global.loadedFromNotification) {
+        if (email && !global.loadedFromNotification) {
           return navigate('DOWNLOADS');
         } else {
           return navigate('LOGIN');
         }
         // if no connection and logged in
-      } else if (!loggedIn && !global.loadedFromNotification) {
+      } else if (!email && !global.loadedFromNotification) {
         // if not logged in
         if (resetKey) return reset('RESETPASSWORD', { resetKey, email });
         return reset('LOGIN');
@@ -84,7 +84,6 @@ class LoadPage extends React.Component {
           return this.context.showNoConnectionAlert();
         } else if (res.success) {
           updateFcmToken();
-          await AsyncStorage.multiSet([['loggedIn', 'true']]);
           let userData = await getUserData();
 
           let { lessonUrl, commentId } = notif;
@@ -128,7 +127,7 @@ class LoadPage extends React.Component {
               });
             }
           }
-        } else if (!res.success || !loggedIn || loggedIn == 'false') {
+        } else if (!res.success || !email) {
           // is not logged in
           if (resetKey) return reset('RESETPASSWORD', { resetKey, email });
           return reset('LOGIN');
@@ -148,8 +147,8 @@ class LoadPage extends React.Component {
   };
 
   async handleNoConnection() {
-    let isLoggedIn = await AsyncStorage.getItem('loggedIn');
-    if (isLoggedIn == 'true') {
+    let email = await AsyncStorage.getItem('email');
+    if (email) {
       return reset('DOWNLOADS');
     } else {
       reset('LOGINCREDENTIALS');

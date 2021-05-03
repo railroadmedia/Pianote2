@@ -17,7 +17,6 @@ export default class LogOut extends React.Component {
     logOut();
     Intercom.logout();
     AsyncStorage.clear();
-    AsyncStorage.setItem('loggedIn', 'false');
     reset('LOGIN');
     this.props.onLogout?.();
   };
