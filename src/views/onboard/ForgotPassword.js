@@ -17,7 +17,7 @@ import FastImage from 'react-native-fast-image';
 import DeviceInfo from 'react-native-device-info';
 import Back from '../../assets/img/svgs/back';
 import Pianote from '../../assets/img/svgs/pianote.svg';
-import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
+import GradientFeature from '../../../src/components/GradientFeature.js';
 import { forgotPass } from '../../services/UserDataAuth';
 import CustomModal from '../../modals/CustomModal';
 import Loading from '../../components/Loading';
@@ -68,7 +68,7 @@ export default class ForgotPassword extends React.Component {
       <FastImage
         style={{ flex: 1 }}
         resizeMode={FastImage.resizeMode.cover}
-        source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
+        source={require('../../../src/assets/img/imgs/backgroundHands.png')}
       >
         <GradientFeature
           zIndex={0}

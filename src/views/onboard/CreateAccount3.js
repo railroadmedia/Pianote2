@@ -1203,7 +1203,7 @@ export default class CreateAccount3 extends React.Component {
                     borderRadius: 10,
                     alignSelf: 'stretch'
                   }}
-                  source={require('Pianote2/src/assets/img/imgs/pianote-method-logo.png')}
+                  source={require('../../../src/assets/img/imgs/pianote-method-logo.png')}
                   resizeMode={FastImage.resizeMode.contain}
                 />
                 <View style={{ flex: 1 }} />
@@ -1216,7 +1216,7 @@ export default class CreateAccount3 extends React.Component {
                     borderRadius: 10,
                     alignSelf: 'stretch'
                   }}
-                  source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
+                  source={require('../../../src/assets/img/imgs/backgroundHands.png')}
                   resizeMode={FastImage.resizeMode.cover}
                 />
               </View>

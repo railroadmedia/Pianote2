@@ -1,5 +1,5 @@
-import { getToken } from 'Pianote2/src/services/UserDataAuth.js';
-import { updateFcmToken } from 'Pianote2/src/services/notification.service.js';
+import { getToken } from '../../src/services/UserDataAuth.js';
+import { updateFcmToken } from '../../src/services/notification.service.js';
 
 export let cache = {};
 export default {

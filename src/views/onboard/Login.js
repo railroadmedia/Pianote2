@@ -34,20 +34,20 @@ const skus = Platform.select({
 let purchases = [];
 const images = {
   1: [
-    require('Pianote2/src/assets/img/imgs/lisa-foundations.png'),
-    require('Pianote2/src/assets/img/imgs/devices.png')
+    require('../../../src/assets/img/imgs/lisa-foundations.png'),
+    require('../../../src/assets/img/imgs/devices.png')
   ],
   2: [
-    require('Pianote2/src/assets/img/imgs/prescreenPractice.png'),
-    require('Pianote2/src/assets/img/imgs/practice.png')
+    require('../../../src/assets/img/imgs/prescreenPractice.png'),
+    require('../../../src/assets/img/imgs/practice.png')
   ],
   3: [
-    require('Pianote2/src/assets/img/imgs/prescreenSongs.png'),
-    require('Pianote2/src/assets/img/imgs/favorite-songs.png')
+    require('../../../src/assets/img/imgs/prescreenSongs.png'),
+    require('../../../src/assets/img/imgs/favorite-songs.png')
   ],
   4: [
-    require('Pianote2/src/assets/img/imgs/prescreenSupport.png'),
-    require('Pianote2/src/assets/img/imgs/support.png')
+    require('../../../src/assets/img/imgs/prescreenSupport.png'),
+    require('../../../src/assets/img/imgs/support.png')
   ],
   5: ['', '']
 };

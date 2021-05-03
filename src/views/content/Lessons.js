@@ -437,7 +437,7 @@ class Lessons extends React.Component {
                 aspectRatio: this.getAspectRatio(),
                 justifyContent: 'flex-end'
               }}
-              source={require('Pianote2/src/assets/img/imgs/lisamethod.png')}
+              source={require('../../../src/assets/img/imgs/lisamethod.png')}
             >
               <GradientFeature
                 color={'red'}
@@ -463,7 +463,7 @@ class Lessons extends React.Component {
                       alignSelf: 'center',
                       marginBottom: onTablet ? '2%' : '4%'
                     }}
-                    source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
+                    source={require('../../../src/assets/img/imgs/pianote-method.png')}
                     resizeMode={FastImage.resizeMode.contain}
                   />
                 </View>

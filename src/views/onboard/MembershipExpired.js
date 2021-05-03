@@ -38,7 +38,7 @@ export default class MembershipExpired extends React.Component {
       <FastImage
         style={{ flex: 1 }}
         resizeMode={FastImage.resizeMode.cover}
-        source={require('Pianote2/src/assets/img/imgs/lisa-foundations.png')}
+        source={require('../../../src/assets/img/imgs/lisa-foundations.png')}
       >
         <LinearGradient
           style={localStyles.linearStyle}

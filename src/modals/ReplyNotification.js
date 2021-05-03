@@ -8,12 +8,12 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import DeviceInfo from 'react-native-device-info';
-import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
+import Chat from '../../src/assets/img/svgs/chat.svg';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
+import { getUserData } from '../../src/services/UserDataAuth.js';
 
 const isTablet = DeviceInfo.isTablet();
 const messageDict = {

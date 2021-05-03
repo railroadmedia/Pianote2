@@ -7,7 +7,7 @@ import {
   StatusBar
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import NavigationBar from '../../../src/components/NavigationBar.js';
 import { Download_V2, offlineContent } from 'RNDownload';
 import IconFeather from 'react-native-vector-icons/Feather';
 import { SafeAreaView } from 'react-navigation';

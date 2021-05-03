@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
+import { getUserData } from '../../src/services/UserDataAuth.js';
 import commonService from './common.service';
 import { Platform } from 'react-native';
 

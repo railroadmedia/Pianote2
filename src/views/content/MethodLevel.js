@@ -185,7 +185,7 @@ export default class MethodLevel extends React.Component {
               aspectRatio: this.getAspectRatio(),
               justifyContent: 'flex-end'
             }}
-            source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
+            source={require('../../../src/assets/img/imgs/backgroundHands.png')}
           >
             <LinearGradient
               colors={[
@@ -220,7 +220,7 @@ export default class MethodLevel extends React.Component {
                     alignSelf: 'center',
                     marginBottom: onTablet ? '2%' : '4%'
                   }}
-                  source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
+                  source={require('../../../src/assets/img/imgs/pianote-method.png')}
                   resizeMode={FastImage.resizeMode.contain}
                 />
               </View>
