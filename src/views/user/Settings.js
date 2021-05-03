@@ -4,6 +4,7 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Alert,
   StatusBar,
   StyleSheet,
@@ -14,17 +15,21 @@ import RNIap from 'react-native-iap';
 import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import LogOut from '../../modals/LogOut.js';
+import AsyncStorage from '@react-native-community/async-storage';
+import Intercom from 'react-native-intercom';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import Back from '../../assets/img/svgs/back.svg';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
 import NavigationBar from '../../components/NavigationBar.js';
-import { getUserData } from '../../services/UserDataAuth.js';
 import Loading from '../../components/Loading.js';
 import CustomModal from '../../modals/CustomModal.js';
-import { logOut, restorePurchase } from '../../services/UserDataAuth.js';
+import {
+  getUserData,
+  logOut,
+  restorePurchase
+} from '../../services/UserDataAuth.js';
 import { SafeAreaView } from 'react-navigation';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import commonService from '../../services/common.service.js';
@@ -175,6 +180,23 @@ class Settings extends React.Component {
         'Please try Again later.'
       );
     }
+  };
+
+  logOut = () => {
+    [
+      'cacheAndWriteCourses',
+      'cacheAndWriteLessons',
+      'cacheAndWriteMyList',
+      'cacheAndWritePacks',
+      'cacheAndWritePodcasts',
+      'cacheAndWriteQuickTips',
+      'cacheAndWriteSongs',
+      'cacheAndWriteStudentFocus'
+    ].map(redux => this.props[redux]({}));
+    logOut();
+    Intercom.logout();
+    AsyncStorage.clear();
+    reset('LOGIN');
   };
 
   render() {
@@ -376,10 +398,8 @@ class Settings extends React.Component {
             />
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={() => this.setState({ showLogOut: true })}
             style={[styles.centerContent, localStyles.container]}
-            onPress={() => {
-              this.setState({ showLogOut: true });
-            }}
           >
             <View style={{ flexDirection: 'row' }}>
               <View
@@ -419,23 +439,39 @@ class Settings extends React.Component {
           hasBackdrop={true}
           onBackButtonPress={() => this.setState({ showLogOut: false })}
         >
-          <LogOut
-            onLogout={() =>
-              [
-                'cacheAndWriteCourses',
-                'cacheAndWriteLessons',
-                'cacheAndWriteMyList',
-                'cacheAndWritePacks',
-                'cacheAndWritePodcasts',
-                'cacheAndWriteQuickTips',
-                'cacheAndWriteSongs',
-                'cacheAndWriteStudentFocus'
-              ].map(redux => this.props[redux]({}))
-            }
-            hideLogOut={() => {
-              this.setState({ showLogOut: false });
-            }}
-          />
+          <TouchableWithoutFeedback
+            style={styles.container}
+            onPress={() => this.setState({ showLogOut: false })}
+          >
+            <View style={[styles.centerContent, styles.container]}>
+              <View style={localStyles.container2}>
+                <Text style={[styles.modalHeaderText, localStyles.title]}>
+                  Log Out
+                </Text>
+                <Text style={[styles.modalBodyText, localStyles.description]}>
+                  Are you sure that you want to log out?
+                </Text>
+                <TouchableOpacity
+                  style={[styles.centerContent, localStyles.logoutText]}
+                  onPress={() => this.logOut()}
+                >
+                  <Text style={[styles.modalButtonText, localStyles.logout]}>
+                    LOG OUT
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.centerContent, localStyles.cancelContainter]}
+                  onPress={() => this.setState({ showLogOut: false })}
+                >
+                  <Text
+                    style={[styles.modalCancelButtonText, localStyles.cancel]}
+                  >
+                    CANCEL
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
         </Modal>
         <Loading
           ref={ref => {
@@ -488,6 +524,42 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row',
     paddingRight: 10,
     justifyContent: 'space-between'
+  },
+  container2: {
+    backgroundColor: 'white',
+    borderRadius: 15,
+    margin: 20
+  },
+  title: {
+    marginTop: 20,
+    paddingHorizontal: 20
+  },
+  description: {
+    paddingHorizontal: 30,
+    marginTop: 10,
+    marginBottom: 5,
+    fontSize: isTablet ? 18 : 14
+  },
+  logoutText: {
+    backgroundColor: '#fb1b2f',
+    borderRadius: 40,
+    marginVertical: 15,
+    marginHorizontal: 30,
+    fontFamily: 'OpenSans-Bold',
+    height: isTablet ? 40 : 30,
+    textAlign: 'center'
+  },
+  logout: {
+    color: 'white',
+    fontSize: isTablet ? 18 : 14
+  },
+  cancelContainter: {
+    paddingHorizontal: 20,
+    marginBottom: 15
+  },
+  cancel: {
+    color: 'grey',
+    fontSize: isTablet ? 16 : 12
   },
   settingsText: {
     fontFamily: 'OpenSans-Regular',
