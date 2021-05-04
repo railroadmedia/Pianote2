@@ -91,11 +91,7 @@ export default class NextVideo extends React.Component {
               <FastImage
                 style={localStyles.image}
                 source={{
-                  uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                    width * 0.24 * 2
-                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
-                    this.props.item.thumbnail_url
-                  }`
+                  uri: `https://cdn.musora.com/image/fetch/w_250,ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${this.props.item.thumbnail_url}`
                 }}
                 resizeMode={FastImage.resizeMode.cover}
               />

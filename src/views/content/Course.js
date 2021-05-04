@@ -56,9 +56,7 @@ class Course extends React.Component {
     this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   }
 
-  componentWillUnmount() {
-    this.refreshOnFocusListener?.();
-  }
+  componentWillUnmount = () => this.refreshOnFocusListener?.();
 
   async getContent() {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
@@ -105,14 +103,15 @@ class Course extends React.Component {
       page,
       this.filterQuery
     );
-    this.metaFilters = response?.meta?.filterOptions;
-    const newContent = response.data;
 
-    let items = newContent;
+    this.metaFilters = response?.meta?.filterOptions;
 
     this.setState(state => ({
-      allCourses: loadMore ? state.allCourses.concat(items) : items,
-      outVideos: items.length == 0 || response.data.length < 10 ? true : false,
+      allCourses: loadMore
+        ? state.allCourses.concat(response.data)
+        : response.data,
+      outVideos:
+        response.data.length == 0 || response.data.length < 10 ? true : false,
       filtering: false,
       isPaging: false,
       refreshControl: false
@@ -147,9 +146,8 @@ class Course extends React.Component {
     }
   };
 
-  refresh() {
+  refresh = () =>
     this.setState({ refreshControl: true, page: 1 }, this.getContent);
-  }
 
   render() {
     return (

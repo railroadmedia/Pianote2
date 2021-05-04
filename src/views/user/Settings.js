@@ -380,7 +380,7 @@ class Settings extends React.Component {
               <View
                 style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
               >
-                <FontIcon
+                <Icon.FontAwesome
                   name={'shield'}
                   color={colors.pianoteRed}
                   size={onTablet ? 32.5 : 22.5}

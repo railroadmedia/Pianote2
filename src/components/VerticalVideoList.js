@@ -224,9 +224,7 @@ export default class VerticalVideoList extends React.Component {
     if (thumbnail?.includes('var/mobile') || thumbnail?.includes('data/user'))
       return thumbnail;
     if (thumbnail?.includes('http')) {
-      return `https://cdn.musora.com/image/fetch/w_${Math.round(
-        this.props.imageWidth * 2
-      )},ar_${
+      return `https://cdn.musora.com/image/fetch/w_250,ar_${
         this.props.isSquare ? '1' : '16:9'
       },fl_lossy,q_auto:eco,c_fill,g_face/${thumbnail}`;
     }

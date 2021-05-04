@@ -283,11 +283,11 @@ class Lessons extends React.Component {
       this.filterQuery
     );
     this.metaFilters = response?.meta?.filterOptions;
-    let items = response.data;
 
     this.setState({
-      allLessons: [...this.state.allLessons, ...items],
-      outVideos: items.length == 0 || items.length < 10 ? true : false,
+      allLessons: [...this.state.allLessons, ...response.data],
+      outVideos:
+        response.data.length == 0 || response.data.length < 10 ? true : false,
       filtering: false,
       isPaging: false
     });
