@@ -34,26 +34,13 @@ const ranks = [
 ];
 
 export default class XpRank extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      rankProgress: null,
-      XP: this.props.xp,
-      rank: this.props.rank,
-      nextRank: null
-    };
-  }
+  nextRank = () => {
+    return ranks.find(r => this.props.xp < r) || 100000000;
+  };
 
-  componentDidMount() {
-    for (i in ranks) {
-      if (this.state.XP >= ranks[i] && this.state.XP < ranks[Number(i) + 1]) {
-        this.setState({
-          nextRank: ranks[Number(i) + 1],
-          rankProgress: (this.state.XP / ranks[Number(i) + 1]) * 100
-        });
-      }
-    }
-  }
+  rankProgress = () => {
+    return (this.props.xp / this.nextRank) * 100;
+  };
 
   render = () => {
     return (
@@ -78,7 +65,7 @@ export default class XpRank extends React.Component {
                 ]}
               >
                 <ProgressCircle
-                  percent={this.state.rankProgress}
+                  percent={this.rankProgress()}
                   radius={
                     (DeviceInfo.isTablet() ? 0.2 : 0.27) *
                     Dimensions.get('window').width
@@ -90,15 +77,15 @@ export default class XpRank extends React.Component {
                 >
                   <View style={{ transform: [{ rotate: '45deg' }] }}>
                     <Text style={localStyles.XPtext}>
-                      {Number(this.state.XP).toLocaleString()}
+                      {Number(this.props.xp).toLocaleString()}
                     </Text>
-                    <Text style={localStyles.rankText}>{this.state.rank}</Text>
+                    <Text style={localStyles.rankText}>{this.props.rank}</Text>
                   </View>
                 </ProgressCircle>
               </View>
             </View>
             <Text style={[styles.modalBodyText, localStyles.nextRank]}>
-              Next rank: {this.state.nextRank}
+              Next rank: {this.nextRank()}
             </Text>
           </View>
         </View>
