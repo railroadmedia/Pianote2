@@ -58,6 +58,7 @@ export default class Forums extends React.Component {
           appColor: this.props.route.params.appColor
         })
       }
+      appColor={this.props.route.params.appColor}
       isDark={this.props.route.params.isDark}
       data={item}
     />

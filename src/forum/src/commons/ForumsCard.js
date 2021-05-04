@@ -1,15 +1,9 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
-import {
-  pin,
-  coach,
-  team,
-  edge,
-  lifetime,
-  arrowRight,
-  post
-} from '../assets/svgs';
+import AccessLevelAvatar from './AccessLevelAvatar';
+
+import { pin, arrowRight, post } from '../assets/svgs';
 
 let styles;
 export default class ForumsCard extends React.Component {
@@ -17,33 +11,6 @@ export default class ForumsCard extends React.Component {
     super(props);
     let { isDark } = props;
     styles = setStyles(isDark);
-  }
-
-  get userBorderColor() {
-    let borderColor, userTagIcon;
-    switch (this.props.data.user?.accessLevelName) {
-      case 'edge': {
-        borderColor = appColor;
-        userTagIcon = edge;
-        break;
-      }
-      case 'team': {
-        borderColor = 'black';
-        userTagIcon = team;
-        break;
-      }
-      case 'lifetime': {
-        borderColor = '#07B3FF';
-        userTagIcon = lifetime;
-        break;
-      }
-      case 'coach': {
-        borderColor = '#FAA300';
-        userTagIcon = coach;
-        break;
-      }
-    }
-    return { borderColor, userTagIcon };
   }
 
   get lastPostTime() {
@@ -66,6 +33,7 @@ export default class ForumsCard extends React.Component {
 
   render() {
     let {
+      appColor,
       isDark,
       data: {
         user,
@@ -78,23 +46,18 @@ export default class ForumsCard extends React.Component {
         image
       }
     } = this.props;
-    let { borderColor, userTagIcon } = this.userBorderColor;
     return (
       <TouchableOpacity
         style={styles.container}
         onPress={this.props.onNavigate}
       >
-        <View style={{ ...styles.imgContainer, borderColor }}>
-          <Image
-            source={{ uri: image || user.avatarUrl }}
-            style={{ height: 60, aspectRatio: 1 }}
-          />
-          <View
-            style={{ ...styles.userTagContainer, backgroundColor: borderColor }}
-          >
-            {userTagIcon?.({ height: 8, fill: 'white' })}
-          </View>
-        </View>
+        <AccessLevelAvatar
+          uri={image || user.avatarUrl}
+          height={60}
+          appColor={appColor}
+          tagHeight={8}
+          accessLevelName={user.accessLevelName}
+        />
         <View style={{ paddingHorizontal: 10, flex: 1 }}>
           <Text style={styles.title}>
             {pinned && pin({ width: 10, fill: isDark ? 'white' : 'black' })}
@@ -133,20 +96,6 @@ let setStyles = isDark =>
       shadowOffset: { width: 3, height: 4 },
       shadowOpacity: 1,
       shadowRadius: 4
-    },
-    imgContainer: {
-      borderRadius: 32,
-      overflow: 'hidden',
-      borderWidth: 2
-    },
-    userTagContainer: {
-      width: '100%',
-      height: 10,
-      position: 'absolute',
-      bottom: 0,
-      lineHeight: 10,
-      alignItems: 'center',
-      justifyContent: 'center'
     },
     title: {
       fontFamily: 'OpenSans',

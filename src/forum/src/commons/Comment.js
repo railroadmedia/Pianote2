@@ -7,19 +7,12 @@
  */
 
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 import Moderate from './Moderate';
+import AccessLevelAvatar from './AccessLevelAvatar';
 
-import {
-  like,
-  likeOn,
-  replies,
-  coach,
-  team,
-  edge,
-  lifetime
-} from '../assets/svgs';
+import { like, likeOn, replies } from '../assets/svgs';
 import {
   likeComment,
   disLikeComment,
@@ -30,7 +23,6 @@ let styles;
 export default class Comment extends React.PureComponent {
   constructor(props) {
     super(props);
-    console.log(props);
     this.state = {
       isLiked: props.comment.is_liked,
       likeCount: props.comment.like_count
@@ -67,33 +59,6 @@ export default class Comment extends React.PureComponent {
     return `${(dif / 1000 / 60 / 60 / 24 / 365).toFixed()} Years Ago`;
   }
 
-  get userBorderColor() {
-    let borderColor, userTagIcon;
-    switch (this.props.comment.user?.accessLevelName) {
-      case 'edge': {
-        borderColor = appColor;
-        userTagIcon = edge;
-        break;
-      }
-      case 'team': {
-        borderColor = 'black';
-        userTagIcon = team;
-        break;
-      }
-      case 'lifetime': {
-        borderColor = '#07B3FF';
-        userTagIcon = lifetime;
-        break;
-      }
-      case 'coach': {
-        borderColor = '#FAA300';
-        userTagIcon = coach;
-        break;
-      }
-    }
-    return { borderColor, userTagIcon };
-  }
-
   toggleLike = () => {
     if (!connection(true)) return;
     let { id } = this.props.comment;
@@ -112,28 +77,16 @@ export default class Comment extends React.PureComponent {
   render() {
     let { isLiked, likeCount } = this.state;
     let { comment, appColor, onReplies } = this.props;
-    let { borderColor, userTagIcon } = this.userBorderColor;
     return (
       <View style={{ flexDirection: 'row', marginTop: 15 }}>
         <View style={{ marginHorizontal: 15 }}>
-          <View style={{ ...styles.imgContainer, borderColor }}>
-            <Image
-              source={{
-                uri:
-                  comment.user['fields.profile_picture_image_url'] ||
-                  'https://dmmior4id2ysr.cloudfront.net/assets/images/drumeo_fallback_thumb.jpg'
-              }}
-              style={{ height: 38, aspectRatio: 1 }}
-            />
-            <View
-              style={{
-                ...styles.userTagContainer,
-                backgroundColor: borderColor
-              }}
-            >
-              {userTagIcon?.({ height: 4, fill: 'white' })}
-            </View>
-          </View>
+          <AccessLevelAvatar
+            uri={comment.user['fields.profile_picture_image_url']}
+            height={38}
+            appColor={appColor}
+            tagHeight={4}
+            accessLevelName={comment.user.accessLevelName}
+          />
           <Text maxFontSizeMultiplier={1} style={styles.xp}>
             {comment.user ? comment.user.xp_level : ''}
           </Text>
@@ -209,20 +162,6 @@ export default class Comment extends React.PureComponent {
 
 let setStyles = isDark =>
   StyleSheet.create({
-    imgContainer: {
-      borderRadius: 21,
-      overflow: 'hidden',
-      borderWidth: 2
-    },
-    userTagContainer: {
-      width: '100%',
-      height: 5,
-      position: 'absolute',
-      bottom: 0,
-      lineHeight: 5,
-      alignItems: 'center',
-      justifyContent: 'center'
-    },
     commentHeaderContainer: {
       flexDirection: 'row',
       alignItems: 'center',
