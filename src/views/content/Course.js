@@ -18,10 +18,10 @@ import NavigationBar from '../../components/NavigationBar';
 import { cacheAndWriteCourses } from '../../redux/CoursesCacheActions';
 import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
+var page = 1;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
   return (
@@ -39,7 +39,6 @@ class Course extends React.Component {
       progressCourses: [],
       allCourses: [],
       currentSort: 'newest',
-      page: 1,
       outVideos: false,
       isPaging: false,
       refreshing: true,
@@ -65,12 +64,7 @@ class Course extends React.Component {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
 
     let content = await Promise.all([
-      getAllContent(
-        'course',
-        this.state.currentSort,
-        this.state.page,
-        this.filterQuery
-      ),
+      getAllContent('course', this.state.currentSort, page, this.filterQuery),
       getStartedContent('course', 1)
     ]);
     this.metaFilters = content?.[0]?.meta?.filterOptions;
@@ -108,7 +102,7 @@ class Course extends React.Component {
     let response = await getAllContent(
       'course',
       this.state.currentSort,
-      this.state.page,
+      page,
       this.filterQuery
     );
     this.metaFilters = response?.meta?.filterOptions;
@@ -143,9 +137,9 @@ class Course extends React.Component {
       !this.state.isPaging &&
       !this.state.outVideos
     ) {
+      page = page + 1;
       this.setState(
         {
-          page: this.state.page + 1,
           isPaging: true
         },
         () => this.getAllCourses(true)
@@ -233,13 +227,10 @@ class Course extends React.Component {
                 callEndReached={true}
                 reachedEnd={() => {
                   if (!this.state.isPaging && !this.state.outVideos) {
-                    this.setState(
-                      {
-                        page: this.state.page + 1,
-                        isPaging: true
-                      },
-                      () => this.getAllCourses()
-                    );
+                    (page = page + 1),
+                      this.setState({ isPaging: true }, () =>
+                        this.getAllCourses()
+                      );
                   }
                 }}
               />

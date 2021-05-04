@@ -7,7 +7,7 @@ import {
   StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import FontIcon from 'react-native-vector-icons/FontAwesome5';
+import Icon from '../assets/icons';
 
 export default class AddToCalendar extends React.Component {
   render = () => {
@@ -31,7 +31,7 @@ export default class AddToCalendar extends React.Component {
               Add this lesson to your calendar to{'\n'} be notified when it's
               available
             </Text>
-            <FontIcon
+            <Icon.FontAwesome5
               size={onTablet ? 70 : 50}
               name={'calendar-plus'}
               color={colors.pianoteRed}

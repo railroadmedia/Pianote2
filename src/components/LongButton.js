@@ -1,8 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import AntIcon from 'react-native-vector-icons/AntDesign';
+import Icon from '../assets/icons';
 
 export default class StartIcon extends React.Component {
   constructor(props) {
@@ -32,7 +30,7 @@ export default class StartIcon extends React.Component {
   whatIcon = () => {
     if (this.props.type == 'CONTINUE') {
       return (
-        <EntypoIcon
+        <Icon.Entypo
           name={'controller-play'}
           size={this.sizing('icon')}
           color={'white'}
@@ -40,7 +38,7 @@ export default class StartIcon extends React.Component {
       );
     } else if (this.props.type == 'START') {
       return (
-        <EntypoIcon
+        <Icon.Entypo
           name={'controller-play'}
           size={this.sizing('icon')}
           color={'white'}
@@ -48,7 +46,7 @@ export default class StartIcon extends React.Component {
       );
     } else if (this.props.type == 'RESET') {
       return (
-        <MaterialIcon
+        <Icon.MaterialCommunityIcons
           name={'replay'}
           size={this.sizing('icon')}
           color={'white'}
@@ -56,7 +54,7 @@ export default class StartIcon extends React.Component {
       );
     } else if (this.props.type == 'MORE INFO') {
       return (
-        <AntIcon
+        <Icon.AntDesign
           name={'arrowright'}
           size={this.sizing('icon')}
           color={'white'}

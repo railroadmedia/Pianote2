@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, Animated } from 'react-native';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import FontIcon from 'react-native-vector-icons/FontAwesome';
+import Icon from '../assets/icons';
 
 export default class CustomSwitch extends React.Component {
   constructor(props) {
@@ -83,14 +82,14 @@ export default class CustomSwitch extends React.Component {
               ]}
             >
               {this.state.clicked && (
-                <FontIcon
+                <Icon.FontAwesome
                   name={'check'}
                   size={onTablet ? 20 : 17.5}
                   color={'#fb1b2f'}
                 />
               )}
               {!this.state.clicked && (
-                <EntypoIcon
+                <Icon.Entypo
                   name={'cross'}
                   size={onTablet ? 25 : 22.5}
                   color={colors.secondBackground}

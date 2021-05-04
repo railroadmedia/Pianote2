@@ -11,7 +11,7 @@ import {
   StyleSheet
 } from 'react-native';
 import Back from '../../assets/img/svgs/back.svg';
-import AntIcon from 'react-native-vector-icons/AntDesign';
+import Icon from '../../assets/icons.js';
 import AsyncStorage from '@react-native-community/async-storage';
 import Orientation from 'react-native-orientation-locker';
 import { SafeAreaView } from 'react-navigation';
@@ -421,7 +421,7 @@ export default class NewMembership extends React.Component {
                           alignItems: 'center'
                         }}
                       >
-                        <AntIcon
+                        <Icon.AntDesign
                           name={'check'}
                           size={onTablet ? 1.3 * fontIndex : 2 * fontIndex}
                           color={'white'}

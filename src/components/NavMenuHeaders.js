@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StatusBar } from 'react-native';
 import Modal from 'react-native-modal';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Icon from '../assets/icons';
 import Pianote from '../assets/img/svgs/pianote.svg';
 import NavigationMenu from '../../src/components/NavigationMenu.js';
 import { NetworkContext } from '../context/NetworkProvider';
@@ -89,7 +89,7 @@ export default class NavMenuHeaders extends React.Component {
                 LESSONS{' '}
               </Text>
               <View>
-                <EntypoIcon
+                <Icon.Entypo
                   name={'chevron-down'}
                   color={
                     this.props.currentPage == 'LESSONS' || this.props.isMethod

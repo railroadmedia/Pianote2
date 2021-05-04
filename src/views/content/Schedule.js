@@ -8,12 +8,11 @@ import {
   StyleSheet,
   ActivityIndicator
 } from 'react-native';
-import FontIcon from 'react-native-vector-icons/FontAwesome5';
+import Icon from '../../assets/icons.js';
 import Modal from 'react-native-modal';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import AddToCalendar from '../../modals/AddToCalendar';
 import { addToMyList, removeFromMyList } from '../../services/UserActions';
-import AntIcon from 'react-native-vector-icons/AntDesign';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import { SafeAreaView } from 'react-navigation';
 import NavigationBar from '../../components/NavigationBar.js';
@@ -284,7 +283,7 @@ export default class Schedule extends React.Component {
                         : this.removeFromMyList(item.id)
                     }
                   >
-                    <AntIcon
+                    <Icon.AntDesign
                       name={
                         !item.is_added_to_primary_playlist ? 'plus' : 'close'
                       }
@@ -301,7 +300,7 @@ export default class Schedule extends React.Component {
                       this.setState({ addToCalendarModal: true });
                     }}
                   >
-                    <FontIcon
+                    <Icon.FontAwesome5
                       size={sizing.infoButtonSize}
                       name={'calendar-plus'}
                       color={colors.pianoteRed}

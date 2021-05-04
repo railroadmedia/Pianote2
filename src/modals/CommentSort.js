@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Icon from '../assets/icons';
 
 const sortOptions = [
   { title: 'Most Liked', option: 'Popular' },
@@ -46,7 +46,7 @@ export default class CommentSort extends React.Component {
                 this.props.changeSort(sortOption.option);
               }}
             >
-              <EntypoIcon
+              <Icon.Entypo
                 name={'check'}
                 size={onTablet ? 24 : 18}
                 color={
@@ -78,7 +78,7 @@ export default class CommentSort extends React.Component {
               alignItems: 'center'
             }}
           >
-            <EntypoIcon
+            <Icon.Entypo
               name={'cross'}
               size={onTablet ? 30 : 25}
               color={'white'}

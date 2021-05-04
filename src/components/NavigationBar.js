@@ -3,11 +3,8 @@ import FastImage from 'react-native-fast-image';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import DeviceInfo from 'react-native-device-info';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import Icon from '../assets/icons';
 import AsyncStorage from '@react-native-community/async-storage';
-import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NetworkContext } from '../context/NetworkProvider';
 import { navigate } from '../../AppNavigator';
 
@@ -34,7 +31,7 @@ export default class NavigationBar extends React.Component {
   profile = () => {
     if (this.state.profileImage.length == 0) {
       return (
-        <AntIcon
+        <Icon.AntDesign
           name={'user'}
           color={
             this.props.currentPage == 'PROFILE'
@@ -83,7 +80,7 @@ export default class NavigationBar extends React.Component {
                   : navigate(isPackOnly ? 'PACKS' : 'LESSONS');
               }}
             >
-              <SimpleLineIcon
+              <Icon.SimpleLineIcons
                 name={'home'}
                 size={onTablet ? 35 : 27.5}
                 color={
@@ -100,7 +97,7 @@ export default class NavigationBar extends React.Component {
                   : navigate('SEARCH');
               }}
             >
-              <EvilIcons
+              <Icon.EvilIcons
                 name={'search'}
                 size={onTablet ? 55 : 40}
                 color={
@@ -115,7 +112,7 @@ export default class NavigationBar extends React.Component {
                 navigate('DOWNLOADS');
               }}
             >
-              <MaterialIcon
+              <Icon.MaterialCommunityIcons
                 name={'arrow-collapse-down'}
                 size={onTablet ? 40 : 30}
                 color={

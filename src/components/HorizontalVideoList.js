@@ -11,12 +11,11 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import DeviceInfo from 'react-native-device-info';
-import FontIcon from 'react-native-vector-icons/FontAwesome5';
+import Icon from '../assets/icons';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import AddToCalendar from '../modals/AddToCalendar';
-import AntIcon from 'react-native-vector-icons/AntDesign';
 import Relevance from '../modals/Relevance';
 import { addToMyList, removeFromMyList } from '../services/UserActions';
 import ContentModal from '../modals/ContentModal';
@@ -356,7 +355,7 @@ export default class HorizontalVideoList extends React.Component {
                               : sortDict[this.props.currentSort]}
                           </Text>
                           <View>
-                            <FontIcon
+                            <Icon.FontAwesome
                               size={onTablet ? 18 : 14}
                               name={'sort-amount-down'}
                               color={colors.pianoteRed}
@@ -662,7 +661,7 @@ export default class HorizontalVideoList extends React.Component {
                     }
                     style={{ paddingRight: 2.5 }}
                   >
-                    <AntIcon
+                    <Icon.AntDesign
                       name={!item.isAddedToList ? 'plus' : 'close'}
                       size={sizing.myListButtonSize}
                       color={colors.pianoteRed}
@@ -679,7 +678,7 @@ export default class HorizontalVideoList extends React.Component {
                       this.setState({ addToCalendarModal: true });
                     }}
                   >
-                    <FontIcon
+                    <Icon.FontAwesome
                       size={sizing.infoButtonSize}
                       name={'calendar-plus'}
                       color={colors.pianoteRed}
@@ -690,7 +689,7 @@ export default class HorizontalVideoList extends React.Component {
                     onPress={() => this.addToMyList(item.id)}
                     style={{ paddingRight: 2.5 }}
                   >
-                    <AntIcon
+                    <Icon.AntDesign
                       name={'plus'}
                       size={sizing.myListButtonSize}
                       color={colors.pianoteRed}
@@ -701,7 +700,7 @@ export default class HorizontalVideoList extends React.Component {
                     style={{ paddingRight: 2.5 }}
                     onPress={() => this.removeFromMyList(item.id)}
                   >
-                    <AntIcon
+                    <Icon.AntDesign
                       name={'close'}
                       size={sizing.myListButtonSize}
                       color={colors.pianoteRed}

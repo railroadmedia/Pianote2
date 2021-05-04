@@ -9,61 +9,53 @@ import {
 import FastImage from 'react-native-fast-image';
 import DeviceInfo from 'react-native-device-info';
 import Chat from '../../src/assets/img/svgs/chat.svg';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Icon from '../assets/icons';
 import { getUserData } from '../../src/services/UserDataAuth.js';
 
 const isTablet = DeviceInfo.isTablet();
 const messageDict = {
-  'lesson comment reply': [
-    'replied to your comment.',
-    true,
-    'orange',
-    'comment reply notifications'
-  ],
-  'lesson comment liked': [
-    'liked your comment.',
-    true,
-    'blue',
-    'comment like notifications'
-  ],
-  'forum post reply': [
-    'replied to your forum post.',
-    true,
-    'orange',
-    'forum post reply notifications'
-  ],
-  'forum post liked': [
-    'liked your forum post.',
-    true,
-    'blue',
-    'forum post like notifications'
-  ],
-  'forum post in followed thread': [
-    'post in followed thread.',
-    false,
-    'orange',
-    'forum post reply notifications'
-  ],
-  'new content releases': ['', false, 'red', 'new release notifications']
+  'lesson comment reply': {
+    message: 'replied to your comment.',
+    new: true,
+    color: 'orange',
+    type: 'comment reply notifications'
+  },
+  'lesson comment liked': {
+    message: 'liked your comment.',
+    new: true,
+    color: 'blue',
+    type: 'comment like notifications'
+  },
+  'forum post reply': {
+    message: 'replied to your forum post.',
+    new: true,
+    color: 'orange',
+    type: 'forum post reply notifications'
+  },
+  'forum post liked': {
+    message: 'liked your forum post.',
+    new: true,
+    color: 'blue',
+    type: 'forum post like notifications'
+  },
+  'forum post in followed thread': {
+    message: 'post in followed thread.',
+    new: false,
+    color: 'orange',
+    type: 'forum post reply notifications'
+  },
+  'new content releases': {
+    message: '',
+    new: false,
+    color: 'red',
+    type: 'new content release notifications'
+  }
 };
 
 export default class ReplyNotification extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user:
-        this.props.data.type == 'new content releases'
-          ? this.props.data.content?.display_name
-          : this.props.data.sender?.display_name,
-      profileImage:
-        this.props.data.type == 'new content releases'
-          ? this.props.data.content?.thumbnail_url
-          : this.props.data.sender?.profile_image_url,
-      type: messageDict[this.props.data.type]?.[0],
-      notificationStatus: this.props.notificationStatus,
       notify_on_forum_followed_thread_reply: false,
       notify_on_forum_post_like: false,
       notify_on_forum_post_reply: false,
@@ -78,29 +70,40 @@ export default class ReplyNotification extends React.Component {
     let userData = await getUserData();
     let statusChange = null;
 
-    if (this.state.type == 'replied to your comment.') {
+    if (
+      messageDict[this.props.data.type]?.message == 'replied to your comment.'
+    ) {
       statusChange = {
         notify_on_lesson_comment_reply: !this.state
           .notify_on_lesson_comment_reply
       };
-    } else if (this.state.type == 'liked your comment.') {
+    } else if (
+      messageDict[this.props.data.type]?.message == 'liked your comment.'
+    ) {
       statusChange = {
         notify_on_lesson_comment_like: !this.state.notify_on_lesson_comment_like
       };
-    } else if (this.state.type == 'replied to your forum post.') {
+    } else if (
+      messageDict[this.props.data.type]?.message ==
+      'replied to your forum post.'
+    ) {
       statusChange = {
         notify_on_forum_post_reply: !this.state.notify_on_forum_post_reply
       };
-    } else if (this.state.type == 'liked your forum post.') {
+    } else if (
+      messageDict[this.props.data.type]?.message == 'liked your forum post.'
+    ) {
       statusChange = {
         notify_on_forum_post_like: !this.state.notify_on_forum_post_like
       };
-    } else if (this.state.type == 'post in followed thread.') {
+    } else if (
+      messageDict[this.props.data.type]?.message == 'post in followed thread.'
+    ) {
       statusChange = {
         notify_on_forum_followed_thread_reply: !this.state
           .notify_on_forum_followed_thread_reply
       };
-    } else if (this.state.type == '') {
+    } else if (messageDict[this.props.data.type]?.message == '') {
       statusChange = {
         notify_weekly_update: !this.state.notify_weekly_update
       };
@@ -142,21 +145,21 @@ export default class ReplyNotification extends React.Component {
               >
                 <View style={styles.centerContent}>
                   <View style={localStyles.profileContainer2}>
-                    {messageDict[this.props.data.type][2] == 'red' && (
+                    {messageDict[this.props.data.type].color == 'red' && (
                       <View
                         style={[
                           styles.centerContent,
                           localStyles.videoContainer
                         ]}
                       >
-                        <FontAwesome
+                        <Icon.FontAwesome
                           size={sizing.infoButtonSize}
                           color={'white'}
                           name={'video-camera'}
                         />
                       </View>
                     )}
-                    {messageDict[this.props.data.type][2] == 'orange' && (
+                    {messageDict[this.props.data.type].color == 'orange' && (
                       <View
                         style={[
                           styles.centerContent,
@@ -170,14 +173,14 @@ export default class ReplyNotification extends React.Component {
                         />
                       </View>
                     )}
-                    {messageDict[this.props.data.type][2] == 'blue' && (
+                    {messageDict[this.props.data.type].color == 'blue' && (
                       <View
                         style={[
                           styles.centerContent,
                           localStyles.likeContainer
                         ]}
                       >
-                        <AntIcon
+                        <Icon.AntDesign
                           size={sizing.infoButtonSize}
                           color={'white'}
                           name={'like1'}
@@ -187,10 +190,11 @@ export default class ReplyNotification extends React.Component {
                     <FastImage
                       style={localStyles.image}
                       source={{
-                        uri:
-                          this.state.profileImage !== ''
-                            ? this.state.profileImage
-                            : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                        uri: this.state.profileImage
+                          ? this.props.data.type == 'new content releases'
+                            ? this.props.data.content?.thumbnail_url
+                            : this.props.data.sender?.profile_image_url
+                          : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
                       }}
                       resizeMode={FastImage.resizeMode.cover}
                     />
@@ -198,8 +202,12 @@ export default class ReplyNotification extends React.Component {
                 </View>
               </View>
               <Text style={localStyles.replyUser}>
-                <Text style={localStyles.user}>{this.state.user}</Text>{' '}
-                {this.state.type}
+                <Text style={localStyles.user}>
+                  {this.props.data.type == 'new content releases'
+                    ? this.props.data.content?.display_name
+                    : this.props.data.sender?.display_name}
+                </Text>{' '}
+                {messageDict[this.props.data.type]?.message}
               </Text>
             </>
             <>
@@ -209,7 +217,7 @@ export default class ReplyNotification extends React.Component {
                   onPress={() => this.props.removeNotification(this.props.data)}
                 >
                   <View style={localStyles.crossContainer}>
-                    <EntypoIcon
+                    <Icon.Entypo
                       name={'cross'}
                       size={sizing.myListButtonSize * 1.2}
                       color={colors.pianoteRed}
@@ -233,7 +241,7 @@ export default class ReplyNotification extends React.Component {
                   }
                 >
                   <View style={localStyles.notificationContainer}>
-                    <IonIcon
+                    <Icon.Ionicons
                       name={'ios-notifications-outline'}
                       size={sizing.myListButtonSize}
                       color={colors.pianoteRed}
@@ -244,8 +252,8 @@ export default class ReplyNotification extends React.Component {
                         { fontSize: sizing.descriptionText }
                       ]}
                     >
-                      Turn {this.state.notificationStatus ? 'off' : 'on'}{' '}
-                      {messageDict[this.props.data.type][3]}
+                      Turn {this.props.notificationStatus ? 'off' : 'on'}{' '}
+                      {messageDict[this.props.data.type].type}
                     </Text>
                   </View>
                 </TouchableOpacity>

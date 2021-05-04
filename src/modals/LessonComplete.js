@@ -8,7 +8,7 @@ import {
   Dimensions
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import IonIcon from 'react-native-vector-icons/Ionicons';
+import Icon from '../assets/icons';
 import ApprovedTeacher from '../assets/img/svgs/approved-teacher.svg';
 
 const windowDim = Dimensions.get('window');
@@ -44,7 +44,7 @@ export default class LessonComplete extends React.Component {
         <View style={[styles.centerContent, styles.container]}>
           <View style={localStyles.container}>
             <View style={styles.centerContent}>
-              <IonIcon
+              <Icon.Ionicons
                 name={'ios-trophy'}
                 size={onTablet ? 45 : 35}
                 color={'#fb1b2f'}

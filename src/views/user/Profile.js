@@ -12,10 +12,7 @@ import {
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import DeviceInfo from 'react-native-device-info';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import AntIcon from 'react-native-vector-icons/AntDesign';
+import Icon from '../../assets/icons.js';
 import Chat from '../../assets/img/svgs/chat.svg';
 import Settings from '../../assets/img/svgs/settings.svg';
 import XpRank from '../../modals/XpRank.js';
@@ -33,42 +30,42 @@ import { navigate } from '../../../AppNavigator.js';
 
 const isTablet = DeviceInfo.isTablet();
 const messageDict = {
-  'lesson comment reply': [
-    'replied to your comment.',
-    true,
-    'orange',
-    'comment reply notifications'
-  ],
-  'lesson comment liked': [
-    'liked your comment.',
-    true,
-    'blue',
-    'comment like notifications'
-  ],
-  'forum post reply': [
-    'replied to your forum post.',
-    true,
-    'orange',
-    'forum post reply notifications'
-  ],
-  'forum post liked': [
-    'liked your forum post.',
-    true,
-    'blue',
-    'forum post like notifications'
-  ],
-  'forum post in followed thread': [
-    'post in followed thread.',
-    false,
-    'orange',
-    'forum post reply notifications'
-  ],
-  'new content releases': [
-    '',
-    false,
-    'red',
-    'new content release notifications'
-  ]
+  'lesson comment reply': {
+    message: 'replied to your comment.',
+    new: true,
+    color: 'orange',
+    type: 'comment reply notifications'
+  },
+  'lesson comment liked': {
+    message: 'liked your comment.',
+    new: true,
+    color: 'blue',
+    type: 'comment like notifications'
+  },
+  'forum post reply': {
+    message: 'replied to your forum post.',
+    new: true,
+    color: 'orange',
+    type: 'forum post reply notifications'
+  },
+  'forum post liked': {
+    message: 'liked your forum post.',
+    new: true,
+    color: 'blue',
+    type: 'forum post like notifications'
+  },
+  'forum post in followed thread': {
+    message: 'post in followed thread.',
+    new: false,
+    color: 'orange',
+    type: 'forum post reply notifications'
+  },
+  'new content releases': {
+    message: '',
+    new: false,
+    color: 'red',
+    type: 'new content release notifications'
+  }
 };
 
 export default class Profile extends React.Component {
@@ -186,7 +183,7 @@ export default class Profile extends React.Component {
   };
 
   checkNotificationTypeStatus = item => {
-    let type = messageDict[item.type][0];
+    let type = messageDict[item.type].message;
     if (type == 'replied to your comment.') {
       this.setState({
         clickedNotificationStatus: this.state.notify_on_lesson_comment_reply
@@ -303,7 +300,7 @@ export default class Profile extends React.Component {
                         }
                         style={[styles.centerContent, styles.container]}
                       >
-                        <IonIcon
+                        <Icon.Ionicons
                           size={onTablet ? 24 : 18}
                           name={'ios-camera'}
                           color={colors.pianoteRed}
@@ -407,7 +404,7 @@ export default class Profile extends React.Component {
               >
                 <View style={localStyles.innerNotificationContainer}>
                   <View style={localStyles.messageContainer}>
-                    {messageDict[item.type][2] == 'red' && (
+                    {messageDict[item.type].color == 'red' && (
                       <View
                         style={[
                           styles.centerContent,
@@ -415,14 +412,14 @@ export default class Profile extends React.Component {
                           { backgroundColor: 'red' }
                         ]}
                       >
-                        <FontAwesome
+                        <Icon.FontAwesome
                           size={sizing.infoButtonSize}
                           color={'white'}
                           name={'video-camera'}
                         />
                       </View>
                     )}
-                    {messageDict[item.type][2] == 'orange' && (
+                    {messageDict[item.type].color == 'orange' && (
                       <View
                         style={[
                           styles.centerContent,
@@ -437,7 +434,7 @@ export default class Profile extends React.Component {
                         />
                       </View>
                     )}
-                    {messageDict[item.type][2] == 'blue' && (
+                    {messageDict[item.type].color == 'blue' && (
                       <View
                         style={[
                           styles.centerContent,
@@ -445,7 +442,7 @@ export default class Profile extends React.Component {
                           { backgroundColor: 'blue' }
                         ]}
                       >
-                        <AntIcon
+                        <Icon.AntDesign
                           size={sizing.infoButtonSize}
                           color={'white'}
                           name={'like1'}
@@ -481,14 +478,14 @@ export default class Profile extends React.Component {
                       }}
                     >
                       <Text style={localStyles.boldNotificationText}>
-                        {messageDict[item.type][1] ? '' : 'NEW - '}
+                        {messageDict[item.type].new ? '' : 'NEW - '}
                       </Text>
                       {item.type == 'new content releases'
                         ? item.content.display_name
                         : item.sender?.display_name}
                       <Text style={localStyles.messageTypeText}>
                         {' '}
-                        {messageDict[item.type][0]}
+                        {messageDict[item.type].message}
                       </Text>
                     </Text>
                     <Text style={localStyles.createdAtText}>
@@ -508,7 +505,7 @@ export default class Profile extends React.Component {
                         });
                       }}
                     >
-                      <EntypoIcon
+                      <Icon.Entypo
                         size={sizing.infoButtonSize}
                         name={'dots-three-horizontal'}
                         color={colors.secondBackground}

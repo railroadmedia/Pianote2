@@ -9,7 +9,7 @@ import {
 import FastImage from 'react-native-fast-image';
 import NavigationBar from '../../../src/components/NavigationBar.js';
 import { Download_V2, offlineContent } from 'RNDownload';
-import IconFeather from 'react-native-vector-icons/Feather';
+import Icon from '../../assets/icons.js';
 import { SafeAreaView } from 'react-navigation';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { navigate } from '../../../AppNavigator';
@@ -206,7 +206,7 @@ export default class Downloads extends React.Component {
                   )}
                   {!item.dlding.length && !edit ? (
                     <View style={{ justifyContent: 'center' }}>
-                      <IconFeather
+                      <Icon.Feather
                         name={'chevron-right'}
                         size={onTablet ? 25 : 20}
                         color={'white'}

@@ -12,10 +12,8 @@ import DeviceInfo from 'react-native-device-info';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import ImagePicker from 'react-native-image-picker';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import AntIcon from 'react-native-vector-icons/AntDesign';
+import Icon from '../../assets/icons.js';
 import Back from '../../assets/img/svgs/back.svg';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
 import { SafeAreaView } from 'react-navigation';
 import DisplayName from '../../modals/DisplayName.js';
@@ -189,7 +187,7 @@ export default class ProfileSettings extends React.Component {
                 }
               >
                 <Text style={localStyles.settingsText}>Display Name</Text>
-                <AntIcon
+                <Icon.AntDesign
                   name={'right'}
                   size={onTablet ? 30 : 20}
                   color={colors.secondBackground}
@@ -204,7 +202,7 @@ export default class ProfileSettings extends React.Component {
                 }}
               >
                 <Text style={localStyles.settingsText}>Profile Photo</Text>
-                <AntIcon
+                <Icon.AntDesign
                   name={'right'}
                   size={onTablet ? 30 : 20}
                   color={colors.secondBackground}
@@ -260,7 +258,7 @@ export default class ProfileSettings extends React.Component {
                         })
                       }
                     >
-                      <EntypoIcon
+                      <Icon.Entypo
                         name={'cross'}
                         size={onTablet ? 30 : 22.5}
                         color={colors.secondBackground}
@@ -278,7 +276,7 @@ export default class ProfileSettings extends React.Component {
                     onPress={() => this.chooseImage()}
                     style={styles.centerContent}
                   >
-                    <AntIcon
+                    <Icon.AntDesign
                       name={'plus'}
                       size={onTablet ? 80 : 65}
                       color={'white'}
@@ -295,7 +293,7 @@ export default class ProfileSettings extends React.Component {
                 onPress={() => this.chooseImage()}
                 style={[styles.centerContent, localStyles.imageContainer]}
               >
-                <IonIcon
+                <Icon.Ionicons
                   size={onTablet ? 50 : 35}
                   name={'ios-camera'}
                   color={colors.secondBackground}

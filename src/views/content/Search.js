@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   StatusBar
 } from 'react-native';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import Icon from '../../assets/icons.js';
 import AsyncStorage from '@react-native-community/async-storage';
 import { SafeAreaView } from 'react-navigation';
 import NavigationBar from '../../components/NavigationBar';
@@ -259,7 +259,7 @@ export default class Search extends React.Component {
                 <View
                   style={[styles.centerContent, { width: onTablet ? 60 : 40 }]}
                 >
-                  <EvilIcons
+                  <Icon.EvilIcons
                     name={'search'}
                     size={onTablet ? 35 : 25}
                     color={
@@ -381,7 +381,8 @@ export default class Search extends React.Component {
             <View style={{ flex: 1, marginBottom: '2%' }}>
               {!this.state.searchEntered &&
                 !this.state.isLoadingAll &&
-                !this.state.noResults && <View>{this.mapRecentResults()}</View>}
+                !this.state.noResults &&
+                this.mapRecentResults()}
               {this.state.searchEntered &&
                 !this.state.noResults &&
                 !this.state.isLoadingAll && (

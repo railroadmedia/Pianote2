@@ -13,18 +13,13 @@ import {
   BackHandler,
   SafeAreaView
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
 import Video from 'RNVideoEnhanced';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import FontIcon from 'react-native-vector-icons/FontAwesome5';
+import Icon from '../../assets/icons.js';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Download_V2, offlineContent, DownloadResources } from 'RNDownload';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons.js';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Replies from '../../components/Replies';
 import SoundSlice from '../../components/SoundSlice';
@@ -481,7 +476,7 @@ export default class ViewLesson extends React.Component {
                   style={{ marginRight: 10 }}
                   onPress={() => this.likeComment(item.id)}
                 >
-                  <AntIcon
+                  <Icon.AntDesign
                     name={item.is_liked ? 'like1' : 'like2'}
                     size={sizing.infoButtonSize}
                     color={colors.pianoteRed}
@@ -522,7 +517,7 @@ export default class ViewLesson extends React.Component {
                     )
                   }
                 >
-                  <MaterialIcon
+                  <Icon.MaterialCommunityIcons
                     name={'comment-text-outline'}
                     size={sizing.infoButtonSize}
                     color={colors.pianoteRed}
@@ -556,7 +551,7 @@ export default class ViewLesson extends React.Component {
                   style={{ marginLeft: 10 }}
                   onPress={() => this.deleteComment(item.id)}
                 >
-                  <AntIcon
+                  <Icon.AntDesign
                     name={'delete'}
                     size={sizing.infoButtonSize}
                     color={colors.pianoteRed}
@@ -743,14 +738,14 @@ export default class ViewLesson extends React.Component {
           </Text>
 
           {row.progress === 100 ? (
-            <AntIcon
+            <Icon.AntDesign
               name={'checkcircle'}
               size={onTablet ? 25 : 20}
               style={{ paddingVertical: 5 }}
               color={colors.pianoteRed}
             />
           ) : (
-            <EntypoIcon
+            <Icon.Entypo
               name={'chevron-thin-right'}
               size={onTablet ? 25 : 20}
               style={{ paddingVertical: 5 }}
@@ -1038,7 +1033,7 @@ export default class ViewLesson extends React.Component {
                         onPress={this.likeOrDislikeLesson}
                         style={{ flex: 1, alignItems: 'center' }}
                       >
-                        <AntIcon
+                        <Icon.AntDesign
                           name={this.state.isLiked ? 'like1' : 'like2'}
                           size={sizing.infoButtonSize}
                           color={colors.pianoteRed}
@@ -1058,7 +1053,7 @@ export default class ViewLesson extends React.Component {
                         onPress={this.toggleMyList}
                         style={{ flex: 1, alignItems: 'center' }}
                       >
-                        <AntIcon
+                        <Icon.AntDesign
                           name={this.state.isAddedToMyList ? 'close' : 'plus'}
                           size={sizing.myListButtonSize}
                           color={colors.pianoteRed}
@@ -1147,7 +1142,7 @@ export default class ViewLesson extends React.Component {
                           alignItems: 'center'
                         }}
                       >
-                        <AntIcon
+                        <Icon.AntDesign
                           name={
                             this.state.showInfo ? 'infocirlce' : 'infocirlceo'
                           }
@@ -1310,7 +1305,7 @@ export default class ViewLesson extends React.Component {
                                 this.setState({ showCommentSort: true })
                               }
                             >
-                              <FontIcon
+                              <Icon.FontAwesome5
                                 size={onTablet ? 20 : 15}
                                 name={'sort-amount-down'}
                                 color={colors.pianoteRed}
@@ -1564,7 +1559,7 @@ export default class ViewLesson extends React.Component {
                   )
                 }
               >
-                <EntypoIcon
+                <Icon.Entypo
                   name={'chevron-thin-left'}
                   size={onTablet ? 22.5 : 17.5}
                   style={{ padding: 5 }}
@@ -1624,7 +1619,7 @@ export default class ViewLesson extends React.Component {
                   )
                 }
               >
-                <EntypoIcon
+                <Icon.Entypo
                   name={'chevron-thin-right'}
                   size={onTablet ? 22.5 : 17.5}
                   style={{ padding: 5 }}
@@ -1947,7 +1942,7 @@ export default class ViewLesson extends React.Component {
                     }}
                     onPress={() => this.makeComment()}
                   >
-                    <IonIcon
+                    <Icon.Ionicons
                       name={'md-send'}
                       size={onTablet ? 25 : 17.5}
                       color={colors.pianoteRed}

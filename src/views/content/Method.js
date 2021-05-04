@@ -10,8 +10,7 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import AntIcon from 'react-native-vector-icons/AntDesign';
+import Icon from '../../assets/icons.js';
 import LinearGradient from 'react-native-linear-gradient';
 import Orientation from 'react-native-orientation-locker';
 import LongButton from '../../components/LongButton';
@@ -253,7 +252,7 @@ export default class Method extends React.Component {
                       });
                     }}
                   >
-                    <AntIcon
+                    <Icon.AntDesign
                       name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
                       size={onTablet ? 20 : 15}
                       color={colors.pianoteRed}
@@ -388,7 +387,7 @@ export default class Method extends React.Component {
                       }
                     ]}
                   >
-                    <MaterialIcon
+                    <Icon.MaterialCommunityIcons
                       name={'replay'}
                       size={onTablet ? 28 : 20}
                       color={colors.pianoteRed}

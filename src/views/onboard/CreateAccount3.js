@@ -15,7 +15,7 @@ import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import ImagePicker from 'react-native-image-picker';
-import AntIcon from 'react-native-vector-icons/AntDesign';
+import Icon from '../../assets/icons.js';
 import X from '../../assets/img/svgs/X.svg';
 import Back from '../../assets/img/svgs/back';
 import Courses from '../../assets/img/svgs/courses.svg';
@@ -581,7 +581,7 @@ export default class CreateAccount3 extends React.Component {
                         <X fill={'white'} height={'50%'} width={'50%'} />
                       </TouchableOpacity>
                     )}
-                    <AntIcon
+                    <Icon.AntDesign
                       name={'plus'}
                       size={onTablet ? 70 : 50}
                       color={'white'}

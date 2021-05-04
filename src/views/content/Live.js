@@ -25,12 +25,11 @@ import {
   removeAllMessages,
   toggleBlockStudent
 } from '../../services/UserActions';
-import FontIcon from 'react-native-vector-icons/FontAwesome5';
+import Icon from '../../assets/icons.js';
 import ArrowLeft from '../../assets/img/svgs/arrowLeft';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import AddToCalendar from '../../modals/AddToCalendar';
 import { addToMyList, removeFromMyList } from '../../services/UserActions';
-import AntIcon from 'react-native-vector-icons/AntDesign';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { goBack } from '../../../AppNavigator';
 import { getLiveContent } from '../../../src/services/GetContent';
@@ -548,7 +547,7 @@ export default class Live extends React.Component {
                           this.setState({ addToCalendarModal: true });
                         }}
                       >
-                        <FontIcon
+                        <Icon.FontAwesome5
                           size={sizing.infoButtonSize}
                           name={'calendar-plus'}
                           color={colors.pianoteRed}
@@ -701,7 +700,7 @@ export default class Live extends React.Component {
                           }
                           style={{ paddingRight: 2.5, paddingBottom: 25 }}
                         >
-                          <AntIcon
+                          <Icon.AntDesign
                             name={
                               !this.state.liveLesson[0]
                                 .is_added_to_primary_playlist

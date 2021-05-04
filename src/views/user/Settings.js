@@ -17,11 +17,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import Intercom from 'react-native-intercom';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import AntIcon from 'react-native-vector-icons/AntDesign';
+import Icon from '../../assets/icons.js';
 import Back from '../../assets/img/svgs/back.svg';
-import FeatherIcon from 'react-native-vector-icons/Feather';
-import FontIcon from 'react-native-vector-icons/FontAwesome';
 import NavigationBar from '../../components/NavigationBar.js';
 import Loading from '../../components/Loading.js';
 import CustomModal from '../../modals/CustomModal.js';
@@ -241,7 +238,7 @@ class Settings extends React.Component {
               <View
                 style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
               >
-                <FeatherIcon
+                <Icon.Feather
                   name={'user'}
                   size={onTablet ? 30 : 20}
                   color={colors.pianoteRed}
@@ -249,7 +246,7 @@ class Settings extends React.Component {
               </View>
               <Text style={localStyles.settingsText}>Profile Settings</Text>
             </View>
-            <AntIcon
+            <Icon.AntDesign
               name={'right'}
               size={onTablet ? 30 : 20}
               color={colors.secondBackground}
@@ -265,7 +262,7 @@ class Settings extends React.Component {
               <View
                 style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
               >
-                <IonIcon
+                <Icon.Ionicons
                   name={'ios-notifications-outline'}
                   color={colors.pianoteRed}
                   size={onTablet ? 35 : 27.5}
@@ -275,7 +272,7 @@ class Settings extends React.Component {
                 Notification Settings
               </Text>
             </View>
-            <AntIcon
+            <Icon.AntDesign
               name={'right'}
               size={onTablet ? 30 : 20}
               color={colors.secondBackground}
@@ -289,7 +286,7 @@ class Settings extends React.Component {
               <View
                 style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
               >
-                <AntIcon
+                <Icon.AntDesign
                   name={'folder1'}
                   size={onTablet ? 30 : 20}
                   color={colors.pianoteRed}
@@ -297,7 +294,7 @@ class Settings extends React.Component {
               </View>
               <Text style={localStyles.settingsText}>Manage Subscriptions</Text>
             </View>
-            <AntIcon
+            <Icon.AntDesign
               name={'right'}
               size={onTablet ? 30 : 20}
               color={colors.secondBackground}
@@ -311,7 +308,7 @@ class Settings extends React.Component {
               <View
                 style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
               >
-                <AntIcon
+                <Icon.AntDesign
                   name={'creditcard'}
                   size={onTablet ? 30 : 20}
                   color={colors.pianoteRed}
@@ -319,7 +316,7 @@ class Settings extends React.Component {
               </View>
               <Text style={localStyles.settingsText}>Restore Purchases</Text>
             </View>
-            <AntIcon
+            <Icon.AntDesign
               name={'right'}
               size={onTablet ? 30 : 20}
               color={colors.secondBackground}
@@ -335,7 +332,7 @@ class Settings extends React.Component {
               <View
                 style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
               >
-                <FontIcon
+                <Icon.FontAwesome
                   name={'support'}
                   size={onTablet ? 30 : 20}
                   color={colors.pianoteRed}
@@ -343,7 +340,7 @@ class Settings extends React.Component {
               </View>
               <Text style={localStyles.settingsText}>Support</Text>
             </View>
-            <AntIcon
+            <Icon.AntDesign
               name={'right'}
               size={onTablet ? 30 : 20}
               color={colors.secondBackground}
@@ -359,7 +356,7 @@ class Settings extends React.Component {
               <View
                 style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
               >
-                <AntIcon
+                <Icon.AntDesign
                   name={'form'}
                   size={onTablet ? 30 : 20}
                   color={colors.pianoteRed}
@@ -367,7 +364,7 @@ class Settings extends React.Component {
               </View>
               <Text style={localStyles.settingsText}>Terms of Use</Text>
             </View>
-            <AntIcon
+            <Icon.AntDesign
               name={'right'}
               size={onTablet ? 30 : 20}
               color={colors.secondBackground}
@@ -391,7 +388,7 @@ class Settings extends React.Component {
               </View>
               <Text style={localStyles.settingsText}>Privacy Policy</Text>
             </View>
-            <AntIcon
+            <Icon.AntDesign
               name={'right'}
               size={onTablet ? 30 : 20}
               color={colors.secondBackground}
@@ -405,7 +402,7 @@ class Settings extends React.Component {
               <View
                 style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
               >
-                <AntIcon
+                <Icon.AntDesign
                   name={'poweroff'}
                   color={colors.pianoteRed}
                   size={onTablet ? 30 : 20}
@@ -413,7 +410,7 @@ class Settings extends React.Component {
               </View>
               <Text style={localStyles.settingsText}>Log Out</Text>
             </View>
-            <AntIcon
+            <Icon.AntDesign
               name={'right'}
               size={onTablet ? 30 : 20}
               color={colors.secondBackground}

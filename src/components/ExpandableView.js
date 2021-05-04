@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Icon from '../assets/icons';
 
 export default class ExpandableView extends React.Component {
   state = {};
@@ -64,14 +64,14 @@ export default class ExpandableView extends React.Component {
             {this.props.title}
           </Text>
           {(contentVisible || !!this.state.maxHeight) && (
-            <EntypoIcon
+            <Icon.Entypo
               name={'chevron-thin-up'}
               size={onTablet ? 25 : 17.5}
               color={colors.secondBackground}
             />
           )}
           {!contentVisible && !this.state.maxHeight && (
-            <EntypoIcon
+            <Icon.Entypo
               name={'chevron-thin-down'}
               size={onTablet ? 25 : 17.5}
               color={colors.secondBackground}

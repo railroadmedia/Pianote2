@@ -1,14 +1,10 @@
 import React from 'react';
 import { View, SafeAreaView, TouchableOpacity } from 'react-native';
 import { WebView } from 'react-native-webview';
-import FeatherIcon from 'react-native-vector-icons/Feather';
+import Icon from '../assets/icons';
 import IdleTimerManager from 'react-native-idle-timer';
 
 export default class SoundSlice extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount = () => IdleTimerManager.setIdleTimerDisabled(true);
 
   componentWillUnmount = () => IdleTimerManager.setIdleTimerDisabled(false);
@@ -49,7 +45,7 @@ export default class SoundSlice extends React.Component {
                     zIndex: 10
                   }}
                 >
-                  <FeatherIcon
+                  <Icon.Feather
                     size={onTablet ? 50 : 35}
                     name={'x'}
                     color={'black'}

@@ -15,8 +15,7 @@ import { Download_V2 } from 'RNDownload';
 import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import Back from '../../assets/img/svgs/back.svg';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from '../../assets/icons.js';
 import Orientation from 'react-native-orientation-locker';
 import { DownloadResources } from 'RNDownload';
 import LongButton from '../../components/LongButton';
@@ -323,7 +322,7 @@ export default class SinglePack extends React.Component {
                       }}
                     >
                       <View style={styles.centerContent}>
-                        <AntIcon
+                        <Icon.AntDesign
                           name={!this.state.isAddedToList ? 'plus' : 'close'}
                           size={sizing.myListButtonSize}
                           color={colors.pianoteRed}
@@ -539,7 +538,7 @@ export default class SinglePack extends React.Component {
                         });
                       }}
                     >
-                      <MaterialIcon
+                      <Icon.MaterialCommunityIcons
                         size={sizing.myListButtonSize}
                         name={'replay'}
                         color={colors.pianoteRed}

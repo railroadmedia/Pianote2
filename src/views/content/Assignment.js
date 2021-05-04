@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import SoundSlice from '../../components/SoundSlice.js';
-import AntIcon from 'react-native-vector-icons/AntDesign';
+import Icon from '../../assets/icons.js';
 import AssignmentResource from './AssignmentResource.js';
 import downloadService from '../../services/download.service.js';
 import { NetworkContext } from '../../context/NetworkProvider';
@@ -68,7 +68,7 @@ export default class Assignment extends React.Component {
                   zIndex: 1
                 }}
               >
-                <AntIcon
+                <Icon.AntDesign
                   name={'close'}
                   size={sizing.myListButtonSize}
                   color={'#ffffff'}

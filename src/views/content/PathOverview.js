@@ -12,9 +12,8 @@ import {
 import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
 import { Download_V2 } from 'RNDownload';
-import AntIcon from 'react-native-vector-icons/AntDesign';
+import Icon from '../../assets/icons.js';
 import Back from '../../assets/img/svgs/back.svg';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Orientation from 'react-native-orientation-locker';
 import LongButton from '../../components/LongButton';
 import NavigationBar from '../../components/NavigationBar';
@@ -353,7 +352,7 @@ export default class PathOverview extends React.Component {
                 onPress={() => this.toggleMyList(this.state.id)}
               >
                 <View style={[styles.centerContent, { flexDirection: 'row' }]}>
-                  <AntIcon
+                  <Icon.AntDesign
                     name={!this.state.isAddedToList ? 'plus' : 'close'}
                     size={sizing.myListButtonSize}
                     color={colors.pianoteRed}
@@ -624,7 +623,7 @@ export default class PathOverview extends React.Component {
                       marginTop: 5
                     }}
                   >
-                    <MaterialIcon
+                    <Icon.MaterialCommunityIcons
                       name={'replay'}
                       size={sizing.myListButtonSize}
                       color={colors.pianoteRed}

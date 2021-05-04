@@ -7,7 +7,7 @@ import {
   Dimensions,
   ScrollView
 } from 'react-native';
-import FeatherIcon from 'react-native-vector-icons/Feather';
+import Icon from '../assets/icons';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NetworkContext } from '../context/NetworkProvider';
 import { navigate } from '../../AppNavigator';
@@ -201,7 +201,7 @@ export default class NavigationMenu extends React.Component {
               }
             ]}
           >
-            <FeatherIcon
+            <Icon.Feather
               size={onTablet ? 65 : 50}
               name={'x'}
               color={'white'}

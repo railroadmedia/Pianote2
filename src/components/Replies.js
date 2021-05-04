@@ -12,10 +12,7 @@ import {
 import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from '../assets/icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { NetworkContext } from '../context/NetworkProvider';
 
@@ -124,7 +121,7 @@ export default class Replies extends React.Component {
                       );
                     }}
                   >
-                    <AntIcon
+                    <Icon.AntDesign
                       name={reply.is_liked ? 'like1' : 'like2'}
                       size={sizing.infoButtonSize}
                       color={colors.pianoteRed}
@@ -162,7 +159,7 @@ export default class Replies extends React.Component {
                       this.props.deleteReply(reply.id);
                     }}
                   >
-                    <AntIcon
+                    <Icon.AntDesign
                       name={'delete'}
                       size={sizing.infoButtonSize}
                       color={colors.pianoteRed}
@@ -303,7 +300,7 @@ export default class Replies extends React.Component {
                                   );
                                 }}
                               >
-                                <AntIcon
+                                <Icon.AntDesign
                                   name={comment.is_liked ? 'like1' : 'like2'}
                                   size={sizing.infoButtonSize}
                                   color={colors.pianoteRed}
@@ -336,7 +333,7 @@ export default class Replies extends React.Component {
                             </View>
 
                             <View style={{ flexDirection: 'row' }}>
-                              <MaterialIcon
+                              <Icon.MaterialCommunityIcons
                                 name={'comment-text-outline'}
                                 size={sizing.infoButtonSize}
                                 color={colors.pianoteRed}
@@ -367,7 +364,7 @@ export default class Replies extends React.Component {
                                   this.props.deleteComment(comment.id);
                                 }}
                               >
-                                <AntIcon
+                                <Icon.AntDesign
                                   name={'delete'}
                                   size={sizing.infoButtonSize}
                                   color={colors.pianoteRed}
@@ -409,7 +406,7 @@ export default class Replies extends React.Component {
                       color={colors.secondBackground}
                     />
                   )}
-                  <View>{this.mapReplies()}</View>
+                  {this.mapReplies()}
                 </View>
               </KeyboardAwareScrollView>
               <Modal
@@ -454,7 +451,7 @@ export default class Replies extends React.Component {
                           marginBottom: !isiOS ? 10 : 0
                         }}
                       >
-                        <IonIcon
+                        <Icon.Ionicons
                           name={'md-send'}
                           size={onTablet ? 25 : 17.5}
                           color={colors.pianoteRed}

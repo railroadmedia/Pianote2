@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import FastImage from 'react-native-fast-image';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Icon from '../assets/icons';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -130,7 +130,7 @@ export default class NextVideo extends React.Component {
               </Text>
             </View>
             <View style={[styles.centerContent, localStyles.play]}>
-              <EntypoIcon
+              <Icon.Entypo
                 name={'controller-play'}
                 size={onTablet ? 35 : 22.5}
                 color={colors.pianoteRed}

@@ -13,14 +13,13 @@ import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
 import { bindActionCreators } from 'redux';
 import FastImage from 'react-native-fast-image';
+import Icon from '../../assets/icons';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import PasswordVisible from '../../assets/img/svgs/passwordVisible.svg';
 import Orientation from 'react-native-orientation-locker';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import { watchersListener } from 'MusoraChat';
 import DeviceInfo from 'react-native-device-info';
 import LongButton from '../../components/LongButton';
@@ -43,6 +42,7 @@ import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
+var page = 1;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
@@ -753,7 +753,7 @@ class Lessons extends React.Component {
                                 this.addToMyList(this.state.liveLesson[0]?.id)
                               }
                             >
-                              <AntIcon
+                              <Icon.AntDesign
                                 name={'plus'}
                                 size={sizing.myListButtonSize}
                                 color={colors.pianoteRed}
@@ -767,7 +767,7 @@ class Lessons extends React.Component {
                                 )
                               }
                             >
-                              <AntIcon
+                              <Icon.AntDesign
                                 name={'close'}
                                 size={sizing.myListButtonSize}
                                 color={colors.pianoteRed}
@@ -782,7 +782,7 @@ class Lessons extends React.Component {
                               this.setState({ addToCalendarModal: true });
                             }}
                           >
-                            <FontIcon
+                            <Icon.FontAwesome5
                               size={sizing.infoButtonSize}
                               name={'calendar-plus'}
                               color={colors.pianoteRed}
@@ -882,7 +882,7 @@ class Lessons extends React.Component {
                                 );
                           }}
                         >
-                          <AntIcon
+                          <Icon.AntDesign
                             name={
                               !this.state.liveLesson[0]
                                 .is_added_to_primary_playlist
@@ -1058,7 +1058,7 @@ class Lessons extends React.Component {
                               }
                               style={{ paddingRight: 2.5, paddingBottom: 25 }}
                             >
-                              <AntIcon
+                              <Icon.AntDesign
                                 name={'plus'}
                                 size={sizing.myListButtonSize}
                                 color={colors.pianoteRed}
@@ -1073,7 +1073,7 @@ class Lessons extends React.Component {
                                 )
                               }
                             >
-                              <AntIcon
+                              <Icon.AntDesign
                                 name={'close'}
                                 size={sizing.myListButtonSize}
                                 color={colors.pianoteRed}
@@ -1089,7 +1089,7 @@ class Lessons extends React.Component {
                             }
                             style={{ paddingRight: 2.5, paddingBottom: 25 }}
                           >
-                            <AntIcon
+                            <Icon.AntDesign
                               name={'plus'}
                               size={sizing.myListButtonSize}
                               color={colors.pianoteRed}
@@ -1104,7 +1104,7 @@ class Lessons extends React.Component {
                               )
                             }
                           >
-                            <AntIcon
+                            <Icon.AntDesign
                               name={'close'}
                               size={sizing.myListButtonSize}
                               color={colors.pianoteRed}

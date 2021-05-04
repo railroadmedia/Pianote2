@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
-import IonIcon from 'react-native-vector-icons/Ionicons';
+import Icon from '../assets/icons';
 
 export default class AssignmentComplete extends React.Component {
   render = () => {
@@ -12,8 +12,8 @@ export default class AssignmentComplete extends React.Component {
           onPress={() => this.props.hideAssignmentComplete()}
         >
           <View style={localStyles.container}>
-            <View style={[styles.centerContent]}>
-              <IonIcon
+            <View style={styles.centerContent}>
+              <Icon.Ionicons
                 name={'ios-trophy'}
                 size={onTablet ? 45 : 35}
                 color={'#fb1b2f'}

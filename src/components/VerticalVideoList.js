@@ -9,8 +9,7 @@ import {
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import FontIcon from 'react-native-vector-icons/FontAwesome5';
+import Icon from '../assets/icons';
 import { addToMyList, removeFromMyList } from '../services/UserActions';
 import Relevance from '../modals/Relevance';
 import ContentModal from '../modals/ContentModal';
@@ -549,7 +548,7 @@ export default class VerticalVideoList extends React.Component {
                         this.setState({ addToCalendarModal: true });
                       }}
                     >
-                      <FontIcon
+                      <Icon.FontAwesome5
                         size={sizing.myListButtonSize}
                         name={'calendar-plus'}
                         color={colors.pianoteRed}
@@ -557,7 +556,7 @@ export default class VerticalVideoList extends React.Component {
                     </TouchableOpacity>
                   ) : !row.is_added_to_primary_playlist ? (
                     <TouchableOpacity onPress={() => this.addToMyList(row.id)}>
-                      <AntIcon
+                      <Icon.AntDesign
                         name={'plus'}
                         size={sizing.myListButtonSize}
                         color={colors.pianoteRed}
@@ -567,7 +566,7 @@ export default class VerticalVideoList extends React.Component {
                     <TouchableOpacity
                       onPress={() => this.removeFromMyList(row.id)}
                     >
-                      <AntIcon
+                      <Icon.AntDesign
                         name={'close'}
                         size={sizing.myListButtonSize}
                         color={colors.pianoteRed}
@@ -662,7 +661,7 @@ export default class VerticalVideoList extends React.Component {
                       >
                         {sortDict[this.props.currentSort]}
                       </Text>
-                      <FontIcon
+                      <Icon.FontAwesome5
                         size={onTablet ? 20 : 15}
                         name={'sort-amount-down'}
                         color={colors.pianoteRed}

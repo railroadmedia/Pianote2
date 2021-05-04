@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
-import IonIcon from 'react-native-vector-icons/Ionicons';
+import Icon from '../assets/icons';
 
 export default class OverviewComplete extends React.Component {
   changeType = word => {
@@ -24,7 +24,7 @@ export default class OverviewComplete extends React.Component {
         >
           <View style={localStyles.container}>
             <View style={[styles.centerContent]}>
-              <IonIcon
+              <Icon.Ionicons
                 name={'ios-trophy'}
                 size={onTablet ? 45 : 35}
                 color={'#fb1b2f'}

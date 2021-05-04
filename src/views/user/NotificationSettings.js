@@ -10,8 +10,7 @@ import {
 } from 'react-native';
 import Back from '../../assets/img/svgs/back.svg';
 import DeviceInfo from 'react-native-device-info';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import FontIcon from 'react-native-vector-icons/FontAwesome';
+import Icon from '../../assets/icons.js';
 import { getUserData } from '../../services/UserDataAuth.js';
 import CustomSwitch from '../../components/CustomSwitch.js';
 import NavigationBar from '../../components/NavigationBar.js';
@@ -238,14 +237,14 @@ export default class NotificationSettings extends React.Component {
                   ]}
                 >
                   {this.state.notifications_summary_frequency_minutes == 1 && (
-                    <FontIcon
+                    <Icon.FontAwesome
                       name={'check'}
                       size={onTablet ? 25 : 20}
                       color={'white'}
                     />
                   )}
                   {this.state.notifications_summary_frequency_minutes !== 1 && (
-                    <EntypoIcon
+                    <Icon.Entypo
                       name={'cross'}
                       size={onTablet ? 35 : 25}
                       color={'white'}

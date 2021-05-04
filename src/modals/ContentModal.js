@@ -13,7 +13,7 @@ import {
   removeFromMyList
 } from '../../src/services/UserActions.js';
 import FastImage from 'react-native-fast-image';
-import AntIcon from 'react-native-vector-icons/AntDesign';
+import Icon from '../assets/icons';
 import { Download_V2 } from 'RNDownload';
 import DeviceInfo from 'react-native-device-info';
 import contentService from '../services/content.service';
@@ -162,7 +162,7 @@ export default class ContentModal extends React.Component {
                     : this.like(this.state.id);
                 }}
               >
-                <AntIcon
+                <Icon.AntDesign
                   name={this.state.isLiked ? 'like1' : 'like2'}
                   size={sizing.myListButtonSize * 0.9}
                 />
@@ -178,7 +178,7 @@ export default class ContentModal extends React.Component {
                     : this.addToMyList(this.state.id);
                 }}
               >
-                <AntIcon
+                <Icon.AntDesign
                   size={sizing.myListButtonSize}
                   name={this.state.isAddedToList ? 'close' : 'plus'}
                   color={'black'}

@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Icon from '../assets/icons';
+
 const isTablet = DeviceInfo.isTablet();
+
 export default class Relevance extends React.Component {
   constructor(props) {
     super(props);
@@ -45,7 +47,7 @@ export default class Relevance extends React.Component {
               }}
             >
               <View style={styles.centerContent}>
-                <EntypoIcon
+                <Icon.Entypo
                   name={'check'}
                   size={onTablet ? 24 : 18}
                   color={

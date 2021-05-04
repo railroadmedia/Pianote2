@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Icon from '../../assets/icons.js';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
@@ -186,7 +186,7 @@ class MyList extends React.Component {
               </Text>
             </View>
             <View style={[styles.centerContent, { flex: 0.15 }]}>
-              <EntypoIcon
+              <Icon.Entypo
                 name={'chevron-thin-right'}
                 size={onTablet ? 30 : 20}
                 color={colors.secondBackground}
