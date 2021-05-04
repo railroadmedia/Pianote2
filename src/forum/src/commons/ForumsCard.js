@@ -47,7 +47,7 @@ export default class ForumsCard extends React.Component {
   }
 
   get lastPostTime() {
-    let dif = new Date() - this.props.data.lastPost.date;
+    let dif = new Date() - new Date(this.props.data.lastPost.date);
     if (dif < 120 * 1000) return `1 Minute Ago`;
     if (dif < 60 * 1000 * 60)
       return `${(dif / 1000 / 60).toFixed()} Minutes Ago`;
@@ -55,7 +55,13 @@ export default class ForumsCard extends React.Component {
     if (dif < 60 * 1000 * 60 * 24)
       return `${(dif / 1000 / 60 / 60).toFixed()} Hours Ago`;
     if (dif < 60 * 1000 * 60 * 48) return `1 Day Ago`;
-    return `${(dif / 1000 / 60 / 60 / 24).toFixed()} Days Ago`;
+    if (dif < 60 * 1000 * 60 * 24 * 30)
+      return `${(dif / 1000 / 60 / 60 / 24).toFixed()} Days Ago`;
+    if (dif < 60 * 1000 * 60 * 24 * 60) return `1 Month Ago`;
+    if (dif < 60 * 1000 * 60 * 24 * 30 * 12)
+      return `${(dif / 1000 / 60 / 60 / 24 / 30).toFixed()} Months Ago`;
+    if (dif < 60 * 1000 * 60 * 24 * 365 * 2) return `1 Year Ago`;
+    return `${(dif / 1000 / 60 / 60 / 24 / 365).toFixed()} Years Ago`;
   }
 
   render() {

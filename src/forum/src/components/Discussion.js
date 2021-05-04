@@ -81,13 +81,12 @@ export default class Discussion extends React.Component {
           )}
           renderItem={({ item }) => (
             <Comment
-              showReplyIcon={true}
               comment={item}
               appColor={appColor}
               isDark={isDark}
               onEdit={() => navigate('Edit')}
               onDelete={() => {}}
-              goToReplies={() =>
+              onReplies={() =>
                 navigate('Replies', { isDark, appColor, comment: item })
               }
             />

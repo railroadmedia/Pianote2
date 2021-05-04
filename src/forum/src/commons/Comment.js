@@ -1,190 +1,206 @@
 /**
- * PROPS: comment, showReplyIcon, onEdit, onDelete, appColor, isDark
+ * PROPS: comment, onEdit, onReplies, onDelete, appColor, isDark
  * comment: comment to be displayed
- * showReplyIcon: variable that tells the component if it should display 'View replies' label
  * onEdit(): simple navigation to 'Edit' page
  * onDelete(): callback after delete called (for refreshing comments)
+ * onReplies(): simple navigation to 'Replies' page
  */
 
 import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity
-} from 'react-native';
-import moment from 'moment';
-
-import RNVideo from 'react-native-video';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
 import Moderate from './Moderate';
 
-import { like, likeOn, replies } from '../assets/svgs';
+import {
+  like,
+  likeOn,
+  replies,
+  coach,
+  team,
+  edge,
+  lifetime
+} from '../assets/svgs';
 import {
   likeComment,
   disLikeComment,
   connection
 } from '../services/forum.service';
 
-const fallbackProfilePicUri =
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2000px-No_image_available.svg.png';
-const windowWidth = Dimensions.get('window').width;
-const maxFontMultiplier =
-  windowWidth < 375 ? 1 : windowWidth < 1024 ? 1.35 : 1.8;
 let styles;
 export default class Comment extends React.PureComponent {
-  state = {
-    isLiked: null,
-    likeCount: null,
-    containerWidth: windowWidth,
-    showReplies: false
-  };
-
   constructor(props) {
     super(props);
-    let { isDark } = props;
-
-    styles = setStyles(isDark);
-    this.state.isLiked = props.comment.is_liked;
-    this.state.likeCount = props.comment.like_count;
+    console.log(props);
+    this.state = {
+      isLiked: props.comment.is_liked,
+      likeCount: props.comment.like_count
+    };
+    styles = setStyles(props.isDark);
   }
 
-  parseXpValue(xp) {
-    if (xp >= 100000 && xp < 1000000) {
-      return Math.round(xp / 1000) + 'K';
-    } else if (xp >= 1000000) {
-      return Math.round(xp / 1000000).toFixed(1) + 'M';
+  get parseXpValue() {
+    try {
+      let { xp } = this.props.comment.user;
+      if (xp >= 1000000) return `${(xp / 1000000).toFixed(1)} M XP`;
+      if (xp >= 10000) return `${(xp / 10000).toFixed(1)} K XP`;
+      return `${xp} XP`;
+    } catch (e) {
+      return '';
     }
-
-    return xp;
   }
 
-  likeOrDislikeComment = id => {
-    if (connection(true)) {
-      if (id === this.props.comment.id) {
-        let { likeCount, isLiked } = this.state;
-        if (isLiked) {
-          likeCount--;
-          isLiked = false;
-          likeComment(id);
-        } else {
-          likeCount++;
-          isLiked = true;
-          disLikeComment(id);
-        }
-        this.setState({ likeCount, isLiked });
+  get lastPostTime() {
+    let dif = new Date() - new Date(this.props.comment.created_on);
+    if (dif < 120 * 1000) return `1 Minute Ago`;
+    if (dif < 60 * 1000 * 60)
+      return `${(dif / 1000 / 60).toFixed()} Minutes Ago`;
+    if (dif < 60 * 1000 * 60 * 2) return `1 Hour Ago`;
+    if (dif < 60 * 1000 * 60 * 24)
+      return `${(dif / 1000 / 60 / 60).toFixed()} Hours Ago`;
+    if (dif < 60 * 1000 * 60 * 48) return `1 Day Ago`;
+    if (dif < 60 * 1000 * 60 * 24 * 30)
+      return `${(dif / 1000 / 60 / 60 / 24).toFixed()} Days Ago`;
+    if (dif < 60 * 1000 * 60 * 24 * 60) return `1 Month Ago`;
+    if (dif < 60 * 1000 * 60 * 24 * 30 * 12)
+      return `${(dif / 1000 / 60 / 60 / 24 / 30).toFixed()} Months Ago`;
+    if (dif < 60 * 1000 * 60 * 24 * 365 * 2) return `1 Year Ago`;
+    return `${(dif / 1000 / 60 / 60 / 24 / 365).toFixed()} Years Ago`;
+  }
+
+  get userBorderColor() {
+    let borderColor, userTagIcon;
+    switch (this.props.comment.user?.accessLevelName) {
+      case 'edge': {
+        borderColor = appColor;
+        userTagIcon = edge;
+        break;
+      }
+      case 'team': {
+        borderColor = 'black';
+        userTagIcon = team;
+        break;
+      }
+      case 'lifetime': {
+        borderColor = '#07B3FF';
+        userTagIcon = lifetime;
+        break;
+      }
+      case 'coach': {
+        borderColor = '#FAA300';
+        userTagIcon = coach;
+        break;
       }
     }
+    return { borderColor, userTagIcon };
+  }
+
+  toggleLike = () => {
+    if (!connection(true)) return;
+    let { id } = this.props.comment;
+    this.setState(({ isLiked, likeCount }) => {
+      if (isLiked) {
+        likeCount--;
+        disLikeComment(id);
+      } else {
+        likeCount++;
+        likeComment(id);
+      }
+      return { likeCount, isLiked: !isLiked };
+    });
   };
 
   render() {
-    let { isLiked, likeCount, containerWidth } = this.state;
-    let { showReplyIcon, comment, appColor, isDark } = this.props;
-    let profilePicUri = fallbackProfilePicUri;
-    if (comment.user)
-      profilePicUri = comment.user['fields.profile_picture_image_url'];
-
+    let { isLiked, likeCount } = this.state;
+    let { comment, appColor, onReplies } = this.props;
+    let { borderColor, userTagIcon } = this.userBorderColor;
     return (
-      <View style={styles.commentContainer}>
-        <View style={{ paddingHorizontal: 10 }}>
-          <Image source={{ uri: profilePicUri }} style={styles.userImage} />
-          <Text
-            maxFontSizeMultiplier={maxFontMultiplier}
-            style={styles.xpStyle}
-          >
+      <View style={{ flexDirection: 'row', marginTop: 15 }}>
+        <View style={{ marginHorizontal: 15 }}>
+          <View style={{ ...styles.imgContainer, borderColor }}>
+            <Image
+              source={{
+                uri:
+                  comment.user['fields.profile_picture_image_url'] ||
+                  'https://dmmior4id2ysr.cloudfront.net/assets/images/drumeo_fallback_thumb.jpg'
+              }}
+              style={{ height: 38, aspectRatio: 1 }}
+            />
+            <View
+              style={{
+                ...styles.userTagContainer,
+                backgroundColor: borderColor
+              }}
+            >
+              {userTagIcon?.({ height: 4, fill: 'white' })}
+            </View>
+          </View>
+          <Text maxFontSizeMultiplier={1} style={styles.xp}>
             {comment.user ? comment.user.xp_level : ''}
           </Text>
-          <Text
-            maxFontSizeMultiplier={maxFontMultiplier}
-            style={styles.xpStyle}
-          >
-            {comment.user ? this.parseXpValue(comment.user.xp) : ''} XP
+          <Text maxFontSizeMultiplier={1} style={styles.xp}>
+            {this.parseXpValue}
           </Text>
         </View>
-        <View>
-          <View style={{ width: containerWidth - 85 }}>
-            <Text
-              maxFontSizeMultiplier={maxFontMultiplier}
-              style={styles.nameText}
-            >
-              {comment.user ? comment.user['display_name'] : ''}
+        <View style={{ flex: 1, paddingRight: 15 }}>
+          <View style={styles.commentHeaderContainer}>
+            <Text maxFontSizeMultiplier={1} style={styles.name}>
+              {comment.user['display_name']}
             </Text>
-            <Text
-              maxFontSizeMultiplier={maxFontMultiplier}
-              style={styles.commentText}
-            >
-              {comment.comment}
-            </Text>
-            {comment.image && (
-              <Image
-                source={{ uri: comment.image }}
-                style={styles.commentImage}
+            <View style={{ marginRight: -10 }}>
+              <Moderate
+                id={comment.id}
+                appColor={appColor}
+                onEdit={this.props.onEdit}
+                onDelete={this.props.onDelete}
               />
-            )}
-            {comment.video && (
-              <RNVideo
-                resizeMode='cover'
-                paused={true}
-                controls={true}
-                style={styles.commentImage}
-                source={{
-                  uri: comment.video
-                }}
-              />
-            )}
-          </View>
-          <View style={styles.container}>
-            <Text maxFontSizeMultiplier={maxFontMultiplier} style={styles.tag}>
-              {moment.utc(comment.created_on).local().fromNow()}
-            </Text>
-          </View>
-          <View style={styles.container}>
-            <View style={{ flexDirection: 'row' }}>
-              <View style={styles.centerContainer}>
-                <TouchableOpacity
-                  testID='likeBtn'
-                  onPress={() => this.likeOrDislikeComment(comment.id)}
-                  style={{ marginRight: 10 }}
-                >
-                  {isLiked
-                    ? likeOn({ height: 20, width: 20, fill: appColor })
-                    : like({ height: 20, width: 20, fill: appColor })}
-                </TouchableOpacity>
-
-                {likeCount > 0 && (
-                  <TouchableOpacity testID='showLikesBtn' style={styles.bubble}>
-                    <Text
-                      maxFontSizeMultiplier={maxFontMultiplier}
-                      style={[styles.bubbleText, { color: appColor }]}
-                    >
-                      {likeCount === 1
-                        ? likeCount + ' LIKE'
-                        : likeCount + ' LIKES'}
-                    </Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-              {showReplyIcon && (
-                <TouchableOpacity
-                  testID='replyBtn'
-                  onPress={() =>
-                    this.props.goToReplies(comment, isDark, appColor)
-                  }
-                  style={styles.replyIconBtn}
-                >
-                  {replies({ height: 20, width: 20, fill: appColor })}
-                </TouchableOpacity>
-              )}
             </View>
-            <Moderate
-              id={comment.id}
-              appColor={appColor}
-              onEdit={this.props.onEdit}
-              onDelete={this.props.onDelete}
-            />
           </View>
+          <Text maxFontSizeMultiplier={1} style={styles.comment}>
+            {comment.comment}
+          </Text>
+          <Text maxFontSizeMultiplier={1} style={styles.timeStamp}>
+            {this.lastPostTime}
+          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <TouchableOpacity
+              onPress={this.toggleLike}
+              style={{ padding: 5, marginLeft: -5 }}
+            >
+              {(isLiked ? likeOn : like)({
+                height: 20,
+                width: 20,
+                fill: appColor
+              })}
+            </TouchableOpacity>
+            {likeCount > 0 && (
+              <TouchableOpacity
+                testID='showLikesBtn'
+                style={styles.likesNoContainer}
+              >
+                <Text
+                  maxFontSizeMultiplier={1}
+                  style={{ ...styles.likesNoText, color: appColor }}
+                >
+                  {`${likeCount} LIKE${likeCount === 1 ? '' : 'S'}`}
+                </Text>
+              </TouchableOpacity>
+            )}
+            {!!onReplies && (
+              <TouchableOpacity
+                testID='replyBtn'
+                onPress={onReplies}
+                style={{ padding: 5 }}
+              >
+                {replies({ height: 20, width: 20, fill: appColor })}
+              </TouchableOpacity>
+            )}
+          </View>
+          {!!onReplies && !!comment.replies?.length && (
+            <Text style={styles.viewReplies} onPress={onReplies}>
+              VIEW {comment.replies.length} REPL
+              {comment.replies.length === 1 ? 'Y' : 'IES'}
+            </Text>
+          )}
         </View>
       </View>
     );
@@ -193,70 +209,62 @@ export default class Comment extends React.PureComponent {
 
 let setStyles = isDark =>
   StyleSheet.create({
-    commentContainer: {
-      flexDirection: 'row',
-      padding: 10,
-      backgroundColor: isDark ? '#00101D' : '#F7F9FC'
+    imgContainer: {
+      borderRadius: 21,
+      overflow: 'hidden',
+      borderWidth: 2
     },
-    xpStyle: {
+    userTagContainer: {
+      width: '100%',
+      height: 5,
+      position: 'absolute',
+      bottom: 0,
+      lineHeight: 5,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    commentHeaderContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between'
+    },
+    xp: {
       fontSize: 10,
       fontFamily: 'RobotoCondensed-Bold',
       alignSelf: 'center',
-      color: isDark ? '#97AABE' : '#445F74'
+      color: '#445F74'
     },
-    nameText: {
+    name: {
       fontSize: 16,
       fontFamily: 'OpenSans-Bold',
       color: isDark ? '#FFFFFF' : '#00101D'
     },
-    commentText: {
+    comment: {
       fontSize: 14,
       fontFamily: 'OpenSans',
       color: isDark ? '#FFFFFF' : '#00101D'
     },
-    bubble: {
-      width: 60,
-      height: 16,
-      borderRadius: 40,
-      alignItems: 'center',
-      justifyContent: 'center',
+    timeStamp: {
+      fontSize: 11,
+      paddingVertical: 5,
+      fontFamily: 'OpenSans',
+      color: '#445F74'
+    },
+    likesNoContainer: {
+      padding: 5,
+      paddingHorizontal: 10,
+      borderRadius: 10,
       backgroundColor: isDark ? '#001f38' : '#97AABE'
     },
-    container: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginVertical: 5
-    },
-    centerContainer: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      flexDirection: 'row'
-    },
-    bubbleText: {
-      padding: 2,
+    likesNoText: {
       fontSize: 10,
       fontFamily: 'OpenSans'
     },
-    tag: {
+    viewReplies: {
       fontSize: 11,
+      paddingVertical: 5,
       fontFamily: 'OpenSans',
-      color: isDark ? '#97AABE' : '#445F74'
-    },
-    userImage: {
-      backgroundColor: 'transparent',
-      height: 38,
-      aspectRatio: 1,
-      borderRadius: 18,
-      alignSelf: 'center'
-    },
-    replyIconBtn: {
-      marginLeft: 10,
-      flexDirection: 'row',
-      alignItems: 'center'
-    },
-    commentImage: {
-      width: '100%',
-      aspectRatio: 16 / 9,
-      marginTop: 10
+      color: '#445F74',
+      fontWeight: '600'
     }
   });

@@ -50,7 +50,6 @@ export default class Replies extends React.Component {
           <ScrollView keyboardShouldPersistTaps='handled'>
             <Comment
               comment={comment}
-              showReplyIcon={false}
               isDark={isDark}
               appColor={appColor}
               onEdit={() => navigate('Edit')}
@@ -70,7 +69,6 @@ export default class Replies extends React.Component {
               <Comment
                 key={reply.id}
                 comment={reply}
-                showReplyIcon={false}
                 isDark={isDark}
                 appColor={appColor}
                 onEdit={() => navigate('Edit')}
