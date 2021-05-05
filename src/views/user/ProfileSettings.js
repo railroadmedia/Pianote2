@@ -306,51 +306,28 @@ export default class ProfileSettings extends React.Component {
           {this.state.currentlyView == 'Profile Settings' && (
             <NavigationBar currentPage={'PROFILE'} pad={true} />
           )}
-
-          <Modal
-            isVisible={this.state.showDisplayName}
-            style={[styles.centerContent, styles.modalContainer]}
-            animation={'slideInUp'}
-            animationInTiming={350}
-            animationOutTiming={350}
-            coverScreen={true}
-            hasBackdrop={true}
+          <DisplayName
             onBackButtonPress={() =>
               this.setState({
                 showDisplayName: false
               })
             }
-          >
-            <DisplayName
-              hideDisplayName={() => {
-                this.setState({
-                  showDisplayName: false
-                });
-              }}
-            />
-          </Modal>
-          <Modal
+            isVisible={this.state.showDisplayName}
+            hideDisplayName={() => {
+              this.setState({
+                showDisplayName: false
+              });
+            }}
+          />
+          <ProfileImage
             isVisible={this.state.showProfileImage}
-            style={[styles.centerContent, styles.modalContainer]}
-            animation={'slideInUp'}
-            animationInTiming={350}
-            animationOutTiming={350}
-            coverScreen={true}
-            hasBackdrop={true}
-            onBackButtonPress={() =>
+            onBackButtonPress={() => this.setState({ showProfileImage: false })}
+            hideProfileImage={() => {
               this.setState({
                 showProfileImage: false
-              })
-            }
-          >
-            <ProfileImage
-              hideProfileImage={() => {
-                this.setState({
-                  showProfileImage: false
-                });
-              }}
-            />
-          </Modal>
+              });
+            }}
+          />
         </SafeAreaView>
         <Loading ref={ref => (this.loadingRef = ref)} />
         <SafeAreaView style={{ position: 'absolute', zIndex: 3 }}>

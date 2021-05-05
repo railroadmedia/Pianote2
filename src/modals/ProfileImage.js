@@ -6,36 +6,49 @@ import {
   TouchableWithoutFeedback,
   StyleSheet
 } from 'react-native';
+import Modal from 'react-native-modal';
 
 export default class ProfileImage extends React.Component {
   render = () => {
     return (
-      <TouchableWithoutFeedback
-        style={styles.container}
-        onPress={() => this.props.hideProfileImage()}
+      <Modal
+        isVisible={this.props.isVisible}
+        style={[styles.centerContent, styles.modalContainer]}
+        animation={'slideInUp'}
+        animationInTiming={350}
+        animationOutTiming={350}
+        coverScreen={true}
+        hasBackdrop={true}
       >
-        <View style={[styles.container, styles.centerContent]}>
-          <View style={localStyles.container}>
-            <Text style={[styles.modalHeaderText, localStyles.title]}>
-              Profile image is too large.
-            </Text>
-            <Text style={[styles.modalBodyText, localStyles.tryAgain]}>
-              Please try again.
-            </Text>
-
-            <TouchableOpacity
-              style={localStyles.tryAgainTextContainer}
-              onPress={() => {
-                this.props.hideProfileImage();
-              }}
-            >
-              <Text style={[styles.modalButtonText, localStyles.tryAgainText]}>
-                TRY AGAIN
+        <TouchableWithoutFeedback
+          style={styles.container}
+          onPress={() => this.props.hideProfileImage()}
+        >
+          <View style={[styles.container, styles.centerContent]}>
+            <View style={localStyles.container}>
+              <Text style={[styles.modalHeaderText, localStyles.title]}>
+                Profile image is too large.
               </Text>
-            </TouchableOpacity>
+              <Text style={[styles.modalBodyText, localStyles.tryAgain]}>
+                Please try again.
+              </Text>
+
+              <TouchableOpacity
+                style={localStyles.tryAgainTextContainer}
+                onPress={() => {
+                  this.props.hideProfileImage();
+                }}
+              >
+                <Text
+                  style={[styles.modalButtonText, localStyles.tryAgainText]}
+                >
+                  TRY AGAIN
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </Modal>
     );
   };
 }

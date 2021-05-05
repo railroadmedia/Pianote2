@@ -10,6 +10,7 @@ import {
 import FastImage from 'react-native-fast-image';
 import Icon from '../assets/icons';
 import ApprovedTeacher from '../assets/img/svgs/approved-teacher.svg';
+import Modal from 'react-native-modal';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -19,11 +20,7 @@ export default class LessonComplete extends React.Component {
   changeType = word => {
     word = word.replace(/[- )(]/g, ' ').split(' ');
     let string = '';
-
-    for (i in word) {
-      string = string + word[i] + ' ';
-    }
-
+    for (i in word) string = string + word[i] + ' ';
     return string;
   };
 
@@ -37,84 +34,94 @@ export default class LessonComplete extends React.Component {
       type
     } = this.props;
     return (
-      <TouchableWithoutFeedback
-        onPress={() => this.props.hideLessonComplete()}
-        style={styles.container}
+      <Modal
+        isVisible={this.props.isVisible}
+        style={styles.modalContainer}
+        animation={'slideInUp'}
+        animationInTiming={250}
+        animationOutTiming={250}
+        coverScreen={true}
+        hasBackdrop={true}
       >
-        <View style={[styles.centerContent, styles.container]}>
-          <View style={localStyles.container}>
-            <Icon.Ionicons
-              name={'ios-trophy'}
-              size={onTablet ? 45 : 35}
-              color={'#fb1b2f'}
-            />
-            <Text
-              style={[
-                styles.modalHeaderText,
-                localStyles.headerText,
-                { textTransform: 'capitalize' }
-              ]}
-            >
-              {this.changeType(type)}
-              {'\n'}Complete
-            </Text>
-            <View style={[styles.centerContent, localStyles.imageContainer]}>
-              <FastImage
-                style={localStyles.image}
-                resizeMode={FastImage.resizeMode.cover}
-                source={{
-                  uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                    width * 0.55 * 2
-                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${completedLessonImg}`
-                }}
-              >
-                <View
-                  style={[
-                    styles.centerContent,
-                    localStyles.approvedTeacherContainer
-                  ]}
-                />
-                <ApprovedTeacher
-                  height={onTablet ? 70 : 45}
-                  width={onTablet ? 70 : 45}
-                  fill={'white'}
-                />
-              </FastImage>
-            </View>
-            <Text style={[styles.modalBodyText, localStyles.congratsText]}>
-              Congratulations! You completed
-            </Text>
-            <Text style={[styles.modalBodyText, localStyles.completeLesson]}>
-              {completedLessonTitle}
-            </Text>
-            <Text style={[styles.modalBodyText, localStyles.youEarnedText]}>
-              YOU EARNED {completedLessonXp} XP!
-            </Text>
-            <Text style={[styles.modalBodyText, localStyles.upNextText]}>
-              up next:
-            </Text>
-            <TouchableOpacity
-              style={[styles.centerContent, localStyles.image2Container]}
-              onPress={onGoToNext}
-            >
-              <FastImage
-                style={localStyles.image2}
-                resizeMode={FastImage.resizeMode.cover}
-                source={{
-                  uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                    width * 0.55 * 2
-                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
-                    nextLesson.thumbnail_url
-                  }`
-                }}
+        <TouchableWithoutFeedback
+          onPress={() => this.props.hideLessonComplete()}
+          style={styles.container}
+        >
+          <View style={[styles.centerContent, styles.container]}>
+            <View style={localStyles.container}>
+              <Icon.Ionicons
+                name={'ios-trophy'}
+                size={onTablet ? 45 : 35}
+                color={'#fb1b2f'}
               />
-            </TouchableOpacity>
-            <Text style={[styles.modalHeaderText, localStyles.videoTitle]}>
-              {nextLesson.title}
-            </Text>
+              <Text
+                style={[
+                  styles.modalHeaderText,
+                  localStyles.headerText,
+                  { textTransform: 'capitalize' }
+                ]}
+              >
+                {this.changeType(type)}
+                {'\n'}Complete
+              </Text>
+              <View style={[styles.centerContent, localStyles.imageContainer]}>
+                <FastImage
+                  style={localStyles.image}
+                  resizeMode={FastImage.resizeMode.cover}
+                  source={{
+                    uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
+                      width * 0.55 * 2
+                    )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${completedLessonImg}`
+                  }}
+                >
+                  <View
+                    style={[
+                      styles.centerContent,
+                      localStyles.approvedTeacherContainer
+                    ]}
+                  />
+                  <ApprovedTeacher
+                    height={onTablet ? 70 : 45}
+                    width={onTablet ? 70 : 45}
+                    fill={'white'}
+                  />
+                </FastImage>
+              </View>
+              <Text style={[styles.modalBodyText, localStyles.congratsText]}>
+                Congratulations! You completed
+              </Text>
+              <Text style={[styles.modalBodyText, localStyles.completeLesson]}>
+                {completedLessonTitle}
+              </Text>
+              <Text style={[styles.modalBodyText, localStyles.youEarnedText]}>
+                YOU EARNED {completedLessonXp} XP!
+              </Text>
+              <Text style={[styles.modalBodyText, localStyles.upNextText]}>
+                up next:
+              </Text>
+              <TouchableOpacity
+                style={[styles.centerContent, localStyles.image2Container]}
+                onPress={onGoToNext}
+              >
+                <FastImage
+                  style={localStyles.image2}
+                  resizeMode={FastImage.resizeMode.cover}
+                  source={{
+                    uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
+                      width * 0.55 * 2
+                    )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
+                      nextLesson.thumbnail_url
+                    }`
+                  }}
+                />
+              </TouchableOpacity>
+              <Text style={[styles.modalHeaderText, localStyles.videoTitle]}>
+                {nextLesson.title}
+              </Text>
+            </View>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </Modal>
     );
   };
 }

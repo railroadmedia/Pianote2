@@ -6,15 +6,24 @@ import {
   TouchableWithoutFeedback,
   StyleSheet
 } from 'react-native';
+import Modal from 'react-native-modal';
 
 export default class DisplayName extends React.Component {
   render = () => {
     return (
-      <TouchableWithoutFeedback
-        style={styles.container}
-        onPress={() => this.props.hideDisplayName()}
+      <Modal
+        isVisible={this.props.isVisible}
+        style={[styles.centerContent, styles.modalContainer]}
+        animation={'slideInUp'}
+        animationInTiming={350}
+        animationOutTiming={350}
+        coverScreen={true}
+        hasBackdrop={true}
       >
-        <View style={[styles.container, styles.centerContent]}>
+        <TouchableWithoutFeedback
+          style={styles.container}
+          onPress={() => this.props.hideDisplayName()}
+        >
           <View style={localStyles.titleContainer}>
             <Text style={[styles.modalHeaderText, localStyles.displayText]}>
               This display name is already {'\n'} in use.
@@ -22,27 +31,17 @@ export default class DisplayName extends React.Component {
             <Text style={[styles.modalBodyText, localStyles.pleaseTryAgain]}>
               Please try again.
             </Text>
-
             <TouchableOpacity
               style={localStyles.tryAgainContainer}
-              onPress={() => {
-                this.props.hideDisplayName();
-              }}
+              onPress={() => this.props.hideDisplayName()}
             >
-              <Text
-                style={[
-                  styles.modalButtonText,
-                  {
-                    color: '#fb1b2f'
-                  }
-                ]}
-              >
+              <Text style={[styles.modalButtonText, { color: '#fb1b2f' }]}>
                 TRY AGAIN
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </Modal>
     );
   };
 }

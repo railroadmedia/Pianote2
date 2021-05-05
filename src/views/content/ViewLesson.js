@@ -1700,38 +1700,29 @@ export default class ViewLesson extends React.Component {
 
         {!this.state.isLoadingAll && (
           <>
-            <Modal
-              isVisible={this.state.showLessonComplete}
-              style={styles.modalContainer}
-              animation={'slideInUp'}
-              animationInTiming={250}
-              animationOutTiming={250}
-              coverScreen={true}
-              hasBackdrop={true}
+            <LessonComplete
               onBackButtonPress={() =>
                 this.setState({ showLessonComplete: false })
               }
-            >
-              <LessonComplete
-                completedLessonImg={this.state.lessonImage}
-                completedLessonTitle={this.state.lessonTitle}
-                completedLessonXp={this.state.xp}
-                type={this.state.type}
-                nextLesson={this.state.nextLesson}
-                hideLessonComplete={() => {
-                  this.setState({ showLessonComplete: false });
-                }}
-                onGoToNext={() => {
-                  this.setState({ showLessonComplete: false });
-                  if (this.state.nextLesson) {
-                    this.switchLesson(
-                      this.state.nextLesson.id,
-                      this.state.nextLesson.mobile_app_url
-                    );
-                  }
-                }}
-              />
-            </Modal>
+              isVisible={this.state.showLessonComplete}
+              completedLessonImg={this.state.lessonImage}
+              completedLessonTitle={this.state.lessonTitle}
+              completedLessonXp={this.state.xp}
+              type={this.state.type}
+              nextLesson={this.state.nextLesson}
+              hideLessonComplete={() => {
+                this.setState({ showLessonComplete: false });
+              }}
+              onGoToNext={() => {
+                this.setState({ showLessonComplete: false });
+                if (this.state.nextLesson) {
+                  this.switchLesson(
+                    this.state.nextLesson.id,
+                    this.state.nextLesson.mobile_app_url
+                  );
+                }
+              }}
+            />
             <Modal
               isVisible={this.state.showRestartCourse}
               style={styles.modalContainer}

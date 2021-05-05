@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
-import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import ImagePicker from 'react-native-image-picker';
 import Icon from '../../assets/icons.js';
@@ -440,23 +439,14 @@ export default class CreateAccount3 extends React.Component {
                 </View>
               </KeyboardAvoidingView>
             </View>
-            <Modal
+            <DisplayName
               isVisible={this.state.showDisplayName}
-              style={[styles.centerContent, styles.modalContainer]}
-              animation={'slideInUp'}
-              animationInTiming={350}
-              animationOutTiming={350}
-              coverScreen={true}
-              hasBackdrop={true}
-            >
-              <DisplayName
-                hideDisplayName={() => {
-                  this.setState({
-                    showDisplayName: false
-                  });
-                }}
-              />
-            </Modal>
+              hideDisplayName={() => {
+                this.setState({
+                  showDisplayName: false
+                });
+              }}
+            />
           </View>
           <View style={styles.centerContent}>
             <View style={{ flexDirection: 'row' }}>
@@ -744,40 +734,23 @@ export default class CreateAccount3 extends React.Component {
                 </View>
               </View>
             </View>
-            <Modal
+
+            <ProfileImage
               isVisible={this.state.showProfileImage}
-              style={[styles.centerContent, styles.modalContainer]}
-              animation={'slideInUp'}
-              animationInTiming={350}
-              animationOutTiming={350}
-              coverScreen={true}
-              hasBackdrop={true}
-            >
-              <ProfileImage
-                hideProfileImage={() => {
-                  this.setState({
-                    showProfileImage: false
-                  });
-                }}
-              />
-            </Modal>
-            <Modal
+              hideProfileImage={() => {
+                this.setState({
+                  showProfileImage: false
+                });
+              }}
+            />
+            <DisplayName
               isVisible={this.state.showDisplayName}
-              style={[styles.centerContent, styles.modalContainer]}
-              animation={'slideInUp'}
-              animationInTiming={350}
-              animationOutTiming={350}
-              coverScreen={true}
-              hasBackdrop={true}
-            >
-              <DisplayName
-                hideDisplayName={() => {
-                  this.setState({
-                    showDisplayName: false
-                  });
-                }}
-              />
-            </Modal>
+              hideDisplayName={() => {
+                this.setState({
+                  showDisplayName: false
+                });
+              }}
+            />
           </View>
           <View
             style={{
