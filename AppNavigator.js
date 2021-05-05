@@ -174,9 +174,6 @@ export default () => (
         <Stack.Screen name='LESSONS' component={Lessons} />
         <Stack.Screen name='SEEALL' component={SeeAll} />
         <Stack.Screen name='COURSE' component={Course} />
-        <Stack.Screen name='QuickTips' component={Catalogue} />
-        <Stack.Screen name='StudentFocus' component={Catalogue} />
-        <Stack.Screen name='Songs' component={Catalogue} />
         <Stack.Screen name='MYLIST' component={MyList} />
         <Stack.Screen name='SEARCH' component={Search} />
         <Stack.Screen name='PACKS' component={Packs} />
@@ -185,6 +182,14 @@ export default () => (
           component={Forum}
           options={{ gestureEnabled: false }}
         />
+
+        <Stack.Screen name='HOME' component={Catalogue} />
+        <Stack.Screen name='COURSES' component={Catalogue} />
+        <Stack.Screen name='SONGS' component={Catalogue} />
+        <Stack.Screen name='QUICKTIPS' component={Catalogue} />
+        <Stack.Screen name='STUDENTFOCUS' component={Catalogue} />
+        <Stack.Screen name='PODCASTS' component={Catalogue} />
+        <Stack.Screen name='BOOTCAMPS' component={Catalogue} />
       </Stack.Navigator>
     </NavigationContainer>
   </NetworkProvider>
