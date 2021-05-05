@@ -1868,7 +1868,6 @@ export default class ViewLesson extends React.Component {
           }
           onClose={() => {}}
         />
-
         {this.state.showMakeComment && (
           <Modal
             isVisible={this.state.showMakeComment}
