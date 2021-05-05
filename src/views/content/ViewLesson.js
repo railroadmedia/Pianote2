@@ -1807,6 +1807,7 @@ export default class ViewLesson extends React.Component {
           onBackButtonPress={() => this.setState({ showSort: false })}
         >
           <Sort
+            type={'comments'}
             hideSort={() => {
               this.setState({ showSort: false });
             }}

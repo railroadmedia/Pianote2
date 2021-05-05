@@ -757,6 +757,7 @@ export default class VerticalVideoList extends React.Component {
           onBackButtonPress={() => this.setState({ showSort: false })}
         >
           <Sort
+            type={'videos'}
             hideSort={() => {
               this.setState({ showSort: false });
             }}
