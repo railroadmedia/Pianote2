@@ -56,7 +56,7 @@ export default class ForumsCard extends React.Component {
           height={60}
           appColor={appColor}
           tagHeight={8}
-          accessLevelName={user.accessLevelName}
+          accessLevelName={user?.accessLevelName}
         />
         <View style={{ paddingHorizontal: 10, flex: 1 }}>
           <Text style={styles.title}>
