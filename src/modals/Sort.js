@@ -9,7 +9,7 @@ const sortOptions = [
   { title: 'Oldest First', option: 'Oldest' }
 ];
 
-export default class CommentSort extends React.Component {
+export default class Sort extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,7 +22,7 @@ export default class CommentSort extends React.Component {
       <SafeAreaView style={styles.container}>
         <TouchableOpacity
           style={styles.container}
-          onPress={() => this.props.hideCommentSort()}
+          onPress={() => this.props.hideSort()}
         />
 
         <SafeAreaView
@@ -41,7 +41,7 @@ export default class CommentSort extends React.Component {
                 alignItems: 'center'
               }}
               onPress={() => {
-                this.props.hideCommentSort();
+                this.props.hideSort();
                 this.props.changeSort(sortOption.option);
               }}
             >
@@ -70,7 +70,7 @@ export default class CommentSort extends React.Component {
             </TouchableOpacity>
           ))}
           <TouchableOpacity
-            onPress={() => this.props.hideCommentSort()}
+            onPress={() => this.props.hideSort()}
             style={{
               padding: 5,
               flexDirection: 'row',

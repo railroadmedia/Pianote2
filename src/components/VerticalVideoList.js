@@ -11,7 +11,7 @@ import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import Icon from '../assets/icons';
 import { addToMyList, removeFromMyList } from '../services/UserActions';
-import Relevance from '../modals/Relevance';
+import Sort from '../modals/Sort';
 import ContentModal from '../modals/ContentModal';
 import GradientFeature from '../components/GradientFeature';
 import ApprovedTeacher from '../assets/img/svgs/approved-teacher.svg';
@@ -39,7 +39,7 @@ export default class VerticalVideoList extends React.Component {
       showModal: false,
       outVideos: this.props.outVideos,
       isLoading: this.props.isLoading,
-      showRelevance: false,
+      showSort: false,
       items: this.props.items,
       isPaging: false,
       addToCalendarModal: false
@@ -644,7 +644,7 @@ export default class VerticalVideoList extends React.Component {
                       ]}
                       onPress={() => {
                         this.setState({
-                          showRelevance: !this.state.showRelevance
+                          showSort: !this.state.showSort
                         });
                       }}
                     >
@@ -745,7 +745,7 @@ export default class VerticalVideoList extends React.Component {
           />
         </Modal>
         <Modal
-          isVisible={this.state.showRelevance}
+          isVisible={this.state.showSort}
           style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
@@ -754,11 +754,11 @@ export default class VerticalVideoList extends React.Component {
           hasBackdrop={false}
           backdropColor={'white'}
           backdropOpacity={0.79}
-          onBackButtonPress={() => this.setState({ showRelevance: false })}
+          onBackButtonPress={() => this.setState({ showSort: false })}
         >
-          <Relevance
-            hideRelevance={() => {
-              this.setState({ showRelevance: false });
+          <Sort
+            hideSort={() => {
+              this.setState({ showSort: false });
             }}
             isMethod={this.props.isMethod}
             currentSort={this.props.currentSort}

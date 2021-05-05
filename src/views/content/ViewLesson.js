@@ -24,7 +24,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Replies from '../../components/Replies';
 import SoundSlice from '../../components/SoundSlice';
 import VerticalVideoList from '../../components/VerticalVideoList';
-import CommentSort from '../../modals/CommentSort';
+import Sort from '../../modals/Sort';
 import CustomModal from '../../modals/CustomModal';
 import RestartCourse from '../../modals/RestartCourse';
 import LessonComplete from '../../modals/LessonComplete';
@@ -69,7 +69,7 @@ export default class ViewLesson extends React.Component {
       isLoadingAll: true,
       selectedComment: undefined,
       showAssignment: false,
-      showCommentSort: false,
+      showSort: false,
       showSoundSlice: false,
       showMakeComment: false,
       showInfo: false,
@@ -93,7 +93,7 @@ export default class ViewLesson extends React.Component {
       lessonImage: '',
       lessonTitle: '',
       commentId: '',
-      commentSort: 'Popular',
+      sort: 'Popular',
       profileImage: '',
       comment: '',
       description: '',
@@ -300,7 +300,7 @@ export default class ViewLesson extends React.Component {
   fetchComments = async id => {
     let comments = await commentsService.getComments(
       id || this.state.id,
-      this.state.commentSort,
+      this.state.sort,
       this.limit
     );
 
@@ -1301,9 +1301,7 @@ export default class ViewLesson extends React.Component {
                           </Text>
                           {this.context.isConnected && (
                             <TouchableOpacity
-                              onPress={() =>
-                                this.setState({ showCommentSort: true })
-                              }
+                              onPress={() => this.setState({ showSort: true })}
                             >
                               <Icon.FontAwesome5
                                 size={onTablet ? 20 : 15}
@@ -1797,7 +1795,7 @@ export default class ViewLesson extends React.Component {
         )}
 
         <Modal
-          isVisible={this.state.showCommentSort}
+          isVisible={this.state.showSort}
           style={[styles.centerContent, styles.modalContainer]}
           animation={'slideInUp'}
           animationInTiming={250}
@@ -1806,15 +1804,15 @@ export default class ViewLesson extends React.Component {
           hasBackdrop={false}
           backdropColor={'white'}
           backdropOpacity={0.79}
-          onBackButtonPress={() => this.setState({ showCommentSort: false })}
+          onBackButtonPress={() => this.setState({ showSort: false })}
         >
-          <CommentSort
-            hideCommentSort={() => {
-              this.setState({ showCommentSort: false });
+          <Sort
+            hideSort={() => {
+              this.setState({ showSort: false });
             }}
-            currentSort={this.state.commentSort}
-            changeSort={commentSort => {
-              this.setState({ commentSort }, () => {
+            currentSort={this.state.sort}
+            changeSort={sort => {
+              this.setState({ sort }, () => {
                 this.limit = 10;
                 this.fetchComments();
               });
