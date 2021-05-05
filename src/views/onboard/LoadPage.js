@@ -4,23 +4,13 @@
 import React from 'react';
 import { Linking, View, Dimensions, Platform } from 'react-native';
 
-import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
 import { Download_V2 } from 'RNDownload';
-import { bindActionCreators } from 'redux';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-community/async-storage';
 import { getToken, getUserData } from '../../services/UserDataAuth';
 import { notif, updateFcmToken } from '../../services/notification.service';
 import { getCache } from '../../services/GetContent';
-
-import { cachePacks } from '../../redux/PacksCacheActions';
-import { cacheSongs } from '../../redux/SongsCacheActions';
-import { cacheMyList } from '../../redux/MyListCacheActions';
-import { cacheLessons } from '../../redux/LessonsCacheActions';
-import { cachePodcasts } from '../../redux/PodcastsCacheActions';
-import { cacheQuickTips } from '../../redux/QuickTipsCacheActions';
-import { cacheStudentFocus } from '../../redux/StudentFocusCacheActions';
 
 import Pianote from '../../assets/img/svgs/pianote';
 
@@ -42,16 +32,7 @@ const factorHorizontal =
 const factorVertical =
   windowDim.width < windowDim.height ? height / 812 : width / 375;
 
-const cache = [
-  'cachePacks',
-  'cacheSongs',
-  'cacheMyList',
-  'cacheLessons',
-  'cachePodcasts',
-  'cacheQuickTips',
-  'cacheStudentFocus'
-];
-class LoadPage extends React.Component {
+export default class LoadPage extends React.Component {
   static contextType = NetworkContext;
 
   constructor(props) {
@@ -130,7 +111,7 @@ class LoadPage extends React.Component {
               // is logged in with valid membership go to lessons
 
               if (!global.notifNavigation) {
-                reset('LESSONS');
+                reset('HOME');
               }
             } else {
               // membership expired, go to membership expired
@@ -151,13 +132,6 @@ class LoadPage extends React.Component {
   }
 
   loadCache = () => {
-    let { dirs } = RNFetchBlob.fs;
-    cache.map(c => {
-      RNFetchBlob.fs
-        .readFile(`${dirs.LibraryDir || dirs.DocumentDir}/${c}`, 'utf8')
-        .then(stream => this.props[c]?.(JSON.parse(stream)))
-        .catch(() => {});
-    });
     getCache();
   };
 
@@ -233,18 +207,3 @@ class LoadPage extends React.Component {
     );
   }
 }
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      cachePacks,
-      cacheSongs,
-      cacheMyList,
-      cacheLessons,
-      cachePodcasts,
-      cacheQuickTips,
-      cacheStudentFocus
-    },
-    dispatch
-  );
-
-export default connect(null, mapDispatchToProps)(LoadPage);

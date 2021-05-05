@@ -11,8 +11,6 @@ import {
   ActivityIndicator,
   Dimensions
 } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 
@@ -25,7 +23,6 @@ import NavMenuHeaders from '../../components/NavMenuHeaders';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
 import { NetworkContext } from '../../context/NetworkProvider';
 
-import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
 import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
@@ -35,18 +32,16 @@ const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
-class StudentFocusCatalog extends React.Component {
+export default class StudentFocusCatalog extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    let { studentFocusCache } = props;
     this.state = {
       progressStudentFocus: [], // videos
       studentFocus: [],
       refreshing: true,
       refreshControl: false,
-      started: true,
-      ...this.initialValidData(studentFocusCache, true)
+      started: true
     };
   }
 
@@ -67,10 +62,6 @@ class StudentFocusCatalog extends React.Component {
       ),
       getStudentFocusTypes()
     ]);
-    this.props.cacheAndWriteStudentFocus({
-      types: content[1],
-      inProgress: content[0]
-    });
     this.setState(
       this.initialValidData({
         types: content[1],
@@ -79,7 +70,7 @@ class StudentFocusCatalog extends React.Component {
     );
   }
 
-  initialValidData = (content, fromCache) => {
+  initialValidData = content => {
     try {
       const newContent = content.inProgress.data.map(data => {
         return new ContentModel(data);
@@ -107,7 +98,7 @@ class StudentFocusCatalog extends React.Component {
         progressStudentFocus: items,
         studentFocus: shows,
         refreshing: false,
-        refreshControl: fromCache,
+        refreshControl: false,
         started: items.length !== 0
       };
     } catch (e) {
@@ -153,7 +144,7 @@ class StudentFocusCatalog extends React.Component {
   render() {
     return (
       <View style={styles.mainContainer}>
-        <NavMenuHeaders currentPage={'LESSONS'} parentPage={'STUDENT FOCUS'} />
+        <NavMenuHeaders currentPage={'HOME'} parentPage={'STUDENT FOCUS'} />
         {!this.state.refreshing ? (
           <FlatList
             style={styles.mainContainer}
@@ -212,13 +203,3 @@ class StudentFocusCatalog extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({
-  studentFocusCache: state.studentFocusCache
-});
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheAndWriteStudentFocus }, dispatch);
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(StudentFocusCatalog);

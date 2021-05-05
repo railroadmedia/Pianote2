@@ -13,10 +13,10 @@ function decideWhereToRedirect() {
   if (isPackOnly) {
     return navigate('PACKS');
   } else {
-    navigate('LESSONS');
+    navigate('HOME');
     // links that should redirect edge users only
 
-    if (url.includes('members/all')) return navigate('LESSONS');
+    if (url.includes('members/all')) return navigate('HOME');
     if (url.endsWith('courses') || (url.includes('courses') && isNaN(id))) {
       return navigate('COURSE', { url });
     }

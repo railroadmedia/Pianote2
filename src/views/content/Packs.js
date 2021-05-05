@@ -12,9 +12,7 @@ import {
   Dimensions,
   ImageBackground
 } from 'react-native';
-import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
-import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 
@@ -30,7 +28,6 @@ import packsService from '../../services/packs.service';
 import { NetworkContext } from '../../context/NetworkProvider';
 import Orientation from 'react-native-orientation-locker';
 
-import { cacheAndWritePacks } from '../../redux/PacksCacheActions';
 import ResetIcon from '../../components/ResetIcon';
 import { navigate } from '../../../AppNavigator';
 
@@ -42,11 +39,10 @@ const height =
 const factor = (height / 812 + width / 375) / 2;
 
 let greaterWDim;
-class Packs extends React.Component {
+export default class Packs extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    let { packsCache } = props;
     this.state = {
       packs: [],
       headerPackImg: '',
@@ -59,8 +55,7 @@ class Packs extends React.Component {
       refreshing: false,
       showRestartCourse: false,
       isLandscape:
-        Dimensions.get('window').height < Dimensions.get('window').width,
-      ...this.initialValidData(packsCache, true)
+        Dimensions.get('window').height < Dimensions.get('window').width
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
@@ -90,11 +85,11 @@ class Packs extends React.Component {
   async getData() {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     const response = await packsService.allPacks();
-    this.props.cacheAndWritePacks(response);
+    this.props.AndWritePacks(response);
     this.setState(this.initialValidData(response));
   }
 
-  initialValidData = (content, fromCache) => {
+  initialValidData = content => {
     try {
       const newContent = content.myPacks.map(data => {
         return new ContentModel(data);
@@ -115,7 +110,7 @@ class Packs extends React.Component {
       return {
         packs: items,
         isLoading: false,
-        refreshing: fromCache,
+        refreshing: false,
         showRestartCourse: false,
         headerPackImg: topHeaderPack.getData('thumbnail_url'),
         headerPackLogo: topHeaderPack.getData('logo_image_url'),
@@ -381,8 +376,3 @@ class Packs extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({ packsCache: state.packsCache });
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheAndWritePacks }, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(Packs);

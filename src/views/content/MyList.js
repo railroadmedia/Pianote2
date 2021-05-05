@@ -10,8 +10,6 @@ import {
   Dimensions,
   RefreshControl
 } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import NavigationBar from '../../components/NavigationBar';
@@ -21,7 +19,6 @@ import VerticalVideoList from '../../components/VerticalVideoList';
 import { getMyListContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
-import { cacheAndWriteMyList } from '../../redux/MyListCacheActions';
 import { ActivityIndicator } from 'react-native';
 import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
@@ -39,11 +36,10 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   );
 };
 
-class MyList extends React.Component {
+export default class MyList extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    let { myListCache } = props;
     this.state = {
       allLessons: [],
       currentSort: 'newest',
@@ -53,8 +49,7 @@ class MyList extends React.Component {
       isPaging: false,
       filtering: false,
       showModalMenu: false,
-      refreshing: false,
-      ...this.initialValidData(myListCache, false, true)
+      refreshing: false
     };
   }
 
@@ -76,11 +71,10 @@ class MyList extends React.Component {
       ''
     );
     this.metaFilters = response?.meta?.filterOptions;
-    this.props.cacheAndWriteMyList(response);
     this.setState(this.initialValidData(response, loadMore));
   };
 
-  initialValidData = (content, loadMore, fromCache) => {
+  initialValidData = (content, loadMore) => {
     try {
       const newContent = content.data.map(data => {
         return new ContentModel(data);
@@ -128,7 +122,7 @@ class MyList extends React.Component {
         isLoadingAll: false,
         filtering: false,
         isPaging: false,
-        refreshing: fromCache
+        refreshing: false
       };
     } catch (e) {
       return {};
@@ -136,11 +130,6 @@ class MyList extends React.Component {
   };
 
   removeFromMyList = contentID => {
-    let { myListCache } = this.props;
-    this.props.cacheAndWriteMyList({
-      ...myListCache,
-      data: myListCache.data.filter(d => d.id !== contentID)
-    });
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     this.setState({
       allLessons: this.state.allLessons.filter(al => al.id !== contentID)
@@ -341,8 +330,3 @@ class MyList extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({ myListCache: state.myListCache });
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheAndWriteMyList }, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(MyList);

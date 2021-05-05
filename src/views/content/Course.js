@@ -195,7 +195,7 @@ export default class Course extends React.PureComponent {
     let { loading, loadingMore, refreshControl } = this.state;
     return (
       <View style={{ backgroundColor: '#00101d', flex: 1 }}>
-        <NavMenuHeaders currentPage={'LESSONS'} parentPage={'COURSES'} />
+        <NavMenuHeaders currentPage={'HOME'} parentPage={'COURSES'} />
         {loading ? (
           <ActivityIndicator
             size='large'

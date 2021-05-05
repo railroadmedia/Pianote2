@@ -390,7 +390,7 @@ export default class VideoPlayer extends React.Component {
   onBack = () => {
     const { commentId } = this.props.route?.params;
     if (commentId) {
-      navigate('LESSONS');
+      navigate('HOME');
     } else if (this.state.selectedComment) {
       this.replies?.toggle(() => this.setState({ selectedComment: undefined }));
     } else {
@@ -1383,7 +1383,7 @@ export default class VideoPlayer extends React.Component {
                     <VerticalVideoList
                       title={'RELATED LESSONS'}
                       items={this.state.relatedLessons}
-                      type={'LESSONS'}
+                      type={'HOME'}
                       isLoading={this.state.isLoadingAll}
                       showTitleOnly={true}
                       showFilter={true}

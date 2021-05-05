@@ -87,14 +87,14 @@ export default class NavigationBar extends React.Component {
               onPress={() => {
                 !this.context.isConnected
                   ? this.context.showNoConnectionAlert()
-                  : navigate(isPackOnly ? 'PACKS' : 'LESSONS');
+                  : navigate(isPackOnly ? 'PACKS' : 'HOME');
               }}
             >
               <SimpleLineIcon
                 name={'home'}
                 size={onTablet ? 35 : 27.5}
                 color={
-                  this.props.currentPage == 'LESSONS'
+                  this.props.currentPage == 'HOME'
                     ? this.state.primaryColor
                     : this.state.secondaryColor
                 }

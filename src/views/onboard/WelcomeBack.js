@@ -195,7 +195,7 @@ export default class WelcomeBack extends React.Component {
           {this.state.page < 3 ? (
             <TouchableOpacity
               testID='skipBtn'
-              onPress={() => navigate('LESSONS')}
+              onPress={() => navigate('HOME')}
               style={{ marginBottom: '2%', padding: 15 }}
             >
               <Text
@@ -218,7 +218,7 @@ export default class WelcomeBack extends React.Component {
                 borderRadius: 100,
                 backgroundColor: colors.pianoteRed
               }}
-              onPress={() => navigate('LESSONS')}
+              onPress={() => navigate('HOME')}
             >
               <Text
                 style={{

@@ -241,7 +241,7 @@ export default class Method extends React.Component {
       <View style={[styles.mainContainer, { backgroundColor: 'black' }]}>
         <NavMenuHeaders
           isMethod={true}
-          currentPage={'LESSONS'}
+          currentPage={'HOME'}
           parentPage={'METHOD'}
         />
         <ScrollView
@@ -522,7 +522,7 @@ export default class Method extends React.Component {
               items={this.state.items}
               isLoading={this.state.isLoadingAll}
               title={'METHOD'}
-              type={'LESSONS'}
+              type={'HOME'}
               showFilter={false}
               showType={false}
               showArtist={false}

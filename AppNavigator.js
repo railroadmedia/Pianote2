@@ -171,7 +171,7 @@ export default () => (
         />
         <Stack.Screen name='SINGLEPACK' component={SinglePack} />
         <Stack.Screen name='DOWNLOADS' component={Downloads} />
-        <Stack.Screen name='LESSONS' component={Lessons} />
+        {/* <Stack.Screen name='LESSONS' component={Lessons} /> */}
         <Stack.Screen name='SEEALL' component={SeeAll} />
         <Stack.Screen name='COURSE' component={Course} />
         <Stack.Screen name='MYLIST' component={MyList} />

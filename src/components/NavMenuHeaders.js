@@ -47,7 +47,7 @@ export default class NavMenuHeaders extends React.Component {
             onPress={() => {
               !this.context.isConnected
                 ? this.context.showNoConnectionAlert()
-                : navigate(isPackOnly ? 'PACKS' : 'LESSONS');
+                : navigate(isPackOnly ? 'PACKS' : 'HOME');
             }}
             style={{
               height: onTablet ? 45 : 30,
@@ -84,7 +84,7 @@ export default class NavMenuHeaders extends React.Component {
                   fontSize: onTablet ? 20 : 14,
                   fontFamily: 'OpenSans-ExtraBold',
                   color:
-                    this.props.currentPage == 'LESSONS'
+                    this.props.currentPage == 'HOME'
                       ? 'white'
                       : this.props.isMethod
                       ? 'white'
@@ -97,7 +97,7 @@ export default class NavMenuHeaders extends React.Component {
                 <EntypoIcon
                   name={'chevron-down'}
                   color={
-                    this.props.currentPage == 'LESSONS'
+                    this.props.currentPage == 'HOME'
                       ? 'white'
                       : this.props.isMethod
                       ? 'white'

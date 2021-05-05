@@ -68,7 +68,7 @@ export default class Live extends React.Component {
       liveLesson: [], // the lesson
       month: '',
       addToCalendarModal: false,
-      liveViewers: 0,
+      liveViewers: 0
     };
   }
 
@@ -77,12 +77,14 @@ export default class Live extends React.Component {
     await this.getLiveContent();
     let response = await getLiveScheduleContent();
 
-    for(i in response) {
-      let time = (response[i].live_event_start_time) ? response[i].live_event_start_time : response[i].published_on
+    for (i in response) {
+      let time = response[i].live_event_start_time
+        ? response[i].live_event_start_time
+        : response[i].published_on;
       let date = new Date(time + ' UTC').getTime();
       let d = new Date(date);
       let amPM = 'AM';
-      
+
       if (this.state.month == '' && d instanceof Date && !isNaN(d.valueOf())) {
         this.setState({ month: d.getMonth() });
       }
@@ -99,7 +101,7 @@ export default class Live extends React.Component {
         amPM
       };
     }
-    
+
     this.setState({
       items: response,
       isLoadingAll: false,
@@ -114,27 +116,28 @@ export default class Live extends React.Component {
   async getLiveContent() {
     let content = [await getLiveContent()];
     this.content = content[0];
- 
+
     let [{ apiKey, chatChannelName, userId, token }] = content;
     watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
-    this.setState({ liveViewers })
+      this.setState({ liveViewers })
     ).then(rwl => (this.removeWatchersListener = rwl));
 
     let timeNow = Math.floor(Date.now() / 1000);
-    let timeLive = new Date(content[0].live_event_start_time + ' UTC').getTime() / 1000;
+    let timeLive =
+      new Date(content[0].live_event_start_time + ' UTC').getTime() / 1000;
     let timeDiff = timeLive - timeNow;
-    let hours = Math.floor(timeDiff / 3600)
-    let minutes = Math.floor((timeDiff - hours*3600)/60)
-    let seconds = timeDiff - hours*3600 - minutes*60
-    
-    if(timeDiff < 4*3600) {
+    let hours = Math.floor(timeDiff / 3600);
+    let minutes = Math.floor((timeDiff - hours * 3600) / 60);
+    let seconds = timeDiff - hours * 3600 - minutes * 60;
+
+    if (timeDiff < 4 * 3600) {
       this.setState({
         liveLesson: content,
         timeDiffLive: {
           timeDiff,
           hours,
           minutes,
-          seconds,
+          seconds
         }
       });
 
@@ -146,18 +149,21 @@ export default class Live extends React.Component {
 
   async timer() {
     let timeNow = Math.floor(Date.now() / 1000);
-    let timeLive = new Date(this.state.liveLesson[0].live_event_start_time + ' UTC').getTime() / 1000;
+    let timeLive =
+      new Date(
+        this.state.liveLesson[0].live_event_start_time + ' UTC'
+      ).getTime() / 1000;
     let timeDiff = timeLive - timeNow;
-    let hours = Math.floor(timeDiff / 3600)
-    let minutes = Math.floor((timeDiff - hours*3600)/60)
-    let seconds = timeDiff - hours*3600 - minutes*60
+    let hours = Math.floor(timeDiff / 3600);
+    let minutes = Math.floor((timeDiff - hours * 3600) / 60);
+    let seconds = timeDiff - hours * 3600 - minutes * 60;
 
     this.setState({
       timeDiffLive: {
         timeDiff,
         hours,
         minutes,
-        seconds,
+        seconds
       }
     });
 
@@ -172,7 +178,7 @@ export default class Live extends React.Component {
 
   changeType = word => {
     try {
-      word = word.replace(/[- )(]/g, ' ').split(' '); 
+      word = word.replace(/[- )(]/g, ' ').split(' ');
     } catch {}
 
     let string = '';
@@ -206,34 +212,38 @@ export default class Live extends React.Component {
   };
 
   addToMyList = async (contentID, type) => {
-    if (!this.context.isConnected) return this.context.showNoConnectionAlert()
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
 
-    if(type == 'live') {
+    if (type == 'live') {
       this.state.liveLesson[0].is_added_to_primary_playlist = true;
     } else {
-      this.state.items.find(item => item.id == contentID).is_added_to_primary_playlist = true;
+      this.state.items.find(
+        item => item.id == contentID
+      ).is_added_to_primary_playlist = true;
     }
 
     this.setState({
       items: this.state.items,
-      liveLesson: this.state.liveLesson,
+      liveLesson: this.state.liveLesson
     });
 
     addToMyList(contentID);
   };
 
   removeFromMyList = (contentID, type) => {
-    if (!this.context.isConnected) return this.context.showNoConnectionAlert()
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
 
-    if(type == 'live') {
-      this.state.items.find(item => item.id == contentID).is_added_to_primary_playlist = false;
+    if (type == 'live') {
+      this.state.items.find(
+        item => item.id == contentID
+      ).is_added_to_primary_playlist = false;
     } else {
       this.state.liveLesson[0].is_added_to_primary_playlist = false;
     }
 
-    this.setState({ 
+    this.setState({
       items: this.state.items,
-      liveLesson: this.state.liveLesson,
+      liveLesson: this.state.liveLesson
     });
 
     removeFromMyList(contentID);
@@ -245,11 +255,11 @@ export default class Live extends React.Component {
       chatChannelName,
       questionsChannelName,
       userId,
-      token,
+      token
     } = this.content;
     return (
       <>
-      {this.state.liveLesson.length > 0 ? (
+        {this.state.liveLesson.length > 0 ? (
           <View
             style={{
               backgroundColor: colors.mainBackground,
@@ -516,7 +526,10 @@ export default class Live extends React.Component {
                         .is_added_to_primary_playlist ? (
                         <TouchableOpacity
                           onPress={() =>
-                            this.addToMyList(this.state.liveLesson[0]?.id, 'live')
+                            this.addToMyList(
+                              this.state.liveLesson[0]?.id,
+                              'live'
+                            )
                           }
                         >
                           <AntIcon
@@ -687,7 +700,12 @@ export default class Live extends React.Component {
                         {!this.state.liveLesson[0]
                           .is_added_to_primary_playlist ? (
                           <TouchableOpacity
-                            onPress={() => this.addToMyList(this.state.liveLesson[0].id, 'live')}
+                            onPress={() =>
+                              this.addToMyList(
+                                this.state.liveLesson[0].id,
+                                'live'
+                              )
+                            }
                             style={{ paddingRight: 2.5, paddingBottom: 25 }}
                           >
                             <AntIcon
@@ -699,7 +717,9 @@ export default class Live extends React.Component {
                         ) : (
                           <TouchableOpacity
                             style={{ paddingRight: 2.5, paddingBottom: 25 }}
-                            onPress={() => this.removeFromMyList(this.state.liveLesson[0].id)}
+                            onPress={() =>
+                              this.removeFromMyList(this.state.liveLesson[0].id)
+                            }
                           >
                             <AntIcon
                               name={'close'}
@@ -708,7 +728,7 @@ export default class Live extends React.Component {
                             />
                           </TouchableOpacity>
                         )}
-                      </View>                      
+                      </View>
                     </>
                   )}
                 </>
@@ -749,7 +769,7 @@ export default class Live extends React.Component {
           </View>
         ) : (
           <View style={styles.mainContainer}>
-            <NavMenuHeaders currentPage={'LESSONS'} parentPage={'LIVE'} />
+            <NavMenuHeaders currentPage={'HOME'} parentPage={'LIVE'} />
             <StatusBar
               backgroundColor={colors.thirdBackground}
               barStyle={'light-content'}
@@ -828,8 +848,7 @@ export default class Live extends React.Component {
                           textAlign: 'center'
                         }}
                       >
-                        {day[item.timeData.day]}{' '}
-                        {item.timeData.date}
+                        {day[item.timeData.day]} {item.timeData.date}
                       </Text>
                       <Text
                         numberOfLines={1}
@@ -842,7 +861,9 @@ export default class Live extends React.Component {
                         }}
                       >
                         {item.timeData.hours}:
-                        {item.timeData.minutes == 0 ? '00' : item.timeData.minutes}
+                        {item.timeData.minutes == 0
+                          ? '00'
+                          : item.timeData.minutes}
                         {' ' + item.timeData.amPM}
                       </Text>
                     </View>

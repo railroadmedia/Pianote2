@@ -16,9 +16,6 @@ import {
 import DeviceInfo from 'react-native-device-info';
 import RNIap from 'react-native-iap';
 import Modal from 'react-native-modal';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import RNFetchBlob from 'rn-fetch-blob';
 import LogOut from '../../modals/LogOut.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -34,16 +31,9 @@ import { SafeAreaView } from 'react-navigation';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import commonService from '../../services/common.service.js';
 
-import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
-import { cacheAndWriteMyList } from '../../redux/MyListCacheActions';
-import { cacheAndWritePacks } from '../../redux/PacksCacheActions';
-import { cacheAndWritePodcasts } from '../../redux/PodcastsCacheActions';
-import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
-import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
-import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
 import { goBack, navigate, reset } from '../../../AppNavigator.js';
 
-class Settings extends React.Component {
+export default class Settings extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -171,7 +161,7 @@ class Settings extends React.Component {
           { cancelable: false }
         );
       } else if (restoreResponse.token) {
-        reset('LESSONS');
+        reset('HOME');
       } else if (restoreResponse.shouldCreateAccount) navigate('CREATEACCOUNT');
     } catch (err) {
       this.loadingRef?.toggleLoading();
@@ -402,21 +392,7 @@ class Settings extends React.Component {
           onBackButtonPress={() => this.setState({ showLogOut: false })}
         >
           <LogOut
-            onLogout={() => {
-              let { dirs } = RNFetchBlob.fs;
-              RNFetchBlob.fs
-                .unlink(`${dirs.LibraryDir || dirs.DocumentDir}/cache`)
-                .catch(() => {});
-              [
-                'cacheAndWriteLessons',
-                'cacheAndWriteMyList',
-                'cacheAndWritePacks',
-                'cacheAndWritePodcasts',
-                'cacheAndWriteQuickTips',
-                'cacheAndWriteSongs',
-                'cacheAndWriteStudentFocus'
-              ].map(redux => this.props[redux]({}));
-            }}
+            onLogout={() => {}}
             hideLogOut={() => {
               this.setState({ showLogOut: false });
             }}
@@ -497,18 +473,3 @@ const localStyles = StyleSheet.create({
     fontSize: DeviceInfo.isTablet() ? 18 : 12
   }
 });
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      cacheAndWriteLessons,
-      cacheAndWriteMyList,
-      cacheAndWritePacks,
-      cacheAndWritePodcasts,
-      cacheAndWriteQuickTips,
-      cacheAndWriteSongs,
-      cacheAndWriteStudentFocus
-    },
-    dispatch
-  );
-
-export default connect(null, mapDispatchToProps)(Settings);

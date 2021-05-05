@@ -11,8 +11,6 @@ import {
   RefreshControl,
   ActivityIndicator
 } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
@@ -25,8 +23,6 @@ import VerticalVideoList from '../../components/VerticalVideoList';
 
 import { getAllContent, getStudentFocusTypes } from '../../services/GetContent';
 
-import { cacheAndWritePodcasts } from '../../redux/PodcastsCacheActions';
-import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
 import { goBack, refreshOnFocusListener } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
@@ -41,7 +37,7 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   );
 };
 
-class StudentFocusShow extends React.Component {
+export default class StudentFocusShow extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -54,13 +50,7 @@ class StudentFocusShow extends React.Component {
       refreshing: false,
       isLoadingAll: true,
       isPaging: false,
-      filtering: false,
-      ...this.initialValidData(
-        props.route?.params?.type == 'quick-tips'
-          ? props.quickTipsCache
-          : props.podcastsCache,
-        true
-      )
+      filtering: false
     };
   }
 
@@ -85,14 +75,6 @@ class StudentFocusShow extends React.Component {
       )
     ]);
     this.metaFilters = content?.[1]?.meta?.filterOptions;
-    this.props[
-      this.props.route?.params?.type == 'quick-tips'
-        ? 'cacheAndWriteQuickTips'
-        : 'cacheAndWritePodcasts'
-    ]({
-      all: content[1],
-      thumbnail: content[0]
-    });
     this.setState(
       this.initialValidData({
         all: content[1],
@@ -101,7 +83,7 @@ class StudentFocusShow extends React.Component {
     );
   };
 
-  initialValidData = (content, fromCache) => {
+  initialValidData = content => {
     try {
       const newContent = content.all.data.map(data => {
         return new ContentModel(data);
@@ -134,7 +116,7 @@ class StudentFocusShow extends React.Component {
           items.length == 0 || content.all.data.length < 20 ? true : false,
         page: this.state?.page + 1 || 1,
         isLoadingAll: false,
-        refreshing: fromCache,
+        refreshing: false,
         filtering: false,
         isPaging: false
       };
@@ -380,14 +362,3 @@ class StudentFocusShow extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({
-  podcastsCache: state.podcastsCache,
-  quickTipsCache: state.quickTipsCache
-});
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    { cacheAndWriteQuickTips, cacheAndWritePodcasts },
-    dispatch
-  );
-
-export default connect(mapStateToProps, mapDispatchToProps)(StudentFocusShow);

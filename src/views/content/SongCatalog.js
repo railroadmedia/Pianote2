@@ -10,8 +10,6 @@ import {
   RefreshControl,
   ActivityIndicator
 } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
@@ -20,7 +18,6 @@ import HorizontalVideoList from '../../components/HorizontalVideoList';
 import { getStartedContent, getAllContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
-import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
 import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
@@ -37,11 +34,10 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   );
 };
 
-class SongCatalog extends React.Component {
+export default class SongCatalog extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    let { songsCache } = props;
     this.state = {
       progressSongs: [],
       allSongs: [],
@@ -52,8 +48,7 @@ class SongCatalog extends React.Component {
       filtering: false,
       started: true,
       refreshing: true,
-      refreshControl: false,
-      ...this.initialValidData(songsCache, true)
+      refreshControl: false
     };
   }
 
@@ -82,10 +77,6 @@ class SongCatalog extends React.Component {
       getStartedContent('song')
     ]);
     this.metaFilters = content?.[0]?.meta?.filterOptions;
-    this.props.cacheAndWriteSongs({
-      all: content[0],
-      inProgress: content[1]
-    });
     this.setState(
       this.initialValidData({
         all: content[0],
@@ -94,7 +85,7 @@ class SongCatalog extends React.Component {
     );
   }
 
-  initialValidData = (content, fromCache) => {
+  initialValidData = content => {
     try {
       let allVideos = this.setData(
         content.all.data.map(data => {
@@ -116,7 +107,7 @@ class SongCatalog extends React.Component {
         progressSongs: inprogressVideos,
         started: inprogressVideos.length !== 0,
         refreshing: false,
-        refreshControl: fromCache
+        refreshControl: false
       };
     } catch (e) {
       return {};
@@ -250,7 +241,7 @@ class SongCatalog extends React.Component {
   render() {
     return (
       <View style={styles.mainContainer}>
-        <NavMenuHeaders currentPage={'LESSONS'} parentPage={'SONGS'} />
+        <NavMenuHeaders currentPage={'HOME'} parentPage={'SONGS'} />
         {!this.state.refreshing ? (
           <ScrollView
             style={styles.mainContainer}
@@ -343,8 +334,3 @@ class SongCatalog extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({ songsCache: state.songsCache });
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheAndWriteSongs }, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(SongCatalog);

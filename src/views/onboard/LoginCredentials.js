@@ -125,7 +125,7 @@ export default class LoginCredentials extends React.Component {
         reset('PACKS');
       } else if (userData.isLifetime || userData.isMember) {
         // is logged in with valid membership
-        reset('LESSONS');
+        reset('HOME');
       } else {
         // membership expired
         navigate('MEMBERSHIPEXPIRED', {

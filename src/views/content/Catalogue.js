@@ -70,6 +70,11 @@ export default class Catalogue extends React.Component {
   render() {
     return (
       <>
+        <NavMenuHeaders
+          isMethod={true}
+          currentPage={'HOME'}
+          parentPage={'HOME'}
+        />
         <View style={{ flex: 1 }}></View>
         <NavigationBar currentPage={''} />
       </>

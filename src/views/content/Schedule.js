@@ -153,10 +153,7 @@ export default class Schedule extends React.Component {
           top: 'never'
         }}
       >
-        <NavMenuHeaders
-          currentPage={'LESSONS'}
-          parentPage={this.state.parent}
-        />
+        <NavMenuHeaders currentPage={'HOME'} parentPage={this.state.parent} />
         <StatusBar
           backgroundColor={colors.thirdBackground}
           barStyle={'light-content'}

@@ -14,9 +14,7 @@ import {
   Text,
   Image
 } from 'react-native';
-import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
-import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import messaging from '@react-native-firebase/messaging';
@@ -48,7 +46,6 @@ import { addToMyList, removeFromMyList } from '../../services/UserActions';
 import RestartCourse from '../../modals/RestartCourse';
 import Live from '../../modals/Live';
 import AddToCalendar from '../../modals/AddToCalendar';
-import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
@@ -64,11 +61,10 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   );
 };
 
-class Lessons extends React.Component {
+export default class Lessons extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    let { lessonsCache } = props;
     this.state = {
       progressLessons: [],
       allLessons: [],
@@ -91,12 +87,11 @@ class Lessons extends React.Component {
       showRestartCourse: false,
       showLive: false,
       lessonsStarted: true,
-      refreshing: !lessonsCache,
+      refreshing: true,
       refreshControl: true,
       liveViewers: undefined,
       isLandscape:
-        Dimensions.get('window').height < Dimensions.get('window').width,
-      ...this.initialValidData(lessonsCache, true)
+        Dimensions.get('window').height < Dimensions.get('window').width
     };
   }
 
@@ -153,11 +148,6 @@ class Lessons extends React.Component {
     ]);
 
     this.metaFilters = content?.[1]?.meta?.filterOptions;
-    this.props.cacheAndWriteLessons({
-      all: content[1],
-      method: content[0],
-      inProgress: content[2]
-    });
 
     this.setState(
       this.initialValidData({
@@ -249,7 +239,7 @@ class Lessons extends React.Component {
     return string;
   };
 
-  initialValidData = (content, fromCache) => {
+  initialValidData = content => {
     try {
       if (!content) return {};
       let { method } = content;
@@ -281,7 +271,7 @@ class Lessons extends React.Component {
         isPaging: false,
         lessonsStarted: inprogressVideos.length !== 0,
         refreshing: false,
-        refreshControl: fromCache
+        refreshControl: false
       };
     } catch (e) {
       return {};
@@ -1236,7 +1226,7 @@ class Lessons extends React.Component {
                   items={this.state.allLessons}
                   isLoading={false}
                   title={'ALL LESSONS'}
-                  type={'LESSONS'}
+                  type={'HOME'}
                   showFilter={true}
                   isPaging={this.state.isPaging}
                   showType={true}
@@ -1328,13 +1318,8 @@ class Lessons extends React.Component {
             }}
           />
         </Modal>
-        <NavigationBar currentPage={'LESSONS'} isMethod={true} />
+        <NavigationBar currentPage={'HOME'} isMethod={true} />
       </View>
     );
   }
 }
-const mapStateToProps = state => ({ lessonsCache: state.lessonsCache });
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheAndWriteLessons }, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(Lessons);

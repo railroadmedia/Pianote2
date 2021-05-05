@@ -240,7 +240,7 @@ export default class Foundations extends React.Component {
       <View style={[styles.mainContainer, { backgroundColor: 'black' }]}>
         <NavMenuHeaders
           isMethod={true}
-          currentPage={'LESSONS'}
+          currentPage={'HOME'}
           parentPage={'FOUNDATIONS'}
         />
         <ScrollView
@@ -524,7 +524,7 @@ export default class Foundations extends React.Component {
               items={this.state.items}
               isLoading={this.state.isLoadingAll}
               title={'FOUNDATIONS'}
-              type={'LESSONS'}
+              type={'HOME'}
               showFilter={false}
               showType={false}
               showArtist={false}
