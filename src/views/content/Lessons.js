@@ -1248,24 +1248,14 @@ class Lessons extends React.Component {
             }}
           />
         </Modal>
-        <Modal
+
+        <AddToCalendar
           isVisible={this.state.addToCalendarModal}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
-        >
-          <AddToCalendar
-            hideAddToCalendar={() =>
-              this.setState({ addToCalendarModal: false })
-            }
-            addEventToCalendar={() => {
-              this.addEventToCalendar();
-            }}
-          />
-        </Modal>
+          hideAddToCalendar={() => this.setState({ addToCalendarModal: false })}
+          addEventToCalendar={() => {
+            this.addEventToCalendar();
+          }}
+        />
         <NavigationBar currentPage={'LESSONS'} isMethod={true} />
       </View>
     );

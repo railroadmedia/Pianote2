@@ -1,53 +1,65 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  StyleSheet
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Icon from '../assets/icons';
+import Modal from 'react-native-modal';
 
 export default class AddToCalendar extends React.Component {
   render = () => {
     return (
-      <TouchableWithoutFeedback
-        style={styles.container}
-        onPress={() => this.props.hideAddToCalendar()}
+      <Modal
+        isVisible={this.props.isVisible}
+        style={styles.modalContainer}
+        animation={'slideInUp'}
+        animationInTiming={250}
+        animationOutTiming={250}
+        coverScreen={true}
+        hasBackdrop={true}
       >
-        <View style={localStyles.container}>
-          <Text
-            style={[
-              styles.modalHeaderText,
-              localStyles.addToCalendar,
-              { marginTop: 10 }
-            ]}
-          >
-            Add To Calendar
-          </Text>
-          <Text style={[styles.modalBodyText, localStyles.addToCalendar]}>
-            Add this lesson to your calendar to{'\n'} be notified when it's
-            available
-          </Text>
-          <Icon.FontAwesome5
-            size={onTablet ? 70 : 50}
-            name={'calendar-plus'}
-            color={colors.pianoteRed}
-            style={localStyles.calendarIcon}
-          />
-          <TouchableOpacity
-            style={[localStyles.confirmAddition, { justifyContent: 'center' }]}
-            onPress={() => this.props.addEventToCalendar()}
-          >
+        <TouchableOpacity
+          style={[styles.centerContent, styles.container]}
+          activeOpacity={1}
+          onPress={() => this.props.hideAddToCalendar()}
+        >
+          <View style={localStyles.container}>
             <Text
-              style={[styles.modalButtonText, localStyles.confirmAdditionText]}
+              style={[
+                styles.modalHeaderText,
+                localStyles.addToCalendar,
+                { marginTop: 10 }
+              ]}
             >
-              CONFIRM ADDITION
+              Add To Calendar
             </Text>
-          </TouchableOpacity>
-        </View>
-      </TouchableWithoutFeedback>
+            <Text style={[styles.modalBodyText, localStyles.addToCalendar]}>
+              Add this lesson to your calendar to{'\n'} be notified when it's
+              available
+            </Text>
+            <Icon.FontAwesome5
+              size={onTablet ? 70 : 50}
+              name={'calendar-plus'}
+              color={colors.pianoteRed}
+              style={localStyles.calendarIcon}
+            />
+            <TouchableOpacity
+              style={[
+                localStyles.confirmAddition,
+                { justifyContent: 'center' }
+              ]}
+              onPress={() => this.props.addEventToCalendar()}
+            >
+              <Text
+                style={[
+                  styles.modalButtonText,
+                  localStyles.confirmAdditionText
+                ]}
+              >
+                CONFIRM ADDITION
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     );
   };
 }

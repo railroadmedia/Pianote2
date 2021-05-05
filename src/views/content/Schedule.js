@@ -83,11 +83,7 @@ export default class Schedule extends React.Component {
   changeType = word => {
     word = word.replace(/[- )(]/g, ' ').split(' ');
     let string = '';
-
-    for (i in word) {
-      string = string + word[i] + ' ';
-    }
-
+    for (i in word) string = string + word[i] + ' ';
     return string;
   };
 
@@ -303,24 +299,13 @@ export default class Schedule extends React.Component {
             );
           }}
         />
-        <Modal
+        <AddToCalendar
           isVisible={this.state.addToCalendarModal}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
-        >
-          <AddToCalendar
-            hideAddToCalendar={() =>
-              this.setState({ addToCalendarModal: false })
-            }
-            addEventToCalendar={() => {
-              this.addEventToCalendar();
-            }}
-          />
-        </Modal>
+          hideAddToCalendar={() => this.setState({ addToCalendarModal: false })}
+          addEventToCalendar={() => {
+            this.addEventToCalendar();
+          }}
+        />
         <NavigationBar currentPage={'SCHEDULE'} />
       </SafeAreaView>
     );
