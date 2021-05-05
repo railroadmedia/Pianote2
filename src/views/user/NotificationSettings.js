@@ -64,7 +64,7 @@ export default class NotificationSettings extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <>
         <SafeAreaView
           forceInset={{ top: onTablet ? 'never' : 'always' }}
           style={[
@@ -109,9 +109,7 @@ export default class NotificationSettings extends React.Component {
           )}
           {!this.state.isLoading && (
             <ScrollView style={styles.mainContainer}>
-              <View style={localStyles.noteTypeContainer}>
-                <Text style={localStyles.noteTypeText}>Notification Types</Text>
-              </View>
+              <Text style={localStyles.noteTypeText}>Notification Types</Text>
               <View style={localStyles.textContainer}>
                 <Text style={localStyles.text}>Followed forum posts</Text>
                 <CustomSwitch
@@ -168,11 +166,9 @@ export default class NotificationSettings extends React.Component {
                 />
               </View>
               <View style={localStyles.border} />
-              <View style={localStyles.emailNotificationFrequency}>
-                <Text style={[localStyles.text, { paddingVertical: 10 }]}>
-                  Email Notification Frequency
-                </Text>
-              </View>
+              <Text style={[localStyles.text, { padding: 10 }]}>
+                Email Notification Frequency
+              </Text>
               <View style={localStyles.textContainer}>
                 <Text style={localStyles.text}>Immediate</Text>
                 <TouchableOpacity
@@ -213,7 +209,6 @@ export default class NotificationSettings extends React.Component {
                   )}
                 </TouchableOpacity>
               </View>
-
               <View style={localStyles.textContainer}>
                 <Text style={localStyles.text}>Once per day</Text>
                 <TouchableOpacity
@@ -257,7 +252,6 @@ export default class NotificationSettings extends React.Component {
                   )}
                 </TouchableOpacity>
               </View>
-
               <View style={localStyles.textContainer}>
                 <Text style={localStyles.text}>Never</Text>
                 <TouchableOpacity
@@ -307,14 +301,13 @@ export default class NotificationSettings extends React.Component {
               </View>
             </ScrollView>
           )}
-
           <NavigationBar currentPage={'PROFILE'} pad={true} />
         </SafeAreaView>
         <SafeAreaView
           forceInset={'never'}
           style={[{ backgroundColor: colors.mainBackground }]}
-        ></SafeAreaView>
-      </View>
+        />
+      </>
     );
   }
 }
@@ -346,6 +339,7 @@ const localStyles = StyleSheet.create({
   },
   noteTypeText: {
     marginTop: 10,
+    marginLeft: 10,
     fontFamily: 'OpenSans-Regular',
     fontSize: isTablet ? 22 : 16,
     color: '#445f73',

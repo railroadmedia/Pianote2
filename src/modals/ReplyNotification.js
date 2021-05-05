@@ -69,6 +69,7 @@ export default class ReplyNotification extends React.Component {
   componentDidMount = async () => {
     let userData = await getUserData();
     let statusChange = null;
+    console.log(this.props);
 
     if (
       messageDict[this.props.data.type]?.message == 'replied to your comment.'
@@ -125,80 +126,61 @@ export default class ReplyNotification extends React.Component {
 
   render = () => {
     return (
-      <View style={styles.container}>
-        <View style={styles.container}>
-          <TouchableOpacity
-            onPress={() => this.props.hideReplyNotification()}
-            style={styles.container}
-          />
-        </View>
+      <>
+        <TouchableOpacity
+          onPress={() => this.props.hideReplyNotification()}
+          style={styles.container}
+        />
         <SafeAreaView style={localStyles.container}>
-          <View
-            style={
-              (styles.container,
-              { width: '100%', justifyContent: 'space-between' })
-            }
-          >
+          <View style={{ width: '100%', justifyContent: 'space-between' }}>
             <>
               <View
                 style={[styles.centerContent, localStyles.profileContainer]}
               >
-                <View style={styles.centerContent}>
-                  <View style={localStyles.profileContainer2}>
-                    {messageDict[this.props.data.type].color == 'red' && (
-                      <View
-                        style={[
-                          styles.centerContent,
-                          localStyles.videoContainer
-                        ]}
-                      >
-                        <Icon.FontAwesome
-                          size={sizing.infoButtonSize}
-                          color={'white'}
-                          name={'video-camera'}
-                        />
-                      </View>
-                    )}
-                    {messageDict[this.props.data.type].color == 'orange' && (
-                      <View
-                        style={[
-                          styles.centerContent,
-                          localStyles.chatContainer
-                        ]}
-                      >
-                        <Chat
-                          height={sizing.infoButtonSize}
-                          width={sizing.infoButtonSize}
-                          fill={'white'}
-                        />
-                      </View>
-                    )}
-                    {messageDict[this.props.data.type].color == 'blue' && (
-                      <View
-                        style={[
-                          styles.centerContent,
-                          localStyles.likeContainer
-                        ]}
-                      >
-                        <Icon.AntDesign
-                          size={sizing.infoButtonSize}
-                          color={'white'}
-                          name={'like1'}
-                        />
-                      </View>
-                    )}
-                    <FastImage
-                      style={localStyles.image}
-                      source={{
-                        uri: this.state.profileImage
-                          ? this.props.data.type == 'new content releases'
-                            ? this.props.data.content?.thumbnail_url
-                            : this.props.data.sender?.profile_image_url
-                          : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-                      }}
-                      resizeMode={FastImage.resizeMode.cover}
-                    />
-                  </View>
+                <View style={localStyles.profileContainer2}>
+                  {messageDict[this.props.data.type].color == 'red' && (
+                    <View
+                      style={[styles.centerContent, localStyles.videoContainer]}
+                    >
+                      <Icon.FontAwesome
+                        size={sizing.infoButtonSize}
+                        color={'white'}
+                        name={'video-camera'}
+                      />
+                    </View>
+                  )}
+                  {messageDict[this.props.data.type].color == 'orange' && (
+                    <View
+                      style={[styles.centerContent, localStyles.chatContainer]}
+                    >
+                      <Chat
+                        height={sizing.infoButtonSize}
+                        width={sizing.infoButtonSize}
+                        fill={'white'}
+                      />
+                    </View>
+                  )}
+                  {messageDict[this.props.data.type].color == 'blue' && (
+                    <View
+                      style={[styles.centerContent, localStyles.likeContainer]}
+                    >
+                      <Icon.AntDesign
+                        size={sizing.infoButtonSize}
+                        color={'white'}
+                        name={'like1'}
+                      />
+                    </View>
+                  )}
+                  <FastImage
+                    style={localStyles.image}
+                    source={{
+                      uri:
+                        this.props.data.type == 'new content releases'
+                          ? this.props.data.content?.thumbnail_url
+                          : this.props.data.sender?.profile_image_url
+                    }}
+                    resizeMode={FastImage.resizeMode.cover}
+                  />
                 </View>
               </View>
               <Text style={localStyles.replyUser}>
@@ -261,7 +243,7 @@ export default class ReplyNotification extends React.Component {
             </>
           </View>
         </SafeAreaView>
-      </View>
+      </>
     );
   };
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import { Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import Icon from '../assets/icons';
 
 const sortOptions = [
@@ -19,13 +19,12 @@ export default class CommentSort extends React.Component {
 
   render = () => {
     return (
-      <View style={styles.container}>
-        <View style={styles.container}>
-          <TouchableOpacity
-            style={styles.container}
-            onPress={() => this.props.hideCommentSort()}
-          />
-        </View>
+      <SafeAreaView style={styles.container}>
+        <TouchableOpacity
+          style={styles.container}
+          onPress={() => this.props.hideCommentSort()}
+        />
+
         <SafeAreaView
           style={{
             width: '100%',
@@ -95,7 +94,7 @@ export default class CommentSort extends React.Component {
             </Text>
           </TouchableOpacity>
         </SafeAreaView>
-      </View>
+      </SafeAreaView>
     );
   };
 }

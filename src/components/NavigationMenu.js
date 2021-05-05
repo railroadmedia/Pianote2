@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
-  ScrollView
+  ScrollView,
+  SafeAreaView
 } from 'react-native';
 import Icon from '../assets/icons';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -165,7 +166,7 @@ export default class NavigationMenu extends React.Component {
 
   render = () => {
     return (
-      <View
+      <SafeAreaView
         style={[
           localStyles.navContainer,
           {
@@ -184,32 +185,28 @@ export default class NavigationMenu extends React.Component {
         >
           {this.lessonNav()}
         </ScrollView>
-        <View style={{ alignSelf: 'center' }}>
-          <TouchableOpacity
-            onPress={() => {
-              this.props.onClose(false);
-            }}
-            style={[
-              styles.centerContent,
-              styles.redButton,
-              {
-                height: onTablet ? 80 : 65,
-                width: onTablet ? 80 : 65,
-                marginTop: 10,
-                borderRadius: 500,
-                justifyContent: 'center'
-              }
-            ]}
-          >
-            <Icon.Feather
-              size={onTablet ? 65 : 50}
-              name={'x'}
-              color={'white'}
-              style={{ borderRadius: 500 }}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
+        <TouchableOpacity
+          onPress={() => this.props.onClose(false)}
+          style={[
+            styles.centerContent,
+            styles.redButton,
+            {
+              height: onTablet ? 80 : 65,
+              width: onTablet ? 80 : 65,
+              marginTop: 10,
+              borderRadius: 500,
+              alignSelf: 'center'
+            }
+          ]}
+        >
+          <Icon.Feather
+            size={onTablet ? 65 : 50}
+            name={'x'}
+            color={'white'}
+            style={{ borderRadius: 500 }}
+          />
+        </TouchableOpacity>
+      </SafeAreaView>
     );
   };
 }

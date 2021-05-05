@@ -397,7 +397,7 @@ export default class PathOverview extends React.Component {
                 }}
               >
                 <View style={[styles.centerContent, { flexDirection: 'row' }]}>
-                  <AntIcon
+                  <Icon.AntDesign
                     name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
                     size={sizing.infoButtonSize}
                     color={colors.pianoteRed}
@@ -544,7 +544,7 @@ export default class PathOverview extends React.Component {
                       marginTop: 5
                     }}
                   >
-                    <AntIcon
+                    <Icon.AntDesign
                       name={this.state.isLiked ? 'like1' : 'like2'}
                       size={sizing.myListButtonSize}
                       color={colors.pianoteRed}
@@ -795,7 +795,7 @@ export default class PathOverview extends React.Component {
                   </View>
 
                   <TouchableOpacity onPress={() => this.toggleMyList(item.id)}>
-                    <AntIcon
+                    <Icon.AntDesign
                       name={
                         item.is_added_to_primary_playlist ? 'close' : 'plus'
                       }

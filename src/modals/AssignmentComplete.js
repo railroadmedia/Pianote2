@@ -12,13 +12,11 @@ export default class AssignmentComplete extends React.Component {
           onPress={() => this.props.hideAssignmentComplete()}
         >
           <View style={localStyles.container}>
-            <View style={styles.centerContent}>
-              <Icon.Ionicons
-                name={'ios-trophy'}
-                size={onTablet ? 45 : 35}
-                color={'#fb1b2f'}
-              />
-            </View>
+            <Icon.Ionicons
+              name={'ios-trophy'}
+              size={onTablet ? 45 : 35}
+              color={'#fb1b2f'}
+            />
             <View
               style={[
                 styles.centerContent,
@@ -49,7 +47,7 @@ const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     borderRadius: 10,
-    padding: 30
+    paddingHorizontal: 20
   },
   assignmentCompleteContainer: {
     padding: 5,

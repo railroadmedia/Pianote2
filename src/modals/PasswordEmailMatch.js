@@ -14,38 +14,42 @@ export default class PasswordEmailMatch extends React.Component {
         style={styles.container}
         onPress={() => this.props.hidePasswordEmailMatch()}
       >
-        <View style={[styles.container, styles.centerContent]}>
-          <View style={localStyles.container}>
-            <Text
-              numberOfLines={2}
-              style={[
-                styles.modalHeaderText,
-                localStyles.errorMessage,
-                { marginBottom: 5 }
-              ]}
-            >
-              {this.props.errorMessage}
+        <View
+          style={[
+            styles.container,
+            styles.centerContent,
+            localStyles.container
+          ]}
+        >
+          <Text
+            numberOfLines={2}
+            style={[
+              styles.modalHeaderText,
+              localStyles.errorMessage,
+              { marginBottom: 5 }
+            ]}
+          >
+            {this.props.errorMessage}
+          </Text>
+          <Text
+            style={[
+              styles.modalBodyText,
+              localStyles.tryAgainText,
+              { marginBottom: 25 }
+            ]}
+          >
+            Please try again.
+          </Text>
+          <TouchableOpacity
+            style={localStyles.tryAgainText}
+            onPress={() => {
+              this.props.hidePasswordEmailMatch();
+            }}
+          >
+            <Text style={[styles.modalButtonText, localStyles.tryAgain]}>
+              TRY AGAIN
             </Text>
-            <Text
-              style={[
-                styles.modalBodyText,
-                localStyles.tryAgainText,
-                { marginBottom: 25 }
-              ]}
-            >
-              Please try again.
-            </Text>
-            <TouchableOpacity
-              style={localStyles.tryAgainText}
-              onPress={() => {
-                this.props.hidePasswordEmailMatch();
-              }}
-            >
-              <Text style={[styles.modalButtonText, localStyles.tryAgain]}>
-                TRY AGAIN
-              </Text>
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
     );

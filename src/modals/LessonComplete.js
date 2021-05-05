@@ -43,13 +43,11 @@ export default class LessonComplete extends React.Component {
       >
         <View style={[styles.centerContent, styles.container]}>
           <View style={localStyles.container}>
-            <View style={styles.centerContent}>
-              <Icon.Ionicons
-                name={'ios-trophy'}
-                size={onTablet ? 45 : 35}
-                color={'#fb1b2f'}
-              />
-            </View>
+            <Icon.Ionicons
+              name={'ios-trophy'}
+              size={onTablet ? 45 : 35}
+              color={'#fb1b2f'}
+            />
             <Text
               style={[
                 styles.modalHeaderText,

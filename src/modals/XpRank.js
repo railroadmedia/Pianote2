@@ -2,7 +2,7 @@ import React from 'react';
 import {
   View,
   Text,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   StyleSheet,
   Dimensions
 } from 'react-native';
@@ -39,57 +39,42 @@ export default class XpRank extends React.Component {
   };
 
   rankProgress = () => {
-    return (this.props.xp / this.nextRank) * 100;
+    return (this.props.xp / this.nextRank()) * 100;
   };
 
   render = () => {
     return (
-      <TouchableWithoutFeedback
-        style={styles.container}
+      <TouchableOpacity
+        style={[styles.centerContent, styles.container]}
+        activeOpacity={1}
         onPress={() => this.props.hideXpRank()}
       >
-        <View style={[styles.container, styles.centerContent]}>
-          <View style={localStyles.container}>
-            <Text style={[styles.modalHeaderText, localStyles.title]}>
-              Your XP Rank
+        <View style={[localStyles.container, styles.centerContent]}>
+          <Text style={[styles.modalHeaderText, localStyles.title]}>
+            Your XP Rank
+          </Text>
+          <Text style={[styles.modalBodyText, localStyles.description]}>
+            You earn XP by completing lessons,{'\n'}
+            commenting on videos and more!
+          </Text>
+          <ProgressCircle
+            percent={this.rankProgress()}
+            radius={(onTablet ? 0.2 : 0.27) * Dimensions.get('window').width}
+            borderWidth={5}
+            shadowColor={'pink'}
+            color={'red'}
+            bgColor={'white'}
+          >
+            <Text style={localStyles.XPtext}>
+              {Number(this.props.xp).toLocaleString()}
             </Text>
-            <Text style={[styles.modalBodyText, localStyles.description]}>
-              You earn XP by completing lessons,{'\n'}
-              commenting on videos and more!
-            </Text>
-            <View style={localStyles.description}>
-              <View
-                style={[
-                  styles.centerContent,
-                  localStyles.ProgressCircleContainer
-                ]}
-              >
-                <ProgressCircle
-                  percent={this.rankProgress()}
-                  radius={
-                    (DeviceInfo.isTablet() ? 0.2 : 0.27) *
-                    Dimensions.get('window').width
-                  }
-                  borderWidth={5}
-                  shadowColor={'pink'}
-                  color={'red'}
-                  bgColor={'white'}
-                >
-                  <View style={{ transform: [{ rotate: '45deg' }] }}>
-                    <Text style={localStyles.XPtext}>
-                      {Number(this.props.xp).toLocaleString()}
-                    </Text>
-                    <Text style={localStyles.rankText}>{this.props.rank}</Text>
-                  </View>
-                </ProgressCircle>
-              </View>
-            </View>
-            <Text style={[styles.modalBodyText, localStyles.nextRank]}>
-              Next rank: {this.nextRank()}
-            </Text>
-          </View>
+            <Text style={localStyles.rankText}>{this.props.rank}</Text>
+          </ProgressCircle>
+          <Text style={[styles.modalBodyText, localStyles.nextRank]}>
+            Next rank: {this.nextRank()}
+          </Text>
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     );
   };
 }
@@ -98,6 +83,7 @@ const localStyles = StyleSheet.create({
   container: {
     borderRadius: 15,
     backgroundColor: 'white',
+    marginHorizontal: '10%',
     elevation: 10
   },
   title: {

@@ -311,7 +311,7 @@ export default class MethodLevel extends React.Component {
                     <View
                       style={[styles.centerContent, { flexDirection: 'row' }]}
                     >
-                      <AntIcon
+                      <Icon.AntDesign
                         name={
                           this.state.showInfo ? 'infocirlce' : 'infocirlceo'
                         }

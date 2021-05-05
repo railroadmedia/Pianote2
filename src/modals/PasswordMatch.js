@@ -14,23 +14,27 @@ export default class PasswordMatch extends React.Component {
         style={styles.container}
         onPress={() => this.props.hidePasswordMatch()}
       >
-        <View style={[styles.centerContent, styles.container]}>
-          <View style={localStyles.container}>
-            <Text style={[styles.modalHeaderText, localStyles.text]}>
-              Your passwords do not {'\n'} match.
+        <View
+          style={[
+            styles.centerContent,
+            localStyles.container,
+            styles.container
+          ]}
+        >
+          <Text style={[styles.modalHeaderText, localStyles.text]}>
+            Your passwords do not {'\n'} match.
+          </Text>
+          <Text style={[styles.modalBodyText, localStyles.text]}>
+            Please try again.
+          </Text>
+          <TouchableOpacity
+            style={localStyles.tryAgainContainer}
+            onPress={() => this.props.hidePasswordMatch()}
+          >
+            <Text style={[styles.modalButtonText, localStyles.tryAgainText]}>
+              TRY AGAIN
             </Text>
-            <Text style={[styles.modalBodyText, localStyles.text]}>
-              Please try again.
-            </Text>
-            <TouchableOpacity
-              style={localStyles.tryAgainContainer}
-              onPress={() => this.props.hidePasswordMatch()}
-            >
-              <Text style={[styles.modalButtonText, localStyles.tryAgainText]}>
-                TRY AGAIN
-              </Text>
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
     );

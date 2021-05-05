@@ -94,6 +94,7 @@ export default class Profile extends React.Component {
 
   componentDidMount() {
     getUserData().then(userData => {
+      console.log(userData);
       this.setState({
         xp: this.changeXP(userData?.totalXp),
         rank: userData?.xpRank,
@@ -289,24 +290,20 @@ export default class Profile extends React.Component {
                   ]}
                 >
                   <View style={localStyles.imageContainer}>
-                    <View
-                      style={[styles.centerContent, localStyles.profilePic]}
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigate('PROFILESETTINGS', {
+                          data: 'Profile Photo'
+                        })
+                      }
+                      style={[styles.centerContent, styles.container]}
                     >
-                      <TouchableOpacity
-                        onPress={() =>
-                          navigate('PROFILESETTINGS', {
-                            data: 'Profile Photo'
-                          })
-                        }
-                        style={[styles.centerContent, styles.container]}
-                      >
-                        <Icon.Ionicons
-                          size={onTablet ? 24 : 18}
-                          name={'ios-camera'}
-                          color={colors.pianoteRed}
-                        />
-                      </TouchableOpacity>
-                    </View>
+                      <Icon.Ionicons
+                        size={onTablet ? 24 : 18}
+                        name={'ios-camera'}
+                        color={colors.pianoteRed}
+                      />
+                    </TouchableOpacity>
                     <FastImage
                       style={localStyles.profileImageBackground}
                       source={{
@@ -317,16 +314,14 @@ export default class Profile extends React.Component {
                       resizeMode={FastImage.resizeMode.cover}
                     />
                   </View>
-                  <View style={styles.centerContent}>
-                    <Text
-                      style={[localStyles.usernameText, styles.childHeaderText]}
-                    >
-                      {this.state.username}
-                    </Text>
-                    <Text style={localStyles.memberSinceText}>
-                      MEMBER SINCE {this.state.memberSince?.slice(0, 4)}
-                    </Text>
-                  </View>
+                  <Text
+                    style={[localStyles.usernameText, styles.childHeaderText]}
+                  >
+                    {this.state.username}
+                  </Text>
+                  <Text style={localStyles.memberSinceText}>
+                    MEMBER SINCE {this.state.memberSince?.slice(0, 4)}
+                  </Text>
                 </View>
                 <View style={localStyles.rankText}>
                   <TouchableOpacity
@@ -345,35 +340,30 @@ export default class Profile extends React.Component {
                     </Text>
                   </TouchableOpacity>
                 </View>
-                <View style={localStyles.notificationContainer}>
-                  <Text
-                    style={[
-                      localStyles.notificationText,
-                      {
-                        fontSize: sizing.verticalListTitleSmall,
-                        paddingVertical: 15,
-                        paddingLeft: 10,
-                        fontFamily: 'OpenSans-ExtraBold',
-                        color: 'white'
-                      }
-                    ]}
-                  >
-                    NOTIFICATIONS
-                  </Text>
-                </View>
+                <Text
+                  style={[
+                    localStyles.notificationText,
+                    {
+                      fontSize: sizing.verticalListTitleSmall,
+                      paddingVertical: 15,
+                      paddingLeft: 10,
+                      fontFamily: 'OpenSans-ExtraBold',
+                      color: 'white'
+                    }
+                  ]}
+                >
+                  NOTIFICATIONS
+                </Text>
               </>
             )}
             ListEmptyComponent={() =>
               this.state.isLoading ? (
-                <View
-                  style={[styles.centerContent, localStyles.activityContainer]}
-                >
-                  <ActivityIndicator
-                    size={onTablet ? 'large' : 'small'}
-                    animating={true}
-                    color={colors.secondBackground}
-                  />
-                </View>
+                <ActivityIndicator
+                  size={onTablet ? 'large' : 'small'}
+                  animating={true}
+                  color={colors.secondBackground}
+                  style={{ margin: 20 }}
+                />
               ) : (
                 <Text style={localStyles.noNotificationText}>
                   No New Notifications...
@@ -394,6 +384,7 @@ export default class Profile extends React.Component {
                 style={[
                   localStyles.notification,
                   {
+                    paddingLeft: 10,
                     backgroundColor:
                       index % 2
                         ? colors.mainBackground
@@ -402,116 +393,110 @@ export default class Profile extends React.Component {
                 ]}
                 onPress={() => this.openNotification(item)}
               >
-                <View style={localStyles.innerNotificationContainer}>
-                  <View style={localStyles.messageContainer}>
-                    {messageDict[item.type].color == 'red' && (
-                      <View
-                        style={[
-                          styles.centerContent,
-                          localStyles.iconContainer,
-                          { backgroundColor: 'red' }
-                        ]}
-                      >
-                        <Icon.FontAwesome
-                          size={sizing.infoButtonSize}
-                          color={'white'}
-                          name={'video-camera'}
-                        />
-                      </View>
-                    )}
-                    {messageDict[item.type].color == 'orange' && (
-                      <View
-                        style={[
-                          styles.centerContent,
-                          localStyles.iconContainer,
-                          { backgroundColor: 'orange' }
-                        ]}
-                      >
-                        <Chat
-                          height={sizing.infoButtonSize}
-                          width={sizing.infoButtonSize}
-                          fill={'white'}
-                        />
-                      </View>
-                    )}
-                    {messageDict[item.type].color == 'blue' && (
-                      <View
-                        style={[
-                          styles.centerContent,
-                          localStyles.iconContainer,
-                          { backgroundColor: 'blue' }
-                        ]}
-                      >
-                        <Icon.AntDesign
-                          size={sizing.infoButtonSize}
-                          color={'white'}
-                          name={'like1'}
-                        />
-                      </View>
-                    )}
-                    <FastImage
-                      style={{
-                        height: onTablet ? 60 : 40,
-                        width: onTablet ? 60 : 40,
-                        paddingVertical: 10,
-                        borderRadius: 100,
-                        marginRight: 10
-                      }}
-                      source={{
-                        uri:
-                          item.type == 'new content releases'
-                            ? item.content.thumbnail_url
-                            : item.sender
-                            ? item.sender.profile_image_url
-                            : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-                      }}
-                      resizeMode={FastImage.resizeMode.stretch}
-                    />
-                  </View>
+                <View style={localStyles.messageContainer}>
+                  {messageDict[item.type].color == 'red' && (
+                    <View
+                      style={[
+                        styles.centerContent,
+                        localStyles.iconContainer,
+                        { backgroundColor: 'red' }
+                      ]}
+                    >
+                      <Icon.FontAwesome
+                        size={sizing.infoButtonSize}
+                        color={'white'}
+                        name={'video-camera'}
+                      />
+                    </View>
+                  )}
+                  {messageDict[item.type].color == 'orange' && (
+                    <View
+                      style={[
+                        styles.centerContent,
+                        localStyles.iconContainer,
+                        { backgroundColor: 'orange' }
+                      ]}
+                    >
+                      <Chat
+                        height={sizing.infoButtonSize}
+                        width={sizing.infoButtonSize}
+                        fill={'white'}
+                      />
+                    </View>
+                  )}
+                  {messageDict[item.type].color == 'blue' && (
+                    <View
+                      style={[
+                        styles.centerContent,
+                        localStyles.iconContainer,
+                        { backgroundColor: 'blue' }
+                      ]}
+                    >
+                      <Icon.AntDesign
+                        size={sizing.infoButtonSize}
+                        color={'white'}
+                        name={'like1'}
+                      />
+                    </View>
+                  )}
+                  <FastImage
+                    style={{
+                      height: onTablet ? 60 : 40,
+                      width: onTablet ? 60 : 40,
+                      paddingVertical: 10,
+                      borderRadius: 100,
+                      marginRight: 10
+                    }}
+                    source={{
+                      uri:
+                        item.type == 'new content releases'
+                          ? item.content.thumbnail_url
+                          : item.sender
+                          ? item.sender.profile_image_url
+                          : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                    }}
+                    resizeMode={FastImage.resizeMode.stretch}
+                  />
                 </View>
                 <View style={{ flex: 0.975, paddingLeft: 20 }}>
-                  <View style={{ flex: 1, justifyContent: 'center' }}>
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-ExtraBold',
-                        color: 'white'
-                      }}
-                    >
-                      <Text style={localStyles.boldNotificationText}>
-                        {messageDict[item.type].new ? '' : 'NEW - '}
-                      </Text>
-                      {item.type == 'new content releases'
-                        ? item.content.display_name
-                        : item.sender?.display_name}
-                      <Text style={localStyles.messageTypeText}>
-                        {' '}
-                        {messageDict[item.type].message}
-                      </Text>
+                  <Text
+                    style={{
+                      fontFamily: 'OpenSans-ExtraBold',
+                      color: 'white'
+                    }}
+                  >
+                    <Text style={localStyles.boldNotificationText}>
+                      {messageDict[item.type].new ? '' : 'NEW - '}
                     </Text>
-                    <Text style={localStyles.createdAtText}>
-                      {item.created_at}
+                    {item.type == 'new content releases'
+                      ? item.content.display_name
+                      : item.sender?.display_name}
+                    <Text style={localStyles.messageTypeText}>
+                      {' '}
+                      {messageDict[item.type].message}
                     </Text>
-                  </View>
+                  </Text>
+                  <Text style={localStyles.createdAtText}>
+                    {item.created_at}
+                  </Text>
                 </View>
-                <View>
-                  <View style={{ flexDirection: 'row' }}>
-                    <TouchableOpacity
-                      style={localStyles.threeDotsContainer}
-                      onPress={() => {
-                        this.checkNotificationTypeStatus(item);
-                        this.setState({
-                          showReplyNotification: true,
-                          clickedNotification: item
-                        });
-                      }}
-                    >
-                      <Icon.Entypo
-                        size={sizing.infoButtonSize}
-                        name={'dots-three-horizontal'}
-                        color={colors.secondBackground}
-                      />
-                    </TouchableOpacity>
-                  </View>
+                <View style={{ flexDirection: 'row' }}>
+                  <TouchableOpacity
+                    style={localStyles.threeDotsContainer}
+                    onPress={() => {
+                      this.checkNotificationTypeStatus(item);
+                      this.setState({
+                        showReplyNotification: true,
+                        clickedNotification: item
+                      });
+                    }}
+                  >
+                    <Icon.Entypo
+                      size={sizing.infoButtonSize}
+                      name={'dots-three-horizontal'}
+                      color={colors.secondBackground}
+                    />
+                  </TouchableOpacity>
                 </View>
               </TouchableOpacity>
             )}
