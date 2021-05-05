@@ -18,6 +18,7 @@ import RNIap from 'react-native-iap';
 import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import RNFetchBlob from 'rn-fetch-blob';
 import LogOut from '../../modals/LogOut.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -33,7 +34,6 @@ import { SafeAreaView } from 'react-navigation';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import commonService from '../../services/common.service.js';
 
-import { cacheAndWriteCourses } from '../../redux/CoursesCacheActions';
 import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 import { cacheAndWriteMyList } from '../../redux/MyListCacheActions';
 import { cacheAndWritePacks } from '../../redux/PacksCacheActions';
@@ -402,9 +402,12 @@ class Settings extends React.Component {
           onBackButtonPress={() => this.setState({ showLogOut: false })}
         >
           <LogOut
-            onLogout={() =>
+            onLogout={() => {
+              let { dirs } = RNFetchBlob.fs;
+              RNFetchBlob.fs
+                .unlink(`${dirs.LibraryDir || dirs.DocumentDir}/cache`)
+                .catch(() => {});
               [
-                'cacheAndWriteCourses',
                 'cacheAndWriteLessons',
                 'cacheAndWriteMyList',
                 'cacheAndWritePacks',
@@ -412,8 +415,8 @@ class Settings extends React.Component {
                 'cacheAndWriteQuickTips',
                 'cacheAndWriteSongs',
                 'cacheAndWriteStudentFocus'
-              ].map(redux => this.props[redux]({}))
-            }
+              ].map(redux => this.props[redux]({}));
+            }}
             hideLogOut={() => {
               this.setState({ showLogOut: false });
             }}
@@ -497,7 +500,6 @@ const localStyles = StyleSheet.create({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      cacheAndWriteCourses,
       cacheAndWriteLessons,
       cacheAndWriteMyList,
       cacheAndWritePacks,

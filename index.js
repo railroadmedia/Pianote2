@@ -11,7 +11,6 @@ import {
 import App from './App';
 import { name as appName } from './app.json';
 import DeviceInfo from 'react-native-device-info';
-
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import PushNotification from 'react-native-push-notification';
 

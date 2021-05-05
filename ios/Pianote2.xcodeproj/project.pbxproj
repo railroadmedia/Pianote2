@@ -22,6 +22,7 @@
 		43DFF9F72550406800535A27 /* NotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4336193625471E9700589634 /* NotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4FEE23B3237C7E3900907E72 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FEE23B2237C7E3900907E72 /* libRNGestureHandler.a */; };
 		6D071037B44D40ACB66CDFEA /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE85F26D5FC441F798A9CD1D /* OpenSans-Bold.ttf */; };
+		913180401AAAC4DC7C11C302 /* libPods-Pianote2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D4BAC4F72C62AB0AF71502E1 /* libPods-Pianote2.a */; };
 		92AFAB12302145F19A837E51 /* OpenSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EF58EB6996614ACE894B80D8 /* OpenSans-ExtraBold.ttf */; };
 		A31BEC41CA264A75949EECA3 /* OpenSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C24F307AACDF47599D8B8B35 /* OpenSans.ttf */; };
 		AA3FF5F839674B7CA91EB793 /* OpenSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F8DF30BBA55A4948AA5770B3 /* OpenSans-SemiBold.ttf */; };
@@ -87,7 +88,9 @@
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		EE85F26D5FC441F798A9CD1D /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Bold.ttf"; path = "../assets/fonts/OpenSans-Bold.ttf"; sourceTree = "<group>"; };
 		EF58EB6996614ACE894B80D8 /* OpenSans-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-ExtraBold.ttf"; path = "../assets/fonts/OpenSans-ExtraBold.ttf"; sourceTree = "<group>"; };
+		F52B4368D9B2ADE85C071217 /* Pods-Pianote2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pianote2.debug.xcconfig"; path = "Target Support Files/Pods-Pianote2/Pods-Pianote2.debug.xcconfig"; sourceTree = "<group>"; };
 		F8DF30BBA55A4948AA5770B3 /* OpenSans-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-SemiBold.ttf"; path = "../assets/fonts/OpenSans-SemiBold.ttf"; sourceTree = "<group>"; };
+		FE55A86D09CB6E690C230F3E /* Pods-Pianote2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pianote2.release.xcconfig"; path = "Target Support Files/Pods-Pianote2/Pods-Pianote2.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */

@@ -12,11 +12,11 @@ import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-community/async-storage';
 import { getToken, getUserData } from '../../services/UserDataAuth';
 import { notif, updateFcmToken } from '../../services/notification.service';
+import { getCache } from '../../services/GetContent';
 
 import { cachePacks } from '../../redux/PacksCacheActions';
 import { cacheSongs } from '../../redux/SongsCacheActions';
 import { cacheMyList } from '../../redux/MyListCacheActions';
-import { cacheCourses } from '../../redux/CoursesCacheActions';
 import { cacheLessons } from '../../redux/LessonsCacheActions';
 import { cachePodcasts } from '../../redux/PodcastsCacheActions';
 import { cacheQuickTips } from '../../redux/QuickTipsCacheActions';
@@ -47,11 +47,11 @@ const cache = [
   'cacheSongs',
   'cacheMyList',
   'cacheLessons',
-  'cacheCourses',
   'cachePodcasts',
   'cacheQuickTips',
   'cacheStudentFocus'
 ];
+const cacheV2 = ['courses'];
 class LoadPage extends React.Component {
   static contextType = NetworkContext;
 
@@ -159,6 +159,7 @@ class LoadPage extends React.Component {
         .then(stream => this.props[c]?.(JSON.parse(stream)))
         .catch(() => {});
     });
+    cacheV2.map(getCache);
   };
 
   async handleNoConnection() {
@@ -240,7 +241,6 @@ const mapDispatchToProps = dispatch =>
       cacheSongs,
       cacheMyList,
       cacheLessons,
-      cacheCourses,
       cachePodcasts,
       cacheQuickTips,
       cacheStudentFocus

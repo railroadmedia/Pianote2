@@ -3,55 +3,49 @@
  */
 import React from 'react';
 import {
-  View,
-  Text,
-  ScrollView,
-  Dimensions,
+  ActivityIndicator,
+  FlatList,
   RefreshControl,
-  ActivityIndicator
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity
 } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { ContentModel } from '@musora/models';
-import NavMenuHeaders from '../../components/NavMenuHeaders';
-import VerticalVideoList from '../../components/VerticalVideoList';
-import HorizontalVideoList from '../../components/HorizontalVideoList';
-import { getStartedContent, getAllContent } from '../../services/GetContent';
-import { NetworkContext } from '../../context/NetworkProvider';
-import NavigationBar from '../../components/NavigationBar';
 
-import { cacheAndWriteCourses } from '../../redux/CoursesCacheActions';
+import Filters_V2 from '../../components/Filters_V2';
+import NavigationBar from '../../components/NavigationBar';
+import NavMenuHeaders from '../../components/NavMenuHeaders';
+import RowCard from '../../components/Cards';
+import Sort from '../../components/Sort';
+
+import {
+  getAllContent,
+  getCache,
+  getStartedContent,
+  setCache
+} from '../../services/GetContent';
+import structuredState from '../../services/structuredState.service';
+
+import { NetworkContext } from '../../context/NetworkProvider';
+
 import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-
-const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
-  const paddingToBottom = 20;
-  return (
-    layoutMeasurement.height + contentOffset.y >=
-    contentSize.height - paddingToBottom
-  );
-};
-
-class Course extends React.Component {
+export default class Course extends React.PureComponent {
+  static navigationOptions = { header: null };
   static contextType = NetworkContext;
+
+  page = 1;
+  all = [];
+  inProgress = [];
   constructor(props) {
     super(props);
-    let { coursesCache } = props;
+    let { all, inProgress } = getCache('courses');
+    this.all = all;
+    this.inProgress = inProgress;
     this.state = {
-      progressCourses: [],
-      allCourses: [],
-      currentSort: 'newest',
-      page: 1,
-      outVideos: false,
-      isPaging: false, // scrolling more
-      filtering: false, // filtering
-      started: true, // if started lesson
-      refreshing: true,
-      refreshControl: false,
-      ...this.initialValidData(coursesCache, true)
+      loading: !all?.length,
+      loadingMore: false,
+      refreshControl: true
     };
   }
 
@@ -68,295 +62,195 @@ class Course extends React.Component {
     this.refreshOnFocusListener?.();
   }
 
-  async getContent() {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+  getContent = async () => {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let content = await Promise.all([
       getAllContent(
         'course',
-        this.state.currentSort,
-        this.state.page,
-        this.filterQuery
+        this.sortRef?.sortQuery || 'newest',
+        1,
+        this.filterRef?.filterQuery
       ),
       getStartedContent('course')
     ]);
     this.metaFilters = content?.[0]?.meta?.filterOptions;
-    this.props.cacheAndWriteCourses({
+    let { all, inProgress } = structuredState({
       all: content[0],
       inProgress: content[1]
     });
-    this.setState(
-      this.initialValidData({
-        all: content[0],
-        inProgress: content[1]
-      })
-    );
-  }
-
-  initialValidData = (content, fromCache) => {
-    try {
-      let allVideos = this.setData(
-        content.all.data.map(data => {
-          return new ContentModel(data);
-        })
-      );
-
-      let inprogressVideos = this.setData(
-        content.inProgress.data.map(data => {
-          return new ContentModel(data);
-        })
-      );
-
-      return {
-        allCourses: allVideos,
-        progressCourses: inprogressVideos,
-        refreshing: false,
-        refreshControl: fromCache,
-        outVideos:
-          allVideos.length == 0 || content.all.data.length < 20 ? true : false,
-        filtering: false,
-        isPaging: false,
-        page: this.state?.page + 1 || 1,
-        started: inprogressVideos.length !== 0
-      };
-    } catch (e) {
-      return {};
-    }
+    setCache('courses', { all, inProgress });
+    this.all = all;
+    this.inProgress = inProgress;
+    this.setState({ loading: false, refreshControl: false });
   };
 
-  getAllCourses = async loadMore => {
-    this.setState({ filtering: true });
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+  getAll = async loadMore => {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = await getAllContent(
       'course',
-      this.state.currentSort,
-      this.state.page,
-      this.filterQuery
+      this.sortRef?.sortQuery || 'newest',
+      loadMore ? ++this.page : (this.page = 1),
+      this.filterRef?.filterQuery
     );
     this.metaFilters = response?.meta?.filterOptions;
-    const newContent = await response.data.map(data => {
-      return new ContentModel(data);
-    });
-
-    let items = this.setData(newContent);
-
-    this.setState(state => ({
-      allCourses: loadMore ? state.allCourses.concat(items) : items,
-      outVideos: items.length == 0 || response.data.length < 20 ? true : false,
-      filtering: false,
-      isPaging: false,
-      refreshControl: false,
-      page: this.state.page + 1
-    }));
+    let { all } = structuredState({ all: response });
+    this.all = loadMore ? this.all.concat(all || []) : all;
+    this.setState({ loadingMore: false, refreshControl: false });
   };
 
-  setData(newContent) {
-    let items = [];
-    for (let i in newContent) {
-      items.push({
-        title: newContent[i].getField('title'),
-        artist: newContent[i].getField('instructor').fields[0].value,
-        thumbnail: newContent[i].getData('thumbnail_url'),
-        type: newContent[i].post.type,
-        publishedOn:
-          newContent[i].publishedOn.slice(0, 10) +
-          'T' +
-          newContent[i].publishedOn.slice(11, 16),
-        description: newContent[i]
-          .getData('description')
-          .replace(/(<([^>]+)>)/g, '')
-          .replace(/&nbsp;/g, '')
-          .replace(/&amp;/g, '&')
-          .replace(/&#039;/g, "'")
-          .replace(/&quot;/g, '"')
-          .replace(/&gt;/g, '>')
-          .replace(/&lt;/g, '<'),
-        xp: newContent[i].post.xp,
-        id: newContent[i].id,
-        like_count: newContent[i].likeCount,
-        isLiked: newContent[i].post.is_liked_by_current_user,
-        isAddedToList: newContent[i].isAddedToList,
-        isStarted: newContent[i].isStarted,
-        isCompleted: newContent[i].isCompleted,
-        progress_percent: newContent[i].post.progress_percent
-      });
-    }
+  refresh = () => {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    this.setState({ refreshControl: true }, this.getContent);
+  };
 
-    return items;
-  }
+  navigate = data =>
+    navigate('PATHOVERVIEW', {
+      data
+    });
 
-  changeSort = currentSort => {
-    this.setState(
-      {
-        currentSort,
-        outVideos: false,
-        isPaging: false,
-        page: 1
-      },
-      () => this.getAllCourses()
+  filter = () => {
+    this.setState({ refreshControl: true });
+    return this.getAll();
+  };
+
+  sort = () => {
+    this.setState({ refreshControl: true });
+    return this.getAll();
+  };
+
+  renderFLHeader = () => {
+    let { refreshControl } = this.state;
+    return (
+      <>
+        {!!this.inProgress?.length && (
+          <>
+            <View style={lStyle.continueHeaderContainer}>
+              <Text style={lStyle.continueText}>CONTINUE</Text>
+              <TouchableOpacity
+                onPress={() =>
+                  navigate('SEEALL', { title: 'Continue', parent: 'Courses' })
+                }
+                style={{ padding: 10, paddingRight: 0 }}
+              >
+                <Text
+                  style={{ fontSize: onTablet ? 16 : 12, color: '#fb1b2f' }}
+                >
+                  See All
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <FlatList
+              windowSize={10}
+              data={this.inProgress}
+              horizontal={true}
+              initialNumToRender={5}
+              maxToRenderPerBatch={10}
+              onEndReachedThreshold={0.01}
+              removeClippedSubviews={true}
+              keyboardShouldPersistTaps='handled'
+              contentContainerStyle={{
+                width: `${(onTablet ? 33 : 80) * this.inProgress?.length}%`
+              }}
+              renderItem={({ item, index }) => (
+                <View style={{ width: `${100 / this.inProgress?.length}%` }}>
+                  <View
+                    style={{
+                      width: `${100 * this.inProgress?.length}%`,
+                      paddingRight:
+                        index === this.inProgress?.length - 1 ? 10 : 0
+                    }}
+                  >
+                    <RowCard {...item} compact onNavigate={this.navigate} />
+                  </View>
+                </View>
+              )}
+              keyExtractor={({ id }) => id.toString()}
+            />
+          </>
+        )}
+        <View style={lStyle.allHeaderContainer}>
+          <Text style={lStyle.allCoursesText}>
+            COURSES
+            {this.filterRef?.filterAppliedText ? `\n` : ''}
+            {this.filterRef?.filterAppliedText}
+          </Text>
+          <Sort
+            disabled={refreshControl}
+            onSort={this.sort}
+            ref={r => (this.sortRef = r)}
+          />
+          <Filters_V2
+            disabled={refreshControl}
+            onApply={this.filter}
+            meta={this.metaFilters}
+            reference={r => (this.filterRef = r)}
+          />
+        </View>
+      </>
     );
   };
 
-  getVideos = async () => {
-    // change page before getting more lessons if paging
-    if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () =>
-        this.getAllCourses(true)
-      );
-    }
-  };
-
-  handleScroll = event => {
-    if (
-      isCloseToBottom(event) &&
-      !this.state.isPaging &&
-      !this.state.outVideos
-    ) {
-      this.setState(
-        {
-          page: this.state.page + 1,
-          isPaging: true
-        },
-        () => this.getAllCourses(true)
-      );
-    }
-  };
-
-  refresh() {
-    this.setState({ refreshControl: true, page: 1 }, this.getContent);
-  }
-
   render() {
+    console.log('rend course');
+    let { loading, loadingMore, refreshControl } = this.state;
     return (
-      <View style={styles.mainContainer}>
+      <View style={{ backgroundColor: '#00101d', flex: 1 }}>
         <NavMenuHeaders currentPage={'LESSONS'} parentPage={'COURSES'} />
-        {!this.state.refreshing ? (
-          <ScrollView
-            style={styles.mainContainer}
-            showsVerticalScrollIndicator={false}
-            contentInsetAdjustmentBehavior={'never'}
-            onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
-            refreshControl={
-              <RefreshControl
-                tintColor={'transparent'}
-                colors={[colors.pianoteRed]}
-                onRefresh={() => this.refresh()}
-                refreshing={isiOS ? false : this.state.refreshControl}
-              />
-            }
-          >
-            {isiOS && this.state.refreshControl && (
-              <ActivityIndicator
-                size='small'
-                style={styles.activityIndicator}
-                color={colors.secondBackground}
-              />
-            )}
-            <Text style={styles.contentPageHeader}>Courses</Text>
-            {this.state.started && (
-              <HorizontalVideoList
-                hideFilterButton={true}
-                Title={'CONTINUE'}
-                seeAll={() =>
-                  navigate('SEEALL', {
-                    title: 'Continue',
-                    parent: 'Courses'
-                  })
-                }
-                items={this.state.progressCourses}
-              />
-            )}
-            {onTablet ? (
-              <HorizontalVideoList
-                isTile={true}
-                Title={'COURSES'}
-                seeAll={() =>
-                  navigate('SEEALL', {
-                    title: 'Courses',
-                    parent: 'Courses'
-                  })
-                }
-                items={this.state.allCourses}
-                hideFilterButton={false}
-                isPaging={this.state.isPaging}
-                filters={this.state.filters}
-                currentSort={this.state.currentSort}
-                changeSort={sort => this.changeSort(sort)}
-                filterResults={() => this.setState({ showFilters: true })}
-                applyFilters={filters =>
-                  new Promise(res =>
-                    this.setState(
-                      {
-                        allCourses: [],
-                        outVideos: false,
-                        page: 1
-                      },
-                      () => {
-                        this.filterQuery = filters;
-                        this.getAllCourses().then(res);
-                      }
-                    )
-                  )
-                }
-                outVideos={this.state.outVideos}
-                getVideos={() => this.getVideos()}
-                callEndReached={true}
-                reachedEnd={() => {
-                  if (!this.state.isPaging && !this.state.outVideos) {
-                    this.setState(
-                      {
-                        page: this.state.page + 1,
-                        isPaging: true
-                      },
-                      () => this.getAllCourses()
-                    );
-                  }
-                }}
-              />
-            ) : (
-              <VerticalVideoList
-                items={this.state.allCourses}
-                isLoading={false}
-                title={'COURSES'}
-                type={'COURSES'}
-                isPaging={this.state.isPaging}
-                showFilter={true}
-                showType={true}
-                showArtist={true}
-                showLength={false}
-                showSort={true}
-                filters={this.metaFilters}
-                currentSort={this.state.currentSort}
-                changeSort={sort => this.changeSort(sort)}
-                applyFilters={filters =>
-                  new Promise(res =>
-                    this.setState(
-                      {
-                        allCourses: [],
-                        outVideos: false,
-                        page: 1
-                      },
-                      () => {
-                        this.filterQuery = filters;
-                        this.getAllCourses().then(res);
-                      }
-                    )
-                  )
-                }
-                imageWidth={width * 0.26} // image width
-                outVideos={this.state.outVideos}
-                getVideos={() => this.getVideos()}
-              />
-            )}
-          </ScrollView>
-        ) : (
+        {loading ? (
           <ActivityIndicator
             size='large'
             style={{ flex: 1 }}
             color={colors.secondBackground}
+          />
+        ) : (
+          <FlatList
+            windowSize={10}
+            testID='flatList'
+            data={this.all}
+            style={{ flex: 1 }}
+            initialNumToRender={5}
+            maxToRenderPerBatch={10}
+            onEndReachedThreshold={0.01}
+            removeClippedSubviews={true}
+            keyboardShouldPersistTaps='handled'
+            columnWrapperStyle={onTablet ? { width: '33%' } : null}
+            renderItem={({ item }) => (
+              <RowCard
+                {...item}
+                compact={onTablet}
+                onNavigate={this.navigate}
+                onToggleLike={this.toggleLike}
+                onToggleMyList={this.toggleMyList}
+              />
+            )}
+            onEndReached={() =>
+              !refreshControl &&
+              this.setState({ loadingMore: true }, () => this.getAll(true))
+            }
+            ListHeaderComponent={this.renderFLHeader}
+            keyExtractor={({ id }) => id.toString()}
+            numColumns={onTablet ? 3 : 1}
+            ListEmptyComponent={
+              <Text style={lStyle.noResultsText}>
+                There are no results for this content type.
+              </Text>
+            }
+            ListFooterComponent={
+              <ActivityIndicator
+                size='small'
+                color={colors.pianoteRed}
+                animating={loadingMore}
+                style={{ padding: 10 }}
+              />
+            }
+            refreshControl={
+              <RefreshControl
+                colors={[colors.pianoteRed]}
+                tintColor={colors.pianoteRed}
+                onRefresh={this.refresh}
+                refreshing={refreshControl}
+              />
+            }
           />
         )}
         <NavigationBar currentPage={''} />
@@ -364,8 +258,30 @@ class Course extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({ coursesCache: state.coursesCache });
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheAndWriteCourses }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Course);
+let lStyle = StyleSheet.create({
+  continueHeaderContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+    alignItems: 'center'
+  },
+  continueText: {
+    flex: 1,
+    fontSize: 16,
+    fontFamily: 'RobotoCondensed-Bold',
+    color: '#445f73'
+  },
+  allHeaderContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    padding: 10,
+    paddingVertical: 5
+  },
+  allCoursesText: {
+    flex: 1,
+    fontSize: 16,
+    fontFamily: 'RobotoCondensed-Bold',
+    color: '#445f73'
+  },
+  noResultsText: { color: 'white', textAlign: 'center', padding: 20 }
+});

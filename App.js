@@ -8,12 +8,10 @@ import Orientation from 'react-native-orientation-locker';
 import DeviceInfo from 'react-native-device-info';
 import AppNavigator, { reset } from './AppNavigator';
 
-import NavigationService from './src/services/navigation.service';
-
+import cards from './src/redux/CardsReducer';
 import packsReducer from './src/redux/PacksCacheReducer';
 import songsReducer from './src/redux/SongsCacheReducer';
 import myListReducer from './src/redux/MyListCacheReducer';
-import coursesReducer from './src/redux/CoursesCacheReducer';
 import lessonsReducer from './src/redux/LessonsCacheReducer';
 import podcastsReducer from './src/redux/PodcastsCacheReducer';
 import quickTipsReducer from './src/redux/QuickTipsCacheReducer';
@@ -22,11 +20,11 @@ import commonService from './src/services/common.service';
 
 const store = createStore(
   combineReducers({
+    ...cards,
     ...packsReducer,
     ...songsReducer,
     ...myListReducer,
     ...lessonsReducer,
-    ...coursesReducer,
     ...podcastsReducer,
     ...quickTipsReducer,
     ...studentFocusReducer
