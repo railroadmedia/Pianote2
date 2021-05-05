@@ -1633,26 +1633,17 @@ export default class ViewLesson extends React.Component {
         )}
 
         {this.state.selectedAssignment && (
-          <Modal
-            isVisible={this.state.showAssignmentComplete}
-            style={styles.modalContainer}
-            animation={'slideInUp'}
-            animationInTiming={250}
-            animationOutTiming={250}
-            coverScreen={false}
-            hasBackdrop={false}
+          <AssignmentComplete
             onBackButtonPress={() =>
               this.setState({ showAssignmentComplete: false })
             }
-          >
-            <AssignmentComplete
-              title={this.state.selectedAssignment.title}
-              xp={this.state.selectedAssignment.xp}
-              hideAssignmentComplete={() => {
-                this.setState({ showAssignmentComplete: false });
-              }}
-            />
-          </Modal>
+            isVisible={this.state.showAssignmentComplete}
+            title={this.state.selectedAssignment.title}
+            xp={this.state.selectedAssignment.xp}
+            hideAssignmentComplete={() => {
+              this.setState({ showAssignmentComplete: false });
+            }}
+          />
         )}
         <Modal
           isVisible={this.state.showResDownload}

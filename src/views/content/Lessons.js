@@ -1248,7 +1248,6 @@ class Lessons extends React.Component {
             }}
           />
         </Modal>
-
         <AddToCalendar
           isVisible={this.state.addToCalendarModal}
           hideAddToCalendar={() => this.setState({ addToCalendarModal: false })}

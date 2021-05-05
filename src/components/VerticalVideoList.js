@@ -767,8 +767,8 @@ export default class VerticalVideoList extends React.Component {
             }}
           />
         </Modal>
-        {/* // onBackButtonPress={() => this.setState({ addToCalendarModal: false })} */}
         <AddToCalendar
+          onBackButtonPress={() => this.setState({ addToCalendarModal: false })}
           isVisible={this.state.addToCalendarModal}
           hideAddToCalendar={() => this.setState({ addToCalendarModal: false })}
           addEventToCalendar={() => this.addEventToCalendar()}

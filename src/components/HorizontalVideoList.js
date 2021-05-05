@@ -729,25 +729,13 @@ export default class HorizontalVideoList extends React.Component {
             removeFromMyList={contentID => this.removeFromMyList(contentID)}
           />
         </Modal>
-        <Modal
+        <AddToCalendar
           isVisible={this.state.addToCalendarModal}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
-          onBackButtonPress={() => this.setState({ addToCalendarModal: false })}
-        >
-          <AddToCalendar
-            hideAddToCalendar={() =>
-              this.setState({ addToCalendarModal: false })
-            }
-            addEventToCalendar={() => {
-              this.addEventToCalendar();
-            }}
-          />
-        </Modal>
+          hideAddToCalendar={() => this.setState({ addToCalendarModal: false })}
+          addEventToCalendar={() => {
+            this.addEventToCalendar();
+          }}
+        />
         <Modal
           isVisible={this.state.showSort}
           style={styles.modalContainer}
