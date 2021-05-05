@@ -221,201 +221,122 @@ class Settings extends React.Component {
         </View>
 
         <ScrollView style={styles.mainContainer}>
-          <TouchableOpacity
-            style={[
-              styles.centerContent,
-              localStyles.container,
-              {
-                borderTopWidth: 1,
-                borderTopColor: '#445f73'
-              }
-            ]}
-            onPress={() => {
-              navigate('PROFILESETTINGS');
-            }}
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <View
-                style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
-              >
+          {[
+            {
+              nav: () => navigate('PROFILESETTINGS'),
+              title: 'Profile Settings',
+              icon: (
                 <Icon.Feather
                   name={'user'}
                   size={onTablet ? 30 : 20}
                   color={colors.pianoteRed}
                 />
-              </View>
-              <Text style={localStyles.settingsText}>Profile Settings</Text>
-            </View>
-            <Icon.AntDesign
-              name={'right'}
-              size={onTablet ? 30 : 20}
-              color={colors.secondBackground}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigate('NOTIFICATIONSETTINGS');
-            }}
-            style={[styles.centerContent, localStyles.container]}
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <View
-                style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
-              >
+              )
+            },
+            {
+              nav: () => navigate('NOTIFICATIONSETTINGS'),
+              title: 'Notification Settings',
+              icon: (
                 <Icon.Ionicons
                   name={'ios-notifications-outline'}
                   color={colors.pianoteRed}
                   size={onTablet ? 35 : 27.5}
                 />
-              </View>
-              <Text style={localStyles.settingsText}>
-                Notification Settings
-              </Text>
-            </View>
-            <Icon.AntDesign
-              name={'right'}
-              size={onTablet ? 30 : 20}
-              color={colors.secondBackground}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.centerContent, localStyles.container]}
-            onPress={this.manageSubscriptions}
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <View
-                style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
-              >
+              )
+            },
+            {
+              nav: this.manageSubscriptions,
+              title: 'Manage Subscriptions',
+              icon: (
                 <Icon.AntDesign
                   name={'folder1'}
                   size={onTablet ? 30 : 20}
                   color={colors.pianoteRed}
                 />
-              </View>
-              <Text style={localStyles.settingsText}>Manage Subscriptions</Text>
-            </View>
-            <Icon.AntDesign
-              name={'right'}
-              size={onTablet ? 30 : 20}
-              color={colors.secondBackground}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={this.restorePurchase}
-            style={[styles.centerContent, localStyles.container]}
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <View
-                style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
-              >
+              )
+            },
+            {
+              nav: this.restorePurchase,
+              title: 'Restore Purchases',
+              icon: (
                 <Icon.AntDesign
                   name={'creditcard'}
                   size={onTablet ? 30 : 20}
                   color={colors.pianoteRed}
                 />
-              </View>
-              <Text style={localStyles.settingsText}>Restore Purchases</Text>
-            </View>
-            <Icon.AntDesign
-              name={'right'}
-              size={onTablet ? 30 : 20}
-              color={colors.secondBackground}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.centerContent, localStyles.container]}
-            onPress={() => {
-              navigate('SUPPORT');
-            }}
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <View
-                style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
-              >
+              )
+            },
+            {
+              nav: () => navigate('SUPPORT'),
+              title: 'Support',
+              icon: (
                 <Icon.FontAwesome
                   name={'support'}
                   size={onTablet ? 30 : 20}
                   color={colors.pianoteRed}
                 />
-              </View>
-              <Text style={localStyles.settingsText}>Support</Text>
-            </View>
-            <Icon.AntDesign
-              name={'right'}
-              size={onTablet ? 30 : 20}
-              color={colors.secondBackground}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.centerContent, localStyles.container]}
-            onPress={() => {
-              navigate('TERMS');
-            }}
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <View
-                style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
-              >
+              )
+            },
+            {
+              nav: () => navigate('TERMS'),
+              title: 'Terms of Use',
+              icon: (
                 <Icon.AntDesign
                   name={'form'}
                   size={onTablet ? 30 : 20}
                   color={colors.pianoteRed}
                 />
-              </View>
-              <Text style={localStyles.settingsText}>Terms of Use</Text>
-            </View>
-            <Icon.AntDesign
-              name={'right'}
-              size={onTablet ? 30 : 20}
-              color={colors.secondBackground}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.centerContent, localStyles.container]}
-            onPress={() => {
-              navigate('PRIVACYPOLICY');
-            }}
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <View
-                style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
-              >
+              )
+            },
+            {
+              nav: () => navigate('PRIVACYPOLICY'),
+              title: 'Privacy Policy',
+              icon: (
                 <Icon.FontAwesome
                   name={'shield'}
                   color={colors.pianoteRed}
                   size={onTablet ? 32.5 : 22.5}
                 />
-              </View>
-              <Text style={localStyles.settingsText}>Privacy Policy</Text>
-            </View>
-            <Icon.AntDesign
-              name={'right'}
-              size={onTablet ? 30 : 20}
-              color={colors.secondBackground}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => this.setState({ showLogOut: true })}
-            style={[styles.centerContent, localStyles.container]}
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <View
-                style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
-              >
+              )
+            },
+            {
+              nav: () => this.setState({ showLogOut: true }),
+              title: 'Log Out',
+              icon: (
                 <Icon.AntDesign
                   name={'poweroff'}
                   color={colors.pianoteRed}
                   size={onTablet ? 30 : 20}
                 />
+              )
+            }
+          ].map(item => (
+            <TouchableOpacity
+              style={[
+                styles.centerContent,
+                localStyles.container,
+                {
+                  borderTopWidth: 1,
+                  borderTopColor: '#445f73'
+                }
+              ]}
+              onPress={item.nav}
+            >
+              <View style={{ flexDirection: 'row' }}>
+                <View
+                  style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
+                >
+                  {item.icon}
+                </View>
+                <Text style={localStyles.settingsText}>{item.title}</Text>
               </View>
-              <Text style={localStyles.settingsText}>Log Out</Text>
-            </View>
-            <Icon.AntDesign
-              name={'right'}
-              size={onTablet ? 30 : 20}
-              color={colors.secondBackground}
-            />
-          </TouchableOpacity>
+              <Icon.AntDesign
+                name={'right'}
+                size={onTablet ? 30 : 20}
+                color={colors.secondBackground}
+              />
+            </TouchableOpacity>
+          ))}
           <Text style={[localStyles.settingsText, localStyles.appText]}>
             APP VERSION {DeviceInfo.getVersion()}
           </Text>
@@ -425,7 +346,6 @@ class Settings extends React.Component {
             </Text>
           )}
         </ScrollView>
-
         <Modal
           isVisible={this.state.showLogOut}
           style={[styles.centerContent, styles.modalContainer]}

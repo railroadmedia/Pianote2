@@ -14,7 +14,6 @@ import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import Back from '../../assets/img/svgs/back';
 import CheckEmail from '../../modals/CheckEmail.js';
-import ValidateEmail from '../../modals/ValidateEmail.js';
 import GradientFeature from '../../components/GradientFeature.js';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
@@ -194,13 +193,33 @@ export default class CreateAccount extends React.Component {
                 this.setState({ showValidateEmail: false })
               }
             >
-              <ValidateEmail
-                hideValidateEmail={() => {
-                  this.setState({
-                    showValidateEmail: false
-                  });
-                }}
-              />
+              <TouchableWithoutFeedback
+                style={[styles.container, styles.centerContent]}
+                onPress={() => this.setState({ showValidateEmail: false })}
+              >
+                <View style={[styles.container, styles.centerContent]}>
+                  <View style={localStyles.containerModal}>
+                    <Text style={[styles.modalHeaderText, localStyles.title]}>
+                      The email must be a valid {'\n'}email address.
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() =>
+                        this.setState({ showValidateEmail: false })
+                      }
+                      style={localStyles.tryAgain}
+                    >
+                      <Text
+                        style={[
+                          styles.modalCancelButtonText,
+                          localStyles.tryAgainText
+                        ]}
+                      >
+                        TRY AGAIN
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
             </Modal>
           </KeyboardAvoidingView>
         </SafeAreaView>
@@ -255,5 +274,33 @@ const localStyles = StyleSheet.create({
     borderRadius: 50,
     alignSelf: 'center',
     borderColor: '#fb1b2f'
+  },
+  containerModal: {
+    backgroundColor: 'white',
+    borderRadius: 15,
+    paddingBottom: 5,
+    paddingTop: 20,
+    backgroundColor: 'white'
+  },
+  title: {
+    paddingHorizontal: 20,
+    marginBottom: 10
+  },
+  loginContainer: {
+    borderRadius: 45,
+    backgroundColor: '#fb1b2f',
+    marginHorizontal: 20,
+    marginVertical: 5
+  },
+  loginText: {
+    color: 'white',
+    paddingVertical: 10
+  },
+  tryAgain: {
+    paddingHorizontal: 20,
+    marginVertical: 10
+  },
+  tryAgainText: {
+    color: '#fb1b2f'
   }
 });
