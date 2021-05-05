@@ -132,22 +132,14 @@ export default class PathOverview extends React.Component {
   };
 
   toggleMyList = id => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     if (id === this.state.id) {
-      if (this.state.isAddedToList) {
-        removeFromMyList(id);
-      } else {
-        addToMyList(id);
-      }
+      if (this.state.isAddedToList) removeFromMyList(id);
+      else addToMyList(id);
     } else {
       const lesson = this.state.items.find(f => f.id === id);
-      if (lesson.is_added_to_primary_playlist) {
-        removeFromMyList(id);
-      } else {
-        addToMyList(id);
-      }
+      if (lesson.is_added_to_primary_playlist) removeFromMyList(id);
+      else addToMyList(id);
     }
 
     this.setState(state => ({
@@ -165,14 +157,9 @@ export default class PathOverview extends React.Component {
   };
 
   toggleLike = () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    if (this.state.isLiked) {
-      unlikeContent(this.state.id);
-    } else {
-      likeContent(this.state.id);
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    if (this.state.isLiked) unlikeContent(this.state.id);
+    else likeContent(this.state.id);
     this.setState({
       isLiked: !this.state.isLiked,
       likeCount: this.state.isLiked

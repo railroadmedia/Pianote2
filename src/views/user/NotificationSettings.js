@@ -14,7 +14,7 @@ import Icon from '../../assets/icons.js';
 import { getUserData } from '../../services/UserDataAuth.js';
 import CustomSwitch from '../../components/CustomSwitch.js';
 import NavigationBar from '../../components/NavigationBar.js';
-import commonService from '../../services/common.service';
+import { changeNotificationSettings } from '../../services/notification.service';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';
@@ -28,16 +28,16 @@ export default class NotificationSettings extends React.Component {
     this.state = {
       notifications_summary_frequency_minutes: 0,
       notify_on_forum_followed_thread_reply: false,
+      notify_on_post_in_followed_forum_thread: false,
       notify_on_forum_post_like: false,
-      notify_on_forum_post_reply: false,
       notify_on_lesson_comment_like: false,
       notify_on_lesson_comment_reply: false,
-      notify_weekly_update: false,
       isLoading: true
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    console.log(await getUserData());
     getUserData().then(userData =>
       this.setState({
         notifications_summary_frequency_minutes:
@@ -45,41 +45,21 @@ export default class NotificationSettings extends React.Component {
         notify_on_forum_followed_thread_reply:
           userData?.notify_on_forum_followed_thread_reply,
         notify_on_forum_post_like: userData?.notify_on_forum_post_like,
-        notify_on_forum_post_reply: userData?.notify_on_forum_post_reply,
+        notify_on_post_in_followed_forum_thread:
+          userData?.notify_on_post_in_followed_forum_thread,
         notify_on_lesson_comment_like: userData?.notify_on_lesson_comment_like,
         notify_on_lesson_comment_reply:
           userData?.notify_on_lesson_comment_reply,
-        notify_weekly_update: userData?.notify_weekly_update,
         isLoading: false
       })
     );
   }
 
-  changeNotificationStatus = async () => {
+  changeNotificationStatus = async datum => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-
-    const body = {
-      data: {
-        type: 'user',
-        attributes: {
-          notifications_summary_frequency_minutes: this.state
-            .notifications_summary_frequency_minutes,
-          notify_on_forum_post_like: this.state.notify_on_forum_post_like,
-          notify_on_forum_post_reply: this.state.notify_on_forum_post_reply,
-          notify_on_lesson_comment_like: this.state
-            .notify_on_lesson_comment_like,
-          notify_on_lesson_comment_reply: this.state
-            .notify_on_lesson_comment_reply,
-          notify_weekly_update: this.state.notify_weekly_update
-        }
-      }
-    };
-
-    await commonService.tryCall(
-      `${commonService.rootUrl}/usora/api/profile/update`,
-      'POST',
-      body
-    );
+    const body = { data: { type: 'user', attributes: datum } };
+    changeNotificationSettings(body);
+    console.log(await getUserData());
   };
 
   render() {
@@ -133,76 +113,58 @@ export default class NotificationSettings extends React.Component {
                 <Text style={localStyles.noteTypeText}>Notification Types</Text>
               </View>
               <View style={localStyles.textContainer}>
-                <Text style={localStyles.text}>Weekly community updates</Text>
+                <Text style={localStyles.text}>Followed forum posts</Text>
                 <CustomSwitch
                   isClicked={this.state.notify_weekly_update}
-                  clicked={bool => {
-                    console.log('bool: ', bool),
-                      this.setState(
-                        {
-                          notify_weekly_update: bool
-                        },
-                        () => this.changeNotificationStatus()
-                      );
-                  }}
-                />
-              </View>
-
-              <View style={localStyles.textContainer}>
-                <Text style={localStyles.text}>Comment replies</Text>
-                <CustomSwitch
-                  isClicked={this.state.notify_on_lesson_comment_reply}
-                  clicked={bool => {
-                    this.setState(
-                      {
-                        notify_on_lesson_comment_reply: bool
-                      },
-                      () => this.changeNotificationStatus()
-                    );
-                  }}
+                  onClick={bool =>
+                    this.changeNotificationStatus({
+                      notify_weekly_update: bool
+                    })
+                  }
                 />
               </View>
               <View style={localStyles.textContainer}>
-                <Text style={localStyles.text}>Comment likes</Text>
+                <Text style={localStyles.text}>Followed forum replies</Text>
                 <CustomSwitch
-                  isClicked={this.state.notify_on_lesson_comment_like}
-                  clicked={bool => {
-                    this.setState(
-                      {
-                        notify_on_lesson_comment_like: bool
-                      },
-                      () => this.changeNotificationStatus()
-                    );
-                  }}
-                />
-              </View>
-
-              <View style={localStyles.textContainer}>
-                <Text style={localStyles.text}>Forum post replies</Text>
-                <CustomSwitch
-                  isClicked={this.state.notify_on_forum_post_reply}
-                  clicked={bool => {
-                    this.setState(
-                      {
-                        notify_on_forum_post_reply: bool
-                      },
-                      () => this.changeNotificationStatus()
-                    );
-                  }}
+                  isClicked={this.state.notify_on_forum_followed_thread_reply}
+                  onClick={bool =>
+                    this.changeNotificationStatus({
+                      notify_on_forum_followed_thread_reply: bool
+                    })
+                  }
                 />
               </View>
               <View style={localStyles.textContainer}>
                 <Text style={localStyles.text}>Forum post likes</Text>
                 <CustomSwitch
                   isClicked={this.state.notify_on_forum_post_like}
-                  clicked={bool => {
-                    this.setState(
-                      {
-                        notify_on_forum_post_like: bool
-                      },
-                      () => this.changeNotificationStatus()
-                    );
-                  }}
+                  onClick={bool =>
+                    this.changeNotificationStatus({
+                      notify_on_forum_post_like: bool
+                    })
+                  }
+                />
+              </View>
+              <View style={localStyles.textContainer}>
+                <Text style={localStyles.text}>Comment replies</Text>
+                <CustomSwitch
+                  isClicked={this.state.notify_on_lesson_comment_reply}
+                  onClick={bool =>
+                    this.changeNotificationStatus({
+                      notify_on_lesson_comment_reply: bool
+                    })
+                  }
+                />
+              </View>
+              <View style={localStyles.textContainer}>
+                <Text style={localStyles.text}>Comment likes</Text>
+                <CustomSwitch
+                  isClicked={this.state.notify_on_lesson_comment_like}
+                  onClick={bool =>
+                    this.changeNotificationStatus({
+                      notify_on_lesson_comment_like: bool
+                    })
+                  }
                 />
               </View>
               <View style={localStyles.border} />
@@ -211,7 +173,6 @@ export default class NotificationSettings extends React.Component {
                   Email Notification Frequency
                 </Text>
               </View>
-
               <View style={localStyles.textContainer}>
                 <Text style={localStyles.text}>Immediate</Text>
                 <TouchableOpacity
@@ -280,7 +241,7 @@ export default class NotificationSettings extends React.Component {
                 >
                   {this.state.notifications_summary_frequency_minutes ==
                     1440 && (
-                    <FontIcon
+                    <Icon.FontAwesome
                       name={'check'}
                       size={onTablet ? 25 : 20}
                       color={'white'}
@@ -288,7 +249,7 @@ export default class NotificationSettings extends React.Component {
                   )}
                   {this.state.notifications_summary_frequency_minutes !==
                     1440 && (
-                    <EntypoIcon
+                    <Icon.Entypo
                       name={'cross'}
                       size={onTablet ? 35 : 25}
                       color={'white'}
@@ -327,7 +288,7 @@ export default class NotificationSettings extends React.Component {
                   {(this.state.notifications_summary_frequency_minutes == 0 ||
                     this.state.notifications_summary_frequency_minutes ==
                       null) && (
-                    <FontIcon
+                    <Icon.FontAwesome
                       name={'check'}
                       size={onTablet ? 25 : 20}
                       color={'white'}
@@ -336,7 +297,7 @@ export default class NotificationSettings extends React.Component {
                   {this.state.notifications_summary_frequency_minutes !== 0 &&
                     this.state.notifications_summary_frequency_minutes !==
                       null && (
-                      <EntypoIcon
+                      <Icon.Entypo
                         name={'cross'}
                         size={onTablet ? 35 : 25}
                         color={'white'}

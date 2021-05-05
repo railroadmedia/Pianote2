@@ -99,7 +99,7 @@ export default class Profile extends React.Component {
         rank: userData?.xpRank,
         profileImage: userData?.avatarUrl,
         username: userData?.display_name,
-        memberSince: '',
+        memberSince: userData?.created_at,
         notifications_summary_frequency_minutes:
           userData?.notifications_summary_frequency_minutes,
         notify_on_forum_followed_thread_reply:

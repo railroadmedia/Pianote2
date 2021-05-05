@@ -23,9 +23,7 @@ export default class NavigationBar extends React.Component {
 
   componentDidMount = async () => {
     let profileImage = await AsyncStorage.getItem('profileURI');
-    this.setState({
-      profileImage: profileImage || ''
-    });
+    this.setState({ profileImage: profileImage || '' });
   };
 
   profile = () => {

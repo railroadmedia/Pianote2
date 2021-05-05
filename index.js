@@ -102,15 +102,15 @@ global.styles = require('Pianote2/src/assets/styles/styles.js');
 global.isPackOnly = false;
 global.fallbackThumb =
   'https://dmmior4id2ysr.cloudfront.net/assets/images/pianote_fallback_thumb.jpg';
-(global.backButtonSize = DeviceInfo.isTablet() ? 30 : 22.5),
-  (global.colors = {
-    mainBackground: '#00101d',
-    secondBackground: '#445f73',
-    thirdBackground: '#081826',
-    notificationColor: '#002038',
-    pianoteRed: '#fb1b2f',
-    pianoteGrey: '#6e777a'
-  });
+global.backButtonSize = DeviceInfo.isTablet() ? 30 : 22.5;
+global.colors = {
+  mainBackground: '#00101d',
+  secondBackground: '#445f73',
+  thirdBackground: '#081826',
+  notificationColor: '#002038',
+  pianoteRed: '#fb1b2f',
+  pianoteGrey: '#6e777a'
+};
 global.sizing = {
   descriptionText: onTablet ? 16 : 12,
   infoButtonSize: onTablet ? 22.5 : 17.5,

@@ -40,49 +40,41 @@ export default class ContentModal extends React.Component {
     };
   }
 
-  addToMyList = contentID => {
-    if (this.props.data.description !== 'TBD') {
+  toggleMyList = contentID => {
+    if (!this.state.isAddedToList) {
       this.props.addToMyList(contentID);
       this.setState({ isAddedToList: true });
       addToMyList(contentID);
+    } else {
+      this.props.removeFromMyList(contentID);
+      this.setState({ isAddedToList: false });
+      removeFromMyList(contentID);
     }
-  };
-
-  removeFromMyList = contentID => {
-    this.props.removeFromMyList(contentID);
-    this.setState({ isAddedToList: false });
-    removeFromMyList(contentID);
   };
 
   changeType = word => {
     word = word.replace(/[- )(]/g, ' ').split(' ');
     let string = '';
-
-    for (i in word) {
-      string = string + word[i] + ' ';
-    }
-
+    for (i in word) string = string + word[i] + ' ';
     return string;
   };
 
-  like = contentID => {
-    if (this.props.data.description !== 'TBD') {
+  toggleLike = contentID => {
+    if (!this.state.isLiked) {
       this.setState({
-        isLiked: !this.state.isLiked,
+        isLiked: true,
         like_count: Number(this.state.like_count) + 1
       });
       this.props.like(contentID);
       likeContent(contentID);
+    } else {
+      this.setState({
+        isLiked: false,
+        like_count: Number(this.state.like_count) - 1
+      });
+      this.props.like(contentID);
+      unlikeContent(contentID);
     }
-  };
-
-  unlike = contentID => {
-    this.setState({
-      isLiked: !this.state.isLiked,
-      like_count: Number(this.state.like_count) - 1
-    });
-    this.props.like(contentID);
-    unlikeContent(contentID);
   };
 
   render = () => {
@@ -156,11 +148,7 @@ export default class ContentModal extends React.Component {
             <View style={localStyles.button}>
               <TouchableOpacity
                 style={localStyles.likeContainer}
-                onPress={() => {
-                  this.state.isLiked
-                    ? this.unlike(this.state.id)
-                    : this.like(this.state.id);
-                }}
+                onPress={() => this.toggleLike(this.state.id)}
               >
                 <Icon.AntDesign
                   name={this.state.isLiked ? 'like1' : 'like2'}
@@ -172,11 +160,7 @@ export default class ContentModal extends React.Component {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.centerContent}
-                onPress={() => {
-                  this.state.isAddedToList
-                    ? this.removeFromMyList(this.state.id)
-                    : this.addToMyList(this.state.id);
-                }}
+                onPress={() => this.toggleMyList(this.state.id)}
               >
                 <Icon.AntDesign
                   size={sizing.myListButtonSize}

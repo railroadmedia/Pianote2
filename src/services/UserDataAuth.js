@@ -49,39 +49,12 @@ export async function getUserData() {
       // if received data, update data
       try {
         await AsyncStorage.multiSet([
-          ['totalXP', userData.totalXp?.toString()],
-          ['rank', userData.xpRank?.toString()],
-          ['userId', userData.id.toString()],
-          ['displayName', userData.display_name?.toString()],
-          ['profileURI', userData.profile_picture_url?.toString()],
-          ['joined', userData.created_at?.toString()],
-          [
-            'weeklyCommunityUpdatesClicked',
-            userData.notify_weekly_update?.toString()
-          ],
-          [
-            'commentRepliesClicked',
-            userData.notify_on_lesson_comment_reply?.toString()
-          ],
-          [
-            'commentLikesClicked',
-            userData.notify_on_lesson_comment_like?.toString()
-          ],
-          [
-            'forumPostRepliesClicked',
-            userData.notify_on_forum_post_reply?.toString()
-          ],
-          [
-            'forumPostLikesClicked',
-            userData.notify_on_forum_post_like?.toString()
-          ],
-          [
-            'notifications_summary_frequency_minutes',
-            userData.notify_weekly_update == null ||
-            userData.notify_weekly_update == ''
-              ? 'null'
-              : userData.notify_weekly_update?.toString()
-          ]
+          ['totalXP', userData?.totalXp?.toString()],
+          ['rank', userData?.xpRank?.toString()],
+          ['userId', userData?.id?.toString()],
+          ['displayName', userData?.display_name?.toString()],
+          ['profileURI', userData?.avatarUrl?.toString()],
+          ['joined', userData?.created_at?.toString()]
         ]);
       } catch (e) {}
       return userData;

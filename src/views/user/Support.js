@@ -166,7 +166,7 @@ const localStyles = StyleSheet.create({
   phoneEmailText: {
     fontFamily: 'OpenSans-Regular',
     fontSize: isTablet ? 18 : 14,
-    color: colors.secondBackground,
+    color: '#445f73',
     textAlign: 'center',
     padding: 10
   },

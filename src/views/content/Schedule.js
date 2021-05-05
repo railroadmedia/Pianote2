@@ -106,28 +106,20 @@ export default class Schedule extends React.Component {
       .catch(e => {});
   };
 
-  addToMyList = contentID => {
+  toggleMyList = contentID => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    for (i in this.state.items) {
-      if (this.state.items[i].id == contentID) {
-        let items = Object.assign([], this.state.items);
-        items[i].is_added_to_primary_playlist = true;
-        this.setState({ items });
-      }
-    }
-    addToMyList(contentID);
-  };
-
-  removeFromMyList = contentID => {
-    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    for (i in this.state.items) {
-      if (this.state.items[i].id == contentID) {
-        let items = Object.assign([], this.state.items);
-        items[i].is_added_to_primary_playlist = false;
-        this.setState({ items });
-      }
-    }
-    removeFromMyList(contentID);
+    this.setState(({ items }) => ({
+      items: items.map(item => {
+        if (item.id === contentID)
+          if (item.isAddedToList) removeFromMyList(contentID);
+          else addToMyList(contentID);
+        return {
+          ...item,
+          isAddedToList:
+            item.id === contentID ? !item.isAddedToList : item.isAddedToList
+        };
+      })
+    }));
   };
 
   render() {
