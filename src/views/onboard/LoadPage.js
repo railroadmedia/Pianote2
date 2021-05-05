@@ -51,7 +51,6 @@ const cache = [
   'cacheQuickTips',
   'cacheStudentFocus'
 ];
-const cacheV2 = ['courses'];
 class LoadPage extends React.Component {
   static contextType = NetworkContext;
 
@@ -159,7 +158,7 @@ class LoadPage extends React.Component {
         .then(stream => this.props[c]?.(JSON.parse(stream)))
         .catch(() => {});
     });
-    cacheV2.map(getCache);
+    getCache();
   };
 
   async handleNoConnection() {

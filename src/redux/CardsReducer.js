@@ -1,4 +1,7 @@
+import RNFetchBlob from 'rn-fetch-blob';
+
 const cardsReducer = (state = null, { type, card }) => {
+  console.log(state);
   switch (type) {
     case 'toggleMyListCard': {
       let c = { ...card, isAddedToList: !card.isAddedToList };

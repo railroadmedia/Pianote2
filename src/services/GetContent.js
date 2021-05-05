@@ -126,23 +126,24 @@ export async function getStudentFocusTypes() {
   );
 }
 
-let appCache = {};
-export function getCache(path) {
-  if (appCache[path]) return appCache[path];
+let appCache;
+export function getCache() {
+  if (appCache) return appCache;
   let { dirs } = RNFetchBlob.fs;
   RNFetchBlob.fs
-    .readFile(`${dirs.LibraryDir || dirs.DocumentDir}/cache/${path}`, 'utf8')
-    .then(stream => (appCache[path] = JSON.parse(stream)))
+    .readFile(`${dirs.LibraryDir || dirs.DocumentDir}/cache`, 'utf8')
+    .then(stream => (appCache = JSON.parse(stream)))
     .catch(() => {});
   return {};
 }
 
 export function setCache(path, cache) {
+  if (!appCache) appCache = {};
   appCache[path] = cache;
   let { dirs } = RNFetchBlob.fs;
   RNFetchBlob.fs.writeFile(
-    `${dirs.LibraryDir || dirs.DocumentDir}/cache/${path}`,
-    JSON.stringify(cache),
+    `${dirs.LibraryDir || dirs.DocumentDir}/cache`,
+    JSON.stringify(appCache),
     'utf8'
   );
 }

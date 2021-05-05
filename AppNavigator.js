@@ -52,6 +52,7 @@ import Profile from './src/views/user/Profile';
 import Support from './src/views/user/Support';
 import Terms from './src/views/user/Terms';
 import NetworkProvider from './src/context/NetworkProvider';
+import Catalogue from './src/views/content/Catalogue';
 
 const Stack = createStackNavigator();
 
@@ -152,7 +153,7 @@ export default () => (
           name='STUDENTFOCUSCATALOG'
           component={StudentFocusCatalog}
         />
-        <Stack.Screen name='STUDENTFOCUSSHOW' component={StudentFocusShow} />
+        {/* <Stack.Screen name='STUDENTFOCUSSHOW' component={StudentFocusShow} /> */}
         <Stack.Screen name='VIDEOPLAYERSONG' component={VideoPlayerSong} />
         <Stack.Screen name='METHODLEVEL' component={MethodLevel} />
         <Stack.Screen name='LIVE' component={Live} />
@@ -160,7 +161,7 @@ export default () => (
         <Stack.Screen name='METHOD' component={Method} />
         <Stack.Screen name='FOUNDATIONS' component={Foundations} />
         <Stack.Screen name='PATHOVERVIEW' component={PathOverview} />
-        <Stack.Screen name='SONGCATALOG' component={SongCatalog} />
+        {/* <Stack.Screen name='SONGCATALOG' component={SongCatalog} /> */}
         <Stack.Screen
           name='VIDEOPLAYER'
           component={VideoPlayer}
@@ -173,6 +174,9 @@ export default () => (
         <Stack.Screen name='LESSONS' component={Lessons} />
         <Stack.Screen name='SEEALL' component={SeeAll} />
         <Stack.Screen name='COURSE' component={Course} />
+        <Stack.Screen name='QuickTips' component={Catalogue} />
+        <Stack.Screen name='StudentFocus' component={Catalogue} />
+        <Stack.Screen name='Songs' component={Catalogue} />
         <Stack.Screen name='MYLIST' component={MyList} />
         <Stack.Screen name='SEARCH' component={Search} />
         <Stack.Screen name='PACKS' component={Packs} />
