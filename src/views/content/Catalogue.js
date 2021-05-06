@@ -5,8 +5,13 @@ import {
   RefreshControl,
   ActivityIndicator,
   FlatList,
-  ImageBackground
+  ImageBackground,
+  Image,
+  StyleSheet
 } from 'react-native';
+
+import LinearGradient from 'react-native-linear-gradient';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
@@ -22,6 +27,9 @@ import {
   currentScene
 } from '../../../AppNavigator';
 
+let styles;
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
 export default class Catalogue extends React.Component {
   page = 1;
   scene = currentScene();
@@ -29,6 +37,7 @@ export default class Catalogue extends React.Component {
 
   constructor(props) {
     super(props);
+    styles = setStyles(props.theme === 'light');
     this.state = {
       loading: true,
       loadingMore: false,
@@ -60,20 +69,83 @@ export default class Catalogue extends React.Component {
     <Card data={item} type={onTablet ? '' : 'row'} onNavigate={navigate} />
   );
 
-  renderFLHeader = () =>
-    this.scene === 'HOME' ? (
+  renderFLHeader = () => {
+    let {
+      method: { completed, started }
+    } = this.data;
+    return this.scene === 'HOME' ? (
       <ImageBackground
         resizeMode={'cover'}
         style={{
           width: '100%',
-          aspectRatio: onTablet ? (this.context.isLandscape ? 2.5 : 1.8) : 1,
-          justifyContent: 'flex-end'
+          aspectRatio: onTablet ? (this.context.isLandscape ? 2.5 : 1.8) : 1
         }}
         source={require('Pianote2/src/assets/img/imgs/lisamethod.png')}
-      ></ImageBackground>
+      >
+        <LinearGradient
+          colors={[
+            'transparent',
+            'transparent',
+            'rgba(80, 15, 25, 0.4)',
+            'rgba(80, 15, 25, 0.98)'
+          ]}
+          style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}
+        >
+          <Image
+            style={{ height: '20%', aspectRatio: 801 / 286 }}
+            source={require('../../assets/img/imgs/pianote-method.png')}
+            resizeMode={'contain'}
+          />
+          <View style={styles.headerBtnsContainer}>
+            {[
+              {
+                text: completed ? 'RESET' : started ? 'CONTINUE' : 'START',
+                icon: completed ? 'replay' : 'play',
+                action: () =>
+                  completed
+                    ? ''
+                    : navigate('VIDEOPLAYER', {
+                        url: ''
+                      })
+              },
+              {
+                text: 'MORE INFO',
+                icon: 'arrow-right',
+                moreInfo: true,
+                action: () =>
+                  navigate('METHOD', {
+                    methodIsStarted: started,
+                    methodIsCompleted: completed
+                  })
+              }
+            ].map(to => (
+              <TouchableOpacity
+                key={to.text}
+                onPress={to.action}
+                style={[
+                  styles.headerBtns,
+                  {
+                    backgroundColor: to.moreInfo ? '' : '#fb1b2f',
+                    padding: to.moreInfo ? 3 : 5,
+                    borderWidth: to.moreInfo ? 2 : 0
+                  }
+                ]}
+              >
+                <Icon name={to.icon} size={30} color={'white'} />
+                <Text
+                  style={{ color: 'white', fontFamily: 'RobotoCondensed-Bold' }}
+                >
+                  {to.text}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </LinearGradient>
+      </ImageBackground>
     ) : (
       <></>
     );
+  };
 
   loadMore = () => {};
 
@@ -93,10 +165,7 @@ export default class Catalogue extends React.Component {
         {loading ? (
           <ActivityIndicator
             size='large'
-            style={{
-              backgroundColor,
-              flex: 1
-            }}
+            style={{ backgroundColor, flex: 1 }}
             color={'#6e777a'}
           />
         ) : (
@@ -137,3 +206,25 @@ export default class Catalogue extends React.Component {
     );
   }
 }
+let setStyles = isLight =>
+  StyleSheet.create({
+    headerBtnsContainer: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+      width: '100%',
+      maxWidth: 600,
+      marginBottom: '5%'
+    },
+    headerBtns: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      minWidth: '40%',
+      justifyContent: 'center',
+      borderRadius: 99,
+      margin: 10,
+      marginLeft: 0,
+      borderColor: 'white'
+    }
+  });
