@@ -15,7 +15,7 @@ import {
 import Filters_V2 from '../../components/Filters_V2';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
-import RowCard from '../../components/Cards';
+import RowCard from '../../components/Card';
 import Sort from '../../components/Sort';
 
 import {

@@ -53,6 +53,8 @@ import Support from './src/views/user/Support';
 import Terms from './src/views/user/Terms';
 import NetworkProvider from './src/context/NetworkProvider';
 import Catalogue from './src/views/content/Catalogue';
+import OrientationProvider from './src/context/OrientationProvider';
+import CombinedContexts from './src/context/CombinedContexts';
 
 const Stack = createStackNavigator();
 
@@ -99,98 +101,108 @@ const timingAnim = {
 
 export default () => (
   <NetworkProvider>
-    <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator
-        headerMode={'screen'}
-        mode={'card'}
-        keyboardHandlingEnabled={false}
-        screenOptions={{
-          headerShown: false,
-          gestureEnabled: true,
-          gestureResponseDistance: {
-            horizontal: Dimensions.get('window').width
-          },
-          transitionSpec: { open: timingAnim, close: timingAnim }
-        }}
-      >
-        {/* onboard */}
-        <Stack.Screen name='LOADPAGE' component={LoadPage} />
-        <Stack.Screen name='LOGIN' component={Login} />
-        <Stack.Screen name='MEMBERSHIPEXPIRED' component={MembershipExpired} />
-        <Stack.Screen name='LOGINCREDENTIALS' component={LoginCredentials} />
-        <Stack.Screen name='SUPPORTSIGNUP' component={SupportSignUp} />
-        <Stack.Screen name='FORGOTPASSWORD' component={ForgotPassword} />
-        <Stack.Screen name='CREATEACCOUNT2' component={CreateAccount2} />
-        <Stack.Screen
-          name='CREATEACCOUNT3'
-          component={CreateAccount3}
-          options={{
-            gestureEnabled: false
-          }}
-        />
-        <Stack.Screen name='CREATEACCOUNT' component={CreateAccount} />
-        <Stack.Screen name='NEWMEMBERSHIP' component={NewMembership} />
-        <Stack.Screen name='GETRESTARTED' component={GetRestarted} />
-        <Stack.Screen name='WELCOMEBACK' component={WelcomeBack} />
-        <Stack.Screen name='RESETPASSWORD' component={ResetPassword} />
-        {/* user */}
-        <Stack.Screen
-          name='NOTIFICATIONSETTINGS'
-          component={NotificationSettings}
-        />
-        <Stack.Screen
-          name='PROFILESETTINGS'
-          component={ProfileSettings}
-          options={{ gestureEnabled: false }}
-        />
-        <Stack.Screen name='PRIVACYPOLICY' component={PrivacyPolicy} />
-        <Stack.Screen name='SETTINGS' component={Settings} />
-        <Stack.Screen name='PROFILE' component={Profile} />
-        <Stack.Screen name='SUPPORT' component={Support} />
-        <Stack.Screen name='TERMS' component={Terms} />
-        {/* content */}
-        <Stack.Screen
-          name='STUDENTFOCUSCATALOG'
-          component={StudentFocusCatalog}
-        />
-        {/* <Stack.Screen name='STUDENTFOCUSSHOW' component={StudentFocusShow} /> */}
-        <Stack.Screen name='VIDEOPLAYERSONG' component={VideoPlayerSong} />
-        <Stack.Screen name='METHODLEVEL' component={MethodLevel} />
-        <Stack.Screen name='LIVE' component={Live} />
-        <Stack.Screen name='SCHEDULE' component={Schedule} />
-        <Stack.Screen name='METHOD' component={Method} />
-        <Stack.Screen name='FOUNDATIONS' component={Foundations} />
-        <Stack.Screen name='PATHOVERVIEW' component={PathOverview} />
-        {/* <Stack.Screen name='SONGCATALOG' component={SongCatalog} /> */}
-        <Stack.Screen
-          name='VIDEOPLAYER'
-          component={VideoPlayer}
-          options={{
-            gestureEnabled: false
-          }}
-        />
-        <Stack.Screen name='SINGLEPACK' component={SinglePack} />
-        <Stack.Screen name='DOWNLOADS' component={Downloads} />
-        {/* <Stack.Screen name='LESSONS' component={Lessons} /> */}
-        <Stack.Screen name='SEEALL' component={SeeAll} />
-        <Stack.Screen name='COURSE' component={Course} />
-        <Stack.Screen name='MYLIST' component={MyList} />
-        <Stack.Screen name='SEARCH' component={Search} />
-        <Stack.Screen name='PACKS' component={Packs} />
-        <Stack.Screen
-          name='Forum'
-          component={Forum}
-          options={{ gestureEnabled: false }}
-        />
+    <OrientationProvider>
+      <CombinedContexts>
+        <NavigationContainer ref={navigationRef}>
+          <Stack.Navigator
+            headerMode={'screen'}
+            mode={'card'}
+            keyboardHandlingEnabled={false}
+            screenOptions={{
+              headerShown: false,
+              gestureEnabled: true,
+              gestureResponseDistance: {
+                horizontal: Dimensions.get('window').width
+              },
+              transitionSpec: { open: timingAnim, close: timingAnim }
+            }}
+          >
+            {/* onboard */}
+            <Stack.Screen name='LOADPAGE' component={LoadPage} />
+            <Stack.Screen name='LOGIN' component={Login} />
+            <Stack.Screen
+              name='MEMBERSHIPEXPIRED'
+              component={MembershipExpired}
+            />
+            <Stack.Screen
+              name='LOGINCREDENTIALS'
+              component={LoginCredentials}
+            />
+            <Stack.Screen name='SUPPORTSIGNUP' component={SupportSignUp} />
+            <Stack.Screen name='FORGOTPASSWORD' component={ForgotPassword} />
+            <Stack.Screen name='CREATEACCOUNT2' component={CreateAccount2} />
+            <Stack.Screen
+              name='CREATEACCOUNT3'
+              component={CreateAccount3}
+              options={{
+                gestureEnabled: false
+              }}
+            />
+            <Stack.Screen name='CREATEACCOUNT' component={CreateAccount} />
+            <Stack.Screen name='NEWMEMBERSHIP' component={NewMembership} />
+            <Stack.Screen name='GETRESTARTED' component={GetRestarted} />
+            <Stack.Screen name='WELCOMEBACK' component={WelcomeBack} />
+            <Stack.Screen name='RESETPASSWORD' component={ResetPassword} />
+            {/* user */}
+            <Stack.Screen
+              name='NOTIFICATIONSETTINGS'
+              component={NotificationSettings}
+            />
+            <Stack.Screen
+              name='PROFILESETTINGS'
+              component={ProfileSettings}
+              options={{ gestureEnabled: false }}
+            />
+            <Stack.Screen name='PRIVACYPOLICY' component={PrivacyPolicy} />
+            <Stack.Screen name='SETTINGS' component={Settings} />
+            <Stack.Screen name='PROFILE' component={Profile} />
+            <Stack.Screen name='SUPPORT' component={Support} />
+            <Stack.Screen name='TERMS' component={Terms} />
+            {/* content */}
+            <Stack.Screen
+              name='STUDENTFOCUSCATALOG'
+              component={StudentFocusCatalog}
+            />
+            {/* <Stack.Screen name='STUDENTFOCUSSHOW' component={StudentFocusShow} /> */}
+            <Stack.Screen name='VIDEOPLAYERSONG' component={VideoPlayerSong} />
+            <Stack.Screen name='METHODLEVEL' component={MethodLevel} />
+            <Stack.Screen name='LIVE' component={Live} />
+            <Stack.Screen name='SCHEDULE' component={Schedule} />
+            <Stack.Screen name='METHOD' component={Method} />
+            <Stack.Screen name='FOUNDATIONS' component={Foundations} />
+            <Stack.Screen name='PATHOVERVIEW' component={PathOverview} />
+            {/* <Stack.Screen name='SONGCATALOG' component={SongCatalog} /> */}
+            <Stack.Screen
+              name='VIDEOPLAYER'
+              component={VideoPlayer}
+              options={{
+                gestureEnabled: false
+              }}
+            />
+            <Stack.Screen name='SINGLEPACK' component={SinglePack} />
+            <Stack.Screen name='DOWNLOADS' component={Downloads} />
+            {/* <Stack.Screen name='HOME' component={Lessons} /> */}
+            <Stack.Screen name='SEEALL' component={SeeAll} />
+            <Stack.Screen name='COURSE' component={Course} />
+            <Stack.Screen name='MYLIST' component={MyList} />
+            <Stack.Screen name='SEARCH' component={Search} />
+            <Stack.Screen name='PACKS' component={Packs} />
+            <Stack.Screen
+              name='Forum'
+              component={Forum}
+              options={{ gestureEnabled: false }}
+            />
 
-        <Stack.Screen name='HOME' component={Catalogue} />
-        <Stack.Screen name='COURSES' component={Catalogue} />
-        <Stack.Screen name='SONGS' component={Catalogue} />
-        <Stack.Screen name='QUICKTIPS' component={Catalogue} />
-        <Stack.Screen name='STUDENTFOCUS' component={Catalogue} />
-        <Stack.Screen name='PODCASTS' component={Catalogue} />
-        <Stack.Screen name='BOOTCAMPS' component={Catalogue} />
-      </Stack.Navigator>
-    </NavigationContainer>
+            <Stack.Screen name='HOME' component={Catalogue} />
+            <Stack.Screen name='COURSES' component={Catalogue} />
+            <Stack.Screen name='SONGS' component={Catalogue} />
+            <Stack.Screen name='QUICKTIPS' component={Catalogue} />
+            <Stack.Screen name='STUDENTFOCUS' component={Catalogue} />
+            <Stack.Screen name='PODCASTS' component={Catalogue} />
+            <Stack.Screen name='BOOTCAMPS' component={Catalogue} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </CombinedContexts>
+    </OrientationProvider>
   </NetworkProvider>
 );

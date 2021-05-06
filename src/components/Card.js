@@ -16,12 +16,12 @@ import {
 } from '../services/UserActions';
 import contentService from '../services/content.service';
 
-import { NetworkContext } from '../context/NetworkProvider';
+import { Contexts } from '../context/CombinedContexts';
 
 import { toggleMyList, toggleLike } from '../redux/CardsActions';
 
-class RowCard extends React.Component {
-  static contextType = NetworkContext;
+class Card extends React.Component {
+  static contextType = Contexts;
 
   constructor(props) {
     super(props);
@@ -33,22 +33,22 @@ class RowCard extends React.Component {
 
   addToCalendar = () => {
     this.setState({ calendarModalVisible: false });
-    let { title, publishedOn } = this.props;
+    let { title, published_on } = this.props.data;
     AddCalendarEvent.presentEventCreatingDialog({
-      endDate: new Date(publishedOn),
-      startDate: new Date(publishedOn),
+      endDate: new Date(published_on),
+      startDate: new Date(published_on),
       title: title
     }).catch(e => {});
   };
 
   toggleMyList = () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    let { id, isAddedToList } = this.props;
-    isAddedToList ? removeFromMyList(id) : addToMyList(id);
-    this.props.toggleMyList(this.props);
+    let { id, is_added_to_primary_playlist } = this.props.data;
+    is_added_to_primary_playlist ? removeFromMyList(id) : addToMyList(id);
+    this.props.toggleMyList?.();
   };
 
-  navigate = () => this.props.onNavigate?.(this.props);
+  navigate = () => this.props.onNavigate?.();
 
   toggleDetails = () =>
     this.setState(({ detailsModalVisible }) => ({
@@ -64,24 +64,41 @@ class RowCard extends React.Component {
 
   toggleLike = () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    let { id, isLiked } = this.props;
+    let { id, isLiked } = this.props.data;
     isLiked ? unlikeContent(id) : likeContent(id);
-    this.props.toggleLike(this.props);
+    this.props.toggleLike?.();
   };
+
+  get imageUrl() {
+    let { thumbnail_url, published_on } = this.props.data;
+    if (
+      thumbnail_url?.includes('var/mobile') ||
+      thumbnail_url?.includes('data/user')
+    )
+      return thumbnail_url;
+    if (thumbnail_url?.includes('http')) {
+      return `https://cdn.musora.com/image/fetch/w_350,ar_${
+        this.props.type === 'square' ? '1' : '16:9'
+      },fl_lossy,q_auto:eco,c_fill,g_face${
+        new Date(published_on) > new Date() ? ',e_grayscale' : ''
+      }/${thumbnail_url}`;
+    }
+    return 'https://dmmior4id2ysr.cloudfront.net/assets/images/pianote_fallback_thumb.jpg';
+  }
 
   render() {
     let {
-      props,
+      props: { data, type },
       state: { detailsModalVisible, calendarModalVisible }
     } = this;
     return (
       <>
         <TouchableOpacity
-          disabled={new Date(props.publishedOn) > new Date()}
+          disabled={new Date(data.published_on) > new Date()}
           onLongPress={this.toggleDetails}
           onPress={this.navigate}
           style={{
-            flexDirection: props.compact ? 'column' : 'row',
+            flexDirection: type === 'row' ? 'row' : 'column',
             padding: 10,
             paddingBottom: 0,
             paddingRight: 0,
@@ -92,14 +109,14 @@ class RowCard extends React.Component {
             style={{
               aspectRatio: 16 / 9,
               borderRadius: 7.5,
-              width: props.compact ? '100%' : '30%'
+              width: type === 'row' ? '30%' : '100%'
             }}
             resizeMode='cover'
-            source={{ uri: props.thumbnail }}
+            source={{ uri: this.imageUrl }}
           />
           <View style={{ flexDirection: 'row', flex: 1 }}>
             <View
-              style={{ paddingHorizontal: props.compact ? 0 : 10, flex: 1 }}
+              style={{ paddingHorizontal: type === 'row' ? 10 : 0, flex: 1 }}
             >
               <Text
                 numberOfLines={1}
@@ -111,24 +128,26 @@ class RowCard extends React.Component {
                   flexDirection: 'column'
                 }}
               >
-                {props.title}
+                {data.title}
               </Text>
               <Text
                 numberOfLines={1}
                 style={{
+                  textTransform: 'capitalize',
                   fontFamily: 'OpenSans-Regular',
                   color: colors.secondBackground,
                   fontSize: onTablet ? 18 : 14
                 }}
               >
-                {`Course / ${props.artist}`}
+                {data.type}
+                {data.artist?.replace(/(.{0})/, '$1 / ')}
               </Text>
             </View>
             <TouchableOpacity
-              style={{ padding: 10, paddingRight: props.compact ? 0 : 10 }}
+              style={{ padding: 10, paddingRight: type === 'row' ? 10 : 0 }}
               onPress={
                 this[
-                  new Date(props.publishedOn) > new Date()
+                  new Date(data.published_on) > new Date()
                     ? 'toggleAddToCalendar'
                     : 'toggleMyList'
                 ]
@@ -142,9 +161,9 @@ class RowCard extends React.Component {
                 }}
                 size={onTablet ? 28 : 22}
                 name={
-                  new Date(props.publishedOn) > new Date()
+                  new Date(data.published_on) > new Date()
                     ? 'calendar'
-                    : props.isAddedToList
+                    : data.is_added_to_primary_playlist
                     ? 'close'
                     : 'plus'
                 }
@@ -185,7 +204,7 @@ class RowCard extends React.Component {
                   width: '100%'
                 }}
                 resizeMode='cover'
-                source={{ uri: props.thumbnail }}
+                source={{ uri: this.imageUrl }}
               />
               <Text
                 style={{
@@ -195,7 +214,7 @@ class RowCard extends React.Component {
                   textAlign: 'center'
                 }}
               >
-                {props.title}
+                {data.title}
               </Text>
               <Text
                 style={{
@@ -206,7 +225,8 @@ class RowCard extends React.Component {
                   textTransform: 'capitalize'
                 }}
               >
-                {props.type} / {props.artist}
+                {data.type}
+                {data.artist?.replace(/(.{0})/, '$1 / ')}
               </Text>
               <Text
                 style={{
@@ -215,7 +235,7 @@ class RowCard extends React.Component {
                   textAlign: 'center'
                 }}
               >
-                {props.description}
+                {data.description}
               </Text>
               <View
                 style={{
@@ -231,7 +251,7 @@ class RowCard extends React.Component {
                     textAlign: 'center'
                   }}
                 >
-                  {props.lesson_count}
+                  {data.lesson_count}
                   {`\n`}
                   <Text
                     style={{
@@ -249,7 +269,7 @@ class RowCard extends React.Component {
                     textAlign: 'center'
                   }}
                 >
-                  {props.xp}
+                  {data.xp}
                   {`\n`}
                   <Text
                     style={{
@@ -278,15 +298,15 @@ class RowCard extends React.Component {
                       height: onTablet ? 28 : 22
                     }}
                     size={onTablet ? 28 : 22}
-                    name={props.isLiked ? 'like1' : 'like2'}
+                    name={data.isLiked ? 'like1' : 'like2'}
                   />
-                  <Text>{props.like_count}</Text>
+                  <Text>{data.like_count}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={{ alignItems: 'center', flex: 1 }}
                   onPress={
                     this[
-                      new Date(props.publishedOn) > new Date()
+                      new Date(data.published_on) > new Date()
                         ? 'toggleAddToCalendar'
                         : 'toggleMyList'
                     ]
@@ -300,9 +320,9 @@ class RowCard extends React.Component {
                     }}
                     size={onTablet ? 28 : 22}
                     name={
-                      new Date(props.publishedOn) > new Date()
+                      new Date(data.published_on) > new Date()
                         ? 'calendar'
-                        : props.isAddedToList
+                        : data.is_added_to_primary_playlist
                         ? 'close'
                         : 'plus'
                     }
@@ -311,8 +331,8 @@ class RowCard extends React.Component {
                 </TouchableOpacity>
                 <Download_V2
                   entity={{
-                    id: props.id,
-                    content: contentService.getContent(props.id, true)
+                    id: data.id,
+                    content: contentService.getContent(data.id, true)
                   }}
                   styles={{
                     iconSize: {
@@ -427,9 +447,9 @@ class RowCard extends React.Component {
 }
 
 const mapStateToProps = ({ cards }, props) => {
-  return { ...props, ...cards?.[props.id] };
+  return { data: { ...props.data, ...cards?.[props.id] } };
 };
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ toggleMyList, toggleLike }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(RowCard);
+export default connect(mapStateToProps, mapDispatchToProps)(Card);
