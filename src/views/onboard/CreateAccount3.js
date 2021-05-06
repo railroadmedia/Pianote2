@@ -32,6 +32,7 @@ import { isNameUnique, avatarUpload } from '../../services/UserDataAuth';
 
 var data = new FormData();
 
+const isTablet = DeviceInfo.isTablet();
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
@@ -214,83 +215,41 @@ export default class CreateAccount3 extends React.Component {
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView
           horizontal={true}
-          ref={ref => {
-            this.myScroll = ref;
-          }}
-          keyboardShouldPersistTaps='handled'
+          ref={ref => (this.myScroll = ref)}
+          keyboardShouldPersistTaps={'handled'}
           pagingEnabled={true}
           scrollEnabled={this.state.canScroll}
+          contentContainerStyle={{ flexGrow: 1 }}
           onMomentumScrollEnd={e => {
             this.setState({ pageNum: e });
             this.changePage(e);
           }}
-          contentContainerStyle={{ flexGrow: 1 }}
         >
           <View style={styles.centerContent}>
             <View style={[styles.centerContent, localStyles.container1]}>
               <TouchableOpacity
                 onPress={() => this.changePage(this.state.pageNum - 1)}
-                style={{
-                  paddingLeft: 10,
-                  flex: 1
-                }}
               />
               <Text
                 style={[
                   styles.modalHeaderText,
-                  {
-                    fontSize: onTablet ? 36 : 24,
-                    fontFamily: 'OpenSans-Bold'
-                  }
+                  { fontSize: onTablet ? 36 : 24 }
                 ]}
               >
                 Create Account
               </Text>
             </View>
-            <View
-              style={{
-                height: '90%',
-                width: width,
-                zIndex: 3
-              }}
-            >
+            <View style={{ height: '90%', width: width, zIndex: 3 }}>
               <KeyboardAvoidingView
                 behavior={isiOS ? 'height' : ''}
                 style={{ flex: 1, alignItems: 'center' }}
               >
-                <View
-                  style={{
-                    marginBottom: 2,
-                    flexDirection: 'row',
-                    paddingLeft: 20,
-                    marginTop: '45%'
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Bold',
-                      fontSize: DeviceInfo.isTablet() ? 24 : 16,
-                      textAlign: 'left',
-                      paddingVertical: 10
-                    }}
-                  >
+                <View style={localStyles.addDislayNameContainer}>
+                  <Text style={localStyles.addDislayNameText}>
                     Add a display name
                   </Text>
-                  <View style={{ flex: 1 }} />
                 </View>
-                <View
-                  style={{
-                    height: '7%',
-                    width: '95%',
-                    borderRadius: 100,
-                    backgroundColor: 'white',
-                    justifyContent: 'center',
-                    paddingLeft: onTablet ? 20 : 10,
-                    flexDirection: 'row',
-                    borderWidth: 1,
-                    borderColor: '#c2c2c2'
-                  }}
-                >
+                <View style={localStyles.displayNameTextInputContainer}>
                   <TextInput
                     autoCorrect={false}
                     placeholderTextColor={'grey'}
@@ -309,44 +268,33 @@ export default class CreateAccount3 extends React.Component {
                     }}
                   />
                 </View>
-                <View
-                  style={{
-                    width: width,
-                    paddingLeft: 20,
-                    marginTop: 10
-                  }}
+                <Text
+                  style={[
+                    localStyles.descriptionText,
+                    {
+                      fontSize: sizing.descriptionText
+                    }
+                  ]}
                 >
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      fontSize: sizing.descriptionText,
-                      textAlign: 'left'
-                    }}
-                  >
-                    This appears on your Pianote profile and comments.
-                  </Text>
-                </View>
+                  This appears on your Pianote profile and comments.
+                </Text>
                 <View
-                  style={{
-                    height: '6%',
-                    width: '40%',
-                    marginTop: 50,
-                    borderRadius: 100,
-                    borderColor: '#fb1b2f',
-                    backgroundColor:
-                      this.state.displayName.length == 0
-                        ? 'transparent'
-                        : '#fb1b2f',
-                    borderWidth: 1
-                  }}
+                  style={[
+                    localStyles.setName,
+                    {
+                      backgroundColor:
+                        this.state.displayName.length == 0
+                          ? 'transparent'
+                          : '#fb1b2f'
+                    }
+                  ]}
                 >
                   <TouchableOpacity
                     onPress={() => this.setName()}
                     style={[
                       styles.centerContent,
                       {
-                        height: '100%',
-                        width: '100%',
+                        flex: 1,
                         flexDirection: 'row'
                       }
                     ]}
@@ -365,103 +313,63 @@ export default class CreateAccount3 extends React.Component {
                     </Text>
                   </TouchableOpacity>
                 </View>
-                <View
-                  style={{
-                    height: '3.5%',
-                    marginTop: 20,
-                    marginBottom: 30,
-                    flexDirection: 'row'
-                  }}
-                >
-                  <View style={{ justifyContent: 'center' }}>
-                    <View style={{ flexDirection: 'row' }}>
-                      <View
-                        style={{
-                          height: 10,
-                          width: 10,
-                          borderRadius: 100,
+                <View style={localStyles.dotsContainerName}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <View
+                      style={[
+                        localStyles.dot,
+                        {
                           backgroundColor:
-                            this.state.page == 1 ? '#fb1b2f' : 'transparent',
-                          borderWidth: 1,
-                          borderColor: '#fb1b2f'
-                        }}
-                      />
-                      <View
-                        style={{
-                          width: 10
-                        }}
-                      />
-                      <View
-                        style={{
-                          height: 10,
-                          width: 10,
-                          borderRadius: 100,
+                            this.state.page == 1 ? '#fb1b2f' : 'transparent'
+                        }
+                      ]}
+                    />
+                    <View
+                      style={[
+                        localStyles.dot,
+                        {
                           backgroundColor:
-                            this.state.page == 2 ? '#fb1b2f' : 'transparent',
-                          borderWidth: 1,
-                          borderColor: '#fb1b2f'
-                        }}
-                      />
-                      <View
-                        style={{
-                          width: 10
-                        }}
-                      />
-                      <View
-                        style={{
-                          height: 10,
-                          width: 10,
-                          borderRadius: 100,
+                            this.state.page == 2 ? '#fb1b2f' : 'transparent'
+                        }
+                      ]}
+                    />
+                    <View
+                      style={[
+                        localStyles.dot,
+                        {
                           backgroundColor:
-                            this.state.page == 3 ? '#fb1b2f' : 'transparent',
-                          borderWidth: 1,
-                          borderColor: '#fb1b2f'
-                        }}
-                      />
-                      <View
-                        style={{
-                          width: 10
-                        }}
-                      />
-                      <View
-                        style={{
-                          height: 10,
-                          width: 10,
-                          borderRadius: 100,
+                            this.state.page == 3 ? '#fb1b2f' : 'transparent'
+                        }
+                      ]}
+                    />
+                    <View
+                      style={[
+                        localStyles.dot,
+                        {
                           backgroundColor:
-                            this.state.page == 4 ? '#fb1b2f' : 'transparent',
-                          borderWidth: 1,
-                          borderColor: '#fb1b2f'
-                        }}
-                      />
-                    </View>
+                            this.state.page == 4 ? '#fb1b2f' : 'transparent'
+                        }
+                      ]}
+                    />
                   </View>
                 </View>
               </KeyboardAvoidingView>
             </View>
             <DisplayName
               isVisible={this.state.showDisplayName}
-              hideDisplayName={() => {
-                this.setState({
-                  showDisplayName: false
-                });
-              }}
+              hideDisplayName={() => this.setState({ showDisplayName: false })}
             />
           </View>
           <View style={styles.centerContent}>
             <View style={{ flexDirection: 'row' }}>
               <TouchableOpacity
+                style={{ paddingLeft: 15, flex: 1, justifyContent: 'center' }}
                 onPress={() => {
                   this.myScroll.scrollTo({
                     x: 0,
                     y: 0,
                     animated: true
                   });
-                }}
-                style={{
-                  paddingLeft: 15,
-                  flex: 1,
-                  justifyContent: 'center'
                 }}
               >
                 <Back
@@ -474,8 +382,7 @@ export default class CreateAccount3 extends React.Component {
                 style={[
                   styles.modalHeaderText,
                   {
-                    fontSize: onTablet ? 36 : 24,
-                    fontFamily: 'OpenSans-Bold'
+                    fontSize: onTablet ? 36 : 24
                   }
                 ]}
               >
@@ -483,90 +390,35 @@ export default class CreateAccount3 extends React.Component {
               </Text>
               <View style={{ flex: 1, paddingRight: 15 }} />
             </View>
-            <View
-              style={{
-                bottom: 0,
-                height: '90%',
-                width: width,
-                zIndex: 3,
-                elevation: 3
-              }}
-            >
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: 'center'
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    paddingVertical: 10,
-                    marginTop: '20%'
-                  }}
-                >
+            <View style={localStyles.profileContainer}>
+              <View style={{ alignItems: 'center' }}>
+                <View style={localStyles.profileTextContainer}>
                   <Text
                     style={{
-                      fontFamily: 'OpenSans-Bold',
                       fontSize: sizing.titleViewLesson,
+                      fontFamily: 'OpenSans-Bold',
                       textAlign: 'center'
                     }}
                   >
                     Add a profile picture
                   </Text>
                 </View>
-                <View
-                  style={{
-                    height: '22%',
-                    width: '100%',
-                    marginTop: 10,
-                    flexDirection: 'row',
-                    justifyContent: 'center'
-                  }}
-                >
+                <View style={localStyles.image}>
                   <TouchableOpacity
                     onPress={() => this.chooseImage()}
-                    style={[
-                      styles.centerContent,
-                      {
-                        height: height * 0.17125,
-                        width: height * 0.17125,
-                        borderRadius: 500,
-                        backgroundColor: '#fb1b2f'
-                      }
-                    ]}
+                    style={[styles.centerContent, localStyles.imageButton]}
                   >
                     {this.state.showImage && (
                       <FastImage
-                        style={{
-                          position: 'absolute',
-                          height: '100%',
-                          width: '100%',
-                          borderRadius: 500,
-                          zIndex: 5
-                        }}
-                        source={{
-                          uri: this.state.imageURI
-                        }}
+                        style={localStyles.fastimage}
+                        source={{ uri: this.state.imageURI }}
                         resizeMode={FastImage.resizeMode.cover}
                       />
                     )}
                     {this.state.showImage && (
                       <TouchableOpacity
                         onPress={() => this.clearImage()}
-                        style={[
-                          styles.centerContent,
-                          {
-                            position: 'absolute',
-                            height: '22.5%',
-                            width: '22.5%',
-                            right: '4%',
-                            top: '4%',
-                            backgroundColor: '#0090d3',
-                            borderRadius: 500,
-                            zIndex: 5
-                          }
-                        ]}
+                        style={[styles.centerContent, localStyles.x]}
                       >
                         <X fill={'white'} height={'50%'} width={'50%'} />
                       </TouchableOpacity>
@@ -578,38 +430,23 @@ export default class CreateAccount3 extends React.Component {
                     />
                   </TouchableOpacity>
                 </View>
-                <View
-                  style={{
-                    width: width,
-                    paddingTop: 20,
-                    paddingBottom: 40
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      fontSize: sizing.descriptionText,
-                      textAlign: 'center'
-                    }}
-                  >
-                    This appears on your Pianote profile and comments.
-                  </Text>
-                </View>
+                <Text style={localStyles.profileImageText}>
+                  This appears on your Pianote profile and comments.
+                </Text>
                 <View
                   style={{
                     height: '6%',
                     width: '40%',
                     borderRadius: 50,
                     borderColor: '#fb1b2f',
+                    borderWidth: 1,
                     backgroundColor:
                       this.state.imageURI.length == 0
                         ? 'transparent'
-                        : '#fb1b2f',
-                    borderWidth: 1
+                        : '#fb1b2f'
                   }}
                 >
                   <TouchableOpacity
-                    underlayColor={'transparent'}
                     onPress={() => {
                       this.myScroll.scrollTo({
                         x: width * 2,
@@ -624,8 +461,7 @@ export default class CreateAccount3 extends React.Component {
                     style={[
                       styles.centerContent,
                       {
-                        height: '100%',
-                        width: '100%',
+                        flex: 1,
                         flexDirection: 'row'
                       }
                     ]}
@@ -642,84 +478,49 @@ export default class CreateAccount3 extends React.Component {
                     </Text>
                   </TouchableOpacity>
                 </View>
-                <View
-                  style={{
-                    height: '3.5%',
-                    marginTop: '50%',
-                    flexDirection: 'row',
-                    marginBottom: 30
-                  }}
-                >
-                  <View style={{ justifyContent: 'center' }}>
-                    <View style={{ flexDirection: 'row' }}>
-                      <View
-                        style={{
-                          height: 10,
-                          width: 10,
-                          borderRadius: 100,
+                <View style={localStyles.dotContainer}>
+                  <View
+                    style={{ flexDirection: 'row', justifyContent: 'center' }}
+                  >
+                    <View
+                      style={[
+                        localStyles.dot,
+                        {
                           backgroundColor:
-                            this.state.page == 1 ? '#fb1b2f' : 'transparent',
-                          borderWidth: 1,
-                          borderColor: '#fb1b2f'
-                        }}
-                      />
-                      <View
-                        style={{
-                          width: 10
-                        }}
-                      />
-                      <View
-                        style={{
-                          height: 10,
-                          width: 10,
-                          borderRadius: 100,
+                            this.state.page == 1 ? '#fb1b2f' : 'transparent'
+                        }
+                      ]}
+                    />
+                    <View
+                      style={[
+                        localStyles.dot,
+                        {
                           backgroundColor:
-                            this.state.page == 2 ? '#fb1b2f' : 'transparent',
-                          borderWidth: 1,
-                          borderColor: '#fb1b2f'
-                        }}
-                      />
-                      <View
-                        style={{
-                          width: 10
-                        }}
-                      />
-                      <View
-                        style={{
-                          height: 10,
-                          width: 10,
-                          borderRadius: 100,
+                            this.state.page == 2 ? '#fb1b2f' : 'transparent'
+                        }
+                      ]}
+                    />
+                    <View
+                      style={[
+                        localStyles.dot,
+                        {
                           backgroundColor:
-                            this.state.page == 3 ? '#fb1b2f' : 'transparent',
-                          borderWidth: 1,
-                          borderColor: '#fb1b2f'
-                        }}
-                      />
-                      <View
-                        style={{
-                          width: 10
-                        }}
-                      />
-                      <View
-                        style={{
-                          height: 10,
-                          width: 10,
-                          borderRadius: 100,
+                            this.state.page == 3 ? '#fb1b2f' : 'transparent'
+                        }
+                      ]}
+                    />
+                    <View
+                      style={[
+                        localStyles.dot,
+                        {
                           backgroundColor:
-                            this.state.page == 4 ? '#fb1b2f' : 'transparent',
-                          borderWidth: 1,
-                          borderColor: '#fb1b2f'
-                        }}
-                      />
-                    </View>
+                            this.state.page == 4 ? '#fb1b2f' : 'transparent'
+                        }
+                      ]}
+                    />
                   </View>
                 </View>
-                <View
-                  style={{
-                    width: width,
-                    alignItems: 'center'
-                  }}
-                >
+                <View style={{ width: width, alignItems: 'center' }}>
                   <TouchableOpacity onPress={() => this.createAccount()}>
                     <Text
                       style={{
@@ -734,96 +535,49 @@ export default class CreateAccount3 extends React.Component {
                 </View>
               </View>
             </View>
-
             <ProfileImage
               isVisible={this.state.showProfileImage}
-              hideProfileImage={() => {
-                this.setState({
-                  showProfileImage: false
-                });
-              }}
+              hideProfileImage={() =>
+                this.setState({ showProfileImage: false })
+              }
             />
             <DisplayName
               isVisible={this.state.showDisplayName}
-              hideDisplayName={() => {
-                this.setState({
-                  showDisplayName: false
-                });
-              }}
+              hideDisplayName={() => this.setState({ showDisplayName: false })}
             />
           </View>
-          <View
-            style={{
-              height: height,
-              width: width,
-              zIndex: 2
-            }}
-          >
+          <View style={localStyles.reviewContainer}>
             <Text
-              style={{
-                fontFamily: 'OpenSans-Bold',
-                textAlign: 'center',
-                fontSize: sizing.myListButtonSize
-              }}
+              style={[
+                localStyles.headerReview,
+                { fontSize: sizing.myListButtonSize }
+              ]}
             >
               Here's what is included{'\n'}in the Pianote App!
             </Text>
             <View
               style={{
-                height: '4%',
-                borderBottomColor: '#dbdbdb',
-                borderBottomWidth: 0.75
-              }}
-            />
-            <View
-              style={{
                 height: '15%',
-                width: '100%',
+                width: width,
                 alignSelf: 'stretch',
                 flexDirection: 'row',
                 borderBottomColor: '#dbdbdb',
-                borderBottomWidth: 0.75
+                borderBottomWidth: 0.75,
+                justifyContent: 'center'
               }}
             >
-              <View style={{ flex: 0.3 }}>
-                <View style={{ flex: 1 }} />
-                <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      flexDirection: 'row'
-                    }
-                  ]}
-                >
-                  <View style={{ flex: 1 }} />
-                  <View
-                    style={[
-                      styles.centerContent,
-                      {
-                        width: width * 0.15,
-                        height: width * 0.15,
-                        padding: 30,
-                        borderRadius: 200,
-                        backgroundColor: '#fb1b2f'
-                      }
-                    ]}
-                  >
+              <View style={{ flex: 0.3, justifyContent: 'center' }}>
+                <View style={[styles.centerContent, { flexDirection: 'row' }]}>
+                  <View style={[styles.centerContent, localStyles.circle]}>
                     <LearningPaths
                       height={width * 0.1}
                       width={200}
                       fill={'white'}
                     />
                   </View>
-                  <View style={{ flex: 1 }} />
                 </View>
-                <View style={{ flex: 1 }} />
               </View>
-              <View
-                style={{
-                  flex: 0.7
-                }}
-              >
-                <View style={{ flex: 1 }} />
+              <View style={{ flex: 0.7, justifyContent: 'center' }}>
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Bold',
@@ -832,16 +586,9 @@ export default class CreateAccount3 extends React.Component {
                 >
                   Learning Path
                 </Text>
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: onTablet ? 20 : 16,
-                    marginTop: 5
-                  }}
-                >
+                <Text style={localStyles.reviewText}>
                   Guided lessons covering{'\n'}every topic along the way.
                 </Text>
-                <View style={{ flex: 1 }} />
               </View>
             </View>
             <View
@@ -854,40 +601,14 @@ export default class CreateAccount3 extends React.Component {
                 borderBottomWidth: 0.75
               }}
             >
-              <View style={{ flex: 0.3 }}>
-                <View style={{ flex: 1 }} />
-                <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      flexDirection: 'row'
-                    }
-                  ]}
-                >
-                  <View style={{ flex: 1 }} />
-                  <View
-                    style={[
-                      styles.centerContent,
-                      {
-                        width: width * 0.15,
-                        height: width * 0.15,
-                        borderRadius: 200,
-                        backgroundColor: '#fb1b2f'
-                      }
-                    ]}
-                  >
+              <View style={{ flex: 0.3, justifyContent: 'center' }}>
+                <View style={[styles.centerContent, { flexDirection: 'row' }]}>
+                  <View style={[styles.centerContent, localStyles.circle]}>
                     <Courses height={width * 0.07} width={200} fill={'white'} />
                   </View>
-                  <View style={{ flex: 1 }} />
                 </View>
-                <View style={{ flex: 1 }} />
               </View>
-              <View
-                style={{
-                  flex: 0.7
-                }}
-              >
-                <View style={{ flex: 1 }} />
+              <View style={{ flex: 0.7, justifyContent: 'center' }}>
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Bold',
@@ -905,7 +626,6 @@ export default class CreateAccount3 extends React.Component {
                 >
                   Series of short lessons{'\n'}based on a single topic.
                 </Text>
-                <View style={{ flex: 1 }} />
               </View>
             </View>
             <View
@@ -918,40 +638,14 @@ export default class CreateAccount3 extends React.Component {
                 borderBottomWidth: 0.75
               }}
             >
-              <View style={{ flex: 0.3 }}>
-                <View style={{ flex: 1 }} />
-                <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      flexDirection: 'row'
-                    }
-                  ]}
-                >
-                  <View style={{ flex: 1 }} />
-                  <View
-                    style={[
-                      styles.centerContent,
-                      {
-                        width: width * 0.15,
-                        height: width * 0.15,
-                        borderRadius: 200,
-                        backgroundColor: '#fb1b2f'
-                      }
-                    ]}
-                  >
+              <View style={{ flex: 0.3, justifyContent: 'center' }}>
+                <View style={[styles.centerContent, { flexDirection: 'row' }]}>
+                  <View style={[styles.centerContent, localStyles.circle]}>
                     <Songs height={width * 0.085} width={200} fill={'white'} />
                   </View>
-                  <View style={{ flex: 1 }} />
                 </View>
-                <View style={{ flex: 1 }} />
               </View>
-              <View
-                style={{
-                  flex: 0.7
-                }}
-              >
-                <View style={{ flex: 1 }} />
+              <View style={{ flex: 0.7, justifyContent: 'center' }}>
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Bold',
@@ -969,7 +663,6 @@ export default class CreateAccount3 extends React.Component {
                 >
                   Famous songs with note-{'\n'}for-note transcriptions.
                 </Text>
-                <View style={{ flex: 1 }} />
               </View>
             </View>
             <View
@@ -982,40 +675,14 @@ export default class CreateAccount3 extends React.Component {
                 borderBottomWidth: 0.75
               }}
             >
-              <View style={{ flex: 0.3 }}>
-                <View style={{ flex: 1 }} />
-                <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      flexDirection: 'row'
-                    }
-                  ]}
-                >
-                  <View style={{ flex: 1 }} />
-                  <View
-                    style={[
-                      styles.centerContent,
-                      {
-                        width: width * 0.15,
-                        height: width * 0.15,
-                        borderRadius: 200,
-                        backgroundColor: '#fb1b2f'
-                      }
-                    ]}
-                  >
+              <View style={{ flex: 0.3, justifyContent: 'center' }}>
+                <View style={[styles.centerContent, { flexDirection: 'row' }]}>
+                  <View style={[styles.centerContent, localStyles.circle]}>
                     <Support height={width * 0.1} width={200} fill={'white'} />
                   </View>
-                  <View style={{ flex: 1 }} />
                 </View>
-                <View style={{ flex: 1 }} />
               </View>
-              <View
-                style={{
-                  flex: 0.7
-                }}
-              >
-                <View style={{ flex: 1 }} />
+              <View style={{ flex: 0.7, justifyContent: 'center' }}>
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Bold',
@@ -1033,81 +700,54 @@ export default class CreateAccount3 extends React.Component {
                 >
                   Get personal support{'\n'}from real piano teachers.
                 </Text>
-                <View style={{ flex: 1 }} />
               </View>
             </View>
             <View
               style={{
                 height: '3.5%',
                 marginTop: '5%',
-                flexDirection: 'row'
+                flexDirection: 'row',
+                justifyContent: 'center'
               }}
             >
-              <View style={{ flex: 1 }} />
-              <View style={{ justifyContent: 'center' }}>
-                <View style={{ flexDirection: 'row' }}>
-                  <View
-                    style={{
-                      height: 10,
-                      width: 10,
-                      borderRadius: 100,
+              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                <View
+                  style={[
+                    localStyles.dot,
+                    {
                       backgroundColor:
-                        this.state.page == 1 ? '#fb1b2f' : 'transparent',
-                      borderWidth: 1,
-                      borderColor: '#fb1b2f'
-                    }}
-                  />
-                  <View
-                    style={{
-                      width: 10
-                    }}
-                  />
-                  <View
-                    style={{
-                      height: 10,
-                      width: 10,
-                      borderRadius: 100,
+                        this.state.page == 1 ? '#fb1b2f' : 'transparent'
+                    }
+                  ]}
+                />
+                <View
+                  style={[
+                    localStyles.dot,
+                    {
                       backgroundColor:
-                        this.state.page == 2 ? '#fb1b2f' : 'transparent',
-                      borderWidth: 1,
-                      borderColor: '#fb1b2f'
-                    }}
-                  />
-                  <View
-                    style={{
-                      width: 10
-                    }}
-                  />
-                  <View
-                    style={{
-                      height: 10,
-                      width: 10,
-                      borderRadius: 100,
+                        this.state.page == 2 ? '#fb1b2f' : 'transparent'
+                    }
+                  ]}
+                />
+                <View
+                  style={[
+                    localStyles.dot,
+                    {
                       backgroundColor:
-                        this.state.page == 3 ? '#fb1b2f' : 'transparent',
-                      borderWidth: 1,
-                      borderColor: '#fb1b2f'
-                    }}
-                  />
-                  <View
-                    style={{
-                      width: 10
-                    }}
-                  />
-                  <View
-                    style={{
-                      height: 10,
-                      width: 10,
-                      borderRadius: 100,
+                        this.state.page == 3 ? '#fb1b2f' : 'transparent'
+                    }
+                  ]}
+                />
+                <View
+                  style={[
+                    localStyles.dot,
+                    {
                       backgroundColor:
-                        this.state.page == 4 ? '#fb1b2f' : 'transparent',
-                      borderWidth: 1,
-                      borderColor: '#fb1b2f'
-                    }}
-                  />
-                </View>
+                        this.state.page == 4 ? '#fb1b2f' : 'transparent'
+                    }
+                  ]}
+                />
               </View>
-              <View style={{ flex: 1 }} />
             </View>
             <View
               style={{
@@ -1167,8 +807,12 @@ export default class CreateAccount3 extends React.Component {
                 }
               ]}
             >
-              <View style={[styles.centerContent, { flexDirection: 'row' }]}>
-                <View style={{ flex: 1 }} />
+              <View
+                style={[
+                  styles.centerContent,
+                  { flexDirection: 'row', alignItems: 'center' }
+                ]}
+              >
                 <FastImage
                   style={{
                     height: '17%',
@@ -1179,11 +823,11 @@ export default class CreateAccount3 extends React.Component {
                   source={require('../../../src/assets/img/imgs/pianote-method-logo.png')}
                   resizeMode={FastImage.resizeMode.contain}
                 />
-                <View style={{ flex: 1 }} />
               </View>
-              <View style={{ flexDirection: 'row', marginTop: 10 }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <FastImage
                   style={{
+                    marginTop: 10,
                     height: (onTablet ? 0.275 : 0.225) * height,
                     width: width * 0.85,
                     borderRadius: 10,
@@ -1218,74 +862,50 @@ export default class CreateAccount3 extends React.Component {
               style={{
                 height: '3.5%',
                 marginTop: '3%',
-                flexDirection: 'row'
+                flexDirection: 'row',
+                justifyContent: 'center'
               }}
             >
-              <View style={{ flex: 1 }} />
               <View style={{ justifyContent: 'center' }}>
                 <View style={{ flexDirection: 'row' }}>
                   <View
-                    style={{
-                      height: 10,
-                      width: 10,
-                      borderRadius: 100,
-                      backgroundColor:
-                        this.state.page == 1 ? '#fb1b2f' : 'transparent',
-                      borderWidth: 1,
-                      borderColor: '#fb1b2f'
-                    }}
+                    style={[
+                      localStyles.dot,
+                      {
+                        backgroundColor:
+                          this.state.page == 1 ? '#fb1b2f' : 'transparent'
+                      }
+                    ]}
                   />
                   <View
-                    style={{
-                      width: 10
-                    }}
+                    style={[
+                      localStyles.dot,
+                      {
+                        backgroundColor:
+                          this.state.page == 2 ? '#fb1b2f' : 'transparent'
+                      }
+                    ]}
                   />
                   <View
-                    style={{
-                      height: 10,
-                      width: 10,
-                      borderRadius: 100,
-                      backgroundColor:
-                        this.state.page == 2 ? '#fb1b2f' : 'transparent',
-                      borderWidth: 1,
-                      borderColor: '#fb1b2f'
-                    }}
+                    style={[
+                      localStyles.dot,
+                      {
+                        backgroundColor:
+                          this.state.page == 3 ? '#fb1b2f' : 'transparent'
+                      }
+                    ]}
                   />
                   <View
-                    style={{
-                      width: 10
-                    }}
-                  />
-                  <View
-                    style={{
-                      height: 10,
-                      width: 10,
-                      borderRadius: 100,
-                      backgroundColor:
-                        this.state.page == 3 ? '#fb1b2f' : 'transparent',
-                      borderWidth: 1,
-                      borderColor: '#fb1b2f'
-                    }}
-                  />
-                  <View
-                    style={{
-                      width: 10
-                    }}
-                  />
-                  <View
-                    style={{
-                      height: 10,
-                      width: 10,
-                      borderRadius: 100,
-                      backgroundColor:
-                        this.state.page == 4 ? '#fb1b2f' : 'transparent',
-                      borderWidth: 1,
-                      borderColor: '#fb1b2f'
-                    }}
+                    style={[
+                      localStyles.dot,
+                      {
+                        backgroundColor:
+                          this.state.page == 4 ? '#fb1b2f' : 'transparent'
+                      }
+                    ]}
                   />
                 </View>
               </View>
-              <View style={{ flex: 1 }} />
             </View>
             <View
               style={{
@@ -1294,10 +914,10 @@ export default class CreateAccount3 extends React.Component {
                 alignItems: 'center',
                 flexDirection: 'row',
                 marginTop: 15,
-                borderRadius: 30
+                borderRadius: 30,
+                justifyContent: 'center'
               }}
             >
-              <View style={{ flex: 1 }} />
               <TouchableOpacity
                 onPress={() => {
                   this.createAccount();
@@ -1315,14 +935,13 @@ export default class CreateAccount3 extends React.Component {
                 <Text
                   style={{
                     fontFamily: 'RobotoCondensed-Bold',
-                    fontSize: onTablet ? 16 : 12,
+                    fontSize: onTablet ? 20 : 14,
                     color: 'white'
                   }}
                 >
                   GET STARTED
                 </Text>
               </TouchableOpacity>
-              <View style={{ flex: 1 }} />
             </View>
           </View>
         </ScrollView>
@@ -1339,5 +958,137 @@ const localStyles = StyleSheet.create({
     margin: 20,
     height: 200,
     width: '80%'
+  },
+  addDislayNameContainer: {
+    marginBottom: 2,
+    flexDirection: 'row',
+    paddingLeft: 20,
+    marginTop: '45%'
+  },
+  addDislayNameText: {
+    fontFamily: 'OpenSans-Bold',
+    fontSize: isTablet ? 24 : 16,
+    textAlign: 'left',
+    width: '100%',
+    paddingVertical: 10
+  },
+  displayNameTextInputContainer: {
+    height: '7%',
+    width: '95%',
+    borderRadius: 100,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    paddingLeft: isTablet ? 20 : 10,
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: '#c2c2c2'
+  },
+  descriptionText: {
+    fontFamily: 'OpenSans-Regular',
+    textAlign: 'left',
+    width: width,
+    paddingLeft: 20,
+    marginTop: 10
+  },
+  setName: {
+    height: '6%',
+    width: '40%',
+    marginTop: 50,
+    borderRadius: 100,
+    borderColor: '#fb1b2f',
+    borderWidth: 1
+  },
+  dotsContainerName: {
+    height: '3.5%',
+    marginTop: 20,
+    marginBottom: 30,
+    flexDirection: 'row'
+  },
+  dot: {
+    height: 10,
+    width: 10,
+    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: '#fb1b2f',
+    marginHorizontal: 5
+  },
+  profileContainer: {
+    bottom: 0,
+    height: '90%',
+    width: width,
+    zIndex: 3,
+    elevation: 3
+  },
+  profileTextContainer: {
+    flexDirection: 'row',
+    paddingVertical: 10,
+    marginTop: '20%'
+  },
+  image: {
+    height: '22%',
+    width: '100%',
+    marginTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  imageButton: {
+    height: height * 0.17125,
+    width: height * 0.17125,
+    borderRadius: 500,
+    backgroundColor: '#fb1b2f'
+  },
+  fastimage: {
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    borderRadius: 500,
+    zIndex: 5
+  },
+  x: {
+    position: 'absolute',
+    height: '22.5%',
+    width: '22.5%',
+    right: '4%',
+    top: '4%',
+    backgroundColor: '#0090d3',
+    borderRadius: 500,
+    zIndex: 5
+  },
+  profileImageText: {
+    width: width,
+    paddingVertical: 30,
+    fontFamily: 'OpenSans-Regular',
+    fontSize: sizing.descriptionText,
+    textAlign: 'center'
+  },
+  dotContainer: {
+    height: '3.5%',
+    marginTop: '50%',
+    flexDirection: 'row',
+    marginBottom: 30
+  },
+  reviewContainer: {
+    height: height,
+    width: width,
+    zIndex: 2
+  },
+  reviewText: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: isTablet ? 20 : 16,
+    marginTop: 5
+  },
+  circle: {
+    width: width * 0.15,
+    height: width * 0.15,
+    padding: 30,
+    borderRadius: 200,
+    backgroundColor: '#fb1b2f'
+  },
+  headerReview: {
+    fontFamily: 'OpenSans-Bold',
+    textAlign: 'center',
+    marginBottom: '4%',
+    borderBottomColor: '#dbdbdb',
+    borderBottomWidth: 0.75
   }
 });
