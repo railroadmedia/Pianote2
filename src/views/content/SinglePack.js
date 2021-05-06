@@ -683,31 +683,17 @@ export default class SinglePack extends React.Component {
             }}
           />
         </Modal>
-
-        <Modal
-          key={'restartCourse'}
+        <RestartCourse
           isVisible={this.state.showRestartCourse}
-          style={{
-            margin: 0,
-            flex: 1
-          }}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
           onBackButtonPress={() => this.setState({ showRestartCourse: false })}
-        >
-          <RestartCourse
-            hideRestartCourse={() => {
-              this.setState({
-                showRestartCourse: false
-              });
-            }}
-            type='pack'
-            onRestart={() => this.resetProgress()}
-          />
-        </Modal>
+          hideRestartCourse={() => {
+            this.setState({
+              showRestartCourse: false
+            });
+          }}
+          type='pack'
+          onRestart={() => this.resetProgress()}
+        />
       </SafeAreaView>
     );
   }

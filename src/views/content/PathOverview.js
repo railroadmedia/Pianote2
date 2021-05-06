@@ -827,26 +827,17 @@ export default class PathOverview extends React.Component {
             isMethod={isMethod}
           />
         )}
-        <Modal
+        <RestartCourse
           isVisible={this.state.showRestartCourse}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
           onBackButtonPress={() => this.setState({ showRestartCourse: false })}
-        >
-          <RestartCourse
-            hideRestartCourse={() => {
-              this.setState({
-                showRestartCourse: false
-              });
-            }}
-            type={this.state.type}
-            onRestart={this.onRestartCourse}
-          />
-        </Modal>
+          hideRestartCourse={() => {
+            this.setState({
+              showRestartCourse: false
+            });
+          }}
+          type={this.state.type}
+          onRestart={this.onRestartCourse}
+        />
         <NavigationBar
           currentPage={'LessonsPathOverview'}
           isMethod={isMethod}

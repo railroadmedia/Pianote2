@@ -1209,26 +1209,17 @@ class Lessons extends React.Component {
             color={'white'}
           />
         )}
-        <Modal
+        <RestartCourse
           isVisible={this.state.showRestartCourse}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
           onBackButtonPress={() => this.setState({ showRestartCourse: false })}
-        >
-          <RestartCourse
-            hideRestartCourse={() =>
-              this.setState({
-                showRestartCourse: false
-              })
-            }
-            type='method'
-            onRestart={() => this.onRestartMethod()}
-          />
-        </Modal>
+          hideRestartCourse={() =>
+            this.setState({
+              showRestartCourse: false
+            })
+          }
+          type='method'
+          onRestart={() => this.onRestartMethod()}
+        />
         <Modal
           isVisible={this.state.showLive}
           style={styles.modalContainer}

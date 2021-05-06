@@ -309,26 +309,17 @@ class Packs extends React.Component {
           )}
         />
         <NavigationBar currentPage={'PACKS'} />
-        <Modal
+        <RestartCourse
           isVisible={this.state.showRestartCourse}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
           onBackButtonPress={() => this.setState({ showRestartCourse: false })}
-        >
-          <RestartCourse
-            hideRestartCourse={() => {
-              this.setState({
-                showRestartCourse: false
-              });
-            }}
-            type='pack'
-            onRestart={() => this.onRestartPack()}
-          />
-        </Modal>
+          hideRestartCourse={() => {
+            this.setState({
+              showRestartCourse: false
+            });
+          }}
+          type='pack'
+          onRestart={() => this.onRestartPack()}
+        />
       </View>
     );
   }

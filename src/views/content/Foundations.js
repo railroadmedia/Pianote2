@@ -425,26 +425,15 @@ export default class Foundations extends React.Component {
             />
           </View>
         </ScrollView>
-        <Modal
-          isVisible={this.state.showRestartCourse}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
+        <RestartCourse
           onBackButtonPress={() => this.setState({ showRestartCourse: false })}
-        >
-          <RestartCourse
-            hideRestartCourse={() => {
-              this.setState({
-                showRestartCourse: false
-              });
-            }}
-            type='method'
-            onRestart={() => this.onRestartMethod()}
-          />
-        </Modal>
+          isVisible={this.state.showRestartCourse}
+          hideRestartCourse={() => {
+            this.setState({ showRestartCourse: false });
+          }}
+          type='method'
+          onRestart={() => this.onRestartMethod()}
+        />
         {!this.state.isLoadingAll && this.state.nextLesson && (
           <NextVideo
             item={this.state.nextLesson}

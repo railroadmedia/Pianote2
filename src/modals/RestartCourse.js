@@ -7,6 +7,7 @@ import {
   StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
+import Modal from 'react-native-modal';
 
 export default class RestartCourse extends React.Component {
   changeType = word => {
@@ -19,54 +20,67 @@ export default class RestartCourse extends React.Component {
   render = () => {
     const { type } = this.props;
     return (
-      <TouchableWithoutFeedback
-        onPress={() => this.props.hideRestartCourse()}
-        style={styles.container}
+      <Modal
+        isVisible={this.props.isVisible}
+        style={styles.modalContainer}
+        animation={'slideInUp'}
+        animationInTiming={250}
+        animationOutTiming={250}
+        coverScreen={true}
+        hasBackdrop={true}
       >
-        <View style={[styles.centerContent, styles.container]}>
-          <View style={localStyles.container}>
-            <Text
-              style={[styles.modalHeaderText, { textTransform: 'capitalize' }]}
-            >
-              Restart{' '}
-              {type == 'method'
-                ? 'method'
-                : 'this ' + this.changeType(type).toLocaleLowerCase()}
-              ?
-            </Text>
-            <Text
-              style={[
-                styles.modalBodyText,
-                localStyles.descriptionText,
-                { textTransform: 'capitalize' }
-              ]}
-            >
-              Take{' '}
-              {type == 'method'
-                ? 'method '
-                : 'this ' + this.changeType(type).toLocaleLowerCase()}
-              again as a refresher, or just to make sure you've got the concepts
-              nailed! This will remove the XP you've earned.
-            </Text>
-            <TouchableOpacity
-              style={[styles.centerContent, localStyles.restartContainer]}
-              onPress={() => this.props.onRestart()}
-            >
-              <Text style={[styles.modalButtonText, localStyles.restartText]}>
-                RESTART {this.changeType(type).toUpperCase()}
+        <TouchableWithoutFeedback
+          onPress={() => this.props.hideRestartCourse()}
+          style={styles.container}
+        >
+          <View style={[styles.centerContent, styles.container]}>
+            <View style={localStyles.container}>
+              <Text
+                style={[
+                  styles.modalHeaderText,
+                  { textTransform: 'capitalize' }
+                ]}
+              >
+                Restart{' '}
+                {type == 'method'
+                  ? 'method'
+                  : 'this ' + this.changeType(type).toLocaleLowerCase()}
+                ?
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={localStyles.cancelContainer}
-              onPress={() => this.props.hideRestartCourse()}
-            >
-              <Text style={[styles.modalButtonText, localStyles.cancelText]}>
-                CANCEL
+              <Text
+                style={[
+                  styles.modalBodyText,
+                  localStyles.descriptionText,
+                  { textTransform: 'capitalize' }
+                ]}
+              >
+                Take{' '}
+                {type == 'method'
+                  ? 'method '
+                  : 'this ' + this.changeType(type).toLocaleLowerCase()}
+                again as a refresher, or just to make sure you've got the
+                concepts nailed! This will remove the XP you've earned.
               </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.centerContent, localStyles.restartContainer]}
+                onPress={() => this.props.onRestart()}
+              >
+                <Text style={[styles.modalButtonText, localStyles.restartText]}>
+                  RESTART {this.changeType(type).toUpperCase()}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={localStyles.cancelContainer}
+                onPress={() => this.props.hideRestartCourse()}
+              >
+                <Text style={[styles.modalButtonText, localStyles.cancelText]}>
+                  CANCEL
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </Modal>
     );
   };
 }

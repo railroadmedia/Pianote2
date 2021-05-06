@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  StyleSheet
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 
 export default class ProfileImage extends React.Component {
@@ -20,34 +14,31 @@ export default class ProfileImage extends React.Component {
         coverScreen={true}
         hasBackdrop={true}
       >
-        <TouchableWithoutFeedback
-          style={styles.container}
+        <TouchableOpacity
+          style={[styles.centerContent, styles.container]}
+          activeOpacity={1}
           onPress={() => this.props.hideProfileImage()}
         >
-          <View style={[styles.container, styles.centerContent]}>
-            <View style={localStyles.container}>
-              <Text style={[styles.modalHeaderText, localStyles.title]}>
-                Profile image is too large.
-              </Text>
-              <Text style={[styles.modalBodyText, localStyles.tryAgain]}>
-                Please try again.
-              </Text>
+          <View style={localStyles.container}>
+            <Text style={[styles.modalHeaderText, localStyles.title]}>
+              Profile image is too large.
+            </Text>
+            <Text style={[styles.modalBodyText, localStyles.tryAgain]}>
+              Please try again.
+            </Text>
 
-              <TouchableOpacity
-                style={localStyles.tryAgainTextContainer}
-                onPress={() => {
-                  this.props.hideProfileImage();
-                }}
-              >
-                <Text
-                  style={[styles.modalButtonText, localStyles.tryAgainText]}
-                >
-                  TRY AGAIN
-                </Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              style={localStyles.tryAgainTextContainer}
+              onPress={() => {
+                this.props.hideProfileImage();
+              }}
+            >
+              <Text style={[styles.modalButtonText, localStyles.tryAgainText]}>
+                TRY AGAIN
+              </Text>
+            </TouchableOpacity>
           </View>
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
       </Modal>
     );
   };

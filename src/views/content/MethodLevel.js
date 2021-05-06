@@ -377,26 +377,17 @@ export default class MethodLevel extends React.Component {
             />
           </View>
         </ScrollView>
-        <Modal
+        <RestartCourse
           isVisible={this.state.showRestartCourse}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
           onBackButtonPress={() => this.setState({ showRestartCourse: false })}
-        >
-          <RestartCourse
-            hideRestartCourse={() => {
-              this.setState({
-                showRestartCourse: false
-              });
-            }}
-            type='level'
-            onRestart={() => this.onRestartLevel()}
-          />
-        </Modal>
+          hideRestartCourse={() => {
+            this.setState({
+              showRestartCourse: false
+            });
+          }}
+          type='level'
+          onRestart={() => this.onRestartLevel()}
+        />
         {this.state.nextLesson && (
           <NextVideo
             isMethod={true}

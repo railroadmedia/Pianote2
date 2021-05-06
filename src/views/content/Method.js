@@ -431,24 +431,13 @@ export default class Method extends React.Component {
             />
           </View>
         </ScrollView>
-        <Modal
+        <RestartCourse
           isVisible={this.state.showRestartCourse}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
           onBackButtonPress={() => this.setState({ showRestartCourse: false })}
-        >
-          <RestartCourse
-            hideRestartCourse={() =>
-              this.setState({ showRestartCourse: false })
-            }
-            type='method'
-            onRestart={() => this.onRestartMethod()}
-          />
-        </Modal>
+          hideRestartCourse={() => this.setState({ showRestartCourse: false })}
+          type='method'
+          onRestart={() => this.onRestartMethod()}
+        />
         {!this.state.isLoadingAll && this.state.nextLesson && (
           <NextVideo
             item={this.state.nextLesson}
