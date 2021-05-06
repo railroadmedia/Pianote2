@@ -233,7 +233,7 @@ export default class Login extends React.Component {
     if (num == 1) {
       return (
         <>
-          <Text style={localStyles.boldText}>
+          <Text style={[localStyles.bigText, localStyles.boldText]}>
             {'Pianote Lessons, Songs, \n& Support'}
           </Text>
           <Text style={localStyles.normalText}>Everywhere you go.</Text>
@@ -285,15 +285,12 @@ export default class Login extends React.Component {
     } else if (num == 5) {
       return (
         <>
-          <Text style={localStyles.bigText}>
-            Always know
-            <Text style={localStyles.boldText}>{' exactly '}</Text>
-            what to practice.
+          <Text style={[localStyles.bigText, localStyles.boldText]}>
+            Not a member?
           </Text>
           <Text style={localStyles.normalText}>
-            Unlike "video game" learning where you only learn what keys to hit,
-            you'll actually play music with step-by-step lessons that will build
-            your piano playing foundations!
+            Try it for free for 7-days when you click the sign up button below
+            to set up your Pianote account.
           </Text>
         </>
       );
@@ -524,7 +521,7 @@ const localStyles = StyleSheet.create({
     fontFamily: 'RobotoCondensed-Bold',
     fontSize: isTablet ? 24 : 16,
     textAlign: 'center',
-    color: '#fb1b2f',
+    color: 'white',
     padding: 10
   },
   renderButtonsInnerContainer: {
@@ -539,7 +536,7 @@ const localStyles = StyleSheet.create({
   },
   backgroundContainer: {
     flex: 1,
-    width,
+    width: width,
     backgroundColor: 'rgba(23, 26, 26, 1)'
   },
   signupButton: {
