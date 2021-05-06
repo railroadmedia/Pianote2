@@ -79,9 +79,7 @@ export default class Login extends React.Component {
     }
   }
 
-  onLogin = () => {
-    navigate('LOGINCREDENTIALS');
-  };
+  onLogin = () => navigate('LOGINCREDENTIALS');
 
   iapInitialized = async () => {
     try {
@@ -301,15 +299,7 @@ export default class Login extends React.Component {
     if (num == 5) {
       return (
         <View style={localStyles.backgroundContainer}>
-          <SafeAreaView
-            style={{
-              position: 'absolute',
-              top: 0,
-              zIndex: 4,
-              elevation: 4,
-              width: '100%'
-            }}
-          >
+          <SafeAreaView style={localStyles.finalPageContainer}>
             <Pianote
               height={onTablet ? 80 : 60}
               width={onTablet ? 200 : 120}
@@ -323,18 +313,7 @@ export default class Login extends React.Component {
             height={'30%'}
             borderRadius={0}
           />
-          <View
-            style={[
-              styles.centerContent,
-              {
-                flex: 1,
-                backgroundColor: 'rgba(23, 26, 26, 1)',
-                alignSelf: 'stretch',
-                zIndex: 3,
-                marginBottom: 20
-              }
-            ]}
-          >
+          <View style={[styles.centerContent, localStyles.aboveWordsContainer]}>
             <View
               style={[
                 styles.centerContent,
@@ -347,15 +326,7 @@ export default class Login extends React.Component {
             />
             {this.renderWords(num)}
           </View>
-          <View
-            style={{
-              position: 'absolute',
-              bottom: '5.5%',
-              width: '100%',
-              zIndex: 3,
-              elevation: 3
-            }}
-          >
+          <View style={localStyles.dotsContainer}>
             {this.renderDots()}
             <View style={{ height: '20%' }} />
             {this.renderButtons()}
@@ -364,13 +335,7 @@ export default class Login extends React.Component {
       );
     } else {
       return (
-        <View
-          style={{
-            flex: 1,
-            width,
-            backgroundColor: 'rgba(23, 26, 26, 1)'
-          }}
-        >
+        <View style={localStyles.backgroundContainer}>
           <SafeAreaView style={localStyles.finalPageContainer}>
             <Pianote
               height={onTablet ? 80 : 60}
@@ -385,12 +350,7 @@ export default class Login extends React.Component {
             height={'70%'}
             borderRadius={0}
           />
-          <View
-            style={{
-              flex: 0.75,
-              alignSelf: 'stretch'
-            }}
-          >
+          <View style={{ flex: 0.75, alignSelf: 'stretch' }}>
             <Image
               style={{ height: '100%', width: '100%' }}
               source={images[num][0]}
@@ -418,15 +378,7 @@ export default class Login extends React.Component {
               {this.renderWords(num)}
             </View>
           </View>
-          <View
-            style={{
-              position: 'absolute',
-              bottom: '5.5%',
-              width: '100%',
-              zIndex: 3,
-              elevation: 3
-            }}
-          >
+          <View style={localStyles.dotsContainer}>
             {this.renderDots()}
             <View style={{ height: '20%' }} />
             {this.renderButtons()}
@@ -442,53 +394,39 @@ export default class Login extends React.Component {
         style={{ flex: 1, backgroundColor: 'black' }}
         forceInset={{ top: 'never', bottom: 'never' }}
       >
-        <View style={{ flex: 1 }}>
-          <StatusBar backgroundColor='black' barStyle='light-content' />
-          <ScrollView
-            horizontal={true}
-            ref={ref => (this.myScroll = ref)}
-            pagingEnabled={true}
-            onMomentumScrollEnd={e => this.changePage(e)}
-            style={{ flex: 1 }}
-          >
-            {this.renderPage(1)}
-            {this.renderPage(2)}
-            {this.renderPage(3)}
-            {this.renderPage(4)}
-            {this.renderPage(5)}
-          </ScrollView>
-          <Loading
-            ref={ref => {
-              this.loadingRef = ref;
-            }}
-          />
-          <CustomModal
-            ref={r => (this.subscriptionExists = r)}
-            additionalBtn={
-              <TouchableOpacity
-                onPress={this.restorePurchases}
-                style={{
-                  marginTop: 10,
-                  borderRadius: 50,
-                  backgroundColor: colors.pianoteRed
-                }}
-              >
-                <Text
-                  style={{
-                    padding: 15,
-                    fontSize: 15,
-                    color: '#ffffff',
-                    textAlign: 'center',
-                    fontFamily: 'OpenSans-Bold'
-                  }}
-                >
-                  {this.state.signupAlertText}
-                </Text>
-              </TouchableOpacity>
-            }
-            onClose={() => this.loadingRef?.toggleLoading(false)}
-          />
-        </View>
+        <StatusBar backgroundColor='black' barStyle='light-content' />
+        <ScrollView
+          horizontal={true}
+          ref={ref => (this.myScroll = ref)}
+          pagingEnabled={true}
+          onMomentumScrollEnd={e => this.changePage(e)}
+          style={{ flex: 1 }}
+        >
+          {this.renderPage(1)}
+          {this.renderPage(2)}
+          {this.renderPage(3)}
+          {this.renderPage(4)}
+          {this.renderPage(5)}
+        </ScrollView>
+        <Loading ref={ref => (this.loadingRef = ref)} />
+        <CustomModal
+          ref={r => (this.subscriptionExists = r)}
+          onClose={() => this.loadingRef?.toggleLoading(false)}
+          additionalBtn={
+            <TouchableOpacity
+              onPress={this.restorePurchases}
+              style={{
+                marginTop: 10,
+                borderRadius: 50,
+                backgroundColor: colors.pianoteRed
+              }}
+            >
+              <Text style={localStyles.signupAlertText}>
+                {this.state.signupAlertText}
+              </Text>
+            </TouchableOpacity>
+          }
+        />
       </SafeAreaView>
     );
   }
@@ -573,5 +511,26 @@ const localStyles = StyleSheet.create({
     padding: 5,
     textAlign: 'center',
     color: 'white'
+  },
+  dotsContainer: {
+    position: 'absolute',
+    bottom: '5.5%',
+    width: '100%',
+    zIndex: 3,
+    elevation: 3
+  },
+  aboveWordsContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(23, 26, 26, 1)',
+    alignSelf: 'stretch',
+    zIndex: 3,
+    marginBottom: 20
+  },
+  signupAlertText: {
+    padding: 15,
+    fontSize: 15,
+    color: '#ffffff',
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Bold'
   }
 });

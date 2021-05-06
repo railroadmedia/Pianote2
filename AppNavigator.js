@@ -106,9 +106,9 @@ export default () => (
         }}
       >
         {/* onboard */}
-        <Stack.Screen name='LOGIN' component={Login} />
-        <Stack.Screen name='LOADPAGE' component={LoadPage} />
 
+        <Stack.Screen name='LOADPAGE' component={LoadPage} />
+        <Stack.Screen name='LOGIN' component={Login} />
         <Stack.Screen name='MEMBERSHIPEXPIRED' component={MembershipExpired} />
         <Stack.Screen name='LOGINCREDENTIALS' component={LoginCredentials} />
         <Stack.Screen name='SUPPORTSIGNUP' component={SupportSignUp} />
