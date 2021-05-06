@@ -430,7 +430,12 @@ export default class CreateAccount3 extends React.Component {
                     />
                   </TouchableOpacity>
                 </View>
-                <Text style={localStyles.profileImageText}>
+                <Text
+                  style={[
+                    localStyles.profileImageText,
+                    { fontSize: sizing.descriptionText }
+                  ]}
+                >
                   This appears on your Pianote profile and comments.
                 </Text>
                 <View
@@ -1058,7 +1063,6 @@ const localStyles = StyleSheet.create({
     width: width,
     paddingVertical: 30,
     fontFamily: 'OpenSans-Regular',
-    fontSize: sizing.descriptionText,
     textAlign: 'center'
   },
   dotContainer: {
