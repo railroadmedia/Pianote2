@@ -8,8 +8,10 @@ import {
   Alert,
   Dimensions,
   StatusBar,
-  Image
+  Image,
+  StyleSheet
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
 import RNIap from 'react-native-iap';
 import Pianote from '../../assets/img/svgs/pianote.svg';
@@ -23,7 +25,7 @@ import { navigate } from '../../../AppNavigator.js';
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-
+const isTablet = DeviceInfo.isTablet();
 const skus = Platform.select({
   android: ['pianote_app_1_year_2021', 'pianote_app_1_month_2021'],
   ios: [
@@ -189,66 +191,20 @@ export default class Login extends React.Component {
   };
 
   renderButtons = () => (
-    <View
-      style={{
-        width: onTablet ? '80%' : '95%',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: onTablet ? '10%' : '2.5%',
-        marginRight: onTablet ? '10%' : '2.5%'
-      }}
-    >
+    <View style={localStyles.renderButtonsContainer}>
       <TouchableOpacity
         onPress={this.onLogin}
-        style={{
-          flex: 1,
-          marginHorizontal: 10,
-          maxWidth: 400,
-          justifyContent: 'center',
-          borderRadius: 60,
-          backgroundColor: 'transparent',
-          borderWidth: 2,
-          borderColor: '#fb1b2f'
-        }}
+        style={localStyles.renderButtonsInnerContainer}
       >
-        <Text
-          style={{
-            fontFamily: 'RobotoCondensed-Bold',
-            fontSize: onTablet ? 24 : 16,
-            textAlign: 'center',
-            color: '#fb1b2f',
-            padding: 10
-          }}
-        >
-          LOG IN
-        </Text>
+        <Text style={localStyles.loginText}>LOG IN</Text>
       </TouchableOpacity>
-
       <TouchableOpacity
         onPress={async () => {
           if (await this.userCanSignUp()) return navigate('CREATEACCOUNT');
         }}
-        style={{
-          flex: 1,
-          marginHorizontal: 10,
-          maxWidth: 400,
-          justifyContent: 'center',
-          borderRadius: 60,
-          backgroundColor: '#fb1b2f'
-        }}
+        style={localStyles.signupButton}
       >
-        <Text
-          style={{
-            fontFamily: 'RobotoCondensed-Bold',
-            fontSize: onTablet ? 24 : 16,
-            textAlign: 'center',
-            color: 'white',
-            padding: 10
-          }}
-        >
-          SIGN UP
-        </Text>
+        <Text style={localStyles.signupText}>SIGN UP</Text>
       </TouchableOpacity>
     </View>
   );
@@ -259,16 +215,14 @@ export default class Login extends React.Component {
         {[1, 2, 3, 4, 5].map(dot => (
           <View
             key={dot}
-            style={{
-              height: 10,
-              width: 10,
-              margin: 5,
-              borderRadius: 100,
-              backgroundColor:
-                this.state.page == dot ? '#fb1b2f' : 'transparent',
-              borderWidth: 2,
-              borderColor: this.state.page == dot ? '#fb1b2f' : 'grey'
-            }}
+            style={[
+              localStyles.dots,
+              {
+                backgroundColor:
+                  this.state.page == dot ? '#fb1b2f' : 'transparent',
+                borderColor: this.state.page == dot ? '#fb1b2f' : 'grey'
+              }
+            ]}
           />
         ))}
       </View>
@@ -279,64 +233,21 @@ export default class Login extends React.Component {
     if (num == 1) {
       return (
         <>
-          <Text
-            style={{
-              fontFamily: 'OpenSans-Bold',
-              fontSize: onTablet ? 32 : 24,
-              padding: 5,
-              textAlign: 'center',
-              color: 'white'
-            }}
-          >
+          <Text style={localStyles.boldText}>
             {'Pianote Lessons, Songs, \n& Support'}
           </Text>
-          <Text
-            style={{
-              fontFamily: 'OpenSans-Regular',
-              fontSize: onTablet ? 24 : 16,
-              textAlign: 'center',
-              color: 'grey',
-              marginTop: 10
-            }}
-          >
-            Everywhere you go.
-          </Text>
+          <Text style={localStyles.normalText}>Everywhere you go.</Text>
         </>
       );
     } else if (num == 2) {
       return (
         <>
-          <Text
-            style={{
-              fontFamily: 'OpenSans-Regular',
-              fontSize: onTablet ? 32 : 24,
-              padding: 5,
-              textAlign: 'center',
-              color: 'white'
-            }}
-          >
+          <Text style={localStyles.bigText}>
             Always know
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Bold',
-                padding: 5,
-                textAlign: 'center',
-                color: 'white'
-              }}
-            >
-              {' exactly '}
-            </Text>
+            <Text style={localStyles.boldText}>{' exactly '}</Text>
             what to practice.
           </Text>
-          <Text
-            style={{
-              fontFamily: 'OpenSans-Regular',
-              padding: 5,
-              fontSize: onTablet ? 24 : 16,
-              textAlign: 'center',
-              color: 'grey'
-            }}
-          >
+          <Text style={localStyles.normalText}>
             Unlike "video game" learning where you only learn what keys to hit,
             you'll actually play music with step-by-step lessons that will build
             your piano playing foundations!
@@ -346,36 +257,11 @@ export default class Login extends React.Component {
     } else if (num == 3) {
       return (
         <>
-          <Text
-            style={{
-              fontFamily: 'OpenSans-Regular',
-              fontSize: onTablet ? 32 : 24,
-              padding: 5,
-              textAlign: 'center',
-              color: 'white'
-            }}
-          >
+          <Text style={localStyles.bigText}>
             Play Your {'\n'}
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Bold',
-                padding: 5,
-                textAlign: 'center',
-                color: 'white'
-              }}
-            >
-              {' Favorite Songs'}
-            </Text>
+            <Text style={localStyles.boldText}>{' Favorite Songs'}</Text>
           </Text>
-          <Text
-            style={{
-              fontFamily: 'OpenSans-Regular',
-              padding: 5,
-              fontSize: onTablet ? 24 : 16,
-              textAlign: 'center',
-              color: 'grey'
-            }}
-          >
+          <Text style={localStyles.normalText}>
             Nothing is better than playing to real music! So you'll get custom
             play-alongs to help you apply specific-skills PLUS breakdowns of
             popular music so you can play your favorite tunes!
@@ -385,37 +271,11 @@ export default class Login extends React.Component {
     } else if (num == 4) {
       return (
         <>
-          <Text
-            style={{
-              fontFamily: 'OpenSans-Regular',
-              fontSize: onTablet ? 32 : 24,
-              padding: 5,
-              textAlign: 'center',
-              color: 'white'
-            }}
-          >
+          <Text style={localStyles.bigText}>
             Personalized
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Bold',
-                padding: 5,
-                textAlign: 'center',
-                color: 'white'
-              }}
-            >
-              {' Lessons & Support'}
-            </Text>
+            <Text style={localStyles.boldText}>{' Lessons & Support'}</Text>
           </Text>
-          <Text
-            style={{
-              fontFamily: 'OpenSans-Regular',
-              padding: 5,
-              fontSize: onTablet ? 24 : 16,
-              textAlign: 'center',
-              color: 'grey',
-              marginTop: '1%'
-            }}
-          >
+          <Text style={localStyles.normalText}>
             Get direct access to real teachers any time you have a question,
             access weekly live-streaming video lessons, and connect with
             teachers and students in the community forums!
@@ -425,37 +285,12 @@ export default class Login extends React.Component {
     } else if (num == 5) {
       return (
         <>
-          <Text
-            style={{
-              fontFamily: 'OpenSans-Regular',
-              fontSize: onTablet ? 32 : 24,
-              padding: 5,
-              textAlign: 'center',
-              color: 'white'
-            }}
-          >
+          <Text style={localStyles.bigText}>
             Always know
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Bold',
-                padding: 5,
-                textAlign: 'center',
-                color: 'white'
-              }}
-            >
-              {' exactly '}
-            </Text>
+            <Text style={localStyles.boldText}>{' exactly '}</Text>
             what to practice.
           </Text>
-          <Text
-            style={{
-              fontFamily: 'OpenSans-Regular',
-              padding: 5,
-              fontSize: onTablet ? 24 : 16,
-              textAlign: 'center',
-              color: 'grey'
-            }}
-          >
+          <Text style={localStyles.normalText}>
             Unlike "video game" learning where you only learn what keys to hit,
             you'll actually play music with step-by-step lessons that will build
             your piano playing foundations!
@@ -468,9 +303,7 @@ export default class Login extends React.Component {
   renderPage(num) {
     if (num == 5) {
       return (
-        <View
-          style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}
-        >
+        <View style={localStyles.backgroundContainer}>
           <SafeAreaView
             style={{
               position: 'absolute',
@@ -541,15 +374,7 @@ export default class Login extends React.Component {
             backgroundColor: 'rgba(23, 26, 26, 1)'
           }}
         >
-          <SafeAreaView
-            style={{
-              position: 'absolute',
-              top: 0,
-              zIndex: 3,
-              elevation: 3,
-              width: '100%'
-            }}
-          >
+          <SafeAreaView style={localStyles.finalPageContainer}>
             <Pianote
               height={onTablet ? 80 : 60}
               width={onTablet ? 200 : 120}
@@ -671,3 +496,85 @@ export default class Login extends React.Component {
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  finalPageContainer: {
+    position: 'absolute',
+    top: 0,
+    zIndex: 3,
+    elevation: 3,
+    width: '100%'
+  },
+  renderButtonsContainer: {
+    width: isTablet ? '80%' : '95%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: isTablet ? '10%' : '2.5%',
+    marginRight: isTablet ? '10%' : '2.5%'
+  },
+  loginText: {
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: isTablet ? 24 : 16,
+    textAlign: 'center',
+    color: '#fb1b2f',
+    padding: 10
+  },
+  signupText: {
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: isTablet ? 24 : 16,
+    textAlign: 'center',
+    color: '#fb1b2f',
+    padding: 10
+  },
+  renderButtonsInnerContainer: {
+    flex: 1,
+    marginHorizontal: 10,
+    maxWidth: 400,
+    justifyContent: 'center',
+    borderRadius: 60,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: '#fb1b2f'
+  },
+  backgroundContainer: {
+    flex: 1,
+    width,
+    backgroundColor: 'rgba(23, 26, 26, 1)'
+  },
+  signupButton: {
+    flex: 1,
+    marginHorizontal: 10,
+    maxWidth: 400,
+    justifyContent: 'center',
+    borderRadius: 60,
+    backgroundColor: '#fb1b2f'
+  },
+  dots: {
+    height: 10,
+    width: 10,
+    margin: 5,
+    borderRadius: 100,
+    borderWidth: 2
+  },
+  normalText: {
+    fontFamily: 'OpenSans-Regular',
+    padding: 5,
+    fontSize: isTablet ? 24 : 16,
+    textAlign: 'center',
+    color: 'grey'
+  },
+  boldText: {
+    fontFamily: 'OpenSans-Bold',
+    padding: 5,
+    textAlign: 'center',
+    color: 'white'
+  },
+  bigText: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: isTablet ? 32 : 24,
+    padding: 5,
+    textAlign: 'center',
+    color: 'white'
+  }
+});

@@ -85,23 +85,21 @@ export default class ContentModal extends React.Component {
       >
         <View style={[styles.container, styles.centerContent]}>
           <View style={localStyles.container}>
-            <View key={'image'} style={styles.centerContent}>
-              <View
-                style={[
-                  localStyles.imageContainer,
-                  { aspectRatio: this.state.type == 'song' ? 1 : 16 / 9 }
-                ]}
-              >
-                <FastImage
-                  style={localStyles.image}
-                  source={{
-                    uri:
-                      this.state.thumbnail ||
-                      `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,e_grayscale/${fallbackThumb}`
-                  }}
-                  resizeMode={FastImage.resizeMode.cover}
-                />
-              </View>
+            <View
+              style={[
+                localStyles.imageContainer,
+                { aspectRatio: this.state.type == 'song' ? 1 : 16 / 9 }
+              ]}
+            >
+              <FastImage
+                style={localStyles.image}
+                source={{
+                  uri:
+                    this.state.thumbnail ||
+                    `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,e_grayscale/${fallbackThumb}`
+                }}
+                resizeMode={FastImage.resizeMode.cover}
+              />
             </View>
             <Text style={localStyles.title}>{this.state.title}</Text>
             <Text style={localStyles.type}>
@@ -115,14 +113,7 @@ export default class ContentModal extends React.Component {
               <View style={{ flex: 1 }} />
               {(this.state.bundle_number > 1 ||
                 this.state.lesson_count > 1) && (
-                <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      flex: 1
-                    }
-                  ]}
-                >
+                <View style={[styles.centerContent, { flex: 1 }]}>
                   <Text style={localStyles.lessonCount}>
                     {this.state.lesson_count > 1
                       ? this.state.lesson_count
@@ -133,17 +124,11 @@ export default class ContentModal extends React.Component {
               )}
               {(this.state.bundle_number > 1 ||
                 this.state.lesson_count > 1) && <View style={{ flex: 0.6 }} />}
-              <View
-                style={[
-                  styles.centerContent,
-                  {
-                    flex: 1
-                  }
-                ]}
-              >
+              <View style={[styles.centerContent, { flex: 1 }]}>
                 <Text style={localStyles.xp}>{this.state.xp}</Text>
                 <Text style={localStyles.XPtext}>XP</Text>
               </View>
+              <View style={{ flex: 1 }} />
             </View>
             <View style={localStyles.button}>
               <TouchableOpacity
@@ -223,7 +208,7 @@ const localStyles = StyleSheet.create({
     backgroundColor: 'white'
   },
   imageContainer: {
-    width: '95%',
+    width: isTablet ? '75%' : '95%',
     backgroundColor: 'white',
     zIndex: 10,
     marginTop: 10,
@@ -284,20 +269,17 @@ const localStyles = StyleSheet.create({
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
     fontSize: isTablet ? 24 : 18,
-    textAlign: 'left',
-    marginTop: 10
+    textAlign: 'left'
   },
   lessonCount: {
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
     fontSize: isTablet ? 24 : 18,
-    textAlign: 'left',
-    marginTop: 10
+    textAlign: 'left'
   },
   lessons: {
     fontFamily: 'OpenSans-Regular',
     fontSize: isTablet ? 16 : 12,
-    textAlign: 'left',
-    marginTop: 5
+    textAlign: 'left'
   }
 });
