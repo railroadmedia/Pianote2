@@ -37,7 +37,7 @@ export function getInProgress({
 }
 function getMethod() {
   return commonService.tryCall(
-    `${commonService.rootUrl}/api/members/learning-paths/pianote-method`
+    `${commonService.rootUrl}/musora-api/learning-paths/pianote-method`
   );
 }
 function pickIncludedTypes(scene) {

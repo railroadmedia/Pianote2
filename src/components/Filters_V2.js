@@ -125,9 +125,10 @@ export default class Filters_V2 extends React.Component {
         if (instructor)
           instructorNames = instructor.map(i => ({
             id: i.id,
-            name: i.fields?.find(f => f.key === 'name')?.value,
-            headShotPic: i.data?.find(d => d.key === 'head_shot_picture_url')
-              ?.value
+            name: i.name || i.fields?.find(f => f.key === 'name')?.value,
+            headShotPic:
+              i.head_shot_picture_url ||
+              i.data?.find(d => d.key === 'head_shot_picture_url')?.value
           }));
         this.setState({ loading: false });
       }, 0);

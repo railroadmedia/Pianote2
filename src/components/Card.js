@@ -78,7 +78,7 @@ class Card extends React.Component {
       return thumbnail_url;
     if (thumbnail_url?.includes('http')) {
       return `https://cdn.musora.com/image/fetch/w_350,ar_${
-        this.props.type === 'square' ? '1' : '16:9'
+        this.props.type === 'squareRow' ? '1' : '16:9'
       },fl_lossy,q_auto:eco,c_fill,g_face${
         new Date(published_on) > new Date() ? ',e_grayscale' : ''
       }/${thumbnail_url}`;
