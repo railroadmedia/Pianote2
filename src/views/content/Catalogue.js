@@ -19,7 +19,7 @@ import Filters_V2 from '../../components/Filters_V2';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 
-import { getContent } from '../../services/catalogue.service';
+import { getContent, getAll } from '../../services/catalogue.service';
 
 import { Contexts } from '../../context/CombinedContexts';
 
@@ -44,36 +44,52 @@ export default class Catalogue extends React.Component {
       loading: true,
       loadingMore: false,
       refreshing: true,
-      isLandscape: false
+      filtering: false
     };
   }
 
   componentDidMount() {
-    getContent({
-      scene: this.scene,
-      page: this.page,
-      filters: this.filterRef?.filterQuery,
-      sort: this.sort?.sortQuery
-    }).then(data => {
-      this.metaFilters = data[1].meta.filterOptions;
-      console.log(this.metaFilters);
-      this.data = {
-        method: data[0] || {},
-        all: data[1].data || [],
-        inProgress: data[2].data || []
-      };
-      console.log(this.data);
-      this.setState({ loading: false, refreshing: false });
-    });
+    this.refreshOnFocusListener = refreshOnFocusListener.call(this);
+    getContent(this.serviceOptions).then(this.setData);
   }
 
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    this.refreshOnFocusListener?.();
+  }
+
+  get serviceOptions() {
+    let { refreshing, loadingMore, filtering } = this.state;
+    return {
+      scene: this.scene,
+      page:
+        refreshing || filtering
+          ? (this.page = 1)
+          : loadingMore
+          ? ++this.page
+          : this.page,
+      filters: refreshing ? '' : this.filterRef?.filterQuery,
+      sort: this.sort?.sortQuery
+    };
+  }
+
+  setData = ({ method, all, inProgress }) => {
+    let { refreshing, loadingMore, filtering } = this.state;
+    this.metaFilters = all?.meta.filterOptions || this.metaFilters;
+    if (refreshing)
+      this.data = { method, all: all.data, inProgress: inProgress.data };
+    else if (loadingMore) this.data.all.push(...(all.data || []));
+    else if (filtering) this.data.all = all.data;
+    this.setState({
+      loading: false,
+      refreshing: false,
+      filtering: false,
+      loadingMore: false
+    });
+  };
 
   renderFLItem = ({ item }) => (
     <Card data={item} type={onTablet ? '' : 'row'} onNavigate={navigate} />
   );
-
-  filter = () => {};
 
   renderFLHeader = () => {
     let {
@@ -83,10 +99,10 @@ export default class Catalogue extends React.Component {
         started,
         banner_button_url,
         banner_background_image
-      },
+      } = {},
       inProgress
     } = this.data;
-    let { refreshing } = this.state;
+    let { refreshing, filtering, loadingMore } = this.state;
     return (
       <>
         {this.scene === 'HOME' && !!methodId && (
@@ -204,7 +220,7 @@ export default class Catalogue extends React.Component {
               removeClippedSubviews={true}
               keyboardShouldPersistTaps='handled'
               contentContainerStyle={{
-                width: `${(onTablet ? 33 : 80) * inProgress?.length}%`
+                width: `${(onTablet ? 30 : 70) * inProgress?.length}%`
               }}
               renderItem={({ item, index }) => (
                 <View style={{ width: `${100 / inProgress?.length}%` }}>
@@ -241,7 +257,7 @@ export default class Catalogue extends React.Component {
             ALL LESSONS
           </Text>
           <Filters_V2
-            disabled={refreshing}
+            disabled={refreshing || filtering || loadingMore}
             onApply={this.filter}
             meta={this.metaFilters}
             reference={r => (this.filterRef = r)}
@@ -251,13 +267,29 @@ export default class Catalogue extends React.Component {
     );
   };
 
-  loadMore = () => {};
+  filter = () =>
+    new Promise(res =>
+      this.setState({ filtering: true }, () =>
+        getAll(this.serviceOptions).then(all => {
+          this.setData(all);
+          res();
+        })
+      )
+    );
 
-  refresh = () => {};
+  loadMore = () =>
+    this.setState({ loadingMore: true }, () =>
+      getAll(this.serviceOptions).then(this.setData)
+    );
+
+  refresh = () =>
+    this.setState({ refreshing: true }, () =>
+      getContent(this.serviceOptions).then(this.setData)
+    );
 
   render() {
     let { scene, data } = this;
-    let { loading, loadingMore, refreshing } = this.state;
+    let { loading, loadingMore, refreshing, filtering } = this.state;
     let backgroundColor = scene === 'HOME' ? 'black' : '#00101d';
     return (
       <>
@@ -266,45 +298,54 @@ export default class Catalogue extends React.Component {
           currentPage={scene}
           parentPage={scene}
         />
-        {loading ? (
-          <ActivityIndicator
-            size='large'
-            style={{ backgroundColor, flex: 1 }}
-            color={'#6e777a'}
-          />
-        ) : (
-          <FlatList
-            windowSize={10}
-            data={data.all}
-            style={{ flex: 1, backgroundColor }}
-            initialNumToRender={1}
-            maxToRenderPerBatch={10}
-            onEndReachedThreshold={0.01}
-            removeClippedSubviews={true}
-            keyboardShouldPersistTaps='handled'
-            ListHeaderComponent={this.renderFLHeader}
-            renderItem={this.renderFLItem}
-            onEndReached={this.loadMore}
-            keyExtractor={item => item.id.toString()}
-            ListEmptyComponent={<Text style={{}}>No Content</Text>}
-            ListFooterComponent={
-              <ActivityIndicator
-                size='small'
-                color={'#6e777a'}
-                animating={loadingMore}
-                style={{ padding: 15 }}
-              />
-            }
-            refreshControl={
-              <RefreshControl
-                colors={['#6e777a']}
-                tintColor={'#6e777a'}
-                onRefresh={this.refresh}
-                refreshing={refreshing}
-              />
-            }
-          />
-        )}
+        <View style={{ flex: 1 }}>
+          {loading ? (
+            <ActivityIndicator
+              size='large'
+              style={{ backgroundColor, flex: 1 }}
+              color={'#6e777a'}
+            />
+          ) : (
+            <FlatList
+              windowSize={10}
+              data={data.all}
+              style={{ flex: 1, backgroundColor }}
+              initialNumToRender={1}
+              maxToRenderPerBatch={10}
+              onEndReachedThreshold={0.01}
+              removeClippedSubviews={true}
+              keyboardShouldPersistTaps='handled'
+              ListHeaderComponent={this.renderFLHeader}
+              renderItem={this.renderFLItem}
+              onEndReached={this.loadMore}
+              keyExtractor={item => item.id.toString()}
+              ListEmptyComponent={<Text style={{}}>No Content</Text>}
+              ListFooterComponent={
+                <ActivityIndicator
+                  size='small'
+                  color={'#6e777a'}
+                  animating={loadingMore}
+                  style={{ padding: 15 }}
+                />
+              }
+              refreshControl={
+                <RefreshControl
+                  colors={['#6e777a']}
+                  tintColor={'#6e777a'}
+                  onRefresh={this.refresh}
+                  refreshing={refreshing}
+                />
+              }
+            />
+          )}
+          {filtering && (
+            <ActivityIndicator
+              size='large'
+              style={{ position: 'absolute', alignSelf: 'center' }}
+              color={'#6e777a'}
+            />
+          )}
+        </View>
         <NavigationBar currentPage={''} />
       </>
     );

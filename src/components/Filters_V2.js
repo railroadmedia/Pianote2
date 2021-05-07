@@ -246,9 +246,14 @@ export default class Filters_V2 extends React.Component {
 
   apply = () => {
     if (!this.connection()) return;
-    this.setState({ loading: true }, async () => {
-      await this.props.onApply();
-      this.initFilters();
+    this.setState({ loading: true }, () => {
+      try {
+        this.props.onApply().then(this.initFilters);
+      } catch (e) {
+        throw new Error(
+          `Filters_V2's "onApply" property must return a promise!`
+        );
+      }
     });
   };
 

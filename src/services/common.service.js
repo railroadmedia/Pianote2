@@ -4,9 +4,10 @@ import { updateFcmToken } from 'Pianote2/src/services/notification.service.js';
 export let cache = {};
 export default {
   rootUrl: 'https://staging.pianote.com',
-  tryCall: async function (url, method, body) {
+  tryCall: async function (url, method, body, signal) {
     try {
       //
+      let signalAttr = signal ? { signal } : '';
       if (body) body = body ? JSON.stringify(body) : null;
       let headers = body
         ? {
@@ -27,6 +28,7 @@ export default {
       let response = await fetch(newUrl, {
         body,
         headers,
+        ...signalAttr,
         method: method || 'GET'
       });
       let json = await response.json();
@@ -56,6 +58,7 @@ export default {
       // if no error send initial result
       return json;
     } catch (error) {
+      if (error.toString() === 'AbortError: Aborted') return { aborted: true };
       return {
         title: 'Something went wrong...',
         message: `Pianote is down, we are working on a fix and it should be back shortly, thank you for your patience.`
