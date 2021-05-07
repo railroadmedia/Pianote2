@@ -12,6 +12,7 @@ export const networkContext = function () {
 export const NetworkContext = function () {
   return this.NetworkContext;
 };
+
 export const getDiscussions = function () {
   return new Promise(res => setTimeout(() => res(mocks.discussion), 2000));
 };
@@ -27,23 +28,14 @@ export const getTopic = function (page = 1) {
   return this.tryCall(`${this.rootUrl}/TBD`);
 };
 export const getTopics = function (page = 1) {
-  /* TBR */
-  return new Promise(res =>
-    setTimeout(() => res(mocks.topics.slice((page - 1) * 10, page * 10)), 2000)
+  return this.tryCall(
+    `${this.rootUrl}/forums/api/discussions/index?page=${page}`
   );
-  /*******/
-  return this.tryCall(`${this.rootUrl}/TBD`);
 };
 export const getFollowed = function (page = 1) {
-  /* TBR */
-  return new Promise(res =>
-    setTimeout(
-      () => res(mocks.discussions.slice((page - 1) * 10, page * 10)),
-      2000
-    )
+  return this.tryCall(
+    `${this.rootUrl}/forums/api/thread/index?page=${page}&followed=1`
   );
-  /*******/
-  return this.tryCall(`${this.rootUrl}/TBD`);
 };
 export const likeComment = function (id) {
   return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { id });

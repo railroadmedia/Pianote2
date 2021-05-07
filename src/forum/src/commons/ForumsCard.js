@@ -14,7 +14,7 @@ export default class ForumsCard extends React.Component {
   }
 
   get lastPostTime() {
-    let dif = new Date() - new Date(this.props.data.lastPost.date);
+    let dif = new Date() - new Date(this.props.data?.latest_post?.created_at);
     if (dif < 120 * 1000) return `1 Minute Ago`;
     if (dif < 60 * 1000 * 60)
       return `${(dif / 1000 / 60).toFixed()} Minutes Ago`;
@@ -36,14 +36,15 @@ export default class ForumsCard extends React.Component {
       appColor,
       isDark,
       data: {
-        user,
+        author_avatar_url,
+        author_access_level,
         title,
         pinned,
-        lastPost,
-        postsNo,
-        topicName,
-        repliesNo,
-        image
+        latest_post,
+        post_count,
+        category,
+        image,
+        icon
       }
     } = this.props;
     return (
@@ -52,28 +53,31 @@ export default class ForumsCard extends React.Component {
         onPress={this.props.onNavigate}
       >
         <AccessLevelAvatar
-          uri={image || user.avatarUrl}
+          uri={image || author_avatar_url}
           height={60}
           appColor={appColor}
           tagHeight={8}
-          accessLevelName={user?.accessLevelName}
+          accessLevelName={author_access_level}
         />
+
         <View style={{ paddingHorizontal: 10, flex: 1 }}>
           <Text style={styles.title}>
-            {pinned && pin({ width: 10, fill: isDark ? 'white' : 'black' })}
-            {pinned && ' '}
+            {!!pinned && pin({ width: 10, fill: isDark ? 'white' : 'black' })}
+            {!!pinned && ' '}
             {title}
           </Text>
           <Text style={styles.lastPost}>
             Last Post{' '}
             <Text style={{ fontWeight: '900' }}>{this.lastPostTime}</Text> By{' '}
-            <Text style={{ fontWeight: '900' }}>{lastPost.user.name}</Text>
+            <Text style={{ fontWeight: '900' }}>
+              {latest_post?.author_display_name}
+            </Text>
           </Text>
           <Text style={styles.topicName}>
-            {repliesNo
-              ? `${topicName} - ${repliesNo} Replies`
+            {category
+              ? `${category} - ${post_count} Replies`
               : post({ height: 10, fill: '#445F74' })}
-            {!repliesNo && ` ${postsNo} Posts`}
+            {!category && ` ${post_count} Posts`}
           </Text>
         </View>
         {arrowRight({ height: 10, fill: isDark ? 'white' : 'black' })}

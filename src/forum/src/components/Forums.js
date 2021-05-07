@@ -40,8 +40,8 @@ export default class Forums extends React.Component {
 
   componentDidMount() {
     Promise.all([getTopics(), getFollowed()]).then(([topics, followed]) => {
-      this.topics = topics;
-      this.followed = followed;
+      this.topics = topics.results;
+      this.followed = followed.results;
       this.setState({ loading: false });
     });
   }
@@ -70,7 +70,7 @@ export default class Forums extends React.Component {
     let fORt = tab ? 'followed' : 'topics';
     this.setState({ [`${fORt}LoadingMore`]: true }, () =>
       (tab ? getFollowed : getTopics)(++this[`${fORt}Page`]).then(r => {
-        this[fORt].push(...r);
+        this[fORt].push(...r.results);
         this.setState({ [`${fORt}LoadingMore`]: false });
       })
     );
