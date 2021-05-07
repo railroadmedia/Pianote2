@@ -20,6 +20,8 @@ import Intercom from 'react-native-intercom';
 import Icon from '../../assets/icons.js';
 import Back from '../../assets/img/svgs/back.svg';
 import NavigationBar from '../../components/NavigationBar.js';
+import Back from 'Pianote2/src/assets/img/svgs/back.svg';
+import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import Loading from '../../components/Loading.js';
 import CustomModal from '../../modals/CustomModal.js';
 import {
@@ -39,6 +41,7 @@ import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
 import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
 import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
 import { goBack, navigate, reset } from '../../../AppNavigator.js';
+import { connect } from 'react-redux';
 
 const isTablet = DeviceInfo.isTablet();
 
@@ -52,9 +55,10 @@ class Settings extends React.Component {
   }
 
   manageSubscriptions = async () => {
-    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    const userData = await getUserData();
-    let { isAppleAppSubscriber, isGoogleAppSubscriber } = userData;
+    if (!this.context.isConnected) {
+      return this.context.showNoConnectionAlert();
+    }
+    let { isAppleAppSubscriber, isGoogleAppSubscriber } = this.props.user;
     if (isiOS) {
       if (isAppleAppSubscriber) {
         Alert.alert(
@@ -431,6 +435,12 @@ class Settings extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+export default connect(mapStateToProps, null)(Settings);
 
 const localStyles = StyleSheet.create({
   container: {

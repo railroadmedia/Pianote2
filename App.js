@@ -16,6 +16,7 @@ import lessonsReducer from './src/redux/LessonsCacheReducer';
 import podcastsReducer from './src/redux/PodcastsCacheReducer';
 import quickTipsReducer from './src/redux/QuickTipsCacheReducer';
 import studentFocusReducer from './src/redux/StudentFocusCacheReducer';
+import userReducer from './src/redux/UserReducer';
 import commonService from './src/services/common.service';
 
 const store = createStore(
@@ -27,7 +28,8 @@ const store = createStore(
     ...coursesReducer,
     ...podcastsReducer,
     ...quickTipsReducer,
-    ...studentFocusReducer
+    ...studentFocusReducer,
+    userState: userReducer
   })
 );
 

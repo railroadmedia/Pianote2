@@ -10,7 +10,9 @@ import FastImage from 'react-native-fast-image';
 import DeviceInfo from 'react-native-device-info';
 import Chat from '../../src/assets/img/svgs/chat.svg';
 import Icon from '../assets/icons';
-import { getUserData } from '../../src/services/UserDataAuth.js';
+import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
+import { connect } from 'react-redux';
+import { setLoggedInUser } from '../redux/UserActions';
 
 const isTablet = DeviceInfo.isTablet();
 const messageDict = {
@@ -52,7 +54,7 @@ const messageDict = {
   }
 };
 
-export default class ReplyNotification extends React.Component {
+class ReplyNotification extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -67,7 +69,15 @@ export default class ReplyNotification extends React.Component {
   }
 
   componentDidMount = async () => {
-    let userData = await getUserData();
+    const {
+      notify_on_lesson_comment_reply,
+      notify_on_lesson_comment_like,
+      notify_on_forum_post_reply,
+      notify_on_forum_post_like,
+      notifications_summary_frequency_minutes,
+      notify_on_forum_followed_thread_reply,
+      notify_weekly_update
+    } = this.props.user;
     let statusChange = null;
     console.log(this.props);
 
@@ -112,15 +122,13 @@ export default class ReplyNotification extends React.Component {
 
     this.setState({
       statusChange,
-      notify_on_lesson_comment_reply: userData?.notify_on_lesson_comment_reply,
-      notify_on_lesson_comment_like: userData?.notify_on_lesson_comment_like,
-      notify_on_forum_post_reply: userData?.notify_on_forum_post_reply,
-      notify_on_forum_post_like: userData?.notify_on_forum_post_like,
-      notifications_summary_frequency_minutes:
-        userData?.notifications_summary_frequency_minutes,
-      notify_on_forum_followed_thread_reply:
-        userData?.notify_on_forum_followed_thread_reply,
-      notify_weekly_update: userData?.notify_weekly_update
+      notify_on_lesson_comment_reply,
+      notify_on_lesson_comment_like,
+      notify_on_forum_post_reply,
+      notify_on_forum_post_like,
+      notifications_summary_frequency_minutes,
+      notify_on_forum_followed_thread_reply,
+      notify_weekly_update
     });
   };
 
@@ -247,6 +255,16 @@ export default class ReplyNotification extends React.Component {
     );
   };
 }
+
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+const mapDispatchToProps = dispatch => ({
+  setLoggedInUser: user => dispatch(setLoggedInUser(user))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ReplyNotification);
 
 const localStyles = StyleSheet.create({
   profileContainer: {

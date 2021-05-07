@@ -24,10 +24,11 @@ import { NetworkContext } from '../../context/NetworkProvider.js';
 import Loading from '../../components/Loading.js';
 import { goBack, reset } from '../../../AppNavigator.js';
 import { isNameUnique, avatarUpload } from '../../services/UserDataAuth.js';
+import { connect } from 'react-redux';
 
 const isTablet = DeviceInfo.isTablet();
 
-export default class ProfileSettings extends React.Component {
+class ProfileSettings extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -45,16 +46,15 @@ export default class ProfileSettings extends React.Component {
     };
   }
 
-  componentDidMount = async () => {
-    let imageURI = await AsyncStorage.getItem('profileURI');
+  componentDidMount() {
     this.setState({
-      imageURI: imageURI || '',
+      imageURI: this.props.user.profile_picture_url,
       currentlyView:
         this.props.route?.params?.data == 'Profile Photo'
           ? 'Profile Photo'
           : 'Profile Settings'
     });
-  };
+  }
 
   async save() {
     this.setState({ isLoading: true });
@@ -81,7 +81,6 @@ export default class ProfileSettings extends React.Component {
           display_name: this.state.displayName
         }
       );
-      await AsyncStorage.setItem('displayName', this.state.displayName);
       reset('PROFILE');
     } else {
       this.setState({ showDisplayName: true });
@@ -352,6 +351,12 @@ export default class ProfileSettings extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+export default connect(mapStateToProps, null)(ProfileSettings);
 
 const localStyles = StyleSheet.create({
   settingsText: {

@@ -28,40 +28,13 @@ export async function getToken(userEmail, userPass, purchases) {
     response = await response.json();
     if (response.success) {
       token = response.token;
-      await AsyncStorage.multiSet([
-        ['userId', JSON.stringify(response.userId)]
-      ]);
     }
     return response;
   }
 }
 
 export async function getUserData() {
-  // return profile details
-  try {
-    await getToken();
-    let userData = await fetch(`${commonService.rootUrl}/musora-api/profile`, {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    if (typeof userData.error == 'undefined') {
-      userData = await userData.json();
-      // if received data, update data
-      try {
-        await AsyncStorage.multiSet([
-          ['totalXP', userData?.totalXp?.toString()],
-          ['rank', userData?.xpRank?.toString()],
-          ['userId', userData?.id?.toString()],
-          ['displayName', userData?.display_name?.toString()],
-          ['profileURI', userData?.avatarUrl?.toString()],
-          ['joined', userData?.created_at?.toString()]
-        ]);
-      } catch (e) {}
-      return userData;
-    }
-
-    // return userData;
-  } catch (error) {}
+  return commonService.tryCall(`${commonService.rootUrl}/api/profile`);
 }
 
 export async function avatarUpload(data) {

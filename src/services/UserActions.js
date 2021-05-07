@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import { getUserData } from '../../src/services/UserDataAuth.js';
 import commonService from './common.service';
 import { Platform } from 'react-native';
 
@@ -39,7 +38,7 @@ export async function resetProgress(contentID) {
 }
 
 export async function markComplete(contentID) {
-  let response = await commonService.tryCall(
+  return commonService.tryCall(
     `${
       commonService.rootUrl
     }/musora-api/complete?content_id=${contentID}&device_type=${
@@ -47,13 +46,6 @@ export async function markComplete(contentID) {
     }`,
     'PUT'
   );
-  let userData = await getUserData();
-
-  await AsyncStorage.multiSet([
-    ['totalXP', userData.totalXp.toString()],
-    ['rank', userData.xpRank.toString()]
-  ]);
-  return response;
 }
 
 export async function updateUserDetails(picture, name, phoneNr, firebaseToken) {

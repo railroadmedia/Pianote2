@@ -7,7 +7,8 @@ import {
   FlatList,
   Linking,
   StatusBar,
-  StyleSheet
+  StyleSheet,
+  RefreshControl
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -27,6 +28,8 @@ import {
 } from '../../services/notification.service';
 import { SafeAreaView } from 'react-navigation';
 import { navigate } from '../../../AppNavigator.js';
+import { setLoggedInUser } from '../../redux/UserActions.js';
+import { connect } from 'react-redux';
 
 const isTablet = DeviceInfo.isTablet();
 const messageDict = {
@@ -68,7 +71,7 @@ const messageDict = {
   }
 };
 
-export default class Profile extends React.Component {
+class Profile extends React.Component {
   static contextType = NetworkContext;
   page = 1;
   constructor(props) {
@@ -88,33 +91,59 @@ export default class Profile extends React.Component {
       notify_on_forum_post_reply: false,
       notify_on_lesson_comment_like: false,
       notify_on_lesson_comment_reply: false,
-      notify_weekly_update: false
+      notify_weekly_update: false,
+      refreshing: false
     };
   }
 
   componentDidMount() {
-    getUserData().then(userData => {
-      console.log(userData);
-      this.setState({
-        xp: this.changeXP(userData?.totalXp),
-        rank: userData?.xpRank,
-        profileImage: userData?.avatarUrl,
-        username: userData?.display_name,
-        memberSince: userData?.created_at,
-        notifications_summary_frequency_minutes:
-          userData?.notifications_summary_frequency_minutes,
-        notify_on_forum_followed_thread_reply:
-          userData?.notify_on_forum_followed_thread_reply,
-        notify_on_forum_post_like: userData?.notify_on_forum_post_like,
-        notify_on_forum_post_reply: userData?.notify_on_forum_post_reply,
-        notify_on_lesson_comment_like: userData?.notify_on_lesson_comment_like,
-        notify_on_lesson_comment_reply:
-          userData?.notify_on_lesson_comment_reply,
-        notify_weekly_update: userData?.notify_weekly_update
-      });
-      this.getNotifications(false);
+    const {
+      display_name,
+      created_at,
+      profile_picture_url,
+      totalXp,
+      xpRank,
+      notifications_summary_frequency_minutes,
+      notify_on_forum_followed_thread_reply,
+      notify_on_forum_post_like,
+      notify_on_forum_post_reply,
+      notify_on_lesson_comment_like,
+      notify_on_lesson_comment_reply,
+      notify_weekly_update
+    } = this.props.user;
+    this.setState({
+      memberSince: created_at,
+      username: display_name,
+      profileImage: profile_picture_url,
+      xp: totalXp,
+      rank: xpRank,
+      notifications_summary_frequency_minutes,
+      notify_on_forum_followed_thread_reply,
+      notify_on_forum_post_like,
+      notify_on_forum_post_reply,
+      notify_on_lesson_comment_like,
+      notify_on_lesson_comment_reply,
+      notify_weekly_update
     });
+    this.getNotifications(false);
   }
+
+  async getUserDetails() {
+    if (!this.context.isConnected) {
+      return this.context.showNoConnectionAlert();
+    }
+    let userDetails = await getUserData();
+    this.props.setLoggedInUser(userDetails);
+    this.setState({ refreshing: false });
+  }
+
+  refresh = () => {
+    if (!this.context.isConnected) {
+      return this.context.showNoConnectionAlert();
+    }
+    this.setState({ refreshing: true });
+    this.getUserDetails();
+  };
 
   async getNotifications(loadMore) {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
@@ -281,6 +310,14 @@ export default class Profile extends React.Component {
             keyExtractor={(item, index) => index.toString()}
             onEndReached={this.loadMoreNotifications}
             onEndReachedThreshold={0.01}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={() => this.refresh()}
+                colors={[colors.pianoteRed]}
+                tintColor={colors.pianoteRed}
+              />
+            }
             ListHeaderComponent={() => (
               <>
                 <View
@@ -551,6 +588,16 @@ export default class Profile extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+const mapDispatchToProps = dispatch => ({
+  setLoggedInUser: user => dispatch(setLoggedInUser(user))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);
 
 const localStyles = StyleSheet.create({
   headerContainer: {

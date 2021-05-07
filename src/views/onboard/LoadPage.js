@@ -20,7 +20,9 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import RNFetchBlob from 'rn-fetch-blob';
 import commonService from '../../services/common.service';
 import navigationService from '../../services/navigation.service';
-import { navigate, reset } from '../../../AppNavigator';
+import { currentScene, navigate, reset } from '../../../AppNavigator';
+import { connect } from 'react-redux';
+import { setLoggedInUser } from '../../redux/UserActions';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -85,7 +87,7 @@ class LoadPage extends React.Component {
         } else if (res.success) {
           updateFcmToken();
           let userData = await getUserData();
-
+          this.props.setLoggedInUser(userData);
           let { lessonUrl, commentId } = notif;
           if (commonService.urlToOpen) {
             return navigationService.decideWhereToRedirect();
@@ -211,7 +213,8 @@ const mapDispatchToProps = dispatch =>
       cacheCourses,
       cachePodcasts,
       cacheQuickTips,
-      cacheStudentFocus
+      cacheStudentFocus,
+      setLoggedInUser: user => dispatch(setLoggedInUser(user))
     },
     dispatch
   );

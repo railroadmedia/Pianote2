@@ -4,11 +4,11 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import DeviceInfo from 'react-native-device-info';
 import Icon from '../assets/icons';
-import AsyncStorage from '@react-native-community/async-storage';
 import { NetworkContext } from '../context/NetworkProvider';
 import { navigate } from '../../AppNavigator';
+import { connect } from 'react-redux';
 
-export default class NavigationBar extends React.Component {
+class NavigationBar extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -21,9 +21,10 @@ export default class NavigationBar extends React.Component {
     };
   }
 
-  componentDidMount = async () => {
-    let profileImage = await AsyncStorage.getItem('profileURI');
-    this.setState({ profileImage: profileImage || '' });
+  componentDidMount = () => {
+    this.setState({
+      profileImage: this.props.user.profile_picture_url
+    });
   };
 
   profile = () => {
@@ -151,6 +152,12 @@ export default class NavigationBar extends React.Component {
     );
   };
 }
+
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+export default connect(mapStateToProps, null)(NavigationBar);
 
 const localStyles = StyleSheet.create({
   navIconContainer: {

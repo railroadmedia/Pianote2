@@ -15,13 +15,17 @@ import { getUserData } from '../../services/UserDataAuth.js';
 import CustomSwitch from '../../components/CustomSwitch.js';
 import NavigationBar from '../../components/NavigationBar.js';
 import { changeNotificationSettings } from '../../services/notification.service';
+import CustomSwitch from 'Pianote2/src/components/CustomSwitch.js';
+import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';
+import { connect } from 'react-redux';
+import { setLoggedInUser } from '../../redux/UserActions';
 
 const isTablet = DeviceInfo.isTablet();
 
-export default class NotificationSettings extends React.Component {
+class NotificationSettings extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -36,23 +40,26 @@ export default class NotificationSettings extends React.Component {
     };
   }
 
-  async componentDidMount() {
-    console.log(await getUserData());
-    getUserData().then(userData =>
-      this.setState({
-        notifications_summary_frequency_minutes:
-          userData?.notifications_summary_frequency_minutes,
-        notify_on_forum_followed_thread_reply:
-          userData?.notify_on_forum_followed_thread_reply,
-        notify_on_forum_post_like: userData?.notify_on_forum_post_like,
-        notify_on_post_in_followed_forum_thread:
-          userData?.notify_on_post_in_followed_forum_thread,
-        notify_on_lesson_comment_like: userData?.notify_on_lesson_comment_like,
-        notify_on_lesson_comment_reply:
-          userData?.notify_on_lesson_comment_reply,
-        isLoading: false
-      })
-    );
+  componentDidMount() {
+    const {
+      notifications_summary_frequency_minutes,
+      notify_on_forum_followed_thread_reply,
+      notify_on_forum_post_like,
+      notify_on_forum_post_reply,
+      notify_on_lesson_comment_like,
+      notify_on_lesson_comment_reply,
+      notify_weekly_update
+    } = this.props.user;
+    this.setState({
+      notifications_summary_frequency_minutes,
+      notify_on_forum_followed_thread_reply,
+      notify_on_forum_post_like,
+      notify_on_forum_post_reply,
+      notify_on_lesson_comment_like,
+      notify_on_lesson_comment_reply,
+      notify_weekly_update,
+      isLoading: false
+    });
   }
 
   changeNotificationStatus = async datum => {
@@ -311,6 +318,19 @@ export default class NotificationSettings extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+const mapDispatchToProps = dispatch => ({
+  setLoggedInUser: user => dispatch(setLoggedInUser(user))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NotificationSettings);
 
 const localStyles = StyleSheet.create({
   container: {
