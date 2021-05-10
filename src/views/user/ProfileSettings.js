@@ -90,9 +90,7 @@ export default class ProfileSettings extends React.Component {
 
   changeImage = async () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-
     const data = new FormData();
-
     data.append('file', {
       name: this.state.imageName,
       type: this.state.imageType,

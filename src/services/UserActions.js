@@ -77,18 +77,21 @@ export async function getMediaSessionId(
     'PUT'
   );
 }
+
 export async function updateUsersVideoProgress(id, seconds, lengthInSeconds) {
   return commonService.tryCall(
     `${commonService.rootUrl}/musora-api/media/${id}?seconds_played=${seconds}&current_second=${seconds}&length_in_seconds=${lengthInSeconds}`,
     'PUT'
   );
 }
+
 export function removeAllMessages(userId) {
   return commonService.tryCall(
     `${commonService.rootUrl}/api/chat/delete-user-messages?user_id=${userId}`,
     'POST'
   );
 }
+
 export function toggleBlockStudent(user) {
   return commonService.tryCall(
     `${commonService.rootUrl}/api/chat/${

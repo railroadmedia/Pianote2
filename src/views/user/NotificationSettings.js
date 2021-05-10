@@ -14,10 +14,7 @@ import Icon from '../../assets/icons.js';
 import { getUserData } from '../../services/UserDataAuth.js';
 import CustomSwitch from '../../components/CustomSwitch.js';
 import NavigationBar from '../../components/NavigationBar.js';
-import {
-  changeNotificationSettings,
-  getNotificationSettings
-} from '../../services/notification.service';
+import { changeNotificationSettings } from '../../services/notification.service';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';
@@ -40,7 +37,7 @@ export default class NotificationSettings extends React.Component {
   }
 
   async componentDidMount() {
-    console.log(await getNotificationSettings());
+    console.log(await getUserData());
     getUserData().then(userData =>
       this.setState({
         notifications_summary_frequency_minutes:
@@ -59,14 +56,8 @@ export default class NotificationSettings extends React.Component {
   }
 
   changeNotificationStatus = async datum => {
-    // notify_on_forum_followed_thread_reply: bool
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    const body = {
-      data: {
-        type: 'user',
-        attributes: datum
-      }
-    };
+    const body = { data: { type: 'user', attributes: datum } };
     changeNotificationSettings(body);
     console.log(await getUserData());
   };
