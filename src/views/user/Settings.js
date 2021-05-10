@@ -20,15 +20,9 @@ import Intercom from 'react-native-intercom';
 import Icon from '../../assets/icons.js';
 import Back from '../../assets/img/svgs/back.svg';
 import NavigationBar from '../../components/NavigationBar.js';
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import Loading from '../../components/Loading.js';
 import CustomModal from '../../modals/CustomModal.js';
-import {
-  getUserData,
-  logOut,
-  restorePurchase
-} from '../../services/UserDataAuth.js';
+import { logOut, restorePurchase } from '../../services/UserDataAuth.js';
 import { SafeAreaView } from 'react-navigation';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import commonService from '../../services/common.service.js';
@@ -41,7 +35,7 @@ import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
 import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
 import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
 import { goBack, navigate, reset } from '../../../AppNavigator.js';
-import { connect } from 'react-redux';
+import { setLoggedInUser } from '../../redux/UserActions.js';
 
 const isTablet = DeviceInfo.isTablet();
 
@@ -158,6 +152,7 @@ class Settings extends React.Component {
       if (restoreResponse.email) {
         this.loadingRef?.toggleLoading();
         await logOut();
+        this.props.setLoggedInUser({});
         this.loadingRef?.toggleLoading();
         navigate('LOGINCREDENTIALS', {
           email: restoreResponse.email
@@ -195,6 +190,7 @@ class Settings extends React.Component {
       'cacheAndWriteStudentFocus'
     ].map(redux => this.props[redux]({}));
     logOut();
+    this.props.setLoggedInUser({});
     Intercom.logout();
     AsyncStorage.clear();
     reset('LOGIN');
@@ -436,11 +432,27 @@ class Settings extends React.Component {
   }
 }
 
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      cacheAndWriteCourses,
+      cacheAndWriteLessons,
+      cacheAndWriteMyList,
+      cacheAndWritePacks,
+      cacheAndWritePodcasts,
+      cacheAndWriteQuickTips,
+      cacheAndWriteSongs,
+      cacheAndWriteStudentFocus,
+      setLoggedInUser: user => dispatch(setLoggedInUser(user))
+    },
+    dispatch
+  );
+
 const mapStateToProps = state => ({
   user: state.userState.user
 });
 
-export default connect(mapStateToProps, null)(Settings);
+export default connect(mapStateToProps, mapDispatchToProps)(Settings);
 
 const localStyles = StyleSheet.create({
   container: {
@@ -512,19 +524,3 @@ const localStyles = StyleSheet.create({
     fontSize: isTablet ? 18 : 12
   }
 });
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      cacheAndWriteCourses,
-      cacheAndWriteLessons,
-      cacheAndWriteMyList,
-      cacheAndWritePacks,
-      cacheAndWritePodcasts,
-      cacheAndWriteQuickTips,
-      cacheAndWriteSongs,
-      cacheAndWriteStudentFocus
-    },
-    dispatch
-  );
-
-export default connect(null, mapDispatchToProps)(Settings);

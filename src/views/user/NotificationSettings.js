@@ -11,17 +11,16 @@ import {
 import Back from '../../assets/img/svgs/back.svg';
 import DeviceInfo from 'react-native-device-info';
 import Icon from '../../assets/icons.js';
-import { getUserData } from '../../services/UserDataAuth.js';
 import CustomSwitch from '../../components/CustomSwitch.js';
 import NavigationBar from '../../components/NavigationBar.js';
-import { changeNotificationSettings } from '../../services/notification.service';
-import CustomSwitch from 'Pianote2/src/components/CustomSwitch.js';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import {
+  changeNotificationSettings,
+  getNotificationSettings
+} from '../../services/notification.service';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';
 import { connect } from 'react-redux';
-import { setLoggedInUser } from '../../redux/UserActions';
 
 const isTablet = DeviceInfo.isTablet();
 
@@ -30,43 +29,48 @@ class NotificationSettings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      notifications_summary_frequency_minutes: 0,
-      notify_on_forum_followed_thread_reply: false,
       notify_on_post_in_followed_forum_thread: false,
-      notify_on_forum_post_like: false,
+      notify_on_forum_followed_thread_reply: false,
       notify_on_lesson_comment_like: false,
       notify_on_lesson_comment_reply: false,
+      notifications_summary_frequency_minutes: 0, //?
       isLoading: true
     };
   }
 
   componentDidMount() {
-    const {
-      notifications_summary_frequency_minutes,
-      notify_on_forum_followed_thread_reply,
-      notify_on_forum_post_like,
-      notify_on_forum_post_reply,
-      notify_on_lesson_comment_like,
-      notify_on_lesson_comment_reply,
-      notify_weekly_update
-    } = this.props.user;
-    this.setState({
-      notifications_summary_frequency_minutes,
-      notify_on_forum_followed_thread_reply,
-      notify_on_forum_post_like,
-      notify_on_forum_post_reply,
-      notify_on_lesson_comment_like,
-      notify_on_lesson_comment_reply,
-      notify_weekly_update,
-      isLoading: false
-    });
+    this.getNotificationSettings();
   }
 
-  changeNotificationStatus = async datum => {
+  async getNotificationSettings() {
+    const settings = (await getNotificationSettings()).data;
+    const {
+      notify_on_forum_followed_thread_reply,
+      notify_on_forum_post_like,
+      notify_on_lesson_comment_like,
+      notify_on_lesson_comment_reply,
+      notify_on_post_in_followed_forum_thread
+    } = settings;
+    this.setState({
+      notify_on_post_in_followed_forum_thread,
+      notify_on_forum_followed_thread_reply,
+      notify_on_lesson_comment_like,
+      notify_on_lesson_comment_reply,
+      isLoading: false
+    });
+    console.log(settings);
+  }
+
+  changeNotificationStatus = datum => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    const body = { data: { type: 'user', attributes: datum } };
+    const setting_name = Object.keys(datum)[0];
+    const setting_value = Object.values(datum)[0];
+    const body = {
+      user_id: this.props.user.id,
+      setting_name,
+      setting_value
+    };
     changeNotificationSettings(body);
-    console.log(await getUserData());
   };
 
   render() {
@@ -120,10 +124,10 @@ class NotificationSettings extends React.Component {
               <View style={localStyles.textContainer}>
                 <Text style={localStyles.text}>Followed forum posts</Text>
                 <CustomSwitch
-                  isClicked={this.state.notify_weekly_update}
+                  isClicked={this.state.notify_on_post_in_followed_forum_thread}
                   onClick={bool =>
                     this.changeNotificationStatus({
-                      notify_weekly_update: bool
+                      notify_on_post_in_followed_forum_thread: bool
                     })
                   }
                 />
@@ -139,17 +143,7 @@ class NotificationSettings extends React.Component {
                   }
                 />
               </View>
-              <View style={localStyles.textContainer}>
-                <Text style={localStyles.text}>Forum post likes</Text>
-                <CustomSwitch
-                  isClicked={this.state.notify_on_forum_post_like}
-                  onClick={bool =>
-                    this.changeNotificationStatus({
-                      notify_on_forum_post_like: bool
-                    })
-                  }
-                />
-              </View>
+
               <View style={localStyles.textContainer}>
                 <Text style={localStyles.text}>Comment replies</Text>
                 <CustomSwitch
@@ -180,12 +174,9 @@ class NotificationSettings extends React.Component {
                 <Text style={localStyles.text}>Immediate</Text>
                 <TouchableOpacity
                   onPress={() => {
-                    this.setState(
-                      {
-                        notifications_summary_frequency_minutes: 1
-                      },
-                      () => this.changeNotificationStatus()
-                    );
+                    this.changeNotificationStatus({
+                      notifications_summary_frequency_minutes: 1
+                    });
                   }}
                   style={[
                     styles.centerContent,
@@ -220,12 +211,9 @@ class NotificationSettings extends React.Component {
                 <Text style={localStyles.text}>Once per day</Text>
                 <TouchableOpacity
                   onPress={() => {
-                    this.setState(
-                      {
-                        notifications_summary_frequency_minutes: 1440
-                      },
-                      () => this.changeNotificationStatus()
-                    );
+                    this.changeNotificationStatus({
+                      notifications_summary_frequency_minutes: 1440
+                    });
                   }}
                   style={[
                     styles.centerContent,
@@ -263,12 +251,9 @@ class NotificationSettings extends React.Component {
                 <Text style={localStyles.text}>Never</Text>
                 <TouchableOpacity
                   onPress={() => {
-                    this.setState(
-                      {
-                        notifications_summary_frequency_minutes: 0
-                      },
-                      () => this.changeNotificationStatus()
-                    );
+                    this.changeNotificationStatus({
+                      notifications_summary_frequency_minutes: 0
+                    });
                   }}
                   style={[
                     styles.centerContent,
@@ -323,14 +308,7 @@ const mapStateToProps = state => ({
   user: state.userState.user
 });
 
-const mapDispatchToProps = dispatch => ({
-  setLoggedInUser: user => dispatch(setLoggedInUser(user))
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(NotificationSettings);
+export default connect(mapStateToProps, null)(NotificationSettings);
 
 const localStyles = StyleSheet.create({
   container: {

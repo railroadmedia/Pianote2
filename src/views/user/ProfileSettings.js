@@ -25,6 +25,7 @@ import Loading from '../../components/Loading.js';
 import { goBack, reset } from '../../../AppNavigator.js';
 import { isNameUnique, avatarUpload } from '../../services/UserDataAuth.js';
 import { connect } from 'react-redux';
+import { setLoggedInUser } from '../../redux/UserActions.js';
 
 const isTablet = DeviceInfo.isTablet();
 
@@ -81,6 +82,10 @@ class ProfileSettings extends React.Component {
           display_name: this.state.displayName
         }
       );
+      this.props.setLoggedInUser({
+        ...this.props.user,
+        display_name: this.state.displayName
+      });
       reset('PROFILE');
     } else {
       this.setState({ showDisplayName: true });
@@ -100,6 +105,7 @@ class ProfileSettings extends React.Component {
     data.append('target', this.state.imageName);
     if (this.state.imageURI !== '') {
       let response = await avatarUpload(data);
+      console.log(response);
       if (response.status == 413) {
         this.setState({ showProfileImage: true });
         return;
@@ -111,10 +117,11 @@ class ProfileSettings extends React.Component {
           'POST',
           { file: url == '' ? url : url.data[0].url }
         );
-        await AsyncStorage.setItem(
-          'profileURI',
-          url == '' ? url : url.data[0].url
-        );
+        this.props.setLoggedInUser({
+          ...this.props.user,
+          profile_picture_url: url.data[0].url
+        });
+
         reset('PROFILE');
       }
     }
@@ -356,7 +363,11 @@ const mapStateToProps = state => ({
   user: state.userState.user
 });
 
-export default connect(mapStateToProps, null)(ProfileSettings);
+const mapDispatchToProps = dispatch => ({
+  setLoggedInUser: user => dispatch(setLoggedInUser(user))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileSettings);
 
 const localStyles = StyleSheet.create({
   settingsText: {

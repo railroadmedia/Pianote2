@@ -38,14 +38,13 @@ export async function getUserData() {
 }
 
 export async function avatarUpload(data) {
-  return commonService.tryCall(
-    `${commonService.rootUrl}/musora-api/avatar/upload`,
-    {
+  try {
+    return await fetch(`${commonService.rootUrl}/musora-api/avatar/upload`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
       body: data
-    }
-  );
+    });
+  } catch (error) {}
 }
 
 export async function forgotPass(emailAddress) {

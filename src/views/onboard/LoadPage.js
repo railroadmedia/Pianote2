@@ -21,7 +21,6 @@ import RNFetchBlob from 'rn-fetch-blob';
 import commonService from '../../services/common.service';
 import navigationService from '../../services/navigation.service';
 import { currentScene, navigate, reset } from '../../../AppNavigator';
-import { connect } from 'react-redux';
 import { setLoggedInUser } from '../../redux/UserActions';
 
 const windowDim = Dimensions.get('window');

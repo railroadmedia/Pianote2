@@ -45,12 +45,6 @@ const messageDict = {
     color: 'blue',
     type: 'comment like notifications'
   },
-  'forum post reply': {
-    message: 'replied to your forum post.',
-    new: true,
-    color: 'orange',
-    type: 'forum post reply notifications'
-  },
   'forum post liked': {
     message: 'liked your forum post.',
     new: true,
@@ -86,12 +80,11 @@ class Profile extends React.Component {
       isLoading: true,
       animateLoadMore: false,
       clickedNotificationStatus: false,
-      notify_on_forum_followed_thread_reply: false,
-      notify_on_forum_post_like: false,
-      notify_on_forum_post_reply: false,
-      notify_on_lesson_comment_like: false,
-      notify_on_lesson_comment_reply: false,
-      notify_weekly_update: false,
+      notify_on_post_in_followed_forum_thread,
+      notify_on_forum_followed_thread_reply, //
+      notify_on_lesson_comment_like, //
+      notify_on_lesson_comment_reply, //
+      notify_on_forum_post_like, //
       refreshing: false
     };
   }
@@ -102,28 +95,14 @@ class Profile extends React.Component {
       created_at,
       profile_picture_url,
       totalXp,
-      xpRank,
-      notifications_summary_frequency_minutes,
-      notify_on_forum_followed_thread_reply,
-      notify_on_forum_post_like,
-      notify_on_forum_post_reply,
-      notify_on_lesson_comment_like,
-      notify_on_lesson_comment_reply,
-      notify_weekly_update
+      xpRank
     } = this.props.user;
     this.setState({
       memberSince: created_at,
       username: display_name,
       profileImage: profile_picture_url,
       xp: totalXp,
-      rank: xpRank,
-      notifications_summary_frequency_minutes,
-      notify_on_forum_followed_thread_reply,
-      notify_on_forum_post_like,
-      notify_on_forum_post_reply,
-      notify_on_lesson_comment_like,
-      notify_on_lesson_comment_reply,
-      notify_weekly_update
+      rank: xpRank
     });
     this.getNotifications(false);
   }
@@ -144,6 +123,25 @@ class Profile extends React.Component {
     this.setState({ refreshing: true });
     this.getUserDetails();
   };
+
+  async getNotificationSettings() {
+    const settings = (await getNotificationSettings()).data;
+    const {
+      notify_on_forum_followed_thread_reply,
+      notify_on_forum_post_like,
+      notify_on_lesson_comment_like,
+      notify_on_lesson_comment_reply,
+      notify_on_post_in_followed_forum_thread
+    } = settings;
+    this.setState({
+      notify_on_post_in_followed_forum_thread,
+      notify_on_forum_followed_thread_reply,
+      notify_on_lesson_comment_like,
+      notify_on_lesson_comment_reply,
+      notify_on_forum_post_like,
+      isLoading: false
+    });
+  }
 
   async getNotifications(loadMore) {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
@@ -222,10 +220,6 @@ class Profile extends React.Component {
       this.setState({
         clickedNotificationStatus: this.state.notify_on_lesson_comment_like
       });
-    } else if (type == 'replied to your forum post.') {
-      this.setState({
-        clickedNotificationStatus: this.state.notify_on_forum_post_reply
-      });
     } else if (type == 'liked your forum post.') {
       this.setState({
         clickedNotificationStatus: this.state.notify_on_forum_post_like
@@ -235,14 +229,11 @@ class Profile extends React.Component {
         clickedNotificationStatus: this.state
           .notify_on_forum_followed_thread_reply
       });
-    } else if (type == '') {
-      this.setState({
-        clickedNotificationStatus: this.state.notify_weekly_update
-      });
     }
   };
 
   turnOfffNotifications = data => {
+    console.log(data);
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     this.setState(data);
     commonService.tryCall(

@@ -12,7 +12,7 @@ import Chat from '../../src/assets/img/svgs/chat.svg';
 import Icon from '../assets/icons';
 import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
 import { connect } from 'react-redux';
-import { setLoggedInUser } from '../redux/UserActions';
+import { getNotificationSettings } from '../services/notification.service';
 
 const isTablet = DeviceInfo.isTablet();
 const messageDict = {
@@ -27,12 +27,6 @@ const messageDict = {
     new: true,
     color: 'blue',
     type: 'comment like notifications'
-  },
-  'forum post reply': {
-    message: 'replied to your forum post.',
-    new: true,
-    color: 'orange',
-    type: 'forum post reply notifications'
   },
   'forum post liked': {
     message: 'liked your forum post.',
@@ -58,26 +52,23 @@ class ReplyNotification extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      notify_on_post_in_followed_forum_thread: false,
       notify_on_forum_followed_thread_reply: false,
-      notify_on_forum_post_like: false,
-      notify_on_forum_post_reply: false,
       notify_on_lesson_comment_like: false,
       notify_on_lesson_comment_reply: false,
-      notify_weekly_update: false,
+      notifications_summary_frequency_minutes: 0, //?
       statusChange: false
     };
   }
 
   componentDidMount = async () => {
     const {
-      notify_on_lesson_comment_reply,
-      notify_on_lesson_comment_like,
-      notify_on_forum_post_reply,
-      notify_on_forum_post_like,
-      notifications_summary_frequency_minutes,
       notify_on_forum_followed_thread_reply,
-      notify_weekly_update
-    } = this.props.user;
+      notify_on_forum_post_like,
+      notify_on_lesson_comment_like,
+      notify_on_lesson_comment_reply,
+      notify_on_post_in_followed_forum_thread
+    } = (await getNotificationSettings()).data;
     let statusChange = null;
     console.log(this.props);
 
@@ -95,13 +86,6 @@ class ReplyNotification extends React.Component {
         notify_on_lesson_comment_like: !this.state.notify_on_lesson_comment_like
       };
     } else if (
-      messageDict[this.props.data.type]?.message ==
-      'replied to your forum post.'
-    ) {
-      statusChange = {
-        notify_on_forum_post_reply: !this.state.notify_on_forum_post_reply
-      };
-    } else if (
       messageDict[this.props.data.type]?.message == 'liked your forum post.'
     ) {
       statusChange = {
@@ -114,21 +98,15 @@ class ReplyNotification extends React.Component {
         notify_on_forum_followed_thread_reply: !this.state
           .notify_on_forum_followed_thread_reply
       };
-    } else if (messageDict[this.props.data.type]?.message == '') {
-      statusChange = {
-        notify_weekly_update: !this.state.notify_weekly_update
-      };
     }
 
     this.setState({
       statusChange,
-      notify_on_lesson_comment_reply,
-      notify_on_lesson_comment_like,
-      notify_on_forum_post_reply,
-      notify_on_forum_post_like,
-      notifications_summary_frequency_minutes,
       notify_on_forum_followed_thread_reply,
-      notify_weekly_update
+      notify_on_forum_post_like,
+      notify_on_lesson_comment_like,
+      notify_on_lesson_comment_reply,
+      notify_on_post_in_followed_forum_thread
     });
   };
 
@@ -260,11 +238,7 @@ const mapStateToProps = state => ({
   user: state.userState.user
 });
 
-const mapDispatchToProps = dispatch => ({
-  setLoggedInUser: user => dispatch(setLoggedInUser(user))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ReplyNotification);
+export default connect(mapStateToProps, null)(ReplyNotification);
 
 const localStyles = StyleSheet.create({
   profileContainer: {

@@ -18,7 +18,6 @@ import Video from 'RNVideoEnhanced';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import Icon from '../../assets/icons.js';
-import AsyncStorage from '@react-native-community/async-storage';
 import { Download_V2, offlineContent, DownloadResources } from 'RNDownload';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Replies from '../../components/Replies';
@@ -48,12 +47,13 @@ import Assignment from './Assignment';
 import { NetworkContext } from '../../context/NetworkProvider';
 import methodService from '../../services/method.service';
 import { goBack, navigate } from '../../../AppNavigator';
+import { connect } from 'react-redux';
 
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
-export default class ViewLesson extends React.Component {
+class ViewLesson extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -107,12 +107,8 @@ export default class ViewLesson extends React.Component {
 
     // get profile image
     this.limit = 10;
-    let storage = await Promise.all([
-      AsyncStorage.getItem('userId'),
-      AsyncStorage.getItem('profileURI')
-    ]);
-    if (storage[1]) this.setState({ profileImage: storage[1] });
-    this.userId = JSON.parse(storage[0]);
+    this.setState({ profileImage: this.props.user.profile_picture_url });
+    this.userId = this.props.user.id;
     this.getContent();
   };
 
@@ -1928,3 +1924,9 @@ export default class ViewLesson extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+export default connect(mapStateToProps, null)(ViewLesson);
