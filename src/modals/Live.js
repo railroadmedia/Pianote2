@@ -22,10 +22,6 @@ export default class Live extends React.Component {
     };
   }
 
-  componentDidMount() {
-    console.log(this.props.liveLesson[0].thumbnail_url);
-  }
-
   changeType = word => {
     if (!word) return;
 

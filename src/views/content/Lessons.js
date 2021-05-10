@@ -687,7 +687,7 @@ class Lessons extends React.Component {
                     numberOfLines={1}
                     style={{
                       textAlign: 'left',
-                      fontSize: DeviceInfo.isTablet() ? 20 : 16,
+                      fontSize: onTablet ? 20 : 16,
                       fontFamily: 'RobotoCondensed-Bold',
                       paddingTop: 5,
                       paddingBottom: 15,
@@ -923,7 +923,7 @@ class Lessons extends React.Component {
                             numberOfLines={1}
                             ellipsizeMode='tail'
                             style={{
-                              fontSize: DeviceInfo.isTablet() ? 16 : 14,
+                              fontSize: onTablet ? 16 : 14,
                               fontFamily: 'OpenSans-Bold',
                               color: 'white'
                             }}
@@ -1100,7 +1100,7 @@ class Lessons extends React.Component {
                                 <Text
                                   numberOfLines={1}
                                   style={{
-                                    fontSize: DeviceInfo.isTablet() ? 14 : 12,
+                                    fontSize: onTablet ? 14 : 12,
                                     fontFamily: 'OpenSans-Regular',
                                     color: 'white',
                                     paddingLeft: 5
@@ -1115,7 +1115,7 @@ class Lessons extends React.Component {
                             numberOfLines={1}
                             ellipsizeMode='tail'
                             style={{
-                              fontSize: DeviceInfo.isTablet() ? 16 : 14,
+                              fontSize: onTablet ? 16 : 14,
                               fontFamily: 'OpenSans-Bold',
                               color: 'white'
                             }}

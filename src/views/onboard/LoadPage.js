@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
 import { Download_V2 } from 'RNDownload';
 import { bindActionCreators } from 'redux';
-import { requestTrackingPermission } from 'react-native-tracking-transparency';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-community/async-storage';
 import { getToken, getUserData } from '../../services/UserDataAuth';

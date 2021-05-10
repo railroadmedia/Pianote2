@@ -100,7 +100,7 @@ global.fullHeight = Dimensions.get('window').height;
 global.token = '';
 global.onTablet = DeviceInfo.isTablet();
 global.loadedFromNotification = false;
-global.isiOS = Platform.OS == 'ios';
+global.isiOS = Platform.OS === 'ios';
 global.styles = require('Pianote2/src/assets/styles/styles.js');
 global.isConnected = true;
 global.isPackOnly = false;

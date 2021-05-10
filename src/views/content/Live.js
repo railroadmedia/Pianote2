@@ -215,7 +215,7 @@ export default class Live extends React.Component {
   addToMyList = async (contentID, type) => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
 
-    if (type == 'live') {
+    if (type === 'live') {
       this.state.liveLesson[0].is_added_to_primary_playlist = true;
     } else {
       this.state.items.find(
@@ -234,7 +234,7 @@ export default class Live extends React.Component {
   removeFromMyList = (contentID, type) => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
 
-    if (type == 'live') {
+    if (type === 'live') {
       this.state.liveLesson[0].is_added_to_primary_playlist = false;
     } else {
       this.state.items.find(
