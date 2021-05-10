@@ -50,7 +50,7 @@ export default class Catalogue extends React.Component {
 
   componentDidMount() {
     this.refreshOnFocusListener = refreshOnFocusListener.call(this);
-    this.setContent(this.serviceOptions);
+    this.setContent(this.serviceOptions, 'refresh');
   }
 
   componentWillUnmount() {
@@ -58,18 +58,13 @@ export default class Catalogue extends React.Component {
   }
 
   get serviceOptions() {
-    return {
-      scene: this.scene,
-      sort: this.sort?.sortQuery
-    };
+    return { scene: this.scene, sort: this.sort?.sortQuery };
   }
 
   setContent = (serviceOptions, actionType = 'refresh') => {
-    console.log(serviceOptions);
     return (actionType === 'refresh' ? getContent : getAll)(
       serviceOptions
     ).then(({ method, all, inProgress, aborted }) => {
-      console.log(method, all, inProgress, aborted);
       switch (actionType) {
         case 'refresh': {
           this.data = { method, all: all.data, inProgress: inProgress.data };

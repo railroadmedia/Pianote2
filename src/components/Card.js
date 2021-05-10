@@ -332,7 +332,7 @@ class Card extends React.Component {
                 <Download_V2
                   entity={{
                     id: data.id,
-                    content: contentService.getContent(data.id, true)
+                    content: contentService.getContent
                   }}
                   styles={{
                     iconSize: {
