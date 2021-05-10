@@ -50,7 +50,7 @@ export default class Catalogue extends React.Component {
 
   componentDidMount() {
     this.refreshOnFocusListener = refreshOnFocusListener.call(this);
-    getContent(this.serviceOptions).then(this.setData);
+    this.setContent(this.serviceOptions);
   }
 
   componentWillUnmount() {
@@ -58,32 +58,43 @@ export default class Catalogue extends React.Component {
   }
 
   get serviceOptions() {
-    let { refreshing, loadingMore, filtering } = this.state;
     return {
       scene: this.scene,
-      page:
-        refreshing || filtering
-          ? (this.page = 1)
-          : loadingMore
-          ? ++this.page
-          : this.page,
-      filters: refreshing ? '' : this.filterRef?.filterQuery,
       sort: this.sort?.sortQuery
     };
   }
 
-  setData = ({ method, all, inProgress }) => {
-    let { refreshing, loadingMore, filtering } = this.state;
-    this.metaFilters = all?.meta.filterOptions || this.metaFilters;
-    if (refreshing)
-      this.data = { method, all: all.data, inProgress: inProgress.data };
-    else if (loadingMore) this.data.all.push(...(all.data || []));
-    else if (filtering) this.data.all = all.data;
-    this.setState({
-      loading: false,
-      refreshing: false,
-      filtering: false,
-      loadingMore: false
+  setContent = (serviceOptions, actionType = 'refresh') => {
+    console.log(serviceOptions);
+    return (actionType === 'refresh' ? getContent : getAll)(
+      serviceOptions
+    ).then(({ method, all, inProgress, aborted }) => {
+      console.log(method, all, inProgress, aborted);
+      switch (actionType) {
+        case 'refresh': {
+          this.data = { method, all: all.data, inProgress: inProgress.data };
+          this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
+          this.setState({ loading: false, refreshing: false });
+          break;
+        }
+        case 'loadMore': {
+          if (!aborted) {
+            if (!all.data) this.page--;
+            this.data.all?.push(...(all.data || []));
+            this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
+            this.setState({ loadingMore: false });
+          }
+          break;
+        }
+        case 'filter': {
+          if (!aborted) {
+            this.data.all = all.data;
+            this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
+            this.setState({ filtering: false });
+          }
+          break;
+        }
+      }
     });
   };
 
@@ -270,22 +281,42 @@ export default class Catalogue extends React.Component {
   filter = () =>
     new Promise(res =>
       this.setState({ filtering: true }, () =>
-        getAll(this.serviceOptions).then(all => {
-          this.setData(all);
-          res();
-        })
+        this.setContent(
+          {
+            ...this.serviceOptions,
+            page: (this.page = 1),
+            filters: this.filterRef?.filterQuery,
+            signal: (this.abortFilter = new AbortController()).signal
+          },
+          'filter'
+        ).then(res)
       )
     );
 
   loadMore = () =>
     this.setState({ loadingMore: true }, () =>
-      getAll(this.serviceOptions).then(this.setData)
+      (this.loadMorePromise || Promise.resolve()).then(
+        () =>
+          (this.loadMorePromise = this.setContent(
+            {
+              ...this.serviceOptions,
+              page: ++this.page,
+              filters: this.filterRef?.filterQuery,
+              signal: (this.abortLoadMore = new AbortController()).signal
+            },
+            'loadMore'
+          ))
+      )
     );
 
-  refresh = () =>
-    this.setState({ refreshing: true }, () =>
-      getContent(this.serviceOptions).then(this.setData)
+  refresh = () => {
+    this.abortFilter?.abort();
+    this.abortLoadMore?.abort();
+    this.setState(
+      { refreshing: true, loadingMore: false, filtering: false },
+      () => this.setContent({ ...this.serviceOptions, page: (this.page = 1) })
     );
+  };
 
   render() {
     let { scene, data } = this;

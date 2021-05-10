@@ -22,7 +22,7 @@ export function getContent(options) {
 }
 export function getAll({
   scene,
-  page,
+  page = 1,
   filters = '',
   sort = '-published_on',
   signal
@@ -44,7 +44,7 @@ export function getAll({
 }
 export function getInProgress({
   scene,
-  page,
+  page = 1,
   filters = '',
   sort = 'progress',
   signal
