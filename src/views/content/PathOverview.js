@@ -630,219 +630,227 @@ export default class PathOverview extends React.Component {
   render() {
     const { isMethod, items, refreshing, isLandscape, nextLesson } = this.state;
     return (
-      <SafeAreaView
-        forceInset={{ top: onTablet ? 'never' : 'never' }}
-        style={[
-          {
-            flex: 1,
-            backgroundColor: isMethod ? 'black' : colors.mainBackground
-          }
-        ]}
-      >
-        <StatusBar
-          backgroundColor={isMethod ? 'black' : colors.mainBackground}
-          barStyle={'light-content'}
-        />
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl
-              colors={[colors.pianoteRed]}
-              refreshing={refreshing}
-              onRefresh={() => this.refresh()}
-            />
-          }
-        >
-          {this.renderHeader()}
-          <FlatList
-            style={{
+      <>
+        <SafeAreaView
+          forceInset={{ top: onTablet ? 'never' : 'never' }}
+          style={[
+            {
               flex: 1,
-              marginLeft: onTablet ? (isLandscape ? '10%' : '2%') : 0,
-              backgroundColor: isMethod ? 'black' : colors.mainBackground,
-              marginBottom: 10,
-              alignSelf: 'center',
-              paddingHorizontal: onTablet ? 0 : 10,
-              width: '100%'
-            }}
-            numColumns={onTablet ? 3 : 1}
-            data={items}
-            keyboardShouldPersistTaps='handled'
-            keyExtractor={content => content.id.toString()}
-            removeClippedSubviews={true}
-            renderItem={({ item, index }) => (
-              <TouchableOpacity
-                onPress={() =>
-                  this.goToLesson(isMethod ? item.mobile_app_url : item.id)
-                }
-                style={[
-                  {
-                    width: onTablet
-                      ? `${isLandscape ? 86 / 3 : 94 / 3}%` // 86 = 100 - 10(=marginRight) - 4(=2*marginleft); 94 = 100 - 2(=marginRight) - 4 (=2*marginLeft)
-                      : '100%',
-                    paddingVertical: 3.5,
-                    flexDirection: onTablet ? 'column' : 'row'
-                  },
-                  isLandscape && index % 3 === 2
-                    ? { marginRight: '10%' }
-                    : { marginRight: '2%' }
-                ]}
-              >
-                <ImageBackground
-                  imageStyle={{ borderRadius: 5 }}
-                  style={{
-                    width: onTablet ? '100%' : width * 0.26,
-                    aspectRatio: 16 / 9
-                  }}
-                  source={{
-                    uri: item.thumbnail_url?.includes('https')
-                      ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                          width
-                        )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
-                          item.thumbnail_url
-                        }`
-                      : item.thumbnail_url
-                  }}
-                  resizeMode='cover'
-                >
-                  {item.completed && (
-                    <View
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        aspectRatio: 16 / 9,
-                        borderRadius: 5,
-                        zIndex: 1,
-                        opacity: 0.2,
-                        backgroundColor: colors.pianoteRed
-                      }}
-                    />
-                  )}
-
-                  <View
-                    style={[
-                      styles.centerContent,
-                      {
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        aspectRatio: 16 / 9,
-                        zIndex: 2
-                      }
-                    ]}
-                  >
-                    {item.started ? (
-                      <Progress
-                        height={onTablet ? 60 : 35}
-                        width={onTablet ? 60 : 35}
-                        fill={'white'}
-                      />
-                    ) : item.completed ? (
-                      <ApprovedTeacher
-                        height={onTablet ? 70 : 45}
-                        width={onTablet ? 70 : 45}
-                        fill={'white'}
-                      />
-                    ) : null}
-                  </View>
-                </ImageBackground>
-                <View
+              backgroundColor: isMethod ? 'black' : colors.mainBackground
+            }
+          ]}
+        >
+          <StatusBar
+            backgroundColor={isMethod ? 'black' : colors.mainBackground}
+            barStyle={'light-content'}
+          />
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                colors={[colors.pianoteRed]}
+                refreshing={refreshing}
+                onRefresh={() => this.refresh()}
+              />
+            }
+          >
+            {this.renderHeader()}
+            <FlatList
+              style={{
+                flex: 1,
+                marginLeft: onTablet ? (isLandscape ? '10%' : '2%') : 0,
+                backgroundColor: isMethod ? 'black' : colors.mainBackground,
+                marginBottom: 10,
+                alignSelf: 'center',
+                paddingHorizontal: onTablet ? 0 : 10,
+                width: '100%'
+              }}
+              numColumns={onTablet ? 3 : 1}
+              data={items}
+              keyboardShouldPersistTaps='handled'
+              keyExtractor={content => content.id.toString()}
+              removeClippedSubviews={true}
+              renderItem={({ item, index }) => (
+                <TouchableOpacity
+                  onPress={() =>
+                    this.goToLesson(isMethod ? item.mobile_app_url : item.id)
+                  }
                   style={[
                     {
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between'
+                      width: onTablet
+                        ? `${isLandscape ? 86 / 3 : 94 / 3}%` // 86 = 100 - 10(=marginRight) - 4(=2*marginleft); 94 = 100 - 2(=marginRight) - 4 (=2*marginLeft)
+                        : '100%',
+                      paddingVertical: 3.5,
+                      flexDirection: onTablet ? 'column' : 'row'
                     },
-                    onTablet ? { width: '100%' } : { flex: 1 }
+                    isLandscape && index % 3 === 2
+                      ? { marginRight: '10%' }
+                      : { marginRight: '2%' }
                   ]}
                 >
-                  <View style={{ width: '80%' }}>
-                    <Text
-                      numberOfLines={1}
-                      style={{
-                        fontSize: onTablet ? 16 : 14,
-                        textAlign: 'left',
-                        fontFamily: 'OpenSans-Bold',
-                        color: 'white',
-                        paddingHorizontal: onTablet ? 0 : 5,
-                        marginTop: onTablet ? 10 : 2.5
-                      }}
-                    >
-                      {item.title}
-                    </Text>
-                    <Text
-                      numberOfLines={1}
-                      style={{
-                        fontSize: sizing.descriptionText,
-                        color: this.props.isMethod
-                          ? colors.pianoteGrey
-                          : colors.secondBackground,
-                        textAlign: 'left',
-                        fontFamily: 'OpenSans-Regular',
-                        paddingHorizontal: onTablet ? 0 : 5
-                      }}
-                    >
-                      {item.length_in_seconds
-                        ? Math.floor(item.length_in_seconds / 60)
-                        : 0}{' '}
-                      {Math.floor(item.length_in_seconds / 60) == 1
-                        ? 'min'
-                        : 'mins'}
-                    </Text>
-                  </View>
+                  <ImageBackground
+                    imageStyle={{ borderRadius: 5 }}
+                    style={{
+                      width: onTablet ? '100%' : width * 0.26,
+                      aspectRatio: 16 / 9
+                    }}
+                    source={{
+                      uri: item.thumbnail_url?.includes('https')
+                        ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                            width
+                          )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
+                            item.thumbnail_url
+                          }`
+                        : item.thumbnail_url
+                    }}
+                    resizeMode='cover'
+                  >
+                    {item.completed && (
+                      <View
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          aspectRatio: 16 / 9,
+                          borderRadius: 5,
+                          zIndex: 1,
+                          opacity: 0.2,
+                          backgroundColor: colors.pianoteRed
+                        }}
+                      />
+                    )}
 
-                  <TouchableOpacity onPress={() => this.toggleMyList(item.id)}>
-                    <Icon.AntDesign
-                      name={
-                        item.is_added_to_primary_playlist ? 'close' : 'plus'
-                      }
-                      size={sizing.myListButtonSize}
-                      color={colors.pianoteRed}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-        </ScrollView>
-        {nextLesson && (
-          <NextVideo
-            item={nextLesson}
-            progress={this.state.progress}
-            type={
-              this.state.isFoundations
-                ? 'Lesson'
-                : isMethod
-                ? 'COURSE'
-                : this.state.type.toUpperCase()
+                    <View
+                      style={[
+                        styles.centerContent,
+                        {
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          aspectRatio: 16 / 9,
+                          zIndex: 2
+                        }
+                      ]}
+                    >
+                      {item.started ? (
+                        <Progress
+                          height={onTablet ? 60 : 35}
+                          width={onTablet ? 60 : 35}
+                          fill={'white'}
+                        />
+                      ) : item.completed ? (
+                        <ApprovedTeacher
+                          height={onTablet ? 70 : 45}
+                          width={onTablet ? 70 : 45}
+                          fill={'white'}
+                        />
+                      ) : null}
+                    </View>
+                  </ImageBackground>
+                  <View
+                    style={[
+                      {
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                      },
+                      onTablet ? { width: '100%' } : { flex: 1 }
+                    ]}
+                  >
+                    <View style={{ width: '80%' }}>
+                      <Text
+                        numberOfLines={1}
+                        style={{
+                          fontSize: onTablet ? 16 : 14,
+                          textAlign: 'left',
+                          fontFamily: 'OpenSans-Bold',
+                          color: 'white',
+                          paddingHorizontal: onTablet ? 0 : 5,
+                          marginTop: onTablet ? 10 : 2.5
+                        }}
+                      >
+                        {item.title}
+                      </Text>
+                      <Text
+                        numberOfLines={1}
+                        style={{
+                          fontSize: sizing.descriptionText,
+                          color: this.props.isMethod
+                            ? colors.pianoteGrey
+                            : colors.secondBackground,
+                          textAlign: 'left',
+                          fontFamily: 'OpenSans-Regular',
+                          paddingHorizontal: onTablet ? 0 : 5
+                        }}
+                      >
+                        {item.length_in_seconds
+                          ? Math.floor(item.length_in_seconds / 60)
+                          : 0}{' '}
+                        {Math.floor(item.length_in_seconds / 60) == 1
+                          ? 'min'
+                          : 'mins'}
+                      </Text>
+                    </View>
+
+                    <TouchableOpacity
+                      onPress={() => this.toggleMyList(item.id)}
+                    >
+                      <Icon.AntDesign
+                        name={
+                          item.is_added_to_primary_playlist ? 'close' : 'plus'
+                        }
+                        size={sizing.myListButtonSize}
+                        color={colors.pianoteRed}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </TouchableOpacity>
+              )}
+            />
+          </ScrollView>
+          {nextLesson && (
+            <NextVideo
+              item={nextLesson}
+              progress={this.state.progress}
+              type={
+                this.state.isFoundations
+                  ? 'Lesson'
+                  : isMethod
+                  ? 'COURSE'
+                  : this.state.type.toUpperCase()
+              }
+              onNextLesson={() =>
+                this.goToLesson(
+                  this.state.isMethod
+                    ? nextLesson.mobile_app_url
+                    : nextLesson.id
+                )
+              }
+              isMethod={isMethod}
+            />
+          )}
+          <RestartCourse
+            isVisible={this.state.showRestartCourse}
+            onBackButtonPress={() =>
+              this.setState({ showRestartCourse: false })
             }
-            onNextLesson={() =>
-              this.goToLesson(
-                this.state.isMethod ? nextLesson.mobile_app_url : nextLesson.id
-              )
-            }
-            isMethod={isMethod}
+            hideRestartCourse={() => {
+              this.setState({
+                showRestartCourse: false
+              });
+            }}
+            type={this.state.type}
+            onRestart={this.onRestartCourse}
           />
-        )}
-        <RestartCourse
-          isVisible={this.state.showRestartCourse}
-          onBackButtonPress={() => this.setState({ showRestartCourse: false })}
-          hideRestartCourse={() => {
-            this.setState({
-              showRestartCourse: false
-            });
-          }}
-          type={this.state.type}
-          onRestart={this.onRestartCourse}
-        />
+        </SafeAreaView>
         <NavigationBar
           currentPage={'LessonsPathOverview'}
           isMethod={isMethod}
         />
-      </SafeAreaView>
+      </>
     );
   }
 }

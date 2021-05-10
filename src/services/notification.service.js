@@ -56,10 +56,18 @@ export async function removeNotification(id) {
   );
 }
 
-export async function changeNotificationSettings(body) {
+export async function getNotificationSettings() {
   return commonService.tryCall(
-    `${commonService.rootUrl}/usora/api/profile/update`,
-    'POST',
+    `${commonService.rootUrl}/api/railnotifications/user-notification-settings`
+  );
+}
+
+export async function changeNotificationSettings(body) {
+  let x = await commonService.tryCall(
+    `${commonService.rootUrl}/api/railnotifications/user-notification-settings`,
+    'PATCH',
     body
   );
+  console.log(x);
+  return x;
 }
