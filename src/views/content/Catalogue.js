@@ -50,7 +50,11 @@ export default class Catalogue extends React.Component {
 
   componentDidMount() {
     this.refreshOnFocusListener = refreshOnFocusListener.call(this);
-    this.setContent(this.serviceOptions, 'refresh');
+    getContent(this.serviceOptions).then(({ method, all, inProgress }) => {
+      this.data = { method, all: all.data, inProgress: inProgress.data };
+      this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
+      this.setState({ loading: false, refreshing: false });
+    });
   }
 
   componentWillUnmount() {
@@ -60,37 +64,6 @@ export default class Catalogue extends React.Component {
   get serviceOptions() {
     return { scene: this.scene, sort: this.sort?.sortQuery };
   }
-
-  setContent = (serviceOptions, actionType = 'refresh') => {
-    return (actionType === 'refresh' ? getContent : getAll)(
-      serviceOptions
-    ).then(({ method, all, inProgress }) => {
-      switch (actionType) {
-        case 'refresh': {
-          this.data = { method, all: all.data, inProgress: inProgress.data };
-          this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
-          this.setState({ loading: false, refreshing: false });
-          break;
-        }
-        case 'loadMore': {
-          if (!all.aborted) {
-            this.data.all?.push(...(all.data || []));
-            this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
-            this.setState({ loadingMore: false });
-          }
-          break;
-        }
-        case 'filter': {
-          if (!all.aborted) {
-            this.data.all = all.data;
-            this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
-            this.setState({ filtering: false });
-          }
-          break;
-        }
-      }
-    });
-  };
 
   renderFLItem = ({ item }) => (
     <Card data={item} type={onTablet ? '' : 'row'} onNavigate={navigate} />
@@ -273,43 +246,52 @@ export default class Catalogue extends React.Component {
   };
 
   filter = () =>
-    new Promise(res =>
-      this.setState({ filtering: true }, () =>
-        this.setContent(
-          {
-            ...this.serviceOptions,
-            page: (this.page = 1),
-            filters: this.filterRef?.filterQuery,
-            signal: (this.abortFilter = new AbortController()).signal
-          },
-          'filter'
-        ).then(res)
-      )
-    );
+    new Promise(res => {
+      this.setState({ filtering: true });
+      getAll({
+        ...this.serviceOptions,
+        page: (this.page = 1),
+        filters: this.filterRef?.filterQuery,
+        signal: (this.abortFilter = new AbortController()).signal
+      }).then(({ all }) => {
+        if (!all.aborted) {
+          this.data.all = all.data;
+          this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
+          this.setState({ filtering: false });
+        }
+        res();
+      });
+    });
 
-  loadMore = () =>
-    this.setState({ loadingMore: true }, () =>
-      (this.loadMorePromise || Promise.resolve()).then(
-        () =>
-          (this.loadMorePromise = this.setContent(
-            {
-              ...this.serviceOptions,
-              page: ++this.page,
-              filters: this.filterRef?.filterQuery,
-              signal: (this.abortLoadMore = new AbortController()).signal
-            },
-            'loadMore'
-          ))
-      )
-    );
+  loadMore = () => {
+    this.setState({ loadingMore: true });
+    this.loadMorePromise = getAll({
+      ...this.serviceOptions,
+      page: ++this.page,
+      filters: this.filterRef?.filterQuery,
+      signal: (this.abortLoadMore = new AbortController()).signal
+    }).then(({ all }) => {
+      console.log(this.page);
+      if (!all.aborted) {
+        this.data.all?.push(...(all.data || []));
+        this.setState({ loadingMore: false });
+      }
+    });
+  };
 
   refresh = () => {
     this.abortFilter?.abort();
     this.abortLoadMore?.abort();
-    this.setState(
-      { refreshing: true, loadingMore: false, filtering: false },
-      () => this.setContent({ ...this.serviceOptions, page: (this.page = 1) })
-    );
+    this.setState({ refreshing: true, loadingMore: false, filtering: false });
+    this.refreshPromise = getContent({
+      ...this.serviceOptions,
+      page: (this.page = 1)
+    }).then(({ method, all, inProgress }) => {
+      this.data = { method, all: all.data, inProgress: inProgress.data };
+      this.filterRef.appliedFilters = {};
+      this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
+      this.setState({ loading: false, refreshing: false });
+    });
   };
 
   render() {
