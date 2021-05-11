@@ -263,15 +263,18 @@ export default class Catalogue extends React.Component {
       });
     });
 
-  loadMore = () => {
+  loadMore = async () => {
+    if (this.loadMorePromise) return;
+    this.loadMorePromise = true;
     this.setState({ loadingMore: true });
-    this.loadMorePromise = getAll({
+    getAll({
       ...this.serviceOptions,
       page: ++this.page,
       filters: this.filterRef?.filterQuery,
       signal: (this.abortLoadMore = new AbortController()).signal
     }).then(({ all }) => {
-      console.log(this.page);
+      console.log(this.page, all.meta);
+      delete this.loadMorePromise;
       if (!all.aborted) {
         this.data.all?.push(...(all.data || []));
         this.setState({ loadingMore: false });
