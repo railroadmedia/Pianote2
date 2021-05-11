@@ -115,11 +115,7 @@ export default class Catalogue extends React.Component {
                 'rgba(80, 15, 25, 0.4)',
                 'rgba(80, 15, 25, 0.98)'
               ]}
-              style={{
-                flex: 1,
-                justifyContent: 'flex-end',
-                alignItems: 'center'
-              }}
+              style={styles.linearGradient}
             >
               <Image
                 style={{ height: '20%', aspectRatio: 801 / 286 }}
@@ -151,7 +147,7 @@ export default class Catalogue extends React.Component {
                     key={to.text}
                     onPress={to.action}
                     style={[
-                      styles.headerBtns,
+                      styles.headerBtn,
                       {
                         backgroundColor: to.moreInfo ? '' : '#fb1b2f',
                         padding: to.moreInfo ? 7 : 9,
@@ -160,14 +156,7 @@ export default class Catalogue extends React.Component {
                     ]}
                   >
                     <Icon name={to.icon} size={30} color={'white'} />
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontFamily: 'RobotoCondensed-Bold'
-                      }}
-                    >
-                      {to.text}
-                    </Text>
+                    <Text style={styles.headerBtnText}>{to.text}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -176,24 +165,8 @@ export default class Catalogue extends React.Component {
         )}
         {!!inProgress?.length && (
           <>
-            <View
-              style={{
-                flexDirection: 'row',
-                padding: 10,
-                paddingBottom: 0,
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontFamily: 'RobotoCondensed-Bold',
-                  color: 'white'
-                }}
-              >
-                IN PROGRESS
-              </Text>
+            <View style={styles.flSectionHeaderContainer}>
+              <Text style={styles.flSectionHeaderText}>IN PROGRESS</Text>
               <TouchableOpacity
                 onPress={() =>
                   navigate('SEEALL', { title: 'Continue', parent: this.scene })
@@ -230,24 +203,8 @@ export default class Catalogue extends React.Component {
             />
           </>
         )}
-        <View
-          style={{
-            flexDirection: 'row',
-            padding: 10,
-            paddingBottom: 0,
-            alignItems: 'center'
-          }}
-        >
-          <Text
-            style={{
-              flex: 1,
-              fontSize: 18,
-              fontFamily: 'RobotoCondensed-Bold',
-              color: 'white'
-            }}
-          >
-            ALL LESSONS
-          </Text>
+        <View style={styles.flSectionHeaderContainer}>
+          <Text style={styles.flSectionHeaderText}>ALL LESSONS</Text>
           <Sort
             disabled={filterAndSortDisabled}
             onSort={this.sort}
@@ -421,7 +378,7 @@ let setStyles = isLight =>
       maxWidth: 600,
       marginBottom: '5%'
     },
-    headerBtns: {
+    headerBtn: {
       flexDirection: 'row',
       alignItems: 'center',
       width: '40%',
@@ -430,5 +387,26 @@ let setStyles = isLight =>
       margin: 10,
       marginLeft: 0,
       borderColor: 'white'
+    },
+    headerBtnText: {
+      color: 'white',
+      fontFamily: 'RobotoCondensed-Bold'
+    },
+    linearGradient: {
+      flex: 1,
+      justifyContent: 'flex-end',
+      alignItems: 'center'
+    },
+    flSectionHeaderContainer: {
+      flexDirection: 'row',
+      padding: 10,
+      paddingBottom: 0,
+      alignItems: 'center'
+    },
+    flSectionHeaderText: {
+      fontSize: 18,
+      flex: 1,
+      fontFamily: 'RobotoCondensed-Bold',
+      color: 'white'
     }
   });
