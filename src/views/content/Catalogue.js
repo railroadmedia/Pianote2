@@ -52,11 +52,13 @@ export default class Catalogue extends React.Component {
 
   componentDidMount() {
     this.refreshOnFocusListener = refreshOnFocusListener.call(this);
-    getContent({ scene: this.scene }).then(({ method, all, inProgress }) => {
-      this.data = { method, all: all.data, inProgress: inProgress.data };
-      this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
-      this.setState({ loading: false, refreshing: false });
-    });
+    this.refreshPromise = getContent({ scene: this.scene }).then(
+      ({ method, all, inProgress }) => {
+        this.data = { method, all: all.data, inProgress: inProgress.data };
+        this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
+        this.setState({ loading: false, refreshing: false });
+      }
+    );
   }
 
   componentWillUnmount() {
@@ -287,8 +289,12 @@ export default class Catalogue extends React.Component {
   };
 
   loadMore = async () => {
-    if (this.loadMorePromise) return;
-    this.loadMorePromise = true;
+    if (this.preventLoadingMore) return;
+    this.preventLoadingMore = true;
+    if (this.refreshPromise) {
+      await this.refreshPromise;
+      delete this.refreshPromise;
+    }
     this.setState({ loadingMore: true });
     getAll({
       scene: this.scene,
@@ -297,7 +303,7 @@ export default class Catalogue extends React.Component {
       signal: (this.abortLoadMore = new AbortController()).signal,
       sort: this.sortRef?.sortQuery
     }).then(({ all }) => {
-      delete this.loadMorePromise;
+      delete this.preventLoadingMore;
       if (!all.aborted) {
         this.data.all?.push(...(all.data || []));
         this.setState({ loadingMore: false });
