@@ -53,18 +53,77 @@ export default class Catalogue extends React.Component {
 
   componentDidMount() {
     this.refreshOnFocusListener = refreshOnFocusListener.call(this);
-    this.refreshPromise = getContent({ scene: this.scene }).then(
-      ({ method, all, inProgress }) => {
-        this.data = { method, all: all.data, inProgress: inProgress.data };
-        this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
-        this.setState({ loading: false, refreshing: false });
-      }
+    this.refreshPromise = this.setData('refresh').then(
+      () => delete this.refreshPromise
     );
   }
 
   componentWillUnmount() {
     this.refreshOnFocusListener?.();
   }
+
+  getServiceOptions = action => {
+    let options = { scene: this.scene };
+    options.page = action === 'loadMore' ? ++this.page : (this.page = 1);
+    if (action !== 'refresh') {
+      options.filters = this.filterRef?.filterQuery;
+      options.sort = this.sortRef?.sortQuery;
+      options.signal = (this[`${action}Abort`] = new AbortController()).signal;
+    }
+    return options;
+  };
+
+  setData = (action, state = { loading: false, refreshing: false }) =>
+    (action === 'refresh' ? getContent : getAll)(
+      this.getServiceOptions(action)
+    ).then(({ method, all, inProgress }) => {
+      if (all.aborted) return;
+      if (action === 'refresh') {
+        if (this.filterRef) this.filterRef.appliedFilters = {};
+        if (this.sortRef) this.sortRef.sortIndex = 0;
+        this.data = { method, inProgress: inProgress.data };
+      }
+      if (action === 'loadMore') this.data.all?.push(...(all.data || []));
+      else this.data.all = all.data;
+      this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
+      this.setState(state);
+    });
+
+  filter = () =>
+    new Promise(res => {
+      this.setState({ filtering: true });
+      this.setData('filter', { filtering: false }).then(res);
+    });
+
+  sort = () => {
+    this.setState({ sorting: true });
+    this.setData('sort', { sorting: false });
+  };
+
+  loadMore = async () => {
+    if (this.preventLoadingMore) return;
+    this.preventLoadingMore = true;
+    this.setState({ loadingMore: true });
+    if (this.refreshPromise) await this.refreshPromise;
+    this.setData('loadMore', { loadingMore: false }).then(
+      () => delete this.preventLoadingMore
+    );
+  };
+
+  refresh = () => {
+    this.filterAbort?.abort();
+    this.loadMoreAbort?.abort();
+    this.sortAbort?.abort();
+    this.setState({
+      refreshing: true,
+      loadingMore: false,
+      filtering: false,
+      sorting: false
+    });
+    this.refreshPromise = this.setData('refresh').then(
+      () => delete this.refreshPromise
+    );
+  };
 
   renderFLItem = ({ item, index }) => (
     <View
@@ -219,87 +278,6 @@ export default class Catalogue extends React.Component {
         </View>
       </>
     );
-  };
-
-  filter = () =>
-    new Promise(res => {
-      this.setState({ filtering: true });
-      getAll({
-        scene: this.scene,
-        page: (this.page = 1),
-        filters: this.filterRef?.filterQuery,
-        signal: (this.abortFilter = new AbortController()).signal,
-        sort: this.sortRef?.sortQuery
-      }).then(({ all }) => {
-        if (!all.aborted) {
-          this.data.all = all.data;
-          this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
-          this.setState({ filtering: false });
-        }
-        res();
-      });
-    });
-
-  sort = () => {
-    this.setState({ sorting: true });
-    getAll({
-      scene: this.scene,
-      page: (this.page = 1),
-      filters: this.filterRef?.filterQuery,
-      signal: (this.abortSort = new AbortController()).signal,
-      sort: this.sortRef?.sortQuery
-    }).then(({ all }) => {
-      if (!all.aborted) {
-        this.data.all = all.data;
-        this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
-        this.setState({ sorting: false });
-      }
-    });
-  };
-
-  loadMore = async () => {
-    if (this.preventLoadingMore) return;
-    this.preventLoadingMore = true;
-    if (this.refreshPromise) {
-      await this.refreshPromise;
-      delete this.refreshPromise;
-    }
-    this.setState({ loadingMore: true });
-    getAll({
-      scene: this.scene,
-      page: ++this.page,
-      filters: this.filterRef?.filterQuery,
-      signal: (this.abortLoadMore = new AbortController()).signal,
-      sort: this.sortRef?.sortQuery
-    }).then(({ all }) => {
-      delete this.preventLoadingMore;
-      if (!all.aborted) {
-        this.data.all?.push(...(all.data || []));
-        this.setState({ loadingMore: false });
-      }
-    });
-  };
-
-  refresh = () => {
-    this.abortFilter?.abort();
-    this.abortLoadMore?.abort();
-    this.abortSort?.abort();
-    this.setState({
-      refreshing: true,
-      loadingMore: false,
-      filtering: false,
-      sorting: false
-    });
-    this.refreshPromise = getContent({
-      scene: this.scene,
-      page: (this.page = 1)
-    }).then(({ method, all, inProgress }) => {
-      this.data = { method, all: all.data, inProgress: inProgress.data };
-      this.filterRef.appliedFilters = {};
-      this.sortRef.sortIndex = 0;
-      this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
-      this.setState({ loading: false, refreshing: false });
-    });
   };
 
   render() {
