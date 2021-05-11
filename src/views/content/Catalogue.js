@@ -64,7 +64,7 @@ export default class Catalogue extends React.Component {
   setContent = (serviceOptions, actionType = 'refresh') => {
     return (actionType === 'refresh' ? getContent : getAll)(
       serviceOptions
-    ).then(({ method, all, inProgress, aborted }) => {
+    ).then(({ method, all, inProgress }) => {
       switch (actionType) {
         case 'refresh': {
           this.data = { method, all: all.data, inProgress: inProgress.data };
@@ -73,8 +73,7 @@ export default class Catalogue extends React.Component {
           break;
         }
         case 'loadMore': {
-          if (!aborted) {
-            if (!all.data) this.page--;
+          if (!all.aborted) {
             this.data.all?.push(...(all.data || []));
             this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
             this.setState({ loadingMore: false });
@@ -82,7 +81,7 @@ export default class Catalogue extends React.Component {
           break;
         }
         case 'filter': {
-          if (!aborted) {
+          if (!all.aborted) {
             this.data.all = all.data;
             this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
             this.setState({ filtering: false });
