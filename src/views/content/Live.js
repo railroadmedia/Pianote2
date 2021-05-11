@@ -79,9 +79,7 @@ export default class Live extends React.Component {
     let response = await getLiveScheduleContent();
 
     for (i in response) {
-      let time = response[i].live_event_start_time
-        ? response[i].live_event_start_time
-        : response[i].published_on;
+      let time = response[i].live_event_start_time || response[i].published_on;
       let date = new Date(time + ' UTC').getTime();
       let d = new Date(date);
       let amPM = 'AM';
@@ -117,12 +115,12 @@ export default class Live extends React.Component {
   async getLiveContent() {
     let content = [await getLiveContent()];
     this.content = content[0];
-
-    let [{ apiKey, chatChannelName, userId, token }] = content;
-    watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
-      this.setState({ liveViewers })
-    ).then(rwl => (this.removeWatchersListener = rwl));
-
+    if (content[0].length > 0) {
+      let [{ apiKey, chatChannelName, userId, token }] = content;
+      watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
+        this.setState({ liveViewers })
+      ).then(rwl => (this.removeWatchersListener = rwl));
+    }
     let timeNow = Math.floor(Date.now() / 1000);
     let timeLive =
       new Date(content[0].live_event_start_time + ' UTC').getTime() / 1000;

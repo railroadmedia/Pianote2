@@ -167,12 +167,14 @@ class Lessons extends React.Component {
 
   async getLiveContent() {
     let content = [await getLiveContent()];
-    let [{ apiKey, chatChannelName, userId, token }] = content;
 
-    watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
-      this.setState({ liveViewers })
-    ).then(rwl => (this.removeWatchersListener = rwl));
+    if (content[0].length > 0) {
+      let [{ apiKey, chatChannelName, userId, token }] = content;
 
+      watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
+        this.setState({ liveViewers })
+      ).then(rwl => (this.removeWatchersListener = rwl));
+    }
     let timeNow = Math.floor(Date.now() / 1000);
     let timeLive =
       new Date(content[0].live_event_start_time + ' UTC').getTime() / 1000;
@@ -886,7 +888,11 @@ class Lessons extends React.Component {
                               }}
                               source={{
                                 uri: this.state.liveLesson[0].thumbnail_url
-                                  ? this.state.liveLesson[0].thumbnail_url
+                                  ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                                      (Dimensions.get('window').width - 20) * 2
+                                    )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
+                                      this.state.liveLesson[0]?.thumbnail_url
+                                    }`
                                   : fallbackThumb
                               }}
                               resizeMode={FastImage.resizeMode.cover}
@@ -1017,7 +1023,11 @@ class Lessons extends React.Component {
                             }}
                             source={{
                               uri: this.state.liveLesson[0].thumbnail_url
-                                ? this.state.liveLesson[0].thumbnail_url
+                                ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                                    (Dimensions.get('window').width - 20) * 2
+                                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
+                                    this.state.liveLesson[0]?.thumbnail_url
+                                  }`
                                 : fallbackThumb
                             }}
                             resizeMode={FastImage.resizeMode.cover}
