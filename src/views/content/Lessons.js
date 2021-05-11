@@ -166,34 +166,37 @@ class Lessons extends React.Component {
   }
 
   async getLiveContent() {
-    let content = [await getLiveContent()];
-    let [{ apiKey, chatChannelName, userId, token }] = content;
+    let content = await getLiveContent();
+    console.log(content);
+    if (content) {
+      let [{ apiKey, chatChannelName, userId, token }] = content;
 
-    watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
-      this.setState({ liveViewers })
-    ).then(rwl => (this.removeWatchersListener = rwl));
+      watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
+        this.setState({ liveViewers })
+      ).then(rwl => (this.removeWatchersListener = rwl));
 
-    let timeNow = Math.floor(Date.now() / 1000);
-    let timeLive =
-      new Date(content[0].live_event_start_time + ' UTC').getTime() / 1000;
-    let timeDiff = timeLive - timeNow;
-    let hours = Math.floor(timeDiff / 3600);
-    let minutes = Math.floor((timeDiff - hours * 3600) / 60);
-    let seconds = timeDiff - hours * 3600 - minutes * 60;
+      let timeNow = Math.floor(Date.now() / 1000);
+      let timeLive =
+        new Date(content.live_event_start_time + ' UTC').getTime() / 1000;
+      let timeDiff = timeLive - timeNow;
+      let hours = Math.floor(timeDiff / 3600);
+      let minutes = Math.floor((timeDiff - hours * 3600) / 60);
+      let seconds = timeDiff - hours * 3600 - minutes * 60;
 
-    if (timeDiff < 4 * 3600) {
-      this.setState({
-        liveLesson: content,
-        timeDiffLive: {
-          timeDiff,
-          hours,
-          minutes,
-          seconds
+      if (timeDiff < 4 * 3600) {
+        this.setState({
+          liveLesson: content,
+          timeDiffLive: {
+            timeDiff,
+            hours,
+            minutes,
+            seconds
+          }
+        });
+
+        if (!content.isLive) {
+          this.interval = setInterval(() => this.timer(), 1000);
         }
-      });
-
-      if (!content[0].isLive) {
-        this.interval = setInterval(() => this.timer(), 1000);
       }
     }
   }
@@ -201,9 +204,8 @@ class Lessons extends React.Component {
   async timer() {
     let timeNow = Math.floor(Date.now() / 1000);
     let timeLive =
-      new Date(
-        this.state.liveLesson[0].live_event_start_time + ' UTC'
-      ).getTime() / 1000;
+      new Date(this.state.liveLesson.live_event_start_time + ' UTC').getTime() /
+      1000;
     let timeDiff = timeLive - timeNow;
     let hours = Math.floor(timeDiff / 3600);
     let minutes = Math.floor((timeDiff - hours * 3600) / 60);
@@ -226,24 +228,26 @@ class Lessons extends React.Component {
   }
 
   changeType = word => {
-    try {
-      word = word.replace(/[- )(]/g, ' ').split(' ');
-    } catch {}
+    if (word) {
+      try {
+        word = word.replace(/[- )(]/g, ' ').split(' ');
+      } catch {}
 
-    let string = '';
+      let string = '';
 
-    for (let i = 0; i < word.length; i++) {
-      if (word[i] !== 'and') {
-        word[i] = word[i][0].toUpperCase() + word[i].substr(1);
+      for (let i = 0; i < word.length; i++) {
+        if (word[i] !== 'and') {
+          word[i] = word[i][0].toUpperCase() + word[i].substr(1);
+        }
       }
-    }
 
-    for (i in word) {
-      string = string + word[i];
-      if (Number(i) < word.length - 1) string = string + ' / ';
-    }
+      for (i in word) {
+        string = string + word[i];
+        if (Number(i) < word.length - 1) string = string + ' / ';
+      }
 
-    return string;
+      return string;
+    }
   };
 
   initialValidData = (content, fromCache) => {
@@ -450,24 +454,16 @@ class Lessons extends React.Component {
   };
 
   addToMyList = contentID => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-
-    this.state.liveLesson[0].is_added_to_primary_playlist = true;
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    this.state.liveLesson.is_added_to_primary_playlist = true;
     this.setState({ liveLesson: this.state.liveLesson });
-
     addToMyList(contentID);
   };
 
   removeFromMyList = contentID => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-
-    this.state.liveLesson[0].is_added_to_primary_playlist = false;
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    this.state.liveLesson.is_added_to_primary_playlist = false;
     this.setState({ liveLesson: this.state.liveLesson });
-
     removeFromMyList(contentID);
   };
 
@@ -679,7 +675,7 @@ class Lessons extends React.Component {
                 />
               )}
               <View style={{ height: 10 / 2 }} />
-              {this.state.liveLesson?.length > 0 && (
+              {this.state.liveLesson ? (
                 //this.state.timeDiffLive.timeDiff < 3600 * 4 && (
                 // if there is a live lesson && it is less than 4 hours away
                 <>
@@ -885,8 +881,12 @@ class Lessons extends React.Component {
                                 aspectRatio: 16 / 9
                               }}
                               source={{
-                                uri: this.state.liveLesson[0].thumbnail_url
-                                  ? this.state.liveLesson[0].thumbnail_url
+                                uri: this.state.liveLesson?.thumbnail_url
+                                  ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                                      (Dimensions.get('window').width - 20) * 2
+                                    )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
+                                      this.state.liveLesson?.thumbnail_url
+                                    }`
                                   : fallbackThumb
                               }}
                               resizeMode={FastImage.resizeMode.cover}
@@ -901,8 +901,8 @@ class Lessons extends React.Component {
                               }}
                               resizeMode='cover'
                               source={{
-                                uri: this.state.liveLesson[0].thumbnail_url
-                                  ? this.state.liveLesson[0].thumbnail_url
+                                uri: this.state.liveLesson.thumbnail_url
+                                  ? this.state.liveLesson.thumbnail_url
                                   : fallbackThumb
                               }}
                             />
@@ -945,16 +945,15 @@ class Lessons extends React.Component {
                               }}
                             >
                               {this.changeType(
-                                this.state.liveLesson[0].instructors
+                                this.state.liveLesson?.instructors
                               )}
                             </Text>
                           </View>
                         </View>
-                        {!this.state.liveLesson[0]
-                          .is_added_to_primary_playlist ? (
+                        {!this.state.liveLesson.is_added_to_primary_playlist ? (
                           <TouchableOpacity
                             onPress={() =>
-                              this.addToMyList(this.state.liveLesson[0]?.id)
+                              this.addToMyList(this.state.liveLesson?.id)
                             }
                           >
                             <AntIcon
@@ -966,9 +965,7 @@ class Lessons extends React.Component {
                         ) : (
                           <TouchableOpacity
                             onPress={() =>
-                              this.removeFromMyList(
-                                this.state.liveLesson[0]?.id
-                              )
+                              this.removeFromMyList(this.state.liveLesson?.id)
                             }
                           >
                             <AntIcon
@@ -983,8 +980,8 @@ class Lessons extends React.Component {
                             paddingRight: 5
                           }}
                           onPress={() => {
-                            this.addToCalendarLessonTitle = this.state.liveLesson[0].title;
-                            this.addToCalendatLessonPublishDate = this.state.liveLesson[0].live_event_start_time;
+                            this.addToCalendarLessonTitle = this.state.liveLesson.title;
+                            this.addToCalendatLessonPublishDate = this.state.liveLesson.live_event_start_time;
                             this.setState({
                               addToCalendarModal: true
                             });
@@ -1010,15 +1007,20 @@ class Lessons extends React.Component {
                       <View style={{ width: '100%' }}>
                         {Platform.OS == 'ios' ? (
                           <FastImage
+                            onLayout={() =>
+                              console.log(
+                                'this: ',
+                                this.state.liveLesson.thumbnail_url
+                              )
+                            }
                             style={{
                               width: '100%',
                               borderRadius: 7.5,
                               aspectRatio: 16 / 9
                             }}
                             source={{
-                              uri: this.state.liveLesson[0].thumbnail_url
-                                ? this.state.liveLesson[0].thumbnail_url
-                                : fallbackThumb
+                              // 'https://d1923uyy6spedc.cloudfront.net/299539-card-thumbnail-1619470360.png' //
+                              uri: this.state.liveLesson.thumbnail_url
                             }}
                             resizeMode={FastImage.resizeMode.cover}
                           />
@@ -1031,9 +1033,7 @@ class Lessons extends React.Component {
                             }}
                             resizeMode='cover'
                             source={{
-                              uri: this.state.liveLesson[0].thumbnail_url
-                                ? this.state.liveLesson[0].thumbnail_url
-                                : fallbackThumb
+                              uri: this.state.liveLesson.thumbnail_url
                             }}
                           />
                         )}
@@ -1137,16 +1137,15 @@ class Lessons extends React.Component {
                               }}
                             >
                               {this.changeType(
-                                this.state.liveLesson[0].instructors
+                                this.state.liveLesson?.instructors
                               )}
                             </Text>
                           </View>
                         </View>
-                        {!this.state.liveLesson[0]
-                          .is_added_to_primary_playlist ? (
+                        {!this.state.liveLesson.is_added_to_primary_playlist ? (
                           <TouchableOpacity
                             onPress={() =>
-                              this.addToMyList(this.state.liveLesson[0]?.id)
+                              this.addToMyList(this.state.liveLesson?.id)
                             }
                             style={{
                               paddingRight: 2.5,
@@ -1166,9 +1165,7 @@ class Lessons extends React.Component {
                               paddingBottom: 10
                             }}
                             onPress={() =>
-                              this.removeFromMyList(
-                                this.state.liveLesson[0]?.id
-                              )
+                              this.removeFromMyList(this.state.liveLesson?.id)
                             }
                           >
                             <AntIcon
@@ -1182,6 +1179,8 @@ class Lessons extends React.Component {
                     </TouchableOpacity>
                   )}
                 </>
+              ) : (
+                {}
               )}
               <View style={{ height: 10 / 2 }} />
               {onTablet ? (

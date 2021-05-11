@@ -65,7 +65,7 @@ export default class Live extends React.Component {
     this.state = {
       isLoadingAll: true,
       isLive: false,
-      items: [], // for scheduled live events
+      items: [],
       liveLesson: [],
       month: '',
       addToCalendarModal: false,
@@ -79,9 +79,7 @@ export default class Live extends React.Component {
     let response = await getLiveScheduleContent();
 
     for (i in response) {
-      let time = response[i].live_event_start_time
-        ? response[i].live_event_start_time
-        : response[i].published_on;
+      let time = response[i].live_event_start_time || response[i].published_on;
       let date = new Date(time + ' UTC').getTime();
       let d = new Date(date);
       let amPM = 'AM';
@@ -106,7 +104,7 @@ export default class Live extends React.Component {
     this.setState({
       items: response,
       isLoadingAll: false,
-      isLive: this.state.liveLesson[0]?.isLive
+      isLive: this.state.liveLesson?.isLive
     });
   };
 
@@ -115,45 +113,45 @@ export default class Live extends React.Component {
   }
 
   async getLiveContent() {
-    let content = [await getLiveContent()];
-    this.content = content[0];
+    let content = await getLiveContent();
+    this.content = content;
+    if (content.length > 0) {
+      let [{ apiKey, chatChannelName, userId, token }] = content;
+      watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
+        this.setState({ liveViewers })
+      ).then(rwl => (this.removeWatchersListener = rwl));
 
-    let [{ apiKey, chatChannelName, userId, token }] = content;
-    watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
-      this.setState({ liveViewers })
-    ).then(rwl => (this.removeWatchersListener = rwl));
+      let timeNow = Math.floor(Date.now() / 1000);
+      let timeLive =
+        new Date(content.live_event_start_time + ' UTC').getTime() / 1000;
+      let timeDiff = timeLive - timeNow;
+      let hours = Math.floor(timeDiff / 3600);
+      let minutes = Math.floor((timeDiff - hours * 3600) / 60);
+      let seconds = timeDiff - hours * 3600 - minutes * 60;
 
-    let timeNow = Math.floor(Date.now() / 1000);
-    let timeLive =
-      new Date(content[0].live_event_start_time + ' UTC').getTime() / 1000;
-    let timeDiff = timeLive - timeNow;
-    let hours = Math.floor(timeDiff / 3600);
-    let minutes = Math.floor((timeDiff - hours * 3600) / 60);
-    let seconds = timeDiff - hours * 3600 - minutes * 60;
+      if (timeDiff < 4 * 3600) {
+        this.setState({
+          liveLesson: content,
+          timeDiffLive: {
+            timeDiff,
+            hours,
+            minutes,
+            seconds
+          }
+        });
 
-    if (timeDiff < 4 * 3600) {
-      this.setState({
-        liveLesson: content,
-        timeDiffLive: {
-          timeDiff,
-          hours,
-          minutes,
-          seconds
+        if (!content.isLive) {
+          this.interval = setInterval(() => this.timer(), 1000);
         }
-      });
-
-      if (!content[0].isLive) {
-        this.interval = setInterval(() => this.timer(), 1000);
       }
     }
   }
 
-  async timer() {
+  timer() {
     let timeNow = Math.floor(Date.now() / 1000);
     let timeLive =
-      new Date(
-        this.state.liveLesson[0].live_event_start_time + ' UTC'
-      ).getTime() / 1000;
+      new Date(this.state.liveLesson.live_event_start_time + ' UTC').getTime() /
+      1000;
     let timeDiff = timeLive - timeNow;
     let hours = Math.floor(timeDiff / 3600);
     let minutes = Math.floor((timeDiff - hours * 3600) / 60);
@@ -177,26 +175,6 @@ export default class Live extends React.Component {
 
   onBack = () => goBack();
 
-  changeType = word => {
-    try {
-      word = word.replace(/[- )(]/g, ' ').split(' ');
-    } catch {}
-
-    let string = '';
-
-    for (let i = 0; i < word.length; i++) {
-      if (word[i] !== 'and') {
-        word[i] = word[i][0].toUpperCase() + word[i].substr(1);
-      }
-    }
-
-    for (i in word) {
-      string = string + word[i] + ' ';
-    }
-
-    return string;
-  };
-
   addEventToCalendar = () => {
     const eventConfig = {
       title: this.addToCalendarLessonTitle,
@@ -216,7 +194,7 @@ export default class Live extends React.Component {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
 
     if (type === 'live') {
-      this.state.liveLesson[0].is_added_to_primary_playlist = true;
+      this.state.liveLesson.is_added_to_primary_playlist = true;
     } else {
       this.state.items.find(
         item => item.id == contentID
@@ -235,7 +213,7 @@ export default class Live extends React.Component {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
 
     if (type === 'live') {
-      this.state.liveLesson[0].is_added_to_primary_playlist = false;
+      this.state.liveLesson.is_added_to_primary_playlist = false;
     } else {
       this.state.items.find(
         item => item.id == contentID
@@ -469,8 +447,12 @@ export default class Live extends React.Component {
                               aspectRatio: 16 / 9
                             }}
                             source={{
-                              uri: this.state.liveLesson[0].thumbnail_url
-                                ? this.state.liveLesson[0].thumbnail_url
+                              uri: this.state.liveLesson?.thumbnail_url
+                                ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                                    (Dimensions.get('window').width - 20) * 2
+                                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
+                                    this.state.liveLesson?.thumbnail_url
+                                  }`
                                 : fallbackThumb
                             }}
                             resizeMode={FastImage.resizeMode.cover}
@@ -484,8 +466,12 @@ export default class Live extends React.Component {
                             }}
                             resizeMode='cover'
                             source={{
-                              uri: this.state.liveLesson[0].thumbnail_url
-                                ? this.state.liveLesson[0].thumbnail_url
+                              uri: this.state.liveLesson?.thumbnail_url
+                                ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                                    (Dimensions.get('window').width - 20) * 2
+                                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
+                                    this.state.liveLesson?.thumbnail_url
+                                  }`
                                 : fallbackThumb
                             }}
                           />
@@ -519,24 +505,20 @@ export default class Live extends React.Component {
                             style={{
                               fontFamily: 'OpenSans-Regular',
                               color: colors.pianoteGrey,
-
+                              textTransform: 'capitalize',
                               fontSize: sizing.descriptionText
                             }}
                           >
-                            {this.changeType(
-                              this.state.liveLesson[0].instructors
-                            )}
+                            {this.state.liveLesson?.instructors
+                              .join()
+                              .replace(/-/g, ' ')}
                           </Text>
                         </View>
                       </View>
-                      {!this.state.liveLesson[0]
-                        .is_added_to_primary_playlist ? (
+                      {!this.state.liveLesson.is_added_to_primary_playlist ? (
                         <TouchableOpacity
                           onPress={() =>
-                            this.addToMyList(
-                              this.state.liveLesson[0]?.id,
-                              'live'
-                            )
+                            this.addToMyList(this.state.liveLesson?.id, 'live')
                           }
                         >
                           <AntIcon
@@ -549,7 +531,7 @@ export default class Live extends React.Component {
                         <TouchableOpacity
                           onPress={() =>
                             this.removeFromMyList(
-                              this.state.liveLesson[0]?.id,
+                              this.state.liveLesson?.id,
                               'live'
                             )
                           }
@@ -561,22 +543,6 @@ export default class Live extends React.Component {
                           />
                         </TouchableOpacity>
                       )}
-                      {/* 
-                      <TouchableOpacity
-                        style={{ paddingRight: 5 }}
-                        onPress={() => {
-                          this.addToCalendarLessonTitle = this.state.liveLesson[0].title;
-                          this.addToCalendatLessonPublishDate = this.state.liveLesson[0].live_event_start_time;
-                          this.setState({ addToCalendarModal: true });
-                        }}
-                      >
-                        <FontIcon
-                          size={sizing.infoButtonSize}
-                          name={'calendar-plus'}
-                          color={colors.pianoteRed}
-                        />
-                      </TouchableOpacity>
-                       */}
                     </View>
                   </SafeAreaView>
                 </>
@@ -613,7 +579,7 @@ export default class Live extends React.Component {
                   ) : (
                     <>
                       <Video
-                        youtubeId={this.state.liveLesson[0]?.youtube_video_id}
+                        youtubeId={this.state.liveLesson?.youtube_video_id}
                         toSupport={() => {}}
                         onRefresh={() => {}}
                         content={this.state}
@@ -709,15 +675,11 @@ export default class Live extends React.Component {
                             </View>
                           </View>
                         </View>
-                        {!this.state.liveLesson[0]
-                          .is_added_to_primary_playlist ? (
+                        {!this.state.liveLesson.is_added_to_primary_playlist ? (
                           <TouchableOpacity
                             style={{ paddingRight: 2.5, paddingVertical: 5 }}
                             onPress={() =>
-                              this.addToMyList(
-                                this.state.liveLesson[0].id,
-                                'live'
-                              )
+                              this.addToMyList(this.state.liveLesson.id, 'live')
                             }
                           >
                             <AntIcon
@@ -731,7 +693,7 @@ export default class Live extends React.Component {
                             style={{ paddingRight: 2.5, paddingBottom: 5 }}
                             onPress={() =>
                               this.removeFromMyList(
-                                this.state.liveLesson[0].id,
+                                this.state.liveLesson.id,
                                 'live'
                               )
                             }
@@ -904,10 +866,11 @@ export default class Live extends React.Component {
                           fontSize: sizing.descriptionText,
                           color: colors.secondBackground,
                           textAlign: 'left',
-                          fontFamily: 'OpenSans-Regular'
+                          fontFamily: 'OpenSans-Regular',
+                          textTransform: 'capitalize'
                         }}
                       >
-                        {this.changeType(item.type)}
+                        {item?.type.toString().replace(/-/g, ' ')}
                       </Text>
                     </View>
                     <View

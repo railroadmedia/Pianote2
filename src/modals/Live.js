@@ -18,28 +18,9 @@ export default class Live extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      liveLesson: this.props.liveLesson[0]
+      liveLesson: this.props.liveLesson
     };
   }
-
-  changeType = word => {
-    if (!word) return;
-
-    let string = '';
-
-    for (let i = 0; i < word.length; i++) {
-      if (word[i] !== 'and') {
-        word[i] = word[i][0].toUpperCase() + word[i].substr(1);
-      }
-    }
-
-    for (i in word) {
-      string = string + word[i];
-      if (Number(i) < word.length - 1) string = string + ', ';
-    }
-
-    return string;
-  };
 
   render = () => {
     return (
@@ -57,8 +38,12 @@ export default class Live extends React.Component {
                   borderRadius: 500
                 }}
                 source={{
-                  uri: this.props.liveLesson[0].thumbnail_url
-                    ? this.props.liveLesson[0].thumbnail_url
+                  uri: this.props.liveLesson?.thumbnail_url
+                    ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                        (Dimensions.get('window').width - 20) * 2
+                      )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
+                        this.props.liveLesson?.thumbnail_url
+                      }`
                     : fallbackThumb
                 }}
                 resizeMode={FastImage.resizeMode.cover}
@@ -92,10 +77,11 @@ export default class Live extends React.Component {
                   fontFamily: 'OpenSans-Bold',
                   position: 'absolute',
                   fontSize: onTablet ? 16 : 14,
-                  marginTop: 20
+                  marginTop: 20,
+                  textTransform: 'capitalize'
                 }}
               >
-                {this.changeType(this.props.liveLesson[0]?.instructors)}
+                {this.props.liveLesson?.instructors.replace(/-/g, ' ')}
               </Text>{' '}
               just went live. {'\n'}Would you like to join?
             </Text>
