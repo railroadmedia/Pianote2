@@ -69,5 +69,5 @@ export async function changeNotificationSettings(body) {
     'POST',
     body
   );
-  return x;
+  return response;
 }

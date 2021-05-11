@@ -28,8 +28,9 @@ export default class NotificationSettings extends React.Component {
     this.state = {
       notifications_summary_frequency_minutes: 0,
       notify_on_forum_followed_thread_reply: false,
-      notify_on_post_in_followed_forum_thread: false,
       notify_on_forum_post_like: false,
+      notify_on_forum_post_reply: false,
+      notify_weekly_update: false,
       notify_on_lesson_comment_like: false,
       notify_on_lesson_comment_reply: false,
       isLoading: true
@@ -37,7 +38,6 @@ export default class NotificationSettings extends React.Component {
   }
 
   async componentDidMount() {
-    console.log(await getUserData());
     getUserData().then(userData =>
       this.setState({
         notifications_summary_frequency_minutes:
@@ -45,8 +45,8 @@ export default class NotificationSettings extends React.Component {
         notify_on_forum_followed_thread_reply:
           userData?.notify_on_forum_followed_thread_reply,
         notify_on_forum_post_like: userData?.notify_on_forum_post_like,
-        notify_on_post_in_followed_forum_thread:
-          userData?.notify_on_post_in_followed_forum_thread,
+        notify_on_forum_post_reply: userData?.notify_on_forum_post_reply,
+        notify_weekly_update: userData?.notify_weekly_update,
         notify_on_lesson_comment_like: userData?.notify_on_lesson_comment_like,
         notify_on_lesson_comment_reply:
           userData?.notify_on_lesson_comment_reply,
@@ -55,11 +55,11 @@ export default class NotificationSettings extends React.Component {
     );
   }
 
-  changeNotificationStatus = async datum => {
+  changeNotificationStatus = async attribute => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    const body = { data: { type: 'user', attributes: datum } };
-    changeNotificationSettings(body);
-    console.log(await getUserData());
+    const body = { data: { type: 'user', attributes: attribute } };
+    this.setState(attribute);
+    await changeNotificationSettings(body);
   };
 
   render() {
@@ -111,23 +111,12 @@ export default class NotificationSettings extends React.Component {
             <ScrollView style={styles.mainContainer}>
               <Text style={localStyles.noteTypeText}>Notification Types</Text>
               <View style={localStyles.textContainer}>
-                <Text style={localStyles.text}>Followed forum posts</Text>
+                <Text style={localStyles.text}>Weekly Updates</Text>
                 <CustomSwitch
                   isClicked={this.state.notify_weekly_update}
                   onClick={bool =>
                     this.changeNotificationStatus({
                       notify_weekly_update: bool
-                    })
-                  }
-                />
-              </View>
-              <View style={localStyles.textContainer}>
-                <Text style={localStyles.text}>Followed forum replies</Text>
-                <CustomSwitch
-                  isClicked={this.state.notify_on_forum_followed_thread_reply}
-                  onClick={bool =>
-                    this.changeNotificationStatus({
-                      notify_on_forum_followed_thread_reply: bool
                     })
                   }
                 />
@@ -165,6 +154,28 @@ export default class NotificationSettings extends React.Component {
                   }
                 />
               </View>
+              <View style={localStyles.textContainer}>
+                <Text style={localStyles.text}>Followed forum replies</Text>
+                <CustomSwitch
+                  isClicked={this.state.notify_on_forum_followed_thread_reply}
+                  onClick={bool =>
+                    this.changeNotificationStatus({
+                      notify_on_forum_followed_thread_reply: bool
+                    })
+                  }
+                />
+              </View>
+              <View style={localStyles.textContainer}>
+                <Text style={localStyles.text}>Forum post reply</Text>
+                <CustomSwitch
+                  isClicked={this.state.notify_on_forum_post_reply}
+                  onClick={bool =>
+                    this.changeNotificationStatus({
+                      notify_on_forum_post_reply: bool
+                    })
+                  }
+                />
+              </View>
               <View style={localStyles.border} />
               <Text style={[localStyles.text, { padding: 10 }]}>
                 Email Notification Frequency
@@ -177,7 +188,10 @@ export default class NotificationSettings extends React.Component {
                       {
                         notifications_summary_frequency_minutes: 1
                       },
-                      () => this.changeNotificationStatus()
+                      () =>
+                        this.changeNotificationStatus({
+                          notifications_summary_frequency_minutes: 1
+                        })
                     );
                   }}
                   style={[
@@ -217,7 +231,10 @@ export default class NotificationSettings extends React.Component {
                       {
                         notifications_summary_frequency_minutes: 1440
                       },
-                      () => this.changeNotificationStatus()
+                      () =>
+                        this.changeNotificationStatus({
+                          notifications_summary_frequency_minutes: 1440
+                        })
                     );
                   }}
                   style={[
@@ -260,7 +277,10 @@ export default class NotificationSettings extends React.Component {
                       {
                         notifications_summary_frequency_minutes: 0
                       },
-                      () => this.changeNotificationStatus()
+                      () =>
+                        this.changeNotificationStatus({
+                          notifications_summary_frequency_minutes: 0
+                        })
                     );
                   }}
                   style={[
