@@ -98,7 +98,7 @@ class Card extends React.Component {
           onLongPress={this.toggleDetails}
           onPress={this.navigate}
           style={{
-            flexDirection: type === 'row' ? 'row' : 'column',
+            flexDirection: type.match(/^(row|squareRow)$/) ? 'row' : 'column',
             padding: 10,
             paddingBottom: 0,
             paddingRight: 0,
@@ -109,14 +109,17 @@ class Card extends React.Component {
             style={{
               aspectRatio: 16 / 9,
               borderRadius: 7.5,
-              width: type === 'row' ? '30%' : '100%'
+              width: type.match(/^(row|squareRow)$/) ? '30%' : '100%'
             }}
             resizeMode='cover'
             source={{ uri: this.imageUrl }}
           />
           <View style={{ flexDirection: 'row', flex: 1 }}>
             <View
-              style={{ paddingHorizontal: type === 'row' ? 10 : 0, flex: 1 }}
+              style={{
+                paddingHorizontal: type.match(/^(row|squareRow)$/) ? 10 : 0,
+                flex: 1
+              }}
             >
               <Text
                 numberOfLines={1}
@@ -144,7 +147,10 @@ class Card extends React.Component {
               </Text>
             </View>
             <TouchableOpacity
-              style={{ padding: 10, paddingRight: type === 'row' ? 10 : 0 }}
+              style={{
+                padding: 10,
+                paddingRight: type.match(/^(row|squareRow)$/) ? 10 : 0
+              }}
               onPress={
                 this[
                   new Date(data.published_on) > new Date()

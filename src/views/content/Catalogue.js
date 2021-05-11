@@ -36,6 +36,7 @@ export default class Catalogue extends React.Component {
   page = 1;
   scene = currentScene();
   data = { method: {}, inProgress: [], all: [] };
+  flatListCols = onTablet ? 3 : 1;
   static contextType = Contexts;
 
   constructor(props) {
@@ -65,8 +66,19 @@ export default class Catalogue extends React.Component {
     this.refreshOnFocusListener?.();
   }
 
-  renderFLItem = ({ item }) => (
-    <Card data={item} type={onTablet ? '' : 'row'} onNavigate={navigate} />
+  renderFLItem = ({ item, index }) => (
+    <View
+      style={{
+        width: `${100 / this.flatListCols}%`,
+        paddingRight: onTablet ? ((index + 1) % this.flatListCols ? 0 : 10) : 0
+      }}
+    >
+      <Card
+        data={item}
+        type={onTablet ? 'compact' : 'row'}
+        onNavigate={navigate}
+      />
+    </View>
   );
 
   renderFLHeader = () => {
@@ -245,7 +257,7 @@ export default class Catalogue extends React.Component {
             disabled={filterAndSortDisabled}
             onApply={this.filter}
             meta={this.metaFilters}
-            reference={r => (this.filterRef = r)}
+            ref={r => (this.filterRef = r)}
           />
         </View>
       </>
@@ -360,11 +372,12 @@ export default class Catalogue extends React.Component {
               maxToRenderPerBatch={10}
               onEndReachedThreshold={0.01}
               removeClippedSubviews={true}
+              numColumns={this.flatListCols}
               keyboardShouldPersistTaps='handled'
               ListHeaderComponent={this.renderFLHeader}
               renderItem={this.renderFLItem}
               onEndReached={this.loadMore}
-              keyExtractor={item => item.id.toString()}
+              keyExtractor={({ id }) => id.toString()}
               ListEmptyComponent={<Text style={{}}>No Content</Text>}
               ListFooterComponent={
                 <ActivityIndicator

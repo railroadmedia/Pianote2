@@ -54,10 +54,6 @@ export default class Filters_V2 extends React.Component {
     this.deepLinking(props.deepLinking);
   }
 
-  componentDidMount() {
-    this.props.reference?.(this);
-  }
-
   componentWillUnmount() {
     difficulties = undefined;
   }
