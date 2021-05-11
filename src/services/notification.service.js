@@ -34,6 +34,7 @@ export const showNotification = ({
     }
   });
 };
+
 export const localNotification = () => {
   messaging().onMessage(notification => {
     showNotification(notification);
@@ -63,11 +64,10 @@ export async function getNotificationSettings() {
 }
 
 export async function changeNotificationSettings(body) {
-  let x = await commonService.tryCall(
-    `${commonService.rootUrl}/api/railnotifications/user-notification-settings`,
-    'PATCH',
+  let response = await commonService.tryCall(
+    `${commonService.rootUrl}/usora/api/profile/update`,
+    'POST',
     body
   );
-  console.log(x);
   return x;
 }
