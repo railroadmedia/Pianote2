@@ -16,6 +16,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Card from '../../components/Card';
 import Filters_V2 from '../../components/Filters_V2';
+import Sort from '../../components/Sort';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 
@@ -44,13 +45,14 @@ export default class Catalogue extends React.Component {
       loading: true,
       loadingMore: false,
       refreshing: true,
-      filtering: false
+      filtering: false,
+      sorting: false
     };
   }
 
   componentDidMount() {
     this.refreshOnFocusListener = refreshOnFocusListener.call(this);
-    getContent(this.serviceOptions).then(({ method, all, inProgress }) => {
+    getContent({ scene: this.scene }).then(({ method, all, inProgress }) => {
       this.data = { method, all: all.data, inProgress: inProgress.data };
       this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
       this.setState({ loading: false, refreshing: false });
@@ -59,10 +61,6 @@ export default class Catalogue extends React.Component {
 
   componentWillUnmount() {
     this.refreshOnFocusListener?.();
-  }
-
-  get serviceOptions() {
-    return { scene: this.scene, sort: this.sort?.sortQuery };
   }
 
   renderFLItem = ({ item }) => (
@@ -80,7 +78,9 @@ export default class Catalogue extends React.Component {
       } = {},
       inProgress
     } = this.data;
-    let { refreshing, filtering, loadingMore } = this.state;
+    let { refreshing, filtering, sorting, loadingMore } = this.state;
+    let filterAndSortDisabled =
+      refreshing || filtering || sorting || loadingMore;
     return (
       <>
         {this.scene === 'HOME' && !!methodId && (
@@ -221,12 +221,12 @@ export default class Catalogue extends React.Component {
             flexDirection: 'row',
             padding: 10,
             paddingBottom: 0,
-            alignItems: 'center',
-            justifyContent: 'space-between'
+            alignItems: 'center'
           }}
         >
           <Text
             style={{
+              flex: 1,
               fontSize: 18,
               fontFamily: 'RobotoCondensed-Bold',
               color: 'white'
@@ -234,8 +234,13 @@ export default class Catalogue extends React.Component {
           >
             ALL LESSONS
           </Text>
+          <Sort
+            disabled={filterAndSortDisabled}
+            onSort={this.sort}
+            ref={r => (this.sortRef = r)}
+          />
           <Filters_V2
-            disabled={refreshing || filtering || loadingMore}
+            disabled={filterAndSortDisabled}
             onApply={this.filter}
             meta={this.metaFilters}
             reference={r => (this.filterRef = r)}
@@ -249,10 +254,11 @@ export default class Catalogue extends React.Component {
     new Promise(res => {
       this.setState({ filtering: true });
       getAll({
-        ...this.serviceOptions,
+        scene: this.scene,
         page: (this.page = 1),
         filters: this.filterRef?.filterQuery,
-        signal: (this.abortFilter = new AbortController()).signal
+        signal: (this.abortFilter = new AbortController()).signal,
+        sort: this.sortRef?.sortQuery
       }).then(({ all }) => {
         if (!all.aborted) {
           this.data.all = all.data;
@@ -263,17 +269,34 @@ export default class Catalogue extends React.Component {
       });
     });
 
+  sort = () => {
+    this.setState({ sorting: true });
+    getAll({
+      scene: this.scene,
+      page: (this.page = 1),
+      filters: this.filterRef?.filterQuery,
+      signal: (this.abortSort = new AbortController()).signal,
+      sort: this.sortRef?.sortQuery
+    }).then(({ all }) => {
+      if (!all.aborted) {
+        this.data.all = all.data;
+        this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
+        this.setState({ sorting: false });
+      }
+    });
+  };
+
   loadMore = async () => {
     if (this.loadMorePromise) return;
     this.loadMorePromise = true;
     this.setState({ loadingMore: true });
     getAll({
-      ...this.serviceOptions,
+      scene: this.scene,
       page: ++this.page,
       filters: this.filterRef?.filterQuery,
-      signal: (this.abortLoadMore = new AbortController()).signal
+      signal: (this.abortLoadMore = new AbortController()).signal,
+      sort: this.sortRef?.sortQuery
     }).then(({ all }) => {
-      console.log(this.page, all.meta);
       delete this.loadMorePromise;
       if (!all.aborted) {
         this.data.all?.push(...(all.data || []));
@@ -285,13 +308,20 @@ export default class Catalogue extends React.Component {
   refresh = () => {
     this.abortFilter?.abort();
     this.abortLoadMore?.abort();
-    this.setState({ refreshing: true, loadingMore: false, filtering: false });
+    this.abortSort?.abort();
+    this.setState({
+      refreshing: true,
+      loadingMore: false,
+      filtering: false,
+      sorting: false
+    });
     this.refreshPromise = getContent({
-      ...this.serviceOptions,
+      scene: this.scene,
       page: (this.page = 1)
     }).then(({ method, all, inProgress }) => {
       this.data = { method, all: all.data, inProgress: inProgress.data };
       this.filterRef.appliedFilters = {};
+      this.sortRef.sortIndex = 0;
       this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
       this.setState({ loading: false, refreshing: false });
     });
@@ -299,7 +329,7 @@ export default class Catalogue extends React.Component {
 
   render() {
     let { scene, data } = this;
-    let { loading, loadingMore, refreshing, filtering } = this.state;
+    let { loading, loadingMore, refreshing, filtering, sorting } = this.state;
     let backgroundColor = scene === 'HOME' ? 'black' : '#00101d';
     return (
       <>
@@ -348,7 +378,7 @@ export default class Catalogue extends React.Component {
               }
             />
           )}
-          {filtering && (
+          {(filtering || sorting) && (
             <ActivityIndicator
               size='large'
               style={{ position: 'absolute', alignSelf: 'center' }}

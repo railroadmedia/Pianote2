@@ -8,34 +8,35 @@ const sorts = [
   {
     menuText: 'Newest First',
     togglerText: 'NEWEST',
-    urlParam: 'newest'
+    urlParam: '-published_on'
   },
   {
     menuText: 'Oldest First',
     togglerText: 'OLDEST',
-    urlParam: 'oldest'
+    urlParam: 'published_on'
   }
 ];
 export default class Sort extends React.PureComponent {
-  state = {
-    modalVisible: false,
-    sortIndex: 0
-  };
+  sortIndex = 0;
+  state = { modalVisible: false };
 
   get sortQuery() {
-    return sorts[this.state.sortIndex].urlParam;
+    return sorts[this.sortIndex].urlParam;
   }
 
   toggleModal = () =>
     this.setState(({ modalVisible }) => ({ modalVisible: !modalVisible }));
 
-  sort = index =>
-    this.setState({ modalVisible: false, sortIndex: index }, this.props.onSort);
+  sort = index => {
+    this.sortIndex = index;
+    this.setState({ modalVisible: false }, this.props.onSort);
+  };
 
   render() {
     let {
+      sortIndex,
       props: { disabled },
-      state: { modalVisible, sortIndex }
+      state: { modalVisible }
     } = this;
     return (
       <>
