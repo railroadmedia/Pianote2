@@ -57,8 +57,12 @@ export default class Live extends React.Component {
                   borderRadius: 500
                 }}
                 source={{
-                  uri: this.props.liveLesson[0].thumbnail_url
-                    ? this.props.liveLesson[0].thumbnail_url
+                  uri: this.props.liveLesson[0]?.thumbnail_url
+                    ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                        (Dimensions.get('window').width - 20) * 2
+                      )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
+                        this.props.liveLesson[0]?.thumbnail_url
+                      }`
                     : fallbackThumb
                 }}
                 resizeMode={FastImage.resizeMode.cover}
