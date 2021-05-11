@@ -38,11 +38,14 @@ import { goBack, navigate, reset } from '../../../AppNavigator.js';
 import { setLoggedInUser } from '../../redux/UserActions.js';
 
 const isTablet = DeviceInfo.isTablet();
+let localStyles;
 
 class Settings extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
+    localStyles = setStyles(this.props.theme === 'light', colors.pianoteRed);
+
     this.state = {
       showLogOut: false
     };
@@ -312,6 +315,7 @@ class Settings extends React.Component {
             }
           ].map(item => (
             <TouchableOpacity
+              key={item.title}
               style={[
                 styles.centerContent,
                 localStyles.container,
@@ -454,73 +458,74 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings);
 
-const localStyles = StyleSheet.create({
-  container: {
-    height: isTablet ? 70 : 50,
-    width: '100%',
-    borderBottomColor: '#445f73',
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    paddingRight: 10,
-    justifyContent: 'space-between'
-  },
-  container2: {
-    backgroundColor: 'white',
-    borderRadius: 15,
-    margin: 20
-  },
-  title: {
-    marginTop: 20,
-    paddingHorizontal: 20
-  },
-  description: {
-    paddingHorizontal: 30,
-    marginTop: 10,
-    marginBottom: 5,
-    fontSize: isTablet ? 18 : 14
-  },
-  logoutText: {
-    backgroundColor: '#fb1b2f',
-    borderRadius: 40,
-    marginVertical: 15,
-    marginHorizontal: 30,
-    fontFamily: 'OpenSans-Bold',
-    height: isTablet ? 40 : 30,
-    textAlign: 'center'
-  },
-  logout: {
-    color: 'white',
-    fontSize: isTablet ? 18 : 14
-  },
-  cancelContainter: {
-    paddingHorizontal: 20,
-    marginBottom: 15
-  },
-  cancel: {
-    color: 'grey',
-    fontSize: isTablet ? 16 : 12
-  },
-  settingsText: {
-    fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 20 : 16,
-    color: '#445f73'
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15
-  },
-  appText: {
-    marginTop: 10,
-    textAlign: 'center',
-    fontSize: isTablet ? 18 : 12
-  },
-  buildText: {
-    fontFamily: 'OpenSans-Regular',
-    textAlign: 'center',
-    color: '#445f73',
-    marginTop: 10,
-    fontSize: isTablet ? 18 : 12
-  }
-});
+const setStyles = (isLight, appColor) =>
+  StyleSheet.create({
+    container: {
+      height: isTablet ? 70 : 50,
+      width: '100%',
+      borderBottomColor: isLight ? '#97AABE' : '#445f73',
+      borderBottomWidth: 1,
+      flexDirection: 'row',
+      paddingRight: 10,
+      justifyContent: 'space-between'
+    },
+    container2: {
+      backgroundColor: 'white',
+      borderRadius: 15,
+      margin: 20
+    },
+    title: {
+      marginTop: 20,
+      paddingHorizontal: 20
+    },
+    description: {
+      paddingHorizontal: 30,
+      marginTop: 10,
+      marginBottom: 5,
+      fontSize: isTablet ? 18 : 14
+    },
+    logoutText: {
+      backgroundColor: appColor,
+      borderRadius: 40,
+      marginVertical: 15,
+      marginHorizontal: 30,
+      fontFamily: 'OpenSans-Bold',
+      height: isTablet ? 40 : 30,
+      textAlign: 'center'
+    },
+    logout: {
+      color: 'white',
+      fontSize: isTablet ? 18 : 14
+    },
+    cancelContainter: {
+      paddingHorizontal: 20,
+      marginBottom: 15
+    },
+    cancel: {
+      color: 'grey',
+      fontSize: isTablet ? 16 : 12
+    },
+    settingsText: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: isTablet ? 20 : 16,
+      color: isLight ? '#97AABE' : '#445f73'
+    },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: 15
+    },
+    appText: {
+      marginTop: 10,
+      textAlign: 'center',
+      fontSize: isTablet ? 18 : 12
+    },
+    buildText: {
+      fontFamily: 'OpenSans-Regular',
+      textAlign: 'center',
+      color: isLight ? '#97AABE' : '#445f73',
+      marginTop: 10,
+      fontSize: isTablet ? 18 : 12
+    }
+  });

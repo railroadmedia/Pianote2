@@ -10,9 +10,7 @@ import FastImage from 'react-native-fast-image';
 import DeviceInfo from 'react-native-device-info';
 import Chat from '../../src/assets/img/svgs/chat.svg';
 import Icon from '../assets/icons';
-import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
 import { connect } from 'react-redux';
-import { getNotificationSettings } from '../services/notification.service';
 
 const isTablet = DeviceInfo.isTablet();
 const messageDict = {
@@ -51,70 +49,22 @@ const messageDict = {
 class ReplyNotification extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      notify_on_post_in_followed_forum_thread: false,
-      notify_on_forum_followed_thread_reply: false,
-      notify_on_lesson_comment_like: false,
-      notify_on_lesson_comment_reply: false,
-      notifications_summary_frequency_minutes: 0, //?
-      statusChange: false
-    };
   }
 
-  componentDidMount = async () => {
+  render() {
+    console.log(this.props.data);
     const {
-      notify_on_forum_followed_thread_reply,
-      notify_on_forum_post_like,
-      notify_on_lesson_comment_like,
-      notify_on_lesson_comment_reply,
-      notify_on_post_in_followed_forum_thread
-    } = (await getNotificationSettings()).data;
-    let statusChange = null;
-    console.log(this.props);
+      notificationStatus,
+      hideReplyNotification,
+      turnOfffNotifications,
+      removeNotification,
+      data: { type, content, sender, id }
+    } = this.props;
 
-    if (
-      messageDict[this.props.data.type]?.message == 'replied to your comment.'
-    ) {
-      statusChange = {
-        notify_on_lesson_comment_reply: !this.state
-          .notify_on_lesson_comment_reply
-      };
-    } else if (
-      messageDict[this.props.data.type]?.message == 'liked your comment.'
-    ) {
-      statusChange = {
-        notify_on_lesson_comment_like: !this.state.notify_on_lesson_comment_like
-      };
-    } else if (
-      messageDict[this.props.data.type]?.message == 'liked your forum post.'
-    ) {
-      statusChange = {
-        notify_on_forum_post_like: !this.state.notify_on_forum_post_like
-      };
-    } else if (
-      messageDict[this.props.data.type]?.message == 'post in followed thread.'
-    ) {
-      statusChange = {
-        notify_on_forum_followed_thread_reply: !this.state
-          .notify_on_forum_followed_thread_reply
-      };
-    }
-
-    this.setState({
-      statusChange,
-      notify_on_forum_followed_thread_reply,
-      notify_on_forum_post_like,
-      notify_on_lesson_comment_like,
-      notify_on_lesson_comment_reply,
-      notify_on_post_in_followed_forum_thread
-    });
-  };
-
-  render = () => {
     return (
       <>
         <TouchableOpacity
-          onPress={() => this.props.hideReplyNotification()}
+          onPress={hideReplyNotification}
           style={styles.container}
         />
         <SafeAreaView style={localStyles.container}>
@@ -124,7 +74,7 @@ class ReplyNotification extends React.Component {
                 style={[styles.centerContent, localStyles.profileContainer]}
               >
                 <View style={localStyles.profileContainer2}>
-                  {messageDict[this.props.data.type].color == 'red' && (
+                  {type === 'new content releases' ? (
                     <View
                       style={[styles.centerContent, localStyles.videoContainer]}
                     >
@@ -134,8 +84,8 @@ class ReplyNotification extends React.Component {
                         name={'video-camera'}
                       />
                     </View>
-                  )}
-                  {messageDict[this.props.data.type].color == 'orange' && (
+                  ) : type === 'forum post in followed thread' ||
+                    type === 'lesson comment reply' ? (
                     <View
                       style={[styles.centerContent, localStyles.chatContainer]}
                     >
@@ -145,8 +95,7 @@ class ReplyNotification extends React.Component {
                         fill={'white'}
                       />
                     </View>
-                  )}
-                  {messageDict[this.props.data.type].color == 'blue' && (
+                  ) : (
                     <View
                       style={[styles.centerContent, localStyles.likeContainer]}
                     >
@@ -161,9 +110,9 @@ class ReplyNotification extends React.Component {
                     style={localStyles.image}
                     source={{
                       uri:
-                        this.props.data.type == 'new content releases'
-                          ? this.props.data.content?.thumbnail_url
-                          : this.props.data.sender?.profile_image_url
+                        type === 'new content releases'
+                          ? content?.thumbnail_url
+                          : sender?.profile_image_url
                     }}
                     resizeMode={FastImage.resizeMode.cover}
                   />
@@ -171,18 +120,18 @@ class ReplyNotification extends React.Component {
               </View>
               <Text style={localStyles.replyUser}>
                 <Text style={localStyles.user}>
-                  {this.props.data.type == 'new content releases'
-                    ? this.props.data.content?.display_name
-                    : this.props.data.sender?.display_name}
+                  {type == 'new content releases'
+                    ? content?.display_name
+                    : sender?.display_name}
                 </Text>{' '}
-                {messageDict[this.props.data.type]?.message}
+                {messageDict[type]?.message}
               </Text>
             </>
             <>
               <View style={localStyles.removeContainer}>
                 <TouchableOpacity
                   style={[styles.container, { justifyContent: 'center' }]}
-                  onPress={() => this.props.removeNotification(this.props.data)}
+                  onPress={() => removeNotification(id)}
                 >
                   <View style={localStyles.crossContainer}>
                     <Icon.Entypo
@@ -204,9 +153,7 @@ class ReplyNotification extends React.Component {
               <View style={localStyles.muteContainer}>
                 <TouchableOpacity
                   style={[styles.container, { justifyContent: 'center' }]}
-                  onPress={() =>
-                    this.props.turnOfffNotifications(this.state.statusChange)
-                  }
+                  onPress={turnOfffNotifications}
                 >
                   <View style={localStyles.notificationContainer}>
                     <Icon.Ionicons
@@ -220,8 +167,8 @@ class ReplyNotification extends React.Component {
                         { fontSize: sizing.descriptionText }
                       ]}
                     >
-                      Turn {this.props.notificationStatus ? 'off' : 'on'}{' '}
-                      {messageDict[this.props.data.type].type}
+                      Turn {notificationStatus ? 'off' : 'on'}{' '}
+                      {messageDict[type]?.type}
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -231,7 +178,7 @@ class ReplyNotification extends React.Component {
         </SafeAreaView>
       </>
     );
-  };
+  }
 }
 
 const mapStateToProps = state => ({
