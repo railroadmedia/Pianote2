@@ -154,7 +154,7 @@ export default class Catalogue extends React.Component {
                       styles.headerBtns,
                       {
                         backgroundColor: to.moreInfo ? '' : '#fb1b2f',
-                        padding: to.moreInfo ? 3 : 5,
+                        padding: to.moreInfo ? 7 : 9,
                         borderWidth: to.moreInfo ? 2 : 0
                       }
                     ]}
@@ -424,7 +424,7 @@ let setStyles = isLight =>
     headerBtns: {
       flexDirection: 'row',
       alignItems: 'center',
-      minWidth: '40%',
+      width: '40%',
       justifyContent: 'center',
       borderRadius: 99,
       margin: 10,
