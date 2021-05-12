@@ -3,6 +3,14 @@ import commonService from './common.service';
 export function getContent(options) {
   return new Promise(res => {
     switch (options.scene) {
+      case 'PODCASTS':
+      case 'BOOTCAMPS':
+      case 'QUICKTIPS':
+        Promise.all([
+          getAll(options),
+          getStudentFocus(options.signal)
+        ]).then(([{ all }, { studentFocus }]) => res({ all, studentFocus }));
+        break;
       case 'SONGS':
       case 'COURSES':
         Promise.all([
@@ -105,6 +113,12 @@ function pickIncludedTypes(scene) {
   switch (scene) {
     case 'COURSES':
       return it + 'course';
+    case 'PODCASTS':
+      return it + 'podcasts';
+    case 'QUICKTIPS':
+      return it + 'quick-tips';
+    case 'BOOTCAMPS':
+      return it + 'boot-camps';
     case 'SONGS':
       return it + 'song';
     case 'STUDENTFOCUS':

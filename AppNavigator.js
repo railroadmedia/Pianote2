@@ -208,9 +208,21 @@ export default () => (
             <Stack.Screen name='STUDENTFOCUS'>
               {props => Navigators('both', 'STUDENTFOCUS', props)}
             </Stack.Screen>
-            <Stack.Screen name='QUICKTIPS' component={Catalogue} />
-            <Stack.Screen name='PODCASTS' component={Catalogue} />
-            <Stack.Screen name='BOOTCAMPS' component={Catalogue} />
+            <Stack.Screen name='QUICKTIPS'>
+              {props => Navigators('bottom', 'QUICKTIPS', props)}
+            </Stack.Screen>
+            <Stack.Screen name='PODCASTS'>
+              {props => Navigators('bottom', 'PODCASTS', props)}
+            </Stack.Screen>
+            <Stack.Screen name='BOOTCAMPS'>
+              {props => Navigators('bottom', 'BOOTCAMPS', props)}
+            </Stack.Screen>
+            {/* <Stack.Screen name='QUESTIONANSWER'>
+              {props => Navigators('bottom', 'QUESTIONANSWER', props)}
+            </Stack.Screen>
+            <Stack.Screen name='STUDENTREVIEWS'>
+              {props => Navigators('bottom', 'STUDENTREVIEWS', props)}
+            </Stack.Screen> */}
           </Stack.Navigator>
         </NavigationContainer>
       </CombinedContexts>

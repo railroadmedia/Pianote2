@@ -23,13 +23,13 @@ import { getContent, getAll } from '../../services/catalogue.service';
 
 import { Contexts } from '../../context/CombinedContexts';
 
-import { refreshOnFocusListener, currentScene } from '../../../AppNavigator';
+import { arrowLeft } from '../../assets/img/svgs/svgs';
 
 let styles;
 
 export default class Catalogue extends React.Component {
   page = 1;
-  scene = currentScene();
+  scene = this.props.route.name;
   data = { method: {}, inProgress: [], all: [] };
   flatListCols = onTablet ? 3 : this.scene === 'STUDENTFOCUS' ? 2 : 1;
   static contextType = Contexts;
@@ -48,7 +48,11 @@ export default class Catalogue extends React.Component {
   }
 
   componentDidMount() {
-    this.refreshOnFocusListener = refreshOnFocusListener.call(this);
+    let reFocused = false;
+    this.refreshOnFocusListener = this.props.navigation?.addListener(
+      'focus',
+      () => (reFocused ? this.refresh?.() : (reFocused = true))
+    );
     this.refreshPromise = this.setData('refresh').then(
       () => delete this.refreshPromise
     );
@@ -180,13 +184,38 @@ export default class Catalogue extends React.Component {
         banner_background_image
       } = {},
       inProgress,
-      all
+      all,
+      studentFocus
     } = this.data;
     let { refreshing, filtering, sorting, loadingMore } = this.state;
     let filterAndSortDisabled =
       refreshing || filtering || sorting || loadingMore;
     return (
       <>
+        {this.scene.match(/^(PODCASTS|BOOTCAMPS|QUICKTIPS)$/) && (
+          <>
+            <TouchableOpacity
+              style={{ padding: 20, paddingHorizontal: 10 }}
+              onPress={this.props.navigation.goBack}
+            >
+              {arrowLeft({ height: 25, fill: 'white' })}
+            </TouchableOpacity>
+            <Image
+              style={{
+                width: '50%',
+                aspectRatio: 1,
+                alignSelf: 'center',
+                borderRadius: 10
+              }}
+              source={{
+                uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:good,c_fill,g_face/${
+                  studentFocus[all[0].type].thumbnailUrl
+                }`
+              }}
+              resizeMode={'contain'}
+            />
+          </>
+        )}
         {this.scene === 'HOME' && !!methodId && (
           <ImageBackground
             resizeMode={'cover'}

@@ -33,7 +33,7 @@ function decideWhereToRedirect() {
       url.endsWith('quick-tips') ||
       (url.includes('quick-tips') && isNaN(id))
     ) {
-      return navigate('STUDENTFOCUSSHOW', { type: 'quick-tips', url });
+      return navigate('QUICKTIPS', { type: 'quick-tips', url });
     }
     if (url.includes('quick-tips')) {
       return navigate('VIDEOPLAYER', { id });
@@ -57,7 +57,7 @@ function decideWhereToRedirect() {
       return navigate('VIDEOPLAYER', { id });
     }
     if (url.endsWith('podcasts') || (url.includes('podcasts') && isNaN(id))) {
-      return navigate('STUDENTFOCUSSHOW', { type: 'podcasts', url });
+      return navigate('PODCASTS', { type: 'podcasts', url });
     }
     if (url.includes('podcasts')) {
       return navigate('VIDEOPLAYER', { id });
@@ -66,7 +66,7 @@ function decideWhereToRedirect() {
       url.endsWith('boot-camps') ||
       (url.includes('boot-camps') && isNaN(id))
     ) {
-      return navigate('STUDENTFOCUSSHOW', { type: 'boot-camps', url });
+      return navigate('BOOTCAMPS', { type: 'boot-camps', url });
     }
     if (url.includes('boot-camps')) {
       return navigate('VIDEOPLAYER', { id });

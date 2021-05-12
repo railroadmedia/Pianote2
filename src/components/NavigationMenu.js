@@ -43,7 +43,7 @@ const navigationOptions = [
   },
   {
     title: 'Quick Tips',
-    navigator: 'STUDENTFOCUSSHOW'
+    navigator: 'QUICKTIPS'
   },
   {
     title: 'Student Focus',
@@ -59,11 +59,11 @@ const navigationOptions = [
   },
   {
     title: 'Podcasts',
-    navigator: 'STUDENTFOCUSSHOW'
+    navigator: 'PODCASTS'
   },
   {
     title: 'Bootcamps',
-    navigator: 'STUDENTFOCUSSHOW'
+    navigator: 'BOOTCAMPS'
   }
 ];
 
