@@ -27,7 +27,7 @@ function decideWhereToRedirect() {
       url.endsWith('student-focus') ||
       (url.includes('student-focus') && isNaN(id))
     ) {
-      return navigate('STUDENTFOCUSCATALOG', { url });
+      return navigate('STUDENTFOCUS', { url });
     }
     if (
       url.endsWith('quick-tips') ||

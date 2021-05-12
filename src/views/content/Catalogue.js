@@ -31,7 +31,7 @@ export default class Catalogue extends React.Component {
   page = 1;
   scene = currentScene();
   data = { method: {}, inProgress: [], all: [] };
-  flatListCols = onTablet ? 3 : 1;
+  flatListCols = onTablet ? 3 : this.scene === 'STUDENTFOCUS' ? 2 : 1;
   static contextType = Contexts;
 
   constructor(props) {
@@ -80,16 +80,16 @@ export default class Catalogue extends React.Component {
   setData = (action, state = { loading: false, refreshing: false }) =>
     (action === 'refresh' ? getContent : getAll)(
       this.getServiceOptions(action)
-    ).then(({ method, all, inProgress }) => {
+    ).then(({ method, all, inProgress, studentFocus }) => {
       try {
-        if (all.aborted) return;
+        if (all?.aborted) return;
         if (action === 'refresh') {
           if (this.filterRef) this.filterRef.appliedFilters = {};
           if (this.sortRef) this.sortRef.sortIndex = 0;
-          this.data = { method, inProgress: inProgress?.data };
+          this.data = { method, inProgress: inProgress?.data, studentFocus };
         }
         if (action === 'loadMore') this.data.all?.push(...(all.data || []));
-        else this.data.all = all.data;
+        else this.data.all = all?.data;
         this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
         this.setState(state);
       } catch (_) {
@@ -158,7 +158,13 @@ export default class Catalogue extends React.Component {
       <Card
         data={item}
         mode={
-          this.scene === 'SONGS' ? 'squareRow' : onTablet ? 'compact' : 'row'
+          this.scene === 'STUDENTFOCUS'
+            ? 'show'
+            : this.scene === 'SONGS'
+            ? 'squareRow'
+            : onTablet
+            ? 'compact'
+            : 'row'
         }
         onNavigate={this.props.onNavigateToCard}
       />
@@ -173,7 +179,8 @@ export default class Catalogue extends React.Component {
         started,
         banner_background_image
       } = {},
-      inProgress
+      inProgress,
+      all
     } = this.data;
     let { refreshing, filtering, sorting, loadingMore } = this.state;
     let filterAndSortDisabled =
@@ -285,20 +292,22 @@ export default class Catalogue extends React.Component {
             />
           </>
         )}
-        <View style={styles.flSectionHeaderContainer}>
-          <Text style={styles.flSectionHeaderText}>ALL LESSONS</Text>
-          <Sort
-            disabled={filterAndSortDisabled}
-            onSort={this.sort}
-            ref={r => (this.sortRef = r)}
-          />
-          <Filters_V2
-            disabled={filterAndSortDisabled}
-            onApply={this.filter}
-            meta={this.metaFilters}
-            ref={r => (this.filterRef = r)}
-          />
-        </View>
+        {!!all?.length && (
+          <View style={styles.flSectionHeaderContainer}>
+            <Text style={styles.flSectionHeaderText}>ALL LESSONS</Text>
+            <Sort
+              disabled={filterAndSortDisabled}
+              onSort={this.sort}
+              ref={r => (this.sortRef = r)}
+            />
+            <Filters_V2
+              disabled={filterAndSortDisabled}
+              onApply={this.filter}
+              meta={this.metaFilters}
+              ref={r => (this.filterRef = r)}
+            />
+          </View>
+        )}
       </>
     );
   };
@@ -325,7 +334,7 @@ export default class Catalogue extends React.Component {
         ) : (
           <FlatList
             windowSize={10}
-            data={data.all}
+            data={data.all || Object.values(data.studentFocus)}
             style={{ flex: 1, backgroundColor }}
             initialNumToRender={1}
             maxToRenderPerBatch={10}
@@ -335,9 +344,21 @@ export default class Catalogue extends React.Component {
             keyboardShouldPersistTaps='handled'
             ListHeaderComponent={this.renderFLHeader}
             renderItem={this.renderFLItem}
-            onEndReached={this.loadMore}
-            keyExtractor={({ id }) => id.toString()}
-            ListEmptyComponent={<Text style={{}}>No Content</Text>}
+            onEndReached={this.scene !== 'STUDENTFOCUS' && this.loadMore}
+            keyExtractor={({ id, name }) => (id || name).toString()}
+            ListEmptyComponent={
+              <Text
+                style={{
+                  textAlign: 'center',
+                  fontFamily: 'OpenSans-Bold',
+                  padding: 15,
+                  fontSize: 15,
+                  color: 'white'
+                }}
+              >
+                No Content
+              </Text>
+            }
             ListFooterComponent={
               <ActivityIndicator
                 size='small'
@@ -426,7 +447,7 @@ export default class Catalogue extends React.Component {
                     fontFamily: 'RobotoCondensed-Bold',
                     padding: 15,
                     fontSize: 15,
-                    color: '#ffffff'
+                    color: 'white'
                   }}
                 >
                   RELOAD

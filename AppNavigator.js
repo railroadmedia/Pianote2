@@ -162,10 +162,10 @@ export default () => (
             <Stack.Screen name='SUPPORT' component={Support} />
             <Stack.Screen name='TERMS' component={Terms} />
             {/* content */}
-            <Stack.Screen
+            {/* <Stack.Screen
               name='STUDENTFOCUSCATALOG'
               component={StudentFocusCatalog}
-            />
+            /> */}
             {/* <Stack.Screen name='STUDENTFOCUSSHOW' component={StudentFocusShow} /> */}
             <Stack.Screen name='VIDEOPLAYERSONG' component={VideoPlayerSong} />
             <Stack.Screen name='METHODLEVEL' component={MethodLevel} />
@@ -205,8 +205,10 @@ export default () => (
             <Stack.Screen name='SONGS'>
               {props => Navigators('both', 'SONGS', props)}
             </Stack.Screen>
+            <Stack.Screen name='STUDENTFOCUS'>
+              {props => Navigators('both', 'STUDENTFOCUS', props)}
+            </Stack.Screen>
             <Stack.Screen name='QUICKTIPS' component={Catalogue} />
-            <Stack.Screen name='STUDENTFOCUS' component={Catalogue} />
             <Stack.Screen name='PODCASTS' component={Catalogue} />
             <Stack.Screen name='BOOTCAMPS' component={Catalogue} />
           </Stack.Navigator>

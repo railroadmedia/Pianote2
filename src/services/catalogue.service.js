@@ -10,6 +10,14 @@ export function getContent(options) {
           getInProgress(options)
         ]).then(([{ all }, { inProgress }]) => res({ all, inProgress }));
         break;
+      case 'STUDENTFOCUS':
+        Promise.all([
+          getStudentFocus(options.signal),
+          getInProgress(options)
+        ]).then(([{ studentFocus }, { inProgress }]) =>
+          res({ studentFocus, inProgress })
+        );
+        break;
       case 'HOME':
         Promise.all([
           getMethod(options.signal),
@@ -80,6 +88,18 @@ function getMethod(signal) {
       .then(method => res({ method }))
   );
 }
+function getStudentFocus(signal) {
+  return new Promise(res =>
+    commonService
+      .tryCall(
+        `${commonService.rootUrl}/api/railcontent/shows`,
+        null,
+        null,
+        signal
+      )
+      .then(studentFocus => res({ studentFocus }))
+  );
+}
 function pickIncludedTypes(scene) {
   let it = 'included_types[]=';
   switch (scene) {
@@ -87,6 +107,16 @@ function pickIncludedTypes(scene) {
       return it + 'course';
     case 'SONGS':
       return it + 'song';
+    case 'STUDENTFOCUS':
+      return [
+        'quick-tips',
+        'question-and-answer',
+        'student-review',
+        'boot-camps',
+        'podcast'
+      ]
+        .map(t => it + t)
+        .join('&');
     case 'HOME':
       return [
         'learning-path-course',

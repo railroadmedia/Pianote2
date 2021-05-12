@@ -47,7 +47,7 @@ const navigationOptions = [
   },
   {
     title: 'Student Focus',
-    navigator: 'STUDENTFOCUSCATALOG'
+    navigator: 'STUDENTFOCUS'
   },
   {
     title: 'Live',
