@@ -215,7 +215,6 @@ export default () => (
 );
 
 function Navigators(mode, screen, props) {
-  console.log();
   return (
     <>
       {!!mode.match(/^(both|top)$/) && (
@@ -225,7 +224,20 @@ function Navigators(mode, screen, props) {
           parentPage={screen}
         />
       )}
-      <Catalogue {...props} />
+      <Catalogue
+        {...props}
+        onNavigationFromCard={navigateTo}
+        onNavigateToMethodLesson={navigateTo}
+        onNavigateToMethod={(started, completed) =>
+          navigate('METHOD', {
+            methodIsStarted: started,
+            methodIsCompleted: completed
+          })
+        }
+        onNavigateToSeeAll={() =>
+          navigate('SEEALL', { title: 'Continue', parent: this.scene })
+        }
+      />
       {!!mode.match(/^(both|bottom)$/) && (
         <NavigationBar
           currentPage={'HOME'}
@@ -234,4 +246,62 @@ function Navigators(mode, screen, props) {
       )}
     </>
   );
+}
+
+function navigateTo(card) {
+  switch (card.type) {
+    case 'course':
+      return navigate('PATHOVERVIEW', {
+        data: card,
+        isMethod: false
+      });
+    case 'song':
+      if (card.lesson_count === 1)
+        return navigate('VIDEOPLAYER', {
+          id: card.currentLessonId
+        });
+      return navigate('PATHOVERVIEW', {
+        data: card,
+        isMethod: false
+      });
+    case 'learning-path':
+      return navigate('METHOD', {
+        url: card.mobile_app_url
+      });
+    case 'learning-path-level':
+      return navigate('METHODLEVEL', {
+        url: card.mobile_app_url,
+        level: index + 1
+      });
+    case 'learning-path-course':
+      return navigate('PATHOVERVIEW', {
+        data: card,
+        isMethod: true
+      });
+    case 'unit':
+      return navigate('PATHOVERVIEW', {
+        data: card,
+        isFoundations: true
+      });
+    case 'learning-path-lesson':
+      return navigate('VIDEOPLAYER', {
+        url: card.mobile_app_url
+      });
+    case 'pack':
+      return navigate('SINGLEPACK', {
+        url: card.mobile_app_url
+      });
+    case 'pack-bundle':
+      return navigate('SINGLEPACK', {
+        url: card.mobile_app_url
+      });
+    case 'pack-bundle-lesson':
+      return navigate('VIDEOPLAYER', {
+        url: card.mobile_app_url
+      });
+    default:
+      return navigate('VIDEOPLAYER', {
+        id: card.id
+      });
+  }
 }

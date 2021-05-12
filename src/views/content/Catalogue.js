@@ -17,18 +17,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Card from '../../components/Card';
 import Filters_V2 from '../../components/Filters_V2';
 import Sort from '../../components/Sort';
-import NavigationBar from '../../components/NavigationBar';
-import NavMenuHeaders from '../../components/NavMenuHeaders';
 
 import { getContent, getAll } from '../../services/catalogue.service';
 
 import { Contexts } from '../../context/CombinedContexts';
 
-import {
-  navigate,
-  refreshOnFocusListener,
-  currentScene
-} from '../../../AppNavigator';
+import { refreshOnFocusListener, currentScene } from '../../../AppNavigator';
 
 let styles;
 
@@ -135,7 +129,7 @@ export default class Catalogue extends React.Component {
       <Card
         data={item}
         type={onTablet ? 'compact' : 'row'}
-        onNavigate={navigate}
+        onNavigate={this.props.onNavigationFromCard}
       />
     </View>
   );
@@ -146,7 +140,7 @@ export default class Catalogue extends React.Component {
         id: methodId,
         completed,
         started,
-        banner_button_url,
+        next_lesson,
         banner_background_image
       } = {},
       inProgress
@@ -186,25 +180,21 @@ export default class Catalogue extends React.Component {
                   {
                     text: completed ? 'RESET' : started ? 'CONTINUE' : 'START',
                     icon: completed ? 'replay' : 'play',
-                    action: () =>
-                      completed
-                        ? ''
-                        : navigate('VIDEOPLAYER', { url: banner_button_url })
+                    action:
+                      !completed &&
+                      (() => this.props.onNavigateToMethodLesson(next_lesson))
                   },
                   {
                     text: 'MORE INFO',
                     icon: 'arrow-right',
                     moreInfo: true,
                     action: () =>
-                      navigate('METHOD', {
-                        methodIsStarted: started,
-                        methodIsCompleted: completed
-                      })
+                      this.props.onNavigateToMethod(started, completed)
                   }
                 ].map(to => (
                   <TouchableOpacity
                     key={to.text}
-                    onPress={to.action}
+                    onPress={to.action || (() => {})}
                     style={[
                       styles.headerBtn,
                       {
@@ -226,11 +216,7 @@ export default class Catalogue extends React.Component {
           <>
             <View style={styles.flSectionHeaderContainer}>
               <Text style={styles.flSectionHeaderText}>IN PROGRESS</Text>
-              <TouchableOpacity
-                onPress={() =>
-                  navigate('SEEALL', { title: 'Continue', parent: this.scene })
-                }
-              >
+              <TouchableOpacity onPress={this.props.onNavigateToSeeAll}>
                 <Text style={{ fontSize: 14, color: '#fb1b2f' }}>See All</Text>
               </TouchableOpacity>
             </View>
@@ -254,7 +240,11 @@ export default class Catalogue extends React.Component {
                       paddingRight: index === inProgress?.length - 1 ? 10 : 0
                     }}
                   >
-                    <Card data={item} type={'compact'} onNavigate={navigate} />
+                    <Card
+                      data={item}
+                      type={'compact'}
+                      onNavigate={this.props.onNavigationFromCard}
+                    />
                   </View>
                 </View>
               )}

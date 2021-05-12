@@ -48,7 +48,7 @@ class Card extends React.Component {
     this.props.toggleMyList?.(this.props.data);
   };
 
-  navigate = () => this.props.onNavigate?.();
+  navigate = () => this.props.onNavigate?.(this.props.data);
 
   toggleDetails = () =>
     this.setState(({ detailsModalVisible }) => ({
