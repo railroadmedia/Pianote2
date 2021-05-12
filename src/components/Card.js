@@ -45,7 +45,7 @@ class Card extends React.Component {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let { id, is_added_to_primary_playlist } = this.props.data;
     is_added_to_primary_playlist ? removeFromMyList(id) : addToMyList(id);
-    this.props.toggleMyList?.();
+    this.props.toggleMyList?.(this.props.data);
   };
 
   navigate = () => this.props.onNavigate?.();
@@ -64,9 +64,9 @@ class Card extends React.Component {
 
   toggleLike = () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    let { id, isLiked } = this.props.data;
-    isLiked ? unlikeContent(id) : likeContent(id);
-    this.props.toggleLike?.();
+    let { id, is_liked_by_current_user } = this.props.data;
+    is_liked_by_current_user ? unlikeContent(id) : likeContent(id);
+    this.props.toggleLike?.(this.props.data);
   };
 
   get imageUrl() {
@@ -304,7 +304,7 @@ class Card extends React.Component {
                       height: onTablet ? 28 : 22
                     }}
                     size={onTablet ? 28 : 22}
-                    name={data.isLiked ? 'like1' : 'like2'}
+                    name={data.is_liked_by_current_user ? 'like1' : 'like2'}
                   />
                   <Text>{data.like_count}</Text>
                 </TouchableOpacity>
@@ -453,7 +453,7 @@ class Card extends React.Component {
 }
 
 const mapStateToProps = ({ cards }, props) => {
-  return { data: { ...props.data, ...cards?.[props.id] } };
+  return { data: cards?.[props.data.id] || props.data };
 };
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ toggleMyList, toggleLike }, dispatch);
