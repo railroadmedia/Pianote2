@@ -10,7 +10,6 @@ import {
   StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import Icon from '../assets/icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -27,6 +26,24 @@ export default class Replies extends React.Component {
       showReplies: false,
       showMakeReply: false
     };
+  }
+
+  lastPostTime(date) {
+    let dif = new Date() - new Date(date);
+    if (dif < 120 * 1000) return `1 Minute Ago`;
+    if (dif < 60 * 1000 * 60)
+      return `${(dif / 1000 / 60).toFixed()} Minutes Ago`;
+    if (dif < 60 * 1000 * 60 * 2) return `1 Hour Ago`;
+    if (dif < 60 * 1000 * 60 * 24)
+      return `${(dif / 1000 / 60 / 60).toFixed()} Hours Ago`;
+    if (dif < 60 * 1000 * 60 * 48) return `1 Day Ago`;
+    if (dif < 60 * 1000 * 60 * 24 * 30)
+      return `${(dif / 1000 / 60 / 60 / 24).toFixed()} Days Ago`;
+    if (dif < 60 * 1000 * 60 * 24 * 60) return `1 Month Ago`;
+    if (dif < 60 * 1000 * 60 * 24 * 30 * 12)
+      return `${(dif / 1000 / 60 / 60 / 24 / 30).toFixed()} Months Ago`;
+    if (dif < 60 * 1000 * 60 * 24 * 365 * 2) return `1 Year Ago`;
+    return `${(dif / 1000 / 60 / 60 / 24 / 365).toFixed()} Years Ago`;
   }
 
   toggle = callback =>
@@ -100,7 +117,7 @@ export default class Replies extends React.Component {
               }}
             >
               {reply.user['display_name']} | {reply.user.rank} |{' '}
-              {moment.utc(reply.created_on).local().fromNow()}
+              {this.lastPostTime(reply.created_on)}
             </Text>
             <View
               style={{
@@ -206,7 +223,7 @@ export default class Replies extends React.Component {
                     <View style={localStyles.commentHeader}>
                       <Text style={localStyles.replyText}>REPLIES</Text>
                       <TouchableOpacity onPress={this.props.close}>
-                        <EntypoIcon
+                        <Icon.Entypo
                           size={onTablet ? 27.5 : 22.5}
                           name={'cross'}
                           color={'#c2c2c2'}
@@ -275,7 +292,7 @@ export default class Replies extends React.Component {
                           }}
                         >
                           {user.display_name} | {user.rank} |{' '}
-                          {moment.utc(comment.created_on).local().fromNow()}
+                          {this.lastPostTime(comment.created_on)}
                         </Text>
                         <View
                           style={{

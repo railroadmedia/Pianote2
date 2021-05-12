@@ -13,7 +13,6 @@ class NavigationBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      profileImage: '',
       secondaryColor: this.props.isMethod
         ? colors.pianoteGrey
         : colors.secondBackground,
@@ -21,14 +20,8 @@ class NavigationBar extends React.Component {
     };
   }
 
-  componentDidMount = () => {
-    this.setState({
-      profileImage: this.props.user.profile_picture_url
-    });
-  };
-
   profile = () => {
-    if (this.state.profileImage.length == 0) {
+    if (this.props.user.profile_picture_url.length == 0) {
       return (
         <Icon.AntDesign
           name={'user'}
@@ -50,7 +43,7 @@ class NavigationBar extends React.Component {
               ? colors.pianoteGrey
               : colors.secondBackground
           }}
-          source={{ uri: this.state.profileImage }}
+          source={{ uri: this.props.user.profile_picture_url }}
           resizeMode={FastImage.resizeMode.cover}
         />
       );
@@ -131,13 +124,13 @@ class NavigationBar extends React.Component {
               <View
                 style={[
                   localStyles.navIconContainer,
-                  this.state.profileImage.length > 0
+                  this.props.user.profile_picture_url.length > 0
                     ? null
                     : styles.centerContent,
                   {
                     borderColor:
                       this.props.currentPage == 'PROFILE' &&
-                      this.state.profileImage.length > 0
+                      this.props.user.profile_picture_url.length > 0
                         ? 'white'
                         : 'transparent'
                   }

@@ -8,9 +8,10 @@ import {
   Linking,
   StatusBar,
   StyleSheet,
-  RefreshControl
+  RefreshControl,
+  Modal
 } from 'react-native';
-import Modal from 'react-native-modal';
+
 import FastImage from 'react-native-fast-image';
 import DeviceInfo from 'react-native-device-info';
 import Icon from '../../assets/icons.js';
@@ -79,14 +80,12 @@ class Profile extends React.Component {
     localStyles = setStyles(this.props.theme === 'light', colors.pianoteRed);
 
     this.state = {
-      profileImage: props.user.profile_picture_url,
       notifications: [],
       showXpRank: false,
       showReplyNotification: false,
       isLoading: false,
       animateLoadMore: false,
-      clickedNotification: null,
-      refreshing: false
+      clickedNotification: null
     };
   }
 
@@ -100,15 +99,14 @@ class Profile extends React.Component {
     }
     let userDetails = await getUserData();
     this.props.setLoggedInUser(userDetails);
-    this.setState({ refreshing: false });
+    this.setState({ isLoading: false });
   }
 
   refresh = () => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    this.setState({ refreshing: true });
-    this.getUserDetails();
+    this.setState({ isLoading: true }, () => this.getUserDetails());
   };
 
   async getNotifications(loadMore) {
@@ -259,6 +257,13 @@ class Profile extends React.Component {
   };
 
   render() {
+    const {
+      profile_picture_url,
+      display_name,
+      created_at,
+      totalXp,
+      xpRank
+    } = this.props.user;
     return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBar
@@ -289,7 +294,7 @@ class Profile extends React.Component {
             onEndReachedThreshold={0.01}
             refreshControl={
               <RefreshControl
-                refreshing={this.state.refreshing}
+                refreshing={this.state.isLoading}
                 onRefresh={() => this.refresh()}
                 colors={[colors.pianoteRed]}
                 tintColor={colors.pianoteRed}
@@ -317,7 +322,7 @@ class Profile extends React.Component {
                       style={localStyles.profilePicture}
                       source={{
                         uri:
-                          this.state.profileImage ||
+                          profile_picture_url ||
                           'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
                       }}
                       resizeMode={FastImage.resizeMode.cover}
@@ -326,10 +331,10 @@ class Profile extends React.Component {
                   <Text
                     style={[localStyles.usernameText, styles.childHeaderText]}
                   >
-                    {this.props.user.display_name}
+                    {display_name}
                   </Text>
                   <Text style={localStyles.memberSinceText}>
-                    MEMBER SINCE {this.props.user.created_at?.slice(0, 4)}
+                    MEMBER SINCE {created_at?.slice(0, 4)}
                   </Text>
                 </View>
 
@@ -339,18 +344,14 @@ class Profile extends React.Component {
                     onPress={() => this.setState({ showXpRank: true })}
                   >
                     <Text style={localStyles.redXpRank}>XP</Text>
-                    <Text style={localStyles.whiteXpRank}>
-                      {this.props.user.totalXp}
-                    </Text>
+                    <Text style={localStyles.whiteXpRank}>{totalXp}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => this.setState({ showXpRank: true })}
                     style={localStyles.center}
                   >
                     <Text style={localStyles.redXpRank}>RANK</Text>
-                    <Text style={localStyles.whiteXpRank}>
-                      {this.props.user.xpRank}
-                    </Text>
+                    <Text style={localStyles.whiteXpRank}>{xpRank}</Text>
                   </TouchableOpacity>
                 </View>
                 <Text
@@ -514,7 +515,8 @@ class Profile extends React.Component {
           />
         </View>
         <Modal
-          isVisible={this.state.showXpRank}
+          transparent={true}
+          visible={this.state.showXpRank}
           style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
@@ -525,12 +527,13 @@ class Profile extends React.Component {
         >
           <XpRank
             hideXpRank={() => this.setState({ showXpRank: false })}
-            xp={this.props.user.totalXp}
-            rank={this.props.user.xpRank}
+            xp={totalXp}
+            rank={xpRank}
           />
         </Modal>
         <Modal
-          isVisible={this.state.showReplyNotification}
+          transparent={true}
+          visible={this.state.showReplyNotification}
           style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
@@ -540,6 +543,8 @@ class Profile extends React.Component {
           onBackButtonPress={() =>
             this.setState({ showReplyNotification: false })
           }
+          onRequestClose={() => this.setState({ showReplyNotification: false })}
+          supportedOrientations={['portrait', 'landscape']}
         >
           {this.state.showReplyNotification && (
             <ReplyNotification
