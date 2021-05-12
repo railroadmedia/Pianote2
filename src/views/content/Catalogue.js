@@ -281,67 +281,61 @@ export default class Catalogue extends React.Component {
   };
 
   render() {
+    console.log('rr cat');
     let { scene, data } = this;
     let { loading, loadingMore, refreshing, filtering, sorting } = this.state;
     let backgroundColor = scene === 'HOME' ? 'black' : '#00101d';
     return (
-      <>
-        <NavMenuHeaders
-          isMethod={scene === 'HOME'}
-          currentPage={scene}
-          parentPage={scene}
-        />
-        <View style={{ flex: 1 }}>
-          {loading ? (
-            <ActivityIndicator
-              size='large'
-              style={{ backgroundColor, flex: 1 }}
-              color={'#6e777a'}
-            />
-          ) : (
-            <FlatList
-              windowSize={10}
-              data={data.all}
-              style={{ flex: 1, backgroundColor }}
-              initialNumToRender={1}
-              maxToRenderPerBatch={10}
-              onEndReachedThreshold={0.01}
-              removeClippedSubviews={true}
-              numColumns={this.flatListCols}
-              keyboardShouldPersistTaps='handled'
-              ListHeaderComponent={this.renderFLHeader}
-              renderItem={this.renderFLItem}
-              onEndReached={this.loadMore}
-              keyExtractor={({ id }) => id.toString()}
-              ListEmptyComponent={<Text style={{}}>No Content</Text>}
-              ListFooterComponent={
-                <ActivityIndicator
-                  size='small'
-                  color={'#6e777a'}
-                  animating={loadingMore}
-                  style={{ padding: 15 }}
-                />
-              }
-              refreshControl={
-                <RefreshControl
-                  colors={['#6e777a']}
-                  tintColor={'#6e777a'}
-                  onRefresh={this.refresh}
-                  refreshing={refreshing}
-                />
-              }
-            />
-          )}
-          {(filtering || sorting) && (
-            <ActivityIndicator
-              size='large'
-              style={{ position: 'absolute', alignSelf: 'center' }}
-              color={'#6e777a'}
-            />
-          )}
-        </View>
-        <NavigationBar currentPage={''} />
-      </>
+      <View style={{ flex: 1 }}>
+        {loading ? (
+          <ActivityIndicator
+            size='large'
+            style={{ backgroundColor, flex: 1 }}
+            color={'#6e777a'}
+          />
+        ) : (
+          <FlatList
+            windowSize={10}
+            data={data.all}
+            style={{ flex: 1, backgroundColor }}
+            initialNumToRender={1}
+            maxToRenderPerBatch={10}
+            onEndReachedThreshold={0.01}
+            removeClippedSubviews={true}
+            numColumns={this.flatListCols}
+            keyboardShouldPersistTaps='handled'
+            ListHeaderComponent={this.renderFLHeader}
+            renderItem={this.renderFLItem}
+            onEndReached={this.loadMore}
+            keyExtractor={({ id }) => id.toString()}
+            ListEmptyComponent={<Text style={{}}>No Content</Text>}
+            ListFooterComponent={
+              <ActivityIndicator
+                size='small'
+                color={'#6e777a'}
+                animating={loadingMore}
+                style={{ padding: 15 }}
+              />
+            }
+            refreshControl={
+              <RefreshControl
+                colors={['#6e777a']}
+                tintColor={'#6e777a'}
+                onRefresh={this.refresh}
+                refreshing={refreshing}
+              />
+            }
+          />
+        )}
+        {(filtering || sorting) && (
+          <LinearGradient
+            colors={['rgba(80, 15, 25, 0.98)', 'transparent']}
+            style={{ position: 'absolute', width: '100%' }}
+          >
+            <ActivityIndicator size='large' style={{}} color={'#6e777a'} />
+          </LinearGradient>
+        )}
+      </View>
     );
   }
 }

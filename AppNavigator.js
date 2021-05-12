@@ -56,6 +56,9 @@ import Catalogue from './src/views/content/Catalogue';
 import OrientationProvider from './src/context/OrientationProvider';
 import CombinedContexts from './src/context/CombinedContexts';
 
+import NavMenuHeaders from './src/components/NavMenuHeaders';
+import NavigationBar from './src/components/NavigationBar';
+
 const Stack = createStackNavigator();
 
 const navigationRef = React.createRef();
@@ -183,7 +186,7 @@ export default () => (
             <Stack.Screen name='DOWNLOADS' component={Downloads} />
             {/* <Stack.Screen name='HOME' component={Lessons} /> */}
             <Stack.Screen name='SEEALL' component={SeeAll} />
-            <Stack.Screen name='COURSE' component={Course} />
+            {/* <Stack.Screen name='COURSE' component={Course} /> */}
             <Stack.Screen name='MYLIST' component={MyList} />
             <Stack.Screen name='SEARCH' component={Search} />
             <Stack.Screen name='PACKS' component={Packs} />
@@ -193,8 +196,12 @@ export default () => (
               options={{ gestureEnabled: false }}
             />
 
-            <Stack.Screen name='HOME' component={Catalogue} />
-            <Stack.Screen name='COURSES' component={Catalogue} />
+            <Stack.Screen name='HOME'>
+              {props => Navigators('both', 'HOME', props)}
+            </Stack.Screen>
+            <Stack.Screen name='COURSE'>
+              {props => Navigators('both', 'COURSE', props)}
+            </Stack.Screen>
             <Stack.Screen name='SONGS' component={Catalogue} />
             <Stack.Screen name='QUICKTIPS' component={Catalogue} />
             <Stack.Screen name='STUDENTFOCUS' component={Catalogue} />
@@ -206,3 +213,25 @@ export default () => (
     </OrientationProvider>
   </NetworkProvider>
 );
+
+function Navigators(mode, screen, props) {
+  console.log();
+  return (
+    <>
+      {!!mode.match(/^(both|top)$/) && (
+        <NavMenuHeaders
+          isMethod={!!screen.match(/^(HOME)$/)}
+          currentPage={screen}
+          parentPage={screen}
+        />
+      )}
+      <Catalogue {...props} />
+      {!!mode.match(/^(both|bottom)$/) && (
+        <NavigationBar
+          currentPage={'HOME'}
+          isMethod={!!screen.match(/^(HOME)$/)}
+        />
+      )}
+    </>
+  );
+}
