@@ -78,7 +78,7 @@ class Card extends React.Component {
       return thumbnail_url;
     if (thumbnail_url?.includes('http')) {
       return `https://cdn.musora.com/image/fetch/w_350,ar_${
-        this.props.type === 'squareRow' ? '1' : '16:9'
+        this.props.mode.match(/^(squareCompact|squareRow)$/) ? '1' : '16:9'
       },fl_lossy,q_auto:eco,c_fill,g_face${
         new Date(published_on) > new Date() ? ',e_grayscale' : ''
       }/${thumbnail_url}`;
@@ -88,7 +88,7 @@ class Card extends React.Component {
 
   render() {
     let {
-      props: { data, type },
+      props: { data, mode },
       state: { detailsModalVisible, calendarModalVisible }
     } = this;
     return (
@@ -98,7 +98,7 @@ class Card extends React.Component {
           onLongPress={this.toggleDetails}
           onPress={this.navigate}
           style={{
-            flexDirection: type.match(/^(row|squareRow)$/) ? 'row' : 'column',
+            flexDirection: mode.match(/^(row|squareRow)$/) ? 'row' : 'column',
             padding: 10,
             paddingBottom: 0,
             paddingRight: 0,
@@ -107,9 +107,11 @@ class Card extends React.Component {
         >
           <Image
             style={{
-              aspectRatio: 16 / 9,
+              aspectRatio: mode.match(/^(squareRow|squareCompact)$/)
+                ? 1
+                : 16 / 9,
               borderRadius: 7.5,
-              width: type.match(/^(row|squareRow)$/) ? '30%' : '100%'
+              width: mode.match(/^(row|squareRow)$/) ? '30%' : '100%'
             }}
             resizeMode='cover'
             source={{ uri: this.imageUrl }}
@@ -117,7 +119,7 @@ class Card extends React.Component {
           <View style={{ flexDirection: 'row', flex: 1 }}>
             <View
               style={{
-                paddingHorizontal: type.match(/^(row|squareRow)$/) ? 10 : 0,
+                paddingHorizontal: mode.match(/^(row|squareRow)$/) ? 10 : 0,
                 flex: 1
               }}
             >
@@ -149,7 +151,7 @@ class Card extends React.Component {
             <TouchableOpacity
               style={{
                 padding: 10,
-                paddingRight: type.match(/^(row|squareRow)$/) ? 10 : 0
+                paddingRight: mode.match(/^(row|squareRow)$/) ? 10 : 0
               }}
               onPress={
                 this[
@@ -205,7 +207,9 @@ class Card extends React.Component {
             >
               <Image
                 style={{
-                  aspectRatio: 16 / 9,
+                  aspectRatio: mode.match(/^(squareRow|squareCompact)$/)
+                    ? 1
+                    : 16 / 9,
                   borderRadius: 10,
                   width: '100%'
                 }}

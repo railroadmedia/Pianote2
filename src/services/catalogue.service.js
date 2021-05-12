@@ -3,8 +3,12 @@ import commonService from './common.service';
 export function getContent(options) {
   return new Promise(res => {
     switch (options.scene) {
+      case 'SONGS':
       case 'COURSES':
-        Promise.all([getAll()]).then(([{ all }]) => res({ all }));
+        Promise.all([
+          getAll(options),
+          getInProgress(options)
+        ]).then(([{ all }, { inProgress }]) => res({ all, inProgress }));
         break;
       case 'HOME':
         Promise.all([
@@ -80,7 +84,9 @@ function pickIncludedTypes(scene) {
   let it = 'included_types[]=';
   switch (scene) {
     case 'COURSES':
-      return it + course;
+      return it + 'course';
+    case 'SONGS':
+      return it + 'song';
     case 'HOME':
       return [
         'learning-path-course',

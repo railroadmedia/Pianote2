@@ -8,7 +8,8 @@ import {
   ImageBackground,
   Image,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  Modal
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
@@ -41,7 +42,8 @@ export default class Catalogue extends React.Component {
       loadingMore: false,
       refreshing: true,
       filtering: false,
-      sorting: false
+      sorting: false,
+      errorVisible: false
     };
   }
 
@@ -55,6 +57,14 @@ export default class Catalogue extends React.Component {
   componentWillUnmount() {
     this.refreshOnFocusListener?.();
   }
+
+  connection = alert => {
+    if (this.context.isConnected) return true;
+    if (alert) this.context.showNoConnectionAlert();
+  };
+
+  toggleError = () =>
+    this.setState(({ errorVisible }) => ({ errorVisible: !errorVisible }));
 
   getServiceOptions = action => {
     let options = { scene: this.scene };
@@ -71,17 +81,36 @@ export default class Catalogue extends React.Component {
     (action === 'refresh' ? getContent : getAll)(
       this.getServiceOptions(action)
     ).then(({ method, all, inProgress }) => {
-      if (all.aborted) return;
-      if (action === 'refresh') {
-        if (this.filterRef) this.filterRef.appliedFilters = {};
-        if (this.sortRef) this.sortRef.sortIndex = 0;
-        this.data = { method, inProgress: inProgress.data };
+      try {
+        if (all.aborted) return;
+        if (action === 'refresh') {
+          if (this.filterRef) this.filterRef.appliedFilters = {};
+          if (this.sortRef) this.sortRef.sortIndex = 0;
+          this.data = { method, inProgress: inProgress?.data };
+        }
+        if (action === 'loadMore') this.data.all?.push(...(all.data || []));
+        else this.data.all = all.data;
+        this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
+        this.setState(state);
+      } catch (_) {
+        this.toggleError();
       }
-      if (action === 'loadMore') this.data.all?.push(...(all.data || []));
-      else this.data.all = all.data;
-      this.metaFilters = all?.meta?.filterOptions || this.metaFilters;
-      this.setState(state);
     });
+
+  navigateTo = path => {
+    if (!this.connection(true)) return;
+    let { next_lesson, started, completed } = this.data.method;
+    switch (path) {
+      case 'methodLesson':
+        return this.props.onNavigateToMethodLesson(next_lesson);
+      case 'method':
+        return this.props.onNavigateToMethod(started, completed);
+      case 'seeAll':
+        return this.props.onNavigateToSeeAll();
+      default:
+        return this.props.onNavigateToCard(path);
+    }
+  };
 
   filter = () =>
     new Promise(res => {
@@ -128,8 +157,10 @@ export default class Catalogue extends React.Component {
     >
       <Card
         data={item}
-        type={onTablet ? 'compact' : 'row'}
-        onNavigate={this.props.onNavigationFromCard}
+        mode={
+          this.scene === 'SONGS' ? 'squareRow' : onTablet ? 'compact' : 'row'
+        }
+        onNavigate={this.props.onNavigateToCard}
       />
     </View>
   );
@@ -140,7 +171,6 @@ export default class Catalogue extends React.Component {
         id: methodId,
         completed,
         started,
-        next_lesson,
         banner_background_image
       } = {},
       inProgress
@@ -181,15 +211,13 @@ export default class Catalogue extends React.Component {
                     text: completed ? 'RESET' : started ? 'CONTINUE' : 'START',
                     icon: completed ? 'replay' : 'play',
                     action:
-                      !completed &&
-                      (() => this.props.onNavigateToMethodLesson(next_lesson))
+                      !completed && (() => this.navigateTo('methodLesson'))
                   },
                   {
                     text: 'MORE INFO',
                     icon: 'arrow-right',
                     moreInfo: true,
-                    action: () =>
-                      this.props.onNavigateToMethod(started, completed)
+                    action: () => this.navigateTo('method')
                   }
                 ].map(to => (
                   <TouchableOpacity
@@ -216,7 +244,7 @@ export default class Catalogue extends React.Component {
           <>
             <View style={styles.flSectionHeaderContainer}>
               <Text style={styles.flSectionHeaderText}>IN PROGRESS</Text>
-              <TouchableOpacity onPress={this.props.onNavigateToSeeAll}>
+              <TouchableOpacity onPress={() => this.navigateTo('seeAll')}>
                 <Text style={{ fontSize: 14, color: '#fb1b2f' }}>See All</Text>
               </TouchableOpacity>
             </View>
@@ -230,7 +258,10 @@ export default class Catalogue extends React.Component {
               removeClippedSubviews={true}
               keyboardShouldPersistTaps='handled'
               contentContainerStyle={{
-                width: `${(onTablet ? 30 : 70) * inProgress?.length}%`
+                width: `${
+                  (onTablet ? 30 : this.scene === 'SONGS' ? 40 : 70) *
+                  inProgress?.length
+                }%`
               }}
               renderItem={({ item, index }) => (
                 <View style={{ width: `${100 / inProgress?.length}%` }}>
@@ -242,8 +273,10 @@ export default class Catalogue extends React.Component {
                   >
                     <Card
                       data={item}
-                      type={'compact'}
-                      onNavigate={this.props.onNavigationFromCard}
+                      mode={
+                        this.scene === 'SONGS' ? 'squareCompact' : 'compact'
+                      }
+                      onNavigate={this.navigateTo}
                     />
                   </View>
                 </View>
@@ -271,9 +304,15 @@ export default class Catalogue extends React.Component {
   };
 
   render() {
-    console.log('rr cat');
     let { scene, data } = this;
-    let { loading, loadingMore, refreshing, filtering, sorting } = this.state;
+    let {
+      loading,
+      loadingMore,
+      refreshing,
+      filtering,
+      sorting,
+      errorVisible
+    } = this.state;
     let backgroundColor = scene === 'HOME' ? 'black' : '#00101d';
     return (
       <View style={{ flex: 1 }}>
@@ -325,6 +364,77 @@ export default class Catalogue extends React.Component {
             <ActivityIndicator size='large' style={{}} color={'#6e777a'} />
           </LinearGradient>
         )}
+        <Modal
+          transparent={true}
+          visible={errorVisible}
+          onRequestClose={this.toggleError}
+          supportedOrientations={['portrait', 'landscape']}
+          animationType='fade'
+        >
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={this.toggleError}
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(0,0,0,.5)'
+            }}
+          >
+            <View
+              style={{
+                padding: 10,
+                paddingHorizontal: 50,
+                borderRadius: 10,
+                margin: 50,
+                backgroundColor: 'white'
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: 'OpenSans-Bold',
+                  textAlign: 'center',
+                  fontSize: 20
+                }}
+              >
+                Something went wrong...
+              </Text>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  fontFamily: 'OpenSans-Regular',
+                  fontSize: 14
+                }}
+              >
+                Pianote is down, we are working on a fix and it should be back
+                shortly, thank you for your patience.
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  this.toggleError();
+                  this.refresh();
+                }}
+                style={{
+                  marginTop: 10,
+                  borderRadius: 50,
+                  backgroundColor: colors.pianoteRed
+                }}
+              >
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    fontFamily: 'RobotoCondensed-Bold',
+                    padding: 15,
+                    fontSize: 15,
+                    color: '#ffffff'
+                  }}
+                >
+                  RELOAD
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
       </View>
     );
   }

@@ -35,11 +35,11 @@ const navigationOptions = [
   },
   {
     title: 'Courses',
-    navigator: 'COURSE'
+    navigator: 'COURSES'
   },
   {
     title: 'Songs',
-    navigator: 'SONGCATALOG'
+    navigator: 'SONGS'
   },
   {
     title: 'Quick Tips',

@@ -861,7 +861,7 @@ export default class PathOverview extends React.Component {
               this.state.isFoundations
                 ? 'Lesson'
                 : isMethod
-                ? 'COURSE'
+                ? 'COURSES'
                 : this.state.type.toUpperCase()
             }
             onNextLesson={() =>

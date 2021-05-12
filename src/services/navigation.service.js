@@ -18,10 +18,10 @@ function decideWhereToRedirect() {
 
     if (url.includes('members/all')) return navigate('HOME');
     if (url.endsWith('courses') || (url.includes('courses') && isNaN(id))) {
-      return navigate('COURSE', { url });
+      return navigate('COURSES', { url });
     }
     if (url.endsWith('songs') || (url.includes('songs') && isNaN(id))) {
-      return navigate('SONGCATALOG', { url });
+      return navigate('SONGS', { url });
     }
     if (
       url.endsWith('student-focus') ||

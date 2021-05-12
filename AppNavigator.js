@@ -199,10 +199,12 @@ export default () => (
             <Stack.Screen name='HOME'>
               {props => Navigators('both', 'HOME', props)}
             </Stack.Screen>
-            <Stack.Screen name='COURSE'>
-              {props => Navigators('both', 'COURSE', props)}
+            <Stack.Screen name='COURSES'>
+              {props => Navigators('both', 'COURSES', props)}
             </Stack.Screen>
-            <Stack.Screen name='SONGS' component={Catalogue} />
+            <Stack.Screen name='SONGS'>
+              {props => Navigators('both', 'SONGS', props)}
+            </Stack.Screen>
             <Stack.Screen name='QUICKTIPS' component={Catalogue} />
             <Stack.Screen name='STUDENTFOCUS' component={Catalogue} />
             <Stack.Screen name='PODCASTS' component={Catalogue} />
@@ -226,7 +228,7 @@ function Navigators(mode, screen, props) {
       )}
       <Catalogue
         {...props}
-        onNavigationFromCard={navigateTo}
+        onNavigateToCard={navigateTo}
         onNavigateToMethodLesson={navigateTo}
         onNavigateToMethod={(started, completed) =>
           navigate('METHOD', {
