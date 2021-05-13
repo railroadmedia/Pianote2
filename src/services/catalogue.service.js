@@ -25,7 +25,9 @@ export function getContent(options) {
           getStudentFocus(options.signal),
           getInProgress(options)
         ]).then(([{ studentFocus }, { inProgress }]) => {
-          Object.keys(studentFocus).map(sfk => (studentFocus[sfk].type = sfk));
+          Object.keys(studentFocus).map(sfk => {
+            studentFocus[sfk].type = `${sfk}-catalogue`;
+          });
           res({ studentFocus, inProgress });
         });
         break;

@@ -266,15 +266,15 @@ function Navigators(mode, screen, props) {
 
 function navigateTo(card) {
   switch (card.type) {
-    case 'student-review':
+    case 'student-review-catalogue':
       return navigate('STUDENTREVIEWS');
-    case 'boot-camps':
+    case 'boot-camps-catalogue':
       return navigate('BOOTCAMPS');
-    case 'question-and-answer':
+    case 'question-and-answer-catalogue':
       return navigate('QUESTIONANSWER');
-    case 'quick-tips':
+    case 'quick-tips-catalogue':
       return navigate('QUICKTIPS');
-    case 'podcasts':
+    case 'podcasts-catalogue':
       return navigate('PODCASTS');
     case 'course':
       return navigate('PATHOVERVIEW', {
