@@ -313,7 +313,6 @@ export default class CreateAccount3 extends React.Component {
                   </View>
                   <View
                     style={{
-                      height: '7%',
                       width: '95%',
                       borderRadius: 100,
                       backgroundColor: 'white',
@@ -362,7 +361,7 @@ export default class CreateAccount3 extends React.Component {
                   <View style={{ height: 50 }} />
                   <View
                     style={{
-                      height: '6%',
+                      height: 50,
                       width: '40%',
                       borderRadius: 100,
                       borderColor: '#fb1b2f',
@@ -482,6 +481,11 @@ export default class CreateAccount3 extends React.Component {
                 animationOutTiming={350}
                 coverScreen={true}
                 hasBackdrop={true}
+                onBackButtonPress={() =>
+                  this.setState({
+                    showDisplayName: false
+                  })
+                }
               >
                 <DisplayName
                   hideDisplayName={() => {
@@ -805,6 +809,11 @@ export default class CreateAccount3 extends React.Component {
                 animationOutTiming={350}
                 coverScreen={true}
                 hasBackdrop={true}
+                onBackButtonPress={() =>
+                  this.setState({
+                    showProfileImage: false
+                  })
+                }
               >
                 <ProfileImage
                   hideProfileImage={() => {
@@ -822,6 +831,11 @@ export default class CreateAccount3 extends React.Component {
                 animationOutTiming={350}
                 coverScreen={true}
                 hasBackdrop={true}
+                onBackButtonPress={() =>
+                  this.setState({
+                    showDisplayName: false
+                  })
+                }
               >
                 <DisplayName
                   hideDisplayName={() => {

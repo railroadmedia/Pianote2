@@ -40,6 +40,7 @@ export default class App extends React.Component {
     super(props);
     if (DeviceInfo.isTablet()) Orientation.unlockAllOrientations();
     else Orientation.lockToPortrait();
+    global.notifNavigation = false;
   }
 
   componentDidMount() {
@@ -49,6 +50,10 @@ export default class App extends React.Component {
       })
       .catch(error => console.log(error));
     Linking.addEventListener('url', this.handleOpenURL);
+  }
+
+  componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleOpenURL);
   }
 
   handleOpenURL = async ({ url }) => {

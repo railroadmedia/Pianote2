@@ -43,8 +43,8 @@ import {
 } from '../../services/GetContent';
 import { addToMyList, removeFromMyList } from '../../services/UserActions';
 import RestartCourse from '../../modals/RestartCourse';
-import Live from '../../modals/Live';
 import AddToCalendar from '../../modals/AddToCalendar';
+import Live from '../../modals/Live';
 import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
@@ -86,11 +86,9 @@ class Lessons extends React.Component {
       methodIsCompleted: false,
       methodNextLessonUrl: null,
       showRestartCourse: false,
-      showLive: false,
       lessonsStarted: true,
       refreshing: !lessonsCache,
       refreshControl: true,
-      liveViewers: undefined,
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width,
       ...this.initialValidData(lessonsCache, true)
@@ -98,7 +96,6 @@ class Lessons extends React.Component {
   }
 
   componentDidMount = async () => {
-    this.getLiveContent();
     let deepFilters = decodeURIComponent(this.props.route?.params?.url).split(
       '?'
     )[1];
@@ -122,6 +119,7 @@ class Lessons extends React.Component {
       });
     });
 
+    this.getLiveContent();
     this.getContent();
     messaging().requestPermission();
     this.refreshOnFocusListener = refreshOnFocusListener.call(this);
@@ -171,7 +169,6 @@ class Lessons extends React.Component {
     let timeLive =
       new Date(liveLesson.live_event_start_time + ' UTC').getTime() / 1000;
     let timeDiff = timeLive - timeNow;
-
     if (timeDiff < 4 * 3600) {
       this.setState({ liveLesson, timeDiffLive: timeDiff });
       if (liveLesson.isLive) {
@@ -666,10 +663,7 @@ class Lessons extends React.Component {
                             timesUp={() =>
                               this.setState({
                                 showLive: true,
-                                timeDiffLive: {
-                                  ...this.state.timeDiffLive,
-                                  timeDiff: 0
-                                }
+                                timeDiffLive: 0
                               })
                             }
                             live_event_start_time={
@@ -817,9 +811,6 @@ class Lessons extends React.Component {
                         <View style={{ width: '100%' }}>
                           {Platform.OS == 'ios' ? (
                             <FastImage
-                              onLayout={() =>
-                                console.log(this.state.liveLesson)
-                              }
                               style={{
                                 width: '100%',
                                 borderRadius: 7.5,
@@ -1049,40 +1040,42 @@ class Lessons extends React.Component {
                   }}
                 />
               ) : (
-                <VerticalVideoList
-                  isMethod={true}
-                  items={this.state.allLessons}
-                  isLoading={false}
-                  title={'ALL LESSONS'}
-                  type={'LESSONS'}
-                  showFilter={true}
-                  isPaging={this.state.isPaging}
-                  showType={true}
-                  showArtist={true}
-                  showSort={true}
-                  showLength={false}
-                  filters={this.metaFilters} // show filter list
-                  currentSort={this.state.currentSort}
-                  changeSort={sort => this.changeSort(sort)} // change sort and reload videos
-                  applyFilters={filters =>
-                    new Promise(res =>
-                      this.setState(
-                        {
-                          allLessons: [],
-                          outVideos: false,
-                          page: 1
-                        },
-                        () => {
-                          this.filterQuery = filters;
-                          this.getAllLessons().then(res);
-                        }
+                <View style={{ marginTop: 5 }}>
+                  <VerticalVideoList
+                    isMethod={true}
+                    items={this.state.allLessons}
+                    isLoading={false}
+                    title={'ALL LESSONS'}
+                    type={'LESSONS'}
+                    showFilter={true}
+                    isPaging={this.state.isPaging}
+                    showType={true}
+                    showArtist={true}
+                    showSort={true}
+                    showLength={false}
+                    filters={this.metaFilters} // show filter list
+                    currentSort={this.state.currentSort}
+                    changeSort={sort => this.changeSort(sort)} // change sort and reload videos
+                    applyFilters={filters =>
+                      new Promise(res =>
+                        this.setState(
+                          {
+                            allLessons: [],
+                            outVideos: false,
+                            page: 1
+                          },
+                          () => {
+                            this.filterQuery = filters;
+                            this.getAllLessons().then(res);
+                          }
+                        )
                       )
-                    )
-                  }
-                  imageWidth={width * 0.26} // image width
-                  outVideos={this.state.outVideos} // if paging and out of videos
-                  getVideos={() => this.getVideos()}
-                />
+                    }
+                    imageWidth={width * 0.26} // image width
+                    outVideos={this.state.outVideos} // if paging and out of videos
+                    getVideos={() => this.getVideos()}
+                  />
+                </View>
               )}
             </View>
           </ScrollView>
@@ -1097,6 +1090,7 @@ class Lessons extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showRestartCourse: false })}
         >
           <RestartCourse
             hideRestartCourse={() =>
@@ -1118,13 +1112,8 @@ class Lessons extends React.Component {
           hasBackdrop={true}
         >
           <Live
-            numViewers={this.state.liveViewers}
+            hideLive={() => this.setState({ showLive: false })}
             liveLesson={this.state.liveLesson}
-            hideLive={() => {
-              this.setState({
-                showLive: false
-              });
-            }}
           />
         </Modal>
         <Modal

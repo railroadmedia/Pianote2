@@ -558,6 +558,7 @@ export default class Profile extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showXpRank: false })}
         >
           <XpRank
             hideXpRank={() => this.setState({ showXpRank: false })}
@@ -573,15 +574,18 @@ export default class Profile extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() =>
+            this.setState({ showReplyNotification: false })
+          }
         >
           <ReplyNotification
             removeNotification={data => {
-              this.setState({ showReplyNotification: false }),
-                this.removeNotification(data.id);
+              this.setState({ showReplyNotification: false });
+              this.removeNotification(data.id);
             }}
             turnOfffNotifications={data => {
-              this.setState({ showReplyNotification: false }),
-                this.turnOfffNotifications(data);
+              this.setState({ showReplyNotification: false });
+              this.turnOfffNotifications(data);
             }}
             hideReplyNotification={() => {
               this.setState({ showReplyNotification: false });

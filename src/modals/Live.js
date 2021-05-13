@@ -17,9 +17,6 @@ import { navigate } from 'Pianote2/AppNavigator';
 export default class Live extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      liveLesson: this.props.liveLesson
-    };
   }
 
   changeType = word => {
@@ -61,11 +58,11 @@ export default class Live extends React.Component {
                   borderRadius: 500
                 }}
                 source={{
-                  uri: this.props.liveLesson[0].thumbnail_url
+                  uri: this.props.liveLesson.thumbnail_url
                     ? `https://cdn.musora.com/image/fetch/w_${Math.round(
                         (Dimensions.get('window').width - 20) * 2
                       )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
-                        this.props.liveLesson[0].thumbnail_url
+                        this.props.liveLesson.thumbnail_url
                       }`
                     : fallbackThumb
                 }}
@@ -104,7 +101,7 @@ export default class Live extends React.Component {
                   textTransform: 'capitalize'
                 }}
               >
-                {this.changeType(this.props.liveLesson[0]?.instructors)}
+                {this.changeType(this.props.liveLesson?.instructors)}
               </Text>{' '}
               just went live. {'\n'}Would you like to join?
             </Text>

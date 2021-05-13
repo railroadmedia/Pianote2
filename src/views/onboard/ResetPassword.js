@@ -364,6 +364,9 @@ export default class ResetPassword extends React.Component {
             animationOutTiming={450}
             coverScreen={true}
             hasBackdrop={true}
+            onBackButtonPress={() =>
+              this.setState({ showPasswordMatch: false })
+            }
           >
             <PasswordMatch
               hidePasswordMatch={() => {

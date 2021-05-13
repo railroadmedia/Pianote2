@@ -20,7 +20,6 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import LinearGradient from 'react-native-linear-gradient';
 import Orientation from 'react-native-orientation-locker';
-
 import ResetIcon from '../../components/ResetIcon';
 import NextVideo from '../../components/NextVideo';
 import StartIcon from '../../components/StartIcon';
@@ -544,6 +543,7 @@ export default class Foundations extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showRestartCourse: false })}
         >
           <RestartCourse
             hideRestartCourse={() => {

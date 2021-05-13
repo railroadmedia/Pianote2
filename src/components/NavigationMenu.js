@@ -69,7 +69,6 @@ const navigationOptions = [
 
 export default class NavigationMenu extends React.Component {
   static contextType = NetworkContext;
-
   constructor(props) {
     super(props);
     this.state = {
@@ -115,16 +114,6 @@ export default class NavigationMenu extends React.Component {
               } else if (nav.title === 'Bootcamps') {
                 navigate(nav.navigator, {
                   type: 'boot-camps'
-                });
-              } else if (nav.title === 'Live') {
-                navigate(nav.navigator, {
-                  title: nav.title,
-                  parent: 'live'
-                });
-              } else if (nav.title === 'Schedule') {
-                return navigate(nav.navigator, {
-                  title: nav.title,
-                  parent: 'SCHEDULE'
                 });
               } else {
                 navigate(nav.navigator);

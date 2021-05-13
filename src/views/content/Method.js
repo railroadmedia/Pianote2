@@ -542,13 +542,12 @@ export default class Method extends React.Component {
           animationOutTiming={250}
           coverScreen={true}
           hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showRestartCourse: false })}
         >
           <RestartCourse
-            hideRestartCourse={() => {
-              this.setState({
-                showRestartCourse: false
-              });
-            }}
+            hideRestartCourse={() =>
+              this.setState({ showRestartCourse: false })
+            }
             type='method'
             onRestart={() => this.onRestartMethod()}
           />
