@@ -12,14 +12,14 @@ import {
   Modal
 } from 'react-native';
 
-import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import LinearGradient from 'react-native-linear-gradient';
 
 import Card from '../../components/Card';
 import Filters_V2 from '../../components/Filters_V2';
 import Sort from '../../components/Sort';
 
-import { getContent, getAll } from '../../services/catalogue.service';
+import { getContent, getAll, cache } from '../../services/catalogue.service';
 
 import { Contexts } from '../../context/CombinedContexts';
 
@@ -30,13 +30,13 @@ let styles;
 export default class Catalogue extends React.Component {
   page = 1;
   scene = this.props.route.name;
-  data = { method: {}, inProgress: [], all: [] };
   flatListCols = onTablet ? 3 : this.scene === 'STUDENTFOCUS' ? 2 : 1;
   static contextType = Contexts;
 
   constructor(props) {
     super(props);
     styles = setStyles(props.theme === 'light');
+    console.log(cache[this.scene]);
     this.state = {
       loading: true,
       loadingMore: false,

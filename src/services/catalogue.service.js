@@ -1,4 +1,10 @@
+import RNFetchBlob from 'rn-fetch-blob';
+
 import commonService from './common.service';
+
+const { dirs } = RNFetchBlob.fs;
+
+export let cache = {};
 
 export function getContent(options) {
   return new Promise(res => {
@@ -7,14 +13,18 @@ export function getContent(options) {
         Promise.all([
           getAll(options),
           getStudentFocus(options.signal)
-        ]).then(([{ all }, { studentFocus }]) => res({ all, studentFocus }));
+        ]).then(([{ all }, { studentFocus }]) =>
+          setCache({ all, studentFocus }, options.scene, res)
+        );
         break;
       case 'SONGS':
       case 'COURSES':
         Promise.all([
           getAll(options),
           getInProgress(options)
-        ]).then(([{ all }, { inProgress }]) => res({ all, inProgress }));
+        ]).then(([{ all }, { inProgress }]) =>
+          setCache({ all, inProgress }, options.scene, res)
+        );
         break;
       case 'STUDENTFOCUS':
         Promise.all([
@@ -25,7 +35,7 @@ export function getContent(options) {
             studentFocus[sfk].showType = sfk;
             studentFocus[sfk].type = 'show';
           });
-          res({ studentFocus, inProgress });
+          setCache({ studentFocus, inProgress }, options.scene, res);
         });
         break;
       case 'HOME':
@@ -34,7 +44,7 @@ export function getContent(options) {
           getAll(options),
           getInProgress(options)
         ]).then(([{ method }, { all }, { inProgress }]) =>
-          res({ method, all, inProgress })
+          setCache({ method, all, inProgress }, options.scene, res)
         );
         break;
       default:
@@ -114,6 +124,29 @@ function getStudentFocus(signal) {
       .then(studentFocus => res({ studentFocus }))
   );
 }
+async function setCache(
+  { method, all, inProgress, studentFocus },
+  scene,
+  resolve
+) {
+  cache[scene] = {
+    method,
+    all: all?.data?.map(a => a.id),
+    inProgress: inProgress?.data?.map(ip => ip.id),
+    studentFocus
+  };
+  RNFetchBlob.fs.writeFile(
+    `${dirs.LibraryDir || dirs.DocumentDir}/cacheCatalogue`,
+    JSON.stringify(cache),
+    'utf8'
+  );
+  resolve({ method, all, inProgress, studentFocus });
+}
+(function getCache() {
+  RNFetchBlob.fs
+    .readFile(`${dirs.LibraryDir || dirs.DocumentDir}/cacheCatalogue`, 'utf8')
+    .then(r => (cache = JSON.parse(r) || {}));
+})();
 function pickIncludedTypes(scene, showType) {
   let it = 'included_types[]=';
   switch (scene) {
