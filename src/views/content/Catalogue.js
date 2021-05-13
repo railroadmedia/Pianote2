@@ -339,20 +339,21 @@ export default class Catalogue extends React.Component {
             />
           </View>
         )}
+        {(filtering || sorting) && (
+          <LinearGradient
+            colors={['rgba(80, 15, 25, 0.98)', 'transparent']}
+            style={{ position: 'absolute', width: '100%' }}
+          >
+            <ActivityIndicator size='large' style={{}} color={'#6e777a'} />
+          </LinearGradient>
+        )}
       </>
     );
   };
 
   render() {
     let { scene, data } = this;
-    let {
-      loading,
-      loadingMore,
-      refreshing,
-      filtering,
-      sorting,
-      errorVisible
-    } = this.state;
+    let { loading, loadingMore, refreshing, errorVisible } = this.state;
     let backgroundColor = scene === 'HOME' ? 'black' : '#00101d';
     return (
       <View style={{ flex: 1 }}>
@@ -407,14 +408,6 @@ export default class Catalogue extends React.Component {
               />
             }
           />
-        )}
-        {(filtering || sorting) && (
-          <LinearGradient
-            colors={['rgba(80, 15, 25, 0.98)', 'transparent']}
-            style={{ position: 'absolute', width: '100%' }}
-          >
-            <ActivityIndicator size='large' style={{}} color={'#6e777a'} />
-          </LinearGradient>
         )}
         <Modal
           transparent={true}
