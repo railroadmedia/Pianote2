@@ -102,7 +102,7 @@ export default class Live extends React.Component {
     if (timeDiff < 1800) {
       // if 30 minutes to go show live lesson and setup chat
       this.setState({ liveLesson: content, timeDiffLive: timeDiff });
-      let [{ apiKey, chatChannelName, userId, token }] = content;
+      let { apiKey, chatChannelName, userId, token } = content;
       watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
         this.setState({ liveViewers })
       ).then(rwl => (this.removeWatchersListener = rwl));

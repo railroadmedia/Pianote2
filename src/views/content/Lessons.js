@@ -175,7 +175,7 @@ class Lessons extends React.Component {
     if (timeDiff < 4 * 3600) {
       this.setState({ liveLesson, timeDiffLive: timeDiff });
       if (liveLesson.isLive) {
-        let [{ apiKey, chatChannelName, userId, token }] = content;
+        let { apiKey, chatChannelName, userId, token } = liveLesson;
         watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
           this.setState({ liveViewers })
         ).then(rwl => (this.removeWatchersListener = rwl));
