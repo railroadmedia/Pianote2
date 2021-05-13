@@ -36,7 +36,6 @@ export default class CountDown extends React.Component {
         seconds
       }
     });
-    console.log(timeDiff);
     if (timeDiff <= 0) {
       this.props.timesUp();
       clearInterval(this.interval);

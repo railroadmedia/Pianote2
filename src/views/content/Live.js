@@ -64,7 +64,8 @@ export default class Live extends React.Component {
       isLoadingAll: true,
       isLive: false,
       items: [],
-      liveLesson: [],
+      liveLesson: null,
+      timeDiffLive: '',
       addToCalendarModal: false,
       liveViewers: 0
     };
@@ -92,34 +93,19 @@ export default class Live extends React.Component {
   }
 
   async getLiveContent() {
-    let content = [await getLiveContent()];
-    this.content = content[0];
-
-    if (content[0].length > 0) {
+    let content = await getLiveContent();
+    this.content = content;
+    let timeNow = Math.floor(Date.now() / 1000);
+    let timeLive =
+      new Date(content.live_event_start_time + ' UTC').getTime() / 1000;
+    let timeDiff = timeLive - timeNow;
+    if (timeDiff < 1800) {
+      // if 30 minutes to go show live lesson and setup chat
+      this.setState({ liveLesson: content, timeDiffLive: timeDiff });
       let [{ apiKey, chatChannelName, userId, token }] = content;
       watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
         this.setState({ liveViewers })
       ).then(rwl => (this.removeWatchersListener = rwl));
-    }
-
-    let timeNow = Math.floor(Date.now() / 1000);
-    let timeLive =
-      new Date(content[0].live_event_start_time + ' UTC').getTime() / 1000;
-    let timeDiff = timeLive - timeNow;
-    let hours = Math.floor(timeDiff / 3600);
-    let minutes = Math.floor((timeDiff - hours * 3600) / 60);
-    let seconds = timeDiff - hours * 3600 - minutes * 60;
-
-    if (timeDiff < 4 * 3600) {
-      this.setState({
-        liveLesson: content,
-        timeDiffLive: {
-          timeDiff,
-          hours,
-          minutes,
-          seconds
-        }
-      });
     }
   }
 
@@ -224,8 +210,7 @@ export default class Live extends React.Component {
     } = this.content;
     return (
       <>
-        {this.state.liveLesson.length > 0 &&
-        this.state.timeDiffLive.timeDiff < 1800 ? (
+        {this.state.liveLesson && this.state.timeDiffLive < 1800 ? (
           <View
             style={{
               backgroundColor: colors.mainBackground,
@@ -234,7 +219,7 @@ export default class Live extends React.Component {
           >
             {/* COUNTDOWN or LIVE */}
             <>
-              {this.state.timeDiffLive.timeDiff > 0 ? (
+              {this.state.timeDiffLive > 0 ? (
                 // UPCOMING EVENT (< 30 mins)
                 <>
                   <SafeAreaView
@@ -243,20 +228,17 @@ export default class Live extends React.Component {
                     }}
                   >
                     <View style={{ width: '100%' }}>
-                      {this.state.liveLesson[0]?.live_event_start_time && (
+                      {this.state.liveLesson?.live_event_start_time && (
                         <CountDown
                           onLivePage={true}
                           timesUp={() =>
                             this.setState({
                               showLive: true,
-                              timeDiffLive: {
-                                ...this.state.timeDiffLive.timeDiff,
-                                timeDiff: 0
-                              }
+                              timeDiffLive: 0
                             })
                           }
                           live_event_start_time={
-                            this.state.liveLesson[0].live_event_start_time
+                            this.state.liveLesson.live_event_start_time
                           }
                         />
                       )}
@@ -401,8 +383,7 @@ export default class Live extends React.Component {
                   ) : (
                     <>
                       <Video
-                        youtubeId={this.state.liveLesson[0]?.youtube_video_id}
-                        toSupport={() => {}}
+                        youtubeId={this.state.liveLesson?.youtube_video_id}
                         onRefresh={() => {}}
                         content={this.state}
                         maxFontMultiplier={1}
@@ -779,5 +760,3 @@ export default class Live extends React.Component {
     );
   }
 }
-
-const localStyles = StyleSheet.create({});
