@@ -73,28 +73,15 @@ export default class Live extends React.Component {
   componentDidMount = async () => {
     BackHandler.addEventListener('hardwareBackPress', this.onBack);
     await this.getLiveContent();
-    let response = await getLiveScheduleContent();
+    let items = await getLiveScheduleContent();
     for (i in response) {
-      try {
-        let time =
-          response[i].live_event_start_time || response[i].published_on;
-        let d = new Date(time + ' UTC');
-        let amPM = 'AM';
-
-        if (d.getHours() > 11) amPM = 'PM';
-        response[i].timeData = {
-          minutes: d.getMinutes(),
-          hours: d.getHours() > 12 ? d.getHours() - 12 : d.getHours(),
-          day: d.getDay(),
-          date: d.getDate(),
-          month: d.getMonth(),
-          amPM
-        };
-      } catch (error) {}
+      let time = response[i].live_event_start_time || response[i].published_on;
+      let d = new Date(time + ' UTC');
+      response[i].timeData = { month: d.getMonth() };
     }
 
     this.setState({
-      items: response,
+      items,
       isLoadingAll: false,
       isLive: this.state.liveLesson?.isLive
     });
@@ -215,7 +202,6 @@ export default class Live extends React.Component {
   };
 
   checkShouldRender = item => {
-    console.log(item, this.state.items);
     for (i in this.state.items) {
       if (this.state.items[i].id == item.id) {
         if (Number(i) === 0) return true;
