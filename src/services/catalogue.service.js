@@ -3,6 +3,8 @@ import commonService from './common.service';
 export function getContent(options) {
   return new Promise(res => {
     switch (options.scene) {
+      case 'STUDENTREVIEWS':
+      case 'QUESTIONANSWER':
       case 'PODCASTS':
       case 'BOOTCAMPS':
       case 'QUICKTIPS':
@@ -22,9 +24,10 @@ export function getContent(options) {
         Promise.all([
           getStudentFocus(options.signal),
           getInProgress(options)
-        ]).then(([{ studentFocus }, { inProgress }]) =>
-          res({ studentFocus, inProgress })
-        );
+        ]).then(([{ studentFocus }, { inProgress }]) => {
+          Object.keys(studentFocus).map(sfk => (studentFocus[sfk].type = sfk));
+          res({ studentFocus, inProgress });
+        });
         break;
       case 'HOME':
         Promise.all([
@@ -113,6 +116,10 @@ function pickIncludedTypes(scene) {
   switch (scene) {
     case 'COURSES':
       return it + 'course';
+    case 'STUDENTREVIEWS':
+      return it + 'student-review';
+    case 'QUESTIONANSWER':
+      return it + 'question-and-answer';
     case 'PODCASTS':
       return it + 'podcasts';
     case 'QUICKTIPS':

@@ -217,12 +217,12 @@ export default () => (
             <Stack.Screen name='BOOTCAMPS'>
               {props => Navigators('bottom', 'BOOTCAMPS', props)}
             </Stack.Screen>
-            {/* <Stack.Screen name='QUESTIONANSWER'>
+            <Stack.Screen name='QUESTIONANSWER'>
               {props => Navigators('bottom', 'QUESTIONANSWER', props)}
             </Stack.Screen>
             <Stack.Screen name='STUDENTREVIEWS'>
               {props => Navigators('bottom', 'STUDENTREVIEWS', props)}
-            </Stack.Screen> */}
+            </Stack.Screen>
           </Stack.Navigator>
         </NavigationContainer>
       </CombinedContexts>
@@ -266,6 +266,16 @@ function Navigators(mode, screen, props) {
 
 function navigateTo(card) {
   switch (card.type) {
+    case 'student-review':
+      return navigate('STUDENTREVIEWS');
+    case 'boot-camps':
+      return navigate('BOOTCAMPS');
+    case 'question-and-answer':
+      return navigate('QUESTIONANSWER');
+    case 'quick-tips':
+      return navigate('QUICKTIPS');
+    case 'podcasts':
+      return navigate('PODCASTS');
     case 'course':
       return navigate('PATHOVERVIEW', {
         data: card,

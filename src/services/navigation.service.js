@@ -42,7 +42,7 @@ function decideWhereToRedirect() {
       url.endsWith('student-reviews') ||
       (url.includes('student-reviews') && isNaN(id))
     ) {
-      return navigate('STUDENTFOCUSSHOW', { type: 'student-review', url });
+      return navigate('STUDENTREVIEWS', { type: 'student-review', url });
     }
     if (url.includes('student-reviews')) {
       return navigate('VIDEOPLAYER', { id });
@@ -51,7 +51,7 @@ function decideWhereToRedirect() {
       url.endsWith('question-and-answer') ||
       (url.includes('question-and-answer') && isNaN(id))
     ) {
-      return navigate('STUDENTFOCUSSHOW', { type: 'question-and-answer', url });
+      return navigate('QUESTIONANSWER', { type: 'question-and-answer', url });
     }
     if (url.includes('question-and-answer')) {
       return navigate('VIDEOPLAYER', { id });

@@ -192,7 +192,9 @@ export default class Catalogue extends React.Component {
       refreshing || filtering || sorting || loadingMore;
     return (
       <>
-        {this.scene.match(/^(PODCASTS|BOOTCAMPS|QUICKTIPS)$/) && (
+        {this.scene.match(
+          /^(PODCASTS|BOOTCAMPS|QUICKTIPS|STUDENTREVIEWS|QUESTIONANSWER)$/
+        ) && (
           <>
             <TouchableOpacity
               style={{ padding: 20, paddingHorizontal: 10 }}
