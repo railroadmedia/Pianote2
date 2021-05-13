@@ -21,12 +21,11 @@ import Modal from 'react-native-modal';
 import DeviceInfo from 'react-native-device-info';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import NavigationBar from '../../components/NavigationBar.js';
+import CountDown from '../../components/CountDown';
 import FastImage from 'react-native-fast-image';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
-import LinearGradient from 'react-native-linear-gradient';
 import { MusoraChat, watchersListener } from 'MusoraChat';
 import { getLiveScheduleContent } from '../../services/GetContent';
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import {
   removeAllMessages,
   toggleBlockStudent
@@ -115,6 +114,7 @@ export default class Live extends React.Component {
   async getLiveContent() {
     let content = [await getLiveContent()];
     this.content = content[0];
+
     if (content[0].length > 0) {
       let [{ apiKey, chatChannelName, userId, token }] = content;
       watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
@@ -142,31 +142,28 @@ export default class Live extends React.Component {
     }
   }
 
-  timer() {
-    let timeNow = Math.floor(Date.now() / 1000);
-    let timeLive =
-      new Date(this.state.liveLesson.live_event_start_time + ' UTC').getTime() /
-      1000;
-    let timeDiff = timeLive - timeNow;
-    let hours = Math.floor(timeDiff / 3600);
-    let minutes = Math.floor((timeDiff - hours * 3600) / 60);
-    let seconds = timeDiff - hours * 3600 - minutes * 60;
+  changeType = word => {
+    if (word) {
+      try {
+        word = word.replace(/[- )(]/g, ' ').split(' ');
+      } catch {}
 
-    this.setState({
-      timeDiffLive: {
-        timeDiff,
-        hours,
-        minutes,
-        seconds
+      let string = '';
+
+      for (let i = 0; i < word.length; i++) {
+        if (word[i] !== 'and') {
+          word[i] = word[i][0].toUpperCase() + word[i].substr(1);
+        }
       }
-    });
 
-    if (timeDiff < 0) {
-      // if time ran out show reminder, get rid of timer
-      this.setState({ isLive: true });
-      clearInterval(this.interval);
+      for (i in word) {
+        string = string + word[i];
+        if (Number(i) < word.length - 1) string = string + ' / ';
+      }
+
+      return string;
     }
-  }
+  };
 
   onBack = () => goBack();
 
@@ -252,187 +249,23 @@ export default class Live extends React.Component {
                     }}
                   >
                     <View style={{ width: '100%' }}>
-                      <View
-                        style={[
-                          styles.centerContent,
-                          {
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '100%',
-                            height: '100%',
-                            zIndex: 1
+                      {this.state.liveLesson[0]?.live_event_start_time && (
+                        <CountDown
+                          onLivePage={true}
+                          timesUp={() =>
+                            this.setState({
+                              showLive: true,
+                              timeDiffLive: {
+                                ...this.state.timeDiffLive.timeDiff,
+                                timeDiff: 0
+                              }
+                            })
                           }
-                        ]}
-                      >
-                        <View
-                          style={[
-                            styles.centerContent,
-                            {
-                              height: '100%',
-                              width: '100%',
-                              borderRadius: 10
-                            }
-                          ]}
-                        >
-                          <LinearGradient
-                            colors={[
-                              'transparent',
-                              'rgba(20, 20, 20, 0.5)',
-                              'rgba(0, 0, 0, 1)'
-                            ]}
-                            style={{
-                              borderRadius: 0,
-                              width: '100%',
-                              height: '100%',
-                              position: 'absolute',
-                              left: 0,
-                              bottom: 0
-                            }}
-                          />
-                          <TouchableOpacity
-                            style={{
-                              position: 'absolute',
-                              padding: 10,
-                              left: 0,
-                              top: 0
-                            }}
-                            onPress={() => goBack()}
-                          >
-                            <Back
-                              width={backButtonSize}
-                              height={backButtonSize}
-                              fill={'white'}
-                            />
-                          </TouchableOpacity>
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontFamily: 'OpenSans-Bold',
-                              position: 'absolute',
-                              fontSize: onTablet ? 16 : 12,
-                              right: 5,
-                              top: 10
-                            }}
-                          >
-                            UPCOMING EVENT
-                          </Text>
-                          <Text>
-                            <View>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  fontSize: onTablet ? 60 : 40,
-                                  textAlign: 'center'
-                                }}
-                              >
-                                {this.state.timeDiffLive?.hours}
-                              </Text>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  top: 0,
-                                  textAlign: 'center'
-                                }}
-                              >
-                                HOURS
-                              </Text>
-                            </View>
-                            <View>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  fontSize: onTablet ? 60 : 40
-                                }}
-                              >
-                                {' '}
-                                :{' '}
-                              </Text>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  top: 0,
-                                  textAlign: 'center',
-                                  color: 'transparent'
-                                }}
-                              >
-                                h
-                              </Text>
-                            </View>
-                            <View>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  fontSize: onTablet ? 60 : 40,
-                                  textAlign: 'center'
-                                }}
-                              >
-                                {this.state.timeDiffLive?.minutes}
-                              </Text>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  top: 0,
-                                  textAlign: 'center'
-                                }}
-                              >
-                                MINUTES
-                              </Text>
-                            </View>
-                            <View>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  fontSize: onTablet ? 60 : 40
-                                }}
-                              >
-                                {' '}
-                                :{' '}
-                              </Text>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  top: 0,
-                                  textAlign: 'center',
-                                  color: 'transparent'
-                                }}
-                              >
-                                h
-                              </Text>
-                            </View>
-                            <View>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  fontSize: onTablet ? 60 : 40,
-                                  textAlign: 'center'
-                                }}
-                              >
-                                {this.state.timeDiffLive?.seconds}
-                              </Text>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  top: 0,
-                                  textAlign: 'center'
-                                }}
-                              >
-                                SECONDS
-                              </Text>
-                            </View>
-                          </Text>
-                        </View>
-                      </View>
+                          live_event_start_time={
+                            this.state.liveLesson[0].live_event_start_time
+                          }
+                        />
+                      )}
                       <View style={{ width: '100%' }}>
                         {Platform.OS === 'ios' ? (
                           <FastImage
@@ -504,9 +337,9 @@ export default class Live extends React.Component {
                               fontSize: sizing.descriptionText
                             }}
                           >
-                            {this.state.liveLesson?.instructors
-                              .join()
-                              .replace(/-/g, ' ')}
+                            {this.changeType(
+                              this.state.liveLesson?.instructors
+                            )}
                           </Text>
                         </View>
                       </View>
@@ -574,7 +407,7 @@ export default class Live extends React.Component {
                   ) : (
                     <>
                       <Video
-                        youtubeId={this.state.liveLesson?.youtube_video_id}
+                        youtubeId={this.state.liveLesson[0]?.youtube_video_id}
                         toSupport={() => {}}
                         onRefresh={() => {}}
                         content={this.state}
@@ -658,7 +491,7 @@ export default class Live extends React.Component {
                                 <Text
                                   numberOfLines={1}
                                   style={{
-                                    fontSize: DeviceInfo.isTablet() ? 14 : 12,
+                                    fontSize: onTablet ? 14 : 12,
                                     fontFamily: 'OpenSans-Regular',
                                     color: 'white',
                                     paddingLeft: 5

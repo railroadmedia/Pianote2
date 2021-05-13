@@ -22,6 +22,29 @@ export default class Live extends React.Component {
     };
   }
 
+  changeType = word => {
+    if (word) {
+      try {
+        word = word.replace(/[- )(]/g, ' ').split(' ');
+      } catch {}
+
+      let string = '';
+
+      for (let i = 0; i < word.length; i++) {
+        if (word[i] !== 'and') {
+          word[i] = word[i][0].toUpperCase() + word[i].substr(1);
+        }
+      }
+
+      for (i in word) {
+        string = string + word[i];
+        if (Number(i) < word.length - 1) string = string + ' / ';
+      }
+
+      return string;
+    }
+  };
+
   render = () => {
     return (
       <TouchableWithoutFeedback
@@ -81,7 +104,7 @@ export default class Live extends React.Component {
                   textTransform: 'capitalize'
                 }}
               >
-                {this.props.liveLesson?.instructors.replace(/-/g, ' ')}
+                {this.changeType(this.props.liveLesson[0]?.instructors)}
               </Text>{' '}
               just went live. {'\n'}Would you like to join?
             </Text>
