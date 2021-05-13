@@ -66,7 +66,6 @@ export default class Live extends React.Component {
       isLive: false,
       items: [],
       liveLesson: [],
-      month: '',
       addToCalendarModal: false,
       liveViewers: 0
     };
@@ -77,27 +76,28 @@ export default class Live extends React.Component {
     await this.getLiveContent();
     let response = await getLiveScheduleContent();
 
+    response[9].live_event_start_time = '2021/06/20 21:00:00';
+    response[10].live_event_start_time = '2021/06/20 21:00:00';
+    response[11].live_event_start_time = '2021/06/20 21:00:00';
+    response[12].live_event_start_time = '2021/06/20 21:00:00';
+    response[13].live_event_start_time = '2021/06/20 21:00:00';
     for (i in response) {
-      let time = response[i].live_event_start_time || response[i].published_on;
-      let date = new Date(time + ' UTC').getTime();
-      let d = new Date(date);
-      let amPM = 'AM';
+      try {
+        let time =
+          response[i].live_event_start_time || response[i].published_on;
+        let d = new Date(time + ' UTC');
+        let amPM = 'AM';
 
-      if (this.state.month == '' && d instanceof Date && !isNaN(d.valueOf())) {
-        this.setState({ month: d.getMonth() });
-      }
-      if (d.getHours() > 11) {
-        amPM = 'PM';
-      }
-
-      response[i].timeData = {
-        minutes: d.getMinutes(),
-        hours: d.getHours() > 12 ? d.getHours() - 12 : d.getHours(),
-        day: d.getDay(),
-        date: d.getDate(),
-        month: d.getMonth(),
-        amPM
-      };
+        if (d.getHours() > 11) amPM = 'PM';
+        response[i].timeData = {
+          minutes: d.getMinutes(),
+          hours: d.getHours() > 12 ? d.getHours() - 12 : d.getHours(),
+          day: d.getDay(),
+          date: d.getDate(),
+          month: d.getMonth(),
+          amPM
+        };
+      } catch (error) {}
     }
 
     this.setState({
@@ -218,6 +218,20 @@ export default class Live extends React.Component {
     });
 
     removeFromMyList(contentID);
+  };
+
+  checkShouldRender = item => {
+    console.log(item, this.state.items);
+    for (i in this.state.items) {
+      if (this.state.items[i].id == item.id) {
+        if (Number(i) === 0) return true;
+        else if (
+          item.timeData.month !== this.state.items[Number(i) - 1].timeData.month
+        ) {
+          return true;
+        } else return false;
+      }
+    }
   };
 
   render() {
@@ -585,24 +599,12 @@ export default class Live extends React.Component {
               extraData={this.state}
               keyExtractor={item => item.id.toString()}
               style={styles.mainContainer}
-              ListHeaderComponent={() => (
-                <Text
-                  style={{
-                    paddingLeft: 10,
-                    paddingTop: 10,
-                    color: colors.secondBackground,
-                    fontSize: onTablet ? 14 : 12
-                  }}
-                >
-                  {month[this.state.month]}
-                </Text>
-              )}
               ListEmptyComponent={() =>
                 this.state.isLoadingAll ? (
                   <ActivityIndicator
                     size={'small'}
                     style={{
-                      flex: 1,
+                      padding: 50,
                       justifyContent: 'center',
                       alignItems: 'center'
                     }}
@@ -624,133 +626,148 @@ export default class Live extends React.Component {
               renderItem={({ item }) => {
                 let type = item.lesson ? 'lesson' : 'overview';
                 return (
-                  <TouchableOpacity
-                    style={{
-                      padding: 10,
-                      flexDirection: 'row',
-                      height: 80
-                    }}
-                  >
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          width: '26%',
-                          aspectRatio: 16 / 9,
-                          backgroundColor: 'black',
-                          borderRadius: 10,
-                          marginRight: 10
-                        }
-                      ]}
-                    >
+                  <>
+                    {this.checkShouldRender(item) && (
                       <Text
-                        numberOfLines={1}
                         style={{
-                          fontSize: sizing.descriptionText,
-                          color: 'white',
-                          textAlign: 'left',
-                          fontFamily: 'OpenSans-Bold',
-                          textAlign: 'center'
+                          padding: 10,
+                          color: colors.secondBackground,
+                          fontSize: onTablet ? 14 : 12
                         }}
                       >
-                        {day[item.timeData.day]} {item.timeData.date}
+                        {month[item.timeData.month]}
                       </Text>
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          fontSize: sizing.descriptionText,
-                          color: 'white',
-                          textAlign: 'left',
-                          fontFamily: 'OpenSans-Regular',
-                          textAlign: 'center'
-                        }}
-                      >
-                        {item.timeData.hours}:
-                        {item.timeData.minutes == 0
-                          ? '00'
-                          : item.timeData.minutes}
-                        {' ' + item.timeData.amPM}
-                      </Text>
-                    </View>
-                    <View
+                    )}
+                    <TouchableOpacity
                       style={{
-                        flex: 1,
-                        justifyContent: 'center'
+                        paddingHorizontal: 10,
+                        flexDirection: 'row',
+                        height: 80
                       }}
                     >
-                      <Text
-                        style={{
-                          fontSize: sizing.videoTitleText,
-                          marginBottom: 2,
-                          color: 'white',
-                          fontFamily: 'OpenSans-Bold'
-                        }}
-                      >
-                        {item.title}
-                      </Text>
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          fontSize: sizing.descriptionText,
-                          color: colors.secondBackground,
-                          textAlign: 'left',
-                          fontFamily: 'OpenSans-Regular',
-                          textTransform: 'capitalize'
-                        }}
-                      >
-                        {item?.type.toString().replace(/-/g, ' ')}
-                      </Text>
-                    </View>
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          paddingLeft: 20,
-                          flexDirection: 'row'
-                        }
-                      ]}
-                    >
-                      {!item.is_added_to_primary_playlist ? (
-                        <TouchableOpacity
-                          onPress={() => this.addToMyList(item.id, 'schedule')}
-                        >
-                          <AntIcon
-                            name={'plus'}
-                            size={sizing.myListButtonSize}
-                            color={colors.pianoteRed}
-                          />
-                        </TouchableOpacity>
-                      ) : (
-                        <TouchableOpacity
-                          onPress={() =>
-                            this.removeFromMyList(item.id, 'schedule')
+                      <View
+                        style={[
+                          styles.centerContent,
+                          {
+                            width: '26%',
+                            aspectRatio: 16 / 9,
+                            backgroundColor: 'black',
+                            borderRadius: 10,
+                            marginRight: 10
                           }
+                        ]}
+                      >
+                        <Text
+                          numberOfLines={1}
+                          style={{
+                            fontSize: sizing.descriptionText,
+                            color: 'white',
+                            textAlign: 'left',
+                            fontFamily: 'OpenSans-Bold',
+                            textAlign: 'center'
+                          }}
                         >
-                          <AntIcon
-                            name={'close'}
-                            size={sizing.myListButtonSize}
+                          {day[item.timeData.day]} {item.timeData.date}
+                        </Text>
+                        <Text
+                          numberOfLines={1}
+                          style={{
+                            fontSize: sizing.descriptionText,
+                            color: 'white',
+                            textAlign: 'left',
+                            fontFamily: 'OpenSans-Regular',
+                            textAlign: 'center'
+                          }}
+                        >
+                          {item.timeData.hours}:
+                          {item.timeData.minutes == 0
+                            ? '00'
+                            : item.timeData.minutes}
+                          {' ' + item.timeData.amPM}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          flex: 1,
+                          justifyContent: 'center'
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontSize: sizing.videoTitleText,
+                            marginBottom: 2,
+                            color: 'white',
+                            fontFamily: 'OpenSans-Bold'
+                          }}
+                        >
+                          {item.title}
+                        </Text>
+                        <Text
+                          numberOfLines={1}
+                          style={{
+                            fontSize: sizing.descriptionText,
+                            color: colors.secondBackground,
+                            textAlign: 'left',
+                            fontFamily: 'OpenSans-Regular',
+                            textTransform: 'capitalize'
+                          }}
+                        >
+                          {item?.type.toString().replace(/-/g, ' ')}
+                        </Text>
+                      </View>
+                      <View
+                        style={[
+                          styles.centerContent,
+                          {
+                            paddingLeft: 20,
+                            flexDirection: 'row'
+                          }
+                        ]}
+                      >
+                        {!item.is_added_to_primary_playlist ? (
+                          <TouchableOpacity
+                            onPress={() =>
+                              this.addToMyList(item.id, 'schedule')
+                            }
+                          >
+                            <AntIcon
+                              name={'plus'}
+                              size={sizing.myListButtonSize}
+                              color={colors.pianoteRed}
+                            />
+                          </TouchableOpacity>
+                        ) : (
+                          <TouchableOpacity
+                            onPress={() =>
+                              this.removeFromMyList(item.id, 'schedule')
+                            }
+                          >
+                            <AntIcon
+                              name={'close'}
+                              size={sizing.myListButtonSize}
+                              color={colors.pianoteRed}
+                            />
+                          </TouchableOpacity>
+                        )}
+
+                        <TouchableOpacity
+                          style={{ marginLeft: 10 }}
+                          onPress={() => {
+                            this.addToCalendarLessonTitle = item.title;
+                            this.addToCalendatLessonPublishDate =
+                              item.live_event_start_time;
+                            this.setState({ addToCalendarModal: true });
+                          }}
+                        >
+                          <FontIcon
+                            size={sizing.infoButtonSize}
+                            name={'calendar-plus'}
                             color={colors.pianoteRed}
                           />
                         </TouchableOpacity>
-                      )}
-
-                      <TouchableOpacity
-                        style={{ marginLeft: 10 }}
-                        onPress={() => {
-                          this.addToCalendarLessonTitle = item.title;
-                          this.addToCalendatLessonPublishDate =
-                            item.live_event_start_time;
-                          this.setState({ addToCalendarModal: true });
-                        }}
-                      >
-                        <FontIcon
-                          size={sizing.infoButtonSize}
-                          name={'calendar-plus'}
-                          color={colors.pianoteRed}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </TouchableOpacity>
+                      </View>
+                    </TouchableOpacity>
+                  </>
                 );
               }}
             />

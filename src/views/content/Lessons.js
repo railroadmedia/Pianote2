@@ -671,7 +671,6 @@ class Lessons extends React.Component {
                         }}
                       >
                         <TouchableOpacity
-                          onLayout={() => console.log}
                           onPress={() => navigate('LIVE')}
                           style={{ width: '100%' }}
                         >
