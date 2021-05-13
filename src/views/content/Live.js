@@ -40,7 +40,6 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import { goBack } from '../../../AppNavigator';
 import { getLiveContent } from 'Pianote2/src/services/GetContent';
 
-const day = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
 const month = [
   'January',
   'February',
@@ -75,7 +74,6 @@ export default class Live extends React.Component {
     BackHandler.addEventListener('hardwareBackPress', this.onBack);
     await this.getLiveContent();
     let response = await getLiveScheduleContent();
-
     for (i in response) {
       try {
         let time =
@@ -116,6 +114,7 @@ export default class Live extends React.Component {
         this.setState({ liveViewers })
       ).then(rwl => (this.removeWatchersListener = rwl));
     }
+
     let timeNow = Math.floor(Date.now() / 1000);
     let timeLive =
       new Date(content[0].live_event_start_time + ' UTC').getTime() / 1000;
@@ -620,6 +619,9 @@ export default class Live extends React.Component {
               }
               renderItem={({ item }) => {
                 let type = item.lesson ? 'lesson' : 'overview';
+                let date = new Date(
+                  `${item?.live_event_start_time || item?.published_on} UTC`
+                );
                 return (
                   <>
                     {this.checkShouldRender(item) && (
@@ -662,7 +664,8 @@ export default class Live extends React.Component {
                             textAlign: 'center'
                           }}
                         >
-                          {day[item.timeData.day]} {item.timeData.date}
+                          {date.toLocaleString([], { weekday: 'short' })}{' '}
+                          {date.getDate()}
                         </Text>
                         <Text
                           numberOfLines={1}
@@ -674,11 +677,10 @@ export default class Live extends React.Component {
                             textAlign: 'center'
                           }}
                         >
-                          {item.timeData.hours}:
-                          {item.timeData.minutes == 0
-                            ? '00'
-                            : item.timeData.minutes}
-                          {' ' + item.timeData.amPM}
+                          {date.toLocaleString([], {
+                            hour: 'numeric',
+                            minute: '2-digit'
+                          })}
                         </Text>
                       </View>
                       <View
