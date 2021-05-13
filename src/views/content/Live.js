@@ -76,11 +76,6 @@ export default class Live extends React.Component {
     await this.getLiveContent();
     let response = await getLiveScheduleContent();
 
-    response[9].live_event_start_time = '2021/06/20 21:00:00';
-    response[10].live_event_start_time = '2021/06/20 21:00:00';
-    response[11].live_event_start_time = '2021/06/20 21:00:00';
-    response[12].live_event_start_time = '2021/06/20 21:00:00';
-    response[13].live_event_start_time = '2021/06/20 21:00:00';
     for (i in response) {
       try {
         let time =
