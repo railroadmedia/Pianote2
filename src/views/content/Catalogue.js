@@ -71,7 +71,10 @@ export default class Catalogue extends React.Component {
     this.setState(({ errorVisible }) => ({ errorVisible: !errorVisible }));
 
   getServiceOptions = action => {
-    let options = { scene: this.scene };
+    let options = {
+      scene: this.scene,
+      showType: this.props.route.params?.showType
+    };
     options.page = action === 'loadMore' ? ++this.page : (this.page = 1);
     if (action !== 'refresh') {
       options.filters = this.filterRef?.filterQuery;
@@ -192,9 +195,7 @@ export default class Catalogue extends React.Component {
       refreshing || filtering || sorting || loadingMore;
     return (
       <>
-        {this.scene.match(
-          /^(PODCASTS|BOOTCAMPS|QUICKTIPS|STUDENTREVIEWS|QUESTIONANSWER)$/
-        ) && (
+        {this.scene.match(/^(SHOW)$/) && (
           <>
             <TouchableOpacity
               style={{ padding: 20, paddingHorizontal: 10 }}

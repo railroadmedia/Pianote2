@@ -43,7 +43,7 @@ const navigationOptions = [
   },
   {
     title: 'Quick Tips',
-    navigator: 'QUICKTIPS'
+    navigator: 'SHOW'
   },
   {
     title: 'Student Focus',
@@ -59,11 +59,11 @@ const navigationOptions = [
   },
   {
     title: 'Podcasts',
-    navigator: 'PODCASTS'
+    navigator: 'SHOW'
   },
   {
     title: 'Bootcamps',
-    navigator: 'BOOTCAMPS'
+    navigator: 'SHOW'
   }
 ];
 
@@ -106,15 +106,15 @@ export default class NavigationMenu extends React.Component {
                 });
               } else if (nav.title === 'Quick Tips') {
                 navigate(nav.navigator, {
-                  type: 'quick-tips'
+                  showType: 'quick-tips'
                 });
               } else if (nav.title === 'Podcasts') {
                 navigate(nav.navigator, {
-                  type: 'podcasts'
+                  showType: 'podcasts'
                 });
               } else if (nav.title === 'Bootcamps') {
                 navigate(nav.navigator, {
-                  type: 'boot-camps'
+                  showType: 'boot-camps'
                 });
               } else if (nav.title === 'Live') {
                 navigate(nav.navigator, {

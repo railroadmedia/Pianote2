@@ -208,20 +208,8 @@ export default () => (
             <Stack.Screen name='STUDENTFOCUS'>
               {props => Navigators('both', 'STUDENTFOCUS', props)}
             </Stack.Screen>
-            <Stack.Screen name='QUICKTIPS'>
-              {props => Navigators('bottom', 'QUICKTIPS', props)}
-            </Stack.Screen>
-            <Stack.Screen name='PODCASTS'>
-              {props => Navigators('bottom', 'PODCASTS', props)}
-            </Stack.Screen>
-            <Stack.Screen name='BOOTCAMPS'>
-              {props => Navigators('bottom', 'BOOTCAMPS', props)}
-            </Stack.Screen>
-            <Stack.Screen name='QUESTIONANSWER'>
-              {props => Navigators('bottom', 'QUESTIONANSWER', props)}
-            </Stack.Screen>
-            <Stack.Screen name='STUDENTREVIEWS'>
-              {props => Navigators('bottom', 'STUDENTREVIEWS', props)}
+            <Stack.Screen name='SHOW'>
+              {props => Navigators('bottom', 'SHOW', props)}
             </Stack.Screen>
           </Stack.Navigator>
         </NavigationContainer>
@@ -266,16 +254,8 @@ function Navigators(mode, screen, props) {
 
 function navigateTo(card) {
   switch (card.type) {
-    case 'student-review-catalogue':
-      return navigate('STUDENTREVIEWS');
-    case 'boot-camps-catalogue':
-      return navigate('BOOTCAMPS');
-    case 'question-and-answer-catalogue':
-      return navigate('QUESTIONANSWER');
-    case 'quick-tips-catalogue':
-      return navigate('QUICKTIPS');
-    case 'podcasts-catalogue':
-      return navigate('PODCASTS');
+    case 'show':
+      return navigate('SHOW', { showType: card.showType });
     case 'course':
       return navigate('PATHOVERVIEW', {
         data: card,

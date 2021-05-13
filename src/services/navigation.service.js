@@ -33,7 +33,7 @@ function decideWhereToRedirect() {
       url.endsWith('quick-tips') ||
       (url.includes('quick-tips') && isNaN(id))
     ) {
-      return navigate('QUICKTIPS', { type: 'quick-tips', url });
+      return navigate('SHOW', { showType: 'quick-tips', url });
     }
     if (url.includes('quick-tips')) {
       return navigate('VIDEOPLAYER', { id });
@@ -42,7 +42,7 @@ function decideWhereToRedirect() {
       url.endsWith('student-reviews') ||
       (url.includes('student-reviews') && isNaN(id))
     ) {
-      return navigate('STUDENTREVIEWS', { type: 'student-review', url });
+      return navigate('SHOW', { showType: 'student-review', url });
     }
     if (url.includes('student-reviews')) {
       return navigate('VIDEOPLAYER', { id });
@@ -51,13 +51,13 @@ function decideWhereToRedirect() {
       url.endsWith('question-and-answer') ||
       (url.includes('question-and-answer') && isNaN(id))
     ) {
-      return navigate('QUESTIONANSWER', { type: 'question-and-answer', url });
+      return navigate('SHOW', { showType: 'question-and-answer', url });
     }
     if (url.includes('question-and-answer')) {
       return navigate('VIDEOPLAYER', { id });
     }
     if (url.endsWith('podcasts') || (url.includes('podcasts') && isNaN(id))) {
-      return navigate('PODCASTS', { type: 'podcasts', url });
+      return navigate('SHOW', { showType: 'podcasts', url });
     }
     if (url.includes('podcasts')) {
       return navigate('VIDEOPLAYER', { id });
@@ -66,7 +66,7 @@ function decideWhereToRedirect() {
       url.endsWith('boot-camps') ||
       (url.includes('boot-camps') && isNaN(id))
     ) {
-      return navigate('BOOTCAMPS', { type: 'boot-camps', url });
+      return navigate('SHOW', { showType: 'boot-camps', url });
     }
     if (url.includes('boot-camps')) {
       return navigate('VIDEOPLAYER', { id });

@@ -3,11 +3,7 @@ import commonService from './common.service';
 export function getContent(options) {
   return new Promise(res => {
     switch (options.scene) {
-      case 'STUDENTREVIEWS':
-      case 'QUESTIONANSWER':
-      case 'PODCASTS':
-      case 'BOOTCAMPS':
-      case 'QUICKTIPS':
+      case 'SHOW':
         Promise.all([
           getAll(options),
           getStudentFocus(options.signal)
@@ -26,7 +22,8 @@ export function getContent(options) {
           getInProgress(options)
         ]).then(([{ studentFocus }, { inProgress }]) => {
           Object.keys(studentFocus).map(sfk => {
-            studentFocus[sfk].type = `${sfk}-catalogue`;
+            studentFocus[sfk].showType = sfk;
+            studentFocus[sfk].type = 'show';
           });
           res({ studentFocus, inProgress });
         });
@@ -47,6 +44,7 @@ export function getContent(options) {
 }
 export function getAll({
   scene,
+  showType,
   page = 1,
   filters = '',
   sort = '-published_on',
@@ -58,7 +56,8 @@ export function getAll({
         `${
           commonService.rootUrl
         }/musora-api/all?brand=pianote&statuses[]=published&limit=20&${pickIncludedTypes(
-          scene
+          scene,
+          showType
         )}&page=${page}&sort=${sort}${filters}`,
         null,
         null,
@@ -69,6 +68,7 @@ export function getAll({
 }
 export function getInProgress({
   scene,
+  showType,
   page = 1,
   filters = '',
   sort = 'progress',
@@ -80,7 +80,8 @@ export function getInProgress({
         `${
           commonService.rootUrl
         }/musora-api/in-progress?brand=pianote&&statuses[]=published&limit=20&${pickIncludedTypes(
-          scene
+          scene,
+          showType
         )}&required_user_states[]=started&sort=${sort}&page=${page}${filters}`,
         null,
         null,
@@ -113,21 +114,24 @@ function getStudentFocus(signal) {
       .then(studentFocus => res({ studentFocus }))
   );
 }
-function pickIncludedTypes(scene) {
+function pickIncludedTypes(scene, showType) {
   let it = 'included_types[]=';
   switch (scene) {
+    case 'SHOW':
+      switch (showType) {
+        case 'boot-camps':
+          return it + 'boot-camps';
+        case 'quick-tips':
+          return it + 'quick-tips';
+        case 'student-review':
+          return it + 'student-review';
+        case 'question-and-answer':
+          return it + 'question-and-answer';
+        case 'podcasts':
+          return it + 'podcasts';
+      }
     case 'COURSES':
       return it + 'course';
-    case 'STUDENTREVIEWS':
-      return it + 'student-review';
-    case 'QUESTIONANSWER':
-      return it + 'question-and-answer';
-    case 'PODCASTS':
-      return it + 'podcasts';
-    case 'QUICKTIPS':
-      return it + 'quick-tips';
-    case 'BOOTCAMPS':
-      return it + 'boot-camps';
     case 'SONGS':
       return it + 'song';
     case 'STUDENTFOCUS':
