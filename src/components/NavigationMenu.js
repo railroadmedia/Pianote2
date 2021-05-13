@@ -113,7 +113,7 @@ export default class NavigationMenu extends React.Component {
                   type: 'podcasts'
                 });
               } else if (nav.title === 'Bootcamps') {
-                this.props.navigation.navigate(nav.navigator, {
+                navigate(nav.navigator, {
                   type: 'boot-camps'
                 });
               } else if (nav.title === 'Live') {

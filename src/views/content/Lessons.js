@@ -27,6 +27,7 @@ import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import { watchersListener } from 'MusoraChat';
 import StartIcon from '../../components/StartIcon';
 import ResetIcon from '../../components/ResetIcon';
+import CountDown from '../../components/CountDown';
 import MoreInfoIcon from '../../components/MoreInfoIcon';
 import ContinueIcon from '../../components/ContinueIcon';
 import NavigationBar from '../../components/NavigationBar';
@@ -196,32 +197,6 @@ class Lessons extends React.Component {
       if (!content.isLive) {
         this.interval = setInterval(() => this.timer(), 1000);
       }
-    }
-  }
-
-  async timer() {
-    let timeNow = Math.floor(Date.now() / 1000);
-    let timeLive =
-      new Date(this.state.liveLesson.live_event_start_time + ' UTC').getTime() /
-      1000;
-    let timeDiff = timeLive - timeNow;
-    let hours = Math.floor(timeDiff / 3600);
-    let minutes = Math.floor((timeDiff - hours * 3600) / 60);
-    let seconds = timeDiff - hours * 3600 - minutes * 60;
-
-    this.setState({
-      timeDiffLive: {
-        timeDiff,
-        hours,
-        minutes,
-        seconds
-      }
-    });
-
-    if (timeDiff < 0) {
-      // if time ran out show reminder, get rid of timer
-      this.setState({ showLive: true });
-      clearInterval(this.interval);
     }
   }
 
@@ -510,6 +485,32 @@ class Lessons extends React.Component {
     if (onTablet && this.state.isLandscape) return 2.5;
     if (onTablet && !this.state.isLandscape) return 1.8;
     return 1;
+  }
+
+  timer() {
+    let timeNow = Math.floor(Date.now() / 1000);
+    let timeLive =
+      new Date(this.state.liveLesson.live_event_start_time + ' UTC').getTime() /
+      1000;
+    let timeDiff = timeLive - timeNow;
+    let hours = Math.floor(timeDiff / 3600);
+    let minutes = Math.floor((timeDiff - hours * 3600) / 60);
+    let seconds = timeDiff - hours * 3600 - minutes * 60;
+
+    this.setState({
+      timeDiffLive: {
+        timeDiff,
+        hours,
+        minutes,
+        seconds
+      }
+    });
+
+    if (timeDiff < 0) {
+      // if time ran out show reminder, get rid of timer
+      this.setState({ showLive: true });
+      clearInterval(this.interval);
+    }
   }
 
   render() {
