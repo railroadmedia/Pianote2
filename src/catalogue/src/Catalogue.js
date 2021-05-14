@@ -202,26 +202,11 @@ export default class Catalogue extends React.Component {
       <>
         {this.scene.match(/^(SEEALL|SHOW)$/) && (
           <TouchableOpacity
-            style={{
-              padding: 20,
-              paddingHorizontal: 10,
-              justifyContent: 'center'
-            }}
+            style={styles.backBtn}
             onPress={this.props.navigation.goBack}
           >
             {this.scene.match(/^(SEEALL)$/) && (
-              <Text
-                style={{
-                  position: 'absolute',
-                  fontSize: 24,
-                  color: 'white',
-                  width: '100%',
-                  fontFamily: 'OpenSans-ExtraBold',
-                  textAlign: 'center',
-                  textTransform: 'capitalize',
-                  alignSelf: 'center'
-                }}
-              >
+              <Text style={styles.backText}>
                 {this.props.route.params.title}
               </Text>
             )}
@@ -466,6 +451,21 @@ export default class Catalogue extends React.Component {
 }
 let setStyles = isLight =>
   StyleSheet.create({
+    backBtn: {
+      padding: 20,
+      paddingHorizontal: 10,
+      justifyContent: 'center'
+    },
+    backText: {
+      position: 'absolute',
+      fontSize: 24,
+      color: 'white',
+      width: '100%',
+      fontFamily: 'OpenSans-ExtraBold',
+      textAlign: 'center',
+      textTransform: 'capitalize',
+      alignSelf: 'center'
+    },
     headerBtnsContainer: {
       alignItems: 'center',
       flexDirection: 'row',

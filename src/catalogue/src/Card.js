@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, Image, Modal } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Image,
+  Modal,
+  StyleSheet
+} from 'react-native';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -127,24 +134,11 @@ class Card extends React.Component {
                 <Text
                   numberOfLines={1}
                   ellipsizeMode='tail'
-                  style={{
-                    fontSize: onTablet ? 16 : 14,
-                    fontFamily: 'OpenSans-Bold',
-                    color: 'white',
-                    flexDirection: 'column'
-                  }}
+                  style={styles.title}
                 >
                   {data.title}
                 </Text>
-                <Text
-                  numberOfLines={1}
-                  style={{
-                    textTransform: 'capitalize',
-                    fontFamily: 'OpenSans-Regular',
-                    color: colors.secondBackground,
-                    fontSize: onTablet ? 18 : 14
-                  }}
-                >
+                <Text numberOfLines={1} style={styles.subTitle}>
                   {data.type}
                   {data.artist?.replace(/(.{0})/, '$1 / ')}
                 </Text>
@@ -187,21 +181,9 @@ class Card extends React.Component {
               <TouchableOpacity
                 activeOpacity={1}
                 onPress={this.toggleDetails}
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: 'rgba(0,0,0,.5)'
-                }}
+                style={styles.modal}
               >
-                <View
-                  style={{
-                    backgroundColor: 'white',
-                    borderRadius: 10,
-                    padding: 5,
-                    width: onTablet ? '50%' : '80%'
-                  }}
-                >
+                <View style={styles.detailsModalContainer}>
                   <Image
                     style={{
                       aspectRatio: mode.match(
@@ -215,87 +197,35 @@ class Card extends React.Component {
                     resizeMode='cover'
                     source={{ uri: this.imageUrl }}
                   />
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Bold',
-                      paddingVertical: 5,
-                      fontSize: onTablet ? 24 : 18,
-                      textAlign: 'center'
-                    }}
-                  >
-                    {data.title}
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      textAlign: 'center',
-                      fontSize: onTablet ? 16 : 12,
-                      color: 'grey',
-                      textTransform: 'capitalize'
-                    }}
-                  >
+                  <Text style={styles.modalTitle}>{data.title}</Text>
+                  <Text style={styles.modalSubTitle}>
                     {data.type}
                     {data.artist?.replace(/(.{0})/, '$1 / ')}
                   </Text>
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      fontSize: onTablet ? 16 : 12,
-                      textAlign: 'center'
-                    }}
-                  >
+                  <Text style={styles.modalDescription}>
                     {data.description}
                   </Text>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-evenly',
-                      padding: 10
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Bold',
-                        fontSize: onTablet ? 24 : 18,
-                        textAlign: 'center'
-                      }}
-                    >
+                  <View style={styles.modalDetailsContainer}>
+                    <Text style={styles.lessonCount}>
                       {data.lesson_count}
                       {`\n`}
                       <Text
-                        style={{
-                          fontSize: onTablet ? 16 : 12,
-                          fontFamily: 'OpenSans-Regular'
-                        }}
+                        style={{ fontSize: 14, fontFamily: 'OpenSans-Regular' }}
                       >
                         LESSONS
                       </Text>
                     </Text>
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Bold',
-                        fontSize: onTablet ? 24 : 18,
-                        textAlign: 'center'
-                      }}
-                    >
+                    <Text style={styles.xp}>
                       {data.xp}
                       {`\n`}
                       <Text
-                        style={{
-                          fontSize: onTablet ? 16 : 12,
-                          fontFamily: 'OpenSans-Regular'
-                        }}
+                        style={{ fontSize: 14, fontFamily: 'OpenSans-Regular' }}
                       >
                         XP
                       </Text>
                     </Text>
                   </View>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      padding: 10
-                    }}
-                  >
+                  <View style={{ flexDirection: 'row', padding: 10 }}>
                     <TouchableOpacity
                       style={{ alignItems: 'center', flex: 1 }}
                       onPress={this.toggleLike}
@@ -373,38 +303,11 @@ class Card extends React.Component {
               <TouchableOpacity
                 activeOpacity={1}
                 onPress={this.toggleAddToCalendar}
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: 'rgba(0,0,0,.5)'
-                }}
+                style={styles.modal}
               >
-                <View
-                  style={{
-                    backgroundColor: 'white',
-                    borderRadius: 15,
-                    alignItems: 'center',
-                    padding: 10
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Bold',
-                      textAlign: 'center',
-                      fontSize: onTablet ? 24 : 18
-                    }}
-                  >
-                    Add To Calendar
-                  </Text>
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      fontFamily: 'OpenSans-Regular',
-                      fontSize: onTablet ? 16 : 12,
-                      padding: 10
-                    }}
-                  >
+                <View style={styles.calendarModalContainer}>
+                  <Text style={styles.calendarModalTitle}>Add To Calendar</Text>
+                  <Text style={styles.calendarModalMsg}>
                     Add this lesson to your calendar to{'\n'} be notified when
                     it's available
                   </Text>
@@ -415,20 +318,9 @@ class Card extends React.Component {
                   })}
                   <TouchableOpacity
                     onPress={this.addToCalendar}
-                    style={{
-                      backgroundColor: colors.pianoteRed,
-                      padding: 10,
-                      borderRadius: 99
-                    }}
+                    style={styles.calendarModalBtn}
                   >
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        color: 'white',
-                        fontFamily: 'RobotoCondensed-Bold',
-                        fontSize: onTablet ? 16 : 12
-                      }}
-                    >
+                    <Text style={styles.calendarModalBtnText}>
                       CONFIRM ADDITION
                     </Text>
                   </TouchableOpacity>
@@ -441,7 +333,94 @@ class Card extends React.Component {
     );
   }
 }
-
+let styles = StyleSheet.create({
+  title: {
+    fontSize: 15,
+    fontFamily: 'OpenSans-Bold',
+    color: 'white',
+    flexDirection: 'column'
+  },
+  subTitle: {
+    textTransform: 'capitalize',
+    fontFamily: 'OpenSans-Regular',
+    color: '#445f73',
+    fontSize: 16
+  },
+  modal: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
+  detailsModalContainer: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 5,
+    width: '80%',
+    maxWidth: 400
+  },
+  modalTitle: {
+    fontFamily: 'OpenSans-Bold',
+    paddingVertical: 5,
+    fontSize: 20,
+    textAlign: 'center'
+  },
+  modalSubTitle: {
+    fontFamily: 'OpenSans-Regular',
+    textAlign: 'center',
+    fontSize: 14,
+    color: 'grey',
+    textTransform: 'capitalize'
+  },
+  modalDescription: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 14,
+    textAlign: 'center'
+  },
+  modalDetailsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    padding: 10
+  },
+  lessonCount: {
+    fontFamily: 'OpenSans-Bold',
+    fontSize: 20,
+    textAlign: 'center'
+  },
+  xp: {
+    fontFamily: 'OpenSans-Bold',
+    fontSize: 20,
+    textAlign: 'center'
+  },
+  calendarModalContainer: {
+    backgroundColor: 'white',
+    borderRadius: 15,
+    alignItems: 'center',
+    padding: 10
+  },
+  calendarModalTitle: {
+    fontFamily: 'OpenSans-Bold',
+    textAlign: 'center',
+    fontSize: 20
+  },
+  calendarModalMsg: {
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 14,
+    padding: 10
+  },
+  calendarModalBtn: {
+    backgroundColor: '#fb1b2f',
+    padding: 10,
+    borderRadius: 99
+  },
+  calendarModalBtnText: {
+    textAlign: 'center',
+    color: 'white',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: 14
+  }
+});
 const mapStateToProps = ({ cards }, props) => {
   return { data: cards?.[props.data.id] || props.data };
 };
