@@ -1,5 +1,5 @@
 import React from 'react';
-import { PanResponder, View, ScrollView } from 'react-native';
+import { PanResponder, View, ScrollView, Dimensions } from 'react-native';
 import ImageSvg from 'react-native-remote-svg';
 import PDFView from 'react-native-view-pdf';
 import { SafeAreaView } from 'react-navigation';
@@ -8,7 +8,8 @@ import { NetworkContext } from '../../context/NetworkProvider';
 export default class AssignmentResource extends React.Component {
   static contextType = NetworkContext;
   state = {
-    scroll: true
+    scroll: true,
+    width: Dimensions.get('window').width
   };
 
   constructor(props) {
@@ -118,6 +119,7 @@ export default class AssignmentResource extends React.Component {
   };
 
   render() {
+    console.log(this.props.data);
     let { width } = this.state;
     return (
       <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>

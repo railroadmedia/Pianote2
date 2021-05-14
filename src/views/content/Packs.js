@@ -9,7 +9,6 @@ import {
   ImageBackground
 } from 'react-native';
 import { connect } from 'react-redux';
-import Modal from 'react-native-modal';
 import { bindActionCreators } from 'redux';
 import FastImage from 'react-native-fast-image';
 import LongButton from '../../components/LongButton';

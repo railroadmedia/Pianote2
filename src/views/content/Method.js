@@ -8,7 +8,6 @@ import {
   Dimensions,
   ImageBackground
 } from 'react-native';
-import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import Icon from '../../assets/icons.js';
 import LinearGradient from 'react-native-linear-gradient';

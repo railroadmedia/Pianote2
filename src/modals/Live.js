@@ -42,8 +42,8 @@ export default class Live extends React.Component {
 
   render = () => {
     return (
-      <TouchableWithoutFeedback
-        style={styles.container}
+      <TouchableOpacity
+        style={[styles.centerContent, localStyles.modalContainer]}
         onPress={() => this.props.hideLive()}
       >
         <View style={[styles.container, styles.centerContent]}>
@@ -139,12 +139,16 @@ export default class Live extends React.Component {
             </TouchableOpacity>
           </View>
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     );
   };
 }
 
 const localStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
   container: {
     backgroundColor: 'white',
     paddingBottom: 15,

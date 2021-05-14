@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
 import Icon from '../assets/icons';
 
@@ -17,42 +17,57 @@ export default class OverviewComplete extends React.Component {
 
   render = () => {
     return (
-      <BlurView style={[styles.container, styles.centerContent]} blurAmount={5}>
-        <TouchableOpacity
-          style={[styles.centerContent, styles.container]}
-          onPress={() => this.props.hideOverviewComplete()}
+      <Modal
+        visible={this.props.isVisible}
+        transparent={true}
+        style={styles.modalContainer}
+        animation={'slideInUp'}
+        animationInTiming={250}
+        animationOutTiming={250}
+        coverScreen={true}
+        hasBackdrop={true}
+        onBackButtonPress={() => this.props.hideOverviewComplete()}
+      >
+        <BlurView
+          style={[styles.container, styles.centerContent]}
+          blurAmount={5}
         >
-          <View style={localStyles.container}>
-            <View style={[styles.centerContent]}>
-              <Icon.Ionicons
-                name={'ios-trophy'}
-                size={onTablet ? 45 : 35}
-                color={'#fb1b2f'}
-              />
-            </View>
-            <View style={[styles.centerContent, { padding: 5 }]}>
-              <Text
-                style={[
-                  styles.modalHeaderText,
-                  { textTransform: 'capitalize' }
-                ]}
-              >
-                {this.changeType(this.props.type).toUpperCase()}
-                {'\n'}Complete
+          <TouchableOpacity
+            style={[styles.centerContent, styles.container]}
+            onPress={() => this.props.hideOverviewComplete()}
+          >
+            <View style={localStyles.container}>
+              <View style={[styles.centerContent]}>
+                <Icon.Ionicons
+                  name={'ios-trophy'}
+                  size={onTablet ? 45 : 35}
+                  color={'#fb1b2f'}
+                />
+              </View>
+              <View style={[styles.centerContent, { padding: 5 }]}>
+                <Text
+                  style={[
+                    styles.modalHeaderText,
+                    { textTransform: 'capitalize' }
+                  ]}
+                >
+                  {this.changeType(this.props.type).toUpperCase()}
+                  {'\n'}Complete
+                </Text>
+              </View>
+              <Text style={[styles.modalBodyText, localStyles.congrats]}>
+                Congratulations! You completed
+              </Text>
+              <Text style={[styles.modalBodyText, localStyles.title]}>
+                {this.props.title}
+              </Text>
+              <Text style={[styles.modalButtonText, localStyles.xp]}>
+                YOU EARNED {this.props.xp} XP!
               </Text>
             </View>
-            <Text style={[styles.modalBodyText, localStyles.congrats]}>
-              Congratulations! You completed
-            </Text>
-            <Text style={[styles.modalBodyText, localStyles.title]}>
-              {this.props.title}
-            </Text>
-            <Text style={[styles.modalButtonText, localStyles.xp]}>
-              YOU EARNED {this.props.xp} XP!
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </BlurView>
+          </TouchableOpacity>
+        </BlurView>
+      </Modal>
     );
   };
 }

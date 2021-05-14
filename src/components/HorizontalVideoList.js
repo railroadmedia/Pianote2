@@ -12,7 +12,6 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from '../assets/icons';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
-import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import AddToCalendar from '../modals/AddToCalendar';
 import Sort from '../modals/Sort';
@@ -711,16 +710,7 @@ export default class HorizontalVideoList extends React.Component {
             </TouchableOpacity>
           )}
         />
-        <Modal
-          isVisible={this.state.showModal}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
-          onBackButtonPress={() => this.setState({ showModal: false })}
-        >
+        {this.state.showModal && (
           <ContentModal
             data={this.state.item}
             hideContentModal={() => this.setState({ showModal: false })}
@@ -728,7 +718,7 @@ export default class HorizontalVideoList extends React.Component {
             addToMyList={contentID => this.addToMyList(contentID)}
             removeFromMyList={contentID => this.removeFromMyList(contentID)}
           />
-        </Modal>
+        )}
         <AddToCalendar
           isVisible={this.state.addToCalendarModal}
           hideAddToCalendar={() => this.setState({ addToCalendarModal: false })}
@@ -736,18 +726,7 @@ export default class HorizontalVideoList extends React.Component {
             this.addEventToCalendar();
           }}
         />
-        <Modal
-          isVisible={this.state.showSort}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={false}
-          backdropColor={'white'}
-          backdropOpacity={0.79}
-          onBackButtonPress={() => this.setState({ showSort: false })}
-        >
+        {this.state.showSort && (
           <Sort
             hideSort={() => {
               this.setState({ showSort: false });
@@ -758,7 +737,7 @@ export default class HorizontalVideoList extends React.Component {
               this.props.changeSort(sort);
             }}
           />
-        </Modal>
+        )}
       </View>
     );
   };

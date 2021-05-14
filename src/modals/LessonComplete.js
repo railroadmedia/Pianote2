@@ -2,15 +2,14 @@ import React from 'react';
 import {
   View,
   Text,
-  TouchableWithoutFeedback,
   TouchableOpacity,
   StyleSheet,
-  Dimensions
+  Dimensions,
+  Modal
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Icon from '../assets/icons';
 import ApprovedTeacher from '../assets/img/svgs/approved-teacher.svg';
-import Modal from 'react-native-modal';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -35,7 +34,8 @@ export default class LessonComplete extends React.Component {
     } = this.props;
     return (
       <Modal
-        isVisible={this.props.isVisible}
+        visible={this.props.isVisible}
+        transparent={true}
         style={styles.modalContainer}
         animation={'slideInUp'}
         animationInTiming={250}
@@ -43,9 +43,9 @@ export default class LessonComplete extends React.Component {
         coverScreen={true}
         hasBackdrop={true}
       >
-        <TouchableWithoutFeedback
+        <TouchableOpacity
           onPress={() => this.props.hideLessonComplete()}
-          style={styles.container}
+          style={[styles.centerContent, localStyles.modalContainer]}
         >
           <View style={[styles.centerContent, styles.container]}>
             <View style={localStyles.container}>
@@ -110,23 +110,27 @@ export default class LessonComplete extends React.Component {
                     uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
                       width * 0.55 * 2
                     )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
-                      nextLesson.thumbnail_url
+                      nextLesson?.thumbnail_url
                     }`
                   }}
                 />
               </TouchableOpacity>
               <Text style={[styles.modalHeaderText, localStyles.videoTitle]}>
-                {nextLesson.title}
+                {nextLesson?.title}
               </Text>
             </View>
           </View>
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
       </Modal>
     );
   };
 }
 
 const localStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
   container: {
     borderRadius: 10,
     margin: 20,

@@ -1,14 +1,14 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
 import Icon from '../assets/icons';
-import Modal from 'react-native-modal';
 
 export default class AssignmentComplete extends React.Component {
   render = () => {
     return (
       <Modal
-        isVisible={this.props.isVisible}
+        visible={this.props.isVisible}
+        transparent={true}
         style={styles.modalContainer}
         animation={'slideInUp'}
         animationInTiming={250}
@@ -18,7 +18,7 @@ export default class AssignmentComplete extends React.Component {
       >
         <BlurView style={styles.container} blurAmount={5}>
           <TouchableOpacity
-            style={[styles.container, styles.centerContent]}
+            style={[styles.centerContent, localStyles.modalContainer]}
             onPress={() => this.props.hideAssignmentComplete()}
           >
             <View style={localStyles.container}>
@@ -57,6 +57,10 @@ export default class AssignmentComplete extends React.Component {
 }
 
 const localStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
   container: {
     backgroundColor: 'white',
     borderRadius: 10,

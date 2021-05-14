@@ -13,8 +13,6 @@ import {
   SafeAreaView
 } from 'react-native';
 import Video from 'RNVideoEnhanced';
-import Modal from 'react-native-modal';
-import DeviceInfo from 'react-native-device-info';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import NavigationBar from '../../components/NavigationBar.js';
 import CountDown from '../../components/CountDown';

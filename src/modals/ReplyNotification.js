@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  SafeAreaView
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Chat from '../../src/assets/img/svgs/chat.svg';
 import Icon from '../assets/icons';
@@ -60,122 +54,138 @@ class ReplyNotification extends React.Component {
     } = this.props;
 
     return (
-      <TouchableOpacity
-        style={localStyles.modalContainer}
-        onPress={hideReplyNotification}
+      <Modal
+        transparent={true}
+        visible={true}
+        style={styles.modalContainer}
+        animation={'slideInUp'}
+        animationInTiming={250}
+        animationOutTiming={250}
+        coverScreen={true}
+        hasBackdrop={true}
+        onBackButtonPress={hideReplyNotification}
+        onRequestClose={hideReplyNotification}
+        supportedOrientations={['portrait', 'landscape']}
       >
-        <View
-          style={{
-            width: '100%',
-            justifyContent: 'space-between',
-            backgroundColor: colors.mainBackground
-          }}
+        <TouchableOpacity
+          style={localStyles.modalContainer}
+          onPress={hideReplyNotification}
         >
-          <>
-            <View style={[styles.centerContent, localStyles.profileContainer]}>
-              <View style={localStyles.profileContainer2}>
-                {type === 'new content releases' ? (
-                  <View
-                    style={[styles.centerContent, localStyles.videoContainer]}
-                  >
-                    <Icon.FontAwesome
-                      size={sizing.infoButtonSize}
-                      color={'white'}
-                      name={'video-camera'}
-                    />
-                  </View>
-                ) : type === 'forum post in followed thread' ||
-                  type === 'lesson comment reply' ? (
-                  <View
-                    style={[styles.centerContent, localStyles.chatContainer]}
-                  >
-                    <Chat
-                      height={sizing.infoButtonSize}
-                      width={sizing.infoButtonSize}
-                      fill={'white'}
-                    />
-                  </View>
-                ) : (
-                  <View
-                    style={[styles.centerContent, localStyles.likeContainer]}
-                  >
-                    <Icon.AntDesign
-                      size={sizing.infoButtonSize}
-                      color={'white'}
-                      name={'like1'}
-                    />
-                  </View>
-                )}
-                <FastImage
-                  style={localStyles.image}
-                  source={{
-                    uri:
-                      type === 'new content releases'
-                        ? content?.thumbnail_url
-                        : sender?.profile_image_url
-                  }}
-                  resizeMode={FastImage.resizeMode.cover}
-                />
+          <View
+            style={{
+              width: '100%',
+              justifyContent: 'space-between',
+              backgroundColor: colors.mainBackground
+            }}
+          >
+            <>
+              <View
+                style={[styles.centerContent, localStyles.profileContainer]}
+              >
+                <View style={localStyles.profileContainer2}>
+                  {type === 'new content releases' ? (
+                    <View
+                      style={[styles.centerContent, localStyles.videoContainer]}
+                    >
+                      <Icon.FontAwesome
+                        size={sizing.infoButtonSize}
+                        color={'white'}
+                        name={'video-camera'}
+                      />
+                    </View>
+                  ) : type === 'forum post in followed thread' ||
+                    type === 'lesson comment reply' ? (
+                    <View
+                      style={[styles.centerContent, localStyles.chatContainer]}
+                    >
+                      <Chat
+                        height={sizing.infoButtonSize}
+                        width={sizing.infoButtonSize}
+                        fill={'white'}
+                      />
+                    </View>
+                  ) : (
+                    <View
+                      style={[styles.centerContent, localStyles.likeContainer]}
+                    >
+                      <Icon.AntDesign
+                        size={sizing.infoButtonSize}
+                        color={'white'}
+                        name={'like1'}
+                      />
+                    </View>
+                  )}
+                  <FastImage
+                    style={localStyles.image}
+                    source={{
+                      uri:
+                        type === 'new content releases'
+                          ? content?.thumbnail_url
+                          : sender?.profile_image_url
+                    }}
+                    resizeMode={FastImage.resizeMode.cover}
+                  />
+                </View>
               </View>
-            </View>
-            <Text style={localStyles.replyUser}>
-              <Text style={localStyles.user}>
-                {type == 'new content releases'
-                  ? content?.display_name
-                  : sender?.display_name}
-              </Text>{' '}
-              {messageDict[type]?.message}
-            </Text>
-          </>
-          <>
-            <View style={localStyles.removeContainer}>
-              <TouchableOpacity
-                style={[styles.container, { justifyContent: 'center' }]}
-                onPress={() => removeNotification(id)}
-              >
-                <View style={localStyles.crossContainer}>
-                  <Icon.Entypo
-                    name={'cross'}
-                    size={sizing.myListButtonSize * 1.2}
-                    color={colors.pianoteRed}
-                  />
-                  <Text
-                    style={[
-                      localStyles.removeText,
-                      { fontSize: sizing.descriptionText }
-                    ]}
-                  >
-                    Remove this notification
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View style={localStyles.muteContainer}>
-              <TouchableOpacity
-                style={[styles.container, { justifyContent: 'center' }]}
-                onPress={turnOfffNotifications}
-              >
-                <View style={localStyles.notificationContainer}>
-                  <Icon.Ionicons
-                    name={'ios-notifications-outline'}
-                    size={sizing.myListButtonSize}
-                    color={colors.pianoteRed}
-                  />
-                  <Text
-                    style={[
-                      localStyles.removeText,
-                      { fontSize: sizing.descriptionText }
-                    ]}
-                  >
-                    Turn {notificationStatus ? 'off' : 'on'}{' '}
-                    {messageDict[type]?.type}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          </>
-        </View>
-      </TouchableOpacity>
+              <Text style={localStyles.replyUser}>
+                <Text style={localStyles.user}>
+                  {type == 'new content releases'
+                    ? content?.display_name
+                    : sender?.display_name}
+                </Text>{' '}
+                {messageDict[type]?.message}
+              </Text>
+            </>
+            <>
+              <View style={localStyles.removeContainer}>
+                <TouchableOpacity
+                  style={[styles.container, { justifyContent: 'center' }]}
+                  onPress={() => removeNotification(id)}
+                >
+                  <View style={localStyles.crossContainer}>
+                    <Icon.Entypo
+                      name={'cross'}
+                      size={sizing.myListButtonSize * 1.2}
+                      color={colors.pianoteRed}
+                    />
+                    <Text
+                      style={[
+                        localStyles.removeText,
+                        { fontSize: sizing.descriptionText }
+                      ]}
+                    >
+                      Remove this notification
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+              <View style={localStyles.muteContainer}>
+                <TouchableOpacity
+                  style={[styles.container, { justifyContent: 'center' }]}
+                  onPress={turnOfffNotifications}
+                >
+                  <View style={localStyles.notificationContainer}>
+                    <Icon.Ionicons
+                      name={'ios-notifications-outline'}
+                      size={sizing.myListButtonSize}
+                      color={colors.pianoteRed}
+                    />
+                    <Text
+                      style={[
+                        localStyles.removeText,
+                        { fontSize: sizing.descriptionText }
+                      ]}
+                    >
+                      Turn {notificationStatus ? 'off' : 'on'}{' '}
+                      {messageDict[type]?.type}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     );
   }
 }

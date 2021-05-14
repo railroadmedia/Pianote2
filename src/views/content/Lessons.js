@@ -8,10 +8,10 @@ import {
   ImageBackground,
   TouchableOpacity,
   Text,
-  Image
+  Image,
+  Modal
 } from 'react-native';
 import { connect } from 'react-redux';
-import Modal from 'react-native-modal';
 import { bindActionCreators } from 'redux';
 import FastImage from 'react-native-fast-image';
 import Icon from '../../assets/icons';
@@ -80,6 +80,7 @@ class Lessons extends React.Component {
       lessonsStarted: true,
       refreshing: !lessonsCache,
       refreshControl: true,
+      showLive: false,
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width,
       ...this.initialValidData(lessonsCache, true)
@@ -963,7 +964,8 @@ class Lessons extends React.Component {
           onRestart={() => this.onRestartMethod()}
         />
         <Modal
-          isVisible={this.state.showLive}
+          visible={this.state.showLive}
+          transparent={true}
           style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}

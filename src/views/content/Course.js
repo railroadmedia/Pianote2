@@ -65,7 +65,6 @@ class Course extends React.Component {
       getAllContent('course', this.state.currentSort, page, this.filterQuery),
       getStartedContent('course', 1)
     ]);
-
     this.metaFilters = content?.[0]?.meta?.filterOptions;
     this.props.cacheAndWriteCourses({
       all: content[0],
@@ -80,8 +79,8 @@ class Course extends React.Component {
   }
 
   initialValidData = (content, fromCache) => {
-    let allVideos = content.all.data;
-    let inprogressVideos = content.inProgress.data;
+    let allVideos = content?.all?.data;
+    let inprogressVideos = content?.inProgress?.data;
 
     return {
       allCourses: allVideos,
@@ -89,7 +88,7 @@ class Course extends React.Component {
       refreshing: false,
       refreshControl: fromCache,
       outVideos:
-        allVideos.length === 0 || content.all.data.length < 10 ? true : false,
+        allVideos?.length === 0 || allVideos?.length < 10 ? true : false,
       filtering: false,
       isPaging: false,
       page: 1
@@ -177,7 +176,7 @@ class Course extends React.Component {
               />
             )}
             <Text style={styles.contentPageHeader}>Courses</Text>
-            {!!this.state.progressCourses.length && (
+            {!!this.state.progressCourses?.length && (
               <HorizontalVideoList
                 hideFilterButton={true}
                 Title={'CONTINUE'}

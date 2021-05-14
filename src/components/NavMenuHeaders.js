@@ -1,6 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity, StatusBar } from 'react-native';
-import Modal from 'react-native-modal';
+import { Text, TouchableOpacity, StatusBar, Modal } from 'react-native';
 import Icon from '../assets/icons';
 import Pianote from '../assets/img/svgs/pianote.svg';
 import NavigationMenu from '../../src/components/NavigationMenu.js';
@@ -141,7 +140,8 @@ export default class NavMenuHeaders extends React.Component {
           </Text>
         </TouchableOpacity>
         <Modal
-          isVisible={this.state.showModalMenu}
+          visible={this.state.showModalMenu}
+          transparent={true}
           style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}

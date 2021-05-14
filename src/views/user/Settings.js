@@ -8,11 +8,11 @@ import {
   Alert,
   StatusBar,
   StyleSheet,
-  Linking
+  Linking,
+  Modal
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import RNIap from 'react-native-iap';
-import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -351,7 +351,8 @@ class Settings extends React.Component {
           )}
         </ScrollView>
         <Modal
-          isVisible={this.state.showLogOut}
+          visible={this.state.showLogOut}
+          transparent={true}
           style={[styles.centerContent, styles.modalContainer]}
           animation={'slideInUp'}
           animationInTiming={250}
@@ -360,8 +361,8 @@ class Settings extends React.Component {
           hasBackdrop={true}
           onBackButtonPress={() => this.setState({ showLogOut: false })}
         >
-          <TouchableWithoutFeedback
-            style={styles.container}
+          <TouchableOpacity
+            style={[styles.centerContent, localStyles.modalContainer]}
             onPress={() => this.setState({ showLogOut: false })}
           >
             <View style={[styles.centerContent, styles.container]}>
@@ -392,7 +393,7 @@ class Settings extends React.Component {
                 </TouchableOpacity>
               </View>
             </View>
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
         </Modal>
         <Loading
           ref={ref => {
@@ -460,6 +461,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(Settings);
 
 const setStyles = (isLight, appColor) =>
   StyleSheet.create({
+    modalContainer: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,.5)'
+    },
     container: {
       height: isTablet ? 70 : 50,
       width: '100%',

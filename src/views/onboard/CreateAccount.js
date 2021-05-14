@@ -7,10 +7,10 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  StyleSheet
+  StyleSheet,
+  Modal
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import Back from '../../assets/img/svgs/back';
 import CheckEmail from '../../modals/CheckEmail.js';
@@ -162,27 +162,20 @@ export default class CreateAccount extends React.Component {
                 <CreateAccountStepCounter step={1} />
               </View>
             </ScrollView>
-            <Modal
+
+            <CheckEmail
               isVisible={this.state.showCheckEmail}
-              style={[styles.centerContent, styles.modalContainer]}
-              animation={'slideInUp'}
-              animationInTiming={350}
-              animationOutTiming={350}
-              coverScreen={true}
-              hasBackdrop={true}
-              onBackButtonPress={() => this.setState({ showCheckEmail: false })}
-            >
-              <CheckEmail
-                hideCheckEmail={() =>
-                  this.setState({
-                    showCheckEmail: false
-                  })
-                }
-              />
-            </Modal>
+              hideCheckEmail={() =>
+                this.setState({
+                  showCheckEmail: false
+                })
+              }
+            />
+
             <Modal
-              isVisible={this.state.showValidateEmail}
-              style={[styles.centerContent, styles.modalContainer]}
+              visible={this.state.showValidateEmail}
+              transparent={true}
+              style={[styles.centerContent, localStyles.modalContainer]}
               animation={'slideInUp'}
               animationInTiming={350}
               animationOutTiming={350}
@@ -192,7 +185,7 @@ export default class CreateAccount extends React.Component {
                 this.setState({ showValidateEmail: false })
               }
             >
-              <TouchableWithoutFeedback
+              <TouchableOpacity
                 style={[styles.container, styles.centerContent]}
                 onPress={() => this.setState({ showValidateEmail: false })}
               >
@@ -218,7 +211,7 @@ export default class CreateAccount extends React.Component {
                     </TouchableOpacity>
                   </View>
                 </View>
-              </TouchableWithoutFeedback>
+              </TouchableOpacity>
             </Modal>
           </KeyboardAvoidingView>
         </SafeAreaView>
@@ -228,6 +221,10 @@ export default class CreateAccount extends React.Component {
 }
 
 const localStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
   createAccountContainer: {
     padding: 15,
     flexDirection: 'row',

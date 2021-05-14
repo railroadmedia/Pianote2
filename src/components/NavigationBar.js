@@ -22,19 +22,7 @@ class NavigationBar extends React.Component {
   }
 
   profile = () => {
-    if (this.props.user.profile_picture_url.length == 0) {
-      return (
-        <Icon.AntDesign
-          name={'user'}
-          color={
-            this.props.currentPage === 'PROFILE'
-              ? 'white'
-              : this.state.secondaryColor
-          }
-          size={onTablet ? 40 : 30}
-        />
-      );
-    } else {
+    if (this.props.user.profile_picture_url) {
       return (
         <FastImage
           style={{
@@ -49,6 +37,18 @@ class NavigationBar extends React.Component {
         />
       );
     }
+
+    return (
+      <Icon.AntDesign
+        name={'user'}
+        color={
+          this.props.currentPage === 'PROFILE'
+            ? 'white'
+            : this.state.secondaryColor
+        }
+        size={onTablet ? 40 : 30}
+      />
+    );
   };
 
   render = () => {
@@ -121,13 +121,13 @@ class NavigationBar extends React.Component {
               <View
                 style={[
                   localStyles.navIconContainer,
-                  this.props.user.profile_picture_url.length > 0
+                  this.props.user.profile_picture_url
                     ? null
                     : styles.centerContent,
                   {
                     borderColor:
                       this.props.currentPage == 'PROFILE' &&
-                      this.props.user.profile_picture_url.length > 0
+                      this.props.user.profile_picture_url
                         ? 'white'
                         : 'transparent'
                   }

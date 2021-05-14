@@ -8,7 +8,6 @@ import {
   Dimensions,
   ImageBackground
 } from 'react-native';
-import Modal from 'react-native-modal';
 import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import Icon from '../../assets/icons.js';
@@ -54,7 +53,8 @@ export default class MethodLevel extends React.Component {
       url: '',
       description: '',
       isLandscape:
-        Dimensions.get('window').height < Dimensions.get('window').width
+        Dimensions.get('window').height < Dimensions.get('window').width,
+      showRestartCourse: false
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }

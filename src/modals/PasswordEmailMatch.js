@@ -1,62 +1,66 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  StyleSheet
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 
 export default class PasswordEmailMatch extends React.Component {
   render = () => {
     return (
-      <TouchableWithoutFeedback
-        style={styles.container}
-        onPress={() => this.props.hidePasswordEmailMatch()}
+      <Modal
+        visible={this.props.isVisible}
+        transparent={true}
+        style={styles.modalContainer}
+        animation={'slideInUp'}
+        animationInTiming={250}
+        animationOutTiming={250}
+        coverScreen={true}
+        hasBackdrop={true}
+        onBackButtonPress={() => this.props.hidePasswordEmailMatch()}
       >
-        <View
-          style={[
-            styles.container,
-            styles.centerContent,
-            localStyles.container
-          ]}
+        <TouchableOpacity
+          style={[styles.centerContent, localStyles.modalContainer]}
+          onPress={() => this.props.hidePasswordEmailMatch()}
         >
-          <Text
-            numberOfLines={2}
-            style={[
-              styles.modalHeaderText,
-              localStyles.errorMessage,
-              { marginBottom: 5 }
-            ]}
-          >
-            {this.props.errorMessage}
-          </Text>
-          <Text
-            style={[
-              styles.modalBodyText,
-              localStyles.tryAgainText,
-              { marginBottom: 25 }
-            ]}
-          >
-            Please try again.
-          </Text>
-          <TouchableOpacity
-            style={localStyles.tryAgainText}
-            onPress={() => {
-              this.props.hidePasswordEmailMatch();
-            }}
-          >
-            <Text style={[styles.modalButtonText, localStyles.tryAgain]}>
-              TRY AGAIN
+          <View style={localStyles.container}>
+            <Text
+              numberOfLines={2}
+              style={[
+                styles.modalHeaderText,
+                localStyles.errorMessage,
+                { marginBottom: 5 }
+              ]}
+            >
+              {this.props.errorMessage}
             </Text>
-          </TouchableOpacity>
-        </View>
-      </TouchableWithoutFeedback>
+            <Text
+              style={[
+                styles.modalBodyText,
+                localStyles.tryAgainText,
+                { marginBottom: 25 }
+              ]}
+            >
+              Please try again.
+            </Text>
+            <TouchableOpacity
+              style={localStyles.tryAgainText}
+              onPress={() => {
+                this.props.hidePasswordEmailMatch();
+              }}
+            >
+              <Text style={[styles.modalButtonText, localStyles.tryAgain]}>
+                TRY AGAIN
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     );
   };
 }
 
 const localStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
   container: {
     backgroundColor: 'white',
     borderRadius: 15,

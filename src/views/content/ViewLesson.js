@@ -11,10 +11,10 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   BackHandler,
-  SafeAreaView
+  SafeAreaView,
+  Modal
 } from 'react-native';
 import Video from 'RNVideoEnhanced';
-import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import Icon from '../../assets/icons.js';
 import { Download_V2, offlineContent, DownloadResources } from 'RNDownload';
@@ -69,7 +69,6 @@ class ViewLesson extends React.Component {
       selectedComment: undefined,
       showAssignment: false,
       showSort: false,
-      showSoundSlice: false,
       showMakeComment: false,
       showInfo: false,
       isLoadingComm: false,
@@ -77,6 +76,7 @@ class ViewLesson extends React.Component {
       showOverviewComplete: false,
       showLessonComplete: false,
       showResDownload: false,
+      showRestartCourse: false,
       showVideo: true,
       isLiked: false,
       isAddedToMyList: false,
@@ -1656,14 +1656,10 @@ class ViewLesson extends React.Component {
           />
         )}
         <Modal
-          isVisible={this.state.showResDownload}
+          visible={this.state.showResDownload}
+          transparent={true}
           onDismiss={() => this.modalDismissed}
-          style={[
-            styles.modalContainer,
-            {
-              justifyContent: 'flex-end'
-            }
-          ]}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={350}
           animationOutTiming={350}
@@ -1680,31 +1676,39 @@ class ViewLesson extends React.Component {
             )
           }
         >
-          <DownloadResources
-            styles={{
-              container: {
-                backgroundColor: colors.mainBackground,
-                width: '100%'
-              },
-              touchableTextResourceNameFontFamily: 'OpenSans',
-              touchableTextResourceExtensionFontFamily: 'OpenSans',
-              touchableTextResourceCancelFontFamily: 'OpenSans',
-              borderColor: colors.secondBackground,
-              color: '#ffffff'
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              justifyContent: 'flex-end',
+              backgroundColor: 'rgba(0,0,0,.5)'
             }}
-            resources={this.state.resources}
-            lessonTitle={this.state.lessonTitle}
-            onClose={() => {
-              new Promise(res =>
-                this.setState(
-                  {
-                    showResDownload: false
-                  },
-                  () => (isiOS ? (this.modalDismissed = res) : res())
-                )
-              );
-            }}
-          />
+          >
+            <DownloadResources
+              styles={{
+                container: {
+                  backgroundColor: colors.mainBackground,
+                  width: '100%'
+                },
+                touchableTextResourceNameFontFamily: 'OpenSans',
+                touchableTextResourceExtensionFontFamily: 'OpenSans',
+                touchableTextResourceCancelFontFamily: 'OpenSans',
+                borderColor: colors.secondBackground,
+                color: '#ffffff'
+              }}
+              resources={this.state.resources}
+              lessonTitle={this.state.lessonTitle}
+              onClose={() => {
+                new Promise(res =>
+                  this.setState(
+                    {
+                      showResDownload: false
+                    },
+                    () => (isiOS ? (this.modalDismissed = res) : res())
+                  )
+                );
+              }}
+            />
+          </TouchableOpacity>
         </Modal>
 
         {!this.state.isLoadingAll && (
@@ -1745,49 +1749,25 @@ class ViewLesson extends React.Component {
               }
               onRestart={() => this.onResetProgress()}
             />
-            <Modal
+
+            <OverviewComplete
               isVisible={this.state.showOverviewComplete}
-              style={styles.modalContainer}
-              animation={'slideInUp'}
-              animationInTiming={250}
-              animationOutTiming={250}
-              coverScreen={true}
-              hasBackdrop={true}
-              onBackButtonPress={() =>
-                this.setState({ showOverviewComplete: false })
+              title={this.state.lessonTitle}
+              xp={this.state.xp}
+              type={
+                this.state.type === 'learning-path-lesson'
+                  ? 'Method'
+                  : this.state.type
               }
-            >
-              <OverviewComplete
-                title={this.state.lessonTitle}
-                xp={this.state.xp}
-                type={
-                  this.state.type === 'learning-path-lesson'
-                    ? 'Method'
-                    : this.state.type
-                }
-                hideOverviewComplete={() => {
-                  this.setState({
-                    showOverviewComplete: false
-                  });
-                }}
-                onGoToNext={() => {}}
-              />
-            </Modal>
+              hideOverviewComplete={() => {
+                this.setState({
+                  showOverviewComplete: false
+                });
+              }}
+            />
           </>
         )}
-
-        <Modal
-          isVisible={this.state.showSort}
-          style={[styles.centerContent, styles.modalContainer]}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={false}
-          backdropColor={'white'}
-          backdropOpacity={0.79}
-          onBackButtonPress={() => this.setState({ showSort: false })}
-        >
+        {this.state.showSort && (
           <Sort
             type={'comments'}
             hideSort={() => {
@@ -1801,25 +1781,8 @@ class ViewLesson extends React.Component {
               });
             }}
           />
-        </Modal>
-        <Modal
-          isVisible={this.state.showSoundSlice}
-          style={[styles.centerContent, styles.modalContainer]}
-          animation={'slideInUp'}
-          animationInTiming={350}
-          animationOutTiming={350}
-          coverScreen={true}
-          hasBackdrop={true}
-          onBackButtonPress={() => this.setState({ showSoundSlice: false })}
-        >
-          <SoundSlice
-            hideSoundSlice={() => {
-              this.setState({
-                showSoundSlice: false
-              });
-            }}
-          />
-        </Modal>
+        )}
+
         <CustomModal
           ref={r => (this.alert = r)}
           additionalBtn={
@@ -1852,7 +1815,8 @@ class ViewLesson extends React.Component {
         />
         {this.state.showMakeComment && (
           <Modal
-            isVisible={this.state.showMakeComment}
+            visible={this.state.showMakeComment}
+            transparent={true}
             style={styles.modalContainer}
             backdropColor={'transparent'}
             animation={'slideInUp'}
@@ -1864,7 +1828,11 @@ class ViewLesson extends React.Component {
             onBackdropPress={() => this.setState({ showMakeComment: false })}
           >
             <TouchableOpacity
-              style={{ flex: 1 }}
+              style={{
+                flex: 1,
+                justifyContent: 'flex-end',
+                backgroundColor: 'rgba(0,0,0,.5)'
+              }}
               onPress={() => this.setState({ showMakeComment: false })}
             >
               <KeyboardAvoidingView

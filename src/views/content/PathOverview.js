@@ -10,7 +10,6 @@ import {
   FlatList
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import Modal from 'react-native-modal';
 import { Download_V2 } from 'RNDownload';
 import Icon from '../../assets/icons.js';
 import Back from '../../assets/img/svgs/back.svg';

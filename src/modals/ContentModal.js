@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableWithoutFeedback,
-  TouchableOpacity,
-  StyleSheet
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import {
   likeContent,
   unlikeContent,
@@ -78,122 +72,141 @@ export default class ContentModal extends React.Component {
 
   render = () => {
     return (
-      <TouchableWithoutFeedback
-        style={styles.container}
-        onPress={() => this.props.hideContentModal()}
+      <Modal
+        visible={true}
+        transparent={true}
+        style={styles.modalContainer}
+        animation={'slideInUp'}
+        animationInTiming={250}
+        animationOutTiming={250}
+        coverScreen={true}
+        hasBackdrop={true}
+        onBackButtonPress={() => this.props.hideContentModal()}
       >
-        <View style={[styles.container, styles.centerContent]}>
-          <View style={localStyles.container}>
-            <View
-              style={[
-                localStyles.imageContainer,
-                { aspectRatio: this.state.type === 'song' ? 1 : 16 / 9 }
-              ]}
-            >
-              <FastImage
-                style={localStyles.image}
-                source={{
-                  uri:
-                    this.state.thumbnail ||
-                    `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,e_grayscale/${fallbackThumb}`
-                }}
-                resizeMode={FastImage.resizeMode.cover}
-              />
-            </View>
-            <Text style={localStyles.title}>{this.state.title}</Text>
-            <Text style={localStyles.type}>
-              {this.changeType(this.state.type)}/{' '}
-              {this.state.artist || this.state.instructor}
-            </Text>
-            <Text numberOfLines={5} style={localStyles.description}>
-              {this.state.description}
-            </Text>
-            <View style={[styles.centerContent, { flexDirection: 'row' }]}>
-              <View style={{ flex: 1 }} />
-              {(this.state.bundle_number > 1 ||
-                this.state.lesson_count > 1) && (
-                <View style={[styles.centerContent, { flex: 1 }]}>
-                  <Text style={localStyles.lessonCount}>
-                    {this.state.lesson_count > 1
-                      ? this.state.lesson_count
-                      : this.state.bundle_number}
-                  </Text>
-                  <Text style={localStyles.lessons}>LESSONS</Text>
-                </View>
-              )}
-              {(this.state.bundle_number > 1 ||
-                this.state.lesson_count > 1) && <View style={{ flex: 0.6 }} />}
-              <View style={[styles.centerContent, { flex: 1 }]}>
-                <Text style={localStyles.xp}>{this.state.xp}</Text>
-                <Text style={localStyles.XPtext}>XP</Text>
+        <TouchableOpacity
+          style={[styles.centerContent, localStyles.modalContainer]}
+          onPress={() => this.props.hideContentModal()}
+        >
+          <View style={[styles.container, styles.centerContent]}>
+            <View style={localStyles.container}>
+              <View
+                style={[
+                  localStyles.imageContainer,
+                  { aspectRatio: this.state.type === 'song' ? 1 : 16 / 9 }
+                ]}
+              >
+                <FastImage
+                  style={localStyles.image}
+                  source={{
+                    uri:
+                      this.state.thumbnail ||
+                      `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,e_grayscale/${fallbackThumb}`
+                  }}
+                  resizeMode={FastImage.resizeMode.cover}
+                />
               </View>
-              <View style={{ flex: 1 }} />
-            </View>
-            <View style={localStyles.button}>
-              <TouchableOpacity
-                style={localStyles.likeContainer}
-                onPress={() => this.toggleLike(this.state.id)}
-              >
-                <Icon.AntDesign
-                  name={this.state.isLiked ? 'like1' : 'like2'}
-                  size={sizing.myListButtonSize * 0.9}
+              <Text style={localStyles.title}>{this.state.title}</Text>
+              <Text style={localStyles.type}>
+                {this.changeType(this.state.type)}/{' '}
+                {this.state.artist || this.state.instructor}
+              </Text>
+              <Text numberOfLines={5} style={localStyles.description}>
+                {this.state.description}
+              </Text>
+              <View style={[styles.centerContent, { flexDirection: 'row' }]}>
+                <View style={{ flex: 1 }} />
+                {(this.state.bundle_number > 1 ||
+                  this.state.lesson_count > 1) && (
+                  <View style={[styles.centerContent, { flex: 1 }]}>
+                    <Text style={localStyles.lessonCount}>
+                      {this.state.lesson_count > 1
+                        ? this.state.lesson_count
+                        : this.state.bundle_number}
+                    </Text>
+                    <Text style={localStyles.lessons}>LESSONS</Text>
+                  </View>
+                )}
+                {(this.state.bundle_number > 1 ||
+                  this.state.lesson_count > 1) && (
+                  <View style={{ flex: 0.6 }} />
+                )}
+                <View style={[styles.centerContent, { flex: 1 }]}>
+                  <Text style={localStyles.xp}>{this.state.xp}</Text>
+                  <Text style={localStyles.XPtext}>XP</Text>
+                </View>
+                <View style={{ flex: 1 }} />
+              </View>
+              <View style={localStyles.button}>
+                <TouchableOpacity
+                  style={localStyles.likeContainer}
+                  onPress={() => this.toggleLike(this.state.id)}
+                >
+                  <Icon.AntDesign
+                    name={this.state.isLiked ? 'like1' : 'like2'}
+                    size={sizing.myListButtonSize * 0.9}
+                  />
+                  <Text style={localStyles.likeCount}>
+                    {this.state.like_count}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.centerContent}
+                  onPress={() => this.toggleMyList(this.state.id)}
+                >
+                  <Icon.AntDesign
+                    size={sizing.myListButtonSize}
+                    name={this.state.isAddedToList ? 'close' : 'plus'}
+                    color={'black'}
+                  />
+                  <Text style={localStyles.myList}>My List</Text>
+                </TouchableOpacity>
+                <Download_V2
+                  entity={{
+                    id: this.state.id,
+                    content: contentService.getContent(this.state.id, true)
+                  }}
+                  styles={{
+                    iconSize: {
+                      width: sizing.myListButtonSize,
+                      height: sizing.myListButtonSize
+                    },
+                    touchable: { flex: 1 },
+                    activityIndicatorColor: colors.pianoteRed,
+                    animatedProgressBackground: colors.pianoteRed,
+                    textStatus: {
+                      color: 'black',
+                      fontSize: sizing.descriptionText,
+                      fontFamily: 'OpenSans-Regular'
+                    },
+                    alert: {
+                      alertTextMessageFontFamily: 'OpenSans-Regular',
+                      alertTouchableTextDeleteColor: 'white',
+                      alertTextTitleColor: 'black',
+                      alertTextMessageColor: 'black',
+                      alertTextTitleFontFamily: 'OpenSans-Bold',
+                      alertTouchableTextCancelColor: colors.pianoteRed,
+                      alertTouchableDeleteBackground: colors.pianoteRed,
+                      alertBackground: 'white',
+                      alertTouchableTextDeleteFontFamily: 'OpenSans-Bold',
+                      alertTouchableTextCancelFontFamily: 'OpenSans-Bold'
+                    }
+                  }}
                 />
-                <Text style={localStyles.likeCount}>
-                  {this.state.like_count}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.centerContent}
-                onPress={() => this.toggleMyList(this.state.id)}
-              >
-                <Icon.AntDesign
-                  size={sizing.myListButtonSize}
-                  name={this.state.isAddedToList ? 'close' : 'plus'}
-                  color={'black'}
-                />
-                <Text style={localStyles.myList}>My List</Text>
-              </TouchableOpacity>
-              <Download_V2
-                entity={{
-                  id: this.state.id,
-                  content: contentService.getContent(this.state.id, true)
-                }}
-                styles={{
-                  iconSize: {
-                    width: sizing.myListButtonSize,
-                    height: sizing.myListButtonSize
-                  },
-                  touchable: { flex: 1 },
-                  activityIndicatorColor: colors.pianoteRed,
-                  animatedProgressBackground: colors.pianoteRed,
-                  textStatus: {
-                    color: 'black',
-                    fontSize: sizing.descriptionText,
-                    fontFamily: 'OpenSans-Regular'
-                  },
-                  alert: {
-                    alertTextMessageFontFamily: 'OpenSans-Regular',
-                    alertTouchableTextDeleteColor: 'white',
-                    alertTextTitleColor: 'black',
-                    alertTextMessageColor: 'black',
-                    alertTextTitleFontFamily: 'OpenSans-Bold',
-                    alertTouchableTextCancelColor: colors.pianoteRed,
-                    alertTouchableDeleteBackground: colors.pianoteRed,
-                    alertBackground: 'white',
-                    alertTouchableTextDeleteFontFamily: 'OpenSans-Bold',
-                    alertTouchableTextCancelFontFamily: 'OpenSans-Bold'
-                  }
-                }}
-              />
+              </View>
             </View>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableOpacity>
+      </Modal>
     );
   };
 }
 
 const localStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
   container: {
     margin: 40,
     borderRadius: 10,

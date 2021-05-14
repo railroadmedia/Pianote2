@@ -7,7 +7,6 @@ import {
   Image
 } from 'react-native';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
-import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import Icon from '../assets/icons';
 import { addToMyList, removeFromMyList } from '../services/UserActions';
@@ -235,13 +234,13 @@ export default class VerticalVideoList extends React.Component {
   }
 
   renderMappedList = () => {
-    if (this.state.items.length === 0 && this.state.outVideos) {
+    if (this.state.items?.length === 0 && this.state.outVideos) {
       return;
     } else if (this.state.isLoading) {
       return this.showSpinner();
     }
 
-    return this.state.items.map((row, index) => {
+    return this.state.items?.map((row, index) => {
       return (
         <TouchableOpacity
           key={index}
@@ -685,7 +684,7 @@ export default class VerticalVideoList extends React.Component {
           <View style={{ marginHorizontal: 10 }}>
             {this.filters?.filterAppliedText}
           </View>
-          {this.state.items.length === 0 &&
+          {this.state.items?.length === 0 &&
             this.state.outVideos &&
             !this.state.isLoading && (
               <>
@@ -726,16 +725,7 @@ export default class VerticalVideoList extends React.Component {
           )}
           <View style={{ flex: 1 }} />
         </View>
-        <Modal
-          isVisible={this.state.showModal}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
-          onBackButtonPress={() => this.setState({ showModal: false })}
-        >
+        {this.state.showModal && (
           <ContentModal
             data={this.state.item}
             hideContentModal={() => this.setState({ showModal: false })}
@@ -743,19 +733,8 @@ export default class VerticalVideoList extends React.Component {
             addToMyList={contentID => this.addToMyList(contentID)}
             removeFromMyList={contentID => this.removeFromMyList(contentID)}
           />
-        </Modal>
-        <Modal
-          isVisible={this.state.showSort}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={false}
-          backdropColor={'white'}
-          backdropOpacity={0.79}
-          onBackButtonPress={() => this.setState({ showSort: false })}
-        >
+        )}
+        {this.state.showSort && (
           <Sort
             hideSort={() => {
               this.setState({ showSort: false });
@@ -766,7 +745,7 @@ export default class VerticalVideoList extends React.Component {
               this.props.changeSort(sort);
             }}
           />
-        </Modal>
+        )}
         <AddToCalendar
           onBackButtonPress={() => this.setState({ addToCalendarModal: false })}
           isVisible={this.state.addToCalendarModal}

@@ -8,12 +8,10 @@ import {
   Linking,
   StatusBar,
   StyleSheet,
-  RefreshControl,
-  Modal
+  RefreshControl
 } from 'react-native';
 
 import FastImage from 'react-native-fast-image';
-import DeviceInfo from 'react-native-device-info';
 import Icon from '../../assets/icons.js';
 import Chat from '../../assets/img/svgs/chat.svg';
 import Settings from '../../assets/img/svgs/settings.svg';
@@ -514,58 +512,34 @@ class Profile extends React.Component {
             )}
           />
         </View>
-        <Modal
-          transparent={true}
-          visible={this.state.showXpRank}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
-          onBackButtonPress={() => this.setState({ showXpRank: false })}
-        >
+        {this.state.showXpRank && (
           <XpRank
             hideXpRank={() => this.setState({ showXpRank: false })}
             xp={totalXp}
             rank={xpRank}
           />
-        </Modal>
-        <Modal
-          transparent={true}
-          visible={this.state.showReplyNotification}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
-          onBackButtonPress={() =>
-            this.setState({ showReplyNotification: false })
-          }
-          onRequestClose={() => this.setState({ showReplyNotification: false })}
-          supportedOrientations={['portrait', 'landscape']}
-        >
-          {this.state.showReplyNotification && (
-            <ReplyNotification
-              removeNotification={notificationId =>
-                this.removeNotification(notificationId)
-              }
-              turnOfffNotifications={() =>
-                this.turnOfffNotifications(this.state.clickedNotification?.type)
-              }
-              hideReplyNotification={() => {
-                this.setState({ showReplyNotification: false });
-              }}
-              data={this.state.clickedNotification}
-              notificationStatus={
-                this.props.user[
-                  messageDict[this.state.clickedNotification?.type]?.field
-                ]
-              }
-            />
-          )}
-        </Modal>
+        )}
+
+        {this.state.showReplyNotification && (
+          <ReplyNotification
+            removeNotification={notificationId =>
+              this.removeNotification(notificationId)
+            }
+            turnOfffNotifications={() =>
+              this.turnOfffNotifications(this.state.clickedNotification?.type)
+            }
+            hideReplyNotification={() => {
+              this.setState({ showReplyNotification: false });
+            }}
+            data={this.state.clickedNotification}
+            notificationStatus={
+              this.props.user[
+                messageDict[this.state.clickedNotification?.type]?.field
+              ]
+            }
+          />
+        )}
+
         <NavigationBar currentPage={'PROFILE'} pad={true} />
       </SafeAreaView>
     );

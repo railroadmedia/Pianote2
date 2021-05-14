@@ -7,13 +7,12 @@ import {
   ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView,
-  StyleSheet
+  StyleSheet,
+  Modal
 } from 'react-native';
 import RNIap from 'react-native-iap';
-import Modal from 'react-native-modal';
 import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
-import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-community/async-storage';
 import Orientation from 'react-native-orientation-locker';
 import Back from '../../assets/img/svgs/back';
@@ -392,25 +391,15 @@ class LoginCredentials extends React.Component {
             this.loadingRef = ref;
           }}
         />
-        <Modal
+
+        <PasswordEmailMatch
           isVisible={this.state.showPasswordEmailMatch}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
-          onBackButtonPress={() =>
-            this.setState({ showPasswordEmailMatch: false })
-          }
-        >
-          <PasswordEmailMatch
-            errorMessage={this.state.loginErrorMessage}
-            hidePasswordEmailMatch={() => {
-              this.setState({ showPasswordEmailMatch: false });
-            }}
-          />
-        </Modal>
+          errorMessage={this.state.loginErrorMessage}
+          hidePasswordEmailMatch={() => {
+            this.setState({ showPasswordEmailMatch: false });
+          }}
+        />
+
         <CustomModal
           ref={ref => {
             this.customModal = ref;

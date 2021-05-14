@@ -9,7 +9,6 @@ import {
   ActivityIndicator
 } from 'react-native';
 import Icon from '../../assets/icons.js';
-import Modal from 'react-native-modal';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import AddToCalendar from '../../modals/AddToCalendar';
 import { addToMyList, removeFromMyList } from '../../services/UserActions';
@@ -309,7 +308,7 @@ export default class Schedule extends React.Component {
             }}
           />
         </View>
-        <Modal
+        <AddToCalendar
           isVisible={this.state.addToCalendarModal}
           hideAddToCalendar={() => this.setState({ addToCalendarModal: false })}
           addEventToCalendar={() => {

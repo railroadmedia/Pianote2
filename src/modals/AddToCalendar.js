@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import Icon from '../assets/icons';
-import Modal from 'react-native-modal';
 
 const onTablet = global.onTablet;
 
@@ -9,7 +8,8 @@ export default class AddToCalendar extends React.Component {
   render = () => {
     return (
       <Modal
-        isVisible={this.props.isVisible}
+        visible={this.props.isVisible}
+        transparent={true}
         style={styles.modalContainer}
         animation={'slideInUp'}
         animationInTiming={250}
@@ -18,7 +18,7 @@ export default class AddToCalendar extends React.Component {
         hasBackdrop={true}
       >
         <TouchableOpacity
-          style={[styles.centerContent, styles.container]}
+          style={[styles.centerContent, localStyles.modalContainer]}
           activeOpacity={1}
           onPress={() => this.props.hideAddToCalendar()}
         >
@@ -66,6 +66,10 @@ export default class AddToCalendar extends React.Component {
 }
 
 const localStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
   container: {
     backgroundColor: 'white',
     paddingBottom: 15,

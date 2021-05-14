@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  StyleSheet
-} from 'react-native';
-import Modal from 'react-native-modal';
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 
 const onTablet = global.onTablet;
 
@@ -22,17 +15,16 @@ export default class RestartCourse extends React.Component {
     const { type } = this.props;
     return (
       <Modal
-        isVisible={this.props.isVisible}
-        style={styles.modalContainer}
+        visible={this.props.isVisible}
+        transparent={true}
         animation={'slideInUp'}
         animationInTiming={250}
         animationOutTiming={250}
-        coverScreen={true}
         hasBackdrop={true}
       >
-        <TouchableWithoutFeedback
+        <TouchableOpacity
           onPress={() => this.props.hideRestartCourse()}
-          style={styles.container}
+          style={[styles.centerContent, localStyles.modalContainer]}
         >
           <View style={[styles.centerContent, styles.container]}>
             <View style={localStyles.container}>
@@ -80,13 +72,17 @@ export default class RestartCourse extends React.Component {
               </TouchableOpacity>
             </View>
           </View>
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
       </Modal>
     );
   };
 }
 
 const localStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
   container: {
     borderRadius: 10,
     margin: 50,

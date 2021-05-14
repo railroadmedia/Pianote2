@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Dimensions,
-  SafeAreaView
+  SafeAreaView,
+  Modal
 } from 'react-native';
-import Modal from 'react-native-modal';
 import SoundSlice from '../../components/SoundSlice.js';
 import Icon from '../../assets/icons.js';
 import AssignmentResource from './AssignmentResource.js';
@@ -298,25 +298,16 @@ export default class Assignment extends React.Component {
             </TouchableOpacity>
           </SafeAreaView>
         )}
-        <Modal
+
+        <SoundSlice
           isVisible={this.state.showSoundSlice}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={350}
-          animationOutTiming={350}
-          coverScreen={true}
-          hasBackdrop={true}
-          onBackButtonPress={() => this.setState({ showSoundSlice: false })}
-        >
-          <SoundSlice
-            hideSoundSlice={() => {
-              this.setState({
-                showSoundSlice: false
-              });
-            }}
-            slug={slug}
-          />
-        </Modal>
+          hideSoundSlice={() => {
+            this.setState({
+              showSoundSlice: false
+            });
+          }}
+          slug={slug}
+        />
       </>
     );
   }

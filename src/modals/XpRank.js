@@ -4,7 +4,8 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Dimensions
+  Dimensions,
+  Modal
 } from 'react-native';
 import ProgressCircle from 'react-native-progress-circle';
 
@@ -43,37 +44,49 @@ export default class XpRank extends React.Component {
 
   render = () => {
     return (
-      <TouchableOpacity
-        style={[styles.centerContent, localStyles.modalContainer]}
-        activeOpacity={1}
-        onPress={() => this.props.hideXpRank()}
+      <Modal
+        transparent={true}
+        visible={true}
+        style={styles.modalContainer}
+        animation={'slideInUp'}
+        animationInTiming={250}
+        animationOutTiming={250}
+        coverScreen={true}
+        hasBackdrop={true}
+        onBackButtonPress={() => this.props.hideXpRank()}
       >
-        <View style={[localStyles.container, styles.centerContent]}>
-          <Text style={[styles.modalHeaderText, localStyles.title]}>
-            Your XP Rank
-          </Text>
-          <Text style={[styles.modalBodyText, localStyles.description]}>
-            You earn XP by completing lessons,{'\n'}
-            commenting on videos and more!
-          </Text>
-          <ProgressCircle
-            percent={this.rankProgress()}
-            radius={(onTablet ? 0.2 : 0.27) * Dimensions.get('window').width}
-            borderWidth={5}
-            shadowColor={'pink'}
-            color={'red'}
-            bgColor={'white'}
-          >
-            <Text style={localStyles.XPtext}>
-              {Number(this.props.xp).toLocaleString()}
+        <TouchableOpacity
+          style={[styles.centerContent, localStyles.modalContainer]}
+          activeOpacity={1}
+          onPress={() => this.props.hideXpRank()}
+        >
+          <View style={[localStyles.container, styles.centerContent]}>
+            <Text style={[styles.modalHeaderText, localStyles.title]}>
+              Your XP Rank
             </Text>
-            <Text style={localStyles.rankText}>{this.props.rank}</Text>
-          </ProgressCircle>
-          <Text style={[styles.modalBodyText, localStyles.nextRank]}>
-            Next rank: {this.nextRank()}
-          </Text>
-        </View>
-      </TouchableOpacity>
+            <Text style={[styles.modalBodyText, localStyles.description]}>
+              You earn XP by completing lessons,{'\n'}
+              commenting on videos and more!
+            </Text>
+            <ProgressCircle
+              percent={this.rankProgress()}
+              radius={(onTablet ? 0.2 : 0.27) * Dimensions.get('window').width}
+              borderWidth={5}
+              shadowColor={'pink'}
+              color={'red'}
+              bgColor={'white'}
+            >
+              <Text style={localStyles.XPtext}>
+                {Number(this.props.xp).toLocaleString()}
+              </Text>
+              <Text style={localStyles.rankText}>{this.props.rank}</Text>
+            </ProgressCircle>
+            <Text style={[styles.modalBodyText, localStyles.nextRank]}>
+              Next rank: {this.nextRank()}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     );
   };
 }

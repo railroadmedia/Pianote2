@@ -8,9 +8,9 @@ import {
   ActivityIndicator,
   Dimensions,
   ImageBackground,
-  StatusBar
+  StatusBar,
+  Modal
 } from 'react-native';
-import Modal from 'react-native-modal';
 import { Download_V2 } from 'RNDownload';
 import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
@@ -44,6 +44,7 @@ export default class SinglePack extends React.Component {
     super(props);
     this.state = {
       showInfo: false,
+      showRestartCourse: false,
       isDisplayingLessons: true,
       videos: [],
       id: '',
@@ -632,7 +633,8 @@ export default class SinglePack extends React.Component {
 
         <NavigationBar currentPage={'SINGLEPACK'} />
         <Modal
-          isVisible={this.state.showResDownload}
+          visible={this.state.showResDownload}
+          transparent={true}
           onDismiss={() => this.modalDismissed}
           style={[
             styles.modalContainer,
