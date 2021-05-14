@@ -651,8 +651,7 @@ export default class SinglePack extends React.Component {
                 {
                   showResDownload: false
                 },
-                () =>
-                  Platform.OS === 'ios' ? (this.modalDismissed = res) : res()
+                () => (isiOS ? (this.modalDismissed = res) : res())
               )
             )
           }

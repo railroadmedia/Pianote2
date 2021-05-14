@@ -18,9 +18,9 @@ import { cacheStudentFocus } from '../../redux/StudentFocusCacheActions';
 import Pianote from '../../assets/img/svgs/pianote';
 import { NetworkContext } from '../../context/NetworkProvider';
 import RNFetchBlob from 'rn-fetch-blob';
+import { navigate, reset } from '../../../AppNavigator';
 import commonService from '../../services/common.service';
 import navigationService from '../../services/navigation.service';
-import { navigate, reset } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -45,6 +45,8 @@ const cache = [
 class LoadPage extends React.Component {
   static contextType = NetworkContext;
   async componentDidMount() {
+    //requestTrackingPermission();
+
     Download_V2.resumeAll()?.then(async () => {
       this.loadCache();
       await SplashScreen.hide();

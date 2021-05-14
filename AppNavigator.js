@@ -14,13 +14,13 @@ import PathOverview from './src/views/content/PathOverview';
 import SinglePack from './src/views/content/SinglePack';
 import Downloads from './src/views/content/Downloads';
 import Lessons from './src/views/content/Lessons';
+import Live from './src/views/content/Live';
 import SeeAll from './src/views/content/SeeAll';
 import Course from './src/views/content/Course';
 import MyList from './src/views/content/MyList';
 import Search from './src/views/content/Search';
 import Method from './src/views/content/Method';
 import Packs from './src/views/content/Packs';
-import Live from './src/views/content/Live';
 import MethodLevel from './src/views/content/MethodLevel';
 import Foundations from './src/views/content/Foundations';
 
@@ -146,9 +146,9 @@ export default () => (
         <Stack.Screen name='STUDENTFOCUSSHOW' component={StudentFocusShow} />
         <Stack.Screen name='ASSIGNMENT' component={Assignment} />
         <Stack.Screen name='METHODLEVEL' component={MethodLevel} />
+        <Stack.Screen name='METHOD' component={Method} />
         <Stack.Screen name='LIVE' component={Live} />
         <Stack.Screen name='SCHEDULE' component={Schedule} />
-        <Stack.Screen name='METHOD' component={Method} />
         <Stack.Screen name='FOUNDATIONS' component={Foundations} />
         <Stack.Screen name='PATHOVERVIEW' component={PathOverview} />
         <Stack.Screen name='SONGCATALOG' component={SongCatalog} />

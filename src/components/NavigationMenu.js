@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  View,
   Text,
   TouchableOpacity,
   StyleSheet,
@@ -177,10 +176,12 @@ export default class NavigationMenu extends React.Component {
         ]}
       >
         <ScrollView
-          showsVerticalScrollIndicator={false}
+          indicatorStyle={'white'}
+          showsVerticalScrollIndicator={true}
           style={{
             flex: 1,
-            maxHeight: (height / 10) * 7
+            maxHeight: (height / 10) * 7,
+            width: '100%'
           }}
         >
           {this.lessonNav()}

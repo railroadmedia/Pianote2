@@ -2,6 +2,7 @@ import React from 'react';
 import {
   View,
   StatusBar,
+  Image,
   StyleSheet,
   Text,
   FlatList,
@@ -16,9 +17,9 @@ import Modal from 'react-native-modal';
 import DeviceInfo from 'react-native-device-info';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import NavigationBar from '../../components/NavigationBar.js';
+import CountDown from '../../components/CountDown';
 import FastImage from 'react-native-fast-image';
-import PasswordVisible from '../../assets/img/svgs/passwordVisible.svg';
-import LinearGradient from 'react-native-linear-gradient';
+import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import { MusoraChat, watchersListener } from 'MusoraChat';
 import { getLiveScheduleContent } from '../../services/GetContent';
 import {
@@ -34,7 +35,6 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import { goBack } from '../../../AppNavigator';
 import { getLiveContent } from '../../../src/services/GetContent';
 
-const day = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
 const month = [
   'January',
   'February',
@@ -60,46 +60,28 @@ export default class Live extends React.Component {
       liveLesson: [],
       isLoadingAll: true,
       isLive: false,
+      items: [],
+      liveLesson: null,
+      timeDiffLive: '',
       addToCalendarModal: false,
-      liveViewers: 0,
-      month: ''
+      liveViewers: 0
     };
   }
 
   componentDidMount = async () => {
     BackHandler.addEventListener('hardwareBackPress', this.onBack);
     await this.getLiveContent();
-    let response = await getLiveScheduleContent();
-
+    let items = await getLiveScheduleContent();
     for (i in response) {
-      let time = response[i].live_event_start_time
-        ? response[i].live_event_start_time
-        : response[i].published_on;
-      let date = new Date(time + ' UTC').getTime();
-      let d = new Date(date);
-      let amPM = 'AM';
-
-      if (this.state.month === '' && d instanceof Date && !isNaN(d.valueOf())) {
-        this.setState({ month: d.getMonth() });
-      }
-      if (d.getHours() > 11) {
-        amPM = 'PM';
-      }
-
-      response[i].timeData = {
-        minutes: d.getMinutes(),
-        hours: d.getHours() > 12 ? d.getHours() - 12 : d.getHours(),
-        day: d.getDay(),
-        date: d.getDate(),
-        month: d.getMonth(),
-        amPM
-      };
+      let time = response[i].live_event_start_time || response[i].published_on;
+      let d = new Date(time + ' UTC');
+      response[i].timeData = { month: d.getMonth() };
     }
 
     this.setState({
-      items: response,
+      items,
       isLoadingAll: false,
-      isLive: this.state.liveLesson[0]?.isLive
+      isLive: this.state.liveLesson?.isLive
     });
   };
 
@@ -108,81 +90,46 @@ export default class Live extends React.Component {
   }
 
   async getLiveContent() {
-    let content = [await getLiveContent()];
-    this.content = content[0];
-
-    let [{ apiKey, chatChannelName, userId, token }] = content;
-    watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
-      this.setState({ liveViewers })
-    ).then(rwl => (this.removeWatchersListener = rwl));
-
+    let content = await getLiveContent();
+    this.content = content;
     let timeNow = Math.floor(Date.now() / 1000);
     let timeLive =
-      new Date(content[0].live_event_start_time + ' UTC').getTime() / 1000;
+      new Date(content.live_event_start_time + ' UTC').getTime() / 1000;
     let timeDiff = timeLive - timeNow;
-    let hours = Math.floor(timeDiff / 3600);
-    let minutes = Math.floor((timeDiff - hours * 3600) / 60);
-    let seconds = timeDiff - hours * 3600 - minutes * 60;
-
-    if (timeDiff < 4 * 3600) {
-      this.setState({
-        liveLesson: content,
-        timeDiffLive: {
-          timeDiff,
-          hours,
-          minutes,
-          seconds
-        }
-      });
-
-      if (!content[0].isLive) {
-        this.interval = setInterval(() => this.timer(), 1000);
-      }
+    if (timeDiff < 1800) {
+      // if 30 minutes to go show live lesson and setup chat
+      this.setState({ liveLesson: content, timeDiffLive: timeDiff });
+      let { apiKey, chatChannelName, userId, token } = content;
+      watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
+        this.setState({ liveViewers })
+      ).then(rwl => (this.removeWatchersListener = rwl));
     }
   }
-
-  timer() {
-    let timeNow = Math.floor(Date.now() / 1000);
-    let timeLive =
-      new Date(
-        this.state.liveLesson[0].live_event_start_time + ' UTC'
-      ).getTime() / 1000;
-    let timeDiff = timeLive - timeNow;
-    let hours = Math.floor(timeDiff / 3600);
-    let minutes = Math.floor((timeDiff - hours * 3600) / 60);
-    let seconds = timeDiff - hours * 3600 - minutes * 60;
-
-    this.setState({
-      timeDiffLive: {
-        timeDiff,
-        hours,
-        minutes,
-        seconds
-      }
-    });
-
-    if (timeDiff < 0) {
-      // if time ran out show reminder, get rid of timer
-      this.setState({ isLive: true });
-      clearInterval(this.interval);
-    }
-  }
-
-  onBack = () => goBack();
 
   changeType = word => {
-    try {
-      word = word.replace(/[- )(]/g, ' ').split(' ');
-    } catch {}
+    if (word) {
+      try {
+        word = word.replace(/[- )(]/g, ' ').split(' ');
+      } catch {}
 
-    let string = '';
+      let string = '';
 
-    for (i in word) {
-      string = string + word[i] + ' ';
+      for (let i = 0; i < word.length; i++) {
+        if (word[i] !== 'and') {
+          word[i] = word[i][0].toUpperCase() + word[i].substr(1);
+        }
+      }
+
+      for (i in word) {
+        string = string + word[i];
+        if (Number(i) < word.length - 1) string = string + ' / ';
+      }
+
+      return string;
     }
-
-    return string;
   };
+
+  onBack = () => goBack();
 
   addEventToCalendar = () => {
     const eventConfig = {
@@ -199,39 +146,34 @@ export default class Live extends React.Component {
       .catch(e => {});
   };
 
-  addToMyList = (contentID, type) => {
+  addToMyList = async (contentID, type) => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+
     if (type === 'live') {
-      let liveLesson = Object.assign([], this.state.liveLesson);
-      liveLesson[0].is_added_to_primary_playlist = true;
-      this.setState({ liveLesson });
+      this.state.liveLesson.is_added_to_primary_playlist = true;
     } else {
-      for (i in this.state.items) {
-        if (this.state.items[i].id === contentID) {
-          let items = Object.assign([], this.state.items);
-          items[i].is_added_to_primary_playlist = true;
-          this.setState({ items });
-        }
-      }
+      this.state.items.find(
+        item => item.id == contentID
+      ).is_added_to_primary_playlist = true;
     }
+
+    this.setState({
+      items: this.state.items,
+      liveLesson: this.state.liveLesson
+    });
 
     addToMyList(contentID);
   };
 
   removeFromMyList = (contentID, type) => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+
     if (type === 'live') {
-      let liveLesson = Object.assign([], this.state.liveLesson);
-      liveLesson[0].is_added_to_primary_playlist = false;
-      this.setState({ liveLesson });
+      this.state.liveLesson.is_added_to_primary_playlist = false;
     } else {
-      for (i in this.state.items) {
-        if (this.state.items[i].id === contentID) {
-          let items = Object.assign([], this.state.items);
-          items[i].is_added_to_primary_playlist = false;
-          this.setState({ items });
-        }
-      }
+      this.state.items.find(
+        item => item.id == contentID
+      ).is_added_to_primary_playlist = false;
     }
 
     this.setState({
@@ -240,6 +182,19 @@ export default class Live extends React.Component {
     });
 
     removeFromMyList(contentID);
+  };
+
+  checkShouldRender = item => {
+    for (i in this.state.items) {
+      if (this.state.items[i].id == item.id) {
+        if (Number(i) === 0) return true;
+        else if (
+          item.timeData.month !== this.state.items[Number(i) - 1].timeData.month
+        ) {
+          return true;
+        } else return false;
+      }
+    }
   };
 
   render() {
@@ -252,7 +207,7 @@ export default class Live extends React.Component {
     } = this.content;
     return (
       <>
-        {this.state.liveLesson.length > 0 ? (
+        {this.state.liveLesson && this.state.timeDiffLive < 1800 ? (
           <View
             style={{
               backgroundColor: colors.mainBackground,
@@ -261,8 +216,8 @@ export default class Live extends React.Component {
           >
             {/* COUNTDOWN or LIVE SCREEN */}
             <>
-              {this.state.timeDiffLive.timeDiff > 0 &&
-              this.state.timeDiffLive.timeDiff < 3600 * 4 ? (
+              {this.state.timeDiffLive > 0 ? (
+                // UPCOMING EVENT (< 30 mins)
                 <>
                   <SafeAreaView
                     style={{
@@ -270,172 +225,20 @@ export default class Live extends React.Component {
                     }}
                   >
                     <View style={{ width: '100%' }}>
-                      <View
-                        style={[
-                          styles.centerContent,
-                          {
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '100%',
-                            height: '100%',
-                            zIndex: 1
+                      {this.state.liveLesson?.live_event_start_time && (
+                        <CountDown
+                          onLivePage={true}
+                          timesUp={() =>
+                            this.setState({
+                              showLive: true,
+                              timeDiffLive: 0
+                            })
                           }
-                        ]}
-                      >
-                        <View
-                          style={[
-                            styles.centerContent,
-                            {
-                              height: '100%',
-                              width: '100%',
-                              borderRadius: 10
-                            }
-                          ]}
-                        >
-                          <LinearGradient
-                            colors={[
-                              'transparent',
-                              'rgba(20, 20, 20, 0.5)',
-                              'rgba(0, 0, 0, 1)'
-                            ]}
-                            style={{
-                              borderRadius: 0,
-                              width: '100%',
-                              height: '100%',
-                              position: 'absolute',
-                              left: 0,
-                              bottom: 0
-                            }}
-                          />
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontFamily: 'OpenSans-Bold',
-                              position: 'absolute',
-                              fontSize: onTablet ? 16 : 12,
-                              left: 5,
-                              top: 10
-                            }}
-                          >
-                            UPCOMING EVENT
-                          </Text>
-                          <Text>
-                            <View>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  fontSize: onTablet ? 60 : 40,
-                                  textAlign: 'center'
-                                }}
-                              >
-                                {this.state.timeDiffLive?.hours}
-                              </Text>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  top: 0,
-                                  textAlign: 'center'
-                                }}
-                              >
-                                HOURS
-                              </Text>
-                            </View>
-                            <View>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  fontSize: onTablet ? 60 : 40
-                                }}
-                              >
-                                {' '}
-                                :{' '}
-                              </Text>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  top: 0,
-                                  textAlign: 'center',
-                                  color: 'transparent'
-                                }}
-                              >
-                                h
-                              </Text>
-                            </View>
-                            <View>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  fontSize: onTablet ? 60 : 40,
-                                  textAlign: 'center'
-                                }}
-                              >
-                                {this.state.timeDiffLive?.minutes}
-                              </Text>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  top: 0,
-                                  textAlign: 'center'
-                                }}
-                              >
-                                MINUTES
-                              </Text>
-                            </View>
-                            <View>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  fontSize: onTablet ? 60 : 40
-                                }}
-                              >
-                                {' '}
-                                :{' '}
-                              </Text>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  top: 0,
-                                  textAlign: 'center',
-                                  color: 'transparent'
-                                }}
-                              >
-                                h
-                              </Text>
-                            </View>
-                            <View>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  fontSize: onTablet ? 60 : 40,
-                                  textAlign: 'center'
-                                }}
-                              >
-                                {this.state.timeDiffLive?.seconds}
-                              </Text>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'OpenSans-Bold',
-                                  top: 0,
-                                  textAlign: 'center'
-                                }}
-                              >
-                                SECONDS
-                              </Text>
-                            </View>
-                          </Text>
-                        </View>
-                      </View>
+                          live_event_start_time={
+                            this.state.liveLesson.live_event_start_time
+                          }
+                        />
+                      )}
                       <View style={{ width: '100%' }}>
                         {isiOS ? (
                           <FastImage
@@ -445,14 +248,13 @@ export default class Live extends React.Component {
                               aspectRatio: 16 / 9
                             }}
                             source={{
-                              uri:
-                                this.state.liveLesson[0].thumbnail_url !== 'TBD'
-                                  ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                      (Dimensions.get('window').width - 20) * 2
-                                    )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
-                                      this.state.liveLesson[0].thumbnail_url
-                                    }`
-                                  : fallbackThumb
+                              uri: this.state.liveLesson?.thumbnail_url
+                                ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                                    (Dimensions.get('window').width - 20) * 2
+                                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
+                                    this.state.liveLesson?.thumbnail_url
+                                  }`
+                                : fallbackThumb
                             }}
                             resizeMode={FastImage.resizeMode.cover}
                           />
@@ -465,14 +267,13 @@ export default class Live extends React.Component {
                             }}
                             resizeMode='cover'
                             source={{
-                              uri:
-                                this.state.liveLesson[0].thumbnail_url !== 'TBD'
-                                  ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                      (Dimensions.get('window').width - 20) * 2
-                                    )},ar_16:9},fl_lossy,q_auto:eco,c_fill,g_face/${
-                                      this.state.liveLesson[0].thumbnail_url
-                                    }`
-                                  : fallbackThumb
+                              uri: this.state.liveLesson?.thumbnail_url
+                                ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                                    (Dimensions.get('window').width - 20) * 2
+                                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
+                                    this.state.liveLesson?.thumbnail_url
+                                  }`
+                                : fallbackThumb
                             }}
                           />
                         )}
@@ -510,53 +311,44 @@ export default class Live extends React.Component {
                             }}
                           >
                             {this.changeType(
-                              this.state.liveLesson[0].instructors
+                              this.state.liveLesson?.instructors
                             )}
                           </Text>
                         </View>
                       </View>
-                      <TouchableOpacity
-                        onPress={() =>
-                          !this.state.liveLesson[0].is_added_to_primary_playlist
-                            ? this.addToMyList(
-                                this.state.liveLesson[0]?.id,
-                                'live'
-                              )
-                            : this.removeFromMyList(
-                                this.state.liveLesson[0]?.id,
-                                'live'
-                              )
-                        }
-                      >
-                        <AntIcon
-                          name={
-                            !this.state.liveLesson[0]
-                              .is_added_to_primary_playlist
-                              ? 'plus'
-                              : 'close'
+                      {!this.state.liveLesson.is_added_to_primary_playlist ? (
+                        <TouchableOpacity
+                          onPress={() =>
+                            this.addToMyList(this.state.liveLesson?.id, 'live')
                           }
-                          size={sizing.myListButtonSize}
-                          color={colors.pianoteRed}
-                        />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={{ paddingRight: 5 }}
-                        onPress={() => {
-                          this.addToCalendarLessonTitle = this.state.liveLesson[0].title;
-                          this.addToCalendatLessonPublishDate = this.state.liveLesson[0].live_event_start_time;
-                          this.setState({ addToCalendarModal: true });
-                        }}
-                      >
-                        <Icon.FontAwesome5
-                          size={sizing.infoButtonSize}
-                          name={'calendar-plus'}
-                          color={colors.pianoteRed}
-                        />
-                      </TouchableOpacity>
+                        >
+                          <AntIcon
+                            name={'plus'}
+                            size={sizing.myListButtonSize}
+                            color={colors.pianoteRed}
+                          />
+                        </TouchableOpacity>
+                      ) : (
+                        <TouchableOpacity
+                          onPress={() =>
+                            this.removeFromMyList(
+                              this.state.liveLesson?.id,
+                              'live'
+                            )
+                          }
+                        >
+                          <AntIcon
+                            name={'close'}
+                            size={sizing.myListButtonSize}
+                            color={colors.pianoteRed}
+                          />
+                        </TouchableOpacity>
+                      )}
                     </View>
                   </SafeAreaView>
                 </>
               ) : (
+                // LIVE PLAYER (0 minutes)
                 <>
                   {this.state.isLoadingAll ? (
                     <View style={{ backgroundColor: 'black' }}>
@@ -588,8 +380,7 @@ export default class Live extends React.Component {
                   ) : (
                     <>
                       <Video
-                        youtubeId={this.state.liveLesson[0]?.youtube_video_id}
-                        toSupport={() => {}}
+                        youtubeId={this.state.liveLesson?.youtube_video_id}
                         onRefresh={() => {}}
                         content={this.state}
                         maxFontMultiplier={1}
@@ -622,7 +413,7 @@ export default class Live extends React.Component {
                       <View
                         style={{
                           width: '100%',
-                          padding: 10,
+                          paddingHorizontal: 10,
                           flexDirection: 'row',
                           justifyContent: 'space-between',
                           alignItems: 'center'
@@ -633,7 +424,6 @@ export default class Live extends React.Component {
                             style={{
                               flexDirection: 'row',
                               width: 80,
-                              marginBottom: 5,
                               marginTop: 2
                             }}
                           >
@@ -648,7 +438,7 @@ export default class Live extends React.Component {
                                 numberOfLines={1}
                                 ellipsizeMode='tail'
                                 style={{
-                                  fontSize: onTablet ? 16 : 14,
+                                  fontSize: onTablet ? 14 : 12,
                                   fontFamily: 'OpenSans-Regular',
                                   color: 'white'
                                 }}
@@ -685,32 +475,36 @@ export default class Live extends React.Component {
                             </View>
                           </View>
                         </View>
-                        <TouchableOpacity
-                          onPress={() =>
-                            !this.state.liveLesson[0]
-                              .is_added_to_primary_playlist
-                              ? this.addToMyList(
-                                  this.state.liveLesson[0].id,
-                                  'live'
-                                )
-                              : this.removeFromMyList(
-                                  this.state.liveLesson[0].id,
-                                  'live'
-                                )
-                          }
-                          style={{ paddingRight: 2.5, paddingBottom: 25 }}
-                        >
-                          <Icon.AntDesign
-                            name={
-                              !this.state.liveLesson[0]
-                                .is_added_to_primary_playlist
-                                ? 'plus'
-                                : 'close'
+                        {!this.state.liveLesson.is_added_to_primary_playlist ? (
+                          <TouchableOpacity
+                            style={{ paddingRight: 2.5, paddingVertical: 5 }}
+                            onPress={() =>
+                              this.addToMyList(this.state.liveLesson.id, 'live')
                             }
-                            size={sizing.myListButtonSize}
-                            color={colors.pianoteRed}
-                          />
-                        </TouchableOpacity>
+                          >
+                            <AntIcon
+                              name={'plus'}
+                              size={sizing.myListButtonSize}
+                              color={colors.pianoteRed}
+                            />
+                          </TouchableOpacity>
+                        ) : (
+                          <TouchableOpacity
+                            style={{ paddingRight: 2.5, paddingBottom: 5 }}
+                            onPress={() =>
+                              this.removeFromMyList(
+                                this.state.liveLesson.id,
+                                'live'
+                              )
+                            }
+                          >
+                            <AntIcon
+                              name={'close'}
+                              size={sizing.myListButtonSize}
+                              color={colors.pianoteRed}
+                            />
+                          </TouchableOpacity>
+                        )}
                       </View>
                     </>
                   )}
@@ -763,24 +557,12 @@ export default class Live extends React.Component {
               extraData={this.state}
               keyExtractor={item => item.id.toString()}
               style={styles.mainContainer}
-              ListHeaderComponent={() => (
-                <Text
-                  style={{
-                    paddingLeft: 10,
-                    paddingTop: 10,
-                    color: colors.secondBackground,
-                    fontSize: onTablet ? 14 : 12
-                  }}
-                >
-                  {month[this.state.month]}
-                </Text>
-              )}
               ListEmptyComponent={() =>
                 this.state.isLoadingAll ? (
                   <ActivityIndicator
                     size={'small'}
                     style={{
-                      flex: 1,
+                      padding: 50,
                       justifyContent: 'center',
                       alignItems: 'center'
                     }}
@@ -801,127 +583,152 @@ export default class Live extends React.Component {
               }
               renderItem={({ item }) => {
                 let type = item.lesson ? 'lesson' : 'overview';
+                let date = new Date(
+                  `${item?.live_event_start_time || item?.published_on} UTC`
+                );
                 return (
-                  <TouchableOpacity
-                    style={{
-                      padding: 10,
-                      flexDirection: 'row',
-                      height: 80
-                    }}
-                  >
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          width: '26%',
-                          aspectRatio: 16 / 9,
-                          backgroundColor: 'black',
-                          borderRadius: 10,
-                          marginRight: 10
-                        }
-                      ]}
-                    >
+                  <>
+                    {this.checkShouldRender(item) && (
                       <Text
-                        numberOfLines={1}
                         style={{
-                          fontSize: sizing.descriptionText,
-                          color: 'white',
-                          textAlign: 'left',
-                          fontFamily: 'OpenSans-Bold',
-                          textAlign: 'center'
+                          padding: 10,
+                          color: colors.secondBackground,
+                          fontSize: onTablet ? 14 : 12
                         }}
                       >
-                        {day[item.timeData.day]} {item.timeData.date}
+                        {month[item.timeData.month]}
                       </Text>
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          fontSize: sizing.descriptionText,
-                          color: 'white',
-                          textAlign: 'left',
-                          fontFamily: 'OpenSans-Regular',
-                          textAlign: 'center'
-                        }}
-                      >
-                        {item.timeData.hours}:
-                        {item.timeData.minutes === 0
-                          ? '00'
-                          : item.timeData.minutes}
-                        {' ' + item.timeData.amPM}
-                      </Text>
-                    </View>
-                    <View
+                    )}
+                    <TouchableOpacity
                       style={{
-                        flex: 1,
-                        justifyContent: 'center'
+                        paddingHorizontal: 10,
+                        flexDirection: 'row',
+                        height: 80
                       }}
                     >
-                      <Text
-                        style={{
-                          fontSize: sizing.videoTitleText,
-                          marginBottom: 2,
-                          color: 'white',
-                          fontFamily: 'OpenSans-Bold'
-                        }}
-                      >
-                        {item.title}
-                      </Text>
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          fontSize: sizing.descriptionText,
-                          color: colors.secondBackground,
-                          textAlign: 'left',
-                          fontFamily: 'OpenSans-Regular',
-                          textTransform: 'capitalize'
-                        }}
-                      >
-                        {this.changeType(item.type)}
-                      </Text>
-                    </View>
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          paddingLeft: 20,
-                          flexDirection: 'row'
-                        }
-                      ]}
-                    >
-                      <TouchableOpacity
-                        onPress={() =>
-                          !item.is_added_to_primary_playlist
-                            ? this.addToMyList(item.id, 'schedule')
-                            : this.removeFromMyList(item.id, 'schedule')
-                        }
-                      >
-                        <AntIcon
-                          name={
-                            !item.is_added_to_primary_playlist
-                              ? 'plus'
-                              : 'close'
+                      <View
+                        style={[
+                          styles.centerContent,
+                          {
+                            width: '26%',
+                            aspectRatio: 16 / 9,
+                            backgroundColor: 'black',
+                            borderRadius: 10,
+                            marginRight: 10
                           }
-                          size={sizing.myListButtonSize}
-                          color={colors.pianoteRed}
-                        />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={{ marginLeft: 10 }}
-                        onPress={() => {
-                          this.addToCalendarLessonTitle = item.title;
-                          this.addToCalendatLessonPublishDate =
-                            item.live_event_start_time;
-                          this.setState({ addToCalendarModal: true });
+                        ]}
+                      >
+                        <Text
+                          numberOfLines={1}
+                          style={{
+                            fontSize: sizing.descriptionText,
+                            color: 'white',
+                            textAlign: 'left',
+                            fontFamily: 'OpenSans-Bold',
+                            textAlign: 'center'
+                          }}
+                        >
+                          {date.toLocaleString([], { weekday: 'short' })}{' '}
+                          {date.getDate()}
+                        </Text>
+                        <Text
+                          numberOfLines={1}
+                          style={{
+                            fontSize: sizing.descriptionText,
+                            color: 'white',
+                            textAlign: 'left',
+                            fontFamily: 'OpenSans-Regular',
+                            textAlign: 'center'
+                          }}
+                        >
+                          {date.toLocaleString([], {
+                            hour: 'numeric',
+                            minute: '2-digit'
+                          })}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          flex: 1,
+                          justifyContent: 'center'
                         }}
                       >
-                        <FontIcon
-                          size={sizing.infoButtonSize}
-                          name={'calendar-plus'}
-                          color={colors.pianoteRed}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </TouchableOpacity>
+                        <Text
+                          style={{
+                            fontSize: sizing.videoTitleText,
+                            marginBottom: 2,
+                            color: 'white',
+                            fontFamily: 'OpenSans-Bold'
+                          }}
+                        >
+                          {item.title}
+                        </Text>
+                        <Text
+                          numberOfLines={1}
+                          style={{
+                            fontSize: sizing.descriptionText,
+                            color: colors.secondBackground,
+                            textAlign: 'left',
+                            fontFamily: 'OpenSans-Regular',
+                            textTransform: 'capitalize'
+                          }}
+                        >
+                          {item?.type.toString().replace(/-/g, ' ')}
+                        </Text>
+                      </View>
+                      <View
+                        style={[
+                          styles.centerContent,
+                          {
+                            paddingLeft: 20,
+                            flexDirection: 'row'
+                          }
+                        ]}
+                      >
+                        {!item.is_added_to_primary_playlist ? (
+                          <TouchableOpacity
+                            onPress={() =>
+                              this.addToMyList(item.id, 'schedule')
+                            }
+                          >
+                            <AntIcon
+                              name={'plus'}
+                              size={sizing.myListButtonSize}
+                              color={colors.pianoteRed}
+                            />
+                          </TouchableOpacity>
+                        ) : (
+                          <TouchableOpacity
+                            onPress={() =>
+                              this.removeFromMyList(item.id, 'schedule')
+                            }
+                          >
+                            <AntIcon
+                              name={'close'}
+                              size={sizing.myListButtonSize}
+                              color={colors.pianoteRed}
+                            />
+                          </TouchableOpacity>
+                        )}
+
+                        <TouchableOpacity
+                          style={{ marginLeft: 10 }}
+                          onPress={() => {
+                            this.addToCalendarLessonTitle = item.title;
+                            this.addToCalendatLessonPublishDate =
+                              item.live_event_start_time;
+                            this.setState({ addToCalendarModal: true });
+                          }}
+                        >
+                          <FontIcon
+                            size={sizing.infoButtonSize}
+                            name={'calendar-plus'}
+                            color={colors.pianoteRed}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </TouchableOpacity>
+                  </>
                 );
               }}
             />
@@ -941,5 +748,3 @@ export default class Live extends React.Component {
     );
   }
 }
-
-const localStyles = StyleSheet.create({});
