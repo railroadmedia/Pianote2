@@ -106,6 +106,16 @@ export async function isEmailUnique(email) {
   );
 }
 
+export async function updateName(name) {
+  return commonService.tryCall(
+    `${commonService.rootUrl}/musora-api/profile/update`,
+    'POST',
+    {
+      display_name: name
+    }
+  );
+}
+
 export async function logOut() {
   // return profile details
   try {

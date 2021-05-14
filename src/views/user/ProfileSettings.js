@@ -20,7 +20,11 @@ import commonService from '../../services/common.service.js';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import Loading from '../../components/Loading.js';
 import { goBack, reset } from '../../../AppNavigator.js';
-import { isNameUnique, avatarUpload } from '../../services/UserDataAuth.js';
+import {
+  isNameUnique,
+  updateName,
+  avatarUpload
+} from '../../services/UserDataAuth.js';
 
 const isTablet = global.onTablet;
 
@@ -69,13 +73,7 @@ export default class ProfileSettings extends React.Component {
     let response = await isNameUnique(this.state.displayName);
 
     if (response.unique) {
-      let nameResponse = await commonService.tryCall(
-        `${commonService.rootUrl}/musora-api/profile/update`,
-        'POST',
-        {
-          display_name: this.state.displayName
-        }
-      );
+      await updateName(this.state.displayName);
       await AsyncStorage.setItem('displayName', this.state.displayName);
       reset('PROFILE');
     } else {
