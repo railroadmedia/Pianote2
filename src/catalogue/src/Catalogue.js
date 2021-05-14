@@ -114,8 +114,6 @@ export default class Catalogue extends React.Component {
         return this.props.onNavigateToMethodLesson(next_lesson);
       case 'method':
         return this.props.onNavigateToMethod(started, completed);
-      case 'seeAll':
-        return this.props.onNavigateToSeeAll();
       default:
         return this.props.onNavigateToCard(path);
     }
@@ -282,7 +280,9 @@ export default class Catalogue extends React.Component {
           <>
             <View style={styles.flSectionHeaderContainer}>
               <Text style={styles.flSectionHeaderText}>IN PROGRESS</Text>
-              <TouchableOpacity onPress={() => this.navigateTo('seeAll')}>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('SEEALL')}
+              >
                 <Text style={{ fontSize: 14, color: '#fb1b2f' }}>See All</Text>
               </TouchableOpacity>
             </View>
@@ -366,7 +366,7 @@ export default class Catalogue extends React.Component {
         ) : (
           <FlatList
             windowSize={10}
-            data={data.all || Object.values(data.studentFocus)}
+            data={data.all || Object.values(data.studentFocus || {})}
             style={{ flex: 1, backgroundColor }}
             initialNumToRender={1}
             maxToRenderPerBatch={10}

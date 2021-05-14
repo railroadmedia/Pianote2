@@ -7,7 +7,7 @@ import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import Forum from './src/forum/index';
-import Catalogue from './src/catalogue/index';
+import Catalogue, { setCatalogueCommonService } from './src/catalogue/index';
 
 // content
 import VideoPlayerSong from './src/views/content/VideoPlayerSong';
@@ -16,7 +16,6 @@ import VideoPlayer from './src/views/content/VideoPlayer';
 import PathOverview from './src/views/content/PathOverview';
 import SinglePack from './src/views/content/SinglePack';
 import Downloads from './src/views/content/Downloads';
-import SeeAll from './src/views/content/SeeAll';
 import MyList from './src/views/content/MyList';
 import Search from './src/views/content/Search';
 import Method from './src/views/content/Method';
@@ -54,13 +53,8 @@ import CombinedContexts, { Contexts } from './src/context/CombinedContexts';
 import NavMenuHeaders from './src/components/NavMenuHeaders';
 import NavigationBar from './src/components/NavigationBar';
 
-/* prepare catalogue's services */
 import commonService from './src/services/common.service';
-import { commonService as catalogueCommonService } from './src/catalogue/index';
-catalogueCommonService.rootUrl = commonService.rootUrl;
-catalogueCommonService.tryCall = commonService.tryCall;
-catalogueCommonService.Contexts = Contexts;
-/* END */
+let { rootUrl, tryCall } = commonService;
 
 const Stack = createStackNavigator();
 
@@ -181,7 +175,6 @@ export default () => (
             />
             <Stack.Screen name='SINGLEPACK' component={SinglePack} />
             <Stack.Screen name='DOWNLOADS' component={Downloads} />
-            <Stack.Screen name='SEEALL' component={SeeAll} />
             <Stack.Screen name='MYLIST' component={MyList} />
             <Stack.Screen name='SEARCH' component={Search} />
             <Stack.Screen name='PACKS' component={Packs} />
@@ -190,8 +183,12 @@ export default () => (
               component={Forum}
               options={{ gestureEnabled: false }}
             />
+            {setCatalogueCommonService({ rootUrl, Contexts, tryCall })}
             <Stack.Screen name='HOME'>
               {props => Navigators('both', 'HOME', props)}
+            </Stack.Screen>
+            <Stack.Screen name='SEEALL'>
+              {props => Navigators('both', 'SEEALL', props)}
             </Stack.Screen>
             <Stack.Screen name='COURSES'>
               {props => Navigators('both', 'COURSES', props)}
@@ -231,9 +228,6 @@ function Navigators(mode, screen, props) {
             methodIsStarted: started,
             methodIsCompleted: completed
           })
-        }
-        onNavigateToSeeAll={() =>
-          navigate('SEEALL', { title: 'Continue', parent: this.scene })
         }
       />
       {!!mode.match(/^(both|bottom)$/) && (
