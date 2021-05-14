@@ -228,7 +228,7 @@ export default class ViewLesson extends React.Component {
           const comments = (
             await commentsService.getComments(this.state.id, 'Mine')
           ).data;
-          const selectedComment = comments?.find(f => f.id == commentId);
+          const selectedComment = comments?.find(f => f.id === commentId);
           if (selectedComment)
             this.replies?.toggle(() => this.setState({ selectedComment }));
         }
@@ -1908,7 +1908,7 @@ export default class ViewLesson extends React.Component {
                   />
                   <TouchableOpacity
                     style={{
-                      marginBottom: Platform.OS == 'android' ? 10 : 0,
+                      marginBottom: Platform.OS === 'android' ? 10 : 0,
                       marginLeft: 20
                     }}
                     onPress={() => this.makeComment()}

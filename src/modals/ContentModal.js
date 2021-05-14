@@ -17,7 +17,7 @@ import Icon from '../assets/icons';
 import { Download_V2 } from 'RNDownload';
 import contentService from '../services/content.service';
 
-const isTablet = global.onTablet;
+const onTablet = global.onTablet;
 
 export default class ContentModal extends React.Component {
   constructor(props) {
@@ -87,7 +87,7 @@ export default class ContentModal extends React.Component {
             <View
               style={[
                 localStyles.imageContainer,
-                { aspectRatio: this.state.type == 'song' ? 1 : 16 / 9 }
+                { aspectRatio: this.state.type === 'song' ? 1 : 16 / 9 }
               ]}
             >
               <FastImage
@@ -207,7 +207,7 @@ const localStyles = StyleSheet.create({
     backgroundColor: 'white'
   },
   imageContainer: {
-    width: isTablet ? '75%' : '95%',
+    width: onTablet ? '75%' : '95%',
     backgroundColor: 'white',
     zIndex: 10,
     marginTop: 10,
@@ -217,14 +217,14 @@ const localStyles = StyleSheet.create({
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
     paddingHorizontal: 10,
-    fontSize: isTablet ? 24 : 18,
+    fontSize: onTablet ? 24 : 18,
     textAlign: 'center',
     marginTop: 5
   },
   type: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'center',
-    fontSize: isTablet ? 16 : 12,
+    fontSize: onTablet ? 16 : 12,
     color: 'grey',
     marginVertical: 5,
     textTransform: 'capitalize'
@@ -237,17 +237,17 @@ const localStyles = StyleSheet.create({
     marginHorizontal: 10,
     fontFamily: 'OpenSans-Regular',
     paddingHorizontal: 5,
-    fontSize: isTablet ? 16 : 12,
+    fontSize: onTablet ? 16 : 12,
     textAlign: 'center'
   },
   myList: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 16 : 12,
+    fontSize: onTablet ? 16 : 12,
     textAlign: 'left'
   },
   likeCount: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 16 : 12,
+    fontSize: onTablet ? 16 : 12,
     textAlign: 'left'
   },
   likeContainer: {
@@ -260,25 +260,25 @@ const localStyles = StyleSheet.create({
   },
   XPtext: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 16 : 12,
+    fontSize: onTablet ? 16 : 12,
     textAlign: 'left',
     marginTop: 5
   },
   xp: {
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
-    fontSize: isTablet ? 24 : 18,
+    fontSize: onTablet ? 24 : 18,
     textAlign: 'left'
   },
   lessonCount: {
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
-    fontSize: isTablet ? 24 : 18,
+    fontSize: onTablet ? 24 : 18,
     textAlign: 'left'
   },
   lessons: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 16 : 12,
+    fontSize: onTablet ? 16 : 12,
     textAlign: 'left'
   }
 });

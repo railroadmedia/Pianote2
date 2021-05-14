@@ -157,7 +157,7 @@ export default class Profile extends React.Component {
         ? state.notifications.concat(notifications.data)
         : notifications.data,
       isLoading: false,
-      animateLoadMore: notifications.data?.length == 0 ? false : true
+      animateLoadMore: notifications.data?.length === 0 ? false : true
     }));
   }
 
@@ -185,28 +185,28 @@ export default class Profile extends React.Component {
 
   checkNotificationTypeStatus = item => {
     let type = messageDict[item.type].message;
-    if (type == 'replied to your comment.') {
+    if (type === 'replied to your comment.') {
       this.setState({
         clickedNotificationStatus: this.state.notify_on_lesson_comment_reply
       });
-    } else if (type == 'liked your comment.') {
+    } else if (type === 'liked your comment.') {
       this.setState({
         clickedNotificationStatus: this.state.notify_on_lesson_comment_like
       });
-    } else if (type == 'replied to your forum post.') {
+    } else if (type === 'replied to your forum post.') {
       this.setState({
         clickedNotificationStatus: this.state.notify_on_forum_post_reply
       });
-    } else if (type == 'liked your forum post.') {
+    } else if (type === 'liked your forum post.') {
       this.setState({
         clickedNotificationStatus: this.state.notify_on_forum_post_like
       });
-    } else if (type == 'post in followed thread.') {
+    } else if (type === 'post in followed thread.') {
       this.setState({
         clickedNotificationStatus: this.state
           .notify_on_forum_followed_thread_reply
       });
-    } else if (type == '') {
+    } else if (type === '') {
       this.setState({
         clickedNotificationStatus: this.state.notify_weekly_update
       });
@@ -394,7 +394,7 @@ export default class Profile extends React.Component {
                 onPress={() => this.openNotification(item)}
               >
                 <View style={localStyles.messageContainer}>
-                  {messageDict[item.type].color == 'red' && (
+                  {messageDict[item.type].color === 'red' && (
                     <View
                       style={[
                         styles.centerContent,
@@ -409,7 +409,7 @@ export default class Profile extends React.Component {
                       />
                     </View>
                   )}
-                  {messageDict[item.type].color == 'orange' && (
+                  {messageDict[item.type].color === 'orange' && (
                     <View
                       style={[
                         styles.centerContent,
@@ -424,7 +424,7 @@ export default class Profile extends React.Component {
                       />
                     </View>
                   )}
-                  {messageDict[item.type].color == 'blue' && (
+                  {messageDict[item.type].color === 'blue' && (
                     <View
                       style={[
                         styles.centerContent,
@@ -449,7 +449,7 @@ export default class Profile extends React.Component {
                     }}
                     source={{
                       uri:
-                        item.type == 'new content releases'
+                        item.type === 'new content releases'
                           ? item.content.thumbnail_url
                           : item.sender
                           ? item.sender.profile_image_url
@@ -468,7 +468,7 @@ export default class Profile extends React.Component {
                     <Text style={localStyles.boldNotificationText}>
                       {messageDict[item.type].new ? '' : 'NEW - '}
                     </Text>
-                    {item.type == 'new content releases'
+                    {item.type === 'new content releases'
                       ? item.content.display_name
                       : item.sender?.display_name}
                     <Text style={localStyles.messageTypeText}>

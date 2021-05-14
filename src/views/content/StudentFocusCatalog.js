@@ -97,8 +97,8 @@ class StudentFocusCatalog extends React.Component {
         style={{
           width: '50%',
           marginTop: '3%',
-          paddingLeft: index % 2 == 0 ? 10 : '1%',
-          paddingRight: index % 2 == 0 ? '1%' : 10
+          paddingLeft: index % 2 === 0 ? 10 : '1%',
+          paddingRight: index % 2 === 0 ? '1%' : 10
         }}
       >
         <FastImage

@@ -59,13 +59,13 @@ export default class CreateAccount3 extends React.Component {
 
   changePage = number => {
     let index = Math.round(number.nativeEvent.contentOffset.x / width);
-    if (index == 0) {
+    if (index === 0) {
       this.setState({ page: 1 });
-    } else if (index == 1) {
+    } else if (index === 1) {
       this.setState({ page: 2, canScroll: false });
-    } else if (index == 2) {
+    } else if (index === 2) {
       this.setState({ page: 3, canScroll: true });
-    } else if (index == 3) {
+    } else if (index === 3) {
       this.setState({ page: 4 });
     }
   };
@@ -171,7 +171,7 @@ export default class CreateAccount3 extends React.Component {
           // upload file
           let response = await avatarUpload(data);
           // if image is too large
-          if (response.status == 413) {
+          if (response.status === 413) {
             this.setState({ showProfileImage: true });
             return;
           }
@@ -282,7 +282,7 @@ export default class CreateAccount3 extends React.Component {
                     localStyles.setName,
                     {
                       backgroundColor:
-                        this.state.displayName.length == 0
+                        this.state.displayName.length === 0
                           ? 'transparent'
                           : '#fb1b2f'
                     }
@@ -303,7 +303,7 @@ export default class CreateAccount3 extends React.Component {
                         fontFamily: 'RobotoCondensed-Bold',
                         fontSize: sizing.titleViewLesson,
                         color:
-                          this.state.displayName.length == 0
+                          this.state.displayName.length === 0
                             ? '#fb1b2f'
                             : 'white'
                       }}
@@ -319,7 +319,7 @@ export default class CreateAccount3 extends React.Component {
                         localStyles.dot,
                         {
                           backgroundColor:
-                            this.state.page == 1 ? '#fb1b2f' : 'transparent'
+                            this.state.page === 1 ? '#fb1b2f' : 'transparent'
                         }
                       ]}
                     />
@@ -328,7 +328,7 @@ export default class CreateAccount3 extends React.Component {
                         localStyles.dot,
                         {
                           backgroundColor:
-                            this.state.page == 2 ? '#fb1b2f' : 'transparent'
+                            this.state.page === 2 ? '#fb1b2f' : 'transparent'
                         }
                       ]}
                     />
@@ -337,7 +337,7 @@ export default class CreateAccount3 extends React.Component {
                         localStyles.dot,
                         {
                           backgroundColor:
-                            this.state.page == 3 ? '#fb1b2f' : 'transparent'
+                            this.state.page === 3 ? '#fb1b2f' : 'transparent'
                         }
                       ]}
                     />
@@ -346,7 +346,7 @@ export default class CreateAccount3 extends React.Component {
                         localStyles.dot,
                         {
                           backgroundColor:
-                            this.state.page == 4 ? '#fb1b2f' : 'transparent'
+                            this.state.page === 4 ? '#fb1b2f' : 'transparent'
                         }
                       ]}
                     />
@@ -445,7 +445,7 @@ export default class CreateAccount3 extends React.Component {
                     borderColor: '#fb1b2f',
                     borderWidth: 1,
                     backgroundColor:
-                      this.state.imageURI.length == 0
+                      this.state.imageURI.length === 0
                         ? 'transparent'
                         : '#fb1b2f'
                   }}
@@ -475,7 +475,7 @@ export default class CreateAccount3 extends React.Component {
                         fontFamily: 'RobotoCondensed-Bold',
                         fontSize: sizing.titleViewLesson,
                         color:
-                          this.state.imageURI.length == 0 ? '#fb1b2f' : 'white'
+                          this.state.imageURI.length === 0 ? '#fb1b2f' : 'white'
                       }}
                     >
                       NEXT
@@ -491,7 +491,7 @@ export default class CreateAccount3 extends React.Component {
                         localStyles.dot,
                         {
                           backgroundColor:
-                            this.state.page == 1 ? '#fb1b2f' : 'transparent'
+                            this.state.page === 1 ? '#fb1b2f' : 'transparent'
                         }
                       ]}
                     />
@@ -500,7 +500,7 @@ export default class CreateAccount3 extends React.Component {
                         localStyles.dot,
                         {
                           backgroundColor:
-                            this.state.page == 2 ? '#fb1b2f' : 'transparent'
+                            this.state.page === 2 ? '#fb1b2f' : 'transparent'
                         }
                       ]}
                     />
@@ -509,7 +509,7 @@ export default class CreateAccount3 extends React.Component {
                         localStyles.dot,
                         {
                           backgroundColor:
-                            this.state.page == 3 ? '#fb1b2f' : 'transparent'
+                            this.state.page === 3 ? '#fb1b2f' : 'transparent'
                         }
                       ]}
                     />
@@ -518,7 +518,7 @@ export default class CreateAccount3 extends React.Component {
                         localStyles.dot,
                         {
                           backgroundColor:
-                            this.state.page == 4 ? '#fb1b2f' : 'transparent'
+                            this.state.page === 4 ? '#fb1b2f' : 'transparent'
                         }
                       ]}
                     />
@@ -720,7 +720,7 @@ export default class CreateAccount3 extends React.Component {
                     localStyles.dot,
                     {
                       backgroundColor:
-                        this.state.page == 1 ? '#fb1b2f' : 'transparent'
+                        this.state.page === 1 ? '#fb1b2f' : 'transparent'
                     }
                   ]}
                 />
@@ -729,7 +729,7 @@ export default class CreateAccount3 extends React.Component {
                     localStyles.dot,
                     {
                       backgroundColor:
-                        this.state.page == 2 ? '#fb1b2f' : 'transparent'
+                        this.state.page === 2 ? '#fb1b2f' : 'transparent'
                     }
                   ]}
                 />
@@ -738,7 +738,7 @@ export default class CreateAccount3 extends React.Component {
                     localStyles.dot,
                     {
                       backgroundColor:
-                        this.state.page == 3 ? '#fb1b2f' : 'transparent'
+                        this.state.page === 3 ? '#fb1b2f' : 'transparent'
                     }
                   ]}
                 />
@@ -747,7 +747,7 @@ export default class CreateAccount3 extends React.Component {
                     localStyles.dot,
                     {
                       backgroundColor:
-                        this.state.page == 4 ? '#fb1b2f' : 'transparent'
+                        this.state.page === 4 ? '#fb1b2f' : 'transparent'
                     }
                   ]}
                 />
@@ -877,7 +877,7 @@ export default class CreateAccount3 extends React.Component {
                       localStyles.dot,
                       {
                         backgroundColor:
-                          this.state.page == 1 ? '#fb1b2f' : 'transparent'
+                          this.state.page === 1 ? '#fb1b2f' : 'transparent'
                       }
                     ]}
                   />
@@ -886,7 +886,7 @@ export default class CreateAccount3 extends React.Component {
                       localStyles.dot,
                       {
                         backgroundColor:
-                          this.state.page == 2 ? '#fb1b2f' : 'transparent'
+                          this.state.page === 2 ? '#fb1b2f' : 'transparent'
                       }
                     ]}
                   />
@@ -895,7 +895,7 @@ export default class CreateAccount3 extends React.Component {
                       localStyles.dot,
                       {
                         backgroundColor:
-                          this.state.page == 3 ? '#fb1b2f' : 'transparent'
+                          this.state.page === 3 ? '#fb1b2f' : 'transparent'
                       }
                     ]}
                   />
@@ -904,7 +904,7 @@ export default class CreateAccount3 extends React.Component {
                       localStyles.dot,
                       {
                         backgroundColor:
-                          this.state.page == 4 ? '#fb1b2f' : 'transparent'
+                          this.state.page === 4 ? '#fb1b2f' : 'transparent'
                       }
                     ]}
                   />

@@ -113,7 +113,7 @@ export default class HorizontalVideoList extends React.Component {
   addToMyList = contentID => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     for (i in this.state.items) {
-      if (this.state.items[i].id == contentID) {
+      if (this.state.items[i].id === contentID) {
         let items = Object.assign([], this.state.items);
         items[i].isAddedToList = true;
         this.setState({ items });
@@ -125,7 +125,7 @@ export default class HorizontalVideoList extends React.Component {
   removeFromMyList = contentID => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     for (i in this.state.items) {
-      if (this.state.items[i].id == contentID) {
+      if (this.state.items[i].id === contentID) {
         let items = Object.assign([], this.state.items);
         items[i].isAddedToList = false;
         this.setState({ items });
@@ -138,7 +138,7 @@ export default class HorizontalVideoList extends React.Component {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
 
     for (i in this.state.items) {
-      if (this.state.items[i].id == contentID) {
+      if (this.state.items[i].id === contentID) {
         let items = Object.assign([], this.state.items);
         items[i].isLiked = !items[i].isLiked;
         items[i].like_count = items[i].isLiked
@@ -175,7 +175,7 @@ export default class HorizontalVideoList extends React.Component {
         });
       case 'song':
         if (content.lesson_count === 1)
-          return navigate('VIDEOPLAYER', {
+          return navigate('VIEWLESSON', {
             id: content.lessons?.[0]?.id
           });
         return navigate('PATHOVERVIEW', {

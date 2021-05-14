@@ -136,12 +136,12 @@ export default class Search extends React.Component {
     if (term.length > 0) {
       var isNewTerm = true;
 
-      if (this.state.searchResults == 0) {
+      if (this.state.searchResults === 0) {
         this.setState({ isLoadingAll: true });
       }
 
       for (i in this.state.recentSearchResults) {
-        if (this.state.recentSearchResults[i][0] == term) {
+        if (this.state.recentSearchResults[i][0] === term) {
           isNewTerm = false;
         }
       }
@@ -167,7 +167,7 @@ export default class Search extends React.Component {
         this.state.page,
         this.filterQuery
       );
-      if (response.data.length == 0) {
+      if (response.data.length === 0) {
         this.setState({
           searchEntered: false,
           isLoadingAll: false,
@@ -181,7 +181,7 @@ export default class Search extends React.Component {
         this.setState({
           searchResults: [...this.state.searchResults, ...newContent],
           outVideos:
-            newContent.length == 0 || newContent.length < 10 ? true : false,
+            newContent.length === 0 || newContent.length < 10 ? true : false,
           isLoadingAll: false,
           filtering: false,
           isPaging: false,
@@ -263,7 +263,7 @@ export default class Search extends React.Component {
                     name={'search'}
                     size={onTablet ? 35 : 25}
                     color={
-                      this.props.currentPage == 'SEARCH' ? '#fb1b2f' : 'grey'
+                      this.props.currentPage === 'SEARCH' ? '#fb1b2f' : 'grey'
                     }
                   />
                 </View>
@@ -335,7 +335,7 @@ export default class Search extends React.Component {
                 )}
               </View>
             </View>
-            {this.state.searchResults.length == 0 && (
+            {this.state.searchResults.length === 0 && (
               <View style={[styles.centerContent, styles.recentSearches]}>
                 {(!this.state.searchEntered ||
                   this.state.searchResults.length > 0) && (

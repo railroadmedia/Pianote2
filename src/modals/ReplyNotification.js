@@ -11,7 +11,7 @@ import Chat from '../../src/assets/img/svgs/chat.svg';
 import Icon from '../assets/icons';
 import { getUserData } from '../../src/services/UserDataAuth.js';
 
-const isTablet = global.onTablet;
+const onTablet = global.onTablet;
 const messageDict = {
   'lesson comment reply': {
     message: 'replied to your comment.',
@@ -71,14 +71,14 @@ export default class ReplyNotification extends React.Component {
     console.log(this.props);
 
     if (
-      messageDict[this.props.data.type]?.message == 'replied to your comment.'
+      messageDict[this.props.data.type]?.message === 'replied to your comment.'
     ) {
       statusChange = {
         notify_on_lesson_comment_reply: !this.state
           .notify_on_lesson_comment_reply
       };
     } else if (
-      messageDict[this.props.data.type]?.message == 'liked your comment.'
+      messageDict[this.props.data.type]?.message === 'liked your comment.'
     ) {
       statusChange = {
         notify_on_lesson_comment_like: !this.state.notify_on_lesson_comment_like
@@ -91,19 +91,19 @@ export default class ReplyNotification extends React.Component {
         notify_on_forum_post_reply: !this.state.notify_on_forum_post_reply
       };
     } else if (
-      messageDict[this.props.data.type]?.message == 'liked your forum post.'
+      messageDict[this.props.data.type]?.message === 'liked your forum post.'
     ) {
       statusChange = {
         notify_on_forum_post_like: !this.state.notify_on_forum_post_like
       };
     } else if (
-      messageDict[this.props.data.type]?.message == 'post in followed thread.'
+      messageDict[this.props.data.type]?.message === 'post in followed thread.'
     ) {
       statusChange = {
         notify_on_forum_followed_thread_reply: !this.state
           .notify_on_forum_followed_thread_reply
       };
-    } else if (messageDict[this.props.data.type]?.message == '') {
+    } else if (messageDict[this.props.data.type]?.message === '') {
       statusChange = {
         notify_weekly_update: !this.state.notify_weekly_update
       };
@@ -137,7 +137,7 @@ export default class ReplyNotification extends React.Component {
                 style={[styles.centerContent, localStyles.profileContainer]}
               >
                 <View style={localStyles.profileContainer2}>
-                  {messageDict[this.props.data.type].color == 'red' && (
+                  {messageDict[this.props.data.type].color === 'red' && (
                     <View
                       style={[styles.centerContent, localStyles.videoContainer]}
                     >
@@ -148,7 +148,7 @@ export default class ReplyNotification extends React.Component {
                       />
                     </View>
                   )}
-                  {messageDict[this.props.data.type].color == 'orange' && (
+                  {messageDict[this.props.data.type].color === 'orange' && (
                     <View
                       style={[styles.centerContent, localStyles.chatContainer]}
                     >
@@ -159,7 +159,7 @@ export default class ReplyNotification extends React.Component {
                       />
                     </View>
                   )}
-                  {messageDict[this.props.data.type].color == 'blue' && (
+                  {messageDict[this.props.data.type].color === 'blue' && (
                     <View
                       style={[styles.centerContent, localStyles.likeContainer]}
                     >
@@ -174,7 +174,7 @@ export default class ReplyNotification extends React.Component {
                     style={localStyles.image}
                     source={{
                       uri:
-                        this.props.data.type == 'new content releases'
+                        this.props.data.type === 'new content releases'
                           ? this.props.data.content?.thumbnail_url
                           : this.props.data.sender?.profile_image_url
                     }}
@@ -184,7 +184,7 @@ export default class ReplyNotification extends React.Component {
               </View>
               <Text style={localStyles.replyUser}>
                 <Text style={localStyles.user}>
-                  {this.props.data.type == 'new content releases'
+                  {this.props.data.type === 'new content releases'
                     ? this.props.data.content?.display_name
                     : this.props.data.sender?.display_name}
                 </Text>{' '}
@@ -258,8 +258,8 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#00101d'
   },
   profileContainer2: {
-    height: isTablet ? 120 : 80,
-    width: isTablet ? 120 : 80,
+    height: onTablet ? 120 : 80,
+    width: onTablet ? 120 : 80,
     borderRadius: 100,
     backgroundColor: '#445f73'
   },
@@ -267,8 +267,8 @@ const localStyles = StyleSheet.create({
     position: 'absolute',
     bottom: -5,
     right: -5,
-    height: isTablet ? 40 : 30,
-    width: isTablet ? 40 : 30,
+    height: onTablet ? 40 : 30,
+    width: onTablet ? 40 : 30,
     backgroundColor: 'red',
     borderRadius: 100,
     zIndex: 5
@@ -277,8 +277,8 @@ const localStyles = StyleSheet.create({
     position: 'absolute',
     bottom: -5,
     right: -5,
-    height: isTablet ? 40 : 30,
-    width: isTablet ? 40 : 30,
+    height: onTablet ? 40 : 30,
+    width: onTablet ? 40 : 30,
     backgroundColor: 'orange',
     borderRadius: 100,
     zIndex: 5
@@ -287,8 +287,8 @@ const localStyles = StyleSheet.create({
     position: 'absolute',
     bottom: -5,
     right: -5,
-    height: isTablet ? 40 : 30,
-    width: isTablet ? 40 : 30,
+    height: onTablet ? 40 : 30,
+    width: onTablet ? 40 : 30,
     backgroundColor: 'blue',
     borderRadius: 100,
     zIndex: 5
@@ -299,19 +299,19 @@ const localStyles = StyleSheet.create({
   },
   replyUser: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 16 : 12,
+    fontSize: onTablet ? 16 : 12,
     paddingBottom: 20,
     textAlign: 'center',
     color: '#445f73'
   },
   user: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: isTablet ? 16 : 12,
+    fontSize: onTablet ? 16 : 12,
     textAlign: 'center'
   },
   removeText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 16 : 12,
+    fontSize: onTablet ? 16 : 12,
     color: '#445f73',
     paddingLeft: 10
   },
@@ -321,14 +321,14 @@ const localStyles = StyleSheet.create({
     width: '100%'
   },
   removeContainer: {
-    height: isTablet ? 70 : 50,
+    height: onTablet ? 70 : 50,
     width: '100%',
     borderTopWidth: 0.5,
     paddingLeft: 10,
     borderTopColor: '#445f73'
   },
   muteContainer: {
-    height: isTablet ? 70 : 50,
+    height: onTablet ? 70 : 50,
     width: '100%',
     borderTopWidth: 0.5,
     borderTopColor: '#445f73'

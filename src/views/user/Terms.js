@@ -391,7 +391,7 @@ const localStyles = StyleSheet.create({
     padding: 10
   },
   title: {
-    fontWeight: Platform.OS == 'android' ? 'bold' : '800',
+    fontWeight: Platform.OS === 'android' ? 'bold' : '800',
     fontSize: onTablet ? 28 : 20,
     alignSelf: 'center',
     textAlign: 'center'

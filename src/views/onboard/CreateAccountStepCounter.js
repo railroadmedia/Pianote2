@@ -9,8 +9,8 @@ export default class CreateAccountStepCounter extends React.Component {
           style={{
             borderTopLeftRadius: 40,
             borderBottomLeftRadius: 40,
-            borderTopRightRadius: this.props.step == 1 ? 40 : 0,
-            borderBottomRightRadius: this.props.step == 1 ? 40 : 0,
+            borderTopRightRadius: this.props.step === 1 ? 40 : 0,
+            borderBottomRightRadius: this.props.step === 1 ? 40 : 0,
             backgroundColor: 'black',
             flex: 1,
             justifyContent: 'center'
@@ -30,8 +30,8 @@ export default class CreateAccountStepCounter extends React.Component {
             {
               flex: 1,
               paddingVertical: 5,
-              borderTopRightRadius: this.props.step == 2 ? 40 : 0,
-              borderBottomRightRadius: this.props.step == 2 ? 40 : 0,
+              borderTopRightRadius: this.props.step === 2 ? 40 : 0,
+              borderBottomRightRadius: this.props.step === 2 ? 40 : 0,
               backgroundColor: this.props.step > 1 ? 'black' : null,
               justifyContent: 'center'
             }
@@ -51,8 +51,8 @@ export default class CreateAccountStepCounter extends React.Component {
             {
               flex: 1,
               paddingVertical: 5,
-              borderTopRightRadius: this.props.step == 3 ? 40 : 0,
-              borderBottomRightRadius: this.props.step == 3 ? 40 : 0,
+              borderTopRightRadius: this.props.step === 3 ? 40 : 0,
+              borderBottomRightRadius: this.props.step === 3 ? 40 : 0,
               backgroundColor: this.props.step > 2 ? 'black' : null
             }
           ]}

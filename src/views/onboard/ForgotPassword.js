@@ -38,9 +38,7 @@ export default class ForgotPassword extends React.Component {
   constructor(props) {
     super(props);
     this.forgotPassword - this.forgotPassword.bind(this);
-    this.state = {
-      email: ''
-    };
+    this.state = { email: '' };
   }
 
   forgotPassword = async () => {

@@ -79,7 +79,7 @@ export default class Live extends React.Component {
       let d = new Date(date);
       let amPM = 'AM';
 
-      if (this.state.month == '' && d instanceof Date && !isNaN(d.valueOf())) {
+      if (this.state.month === '' && d instanceof Date && !isNaN(d.valueOf())) {
         this.setState({ month: d.getMonth() });
       }
       if (d.getHours() > 11) {
@@ -201,13 +201,13 @@ export default class Live extends React.Component {
 
   addToMyList = (contentID, type) => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    if (type == 'live') {
+    if (type === 'live') {
       let liveLesson = Object.assign([], this.state.liveLesson);
       liveLesson[0].is_added_to_primary_playlist = true;
       this.setState({ liveLesson });
     } else {
       for (i in this.state.items) {
-        if (this.state.items[i].id == contentID) {
+        if (this.state.items[i].id === contentID) {
           let items = Object.assign([], this.state.items);
           items[i].is_added_to_primary_playlist = true;
           this.setState({ items });
@@ -220,13 +220,13 @@ export default class Live extends React.Component {
 
   removeFromMyList = (contentID, type) => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    if (type == 'live') {
+    if (type === 'live') {
       let liveLesson = Object.assign([], this.state.liveLesson);
       liveLesson[0].is_added_to_primary_playlist = false;
       this.setState({ liveLesson });
     } else {
       for (i in this.state.items) {
-        if (this.state.items[i].id == contentID) {
+        if (this.state.items[i].id === contentID) {
           let items = Object.assign([], this.state.items);
           items[i].is_added_to_primary_playlist = false;
           this.setState({ items });
@@ -844,7 +844,7 @@ export default class Live extends React.Component {
                         }}
                       >
                         {item.timeData.hours}:
-                        {item.timeData.minutes == 0
+                        {item.timeData.minutes === 0
                           ? '00'
                           : item.timeData.minutes}
                         {' ' + item.timeData.amPM}

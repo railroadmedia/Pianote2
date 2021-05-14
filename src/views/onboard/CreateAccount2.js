@@ -41,7 +41,7 @@ export default class CreateAccount extends React.Component {
 
   savePassword = async () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    if (this.state.password == this.state.confirmPassword) {
+    if (this.state.password === this.state.confirmPassword) {
       if (this.state.password.length > 7) {
         if (this.props.route?.params?.purchase) {
           let response = await signUp(
@@ -155,7 +155,7 @@ export default class CreateAccount extends React.Component {
                     placeholderTextColor={'grey'}
                     placeholder={'Password'}
                     keyboardType={
-                      Platform.OS == 'android' ? 'default' : 'email-address'
+                      Platform.OS === 'android' ? 'default' : 'email-address'
                     }
                     secureTextEntry={true}
                     onChangeText={password => this.setState({ password })}
@@ -206,7 +206,7 @@ export default class CreateAccount extends React.Component {
                     placeholderTextColor={'grey'}
                     placeholder={'Confirm Password'}
                     keyboardType={
-                      Platform.OS == 'android' ? 'default' : 'email-address'
+                      Platform.OS === 'android' ? 'default' : 'email-address'
                     }
                     secureTextEntry={true}
                     onChangeText={confirmPassword =>
@@ -253,7 +253,7 @@ export default class CreateAccount extends React.Component {
                       backgroundColor:
                         this.state.password.length > 0 &&
                         this.state.confirmPassword.length > 0 &&
-                        this.state.password == this.state.confirmPassword
+                        this.state.password === this.state.confirmPassword
                           ? '#fb1b2f'
                           : 'transparent'
                     }
@@ -266,7 +266,7 @@ export default class CreateAccount extends React.Component {
                         color:
                           this.state.password.length > 0 &&
                           this.state.confirmPassword.length > 0 &&
-                          this.state.password == this.state.confirmPassword
+                          this.state.password === this.state.confirmPassword
                             ? 'white'
                             : '#fb1b2f',
                         fontFamily: 'RobotoCondensed-Bold',

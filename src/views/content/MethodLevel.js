@@ -373,7 +373,7 @@ export default class MethodLevel extends React.Component {
               showLength={false}
               showSort={false}
               showLines={true}
-              imageWidth={onTablet ? width * 0.225 : width * 0.3}
+              imageWidth={(onTablet ? 0.225 : 0.3) * width}
             />
           </View>
         </ScrollView>
@@ -395,7 +395,7 @@ export default class MethodLevel extends React.Component {
             progress={this.state.progress}
             type='LEVEL'
             onNextLesson={() =>
-              navigate('VIDEOPLAYER', {
+              navigate('VIEWLESSON', {
                 url: this.state.nextLesson.mobile_app_url
               })
             }

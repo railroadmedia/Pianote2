@@ -60,7 +60,7 @@ export default class Schedule extends React.Component {
       let d = new Date(date);
       let amPM = 'AM';
 
-      if (this.state.month == '' && d instanceof Date && !isNaN(d.valueOf())) {
+      if (this.state.month === '' && d instanceof Date && !isNaN(d.valueOf())) {
         this.setState({ month: d.getMonth() });
       }
       if (d.getHours() > 11) {
@@ -222,7 +222,7 @@ export default class Schedule extends React.Component {
                     }}
                   >
                     {item.timeData.hours}:
-                    {item.timeData.minutes == 0 ? '00' : item.timeData.minutes}
+                    {item.timeData.minutes === 0 ? '00' : item.timeData.minutes}
                     {' ' + item.timeData.amPM}
                   </Text>
                 </View>

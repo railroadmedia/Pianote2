@@ -490,14 +490,14 @@ export default class SinglePack extends React.Component {
                       }
                     ]}
                   >
-                    {(this.state.id == 262875 ? false : true) && (
+                    {(this.state.id === 262875 ? false : true) && (
                       <Download_V2
                         entity={{
                           id: this.state.id,
                           content: packsService.getPack(this.state.url, true)
                         }}
                         styles={{
-                          flex: this.state.id == 262875 ? 1 : 0,
+                          flex: this.state.id === 262875 ? 1 : 0,
                           touchable: { flex: 1 },
                           iconSize: {
                             width: sizing.myListButtonSize,

@@ -12,9 +12,7 @@ export default class NavMenuHeaders extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    this.state = {
-      showModalMenu: false
-    };
+    this.state = { showModalMenu: false };
   }
 
   render = () => {
@@ -78,7 +76,7 @@ export default class NavMenuHeaders extends React.Component {
               fontSize: onTablet ? 20 : 14,
               fontFamily: 'OpenSans-ExtraBold',
               color:
-                this.props.currentPage == 'LESSONS' || this.props.isMethod
+                this.props.currentPage === 'LESSONS' || this.props.isMethod
                   ? 'white'
                   : colors.secondBackground
             }}
@@ -88,7 +86,7 @@ export default class NavMenuHeaders extends React.Component {
           <Icon.Entypo
             name={'chevron-down'}
             color={
-              this.props.currentPage == 'LESSONS' || this.props.isMethod
+              this.props.currentPage === 'LESSONS' || this.props.isMethod
                 ? 'white'
                 : colors.secondBackground
             }
@@ -110,7 +108,7 @@ export default class NavMenuHeaders extends React.Component {
               fontSize: onTablet ? 20 : 14,
               fontFamily: 'OpenSans-ExtraBold',
               color:
-                this.props.currentPage == 'PACKS' || this.props.isMethod
+                this.props.currentPage === 'PACKS' || this.props.isMethod
                   ? 'white'
                   : colors.secondBackground
             }}
@@ -134,7 +132,7 @@ export default class NavMenuHeaders extends React.Component {
               fontFamily: 'OpenSans-Regular',
               fontFamily: 'OpenSans-ExtraBold',
               color:
-                this.props.currentPage == 'MYLIST' || this.props.isMethod
+                this.props.currentPage === 'MYLIST' || this.props.isMethod
                   ? 'white'
                   : colors.secondBackground
             }}

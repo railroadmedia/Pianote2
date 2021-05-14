@@ -88,7 +88,7 @@ class Course extends React.Component {
       refreshing: false,
       refreshControl: fromCache,
       outVideos:
-        allVideos.length == 0 || content.all.data.length < 10 ? true : false,
+        allVideos.length === 0 || content.all.data.length < 10 ? true : false,
       filtering: false,
       isPaging: false,
       page: 1
@@ -111,7 +111,7 @@ class Course extends React.Component {
         ? state.allCourses.concat(response.data)
         : response.data,
       outVideos:
-        response.data.length == 0 || response.data.length < 10 ? true : false,
+        response.data.length === 0 || response.data.length < 10 ? true : false,
       filtering: false,
       isPaging: false,
       refreshControl: false

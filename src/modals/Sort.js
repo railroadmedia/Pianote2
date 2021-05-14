@@ -28,7 +28,7 @@ export default class Sort extends React.Component {
             backgroundColor: '#00101d'
           }}
         >
-          {(this.props.type == 'comments' ? sortComments : sortVideos).map(
+          {(this.props.type === 'comments' ? sortComments : sortVideos).map(
             (sortOption, index) => (
               <TouchableOpacity
                 style={{
@@ -52,7 +52,7 @@ export default class Sort extends React.Component {
                   name={'check'}
                   size={onTablet ? 24 : 18}
                   color={
-                    this.props.currentSort == sortOption.option
+                    this.props.currentSort === sortOption.option
                       ? 'white'
                       : colors.mainBackground
                   }
@@ -63,7 +63,7 @@ export default class Sort extends React.Component {
                     fontSize: onTablet ? 16 : 12,
                     fontFamily: 'OpenSans-Regular',
                     color:
-                      this.props.currentSort == sortOption.option
+                      this.props.currentSort === sortOption.option
                         ? 'white'
                         : this.props.isMethod
                         ? colors.pianoteGrey

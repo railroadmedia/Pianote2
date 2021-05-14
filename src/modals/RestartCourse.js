@@ -43,7 +43,7 @@ export default class RestartCourse extends React.Component {
                 ]}
               >
                 Restart{' '}
-                {type == 'method'
+                {type === 'method'
                   ? 'method'
                   : 'this ' + this.changeType(type).toLocaleLowerCase()}
                 ?
@@ -56,7 +56,7 @@ export default class RestartCourse extends React.Component {
                 ]}
               >
                 Take{' '}
-                {type == 'method'
+                {type === 'method'
                   ? 'method '
                   : 'this ' + this.changeType(type).toLocaleLowerCase()}
                 again as a refresher, or just to make sure you've got the

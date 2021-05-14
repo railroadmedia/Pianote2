@@ -31,7 +31,10 @@ export default {
       });
       let json = await response.json();
       // if error, get new token call again
-      if (json.error == 'TOKEN_EXPIRED' || json.error == 'Token not provided') {
+      if (
+        json.error === 'TOKEN_EXPIRED' ||
+        json.error === 'Token not provided'
+      ) {
         // reset global token
         await getToken();
         updateFcmToken();

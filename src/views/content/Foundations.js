@@ -97,11 +97,11 @@ export default class Foundations extends React.Component {
 
   onRestartMethod = async () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-
-    this.setState({ items: [], showRestartCourse: false });
     await resetProgress(this.state.id);
     this.setState(
       {
+        items: [],
+        showRestartCourse: false,
         isStarted: false,
         isCompleted: false,
         isLoadingAll: true,

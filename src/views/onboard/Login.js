@@ -216,8 +216,8 @@ export default class Login extends React.Component {
               localStyles.dots,
               {
                 backgroundColor:
-                  this.state.page == dot ? '#fb1b2f' : 'transparent',
-                borderColor: this.state.page == dot ? '#fb1b2f' : 'grey'
+                  this.state.page === dot ? '#fb1b2f' : 'transparent',
+                borderColor: this.state.page === dot ? '#fb1b2f' : 'grey'
               }
             ]}
           />
@@ -227,7 +227,7 @@ export default class Login extends React.Component {
   }
 
   renderWords = num => {
-    if (num == 1) {
+    if (num === 1) {
       return (
         <>
           <Text style={[localStyles.bigText, localStyles.boldText]}>
@@ -236,7 +236,7 @@ export default class Login extends React.Component {
           <Text style={localStyles.normalText}>Everywhere you go.</Text>
         </>
       );
-    } else if (num == 2) {
+    } else if (num === 2) {
       return (
         <>
           <Text style={localStyles.bigText}>
@@ -251,7 +251,7 @@ export default class Login extends React.Component {
           </Text>
         </>
       );
-    } else if (num == 3) {
+    } else if (num === 3) {
       return (
         <>
           <Text style={localStyles.bigText}>
@@ -265,7 +265,7 @@ export default class Login extends React.Component {
           </Text>
         </>
       );
-    } else if (num == 4) {
+    } else if (num === 4) {
       return (
         <>
           <Text style={localStyles.bigText}>
@@ -279,7 +279,7 @@ export default class Login extends React.Component {
           </Text>
         </>
       );
-    } else if (num == 5) {
+    } else if (num === 5) {
       return (
         <>
           <Text style={[localStyles.bigText, localStyles.boldText]}>
@@ -295,7 +295,7 @@ export default class Login extends React.Component {
   };
 
   renderPage(num) {
-    if (num == 5) {
+    if (num === 5) {
       return (
         <View style={localStyles.backgroundContainer}>
           <SafeAreaView style={localStyles.finalPageContainer}>

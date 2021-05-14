@@ -79,7 +79,7 @@ class LoadPage extends React.Component {
       } else {
         // get token
         const res = await getToken(email, password);
-        if (res == 500) {
+        if (res === 500) {
           return this.context.showNoConnectionAlert();
         } else if (res.success) {
           updateFcmToken();
@@ -175,7 +175,7 @@ class LoadPage extends React.Component {
               height: '100%',
               width: '100%',
               zIndex: 4,
-              elevation: Platform.OS == 'android' ? 4 : 0,
+              elevation: Platform.OS === 'android' ? 4 : 0,
               backgroundColor: 'black'
             }
           ]}

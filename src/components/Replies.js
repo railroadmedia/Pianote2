@@ -15,7 +15,7 @@ import Icon from '../assets/icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { NetworkContext } from '../context/NetworkProvider';
 
-const isTablet = onTablet;
+const onTablet = global.onTablet;
 export default class Replies extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
@@ -347,7 +347,7 @@ export default class Replies extends React.Component {
                                     ]}
                                   >
                                     {comment.replies.length}{' '}
-                                    {comment.replies.length == 1
+                                    {comment.replies.length === 1
                                       ? 'REPLY'
                                       : 'REPLIES'}
                                   </Text>
@@ -479,8 +479,8 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row'
   },
   profileImage: {
-    height: isTablet ? 60 : 40,
-    width: isTablet ? 60 : 40,
+    height: onTablet ? 60 : 40,
+    width: onTablet ? 60 : 40,
     paddingVertical: 10,
     borderRadius: 100,
     marginRight: 10
@@ -498,13 +498,13 @@ const localStyles = StyleSheet.create({
   },
   displayNameText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 16 : 12,
+    fontSize: onTablet ? 16 : 12,
     color: '#445f73',
     paddingVertical: 5
   },
   comment: {
     paddingTop: 10,
-    fontSize: isTablet ? 16 : 12,
+    fontSize: onTablet ? 16 : 12,
     fontFamily: 'OpenSans-Regular',
     color: 'white'
   },
@@ -521,7 +521,7 @@ const localStyles = StyleSheet.create({
   },
   likeCount: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 16 : 12,
+    fontSize: onTablet ? 16 : 12,
     color: '#fb1b2f',
     paddingHorizontal: 10
   },
@@ -540,7 +540,7 @@ const localStyles = StyleSheet.create({
     marginTop: 10
   },
   replyText: {
-    fontSize: isTablet ? 16 : 12,
+    fontSize: onTablet ? 16 : 12,
     marginVertical: 5,
     textAlign: 'left',
     fontFamily: 'RobotoCondensed-Bold',
@@ -554,26 +554,26 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row'
   },
   replierImage: {
-    height: isTablet ? 60 : 40,
-    width: isTablet ? 60 : 40,
+    height: onTablet ? 60 : 40,
+    width: onTablet ? 60 : 40,
     borderRadius: 100,
     marginTop: 10
   },
   opXP: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: isTablet ? 16 : 12,
+    fontSize: onTablet ? 16 : 12,
     marginTop: 5,
     color: 'grey'
   },
   commentText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 16 : 12,
+    fontSize: onTablet ? 16 : 12,
     color: 'white',
     marginBottom: 7
   },
   userStats: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 16 : 12,
+    fontSize: onTablet ? 16 : 12,
     color: '#445f73',
     paddingTop: 5,
     paddingBottom: 10
@@ -601,7 +601,7 @@ const localStyles = StyleSheet.create({
   addReplyText: {
     textAlign: 'left',
     fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 16 : 12,
+    fontSize: onTablet ? 16 : 12,
     color: 'white',
     paddingVertical: 20
   },
@@ -615,7 +615,7 @@ const localStyles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
-    fontSize: isTablet ? 16 : 12,
+    fontSize: onTablet ? 16 : 12,
     color: '#445f73',
     fontFamily: 'OpenSans-Regular',
     paddingVertical: 10,

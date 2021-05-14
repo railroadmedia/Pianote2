@@ -789,7 +789,7 @@ export default class PathOverview extends React.Component {
                         {item.length_in_seconds
                           ? Math.floor(item.length_in_seconds / 60)
                           : 0}{' '}
-                        {Math.floor(item.length_in_seconds / 60) == 1
+                        {Math.floor(item.length_in_seconds / 60) === 1
                           ? 'min'
                           : 'mins'}
                       </Text>

@@ -46,9 +46,7 @@ class Settings extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    this.state = {
-      showLogOut: false
-    };
+    this.state = { showLogOut: false };
   }
 
   manageSubscriptions = async () => {

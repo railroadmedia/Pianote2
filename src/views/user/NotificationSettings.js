@@ -79,7 +79,7 @@ export default class NotificationSettings extends React.Component {
             <TouchableOpacity
               style={{ flex: 1 }}
               onPress={() => {
-                this.state.currentlyView == 'Profile Settings'
+                this.state.currentlyView === 'Profile Settings'
                   ? goBack()
                   : this.setState({
                       currentlyView: 'Profile Settings'
@@ -197,7 +197,7 @@ export default class NotificationSettings extends React.Component {
                     styles.centerContent,
                     {
                       backgroundColor:
-                        this.state.notifications_summary_frequency_minutes == 1
+                        this.state.notifications_summary_frequency_minutes === 1
                           ? '#fb1b2f'
                           : colors.secondBackground,
                       borderRadius: 100,
@@ -206,7 +206,7 @@ export default class NotificationSettings extends React.Component {
                     }
                   ]}
                 >
-                  {this.state.notifications_summary_frequency_minutes == 1 && (
+                  {this.state.notifications_summary_frequency_minutes === 1 && (
                     <Icon.FontAwesome
                       name={'check'}
                       size={onTablet ? 25 : 20}
@@ -298,7 +298,7 @@ export default class NotificationSettings extends React.Component {
                     }
                   ]}
                 >
-                  {(this.state.notifications_summary_frequency_minutes == 0 ||
+                  {(this.state.notifications_summary_frequency_minutes === 0 ||
                     this.state.notifications_summary_frequency_minutes ==
                       null) && (
                     <Icon.FontAwesome

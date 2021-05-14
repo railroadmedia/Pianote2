@@ -12,10 +12,6 @@ import Icon from '../assets/icons';
 const onTablet = global.onTablet;
 
 export default class NextVideo extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render = () => {
     return (
       <TouchableOpacity

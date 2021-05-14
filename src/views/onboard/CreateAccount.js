@@ -21,7 +21,7 @@ import Orientation from 'react-native-orientation-locker';
 import { navigate } from '../../../AppNavigator';
 import { isEmailUnique } from '../../services/UserDataAuth';
 
-const isTablet = global.onTablet;
+const onTablet = global.onTablet;
 
 export default class CreateAccount extends React.Component {
   static contextType = NetworkContext;
@@ -47,7 +47,7 @@ export default class CreateAccount extends React.Component {
       if (response?.exists) {
         this.setState({ showCheckEmail: true });
       } else if (
-        response?.errors?.email == 'The email must be a valid email address.'
+        response?.errors?.email === 'The email must be a valid email address.'
       ) {
         this.setState({ showValidateEmail: true });
       } else {
@@ -119,7 +119,7 @@ export default class CreateAccount extends React.Component {
                     placeholderTextColor={'grey'}
                     placeholder={'Email Address'}
                     keyboardType={
-                      Platform.OS == 'android'
+                      Platform.OS === 'android'
                         ? 'visible-password'
                         : 'email-address'
                     }
@@ -241,14 +241,14 @@ const localStyles = StyleSheet.create({
   },
   emailText: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: isTablet ? 24 : 16,
+    fontSize: onTablet ? 24 : 16,
     textAlign: 'left',
     color: 'white',
     paddingLeft: 15
   },
   createAccountText: {
     color: 'white',
-    fontSize: isTablet ? 36 : 24
+    fontSize: onTablet ? 36 : 24
   },
   container: {
     backgroundColor: 'white',
@@ -263,7 +263,7 @@ const localStyles = StyleSheet.create({
     color: 'black',
     borderRadius: 100,
     marginHorizontal: 15,
-    fontSize: isTablet ? 20 : 14,
+    fontSize: onTablet ? 20 : 14,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },

@@ -3,12 +3,8 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import Icon from '../assets/icons';
 
 export default class StartIcon extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   sizing = type => {
-    if (type == 'icon') {
+    if (type === 'icon') {
       if (onTablet) {
         if (this.props.isMethod) {
           return 30;
@@ -28,7 +24,7 @@ export default class StartIcon extends React.Component {
   };
 
   whatIcon = () => {
-    if (this.props.type == 'CONTINUE') {
+    if (this.props.type === 'CONTINUE') {
       return (
         <Icon.Entypo
           name={'controller-play'}
@@ -36,7 +32,7 @@ export default class StartIcon extends React.Component {
           color={'white'}
         />
       );
-    } else if (this.props.type == 'START') {
+    } else if (this.props.type === 'START') {
       return (
         <Icon.Entypo
           name={'controller-play'}
@@ -44,7 +40,7 @@ export default class StartIcon extends React.Component {
           color={'white'}
         />
       );
-    } else if (this.props.type == 'RESET') {
+    } else if (this.props.type === 'RESET') {
       return (
         <Icon.MaterialCommunityIcons
           name={'replay'}
@@ -52,7 +48,7 @@ export default class StartIcon extends React.Component {
           color={'white'}
         />
       );
-    } else if (this.props.type == 'MORE INFO') {
+    } else if (this.props.type === 'MORE INFO') {
       return (
         <Icon.AntDesign
           name={'arrowright'}
@@ -72,8 +68,8 @@ export default class StartIcon extends React.Component {
             flex: 1,
             borderRadius: 500,
             backgroundColor:
-              this.props.type == 'MORE INFO' ? 'transparent' : '#fb1b2f',
-            borderColor: this.props.type == 'MORE INFO' ? 'white' : '#fb1b2f',
+              this.props.type === 'MORE INFO' ? 'transparent' : '#fb1b2f',
+            borderColor: this.props.type === 'MORE INFO' ? 'white' : '#fb1b2f',
             borderWidth: 2
           }
         ]}

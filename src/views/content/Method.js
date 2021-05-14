@@ -104,10 +104,11 @@ export default class Method extends React.Component {
 
   onRestartMethod = async () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    this.setState({ items: [], showRestartCourse: false });
     await resetProgress(this.state.id);
     this.setState(
       {
+        items: [],
+        showRestartCourse: false,
         methodIsStarted: false,
         methodIsCompleted: false,
         isStarted: false,

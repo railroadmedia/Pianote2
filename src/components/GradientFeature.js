@@ -12,10 +12,6 @@ const colorDict = {
 };
 
 export default class GradientFeature extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render = () => {
     let {
       color,

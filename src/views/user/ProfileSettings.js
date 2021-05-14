@@ -48,7 +48,7 @@ export default class ProfileSettings extends React.Component {
     this.setState({
       imageURI: imageURI || '',
       currentlyView:
-        this.props.route?.params?.data == 'Profile Photo'
+        this.props.route?.params?.data === 'Profile Photo'
           ? 'Profile Photo'
           : 'Profile Settings'
     });
@@ -57,9 +57,9 @@ export default class ProfileSettings extends React.Component {
   async save() {
     this.setState({ isLoading: true });
     this.loadingRef?.toggleLoading(true);
-    if (this.state.currentlyView == 'Display Name') {
+    if (this.state.currentlyView === 'Display Name') {
       await this.changeName();
-    } else if (this.state.currentlyView == 'Profile Photo') {
+    } else if (this.state.currentlyView === 'Profile Photo') {
       await this.changeImage();
     }
     this.loadingRef?.toggleLoading(false);
@@ -97,7 +97,7 @@ export default class ProfileSettings extends React.Component {
     data.append('target', this.state.imageName);
     if (this.state.imageURI !== '') {
       let response = await avatarUpload(data);
-      if (response.status == 413) {
+      if (response.status === 413) {
         this.setState({ showProfileImage: true });
         return;
       }
@@ -106,11 +106,11 @@ export default class ProfileSettings extends React.Component {
         await commonService.tryCall(
           `${commonService.rootUrl}/musora-api/profile/update`,
           'POST',
-          { file: url == '' ? url : url.data[0].url }
+          { file: url === '' ? url : url.data[0].url }
         );
         await AsyncStorage.setItem(
           'profileURI',
-          url == '' ? url : url.data[0].url
+          url === '' ? url : url.data[0].url
         );
         reset('PROFILE');
       }
@@ -172,7 +172,7 @@ export default class ProfileSettings extends React.Component {
             )}
           </View>
 
-          {this.state.currentlyView == 'Profile Settings' && (
+          {this.state.currentlyView === 'Profile Settings' && (
             <ScrollView style={{ flex: 1 }}>
               <TouchableOpacity
                 style={[styles.centerContent, localStyles.displayContainer]}
@@ -206,7 +206,7 @@ export default class ProfileSettings extends React.Component {
               </TouchableOpacity>
             </ScrollView>
           )}
-          {this.state.currentlyView == 'Display Name' && (
+          {this.state.currentlyView === 'Display Name' && (
             <ScrollView style={styles.mainContainer}>
               <TextInput
                 autoCapitalize={'none'}
@@ -231,7 +231,7 @@ export default class ProfileSettings extends React.Component {
               </Text>
             </ScrollView>
           )}
-          {this.state.currentlyView == 'Profile Photo' && (
+          {this.state.currentlyView === 'Profile Photo' && (
             <ScrollView style={{ flex: 1 }}>
               <View style={[localStyles.scrollContainer, styles.centerContent]}>
                 {this.state.imageURI !== '' && (
@@ -267,7 +267,7 @@ export default class ProfileSettings extends React.Component {
                   </View>
                 )}
 
-                {this.state.imageURI == '' && (
+                {this.state.imageURI === '' && (
                   <TouchableOpacity
                     onPress={() => this.chooseImage()}
                     style={styles.centerContent}
@@ -299,7 +299,7 @@ export default class ProfileSettings extends React.Component {
             </ScrollView>
           )}
 
-          {this.state.currentlyView == 'Profile Settings' && (
+          {this.state.currentlyView === 'Profile Settings' && (
             <NavigationBar currentPage={'PROFILE'} pad={true} />
           )}
           <DisplayName
@@ -331,7 +331,7 @@ export default class ProfileSettings extends React.Component {
             onPress={() => {
               this.state.isLoading
                 ? null
-                : this.state.currentlyView == 'Profile Settings'
+                : this.state.currentlyView === 'Profile Settings'
                 ? goBack()
                 : this.setState({ currentlyView: 'Profile Settings' });
             }}

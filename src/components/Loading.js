@@ -4,9 +4,7 @@ import { View, ActivityIndicator, StyleSheet } from 'react-native';
 export default class Loading extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isLoading: false
-    };
+    this.state = { isLoading: false };
   }
 
   toggleLoading(isLoading) {

@@ -28,12 +28,12 @@ export default class NavigationBar extends React.Component {
   };
 
   profile = () => {
-    if (this.state.profileImage.length == 0) {
+    if (this.state.profileImage.length === 0) {
       return (
         <Icon.AntDesign
           name={'user'}
           color={
-            this.props.currentPage == 'PROFILE'
+            this.props.currentPage === 'PROFILE'
               ? 'white'
               : this.state.secondaryColor
           }
@@ -83,7 +83,7 @@ export default class NavigationBar extends React.Component {
                 name={'home'}
                 size={onTablet ? 35 : 27.5}
                 color={
-                  this.props.currentPage == 'LESSONS'
+                  this.props.currentPage === 'LESSONS'
                     ? this.state.primaryColor
                     : this.state.secondaryColor
                 }
@@ -100,22 +100,18 @@ export default class NavigationBar extends React.Component {
                 name={'search'}
                 size={onTablet ? 55 : 40}
                 color={
-                  this.props.currentPage == 'SEARCH'
+                  this.props.currentPage === 'SEARCH'
                     ? this.state.primaryColor
                     : this.state.secondaryColor
                 }
               />
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                navigate('DOWNLOADS');
-              }}
-            >
+            <TouchableOpacity onPress={() => navigate('DOWNLOADS')}>
               <Icon.MaterialCommunityIcons
                 name={'arrow-collapse-down'}
                 size={onTablet ? 40 : 30}
                 color={
-                  this.props.currentPage == 'DOWNLOAD'
+                  this.props.currentPage === 'DOWNLOAD'
                     ? this.state.primaryColor
                     : this.state.secondaryColor
                 }
@@ -136,7 +132,7 @@ export default class NavigationBar extends React.Component {
                     : styles.centerContent,
                   {
                     borderColor:
-                      this.props.currentPage == 'PROFILE' &&
+                      this.props.currentPage === 'PROFILE' &&
                       this.state.profileImage.length > 0
                         ? 'white'
                         : 'transparent'

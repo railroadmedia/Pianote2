@@ -37,7 +37,7 @@ export default class ResetPassword extends React.Component {
   savePassword = async () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     if (
-      this.state.password == this.state.confirmPassword &&
+      this.state.password === this.state.confirmPassword &&
       this.state.password.length > 7
     ) {
       const { email, resetKey } = this.props.route?.params;
@@ -162,7 +162,7 @@ export default class ResetPassword extends React.Component {
                     placeholderTextColor={'grey'}
                     placeholder={'Password'}
                     keyboardType={
-                      Platform.OS == 'android' ? 'default' : 'email-address'
+                      Platform.OS === 'android' ? 'default' : 'email-address'
                     }
                     secureTextEntry={true}
                     onChangeText={password => this.setState({ password })}
@@ -243,7 +243,7 @@ export default class ResetPassword extends React.Component {
                     placeholderTextColor={'grey'}
                     placeholder={'Confirm Password'}
                     keyboardType={
-                      Platform.OS == 'android' ? 'default' : 'email-address'
+                      Platform.OS === 'android' ? 'default' : 'email-address'
                     }
                     secureTextEntry={true}
                     onChangeText={confirmPassword =>
@@ -325,7 +325,7 @@ export default class ResetPassword extends React.Component {
                       backgroundColor:
                         this.state.password.length > 0 &&
                         this.state.confirmPassword.length > 0 &&
-                        this.state.password == this.state.confirmPassword
+                        this.state.password === this.state.confirmPassword
                           ? '#fb1b2f'
                           : 'transparent'
                     }
@@ -339,7 +339,7 @@ export default class ResetPassword extends React.Component {
                       color:
                         this.state.password.length > 0 &&
                         this.state.confirmPassword.length > 0 &&
-                        this.state.password == this.state.confirmPassword
+                        this.state.password === this.state.confirmPassword
                           ? 'white'
                           : '#fb1b2f'
                     }}

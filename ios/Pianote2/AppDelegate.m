@@ -52,7 +52,7 @@
   options.physicalVolumeButtonsWillControlDeviceVolume = YES;
   [GCKCastContext setSharedInstanceWithOptions:options];
   
-  if ([FIRApp defaultApp] == nil) {
+  if ([FIRApp defaultApp] === nil) {
       [FIRApp configure];
     }
   

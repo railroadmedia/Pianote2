@@ -19,7 +19,7 @@ import Filters from '../assets/img/svgs/filters';
 
 let alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
   instructorNames = [],
-  isTablet = onTablet,
+  isTablet = global.onTablet,
   progressTypes = ['ALL', 'IN PROGRESS', 'COMPLETED'],
   statusKeys = ['ALL', 'UPCOMING LIVE EVENTS', 'RECORDED EVENTS'],
   styleKeys = [],

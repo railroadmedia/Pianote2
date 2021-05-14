@@ -48,7 +48,7 @@ class StudentFocusShow extends React.Component {
       page: 1,
       currentSort: 'newest',
       ...this.initialValidData(
-        props.route?.params?.type == 'quick-tips'
+        props.route?.params?.type === 'quick-tips'
           ? props.quickTipsCache
           : props.podcastsCache,
         true
@@ -78,7 +78,7 @@ class StudentFocusShow extends React.Component {
     ]);
     this.metaFilters = content?.[1]?.meta?.filterOptions;
     this.props[
-      this.props.route?.params?.type == 'quick-tips'
+      this.props.route?.params?.type === 'quick-tips'
         ? 'cacheAndWriteQuickTips'
         : 'cacheAndWritePodcasts'
     ]({
@@ -102,7 +102,7 @@ class StudentFocusShow extends React.Component {
           content.thumbnail[this.props.route?.params?.type]?.thumbnailUrl,
         allLessons: newContent,
         outVideos:
-          newContent.length == 0 || newContent.length < 10 ? true : false,
+          newContent.length === 0 || newContent.length < 10 ? true : false,
         page: 1,
         isLoadingAll: false,
         refreshing: fromCache,
@@ -138,7 +138,7 @@ class StudentFocusShow extends React.Component {
         ? state.allLessons.concat(newContent)
         : newContent,
       outVideos:
-        newContent.length == 0 || newContent.length < 10 ? true : false,
+        newContent.length === 0 || newContent.length < 10 ? true : false,
       isLoadingAll: false,
       refreshing: false,
       filtering: false,
@@ -264,10 +264,10 @@ class StudentFocusShow extends React.Component {
             showArtist={true}
             showLength={false}
             showFilter={
-              this.props.route?.params?.type == 'quick-tips' ? true : false
+              this.props.route?.params?.type === 'quick-tips' ? true : false
             }
             showSort={
-              this.props.route?.params?.type == 'quick-tips' ? true : false
+              this.props.route?.params?.type === 'quick-tips' ? true : false
             }
             filters={this.metaFilters}
             currentSort={this.state.currentSort}

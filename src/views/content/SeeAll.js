@@ -74,7 +74,7 @@ export default class SeeAll extends React.Component {
       response = await getMyListContent(
         this.state.page,
         this.filterQuery,
-        this.state.title == 'In Progress' ? 'started' : 'completed'
+        this.state.title === 'In Progress' ? 'started' : 'completed'
       );
     } else if (this.state.parent === 'Lessons') {
       response = await getStartedContent('', this.state.page, this.filterQuery);
@@ -104,7 +104,7 @@ export default class SeeAll extends React.Component {
     this.setState(state => ({
       allLessons: loadMore ? state.allLessons.concat(newContent) : newContent,
       outVideos:
-        newContent.length == 0 || newContent.length < 10 ? true : false,
+        newContent.length === 0 || newContent.length < 10 ? true : false,
       isLoadingAll: false,
       refreshing: false,
       filtering: false,
@@ -177,7 +177,7 @@ export default class SeeAll extends React.Component {
             title={this.state.title}
             type={typeDict[this.state.parent]}
             showFilter={true}
-            hideFilterButton={this.state.parent == 'Lessons' ? false : false} // only show filter button on lessons
+            hideFilterButton={this.state.parent === 'Lessons' ? false : false} // only show filter button on lessons
             showType={false}
             showArtist={true}
             showSort={false}

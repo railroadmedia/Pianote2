@@ -110,7 +110,7 @@ function decideWhereToRedirect() {
             isMethod: true
           });
         }
-        return navigate('VIDEOPLAYER', {
+        return navigate('VIEWLESSON', {
           url:
             commonService.rootUrl +
             '/musora-api/members/learning-path-lesson/' +
@@ -174,7 +174,7 @@ function decideWhereToRedirect() {
       return navigate('SINGLEPACK', {
         url: commonService.rootUrl + '/musora-api/members/pack/' + id
       });
-    return navigate('VIDEOPLAYER', {
+    return navigate('VIEWLESSON', {
       url: commonService.rootUrl + '/musora-api/content/' + id
     });
   }

@@ -86,7 +86,7 @@ export default class VerticalVideoList extends React.Component {
   addToMyList = contentID => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     for (i in this.state.items) {
-      if (this.state.items[i].id == contentID) {
+      if (this.state.items[i].id === contentID) {
         let items = Object.assign([], this.state.items);
         items[i].isAddedToList = true;
         this.setState({ items });
@@ -98,7 +98,7 @@ export default class VerticalVideoList extends React.Component {
   removeFromMyList = contentID => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     for (i in this.state.items) {
-      if (this.state.items[i].id == contentID) {
+      if (this.state.items[i].id === contentID) {
         let items = Object.assign([], this.state.items);
         items[i].isAddedToList = false;
         this.setState({ items });
@@ -106,7 +106,7 @@ export default class VerticalVideoList extends React.Component {
     }
     removeFromMyList(contentID);
     // if on my list page and user removes then delete item from listview
-    if (this.props.type == 'MYLIST') this.props.removeItem(contentID);
+    if (this.props.type === 'MYLIST') this.props.removeItem(contentID);
   };
 
   changeType = word => {
@@ -123,7 +123,7 @@ export default class VerticalVideoList extends React.Component {
   like = contentID => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     for (i in this.state.items) {
-      if (this.state.items[i].id == contentID) {
+      if (this.state.items[i].id === contentID) {
         let items = Object.assign([], this.state.items);
         items[i].isLiked = !items[i].isLiked;
         items[i].like_count = items[i].isLiked
@@ -171,7 +171,7 @@ export default class VerticalVideoList extends React.Component {
         });
       case 'song':
         if (content.lesson_count === 1)
-          return navigate('VIDEOPLAYER', {
+          return navigate('VIEWLESSON', {
             id: content.lessons?.[0]?.id
           });
         return navigate('PATHOVERVIEW', {
@@ -235,7 +235,7 @@ export default class VerticalVideoList extends React.Component {
   }
 
   renderMappedList = () => {
-    if (this.state.items.length == 0 && this.state.outVideos) {
+    if (this.state.items.length === 0 && this.state.outVideos) {
       return;
     } else if (this.state.isLoading) {
       return this.showSpinner();
@@ -246,7 +246,7 @@ export default class VerticalVideoList extends React.Component {
         <TouchableOpacity
           key={index}
           onLongPress={() => {
-            row.type == 'learning-path-level' || row.type == 'unit'
+            row.type === 'learning-path-level' || row.type === 'unit'
               ? null
               : this.setState({
                   showModal: true,
@@ -481,7 +481,7 @@ export default class VerticalVideoList extends React.Component {
                     }}
                   >
                     {Math.floor(row.length_in_seconds / 60)}{' '}
-                    {Math.floor(row.length_in_seconds / 60) == 1
+                    {Math.floor(row.length_in_seconds / 60) === 1
                       ? 'min'
                       : 'mins'}
                   </Text>
@@ -685,7 +685,7 @@ export default class VerticalVideoList extends React.Component {
           <View style={{ marginHorizontal: 10 }}>
             {this.filters?.filterAppliedText}
           </View>
-          {this.state.items.length == 0 &&
+          {this.state.items.length === 0 &&
             this.state.outVideos &&
             !this.state.isLoading && (
               <>

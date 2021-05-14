@@ -135,11 +135,11 @@ export default class NavigationMenu extends React.Component {
             <Text
               style={{
                 fontFamily:
-                  this.props.parentPage == nav.title.toUpperCase()
+                  this.props.parentPage === nav.title.toUpperCase()
                     ? 'OpenSans-ExtraBold'
                     : 'OpenSans',
                 color:
-                  this.props.parentPage == nav.title.toUpperCase()
+                  this.props.parentPage === nav.title.toUpperCase()
                     ? this.props.isMethod
                       ? 'red'
                       : 'white'
@@ -147,7 +147,7 @@ export default class NavigationMenu extends React.Component {
                     ? 'white'
                     : colors.secondBackground,
                 fontSize:
-                  this.props.parentPage == nav.title.toUpperCase()
+                  this.props.parentPage === nav.title.toUpperCase()
                     ? onTablet
                       ? 40
                       : 30

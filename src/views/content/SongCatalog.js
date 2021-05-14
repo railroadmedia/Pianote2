@@ -97,7 +97,7 @@ class SongCatalog extends React.Component {
       return {
         allSongs: allVideos,
         outVideos:
-          allVideos.length == 0 || content.all.data.length < 10 ? true : false,
+          allVideos.length === 0 || content.all.data.length < 10 ? true : false,
         filtering: false,
         isPaging: false,
         progressSongs: inprogressVideos,
@@ -123,7 +123,7 @@ class SongCatalog extends React.Component {
     this.setState(state => ({
       allSongs: loadMore ? state.allSongs.concat(response.data) : response.data,
       outVideos:
-        response.data.length == 0 || response.data.length < 10 ? true : false,
+        response.data.length === 0 || response.data.length < 10 ? true : false,
       filtering: false,
       refreshControl: false,
       isPaging: false,
@@ -172,7 +172,7 @@ class SongCatalog extends React.Component {
 
   getSquareHeight = () => {
     if (onTablet) return 125;
-    if (Platform.OS == 'android') return height * 0.1375;
+    if (Platform.OS === 'android') return height * 0.1375;
     return height * 0.115;
   };
 

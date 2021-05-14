@@ -243,7 +243,7 @@ class Lessons extends React.Component {
         allLessons: allVideos,
         progressLessons: inprogressVideos,
         outVideos:
-          allVideos.length == 0 || allVideos.length < 10 ? true : false,
+          allVideos.length === 0 || allVideos.length < 10 ? true : false,
         filtering: false,
         isPaging: false,
         lessonsStarted: inprogressVideos.length !== 0,
@@ -286,7 +286,7 @@ class Lessons extends React.Component {
     this.setState({
       allLessons: [...this.state.allLessons, ...response.data],
       outVideos:
-        response.data.length == 0 || response.data.length < 10 ? true : false,
+        response.data.length === 0 || response.data.length < 10 ? true : false,
       filtering: false,
       isPaging: false
     });
