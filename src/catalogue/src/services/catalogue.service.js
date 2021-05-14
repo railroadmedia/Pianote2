@@ -1,8 +1,7 @@
 import RNFetchBlob from 'rn-fetch-blob';
+const { dirs } = RNFetchBlob.fs;
 
 import commonService from './common.service';
-
-const { dirs } = RNFetchBlob.fs;
 
 /* cache holders */
 // cacheCards only keep the cards data from all and in progress arrays

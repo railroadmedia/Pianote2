@@ -17,10 +17,9 @@ import { SafeAreaView } from 'react-navigation';
 
 import ExpandableView from './ExpandableView';
 
-import { NetworkContext } from '../context/NetworkProvider';
+import { arrowLeft, filters } from './img/svgs';
 
-import ArrowLeft from '../assets/img/svgs/arrowLeft';
-import Filters from '../assets/img/svgs/filters';
+import commonService from './services/common.service';
 
 let alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
   instructorNames = [],
@@ -31,8 +30,7 @@ let alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
   topicKeys = [],
   difficulties;
 
-export default class Filters_V2 extends React.Component {
-  static contextType = NetworkContext;
+export default class Filters extends React.Component {
   appliedFilters = {};
   originalFilters = {};
 
@@ -51,6 +49,7 @@ export default class Filters_V2 extends React.Component {
 
   constructor(props) {
     super(props);
+    Filters.contextType = commonService.Contexts;
     this.deepLinking(props.deepLinking);
   }
 
@@ -246,9 +245,7 @@ export default class Filters_V2 extends React.Component {
       try {
         this.props.onApply().then(this.initFilters);
       } catch (e) {
-        throw new Error(
-          `Filters_V2's "onApply" property must return a promise!`
-        );
+        throw new Error(`Filters's "onApply" property must return a promise!`);
       }
     });
   };
@@ -267,7 +264,7 @@ export default class Filters_V2 extends React.Component {
             onPress={this.toggleModal}
             style={fStyles.touchableToggler}
           >
-            <Filters width={18} height={18} fill={'#fb1b2f'} />
+            {filters({ height: 18, fill: '#fb1b2f' })}
           </TouchableOpacity>
         </View>
         <Modal
@@ -294,7 +291,7 @@ export default class Filters_V2 extends React.Component {
               }}
             >
               <Text style={fStyles.textTitle}>Filter</Text>
-              <ArrowLeft width={18} height={18} fill={'white'} />
+              {arrowLeft({ height: 18, fill: 'white' })}
             </TouchableOpacity>
           </SafeAreaView>
           {loading ? (

@@ -8,14 +8,10 @@ import Orientation from 'react-native-orientation-locker';
 import DeviceInfo from 'react-native-device-info';
 import AppNavigator, { reset } from './AppNavigator';
 
-import cards from './src/redux/CardsReducer';
+import { cardsReducer } from './src/catalogue/index';
 import commonService from './src/services/common.service';
 
-const store = createStore(
-  combineReducers({
-    ...cards
-  })
-);
+const store = createStore(combineReducers({ ...cardsReducer }));
 
 export default class App extends React.Component {
   constructor(props) {
@@ -32,7 +28,7 @@ export default class App extends React.Component {
       .then(ev => {
         if (ev) this.handleOpenURL({ url: ev });
       })
-      .catch(error => console.log(error));
+      .catch(_ => {});
     Linking.addEventListener('url', this.handleOpenURL);
   }
 

@@ -10,7 +10,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import { arrowUp, arrowDown } from './img/svgs';
 
 export default class ExpandableView extends React.Component {
   state = {};
@@ -73,20 +73,15 @@ export default class ExpandableView extends React.Component {
           <Text testID='title' style={[this.props.titleStyle, { flex: 1 }]}>
             {this.props.title}
           </Text>
-          {(contentVisible || !!this.state.maxHeight) && (
-            <EntypoIcon
-              name={'chevron-thin-up'}
-              size={onTablet ? 25 : 17.5}
-              color={colors.secondBackground}
-            />
-          )}
-          {!contentVisible && !this.state.maxHeight && (
-            <EntypoIcon
-              name={'chevron-thin-down'}
-              size={onTablet ? 25 : 17.5}
-              color={colors.secondBackground}
-            />
-          )}
+          {(contentVisible || !!this.state.maxHeight
+            ? arrowUp
+            : !contentVisible && !this.state.maxHeight
+            ? arrowDown
+            : '')?.({
+            height: 20,
+            width: 20,
+            fill: this.props.iconColor || '#ffffff'
+          })}
         </TouchableOpacity>
         {contentVisible === undefined ? (
           <View style={{ overflow: 'hidden', maxHeight }}>

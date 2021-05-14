@@ -15,27 +15,25 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 
-import Card from '../../components/Card';
-import Filters_V2 from '../../components/Filters_V2';
-import Sort from '../../components/Sort';
+import Card from './Card';
+import Filters from './Filters';
+import Sort from './Sort';
 
-import { getContent, getAll, cache } from '../../services/catalogue.service';
+import commonService from './services/common.service';
+import { getContent, getAll, cache } from './services/catalogue.service';
 
-import { Contexts } from '../../context/CombinedContexts';
-
-import { arrowLeft } from '../../assets/img/svgs/svgs';
+import { arrowLeft } from './img/svgs';
 
 let styles;
 
 export default class Catalogue extends React.Component {
-  static contextType = Contexts;
-
   page = 1;
   scene = this.props.route.name;
   flatListCols = onTablet ? 3 : this.scene === 'STUDENTFOCUS' ? 2 : 1;
 
   constructor(props) {
     super(props);
+    Catalogue.contextType = commonService.Contexts;
     styles = setStyles(props.theme === 'light');
     this.data = cache[this.scene] || { method: {}, inProgress: [], all: [] };
     this.state = {
@@ -333,7 +331,7 @@ export default class Catalogue extends React.Component {
               onSort={this.sort}
               ref={r => (this.sortRef = r)}
             />
-            <Filters_V2
+            <Filters
               disabled={filterAndSortDisabled}
               onApply={this.filter}
               meta={this.metaFilters}

@@ -28,7 +28,6 @@ import ContentModal from '../modals/ContentModal';
 import { NetworkContext } from '../context/NetworkProvider';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
-import Filters_V2 from './Filters_V2';
 import Orientation from 'react-native-orientation-locker';
 import { navigate } from '../../AppNavigator';
 
@@ -380,18 +379,6 @@ export default class HorizontalVideoList extends React.Component {
                         <View style={{ flex: 1 }} />
                       </TouchableOpacity>
                     </>
-                  )}
-                  {!this.props.hideFilterButton && (
-                    <View style={{ marginRight: 10 }}>
-                      <Filters_V2
-                        disabled={this.state.isPaging}
-                        onApply={() =>
-                          this.props.applyFilters?.(this.filters?.filterQuery)
-                        }
-                        meta={this.props.filters}
-                        reference={r => (this.filters = r)}
-                      />
-                    </View>
                   )}
                 </>
               )}

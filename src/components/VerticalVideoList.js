@@ -24,7 +24,6 @@ import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 import { NetworkContext } from '../context/NetworkProvider';
 import AddToCalendar from '../modals/AddToCalendar';
-import Filters_V2 from './Filters_V2';
 import { navigate } from '../../AppNavigator';
 
 const sortDict = {
@@ -683,18 +682,6 @@ export default class VerticalVideoList extends React.Component {
                       />
                     </TouchableOpacity>
                   )}
-                  {!this.props.hideFilterButton &&
-                    !this.props.showTitleOnly && (
-                      <Filters_V2
-                        isMethod={this.props.isMethod}
-                        disabled={!this.props.filters || this.state.isPaging}
-                        onApply={() =>
-                          this.props.applyFilters?.(this.filters?.filterQuery)
-                        }
-                        meta={this.props.filters}
-                        reference={r => (this.filters = r)}
-                      />
-                    )}
                 </View>
               </View>
             </View>

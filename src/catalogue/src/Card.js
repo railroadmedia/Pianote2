@@ -12,19 +12,17 @@ import {
   addToMyList,
   likeContent,
   removeFromMyList,
-  unlikeContent
-} from '../services/UserActions';
-import contentService from '../services/content.service';
+  unlikeContent,
+  getDownloadableContent
+} from './services/cards.service';
+import commonService from './services/common.service';
 
-import { Contexts } from '../context/CombinedContexts';
-
-import { toggleMyList, toggleLike } from '../redux/CardsActions';
+import { toggleMyList, toggleLike } from './redux/CardsActions';
 
 class Card extends React.Component {
-  static contextType = Contexts;
-
   constructor(props) {
     super(props);
+    Card.contextType = commonService.Contexts;
     this.state = {
       detailsModalVisible: false,
       calendarModalVisible: false
@@ -349,7 +347,7 @@ class Card extends React.Component {
                     <Download_V2
                       entity={{
                         id: data.id,
-                        content: contentService.getContent
+                        content: getDownloadableContent
                       }}
                       styles={{
                         iconSize: {

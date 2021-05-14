@@ -1,8 +1,9 @@
 import React from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import { SafeAreaView } from 'react-navigation';
+
+import { check, x, sort } from './img/svgs';
 
 const sorts = [
   {
@@ -49,7 +50,7 @@ export default class Sort extends React.PureComponent {
           onPress={this.toggleModal}
         >
           <Text style={lStyle.togglerText}>{sorts[sortIndex].togglerText}</Text>
-          <Icon size={18} name={'sort-amount-down'} color={colors.pianoteRed} />
+          {sort({ width: 20, height: 20, fill: '#fb1b2f' })}
         </TouchableOpacity>
         <Modal
           transparent={true}
@@ -70,12 +71,11 @@ export default class Sort extends React.PureComponent {
                   onPress={() => this.sort(i)}
                   style={lStyle.menuTOpacity}
                 >
-                  <Icon
-                    size={18}
-                    name={'check'}
-                    color={i === sortIndex ? 'white' : 'black'}
-                    style={lStyle.icon}
-                  />
+                  {check({
+                    width: 18,
+                    height: 18,
+                    fill: i === sortIndex ? 'white' : 'black'
+                  })}
                   <Text
                     style={{
                       color: i === sortIndex ? 'white' : colors.pianoteGrey,
@@ -95,12 +95,7 @@ export default class Sort extends React.PureComponent {
                 onPress={this.toggleModal}
                 style={{ padding: 20, flexDirection: 'row' }}
               >
-                <Icon
-                  size={18}
-                  name={'times'}
-                  color={'white'}
-                  style={lStyle.icon}
-                />
+                {x({ width: 18, height: 18, fill: 'white' })}
                 <Text style={{ color: 'white', paddingLeft: 20 }}>Cancel</Text>
               </TouchableOpacity>
             </SafeAreaView>

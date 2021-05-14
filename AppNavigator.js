@@ -7,20 +7,16 @@ import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import Forum from './src/forum/index';
+import Catalogue from './src/catalogue/index';
 
 // content
-import StudentFocusCatalog from './src/views/content/StudentFocusCatalog';
-import StudentFocusShow from './src/views/content/StudentFocusShow';
 import VideoPlayerSong from './src/views/content/VideoPlayerSong';
 import Schedule from './src/views/content/Schedule';
 import VideoPlayer from './src/views/content/VideoPlayer';
-import SongCatalog from './src/views/content/SongCatalog';
 import PathOverview from './src/views/content/PathOverview';
 import SinglePack from './src/views/content/SinglePack';
 import Downloads from './src/views/content/Downloads';
-import Lessons from './src/views/content/Lessons';
 import SeeAll from './src/views/content/SeeAll';
-import Course from './src/views/content/Course';
 import MyList from './src/views/content/MyList';
 import Search from './src/views/content/Search';
 import Method from './src/views/content/Method';
@@ -52,12 +48,19 @@ import Profile from './src/views/user/Profile';
 import Support from './src/views/user/Support';
 import Terms from './src/views/user/Terms';
 import NetworkProvider from './src/context/NetworkProvider';
-import Catalogue from './src/views/content/Catalogue';
 import OrientationProvider from './src/context/OrientationProvider';
-import CombinedContexts from './src/context/CombinedContexts';
+import CombinedContexts, { Contexts } from './src/context/CombinedContexts';
 
 import NavMenuHeaders from './src/components/NavMenuHeaders';
 import NavigationBar from './src/components/NavigationBar';
+
+/* prepare catalogue's services */
+import commonService from './src/services/common.service';
+import { commonService as catalogueCommonService } from './src/catalogue/index';
+catalogueCommonService.rootUrl = commonService.rootUrl;
+catalogueCommonService.tryCall = commonService.tryCall;
+catalogueCommonService.Contexts = Contexts;
+/* END */
 
 const Stack = createStackNavigator();
 
@@ -162,11 +165,6 @@ export default () => (
             <Stack.Screen name='SUPPORT' component={Support} />
             <Stack.Screen name='TERMS' component={Terms} />
             {/* content */}
-            {/* <Stack.Screen
-              name='STUDENTFOCUSCATALOG'
-              component={StudentFocusCatalog}
-            /> */}
-            {/* <Stack.Screen name='STUDENTFOCUSSHOW' component={StudentFocusShow} /> */}
             <Stack.Screen name='VIDEOPLAYERSONG' component={VideoPlayerSong} />
             <Stack.Screen name='METHODLEVEL' component={MethodLevel} />
             <Stack.Screen name='LIVE' component={Live} />
@@ -174,7 +172,6 @@ export default () => (
             <Stack.Screen name='METHOD' component={Method} />
             <Stack.Screen name='FOUNDATIONS' component={Foundations} />
             <Stack.Screen name='PATHOVERVIEW' component={PathOverview} />
-            {/* <Stack.Screen name='SONGCATALOG' component={SongCatalog} /> */}
             <Stack.Screen
               name='VIDEOPLAYER'
               component={VideoPlayer}
@@ -184,9 +181,7 @@ export default () => (
             />
             <Stack.Screen name='SINGLEPACK' component={SinglePack} />
             <Stack.Screen name='DOWNLOADS' component={Downloads} />
-            {/* <Stack.Screen name='HOME' component={Lessons} /> */}
             <Stack.Screen name='SEEALL' component={SeeAll} />
-            {/* <Stack.Screen name='COURSE' component={Course} /> */}
             <Stack.Screen name='MYLIST' component={MyList} />
             <Stack.Screen name='SEARCH' component={Search} />
             <Stack.Screen name='PACKS' component={Packs} />
@@ -195,7 +190,6 @@ export default () => (
               component={Forum}
               options={{ gestureEnabled: false }}
             />
-
             <Stack.Screen name='HOME'>
               {props => Navigators('both', 'HOME', props)}
             </Stack.Screen>
