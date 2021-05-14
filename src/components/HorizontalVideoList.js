@@ -595,7 +595,7 @@ export default class HorizontalVideoList extends React.Component {
                             )},ar_${
                               this.props.isSquare ? '1' : '16:9'
                             },fl_lossy,q_auto:eco,c_fill,g_face/${
-                              item.thumbnail
+                              item.thumbnail_url
                             }`
                           : fallbackThumb
                     }}
@@ -610,13 +610,13 @@ export default class HorizontalVideoList extends React.Component {
                     resizeMode='cover'
                     source={{
                       uri:
-                        item.thumbnail && item.thumbnail !== 'TBD'
+                        item.thumbnail_url && item.thumbnail_url !== 'TBD'
                           ? `https://cdn.musora.com/image/fetch/w_${Math.round(
                               this.decideWidth() * 2
                             )},ar_${
                               this.props.isSquare ? '1' : '16:9'
                             },fl_lossy,q_auto:eco,c_fill,g_face/${
-                              item.thumbnail
+                              item.thumbnail_url
                             }`
                           : fallbackThumb
                     }}
