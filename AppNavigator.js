@@ -188,7 +188,7 @@ export default () => (
               {props => Navigators('both', 'HOME', props)}
             </Stack.Screen>
             <Stack.Screen name='SEEALL'>
-              {props => Navigators('both', 'SEEALL', props)}
+              {props => Navigators('bottom', 'SEEALL', props)}
             </Stack.Screen>
             <Stack.Screen name='COURSES'>
               {props => Navigators('both', 'COURSES', props)}

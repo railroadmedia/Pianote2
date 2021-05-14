@@ -28,15 +28,18 @@ let styles;
 export default class Catalogue extends React.Component {
   page = 1;
   scene = this.props.route.name;
+  isSeeAllScene = this.scene === 'SEEALL';
   flatListCols = onTablet ? 3 : this.scene === 'STUDENTFOCUS' ? 2 : 1;
 
   constructor(props) {
     super(props);
     Catalogue.contextType = commonService.Contexts;
     styles = setStyles(props.theme === 'light');
-    this.data = cache[this.scene] || { method: {}, inProgress: [], all: [] };
+    let cachedData =
+      cache[this.scene] || cache[this.props.route.params?.showType];
+    this.data = cachedData || { method: {}, inProgress: [], all: [] };
     this.state = {
-      loading: !cache[this.scene],
+      loading: !cachedData,
       loadingMore: false,
       refreshing: true,
       filtering: false,
@@ -73,7 +76,8 @@ export default class Catalogue extends React.Component {
   getServiceOptions = action => {
     let options = {
       scene: this.scene,
-      showType: this.props.route.params?.showType
+      showType: this.props.route.params?.showType,
+      seeAllType: this.props.route.params?.title
     };
     options.page = action === 'loadMore' ? ++this.page : (this.page = 1);
     if (action !== 'refresh') {
@@ -85,7 +89,7 @@ export default class Catalogue extends React.Component {
   };
 
   setData = (action, state = { loading: false, refreshing: false }) =>
-    (action === 'refresh' ? getContent : getAll)(
+    (action === 'refresh' || this.isSeeAllScene ? getContent : getAll)(
       this.getServiceOptions(action)
     ).then(({ method, all, inProgress, studentFocus }) => {
       try {
@@ -196,24 +200,44 @@ export default class Catalogue extends React.Component {
       refreshing || filtering || sorting || loadingMore;
     return (
       <>
+        {this.scene.match(/^(SEEALL|SHOW)$/) && (
+          <TouchableOpacity
+            style={{
+              padding: 20,
+              paddingHorizontal: 10,
+              justifyContent: 'center'
+            }}
+            onPress={this.props.navigation.goBack}
+          >
+            {this.scene.match(/^(SEEALL)$/) && (
+              <Text
+                style={{
+                  position: 'absolute',
+                  fontSize: 24,
+                  color: 'white',
+                  width: '100%',
+                  fontFamily: 'OpenSans-ExtraBold',
+                  textAlign: 'center',
+                  textTransform: 'capitalize',
+                  alignSelf: 'center'
+                }}
+              >
+                {this.props.route.params.title}
+              </Text>
+            )}
+            {arrowLeft({ height: 25, fill: 'white' })}
+          </TouchableOpacity>
+        )}
         {this.scene.match(/^(SHOW)$/) && (
-          <>
-            <TouchableOpacity
-              style={{ padding: 20, paddingHorizontal: 10 }}
-              onPress={this.props.navigation.goBack}
-            >
-              {arrowLeft({ height: 25, fill: 'white' })}
-            </TouchableOpacity>
-            <Image
-              style={styles.showBannerImage}
-              source={{
-                uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:good,c_fill,g_face/${
-                  studentFocus[all[0].type].thumbnailUrl
-                }`
-              }}
-              resizeMode={'contain'}
-            />
-          </>
+          <Image
+            style={styles.showBannerImage}
+            source={{
+              uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:good,c_fill,g_face/${
+                studentFocus[all[0].type].thumbnailUrl
+              }`
+            }}
+            resizeMode={'contain'}
+          />
         )}
         {this.scene === 'HOME' && !!methodId && (
           <ImageBackground
@@ -280,7 +304,11 @@ export default class Catalogue extends React.Component {
             <View style={styles.flSectionHeaderContainer}>
               <Text style={styles.flSectionHeaderText}>IN PROGRESS</Text>
               <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('SEEALL')}
+                onPress={() =>
+                  this.props.navigation.navigate('SEEALL', {
+                    title: this.scene
+                  })
+                }
               >
                 <Text style={{ fontSize: 14, color: '#fb1b2f' }}>See All</Text>
               </TouchableOpacity>
@@ -324,7 +352,9 @@ export default class Catalogue extends React.Component {
         )}
         {!!all?.length && (
           <View style={styles.flSectionHeaderContainer}>
-            <Text style={styles.flSectionHeaderText}>ALL LESSONS</Text>
+            <Text style={styles.flSectionHeaderText}>
+              {this.isSeeAllScene ? 'In Progress' : 'ALL LESSONS'}
+            </Text>
             <Sort
               disabled={filterAndSortDisabled}
               onSort={this.sort}
@@ -375,7 +405,7 @@ export default class Catalogue extends React.Component {
             keyboardShouldPersistTaps='handled'
             ListHeaderComponent={this.renderFLHeader}
             renderItem={this.renderFLItem}
-            onEndReached={this.scene !== 'STUDENTFOCUS' && this.loadMore}
+            onEndReached={scene !== 'STUDENTFOCUS' && this.loadMore}
             keyExtractor={({ id, name }) => (id || name).toString()}
             ListEmptyComponent={
               <Text style={styles.noContentText}>No Content</Text>

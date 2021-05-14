@@ -19,12 +19,18 @@ export let cache = {};
 export function getContent(options) {
   return new Promise(res => {
     switch (options.scene) {
+      case 'SEEALL':
+        getInProgress({
+          ...options,
+          scene: options.seeAllType
+        }).then(({ inProgress }) => res({ all: inProgress }));
+        break;
       case 'SHOW':
         Promise.all([
-          getAll(options),
+          getAll({ ...options, scene: options.showType }),
           getStudentFocus(options.signal)
         ]).then(([{ all }, { studentFocus }]) =>
-          setCache({ all, studentFocus }, options.scene, res)
+          setCache({ all, studentFocus }, options.showType, res)
         );
         break;
       case 'SONGS':
@@ -66,7 +72,6 @@ export function getContent(options) {
 /** data fetcher for 'all' section used in loading more, filtering, sorting and getContent() **/
 export function getAll({
   scene,
-  showType,
   page = 1,
   filters = '',
   sort = '-published_on',
@@ -78,8 +83,7 @@ export function getAll({
         `${
           commonService.rootUrl
         }/musora-api/all?brand=pianote&statuses[]=published&limit=20&${getIncludedTypes(
-          scene,
-          showType
+          scene
         )}&page=${page}&sort=${sort}${filters}`,
         null,
         null,
@@ -92,7 +96,6 @@ export function getAll({
 /** data fetcher for 'in progress' section used in 'see all' and getContent() **/
 export function getInProgress({
   scene,
-  showType,
   page = 1,
   filters = '',
   sort = 'progress',
@@ -104,8 +107,7 @@ export function getInProgress({
         `${
           commonService.rootUrl
         }/musora-api/in-progress?brand=pianote&&statuses[]=published&limit=20&${getIncludedTypes(
-          scene,
-          showType
+          scene
         )}&required_user_states[]=started&sort=${sort}&page=${page}${filters}`,
         null,
         null,
@@ -144,22 +146,19 @@ function getStudentFocus(signal) {
 }
 /** END **/
 /** form the included_types part of the url **/
-function getIncludedTypes(scene, showType) {
+function getIncludedTypes(scene) {
   let it = 'included_types[]=';
   switch (scene) {
-    case 'SHOW':
-      switch (showType) {
-        case 'boot-camps':
-          return it + 'boot-camps';
-        case 'quick-tips':
-          return it + 'quick-tips';
-        case 'student-review':
-          return it + 'student-review';
-        case 'question-and-answer':
-          return it + 'question-and-answer';
-        case 'podcasts':
-          return it + 'podcasts';
-      }
+    case 'boot-camps':
+      return it + 'boot-camps';
+    case 'quick-tips':
+      return it + 'quick-tips';
+    case 'student-review':
+      return it + 'student-review';
+    case 'question-and-answer':
+      return it + 'question-and-answer';
+    case 'podcasts':
+      return it + 'podcasts';
     case 'COURSES':
       return it + 'course';
     case 'SONGS':
@@ -239,8 +238,8 @@ export function setCardsCache(card) {
 function combineCache(chCatalogue, chCards) {
   Object.keys(chCatalogue).map(key => {
     cache[key] = { ...chCatalogue[key] };
-    cache[key].all = cache[key].all.map(a => chCards[a]);
-    cache[key].inProgress = cache[key].inProgress.map(ip => chCards[ip]);
+    cache[key].all = cache[key].all?.map(a => chCards[a]);
+    cache[key].inProgress = cache[key].inProgress?.map(ip => chCards[ip]);
   });
 }
 /** END **/
