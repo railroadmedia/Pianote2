@@ -32,7 +32,8 @@ export default class StartIcon extends React.Component {
           color={'white'}
         />
       );
-    } else if (this.props.type === 'START') {
+    }
+    if (this.props.type === 'START') {
       return (
         <Icon.Entypo
           name={'controller-play'}
@@ -40,7 +41,8 @@ export default class StartIcon extends React.Component {
           color={'white'}
         />
       );
-    } else if (this.props.type === 'RESET') {
+    }
+    if (this.props.type === 'RESET') {
       return (
         <Icon.MaterialCommunityIcons
           name={'replay'}
@@ -48,7 +50,8 @@ export default class StartIcon extends React.Component {
           color={'white'}
         />
       );
-    } else if (this.props.type === 'MORE INFO') {
+    }
+    if (this.props.type === 'MORE INFO') {
       return (
         <Icon.AntDesign
           name={'arrowright'}
