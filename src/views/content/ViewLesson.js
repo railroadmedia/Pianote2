@@ -12,7 +12,8 @@ import {
   KeyboardAvoidingView,
   BackHandler,
   SafeAreaView,
-  Modal
+  Modal,
+  StyleSheet
 } from 'react-native';
 import Video from 'RNVideoEnhanced';
 import FastImage from 'react-native-fast-image';
@@ -51,6 +52,7 @@ import { connect } from 'react-redux';
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+let localStyles;
 
 class ViewLesson extends React.Component {
   static contextType = NetworkContext;
@@ -58,6 +60,8 @@ class ViewLesson extends React.Component {
     super(props);
     this.limit = 10;
     this.allCommentsNum = 0;
+    localStyles = setStyles(colors, sizing);
+
     this.state = {
       id: props.route?.params?.id,
       url: props.route?.params?.url,
@@ -406,25 +410,8 @@ class ViewLesson extends React.Component {
 
   mapComments() {
     return this.state.comments.map((item, index) => (
-      <View
-        key={index}
-        style={{
-          backgroundColor: colors.mainBackground,
-          borderTopColor: colors.secondBackground,
-          flex: 1,
-          borderTopWidth: 0.25,
-          flexDirection: 'row',
-          paddingTop: 10,
-          paddingHorizontal: 10
-        }}
-      >
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            paddingBottom: 10
-          }}
-        >
+      <View key={index} style={localStyles.commentContainer}>
+        <View style={localStyles.commentUser}>
           <FastImage
             style={{
               height: onTablet ? 60 : 40,
@@ -437,139 +424,78 @@ class ViewLesson extends React.Component {
             }}
             resizeMode={FastImage.resizeMode.stretch}
           />
-          <Text
-            style={{
-              fontFamily: 'OpenSans-Regular',
-              fontSize: onTablet ? 15 : 12,
-              paddingTop: 5,
-              fontWeight: 'bold',
-              color: colors.pianoteGrey
-            }}
-          >
-            {this.changeXP(item.user.xp)}
-          </Text>
+          <Text style={localStyles.userXp}>{this.changeXP(item.user.xp)}</Text>
         </View>
 
         <View style={{ flex: 1, paddingLeft: 10 }}>
-          <Text
-            style={{
-              fontFamily: 'OpenSans-Regular',
-              fontSize: sizing.descriptionText,
-              color: 'white',
-              paddingTop: 10
-            }}
-          >
-            {item.comment}
-          </Text>
+          <Text style={localStyles.commentText}>{item.comment}</Text>
 
-          <Text
-            style={{
-              fontFamily: 'OpenSans-Regular',
-              fontSize: sizing.descriptionText,
-              color: colors.secondBackground,
-              paddingTop: 5,
-              paddingBottom: 10
-            }}
-          >
+          <Text style={localStyles.userTags}>
             {item.user['display_name']} | {item.user.rank} |{' '}
             {this.lastPostTime(item.created_on)}
           </Text>
-          <View
-            style={{
-              paddingBottom: 15,
-              paddingTop: 5
-            }}
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <View style={{ flexDirection: 'row', marginRight: 15 }}>
-                <TouchableOpacity
-                  style={{ marginRight: 10 }}
-                  onPress={() => this.likeComment(item.id)}
-                >
-                  <Icon.AntDesign
-                    name={item.is_liked ? 'like1' : 'like2'}
-                    size={sizing.infoButtonSize}
-                    color={colors.pianoteRed}
-                  />
-                </TouchableOpacity>
-                {item.like_count > 0 && (
-                  <View
-                    style={{
-                      borderRadius: 40,
-                      backgroundColor: colors.notificationColor,
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        fontSize: sizing.descriptionText,
-                        color: colors.pianoteRed,
-                        paddingHorizontal: 5
-                      }}
-                    >
-                      {item.like_count}{' '}
-                      {item.like_count === 1 ? 'LIKE' : 'LIKES'}
-                    </Text>
-                  </View>
-                )}
-              </View>
-              <View style={{ flexDirection: 'row' }}>
-                <TouchableOpacity
-                  style={{
-                    marginRight: 10,
-                    marginLeft: -2.5
-                  }}
-                  onPress={() =>
-                    this.replies?.toggle(() =>
-                      this.setState({ selectedComment: item })
-                    )
-                  }
-                >
-                  <Icon.MaterialCommunityIcons
-                    name={'comment-text-outline'}
-                    size={sizing.infoButtonSize}
-                    color={colors.pianoteRed}
-                  />
-                </TouchableOpacity>
-                {item.replies?.length > 0 && (
-                  <View
-                    style={{
-                      borderRadius: 40,
-                      backgroundColor: colors.notificationColor,
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        fontSize: sizing.descriptionText,
-                        color: colors.pianoteRed,
-                        paddingHorizontal: 5
-                      }}
-                    >
-                      {item.replies?.length}{' '}
-                      {item.replies?.length === 1 ? 'REPLY' : 'REPLIES'}
-                    </Text>
-                  </View>
-                )}
-              </View>
-              {this.props.user.id === item.user_id && (
-                <TouchableOpacity
-                  style={{ marginLeft: 10 }}
-                  onPress={() => this.deleteComment(item.id)}
-                >
-                  <Icon.AntDesign
-                    name={'delete'}
-                    size={sizing.infoButtonSize}
-                    color={colors.pianoteRed}
-                  />
-                </TouchableOpacity>
+
+          <View style={localStyles.commentIconsContainer}>
+            <View style={{ flexDirection: 'row', marginRight: 15 }}>
+              <TouchableOpacity
+                style={{ marginRight: 10 }}
+                onPress={() => this.likeComment(item.id)}
+              >
+                <Icon.AntDesign
+                  name={item.is_liked ? 'like1' : 'like2'}
+                  size={sizing.infoButtonSize}
+                  color={colors.pianoteRed}
+                />
+              </TouchableOpacity>
+              {item.like_count > 0 && (
+                <View style={localStyles.bubble}>
+                  <Text style={localStyles.bubbleText}>
+                    {item.like_count} {item.like_count === 1 ? 'LIKE' : 'LIKES'}
+                  </Text>
+                </View>
               )}
             </View>
+            <View style={{ flexDirection: 'row' }}>
+              <TouchableOpacity
+                style={{
+                  marginRight: 10,
+                  marginLeft: -2.5
+                }}
+                onPress={() =>
+                  this.replies?.toggle(() =>
+                    this.setState({ selectedComment: item })
+                  )
+                }
+              >
+                <Icon.MaterialCommunityIcons
+                  name={'comment-text-outline'}
+                  size={sizing.infoButtonSize}
+                  color={colors.pianoteRed}
+                />
+              </TouchableOpacity>
+              {item.replies?.length > 0 && (
+                <View style={localStyles.bubble}>
+                  <Text style={localStyles.bubbleText}>
+                    {item.replies?.length}{' '}
+                    {item.replies?.length === 1 ? 'REPLY' : 'REPLIES'}
+                  </Text>
+                </View>
+              )}
+            </View>
+            {this.props.user.id === item.user_id && (
+              <TouchableOpacity
+                style={{ marginLeft: 10 }}
+                onPress={() => this.deleteComment(item.id)}
+              >
+                <Icon.AntDesign
+                  name={'delete'}
+                  size={sizing.infoButtonSize}
+                  color={colors.pianoteRed}
+                />
+              </TouchableOpacity>
+            )}
           </View>
+
           {item.replies?.length !== 0 && (
             <TouchableOpacity
               onPress={() =>
@@ -578,14 +504,7 @@ class ViewLesson extends React.Component {
                 )
               }
             >
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: sizing.descriptionText,
-                  color: colors.secondBackground,
-                  marginBottom: 10
-                }}
-              >
+              <Text style={localStyles.repliesText}>
                 VIEW {item.replies?.length}{' '}
                 {item.replies?.length === 1 ? 'REPLY' : 'REPLIES'}
               </Text>
@@ -725,25 +644,9 @@ class ViewLesson extends React.Component {
             assignment.index = index + 1;
             this.setState({ selectedAssignment: assignment });
           }}
-          style={{
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-            borderBottomColor: colors.secondBackground,
-            borderBottomWidth: 1,
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexDirection: 'row'
-          }}
+          style={localStyles.assignmentBtn}
         >
-          <Text
-            numberOfLines={1}
-            style={{
-              fontSize: sizing.verticalListTitleSmall,
-              color: colors.secondBackground,
-              fontFamily: 'RobotoCondensed-Bold',
-              maxWidth: '90%'
-            }}
-          >
+          <Text numberOfLines={1} style={localStyles.assignmentBtnText}>
             {index + 1}. {row.title}
           </Text>
 
@@ -843,40 +746,24 @@ class ViewLesson extends React.Component {
   render() {
     let { id, comments, youtubeId } = this.state;
     return (
-      <View
-        style={[
-          {
-            backgroundColor: colors.mainBackground,
-            width: '100%',
-            height: '100%'
-          }
-        ]}
-      >
+      <View style={localStyles.lessonContainer}>
         <StatusBar backgroundColor={'black'} barStyle={'light-content'} />
         {this.state.showVideo && (
           <>
             {this.state.isLoadingAll ||
             (!this.state.video_playback_endpoints && !youtubeId) ? (
-              <View style={{ backgroundColor: 'black' }}>
-                <View style={{ aspectRatio: 16 / 9, justifyContent: 'center' }}>
-                  <TouchableOpacity
-                    onPress={() => this.onBack()}
-                    style={{
-                      top: 0,
-                      left: 0,
-                      padding: 15,
-                      position: 'absolute',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    <ArrowLeft
-                      width={onTablet ? 25 : 18}
-                      height={onTablet ? 25 : 18}
-                      fill={'white'}
-                    />
-                  </TouchableOpacity>
-                  <ActivityIndicator size='large' color='#ffffff' />
-                </View>
+              <View style={localStyles.videoPlaceholder}>
+                <TouchableOpacity
+                  onPress={() => this.onBack()}
+                  style={localStyles.backBtnContainer}
+                >
+                  <ArrowLeft
+                    width={onTablet ? 25 : 18}
+                    height={onTablet ? 25 : 18}
+                    fill={'white'}
+                  />
+                </TouchableOpacity>
+                <ActivityIndicator size='large' color='#ffffff' />
               </View>
             ) : (
               <Video
@@ -951,7 +838,7 @@ class ViewLesson extends React.Component {
         )}
 
         {!this.state.isLoadingAll ? (
-          <View style={{ flex: 1, backgroundColor: colors.mainBackground }}>
+          <View style={localStyles.belowVideoContainer}>
             <View key={'belowVideo'} style={{ flex: 1 }}>
               {this.state.selectedAssignment ? (
                 <Assignment
@@ -1004,215 +891,135 @@ class ViewLesson extends React.Component {
                       onRefresh={() => this.refresh()}
                     />
                   }
-                  style={{ flex: 1, backgroundColor: colors.mainBackground }}
+                  style={localStyles.belowVideoContainer}
                 >
-                  <Text
-                    style={{
-                      fontSize: sizing.titleViewLesson,
-                      marginTop: 15,
-                      marginBottom: 5,
-                      fontFamily: 'OpenSans-Bold',
-                      textAlign: 'center',
-                      color: 'white',
-                      paddingHorizontal: 10
-                    }}
-                  >
+                  <Text style={localStyles.lessonTitle}>
                     {this.state.lessonTitle}
                   </Text>
-                  <Text
-                    style={{
-                      fontSize: sizing.descriptionText,
-                      fontFamily: 'OpenSans-Regular',
-                      textAlign: 'center',
-                      color: colors.secondBackground,
-                      paddingBottom: 20
-                    }}
-                  >
+                  <Text style={localStyles.tags}>
                     {this.renderTagsDependingOnContentType()}
                   </Text>
-                  <View style={{ paddingHorizontal: 10 }}>
-                    <View
-                      style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        justifyContent: 'space-around',
-                        alignContent: 'space-around'
-                      }}
+                  <View style={localStyles.iconsContainer}>
+                    <TouchableOpacity
+                      onPress={this.likeOrDislikeLesson}
+                      style={localStyles.iconBtn}
                     >
-                      <TouchableOpacity
-                        onPress={this.likeOrDislikeLesson}
-                        style={{ flex: 1, alignItems: 'center' }}
-                      >
-                        <Icon.AntDesign
-                          name={this.state.isLiked ? 'like1' : 'like2'}
-                          size={sizing.infoButtonSize}
-                          color={colors.pianoteRed}
-                        />
-                        <Text
-                          style={{
-                            textAlign: 'center',
-                            fontSize: sizing.descriptionText,
-                            color: 'white',
-                            marginTop: 5
-                          }}
-                        >
-                          {this.state.likes}
-                        </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={this.toggleMyList}
-                        style={{ flex: 1, alignItems: 'center' }}
-                      >
-                        <Icon.AntDesign
-                          name={this.state.isAddedToMyList ? 'close' : 'plus'}
-                          size={sizing.myListButtonSize}
-                          color={colors.pianoteRed}
-                        />
-                        <Text
-                          style={{
-                            textAlign: 'center',
-                            fontSize: sizing.descriptionText,
-                            color: 'white',
-                            marginTop: 2
-                          }}
-                        >
-                          {this.state.isAddedToMyList ? 'Added' : 'My List'}
-                        </Text>
-                      </TouchableOpacity>
-                      {this.state.resources && (
-                        <TouchableOpacity
-                          onPress={() =>
-                            this.setState({
-                              showResDownload: true
-                            })
-                          }
-                          style={{ flex: 1, alignItems: 'center' }}
-                        >
-                          <Resources
-                            height={sizing.infoButtonSize}
-                            width={sizing.infoButtonSize}
-                            fill={colors.pianoteRed}
-                          />
-                          <Text
-                            style={{
-                              textAlign: 'center',
-                              fontSize: sizing.descriptionText,
-                              color: 'white',
-                              marginTop: 5
-                            }}
-                          >
-                            Resources
-                          </Text>
-                        </TouchableOpacity>
-                      )}
-                      <Download_V2
-                        entity={{
-                          id,
-                          comments,
-                          content: this.props.route?.params?.url
-                            ? methodService.getMethodContent(this.state.url)
-                            : contentService.getContent(this.state.id)
-                        }}
-                        styles={{
-                          touchable: { flex: 1 },
-                          iconSize: {
-                            width: sizing.myListButtonSize,
-                            height: sizing.myListButtonSize
-                          },
-                          iconDownloadColor: colors.pianoteRed,
-                          activityIndicatorColor: colors.pianoteRed,
-                          animatedProgressBackground: colors.pianoteRed,
-                          textStatus: {
-                            color: '#ffffff',
-                            fontSize: sizing.descriptionText,
-                            fontFamily: 'OpenSans-Regular'
-                          },
-                          alert: {
-                            alertTextMessageFontFamily: 'OpenSans-Regular',
-                            alertTouchableTextDeleteColor: 'white',
-                            alertTextTitleColor: 'black',
-                            alertTextMessageColor: 'black',
-                            alertTextTitleFontFamily: 'OpenSans-Bold',
-                            alertTouchableTextCancelColor: colors.pianoteRed,
-                            alertTouchableDeleteBackground: colors.pianoteRed,
-                            alertBackground: 'white',
-                            alertTouchableTextDeleteFontFamily: 'OpenSans-Bold',
-                            alertTouchableTextCancelFontFamily: 'OpenSans-Bold'
-                          }
-                        }}
+                      <Icon.AntDesign
+                        name={this.state.isLiked ? 'like1' : 'like2'}
+                        size={sizing.infoButtonSize}
+                        color={colors.pianoteRed}
                       />
+                      <Text style={localStyles.belowIconText}>
+                        {this.state.likes}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={this.toggleMyList}
+                      style={localStyles.iconBtn}
+                    >
+                      <Icon.AntDesign
+                        name={this.state.isAddedToMyList ? 'close' : 'plus'}
+                        size={sizing.myListButtonSize}
+                        color={colors.pianoteRed}
+                      />
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          fontSize: sizing.descriptionText,
+                          color: 'white'
+                          // marginTop: 5
+                        }}
+                      >
+                        {this.state.isAddedToMyList ? 'Added' : 'My List'}
+                      </Text>
+                    </TouchableOpacity>
+                    {this.state.resources && (
                       <TouchableOpacity
                         onPress={() =>
                           this.setState({
-                            showInfo: !this.state.showInfo
+                            showResDownload: true
                           })
                         }
-                        style={{
-                          flex: 1,
-                          alignItems: 'center'
-                        }}
+                        style={localStyles.iconBtn}
                       >
-                        <Icon.AntDesign
-                          name={
-                            this.state.showInfo ? 'infocirlce' : 'infocirlceo'
-                          }
-                          size={sizing.infoButtonSize}
-                          color={colors.pianoteRed}
+                        <Resources
+                          height={sizing.infoButtonSize}
+                          width={sizing.infoButtonSize}
+                          fill={colors.pianoteRed}
                         />
-                        <Text
-                          style={{
-                            textAlign: 'center',
-                            fontSize: sizing.descriptionText,
-                            color: 'white',
-                            marginTop: 5
-                          }}
-                        >
-                          Info
-                        </Text>
+                        <Text style={localStyles.belowIconText}>Resources</Text>
                       </TouchableOpacity>
-                    </View>
+                    )}
+                    <Download_V2
+                      entity={{
+                        id,
+                        comments,
+                        content: this.props.route?.params?.url
+                          ? methodService.getMethodContent(this.state.url)
+                          : contentService.getContent(this.state.id)
+                      }}
+                      styles={{
+                        touchable: { flex: 1 },
+                        iconSize: {
+                          width: sizing.myListButtonSize,
+                          height: sizing.myListButtonSize
+                        },
+                        iconDownloadColor: colors.pianoteRed,
+                        activityIndicatorColor: colors.pianoteRed,
+                        animatedProgressBackground: colors.pianoteRed,
+                        textStatus: {
+                          color: '#ffffff',
+                          fontSize: sizing.descriptionText,
+                          fontFamily: 'OpenSans-Regular'
+                        },
+                        alert: {
+                          alertTextMessageFontFamily: 'OpenSans-Regular',
+                          alertTouchableTextDeleteColor: 'white',
+                          alertTextTitleColor: 'black',
+                          alertTextMessageColor: 'black',
+                          alertTextTitleFontFamily: 'OpenSans-Bold',
+                          alertTouchableTextCancelColor: colors.pianoteRed,
+                          alertTouchableDeleteBackground: colors.pianoteRed,
+                          alertBackground: 'white',
+                          alertTouchableTextDeleteFontFamily: 'OpenSans-Bold',
+                          alertTouchableTextCancelFontFamily: 'OpenSans-Bold'
+                        }
+                      }}
+                    />
+                    <TouchableOpacity
+                      onPress={() =>
+                        this.setState({
+                          showInfo: !this.state.showInfo
+                        })
+                      }
+                      style={localStyles.iconBtn}
+                    >
+                      <Icon.AntDesign
+                        name={
+                          this.state.showInfo ? 'infocirlce' : 'infocirlceo'
+                        }
+                        size={sizing.infoButtonSize}
+                        color={colors.pianoteRed}
+                      />
+                      <Text style={localStyles.belowIconText}>Info</Text>
+                    </TouchableOpacity>
                   </View>
+
                   <View>
                     {this.state.showInfo && (
                       <>
-                        <Text
-                          style={{
-                            paddingHorizontal: 10,
-                            paddingTop: 20,
-                            fontFamily: 'OpenSans-Regular',
-                            fontSize: sizing.descriptionText,
-                            textAlign: 'left',
-                            color: 'white'
-                          }}
-                        >
+                        <Text style={localstyles.description}>
                           {this.state.description}
                         </Text>
                         {this.state.chapters?.map(item => (
                           <TouchableOpacity
-                            style={{
-                              alignSelf: 'flex-start',
-                              paddingVertical: 5
-                            }}
+                            style={localStyles.timecodeBtn}
                             onPress={() =>
                               this.video?.onSeek?.(item.chapter_timecode)
                             }
                           >
-                            <Text
-                              style={{
-                                color: 'white',
-                                fontFamily: 'OpenSans-Regular',
-                                fontSize: sizing.descriptionText,
-                                marginTop: 5,
-                                paddingHorizontal: 10,
-                                textAlign: 'left'
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  color: '#007AFF',
-                                  textDecorationLine: 'underline'
-                                }}
-                              >
+                            <Text style={localStyles.timeCodeDescription}>
+                              <Text style={localStyles.timecode}>
                                 {this.secondsToTime(item.chapter_timecode)}
                               </Text>{' '}
                               - {item.chapter_description}
@@ -1223,33 +1030,9 @@ class ViewLesson extends React.Component {
                     )}
                   </View>
                   {this.state.assignmentList?.length > 0 && (
-                    <View style={{ marginTop: 20, marginBottom: 10 }}>
-                      <View
-                        style={{
-                          paddingLeft: 10,
-                          paddingBottom: 10
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontSize: sizing.verticalListTitleSmall,
-                            fontFamily: 'RobotoCondensed-Bold',
-                            color: colors.secondBackground
-                          }}
-                        >
-                          ASSIGNMENTS
-                        </Text>
-                      </View>
-
-                      <View
-                        style={{
-                          width: '100%',
-                          borderTopColor: colors.secondBackground,
-                          borderTopWidth: 1
-                        }}
-                      >
-                        {this.renderAssignments()}
-                      </View>
+                    <View style={{ marginVertical: 20 }}>
+                      <Text style={localStyles.assignment}>ASSIGNMENTS</Text>
+                      {this.renderAssignments()}
                     </View>
                   )}
                   {this.state.relatedLessons.length > 0 && (
@@ -1273,115 +1056,57 @@ class ViewLesson extends React.Component {
                     </View>
                   )}
 
-                  <View
-                    style={[
-                      styles.centerContent,
-                      {
-                        flex: 1,
-                        width: '100%',
-                        zIndex: 10,
-                        marginTop: 10
-                      }
-                    ]}
-                  >
-                    <View style={{ flex: 1 }}>
-                      <View
-                        style={{
-                          width: '100%',
-                          backgroundColor: colors.mainBackground,
-                          zIndex: 5
-                        }}
-                      >
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            flex: 1,
-                            justifyContent: 'space-between',
-                            paddingHorizontal: 10
-                          }}
+                  <>
+                    <View style={localStyles.commentTitleContainer}>
+                      <Text style={localStyles.commentsNum}>
+                        {this.allCommentsNum + ' COMMENTS'}
+                      </Text>
+                      {this.context.isConnected && (
+                        <TouchableOpacity
+                          onPress={() => this.setState({ showSort: true })}
                         >
-                          <Text
-                            style={{
-                              fontSize: sizing.verticalListTitleSmall,
-                              fontFamily: 'RobotoCondensed-Bold',
-                              color: colors.secondBackground
-                            }}
-                          >
-                            {this.allCommentsNum + ' COMMENTS'}
-                          </Text>
-                          {this.context.isConnected && (
-                            <TouchableOpacity
-                              onPress={() => this.setState({ showSort: true })}
-                            >
-                              <Icon.FontAwesome5
-                                size={onTablet ? 20 : 15}
-                                name={'sort-amount-down'}
-                                color={colors.pianoteRed}
-                              />
-                            </TouchableOpacity>
-                          )}
-                        </View>
-
-                        <View
-                          style={{
-                            width: '100%',
-                            flexDirection: 'row',
-                            paddingHorizontal: 10,
-                            paddingVertical: 20
-                          }}
-                        >
-                          <TouchableOpacity
-                            onPress={() =>
-                              this.setState({ showMakeComment: true })
-                            }
-                            style={{ flexDirection: 'row', flex: 1 }}
-                          >
-                            <FastImage
-                              style={{
-                                height: onTablet ? 60 : 40,
-                                width: onTablet ? 60 : 40,
-                                paddingVertical: 10,
-                                borderRadius: 100
-                              }}
-                              source={{
-                                uri:
-                                  this.props.user.profile_picture_url ||
-                                  'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-                              }}
-                              resizeMode={FastImage.resizeMode.stretch}
-                            />
-
-                            <View
-                              style={{
-                                flex: 1,
-                                justifyContent: 'center'
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  textAlign: 'left',
-                                  fontFamily: 'OpenSans-Regular',
-                                  fontSize: sizing.descriptionText,
-                                  color: 'white',
-                                  paddingLeft: 10
-                                }}
-                              >
-                                Add a comment...
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-                      {this.state.isLoadingComm && (
-                        <ActivityIndicator
-                          size='small'
-                          style={{ padding: 10 }}
-                          color={colors.secondBackground}
-                        />
+                          <Icon.FontAwesome5
+                            size={onTablet ? 20 : 15}
+                            name={'sort-amount-down'}
+                            color={colors.pianoteRed}
+                          />
+                        </TouchableOpacity>
                       )}
-                      {this.state.comments.length > 0 && this.mapComments()}
                     </View>
-                  </View>
+
+                    <TouchableOpacity
+                      onPress={() => this.setState({ showMakeComment: true })}
+                      style={localStyles.commentInputBtn}
+                    >
+                      <FastImage
+                        style={{
+                          height: onTablet ? 60 : 40,
+                          width: onTablet ? 60 : 40,
+                          paddingVertical: 10,
+                          borderRadius: 100
+                        }}
+                        source={{
+                          uri:
+                            this.props.user.profile_picture_url ||
+                            'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                        }}
+                        resizeMode={FastImage.resizeMode.stretch}
+                      />
+
+                      <Text style={localStyles.commentPlaceholder}>
+                        Add a comment...
+                      </Text>
+                    </TouchableOpacity>
+
+                    {this.state.isLoadingComm && (
+                      <ActivityIndicator
+                        size='small'
+                        style={{ padding: 10 }}
+                        color={colors.secondBackground}
+                      />
+                    )}
+                    {this.state.comments.length > 0 && this.mapComments()}
+                  </>
                 </KeyboardAwareScrollView>
               )}
             </View>
@@ -1513,52 +1238,28 @@ class ViewLesson extends React.Component {
         )}
         {!this.state.selectedAssignment && !this.state.showMakeComment && (
           <View style={{ backgroundColor: colors.mainBackground }}>
-            <View
-              style={{
-                backgroundColor: colors.mainBackground,
-                height: 2,
-                width: '100%'
-              }}
-            >
+            <View style={localStyles.progressBarContainer}>
               {!!this.state.progress && (
                 <View
                   testID='progress'
                   style={[
                     styles.progressBarCompleted,
-                    {
-                      backgroundColor: colors.pianoteRed,
-                      height: 3,
-                      alignItems: 'flex-end',
-                      justifyContent: 'center',
-                      position: 'relative',
-                      width: this.state.progress + '%'
-                    }
+                    localStyles.progress,
+                    { width: this.state.progress + '%' }
                   ]}
                 />
               )}
             </View>
-            <SafeAreaView
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-evenly',
-                marginTop: 5,
-                paddingVertical: 5,
-                marginHorizontal: 5
-              }}
-            >
+            <SafeAreaView style={localStyles.bottomSafeArea}>
               <TouchableOpacity
-                testID='prevBtn'
-                style={{
-                  borderRadius: 500,
-                  borderWidth: 2,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginRight: 10,
-                  borderColor: this.state.previousLesson
-                    ? colors.pianoteRed
-                    : colors.secondBackground
-                }}
+                style={[
+                  localStyles.prevBtn,
+                  {
+                    borderColor: this.state.previousLesson
+                      ? colors.pianoteRed
+                      : colors.secondBackground
+                  }
+                ]}
                 disabled={!this.state.previousLesson?.id}
                 onPress={() =>
                   this.switchLesson(
@@ -1579,46 +1280,28 @@ class ViewLesson extends React.Component {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[
-                  styles.heightButtons,
-                  {
-                    backgroundColor: colors.pianoteRed,
-                    borderRadius: 500,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flex: 1
-                  }
-                ]}
+                style={[styles.heightButtons, localStyles.completeBtn]}
                 onPress={() =>
                   this.state.progress === 100
                     ? this.setState({ showRestartCourse: true })
                     : this.onComplete(this.state.id)
                 }
               >
-                <Text
-                  style={{
-                    color: 'white',
-                    fontFamily: 'RobotoCondensed-Bold',
-                    fontSize: sizing.verticalListTitleSmall
-                  }}
-                >
+                <Text style={localStyles.completeBtnText}>
                   {this.state.progress === 100
                     ? 'COMPLETED'
                     : 'COMPLETE LESSON'}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                testID='prevBtn'
-                style={{
-                  borderRadius: 500,
-                  borderWidth: 2,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginLeft: 10,
-                  borderColor: this.state.nextLesson
-                    ? colors.pianoteRed
-                    : colors.secondBackground
-                }}
+                style={[
+                  localStyles.nextBtn,
+                  {
+                    borderColor: this.state.nextLesson
+                      ? colors.pianoteRed
+                      : colors.secondBackground
+                  }
+                ]}
                 disabled={!this.state.nextLesson?.id}
                 onPress={() =>
                   this.switchLesson(
@@ -1676,13 +1359,7 @@ class ViewLesson extends React.Component {
             )
           }
         >
-          <TouchableOpacity
-            style={{
-              flex: 1,
-              justifyContent: 'flex-end',
-              backgroundColor: 'rgba(0,0,0,.5)'
-            }}
-          >
+          <TouchableOpacity style={localStyles.modalContainer}>
             <DownloadResources
               styles={{
                 container: {
@@ -1828,27 +1505,14 @@ class ViewLesson extends React.Component {
             onBackdropPress={() => this.setState({ showMakeComment: false })}
           >
             <TouchableOpacity
-              style={{
-                flex: 1,
-                justifyContent: 'flex-end',
-                backgroundColor: 'rgba(0,0,0,.5)'
-              }}
+              style={localStyles.modalContainer}
               onPress={() => this.setState({ showMakeComment: false })}
             >
               <KeyboardAvoidingView
                 behavior={`${isiOS ? 'padding' : ''}`}
                 style={{ flex: 1, justifyContent: 'flex-end' }}
               >
-                <View
-                  style={{
-                    backgroundColor: colors.mainBackground,
-                    flexDirection: 'row',
-                    padding: 10,
-                    alignItems: 'center',
-                    borderTopWidth: 0.5,
-                    borderTopColor: colors.secondBackground
-                  }}
-                >
+                <View style={localStyles.inputContainer}>
                   <FastImage
                     style={{
                       height: onTablet ? 60 : 40,
@@ -1867,17 +1531,8 @@ class ViewLesson extends React.Component {
                   <TextInput
                     autoFocus={true}
                     multiline={true}
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      fontSize: sizing.descriptionText,
-                      flex: 1,
-                      backgroundColor: colors.mainBackground,
-                      color: colors.secondBackground,
-                      paddingVertical: 10
-                    }}
-                    onSubmitEditing={() => {
-                      this.makeComment();
-                    }}
+                    style={localStyles.textInput}
+                    onSubmitEditing={() => this.makeComment()}
                     returnKeyType={'go'}
                     onChangeText={comment => this.setState({ comment })}
                     placeholder={'Add a comment'}
@@ -1911,3 +1566,257 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, null)(ViewLesson);
+
+const setStyles = (appColor, size) =>
+  StyleSheet.create({
+    lessonContainer: {
+      backgroundColor: appColor.mainBackground,
+      width: '100%',
+      height: '100%'
+    },
+    videoPlaceholder: {
+      backgroundColor: 'black',
+      aspectRatio: 16 / 9,
+      justifyContent: 'center'
+    },
+    backBtnContainer: {
+      top: 0,
+      left: 0,
+      padding: 15,
+      position: 'absolute',
+      justifyContent: 'center'
+    },
+    belowVideoContainer: {
+      flex: 1,
+      backgroundColor: appColor.mainBackground
+    },
+    lessonTitle: {
+      fontSize: size.titleViewLesson,
+      marginTop: 15,
+      marginBottom: 5,
+      fontFamily: 'OpenSans-Bold',
+      textAlign: 'center',
+      color: 'white',
+      paddingHorizontal: 10
+    },
+    tags: {
+      fontSize: size.descriptionText,
+      fontFamily: 'OpenSans-Regular',
+      textAlign: 'center',
+      color: appColor.secondBackground,
+      paddingBottom: 20
+    },
+    iconsContainer: {
+      paddingHorizontal: 10,
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      alignContent: 'space-around'
+    },
+    iconBtn: {
+      flex: 1,
+      alignItems: 'center'
+    },
+    belowIconText: {
+      textAlign: 'center',
+      fontSize: size.descriptionText,
+      color: 'white',
+      marginTop: 5
+    },
+    description: {
+      paddingHorizontal: 10,
+      paddingTop: 20,
+      fontFamily: 'OpenSans-Regular',
+      fontSize: size.descriptionText,
+      textAlign: 'left',
+      color: 'white'
+    },
+    timecodeBtn: {
+      alignSelf: 'flex-start',
+      paddingVertical: 5
+    },
+    timeCodeDescription: {
+      color: 'white',
+      fontFamily: 'OpenSans-Regular',
+      fontSize: size.descriptionText,
+      marginTop: 5,
+      paddingHorizontal: 10,
+      textAlign: 'left'
+    },
+    timecode: {
+      color: '#007AFF',
+      textDecorationLine: 'underline'
+    },
+    assignment: {
+      padding: 10,
+      fontSize: size.verticalListTitleSmall,
+      fontFamily: 'RobotoCondensed-Bold',
+      color: appColor.secondBackground,
+      borderBottomColor: appColor.secondBackground,
+      borderBottomWidth: 1
+    },
+    commentTitleContainer: {
+      flexDirection: 'row',
+      flex: 1,
+      justifyContent: 'space-between',
+      paddingHorizontal: 10
+    },
+    commentsNum: {
+      fontSize: size.verticalListTitleSmall,
+      fontFamily: 'RobotoCondensed-Bold',
+      color: appColor.secondBackground
+    },
+    commentInputBtn: {
+      width: '100%',
+      flexDirection: 'row',
+      paddingHorizontal: 10,
+      paddingVertical: 20,
+      flex: 1
+    },
+    commentPlaceholder: {
+      textAlign: 'left',
+      fontFamily: 'OpenSans-Regular',
+      fontSize: size.descriptionText,
+      color: 'white',
+      paddingLeft: 10,
+      alignSelf: 'center'
+    },
+    progressBarContainer: {
+      backgroundColor: appColor.secondBackground,
+      height: 2,
+      width: '100%'
+    },
+    progress: {
+      backgroundColor: appColor.pianoteRed,
+      height: 3,
+      alignItems: 'flex-end',
+      justifyContent: 'center',
+      position: 'relative'
+    },
+    bottomSafeArea: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-evenly',
+      marginTop: 5,
+      paddingVertical: 5,
+      marginHorizontal: 5
+    },
+    prevBtn: {
+      borderRadius: 500,
+      borderWidth: 2,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: 10
+    },
+    completeBtn: {
+      backgroundColor: appColor.pianoteRed,
+      borderRadius: 500,
+      justifyContent: 'center',
+      alignItems: 'center',
+      flex: 1
+    },
+    completeBtnText: {
+      color: 'white',
+      fontFamily: 'RobotoCondensed-Bold',
+      fontSize: size.verticalListTitleSmall
+    },
+    nextBtn: {
+      borderRadius: 500,
+      borderWidth: 2,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginLeft: 10
+    },
+    modalContainer: {
+      flex: 1,
+      justifyContent: 'flex-end',
+      backgroundColor: 'rgba(0,0,0,.5)'
+    },
+    textInput: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: size.descriptionText,
+      flex: 1,
+      backgroundColor: appColor.mainBackground,
+      color: appColor.secondBackground,
+      paddingVertical: 10
+    },
+    inputContainer: {
+      backgroundColor: appColor.mainBackground,
+      flexDirection: 'row',
+      padding: 10,
+      alignItems: 'center',
+      borderTopWidth: 0.5,
+      borderTopColor: appColor.secondBackground
+    },
+    assignmentBtn: {
+      paddingHorizontal: 10,
+      paddingVertical: 5,
+      borderBottomColor: appColor.secondBackground,
+      borderBottomWidth: 1,
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      flexDirection: 'row'
+    },
+    assignmentBtnText: {
+      fontSize: size.verticalListTitleSmall,
+      color: appColor.secondBackground,
+      fontFamily: 'RobotoCondensed-Bold',
+      maxWidth: '90%'
+    },
+    commentContainer: {
+      backgroundColor: appColor.mainBackground,
+      borderTopColor: appColor.secondBackground,
+      flex: 1,
+      borderTopWidth: 0.25,
+      flexDirection: 'row',
+      paddingTop: 10,
+      paddingHorizontal: 10
+    },
+    commentUser: {
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      paddingBottom: 10
+    },
+    userXp: {
+      fontFamily: 'OpenSans-Bold',
+      fontSize: 12,
+      paddingTop: 5,
+      color: appColor.pianoteGrey
+    },
+    commentText: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: size.descriptionText,
+      color: 'white',
+      paddingTop: 10
+    },
+    userTags: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: size.descriptionText,
+      color: appColor.secondBackground,
+      paddingTop: 5,
+      paddingBottom: 10
+    },
+    commentIconsContainer: {
+      flexDirection: 'row',
+      paddingBottom: 15,
+      paddingTop: 5
+    },
+    bubble: {
+      borderRadius: 40,
+      backgroundColor: appColor.notificationColor,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    bubbleText: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: size.descriptionText,
+      color: appColor.pianoteRed,
+      paddingHorizontal: 5
+    },
+    repliesText: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: size.descriptionText,
+      color: appColor.secondBackground,
+      marginBottom: 10
+    }
+  });
