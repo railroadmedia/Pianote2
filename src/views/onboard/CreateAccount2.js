@@ -10,10 +10,8 @@ import {
   StyleSheet
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import AsyncStorage from '@react-native-community/async-storage';
-import PasswordMatch from '../../modals/PasswordMatch';
 import Back from '../../assets/img/svgs/back';
 import GradientFeature from '../../components/GradientFeature.js';
 import PasswordHidden from '../../assets/img/svgs/passwordHidden.svg';
@@ -92,8 +90,6 @@ export default class CreateAccount extends React.Component {
           });
         }
       }
-    } else {
-      this.setState({ showPasswordMatch: true });
     }
   };
 
@@ -244,7 +240,11 @@ export default class CreateAccount extends React.Component {
                   Use at least 8 characters
                 </Text>
                 <TouchableOpacity
-                  onPress={() => this.savePassword()}
+                  onPress={() => {
+                    if (this.state.password === this.state.confirmPassword) {
+                      this.savePassword();
+                    }
+                  }}
                   style={[
                     styles.centerContent,
                     localStyles.savePass,
@@ -282,26 +282,6 @@ export default class CreateAccount extends React.Component {
               </View>
               <CreateAccountStepCounter step={2} />
             </ScrollView>
-            <Modal
-              isVisible={this.state.showPasswordMatch}
-              style={[styles.centerContent, styles.modalContainer]}
-              animation={'slideInUp'}
-              animationInTiming={450}
-              animationOutTiming={450}
-              coverScreen={true}
-              hasBackdrop={true}
-              onBackButtonPress={() =>
-                this.setState({ showPasswordMatch: false })
-              }
-            >
-              <PasswordMatch
-                hidePasswordMatch={() => {
-                  this.setState({
-                    showPasswordMatch: false
-                  });
-                }}
-              />
-            </Modal>
           </KeyboardAvoidingView>
         </SafeAreaView>
       </FastImage>

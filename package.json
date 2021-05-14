@@ -48,7 +48,6 @@
     "react-native-google-cast": "^4.0.1",
     "react-native-home-indicator": "^0.2.6",
     "react-native-iap": "^4.6.3",
-    "react-native-idle-timer": "^2.1.6",
     "react-native-image-picker": "^1.1.0",
     "react-native-intercom": "^13.2.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.1",

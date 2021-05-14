@@ -2,29 +2,21 @@ import React from 'react';
 import { View, SafeAreaView, TouchableOpacity } from 'react-native';
 import { WebView } from 'react-native-webview';
 import Icon from '../assets/icons';
-import IdleTimerManager from 'react-native-idle-timer';
 
 export default class SoundSlice extends React.Component {
-  componentDidMount = () => IdleTimerManager.setIdleTimerDisabled(true);
+  componentDidMount = () => this.webView?.enableIdleTimer?.();
 
-  componentWillUnmount = () => IdleTimerManager.setIdleTimerDisabled(false);
+  componentWillUnmount = () => this.webView?.disableIdleTimer?.();
 
   render = () => {
     return (
       <SafeAreaView
-        style={{
-          flexDirection: 'row',
-          backgroundColor: 'black'
-        }}
+        style={{ flexDirection: 'row', backgroundColor: 'black' }}
         forceInset={{ top: 'always' }}
       >
         <View style={styles.container}>
           <View
-            style={{
-              height: '100%',
-              width: '100%',
-              backgroundColor: 'white'
-            }}
+            style={{ height: '100%', width: '100%', backgroundColor: 'white' }}
           >
             <View style={{ height: '20%' }}>
               <View
@@ -36,14 +28,8 @@ export default class SoundSlice extends React.Component {
                 }}
               >
                 <TouchableOpacity
-                  onPress={() => {
-                    this.props.hideSoundSlice();
-                  }}
-                  style={{
-                    height: '100%',
-                    width: '100%',
-                    zIndex: 10
-                  }}
+                  onPress={() => this.props.hideSoundSlice()}
+                  style={{ height: '100%', width: '100%', zIndex: 10 }}
                 >
                   <Icon.Feather
                     size={onTablet ? 50 : 35}

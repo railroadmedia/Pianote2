@@ -716,7 +716,7 @@ class InstructorsSection extends React.Component {
     if (filterType === 'instructorLetters') {
       this.setState(({ instructorLetters }) => ({
         instructorLetters: instructorLetters.includes(item)
-          ? instructorLetters.filter(il => il != item)
+          ? instructorLetters.filter(il => il !== item)
           : instructorLetters.concat(item)
       }));
     } else this.props.toggleItem(filterType, item);
@@ -815,7 +815,7 @@ class ProgressSection extends React.Component {
         selected: selected && selected === item ? 'ALL' : item
       }),
       () =>
-        this.state.selected && this.state.selected != 'ALL'
+        this.state.selected && this.state.selected !== 'ALL'
           ? (this.props.appliedFilters.progress = [this.state.selected])
           : delete this.props.appliedFilters.progress
     );
@@ -876,7 +876,7 @@ class StatusSection extends React.Component {
         selected: selected && selected === item ? 'ALL' : item
       }),
       () =>
-        this.state.selected && this.state.selected != 'ALL'
+        this.state.selected && this.state.selected !== 'ALL'
           ? (this.props.appliedFilters.status = [this.state.selected])
           : delete this.props.appliedFilters.status
     );

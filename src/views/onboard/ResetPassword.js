@@ -7,9 +7,7 @@ import {
   KeyboardAvoidingView,
   ScrollView
 } from 'react-native';
-import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
-import PasswordMatch from '../../modals/PasswordMatch';
 import { SafeAreaView } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
 import GradientFeature from '../../components/GradientFeature.js';
@@ -25,9 +23,10 @@ export default class ResetPassword extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
+    this.passwordMatch = false;
     this.state = {
       showConfirmPassword: true,
-      showPassword: true,
+      hidePassword: true,
       password: '',
       confirmPassword: '',
       scrollViewContentFlex: { flex: 1 }
@@ -131,9 +130,7 @@ export default class ResetPassword extends React.Component {
                 >
                   Create a new password
                 </Text>
-
                 <View
-                  key={'pass'}
                   style={{
                     marginBottom: 20,
                     borderRadius: 100,
@@ -152,11 +149,7 @@ export default class ResetPassword extends React.Component {
                         }
                       })
                     }
-                    onFocus={() =>
-                      this.setState({
-                        scrollViewContentFlex: {}
-                      })
-                    }
+                    onFocus={() => this.setState({ scrollViewContentFlex: {} })}
                     multiline={false}
                     keyboardAppearance={'dark'}
                     placeholderTextColor={'grey'}
@@ -174,11 +167,11 @@ export default class ResetPassword extends React.Component {
                       fontFamily: 'OpenSans-Regular'
                     }}
                   />
-                  {!this.state.showPassword && (
+                  {!this.state.hidePassword && (
                     <TouchableOpacity
                       onPress={() =>
                         this.setState({
-                          showPassword: true
+                          hidePassword: !this.state.hidePassword
                         })
                       }
                       style={{
@@ -195,11 +188,9 @@ export default class ResetPassword extends React.Component {
                     </TouchableOpacity>
                   )}
                   <TouchableOpacity
-                    onPress={() => {
-                      this.setState({
-                        showPassword: !this.state.showPassword
-                      });
-                    }}
+                    onPress={() =>
+                      this.setState({ hidePassword: !this.state.hidePassword })
+                    }
                     style={{
                       right: 0,
                       padding: 15,
@@ -208,7 +199,7 @@ export default class ResetPassword extends React.Component {
                       position: 'absolute'
                     }}
                   >
-                    {this.state.showPassword ? (
+                    {this.state.hidePassword ? (
                       <PasswordHidden />
                     ) : (
                       <PasswordVisible />
@@ -227,7 +218,6 @@ export default class ResetPassword extends React.Component {
                   Confirm password
                 </Text>
                 <View
-                  key={'confirm_pass'}
                   style={{
                     borderRadius: 100,
                     marginVertical: 10,
@@ -350,30 +340,8 @@ export default class ResetPassword extends React.Component {
               </View>
             </ScrollView>
           </KeyboardAvoidingView>
-          <Modal
-            isVisible={this.state.showPasswordMatch}
-            style={[styles.centerContent, styles.modalContainer]}
-            animation={'slideInUp'}
-            animationInTiming={450}
-            animationOutTiming={450}
-            coverScreen={true}
-            hasBackdrop={true}
-            onBackButtonPress={() =>
-              this.setState({ showPasswordMatch: false })
-            }
-          >
-            <PasswordMatch
-              hidePasswordMatch={() => {
-                this.setState({
-                  showPasswordMatch: false
-                });
-              }}
-            />
-          </Modal>
           <CustomModal
-            ref={ref => {
-              this.alert = ref;
-            }}
+            ref={ref => (this.alert = ref)}
             additionalBtn={
               <TouchableOpacity
                 style={{
