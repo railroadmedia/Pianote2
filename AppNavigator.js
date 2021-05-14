@@ -105,7 +105,6 @@ export default () => (
           transitionSpec: { open: timingAnim, close: timingAnim }
         }}
       >
-        <Stack.Screen name='CREATEACCOUNT2' component={CreateAccount2} />
         {/* onboard */}
         <Stack.Screen name='LOADPAGE' component={LoadPage} />
         <Stack.Screen name='LOGIN' component={Login} />
@@ -113,7 +112,7 @@ export default () => (
         <Stack.Screen name='LOGINCREDENTIALS' component={LoginCredentials} />
         <Stack.Screen name='SUPPORTSIGNUP' component={SupportSignUp} />
         <Stack.Screen name='FORGOTPASSWORD' component={ForgotPassword} />
-
+        <Stack.Screen name='CREATEACCOUNT2' component={CreateAccount2} />
         <Stack.Screen
           name='CREATEACCOUNT3'
           component={CreateAccount3}

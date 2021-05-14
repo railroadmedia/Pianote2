@@ -14,9 +14,8 @@ import Icon from '../../assets/icons.js';
 import Back from '../../assets/img/svgs/back.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import { SafeAreaView } from 'react-navigation';
-import DisplayName from '../../modals/DisplayName.js';
-import ProfileImage from '../../modals/ProfileImage.js';
 import NavigationBar from '../../components/NavigationBar.js';
+import CustomModal from '../../modals/CustomModal';
 import commonService from '../../services/common.service.js';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import Loading from '../../components/Loading.js';
@@ -30,8 +29,6 @@ export default class ProfileSettings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showDisplayName: false,
-      showProfileImage: false,
       isLoading: false,
       currentlyView: 'Profile Settings',
       displayName: '',
@@ -82,7 +79,10 @@ export default class ProfileSettings extends React.Component {
       await AsyncStorage.setItem('displayName', this.state.displayName);
       reset('PROFILE');
     } else {
-      this.setState({ showDisplayName: true });
+      this.alertDisplay?.toggle(
+        'This display name is already in use.',
+        'Please try again.'
+      );
     }
   };
 
@@ -98,7 +98,7 @@ export default class ProfileSettings extends React.Component {
     if (this.state.imageURI !== '') {
       let response = await avatarUpload(data);
       if (response.status === 413) {
-        this.setState({ showProfileImage: true });
+        this.alert?.toggle('Profile image is too large.', 'Please try again.');
         return;
       }
       let url = await response.json();
@@ -302,30 +302,68 @@ export default class ProfileSettings extends React.Component {
           {this.state.currentlyView === 'Profile Settings' && (
             <NavigationBar currentPage={'PROFILE'} pad={true} />
           )}
-          <DisplayName
-            onBackButtonPress={() =>
-              this.setState({
-                showDisplayName: false
-              })
+          <CustomModal
+            ref={r => (this.alertDisplay = r)}
+            additionalBtn={
+              <TouchableOpacity
+                onPress={() => {
+                  this.refresh();
+                  this.alert?.toggle();
+                }}
+                style={{
+                  marginTop: 20,
+                  borderRadius: 50,
+                  backgroundColor: colors.pianoteRed
+                }}
+              >
+                <Text
+                  style={[
+                    styles.modalButtonText,
+                    {
+                      padding: 10,
+                      fontSize: 15,
+                      color: '#ffffff'
+                    }
+                  ]}
+                >
+                  TRY AGAIN
+                </Text>
+              </TouchableOpacity>
             }
-            isVisible={this.state.showDisplayName}
-            hideDisplayName={() => {
-              this.setState({
-                showDisplayName: false
-              });
-            }}
-          />
-          <ProfileImage
-            isVisible={this.state.showProfileImage}
-            onBackButtonPress={() => this.setState({ showProfileImage: false })}
-            hideProfileImage={() => {
-              this.setState({
-                showProfileImage: false
-              });
-            }}
+            onClose={() => {}}
           />
         </SafeAreaView>
         <Loading ref={ref => (this.loadingRef = ref)} />
+        <CustomModal
+          ref={r => (this.alert = r)}
+          additionalBtn={
+            <TouchableOpacity
+              onPress={() => {
+                this.refresh();
+                this.alert?.toggle();
+              }}
+              style={{
+                marginTop: 20,
+                borderRadius: 50,
+                backgroundColor: colors.pianoteRed
+              }}
+            >
+              <Text
+                style={[
+                  styles.modalButtonText,
+                  {
+                    padding: 10,
+                    fontSize: 15,
+                    color: '#ffffff'
+                  }
+                ]}
+              >
+                TRY AGAIN
+              </Text>
+            </TouchableOpacity>
+          }
+          onClose={() => {}}
+        />
         <SafeAreaView style={{ position: 'absolute', zIndex: 3 }}>
           <TouchableOpacity
             onPress={() => {

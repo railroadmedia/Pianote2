@@ -20,8 +20,7 @@ import Courses from '../../assets/img/svgs/courses.svg';
 import Support from '../../assets/img/svgs/support.svg';
 import Songs from '../../assets/img/svgs/headphones.svg';
 import LearningPaths from '../../assets/img/svgs/learningPaths.svg';
-import ProfileImage from '../../modals/ProfileImage.js';
-import DisplayName from '../../modals/DisplayName.js';
+import CustomModal from '../../modals/CustomModal';
 import commonService from '../../services/common.service.js';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import Orientation from 'react-native-orientation-locker';
@@ -45,8 +44,6 @@ export default class CreateAccount3 extends React.Component {
     Orientation.lockToPortrait();
     this.state = {
       page: 1,
-      showDisplayName: false,
-      showProfileImage: false,
       showImage: false,
       canScroll: false,
       pageNum: 0,
@@ -129,7 +126,10 @@ export default class CreateAccount3 extends React.Component {
           page: 2
         });
       } else {
-        this.setState({ showDisplayName: true });
+        this.alertDisplay?.toggle(
+          'This display name is already in use.',
+          'Please try again.'
+        );
       }
     }
   };
@@ -172,7 +172,10 @@ export default class CreateAccount3 extends React.Component {
           let response = await avatarUpload(data);
           // if image is too large
           if (response.status === 413) {
-            this.setState({ showProfileImage: true });
+            this.alert?.toggle(
+              'Profile image is too large.',
+              'Please try again.'
+            );
             return;
           }
 
@@ -354,9 +357,35 @@ export default class CreateAccount3 extends React.Component {
                 </View>
               </KeyboardAvoidingView>
             </View>
-            <DisplayName
-              isVisible={this.state.showDisplayName}
-              hideDisplayName={() => this.setState({ showDisplayName: false })}
+            <CustomModal
+              ref={r => (this.alertDisplay = r)}
+              additionalBtn={
+                <TouchableOpacity
+                  onPress={() => {
+                    this.refresh();
+                    this.alert?.toggle();
+                  }}
+                  style={{
+                    marginTop: 20,
+                    borderRadius: 50,
+                    backgroundColor: colors.pianoteRed
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.modalButtonText,
+                      {
+                        padding: 10,
+                        fontSize: 15,
+                        color: '#ffffff'
+                      }
+                    ]}
+                  >
+                    TRY AGAIN
+                  </Text>
+                </TouchableOpacity>
+              }
+              onClose={() => {}}
             />
           </View>
           <View style={styles.centerContent}>
@@ -539,16 +568,6 @@ export default class CreateAccount3 extends React.Component {
                 </View>
               </View>
             </View>
-            <ProfileImage
-              isVisible={this.state.showProfileImage}
-              hideProfileImage={() =>
-                this.setState({ showProfileImage: false })
-              }
-            />
-            <DisplayName
-              isVisible={this.state.showDisplayName}
-              hideDisplayName={() => this.setState({ showDisplayName: false })}
-            />
           </View>
           <View style={localStyles.reviewContainer}>
             <Text
@@ -949,6 +968,36 @@ export default class CreateAccount3 extends React.Component {
             </View>
           </View>
         </ScrollView>
+        <CustomModal
+          ref={r => (this.alert = r)}
+          additionalBtn={
+            <TouchableOpacity
+              onPress={() => {
+                this.refresh();
+                this.alert?.toggle();
+              }}
+              style={{
+                marginTop: 20,
+                borderRadius: 50,
+                backgroundColor: colors.pianoteRed
+              }}
+            >
+              <Text
+                style={[
+                  styles.modalButtonText,
+                  {
+                    padding: 10,
+                    fontSize: 15,
+                    color: '#ffffff'
+                  }
+                ]}
+              >
+                TRY AGAIN
+              </Text>
+            </TouchableOpacity>
+          }
+          onClose={() => {}}
+        />
         <Loading ref={ref => (this.loadingRef = ref)} />
       </SafeAreaView>
     );
