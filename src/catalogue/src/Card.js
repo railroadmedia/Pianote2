@@ -6,7 +6,6 @@ import { bindActionCreators } from 'redux';
 
 import { Download_V2 } from 'RNDownload';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
-import AntIcon from 'react-native-vector-icons/AntDesign';
 
 import {
   addToMyList,
@@ -18,6 +17,8 @@ import {
 import commonService from './services/common.service';
 
 import { toggleMyList, toggleLike } from './redux/CardsActions';
+
+import { like, likeOn, addToCalendar, x, plus } from './img/svgs';
 
 class Card extends React.Component {
   constructor(props) {
@@ -161,22 +162,15 @@ class Card extends React.Component {
                   ]
                 }
               >
-                <AntIcon
-                  style={{
-                    textAlign: 'center',
-                    width: onTablet ? 28 : 22,
-                    height: onTablet ? 28 : 22
-                  }}
-                  size={onTablet ? 28 : 22}
-                  name={
-                    new Date(data.published_on) > new Date()
-                      ? 'calendar'
-                      : data.is_added_to_primary_playlist
-                      ? 'close'
-                      : 'plus'
-                  }
-                  color={colors.pianoteRed}
-                />
+                {(new Date(data.published_on) > new Date()
+                  ? addToCalendar
+                  : data.is_added_to_primary_playlist
+                  ? x
+                  : plus)({
+                  height: 25,
+                  width: 25,
+                  fill: '#fb1b2f'
+                })}
               </TouchableOpacity>
             </View>
           )}
@@ -306,15 +300,11 @@ class Card extends React.Component {
                       style={{ alignItems: 'center', flex: 1 }}
                       onPress={this.toggleLike}
                     >
-                      <AntIcon
-                        style={{
-                          textAlign: 'center',
-                          width: onTablet ? 28 : 22,
-                          height: onTablet ? 28 : 22
-                        }}
-                        size={onTablet ? 28 : 22}
-                        name={data.is_liked_by_current_user ? 'like1' : 'like2'}
-                      />
+                      {(data.is_liked_by_current_user ? likeOn : like)({
+                        height: 25,
+                        width: 25,
+                        fill: 'black'
+                      })}
                       <Text>{data.like_count}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -327,21 +317,15 @@ class Card extends React.Component {
                         ]
                       }
                     >
-                      <AntIcon
-                        style={{
-                          textAlign: 'center',
-                          width: onTablet ? 28 : 22,
-                          height: onTablet ? 28 : 22
-                        }}
-                        size={onTablet ? 28 : 22}
-                        name={
-                          new Date(data.published_on) > new Date()
-                            ? 'calendar'
-                            : data.is_added_to_primary_playlist
-                            ? 'close'
-                            : 'plus'
-                        }
-                      />
+                      {(new Date(data.published_on) > new Date()
+                        ? addToCalendar
+                        : data.is_added_to_primary_playlist
+                        ? x
+                        : plus)({
+                        height: 25,
+                        width: 25,
+                        fill: 'black'
+                      })}
                       <Text>My List</Text>
                     </TouchableOpacity>
                     <Download_V2
@@ -424,16 +408,11 @@ class Card extends React.Component {
                     Add this lesson to your calendar to{'\n'} be notified when
                     it's available
                   </Text>
-                  <AntIcon
-                    style={{
-                      textAlign: 'center',
-                      width: onTablet ? 70 : 50,
-                      height: onTablet ? 70 : 50
-                    }}
-                    size={onTablet ? 70 : 50}
-                    name={'calendar'}
-                    color={colors.pianoteRed}
-                  />
+                  {addToCalendar({
+                    height: 25,
+                    width: 25,
+                    fill: '#fb1b2f'
+                  })}
                   <TouchableOpacity
                     onPress={this.addToCalendar}
                     style={{

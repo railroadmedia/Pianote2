@@ -12,7 +12,6 @@ import {
   Modal
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 
 import Card from './Card';
@@ -22,7 +21,7 @@ import Sort from './Sort';
 import commonService from './services/common.service';
 import { getContent, getAll, cache } from './services/catalogue.service';
 
-import { arrowLeft } from './img/svgs';
+import { arrowLeft, play, reset, arrowRight } from './img/svgs';
 
 let styles;
 
@@ -245,13 +244,13 @@ export default class Catalogue extends React.Component {
                 {[
                   {
                     text: completed ? 'RESET' : started ? 'CONTINUE' : 'START',
-                    icon: completed ? 'replay' : 'play',
+                    icon: completed ? reset : play,
                     action:
                       !completed && (() => this.navigateTo('methodLesson'))
                   },
                   {
                     text: 'MORE INFO',
-                    icon: 'arrow-right',
+                    icon: arrowRight,
                     moreInfo: true,
                     action: () => this.navigateTo('method')
                   }
@@ -268,7 +267,7 @@ export default class Catalogue extends React.Component {
                       }
                     ]}
                   >
-                    <Icon name={to.icon} size={30} color={'white'} />
+                    {to.icon({ height: 20, width: 20, fill: 'white' })}
                     <Text style={styles.headerBtnText}>{to.text}</Text>
                   </TouchableOpacity>
                 ))}
