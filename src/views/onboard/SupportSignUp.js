@@ -7,11 +7,12 @@ import {
   Linking,
   StyleSheet
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import Intercom from 'react-native-intercom';
 import Back from '../../assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';
+
+const onTablet = global.onTablet;
 
 export default class SupportSignUp extends React.Component {
   componentDidMount = () => Intercom.registerUnidentifiedUser();
@@ -159,7 +160,7 @@ const localStyles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: DeviceInfo.isTablet() ? 20 : 16,
+    fontSize: onTablet ? 20 : 16,
     color: 'white',
     paddingVertical: 15
   }

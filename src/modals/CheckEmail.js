@@ -6,8 +6,9 @@ import {
   TouchableWithoutFeedback,
   StyleSheet
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import { navigate } from '../../AppNavigator';
+
+const onTablet = global.onTablet;
 
 export default class CheckEmail extends React.Component {
   render = () => {
@@ -70,7 +71,7 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#fb1b2f',
     marginHorizontal: 40,
     marginVertical: 5,
-    height: DeviceInfo.isTablet() ? 45 : 35
+    height: onTablet ? 45 : 35
   },
   loginText: {
     color: 'white',

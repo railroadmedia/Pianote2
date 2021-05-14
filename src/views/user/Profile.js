@@ -28,7 +28,7 @@ import {
 import { SafeAreaView } from 'react-navigation';
 import { navigate } from '../../../AppNavigator.js';
 
-const isTablet = DeviceInfo.isTablet();
+const isTablet = global.onTablet;
 const messageDict = {
   'lesson comment reply': {
     message: 'replied to your comment.',

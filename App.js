@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 import { Text, Linking, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Orientation from 'react-native-orientation-locker';
-import DeviceInfo from 'react-native-device-info';
 import AppNavigator, { reset } from './AppNavigator';
 
 import packsReducer from './src/redux/PacksCacheReducer';
@@ -36,7 +35,7 @@ export default class App extends React.Component {
     Text.defaultProps = {};
     Text.defaultProps.maxFontSizeMultiplier = 1;
     super(props);
-    if (DeviceInfo.isTablet()) Orientation.unlockAllOrientations();
+    if (onTablet) Orientation.unlockAllOrientations();
     else Orientation.lockToPortrait();
     global.notifNavigation = false;
   }

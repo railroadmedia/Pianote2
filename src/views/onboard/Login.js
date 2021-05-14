@@ -11,7 +11,6 @@ import {
   Image,
   StyleSheet
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
 import RNIap from 'react-native-iap';
 import Pianote from '../../assets/img/svgs/pianote.svg';
@@ -25,7 +24,7 @@ import { navigate } from '../../../AppNavigator.js';
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const isTablet = DeviceInfo.isTablet();
+const isTablet = global.onTablet;
 const skus = Platform.select({
   android: ['pianote_app_1_year_2021', 'pianote_app_1_month_2021'],
   ios: [

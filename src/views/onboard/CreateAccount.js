@@ -18,11 +18,10 @@ import GradientFeature from '../../components/GradientFeature.js';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
 import Orientation from 'react-native-orientation-locker';
-import DeviceInfo from 'react-native-device-info';
 import { navigate } from '../../../AppNavigator';
 import { isEmailUnique } from '../../services/UserDataAuth';
 
-const isTablet = DeviceInfo.isTablet();
+const isTablet = global.onTablet;
 
 export default class CreateAccount extends React.Component {
   static contextType = NetworkContext;

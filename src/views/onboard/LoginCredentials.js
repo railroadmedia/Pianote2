@@ -35,7 +35,7 @@ import { goBack, navigate, reset } from '../../../AppNavigator';
 import commonService from '../../services/common.service';
 import navigationService from '../../services/navigation.service';
 
-const isTablet = DeviceInfo.isTablet();
+const isTablet = global.onTablet;
 
 export default class LoginCredentials extends React.Component {
   static contextType = NetworkContext;

@@ -8,10 +8,11 @@ import {
   StyleSheet,
   Linking
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import Back from '../../assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';
+
+const onTablet = global.onTablet;
 
 export default class PrivacyPolicy extends React.Component {
   render() {
@@ -873,7 +874,7 @@ const localStyles = StyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
-    fontSize: DeviceInfo.isTablet() ? 28 : 20,
+    fontSize: onTablet ? 28 : 20,
     alignSelf: 'center',
     textAlign: 'center'
   },

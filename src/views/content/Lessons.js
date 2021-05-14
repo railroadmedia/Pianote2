@@ -21,7 +21,6 @@ import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import PasswordVisible from '../../assets/img/svgs/passwordVisible.svg';
 import Orientation from 'react-native-orientation-locker';
 import { watchersListener } from 'MusoraChat';
-import DeviceInfo from 'react-native-device-info';
 import LongButton from '../../components/LongButton';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
@@ -543,7 +542,7 @@ class Lessons extends React.Component {
                     numberOfLines={1}
                     style={{
                       textAlign: 'left',
-                      fontSize: DeviceInfo.isTablet() ? 20 : 16,
+                      fontSize: onTablet ? 20 : 16,
                       fontFamily: 'RobotoCondensed-Bold',
                       paddingTop: 5,
                       paddingBottom: 15,
@@ -849,7 +848,7 @@ class Lessons extends React.Component {
                             numberOfLines={1}
                             ellipsizeMode='tail'
                             style={{
-                              fontSize: DeviceInfo.isTablet() ? 16 : 14,
+                              fontSize: onTablet ? 16 : 14,
                               fontFamily: 'OpenSans-Bold',
                               color: 'white'
                             }}
@@ -1013,7 +1012,7 @@ class Lessons extends React.Component {
                                 <Text
                                   numberOfLines={1}
                                   style={{
-                                    fontSize: DeviceInfo.isTablet() ? 14 : 12,
+                                    fontSize: onTablet ? 14 : 12,
                                     fontFamily: 'OpenSans-Regular',
                                     color: 'white',
                                     paddingLeft: 5
@@ -1028,7 +1027,7 @@ class Lessons extends React.Component {
                             numberOfLines={1}
                             ellipsizeMode='tail'
                             style={{
-                              fontSize: DeviceInfo.isTablet() ? 16 : 14,
+                              fontSize: onTablet ? 16 : 14,
                               fontFamily: 'OpenSans-Bold',
                               color: 'white'
                             }}

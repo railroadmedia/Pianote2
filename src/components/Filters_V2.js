@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import FastImage from 'react-native-fast-image';
 import { SafeAreaView } from 'react-navigation';
 import ExpandableView from './ExpandableView';
@@ -20,7 +19,7 @@ import Filters from '../assets/img/svgs/filters';
 
 let alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
   instructorNames = [],
-  isTablet = DeviceInfo.isTablet(),
+  isTablet = onTablet,
   progressTypes = ['ALL', 'IN PROGRESS', 'COMPLETED'],
   statusKeys = ['ALL', 'UPCOMING LIVE EVENTS', 'RECORDED EVENTS'],
   styleKeys = [],

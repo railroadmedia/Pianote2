@@ -15,7 +15,7 @@ import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';
 
-const isTablet = DeviceInfo.isTablet();
+const isTablet = global.onTablet;
 
 export default class Support extends React.Component {
   componentDidMount = async () => {

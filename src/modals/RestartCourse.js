@@ -6,8 +6,9 @@ import {
   TouchableWithoutFeedback,
   StyleSheet
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import Modal from 'react-native-modal';
+
+const onTablet = global.onTablet;
 
 export default class RestartCourse extends React.Component {
   changeType = word => {
@@ -103,7 +104,7 @@ const localStyles = StyleSheet.create({
     marginTop: 10,
     borderRadius: 40,
     paddingHorizontal: 20,
-    height: DeviceInfo.isTablet() ? 45 : 35,
+    height: onTablet ? 45 : 35,
     alignSelf: 'center',
     justifyContent: 'center'
   },

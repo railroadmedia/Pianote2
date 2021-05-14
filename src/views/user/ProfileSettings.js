@@ -8,8 +8,6 @@ import {
   StatusBar,
   StyleSheet
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
-import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import ImagePicker from 'react-native-image-picker';
 import Icon from '../../assets/icons.js';
@@ -25,7 +23,7 @@ import Loading from '../../components/Loading.js';
 import { goBack, reset } from '../../../AppNavigator.js';
 import { isNameUnique, avatarUpload } from '../../services/UserDataAuth.js';
 
-const isTablet = DeviceInfo.isTablet();
+const isTablet = global.onTablet;
 
 export default class ProfileSettings extends React.Component {
   static contextType = NetworkContext;

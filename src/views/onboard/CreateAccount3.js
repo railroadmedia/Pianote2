@@ -10,7 +10,6 @@ import {
   Dimensions,
   StyleSheet
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import ImagePicker from 'react-native-image-picker';
@@ -32,7 +31,7 @@ import { isNameUnique, avatarUpload } from '../../services/UserDataAuth';
 
 var data = new FormData();
 
-const isTablet = DeviceInfo.isTablet();
+const isTablet = global.onTablet;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;

@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
-import DeviceInfo from 'react-native-device-info';
 import Back from '../../assets/img/svgs/back';
 import Pianote from '../../assets/img/svgs/pianote.svg';
 import GradientFeature from '../../../src/components/GradientFeature.js';
@@ -25,7 +24,7 @@ import { openInbox } from 'react-native-email-link';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { goBack, navigate } from '../../../AppNavigator';
 
-const isTablet = DeviceInfo.isTablet();
+const isTablet = global.onTablet;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;

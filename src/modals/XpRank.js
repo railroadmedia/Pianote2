@@ -6,10 +6,9 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import ProgressCircle from 'react-native-progress-circle';
 
-const isTablet = DeviceInfo.isTablet();
+const isTablet = global.onTablet;
 const ranks = [
   0,
   100,

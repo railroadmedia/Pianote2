@@ -6,9 +6,10 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import FastImage from 'react-native-fast-image';
 import Icon from '../assets/icons';
+
+const onTablet = global.onTablet;
 
 export default class NextVideo extends React.Component {
   constructor(props) {
@@ -148,7 +149,7 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: 10
   },
   image: {
-    width: DeviceInfo.isTablet()
+    width: onTablet
       ? Dimensions.get('window').width * 0.15
       : Dimensions.get('window').width * 0.225,
     aspectRatio: 16 / 9,

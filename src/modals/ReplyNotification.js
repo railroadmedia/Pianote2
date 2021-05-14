@@ -7,12 +7,11 @@ import {
   SafeAreaView
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import DeviceInfo from 'react-native-device-info';
 import Chat from '../../src/assets/img/svgs/chat.svg';
 import Icon from '../assets/icons';
 import { getUserData } from '../../src/services/UserDataAuth.js';
 
-const isTablet = DeviceInfo.isTablet();
+const isTablet = global.onTablet;
 const messageDict = {
   'lesson comment reply': {
     message: 'replied to your comment.',

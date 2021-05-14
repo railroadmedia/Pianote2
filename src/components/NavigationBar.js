@@ -2,11 +2,12 @@ import React from 'react';
 import FastImage from 'react-native-fast-image';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import DeviceInfo from 'react-native-device-info';
 import Icon from '../assets/icons';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NetworkContext } from '../context/NetworkProvider';
 import { navigate } from '../../AppNavigator';
+
+const onTablet = global.onTablet;
 
 export default class NavigationBar extends React.Component {
   static contextType = NetworkContext;
@@ -156,8 +157,8 @@ const localStyles = StyleSheet.create({
   navIconContainer: {
     borderRadius: 100,
     borderWidth: 2.25,
-    height: DeviceInfo.isTablet() ? 40 : 30,
-    width: DeviceInfo.isTablet() ? 40 : 30
+    height: onTablet ? 40 : 30,
+    width: onTablet ? 40 : 30
   },
   navContainer: {
     alignSelf: 'stretch',

@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import Icon from '../assets/icons';
 import Modal from 'react-native-modal';
+
+const onTablet = global.onTablet;
 
 export default class AddToCalendar extends React.Component {
   render = () => {
@@ -88,7 +89,7 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#fb1b2f',
     marginHorizontal: 40,
     justifyContent: 'center',
-    height: DeviceInfo.isTablet() ? 40 : 30
+    height: onTablet ? 40 : 30
   },
   confirmAdditionText: {
     color: 'white'

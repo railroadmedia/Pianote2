@@ -40,7 +40,7 @@ import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
 import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
 import { goBack, navigate, reset } from '../../../AppNavigator.js';
 
-const isTablet = DeviceInfo.isTablet();
+const isTablet = global.onTablet;
 
 class Settings extends React.Component {
   static contextType = NetworkContext;

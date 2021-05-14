@@ -8,9 +8,10 @@ import {
   Dimensions
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import DeviceInfo from 'react-native-device-info';
 import { navigate } from '../../AppNavigator';
-const isTablet = DeviceInfo.isTablet();
+
+const isTablet = global.onTablet;
+
 export default class Live extends React.Component {
   constructor(props) {
     super(props);

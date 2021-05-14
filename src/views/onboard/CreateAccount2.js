@@ -9,7 +9,6 @@ import {
   ScrollView,
   StyleSheet
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -24,7 +23,7 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
 import { goBack, navigate } from '../../../AppNavigator';
 
-const isTablet = DeviceInfo.isTablet();
+const isTablet = global.onTablet;
 
 export default class CreateAccount extends React.Component {
   static contextType = NetworkContext;

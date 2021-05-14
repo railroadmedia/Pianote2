@@ -9,7 +9,6 @@ import {
   StyleSheet
 } from 'react-native';
 import Back from '../../assets/img/svgs/back.svg';
-import DeviceInfo from 'react-native-device-info';
 import Icon from '../../assets/icons.js';
 import { getUserData } from '../../services/UserDataAuth.js';
 import CustomSwitch from '../../components/CustomSwitch.js';
@@ -19,7 +18,7 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';
 
-const isTablet = DeviceInfo.isTablet();
+const isTablet = global.onTablet;
 
 export default class NotificationSettings extends React.Component {
   static contextType = NetworkContext;

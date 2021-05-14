@@ -10,7 +10,6 @@ import {
   Dimensions
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import DeviceInfo from 'react-native-device-info';
 import Icon from '../assets/icons';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import Modal from 'react-native-modal';
@@ -36,6 +35,7 @@ const sortDict = {
   trending: 'TRENDING',
   relevance: 'RELEVANCE'
 };
+const onTablet = global.onTablet;
 
 export default class HorizontalVideoList extends React.Component {
   static contextType = NetworkContext;
@@ -766,13 +766,13 @@ export default class HorizontalVideoList extends React.Component {
 
 const localStyles = StyleSheet.create({
   title: {
-    fontSize: DeviceInfo.isTablet() ? 20 : 16,
+    fontSize: onTablet ? 20 : 16,
     fontFamily: 'RobotoCondensed-Bold',
     paddingVertical: 5
   },
   seeAllText: {
     textAlign: 'right',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    fontSize: onTablet ? 16 : 12,
     color: '#fb1b2f',
     paddingRight: 10
   },
@@ -803,7 +803,7 @@ const localStyles = StyleSheet.create({
     alignItems: 'center'
   },
   videoTitleText: {
-    fontSize: DeviceInfo.isTablet() ? 16 : 14,
+    fontSize: onTablet ? 16 : 14,
     fontFamily: 'OpenSans-Bold',
     color: 'white'
   },

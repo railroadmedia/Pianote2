@@ -15,10 +15,9 @@ import {
 import FastImage from 'react-native-fast-image';
 import Icon from '../assets/icons';
 import { Download_V2 } from 'RNDownload';
-import DeviceInfo from 'react-native-device-info';
 import contentService from '../services/content.service';
 
-const isTablet = DeviceInfo.isTablet();
+const isTablet = global.onTablet;
 
 export default class ContentModal extends React.Component {
   constructor(props) {

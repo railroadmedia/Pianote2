@@ -9,14 +9,13 @@ import {
   KeyboardAvoidingView,
   StyleSheet
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import Icon from '../assets/icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { NetworkContext } from '../context/NetworkProvider';
 
-const isTablet = DeviceInfo.isTablet();
+const isTablet = onTablet;
 export default class Replies extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
