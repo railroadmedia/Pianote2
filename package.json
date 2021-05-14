@@ -27,7 +27,6 @@
     "RNDownload": "git+https://github.com/railroadmedia/RNDownload.git",
     "RNVideoEnhanced": "git+https://github.com/railroadmedia/RNVideoEnhanced.git",
     "link": "^0.1.5",
-    "moment": "^2.27.0",
     "opentype.js": "^1.1.0",
     "patch-package": "^6.2.2",
     "react": "16.13.1",

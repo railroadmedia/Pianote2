@@ -13,12 +13,10 @@ import {
   BackHandler,
   SafeAreaView
 } from 'react-native';
-import moment from 'moment';
 import Video from 'RNVideoEnhanced';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import Icon from '../../assets/icons.js';
-import AsyncStorage from '@react-native-community/async-storage';
 import { Download_V2, offlineContent, DownloadResources } from 'RNDownload';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Replies from '../../components/Replies';
@@ -48,12 +46,13 @@ import Assignment from './Assignment';
 import { NetworkContext } from '../../context/NetworkProvider';
 import methodService from '../../services/method.service';
 import { goBack, navigate } from '../../../AppNavigator';
+import { connect } from 'react-redux';
 
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
-export default class ViewLesson extends React.Component {
+class ViewLesson extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -94,7 +93,6 @@ export default class ViewLesson extends React.Component {
       lessonTitle: '',
       commentId: '',
       sort: 'Popular',
-      profileImage: '',
       comment: '',
       description: '',
       publishedOn: '',
@@ -107,12 +105,6 @@ export default class ViewLesson extends React.Component {
 
     // get profile image
     this.limit = 10;
-    let storage = await Promise.all([
-      AsyncStorage.getItem('userId'),
-      AsyncStorage.getItem('profileURI')
-    ]);
-    if (storage[1]) this.setState({ profileImage: storage[1] });
-    this.userId = JSON.parse(storage[0]);
     this.getContent();
   };
 
@@ -394,6 +386,24 @@ export default class ViewLesson extends React.Component {
     commentsService.deleteComment(id);
   };
 
+  lastPostTime(date) {
+    let dif = new Date() - new Date(date);
+    if (dif < 120 * 1000) return `1 Minute Ago`;
+    if (dif < 60 * 1000 * 60)
+      return `${(dif / 1000 / 60).toFixed()} Minutes Ago`;
+    if (dif < 60 * 1000 * 60 * 2) return `1 Hour Ago`;
+    if (dif < 60 * 1000 * 60 * 24)
+      return `${(dif / 1000 / 60 / 60).toFixed()} Hours Ago`;
+    if (dif < 60 * 1000 * 60 * 48) return `1 Day Ago`;
+    if (dif < 60 * 1000 * 60 * 24 * 30)
+      return `${(dif / 1000 / 60 / 60 / 24).toFixed()} Days Ago`;
+    if (dif < 60 * 1000 * 60 * 24 * 60) return `1 Month Ago`;
+    if (dif < 60 * 1000 * 60 * 24 * 30 * 12)
+      return `${(dif / 1000 / 60 / 60 / 24 / 30).toFixed()} Months Ago`;
+    if (dif < 60 * 1000 * 60 * 24 * 365 * 2) return `1 Year Ago`;
+    return `${(dif / 1000 / 60 / 60 / 24 / 365).toFixed()} Years Ago`;
+  }
+
   mapComments() {
     return this.state.comments.map((item, index) => (
       <View
@@ -462,7 +472,7 @@ export default class ViewLesson extends React.Component {
             }}
           >
             {item.user['display_name']} | {item.user.rank} |{' '}
-            {moment.utc(item.created_on).local().fromNow()}
+            {this.lastPostTime(item.created_on)}
           </Text>
           <View
             style={{
@@ -546,7 +556,7 @@ export default class ViewLesson extends React.Component {
                   </View>
                 )}
               </View>
-              {this.userId === item.user_id && (
+              {this.props.user.id === item.user_id && (
                 <TouchableOpacity
                   style={{ marginLeft: 10 }}
                   onPress={() => this.deleteComment(item.id)}
@@ -632,7 +642,7 @@ export default class ViewLesson extends React.Component {
       progress: !selectedAssignment
         ? 0
         : res.type !== 'course'
-        ? res.user_progress?.[this.userId]?.progress_percent
+        ? res.user_progress?.[this.props.user.id]?.progress_percent
         : state.progress
     }));
   }
@@ -1335,7 +1345,7 @@ export default class ViewLesson extends React.Component {
                               }}
                               source={{
                                 uri:
-                                  this.state.profileImage ||
+                                  this.props.user.profile_picture_url ||
                                   'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
                               }}
                               resizeMode={FastImage.resizeMode.stretch}
@@ -1489,8 +1499,8 @@ export default class ViewLesson extends React.Component {
               ref={r => (this.replies = r)}
               comment={this.state.selectedComment}
               me={{
-                userId: this.userId,
-                profileImage: this.state.profileImage
+                userId: this.props.user.id,
+                profileImage: this.props.user.profile_picture_url
               }}
             />
           </View>
@@ -1881,7 +1891,7 @@ export default class ViewLesson extends React.Component {
                     }}
                     source={{
                       uri:
-                        this.state.profileImage ||
+                        this.props.user.profile_picture_url ||
                         'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
                     }}
                     resizeMode={FastImage.resizeMode.stretch}
@@ -1927,3 +1937,9 @@ export default class ViewLesson extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+export default connect(mapStateToProps, null)(ViewLesson);

@@ -9,25 +9,25 @@ import {
 } from 'react-native';
 import Back from '../../assets/img/svgs/back.svg';
 import Intercom from 'react-native-intercom';
-import { getUserData } from '../../services/UserDataAuth.js';
-import NavigationBar from '../../components/NavigationBar.js';
+import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';
+import { connect } from 'react-redux';
 
 const isTablet = global.onTablet;
 
-export default class Support extends React.Component {
+class Support extends React.Component {
   componentDidMount = async () => {
-    const userData = await getUserData();
+    const { id, email, phone_number, display_name } = this.props.user;
     await Intercom.registerIdentifiedUser({
-      userId: 'musora_' + userData.id.toString()
+      userId: 'musora_' + id.toString()
     });
     await Intercom.updateUser({
-      email: userData.email,
-      phone: userData.phone_number ? userData.phone_number.toString() : '',
-      user_id: 'musora_' + userData.id.toString(),
-      name: userData.display_name,
+      email: email,
+      phone: phone_number ? phone_number.toString() : '',
+      user_id: 'musora_' + id.toString(),
+      name: display_name,
       custom_attributes: {
         app_build_number: '0.0.' + DeviceInfo.getBuildNumber()
       }
@@ -148,6 +148,12 @@ export default class Support extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+export default connect(mapStateToProps, null)(Support);
 
 const localStyles = StyleSheet.create({
   button: {

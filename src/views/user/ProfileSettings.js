@@ -25,10 +25,12 @@ import {
   updateName,
   avatarUpload
 } from '../../services/UserDataAuth.js';
+import { connect } from 'react-redux';
+import { setLoggedInUser } from '../../redux/UserActions.js';
 
 const isTablet = global.onTablet;
 
-export default class ProfileSettings extends React.Component {
+class ProfileSettings extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -44,16 +46,15 @@ export default class ProfileSettings extends React.Component {
     };
   }
 
-  componentDidMount = async () => {
-    let imageURI = await AsyncStorage.getItem('profileURI');
+  componentDidMount() {
     this.setState({
-      imageURI: imageURI || '',
+      imageURI: this.props.user.profile_picture_url,
       currentlyView:
         this.props.route?.params?.data === 'Profile Photo'
           ? 'Profile Photo'
           : 'Profile Settings'
     });
-  };
+  }
 
   async save() {
     this.setState({ isLoading: true });
@@ -74,7 +75,10 @@ export default class ProfileSettings extends React.Component {
 
     if (response.unique) {
       await updateName(this.state.displayName);
-      await AsyncStorage.setItem('displayName', this.state.displayName);
+      this.props.setLoggedInUser({
+        ...this.props.user,
+        display_name: this.state.displayName
+      });
       reset('PROFILE');
     } else {
       this.alertDisplay?.toggle(
@@ -106,10 +110,11 @@ export default class ProfileSettings extends React.Component {
           'POST',
           { file: url === '' ? url : url.data[0].url }
         );
-        await AsyncStorage.setItem(
-          'profileURI',
-          url === '' ? url : url.data[0].url
-        );
+        this.props.setLoggedInUser({
+          ...this.props.user,
+          profile_picture_url: url.data[0].url
+        });
+
         reset('PROFILE');
       }
     }
@@ -384,6 +389,16 @@ export default class ProfileSettings extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+const mapDispatchToProps = dispatch => ({
+  setLoggedInUser: user => dispatch(setLoggedInUser(user))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileSettings);
 
 const localStyles = StyleSheet.create({
   settingsText: {

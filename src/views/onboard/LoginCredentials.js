@@ -34,10 +34,12 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import { goBack, navigate, reset } from '../../../AppNavigator';
 import commonService from '../../services/common.service';
 import navigationService from '../../services/navigation.service';
+import { connect } from 'react-redux';
+import { setLoggedInUser } from '../../redux/UserActions';
 
 const isTablet = global.onTablet;
 
-export default class LoginCredentials extends React.Component {
+class LoginCredentials extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -106,6 +108,8 @@ export default class LoginCredentials extends React.Component {
 
       // checkmembership status
       let userData = await getUserData();
+      this.props.setLoggedInUser(userData);
+
       if (commonService.urlToOpen !== '') {
         return navigationService.decideWhereToRedirect();
       }
@@ -416,6 +420,12 @@ export default class LoginCredentials extends React.Component {
     );
   }
 }
+
+const mapDispatchToProps = dispatch => ({
+  setLoggedInUser: user => dispatch(setLoggedInUser(user))
+});
+
+export default connect(null, mapDispatchToProps)(LoginCredentials);
 
 const localStyles = StyleSheet.create({
   container: {

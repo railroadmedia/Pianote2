@@ -7,21 +7,20 @@ export default class CustomSwitch extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
     super(props);
-    let on = this.props.isClicked;
+    let on = props.isClicked;
     if (!maxTranslateX) maxTranslateX = onTablet ? 60 - 32.5 : 52.5 - 28;
     this.state = { on };
     this.slider = new Animated.Value(on ? maxTranslateX : 0);
   }
 
   click = () => {
-    this.setState(({ on }) => {
+    this.setState({ on: !this.state.on }, () => {
       Animated.timing(this.slider, {
-        toValue: on ? 0 : maxTranslateX,
+        toValue: this.state.on ? 0 : maxTranslateX,
         duration: 100,
         useNativeDriver: true
       }).start();
-      this.props.onClick(!on);
-      return { on: !on };
+      this.props.onClick(this.state.on);
     });
   };
 

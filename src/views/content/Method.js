@@ -44,7 +44,6 @@ export default class Method extends React.Component {
       showInfo: false,
       isLoadingAll: true,
       level: 1,
-      profileImage: '',
       xp: 0,
       description: '',
       nextLesson: null,

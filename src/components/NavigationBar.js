@@ -3,18 +3,17 @@ import FastImage from 'react-native-fast-image';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Icon from '../assets/icons';
-import AsyncStorage from '@react-native-community/async-storage';
 import { NetworkContext } from '../context/NetworkProvider';
 import { navigate } from '../../AppNavigator';
+import { connect } from 'react-redux';
 
 const onTablet = global.onTablet;
 
-export default class NavigationBar extends React.Component {
+class NavigationBar extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
     this.state = {
-      profileImage: '',
       secondaryColor: this.props.isMethod
         ? colors.pianoteGrey
         : colors.secondBackground,
@@ -22,13 +21,8 @@ export default class NavigationBar extends React.Component {
     };
   }
 
-  componentDidMount = async () => {
-    let profileImage = await AsyncStorage.getItem('profileURI');
-    this.setState({ profileImage: profileImage || '' });
-  };
-
   profile = () => {
-    if (this.state.profileImage.length === 0) {
+    if (this.props.user.profile_picture_url.length == 0) {
       return (
         <Icon.AntDesign
           name={'user'}
@@ -50,7 +44,7 @@ export default class NavigationBar extends React.Component {
               ? colors.pianoteGrey
               : colors.secondBackground
           }}
-          source={{ uri: this.state.profileImage }}
+          source={{ uri: this.props.user.profile_picture_url }}
           resizeMode={FastImage.resizeMode.cover}
         />
       );
@@ -127,13 +121,13 @@ export default class NavigationBar extends React.Component {
               <View
                 style={[
                   localStyles.navIconContainer,
-                  this.state.profileImage.length > 0
+                  this.props.user.profile_picture_url.length > 0
                     ? null
                     : styles.centerContent,
                   {
                     borderColor:
-                      this.props.currentPage === 'PROFILE' &&
-                      this.state.profileImage.length > 0
+                      this.props.currentPage == 'PROFILE' &&
+                      this.props.user.profile_picture_url.length > 0
                         ? 'white'
                         : 'transparent'
                   }
@@ -148,6 +142,12 @@ export default class NavigationBar extends React.Component {
     );
   };
 }
+
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+export default connect(mapStateToProps, null)(NavigationBar);
 
 const localStyles = StyleSheet.create({
   navIconContainer: {

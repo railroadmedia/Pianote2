@@ -22,11 +22,7 @@ import Back from '../../assets/img/svgs/back.svg';
 import NavigationBar from '../../components/NavigationBar.js';
 import Loading from '../../components/Loading.js';
 import CustomModal from '../../modals/CustomModal.js';
-import {
-  getUserData,
-  logOut,
-  restorePurchase
-} from '../../services/UserDataAuth.js';
+import { logOut, restorePurchase } from '../../services/UserDataAuth.js';
 import { SafeAreaView } from 'react-navigation';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import commonService from '../../services/common.service.js';
@@ -39,20 +35,27 @@ import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
 import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
 import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
 import { goBack, navigate, reset } from '../../../AppNavigator.js';
+import { setLoggedInUser } from '../../redux/UserActions.js';
 
 const isTablet = global.onTablet;
+let localStyles;
 
 class Settings extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    this.state = { showLogOut: false };
+    localStyles = setStyles(this.props.theme === 'light', colors.pianoteRed);
+
+    this.state = {
+      showLogOut: false
+    };
   }
 
   manageSubscriptions = async () => {
-    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    const userData = await getUserData();
-    let { isAppleAppSubscriber, isGoogleAppSubscriber } = userData;
+    if (!this.context.isConnected) {
+      return this.context.showNoConnectionAlert();
+    }
+    let { isAppleAppSubscriber, isGoogleAppSubscriber } = this.props.user;
     if (isiOS) {
       if (isAppleAppSubscriber) {
         Alert.alert(
@@ -152,6 +155,7 @@ class Settings extends React.Component {
       if (restoreResponse.email) {
         this.loadingRef?.toggleLoading();
         await logOut();
+        this.props.setLoggedInUser({});
         this.loadingRef?.toggleLoading();
         navigate('LOGINCREDENTIALS', {
           email: restoreResponse.email
@@ -189,6 +193,7 @@ class Settings extends React.Component {
       'cacheAndWriteStudentFocus'
     ].map(redux => this.props[redux]({}));
     logOut();
+    this.props.setLoggedInUser({});
     Intercom.logout();
     AsyncStorage.clear();
     reset('LOGIN');
@@ -310,6 +315,7 @@ class Settings extends React.Component {
             }
           ].map(item => (
             <TouchableOpacity
+              key={item.title}
               style={[
                 styles.centerContent,
                 localStyles.container,
@@ -430,76 +436,6 @@ class Settings extends React.Component {
   }
 }
 
-const localStyles = StyleSheet.create({
-  container: {
-    height: isTablet ? 70 : 50,
-    width: '100%',
-    borderBottomColor: '#445f73',
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    paddingRight: 10,
-    justifyContent: 'space-between'
-  },
-  container2: {
-    backgroundColor: 'white',
-    borderRadius: 15,
-    margin: 20
-  },
-  title: {
-    marginTop: 20,
-    paddingHorizontal: 20
-  },
-  description: {
-    paddingHorizontal: 30,
-    marginTop: 10,
-    marginBottom: 5,
-    fontSize: isTablet ? 18 : 14
-  },
-  logoutText: {
-    backgroundColor: '#fb1b2f',
-    borderRadius: 40,
-    marginVertical: 15,
-    marginHorizontal: 30,
-    fontFamily: 'OpenSans-Bold',
-    height: isTablet ? 40 : 30,
-    textAlign: 'center'
-  },
-  logout: {
-    color: 'white',
-    fontSize: isTablet ? 18 : 14
-  },
-  cancelContainter: {
-    paddingHorizontal: 20,
-    marginBottom: 15
-  },
-  cancel: {
-    color: 'grey',
-    fontSize: isTablet ? 16 : 12
-  },
-  settingsText: {
-    fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 20 : 16,
-    color: '#445f73'
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15
-  },
-  appText: {
-    marginTop: 10,
-    textAlign: 'center',
-    fontSize: isTablet ? 18 : 12
-  },
-  buildText: {
-    fontFamily: 'OpenSans-Regular',
-    textAlign: 'center',
-    color: '#445f73',
-    marginTop: 10,
-    fontSize: isTablet ? 18 : 12
-  }
-});
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
@@ -510,9 +446,86 @@ const mapDispatchToProps = dispatch =>
       cacheAndWritePodcasts,
       cacheAndWriteQuickTips,
       cacheAndWriteSongs,
-      cacheAndWriteStudentFocus
+      cacheAndWriteStudentFocus,
+      setLoggedInUser: user => dispatch(setLoggedInUser(user))
     },
     dispatch
   );
 
-export default connect(null, mapDispatchToProps)(Settings);
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Settings);
+
+const setStyles = (isLight, appColor) =>
+  StyleSheet.create({
+    container: {
+      height: isTablet ? 70 : 50,
+      width: '100%',
+      borderBottomColor: isLight ? '#97AABE' : '#445f73',
+      borderBottomWidth: 1,
+      flexDirection: 'row',
+      paddingRight: 10,
+      justifyContent: 'space-between'
+    },
+    container2: {
+      backgroundColor: 'white',
+      borderRadius: 15,
+      margin: 20
+    },
+    title: {
+      marginTop: 20,
+      paddingHorizontal: 20
+    },
+    description: {
+      paddingHorizontal: 30,
+      marginTop: 10,
+      marginBottom: 5,
+      fontSize: isTablet ? 18 : 14
+    },
+    logoutText: {
+      backgroundColor: appColor,
+      borderRadius: 40,
+      marginVertical: 15,
+      marginHorizontal: 30,
+      fontFamily: 'OpenSans-Bold',
+      height: isTablet ? 40 : 30,
+      textAlign: 'center'
+    },
+    logout: {
+      color: 'white',
+      fontSize: isTablet ? 18 : 14
+    },
+    cancelContainter: {
+      paddingHorizontal: 20,
+      marginBottom: 15
+    },
+    cancel: {
+      color: 'grey',
+      fontSize: isTablet ? 16 : 12
+    },
+    settingsText: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: isTablet ? 20 : 16,
+      color: isLight ? '#97AABE' : '#445f73'
+    },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: 15
+    },
+    appText: {
+      marginTop: 10,
+      textAlign: 'center',
+      fontSize: isTablet ? 18 : 12
+    },
+    buildText: {
+      fontFamily: 'OpenSans-Regular',
+      textAlign: 'center',
+      color: isLight ? '#97AABE' : '#445f73',
+      marginTop: 10,
+      fontSize: isTablet ? 18 : 12
+    }
+  });

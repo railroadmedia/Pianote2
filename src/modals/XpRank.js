@@ -44,7 +44,7 @@ export default class XpRank extends React.Component {
   render = () => {
     return (
       <TouchableOpacity
-        style={[styles.centerContent, styles.container]}
+        style={[styles.centerContent, localStyles.modalContainer]}
         activeOpacity={1}
         onPress={() => this.props.hideXpRank()}
       >
@@ -79,6 +79,10 @@ export default class XpRank extends React.Component {
 }
 
 const localStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
   container: {
     borderRadius: 15,
     backgroundColor: 'white',
