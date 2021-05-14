@@ -28,17 +28,18 @@ import { arrowLeft } from '../../assets/img/svgs/svgs';
 let styles;
 
 export default class Catalogue extends React.Component {
+  static contextType = Contexts;
+
   page = 1;
   scene = this.props.route.name;
   flatListCols = onTablet ? 3 : this.scene === 'STUDENTFOCUS' ? 2 : 1;
-  static contextType = Contexts;
 
   constructor(props) {
     super(props);
     styles = setStyles(props.theme === 'light');
-    console.log(cache[this.scene]);
+    this.data = cache[this.scene] || { method: {}, inProgress: [], all: [] };
     this.state = {
-      loading: true,
+      loading: !cache[this.scene],
       loadingMore: false,
       refreshing: true,
       filtering: false,
@@ -53,6 +54,8 @@ export default class Catalogue extends React.Component {
       'focus',
       () => (reFocused ? this.refresh?.() : (reFocused = true))
     );
+    // refreshPromise is necessary for loadMore()
+    // wait for refresh() to finish then proceed with loadMore()
     this.refreshPromise = this.setData('refresh').then(
       () => delete this.refreshPromise
     );
@@ -107,6 +110,7 @@ export default class Catalogue extends React.Component {
   navigateTo = path => {
     if (!this.connection(true)) return;
     let { next_lesson, started, completed } = this.data.method;
+    // navigation is executed in NavigationContainer
     switch (path) {
       case 'methodLesson':
         return this.props.onNavigateToMethodLesson(next_lesson);
@@ -131,6 +135,7 @@ export default class Catalogue extends React.Component {
   };
 
   loadMore = async () => {
+    // preventLoadingMore is necessary to prevent multiple instances of loadMore()
     if (this.preventLoadingMore) return;
     this.preventLoadingMore = true;
     this.setState({ loadingMore: true });
@@ -141,6 +146,7 @@ export default class Catalogue extends React.Component {
   };
 
   refresh = () => {
+    // abort everything on refresh
     this.filterAbort?.abort();
     this.loadMoreAbort?.abort();
     this.sortAbort?.abort();
@@ -204,12 +210,7 @@ export default class Catalogue extends React.Component {
               {arrowLeft({ height: 25, fill: 'white' })}
             </TouchableOpacity>
             <Image
-              style={{
-                width: '50%',
-                aspectRatio: 1,
-                alignSelf: 'center',
-                borderRadius: 10
-              }}
+              style={styles.showBannerImage}
               source={{
                 uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:good,c_fill,g_face/${
                   studentFocus[all[0].type].thumbnailUrl
@@ -345,7 +346,7 @@ export default class Catalogue extends React.Component {
             colors={['rgba(80, 15, 25, 0.98)', 'transparent']}
             style={{ position: 'absolute', width: '100%' }}
           >
-            <ActivityIndicator size='large' style={{}} color={'#6e777a'} />
+            <ActivityIndicator size='large' color={'#6e777a'} />
           </LinearGradient>
         )}
       </>
@@ -380,17 +381,7 @@ export default class Catalogue extends React.Component {
             onEndReached={this.scene !== 'STUDENTFOCUS' && this.loadMore}
             keyExtractor={({ id, name }) => (id || name).toString()}
             ListEmptyComponent={
-              <Text
-                style={{
-                  textAlign: 'center',
-                  fontFamily: 'OpenSans-Bold',
-                  padding: 15,
-                  fontSize: 15,
-                  color: 'white'
-                }}
-              >
-                No Content
-              </Text>
+              <Text style={styles.noContentText}>No Content</Text>
             }
             ListFooterComponent={
               <ActivityIndicator
@@ -420,38 +411,13 @@ export default class Catalogue extends React.Component {
           <TouchableOpacity
             activeOpacity={1}
             onPress={this.toggleError}
-            style={{
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'rgba(0,0,0,.5)'
-            }}
+            style={styles.errorModalBackground}
           >
-            <View
-              style={{
-                padding: 10,
-                paddingHorizontal: 50,
-                borderRadius: 10,
-                margin: 50,
-                backgroundColor: 'white'
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Bold',
-                  textAlign: 'center',
-                  fontSize: 20
-                }}
-              >
+            <View style={styles.errorModalTextContainer}>
+              <Text style={styles.errorModalTitle}>
                 Something went wrong...
               </Text>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 14
-                }}
-              >
+              <Text style={styles.errorModalMsg}>
                 Pianote is down, we are working on a fix and it should be back
                 shortly, thank you for your patience.
               </Text>
@@ -460,23 +426,9 @@ export default class Catalogue extends React.Component {
                   this.toggleError();
                   this.refresh();
                 }}
-                style={{
-                  marginTop: 10,
-                  borderRadius: 50,
-                  backgroundColor: colors.pianoteRed
-                }}
+                style={styles.errorModalBtn}
               >
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    fontFamily: 'RobotoCondensed-Bold',
-                    padding: 15,
-                    fontSize: 15,
-                    color: 'white'
-                  }}
-                >
-                  RELOAD
-                </Text>
+                <Text style={styles.errorModalBtnText}>RELOAD</Text>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
@@ -525,6 +477,54 @@ let setStyles = isLight =>
       fontSize: 18,
       flex: 1,
       fontFamily: 'RobotoCondensed-Bold',
+      color: 'white'
+    },
+    showBannerImage: {
+      width: '50%',
+      aspectRatio: 1,
+      alignSelf: 'center',
+      borderRadius: 10
+    },
+    noContentText: {
+      textAlign: 'center',
+      fontFamily: 'OpenSans-Bold',
+      padding: 15,
+      fontSize: 15,
+      color: 'white'
+    },
+    errorModalBackground: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'rgba(0,0,0,.5)'
+    },
+    errorModalTextContainer: {
+      padding: 10,
+      paddingHorizontal: 50,
+      borderRadius: 10,
+      margin: 50,
+      backgroundColor: 'white'
+    },
+    errorModalTitle: {
+      fontFamily: 'OpenSans-Bold',
+      textAlign: 'center',
+      fontSize: 20
+    },
+    errorModalMsg: {
+      textAlign: 'center',
+      fontFamily: 'OpenSans-Regular',
+      fontSize: 14
+    },
+    errorModalBtn: {
+      marginTop: 10,
+      borderRadius: 50,
+      backgroundColor: '#fb1b2f'
+    },
+    errorModalBtnText: {
+      textAlign: 'center',
+      fontFamily: 'RobotoCondensed-Bold',
+      padding: 15,
+      fontSize: 15,
       color: 'white'
     }
   });
