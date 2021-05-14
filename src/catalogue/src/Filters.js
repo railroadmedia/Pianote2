@@ -264,7 +264,7 @@ export default class Filters extends React.Component {
             onPress={this.toggleModal}
             style={fStyles.touchableToggler}
           >
-            {filters({ height: 18, fill: '#fb1b2f' })}
+            {filters({ height: 18, width: 18, fill: '#fb1b2f' })}
           </TouchableOpacity>
         </View>
         <Modal
