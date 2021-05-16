@@ -147,27 +147,18 @@ class Lessons extends React.Component {
 
   async getLiveContent() {
     let liveLesson = await getLiveContent();
-    console.log(liveLesson);
-    try {
-      let timeNow = Math.floor(Date.now() / 1000);
-      let timeLive =
-        new Date(liveLesson.live_event_start_time + ' UTC').getTime() / 1000;
-      let timeDiff = timeLive - timeNow;
-      if (timeDiff < 4 * 3600) {
-        this.setState({ liveLesson, timeDiffLive: timeDiff });
-        if (liveLesson.isLive) {
-          let { apiKey, chatChannelName, userId, token } = liveLesson;
-          watchersListener(
-            apiKey,
-            chatChannelName,
-            userId,
-            token,
-            liveViewers => this.setState({ liveViewers })
-          ).then(rwl => (this.removeWatchersListener = rwl));
-        }
+    let timeNow = Math.floor(Date.now() / 1000);
+    let timeLive =
+      new Date(liveLesson.live_event_start_time + ' UTC').getTime() / 1000;
+    let timeDiff = timeLive - timeNow;
+    if (timeDiff < 4 * 3600) {
+      this.setState({ liveLesson, timeDiffLive: timeDiff });
+      if (liveLesson.isLive) {
+        let { apiKey, chatChannelName, userId, token } = liveLesson;
+        watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
+          this.setState({ liveViewers })
+        ).then(rwl => (this.removeWatchersListener = rwl));
       }
-    } catch (error) {
-      console.log('error: ', error);
     }
   }
 
