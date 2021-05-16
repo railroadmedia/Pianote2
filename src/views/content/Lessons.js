@@ -87,7 +87,7 @@ class Lessons extends React.Component {
     };
   }
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
     let deepFilters = decodeURIComponent(this.props.route?.params?.url).split(
       '?'
     )[1];
@@ -147,18 +147,27 @@ class Lessons extends React.Component {
 
   async getLiveContent() {
     let liveLesson = await getLiveContent();
-    let timeNow = Math.floor(Date.now() / 1000);
-    let timeLive =
-      new Date(liveLesson.live_event_start_time + ' UTC').getTime() / 1000;
-    let timeDiff = timeLive - timeNow;
-    if (timeDiff < 4 * 3600) {
-      this.setState({ liveLesson, timeDiffLive: timeDiff });
-      if (liveLesson.isLive) {
-        let { apiKey, chatChannelName, userId, token } = liveLesson;
-        watchersListener(apiKey, chatChannelName, userId, token, liveViewers =>
-          this.setState({ liveViewers })
-        ).then(rwl => (this.removeWatchersListener = rwl));
+    console.log(liveLesson);
+    try {
+      let timeNow = Math.floor(Date.now() / 1000);
+      let timeLive =
+        new Date(liveLesson.live_event_start_time + ' UTC').getTime() / 1000;
+      let timeDiff = timeLive - timeNow;
+      if (timeDiff < 4 * 3600) {
+        this.setState({ liveLesson, timeDiffLive: timeDiff });
+        if (liveLesson.isLive) {
+          let { apiKey, chatChannelName, userId, token } = liveLesson;
+          watchersListener(
+            apiKey,
+            chatChannelName,
+            userId,
+            token,
+            liveViewers => this.setState({ liveViewers })
+          ).then(rwl => (this.removeWatchersListener = rwl));
+        }
       }
+    } catch (error) {
+      console.log('error: ', error);
     }
   }
 
@@ -297,7 +306,7 @@ class Lessons extends React.Component {
   addToMyList = contentID => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let liveLesson = Object.assign([], this.state.liveLesson);
-    liveLesson[0].is_added_to_primary_playlist = true;
+    liveLesson.is_added_to_primary_playlist = true;
     this.setState({ liveLesson });
     addToMyList(contentID);
   };
@@ -305,7 +314,7 @@ class Lessons extends React.Component {
   removeFromMyList = contentID => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let liveLesson = Object.assign([], this.state.liveLesson);
-    liveLesson[0].is_added_to_primary_playlist = false;
+    liveLesson.is_added_to_primary_playlist = false;
     this.setState({ liveLesson });
     removeFromMyList(contentID);
   };
@@ -536,7 +545,7 @@ class Lessons extends React.Component {
                             })
                           }
                           live_event_start_time={
-                            this.state.liveLesson.live_event_start_time
+                            this.state.liveLesson?.live_event_start_time
                           }
                         />
                       )}
@@ -622,7 +631,7 @@ class Lessons extends React.Component {
                           </Text>
                         </View>
                       </View>
-                      {!this.state.liveLesson.is_added_to_primary_playlist ? (
+                      {!this.state.liveLesson?.is_added_to_primary_playlist ? (
                         <TouchableOpacity
                           onPress={() =>
                             this.addToMyList(this.state.liveLesson?.id)
@@ -652,8 +661,8 @@ class Lessons extends React.Component {
                           paddingRight: 5
                         }}
                         onPress={() => {
-                          this.addToCalendarLessonTitle = this.state.liveLesson.title;
-                          this.addToCalendatLessonPublishDate = this.state.liveLesson.live_event_start_time;
+                          this.addToCalendarLessonTitle = this.state.liveLesson?.title;
+                          this.addToCalendatLessonPublishDate = this.state.liveLesson?.live_event_start_time;
                           this.setState({
                             addToCalendarModal: true
                           });
@@ -820,17 +829,15 @@ class Lessons extends React.Component {
                             </Text>
                           </View>
                         </View>
-                        {!this.state.liveLesson.is_added_to_primary_playlist ? (
+                        {!this.state.liveLesson
+                          ?.is_added_to_primary_playlist ? (
                           <TouchableOpacity
+                            style={{ paddingRight: 2.5, paddingBottom: 10 }}
                             onPress={() =>
                               this.addToMyList(this.state.liveLesson?.id)
                             }
-                            style={{
-                              paddingRight: 2.5,
-                              paddingBottom: 10
-                            }}
                           >
-                            <Icon.AntIcon
+                            <Icon.AntDesign
                               name={'plus'}
                               size={sizing.myListButtonSize}
                               color={colors.pianoteRed}
@@ -838,10 +845,7 @@ class Lessons extends React.Component {
                           </TouchableOpacity>
                         ) : (
                           <TouchableOpacity
-                            style={{
-                              paddingRight: 2.5,
-                              paddingBottom: 10
-                            }}
+                            style={{ paddingRight: 2.5, paddingBottom: 10 }}
                             onPress={() =>
                               this.removeFromMyList(this.state.liveLesson?.id)
                             }

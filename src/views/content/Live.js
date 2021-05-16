@@ -320,7 +320,7 @@ export default class Live extends React.Component {
                             this.addToMyList(this.state.liveLesson?.id, 'live')
                           }
                         >
-                          <AntIcon
+                          <Icon.AntDesign
                             name={'plus'}
                             size={sizing.myListButtonSize}
                             color={colors.pianoteRed}
@@ -335,7 +335,7 @@ export default class Live extends React.Component {
                             )
                           }
                         >
-                          <AntIcon
+                          <Icon.AntDesign
                             name={'close'}
                             size={sizing.myListButtonSize}
                             color={colors.pianoteRed}
@@ -480,7 +480,7 @@ export default class Live extends React.Component {
                               this.addToMyList(this.state.liveLesson.id, 'live')
                             }
                           >
-                            <AntIcon
+                            <Icon.AntDesign
                               name={'plus'}
                               size={sizing.myListButtonSize}
                               color={colors.pianoteRed}
@@ -496,7 +496,7 @@ export default class Live extends React.Component {
                               )
                             }
                           >
-                            <AntIcon
+                            <Icon.AntDesign
                               name={'close'}
                               size={sizing.myListButtonSize}
                               color={colors.pianoteRed}
@@ -689,7 +689,7 @@ export default class Live extends React.Component {
                               this.addToMyList(item.id, 'schedule')
                             }
                           >
-                            <AntIcon
+                            <Icon.AntDesign
                               name={'plus'}
                               size={sizing.myListButtonSize}
                               color={colors.pianoteRed}
@@ -701,7 +701,7 @@ export default class Live extends React.Component {
                               this.removeFromMyList(item.id, 'schedule')
                             }
                           >
-                            <AntIcon
+                            <Icon.AntDesign
                               name={'close'}
                               size={sizing.myListButtonSize}
                               color={colors.pianoteRed}
@@ -718,7 +718,7 @@ export default class Live extends React.Component {
                             this.setState({ addToCalendarModal: true });
                           }}
                         >
-                          <FontIcon
+                          <Icon.FontAwesome5
                             size={sizing.infoButtonSize}
                             name={'calendar-plus'}
                             color={colors.pianoteRed}
