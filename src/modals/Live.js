@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   StyleSheet,
   Dimensions
 } from 'react-native';
@@ -13,10 +12,6 @@ import { navigate } from '../../AppNavigator';
 const isTablet = global.onTablet;
 
 export default class Live extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   changeType = word => {
     if (word) {
       try {
