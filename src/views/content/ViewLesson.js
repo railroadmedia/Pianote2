@@ -61,7 +61,6 @@ class ViewLesson extends React.Component {
     this.limit = 10;
     this.allCommentsNum = 0;
     localStyles = setStyles(colors, sizing);
-
     this.state = {
       id: props.route?.params?.id,
       url: props.route?.params?.url,
@@ -104,17 +103,14 @@ class ViewLesson extends React.Component {
     };
   }
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
     BackHandler.addEventListener('hardwareBackPress', this.onBack);
-
-    // get profile image
     this.limit = 10;
     this.getContent();
   };
 
-  componentWillUnmount() {
+  componentWillUnmount = () =>
     BackHandler.removeEventListener('hardwareBackPress', this.onBack);
-  }
 
   getContent = async () => {
     let content, comments;
@@ -235,7 +231,6 @@ class ViewLesson extends React.Component {
   createResourcesArr() {
     const { resources } = this.state;
     const extensions = ['mp3', 'pdf', 'zip'];
-
     resources.forEach(resource => {
       let extension = this.decideExtension(resource.resource_url);
       resource.extension = extension;
@@ -271,7 +266,6 @@ class ViewLesson extends React.Component {
   decideExtension = url => {
     const lastDot = url.lastIndexOf('.');
     const extension = url.substr(lastDot + 1).toLowerCase();
-
     return extension;
   };
 
@@ -521,19 +515,15 @@ class ViewLesson extends React.Component {
       if (num < 10000) {
         num = num.toString();
         return num + ' XP';
-      } else {
-        num = (num / 1000).toFixed(1).toString();
-        num = num + 'k';
-        return num + ' XP';
       }
+      num = (num / 1000).toFixed(1).toString();
+      num = num + 'k';
+      return num + ' XP';
     }
   };
 
-  refresh = () => {
-    this.setState({ isLoadingAll: true }, () => {
-      this.getContent();
-    });
-  };
+  refresh = () =>
+    this.setState({ isLoadingAll: true }, () => this.getContent());
 
   async onResetProgress() {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
@@ -638,13 +628,13 @@ class ViewLesson extends React.Component {
     return this.state.assignmentList.map((row, index) => {
       return (
         <TouchableOpacity
+          style={localStyles.assignmentBtn}
           key={index}
           onPress={() => {
             let assignment = row;
             assignment.index = index + 1;
             this.setState({ selectedAssignment: assignment });
           }}
-          style={localStyles.assignmentBtn}
         >
           <Text numberOfLines={1} style={localStyles.assignmentBtnText}>
             {index + 1}. {row.title}
@@ -703,7 +693,6 @@ class ViewLesson extends React.Component {
 
   renderTagsDependingOnContentType = () => {
     let { artist, xp, type, publishedOn, instructor, style } = this.state;
-
     let releaseDate = this.transformDate(publishedOn);
     let releaseDateTag = releaseDate ? `${releaseDate} | ` : '';
     let styleTag = style ? `${style.toUpperCase()} | ` : '';
@@ -737,7 +726,6 @@ class ViewLesson extends React.Component {
     let h = parseInt(seconds / 3600);
     let m = parseInt((seconds - h * 3600) / 60);
     let s = parseInt(seconds - m * 60 - h * 3600);
-
     s = `${s < 10 ? 0 : ''}${s}`;
     m = `${h && m < 10 ? 0 : ''}${m}`;
     return h ? `${h}:${m}:${s}` : `${m}:${s}`;
@@ -836,10 +824,9 @@ class ViewLesson extends React.Component {
             )}
           </>
         )}
-
         {!this.state.isLoadingAll ? (
           <View style={localStyles.belowVideoContainer}>
-            <View key={'belowVideo'} style={{ flex: 1 }}>
+            <View style={{ flex: 1 }}>
               {this.state.selectedAssignment ? (
                 <Assignment
                   onSeek={time => this.video?.onSeek?.(time)}
@@ -1110,7 +1097,6 @@ class ViewLesson extends React.Component {
                 </KeyboardAwareScrollView>
               )}
             </View>
-
             <Replies
               sendReply={reply =>
                 commentsService
@@ -1387,7 +1373,6 @@ class ViewLesson extends React.Component {
             />
           </TouchableOpacity>
         </Modal>
-
         {!this.state.isLoadingAll && (
           <>
             <LessonComplete
@@ -1459,7 +1444,6 @@ class ViewLesson extends React.Component {
             }}
           />
         )}
-
         <CustomModal
           ref={r => (this.alert = r)}
           additionalBtn={
