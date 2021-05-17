@@ -8,7 +8,7 @@ import Orientation from 'react-native-orientation-locker';
 import DeviceInfo from 'react-native-device-info';
 import AppNavigator, { reset } from './AppNavigator';
 
-import { cardsReducer } from './src/catalogue/index';
+import { cardsReducer } from 'MusoraCatalogue';
 import commonService from './src/services/common.service';
 
 const store = createStore(combineReducers({ ...cardsReducer }));

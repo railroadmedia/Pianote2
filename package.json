@@ -26,6 +26,7 @@
     "@react-native-firebase/messaging": "^11.1.2",
     "@react-navigation/native": "^5.9.3",
     "@react-navigation/stack": "^5.14.3",
+    "MusoraCatalogue": "git+https://github.com/railroadmedia/MusoraCatalogue.git",
     "MusoraChat": "git+https://github.com/railroadmedia/MusoraChat.git",
     "RNDownload": "git+https://github.com/railroadmedia/RNDownload.git",
     "RNVideoEnhanced": "git+https://github.com/railroadmedia/RNVideoEnhanced.git",

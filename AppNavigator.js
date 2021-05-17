@@ -7,7 +7,7 @@ import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import Forum from './src/forum/index';
-import { Catalogue, setCatalogueCommonService } from './src/catalogue/index';
+import { Catalogue, setCatalogueCommonService } from 'MusoraCatalogue';
 
 // content
 import VideoPlayerSong from './src/views/content/VideoPlayerSong';
