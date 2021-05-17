@@ -118,11 +118,7 @@ export default class CreateAccount extends React.Component {
                     keyboardAppearance={'dark'}
                     placeholderTextColor={'grey'}
                     placeholder={'Email Address'}
-                    keyboardType={
-                      Platform.OS === 'android'
-                        ? 'visible-password'
-                        : 'email-address'
-                    }
+                    keyboardType={isiOS ? 'email-address' : 'visible-password'}
                     onChangeText={email => this.setState({ email })}
                     style={localStyles.textInput}
                   />

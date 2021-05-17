@@ -428,8 +428,7 @@ export default class VerticalVideoList extends React.Component {
                   style={{
                     fontSize: sizing.descriptionText,
                     textAlign: 'left',
-                    fontWeight: 'bold',
-                    fontFamily: 'OpenSans-Regular',
+                    fontFamily: 'OpenSans-Bold',
                     color: colors.pianoteRed
                   }}
                 >
@@ -441,8 +440,7 @@ export default class VerticalVideoList extends React.Component {
                 style={{
                   fontSize: sizing.descriptionText,
                   textAlign: 'left',
-                  fontWeight: 'bold',
-                  fontFamily: 'OpenSans-Regular',
+                  fontFamily: 'OpenSans-Bold',
                   color: 'white'
                 }}
               >

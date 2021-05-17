@@ -87,7 +87,7 @@ const localStyles = StyleSheet.create({
   title: {
     marginHorizontal: 20,
     marginBottom: 15,
-    fontWeight: 'bold'
+    fontFamily: 'OpenSans-Bold'
   },
   xp: {
     color: '#fb1b2f'

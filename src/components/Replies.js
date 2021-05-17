@@ -85,10 +85,9 @@ export default class Replies extends React.Component {
             />
             <Text
               style={{
-                fontFamily: 'OpenSans-Regular',
+                fontFamily: 'OpenSans-Bold',
                 fontSize: sizing.descriptionText,
                 marginTop: 5,
-                fontWeight: 'bold',
                 color: colors.pianoteGrey
               }}
             >
@@ -259,10 +258,9 @@ export default class Replies extends React.Component {
                         />
                         <Text
                           style={{
-                            fontFamily: 'OpenSans-Regular',
+                            fontFamily: 'OpenSans-Bold',
                             fontSize: sizing.descriptionText,
                             marginTop: 5,
-                            fontWeight: 'bold',
                             color: colors.pianoteGrey
                           }}
                         >

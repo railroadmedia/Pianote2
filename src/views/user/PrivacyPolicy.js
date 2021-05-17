@@ -873,7 +873,7 @@ const localStyles = StyleSheet.create({
     padding: 15
   },
   title: {
-    fontWeight: 'bold',
+    fontFamily: 'OpenSans-Bold',
     fontSize: onTablet ? 28 : 20,
     alignSelf: 'center',
     textAlign: 'center'
@@ -885,7 +885,7 @@ const localStyles = StyleSheet.create({
   subtitle: {
     paddingBottom: 5,
     marginTop: 25,
-    fontWeight: 'bold',
+    fontFamily: 'OpenSans-Bold',
     marginBottom: 0
   },
   contact: {

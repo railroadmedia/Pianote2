@@ -227,8 +227,7 @@ const localStyles = StyleSheet.create({
     marginHorizontal: 10
   },
   title: {
-    fontFamily: 'OpenSans-Regular',
-    fontWeight: 'bold',
+    fontFamily: 'OpenSans-Bold',
     paddingHorizontal: 10,
     fontSize: onTablet ? 24 : 18,
     textAlign: 'center',
@@ -278,14 +277,12 @@ const localStyles = StyleSheet.create({
     marginTop: 5
   },
   xp: {
-    fontFamily: 'OpenSans-Regular',
-    fontWeight: 'bold',
+    fontFamily: 'OpenSans-Bold',
     fontSize: onTablet ? 24 : 18,
     textAlign: 'left'
   },
   lessonCount: {
-    fontFamily: 'OpenSans-Regular',
-    fontWeight: 'bold',
+    fontFamily: 'OpenSans-Bold',
     fontSize: onTablet ? 24 : 18,
     textAlign: 'left'
   },

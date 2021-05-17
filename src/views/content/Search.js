@@ -113,8 +113,7 @@ export default class Search extends React.Component {
           <Text
             style={{
               fontSize: onTablet ? 20 : 14,
-              fontFamily: 'OpenSans-Regular',
-              fontWeight: 'bold',
+              fontFamily: 'OpenSans-Bold',
               color: 'white',
               paddingTop: 10
             }}

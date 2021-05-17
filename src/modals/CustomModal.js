@@ -66,8 +66,7 @@ const localStyles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,.5)'
   },
   title: {
-    fontFamily: 'OpenSans-Regular',
-    fontWeight: 'bold',
+    fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
     paddingVertical: 10,
     color: '#000000'

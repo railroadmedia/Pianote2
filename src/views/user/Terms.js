@@ -391,7 +391,7 @@ const localStyles = StyleSheet.create({
     padding: 10
   },
   title: {
-    fontWeight: Platform.OS === 'android' ? 'bold' : '800',
+    fontFamily: 'OpenSans-Bold',
     fontSize: onTablet ? 28 : 20,
     alignSelf: 'center',
     textAlign: 'center'
@@ -404,7 +404,7 @@ const localStyles = StyleSheet.create({
   subtitle: {
     paddingBottom: 5,
     marginTop: 25,
-    fontWeight: 'bold',
+    fontFamily: 'OpenSans-Bold',
     marginBottom: 0
   }
 });

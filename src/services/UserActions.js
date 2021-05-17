@@ -42,7 +42,7 @@ export async function markComplete(contentID) {
     `${
       commonService.rootUrl
     }/musora-api/complete?content_id=${contentID}&device_type=${
-      Platform.OS === 'ios' ? 'ios' : 'android'
+      isiOS ? 'ios' : 'android'
     }`,
     'PUT'
   );

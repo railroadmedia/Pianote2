@@ -678,7 +678,7 @@ class Lessons extends React.Component {
                       onPress={() => navigate('LIVE')}
                     >
                       <View style={{ width: '100%' }}>
-                        {Platform.OS == 'ios' ? (
+                        {isiOS ? (
                           <FastImage
                             style={{
                               width: '100%',

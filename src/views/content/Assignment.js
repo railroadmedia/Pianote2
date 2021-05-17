@@ -134,8 +134,7 @@ export default class Assignment extends React.Component {
                       >
                         <Text
                           style={{
-                            fontFamily: 'OpenSans-Regular',
-                            fontWeight: '700',
+                            fontFamily: 'OpenSans-Bold',
                             color: 'grey',
                             fontSize: sizing.descriptionText,
                             alignSelf: 'center'
@@ -182,8 +181,7 @@ export default class Assignment extends React.Component {
                     >
                       <Text
                         style={{
-                          fontFamily: 'OpenSans-Regular',
-                          fontWeight: '700',
+                          fontFamily: 'OpenSans-Bold',
                           color: 'grey',
                           fontSize: sizing.descriptionText,
                           alignSelf: 'center'

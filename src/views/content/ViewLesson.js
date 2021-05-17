@@ -1524,7 +1524,7 @@ class ViewLesson extends React.Component {
                   />
                   <TouchableOpacity
                     style={{
-                      marginBottom: Platform.OS === 'android' ? 10 : 0,
+                      marginBottom: isiOS ? 0 : 10,
                       marginLeft: 20
                     }}
                     onPress={() => this.makeComment()}

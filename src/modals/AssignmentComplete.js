@@ -79,7 +79,7 @@ const localStyles = StyleSheet.create({
   },
   assignmentTitle: {
     marginHorizontal: 20,
-    fontWeight: 'bold'
+    fontFamily: 'OpenSans-Bold'
   },
   congratsText: {
     marginHorizontal: 20

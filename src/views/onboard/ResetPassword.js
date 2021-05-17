@@ -154,9 +154,7 @@ export default class ResetPassword extends React.Component {
                     keyboardAppearance={'dark'}
                     placeholderTextColor={'grey'}
                     placeholder={'Password'}
-                    keyboardType={
-                      Platform.OS === 'android' ? 'default' : 'email-address'
-                    }
+                    keyboardType={isiOS ? 'email-address' : 'default'}
                     secureTextEntry={true}
                     onChangeText={password => this.setState({ password })}
                     style={{
@@ -232,9 +230,7 @@ export default class ResetPassword extends React.Component {
                     keyboardAppearance={'dark'}
                     placeholderTextColor={'grey'}
                     placeholder={'Confirm Password'}
-                    keyboardType={
-                      Platform.OS === 'android' ? 'default' : 'email-address'
-                    }
+                    keyboardType={isiOS ? 'email-address' : 'default'}
                     secureTextEntry={true}
                     onChangeText={confirmPassword =>
                       this.setState({ confirmPassword })

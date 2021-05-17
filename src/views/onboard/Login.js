@@ -197,7 +197,7 @@ export default class Login extends React.Component {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={async () => {
-          if (await this.userCanSignUp()) return navigate('CREATEACCOUNT');
+          return navigate('CREATEACCOUNT');
         }}
         style={localStyles.signupButton}
       >

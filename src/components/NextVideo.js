@@ -153,8 +153,7 @@ const localStyles = StyleSheet.create({
   },
   videoTitle: {
     textAlign: 'left',
-    fontWeight: 'bold',
-    fontFamily: 'OpenSans-Regular',
+    fontFamily: 'OpenSans-Bold',
     color: 'white'
   },
   play: {
