@@ -7,7 +7,7 @@ import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import Forum from './src/forum/index';
-import Catalogue, { setCatalogueCommonService } from './src/catalogue/index';
+import { Catalogue, setCatalogueCommonService } from './src/catalogue/index';
 
 // content
 import VideoPlayerSong from './src/views/content/VideoPlayerSong';
@@ -252,7 +252,7 @@ function navigateTo(card) {
     case 'song':
       if (card.lesson_count === 1)
         return navigate('VIDEOPLAYER', {
-          id: card.currentLessonId
+          id: card.lessons[0].id
         });
       return navigate('PATHOVERVIEW', {
         data: card,

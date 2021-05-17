@@ -60,7 +60,7 @@ export default class PathOverview extends React.Component {
       thumbnail: props.route?.params?.data?.thumbnail,
       artist:
         typeof props.route?.params?.data?.artist == 'object'
-          ? props.route?.params?.data?.artist.join(', ')
+          ? props.route?.params?.data?.artist?.join(', ')
           : props.route?.params?.data?.artist,
       isMethod: props.route?.params?.isMethod,
       isFoundations: props.route?.params?.isFoundations,
