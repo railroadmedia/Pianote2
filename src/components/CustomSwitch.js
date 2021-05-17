@@ -35,7 +35,7 @@ export default class CustomSwitch extends React.Component {
           borderRadius: 100,
           width: onTablet ? 60 : 52.5,
           height: onTablet ? 32.5 : 28,
-          backgroundColor: on ? '#fb1b2f' : colors.secondBackground,
+          backgroundColor: on ? colors.pianoteRed : colors.secondBackground,
           flexDirection: 'row'
         }}
       >
@@ -53,7 +53,7 @@ export default class CustomSwitch extends React.Component {
           <FontIcon
             name={on ? 'check' : 'times'}
             size={onTablet ? 20 : 17.5}
-            color={on ? '#fb1b2f' : colors.secondBackground}
+            color={on ? colors.pianoteRed : colors.secondBackground}
           />
         </Animated.View>
       </TouchableOpacity>

@@ -7,8 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView,
-  StyleSheet,
-  Modal
+  StyleSheet
 } from 'react-native';
 import RNIap from 'react-native-iap';
 import { SafeAreaView } from 'react-navigation';
@@ -215,7 +214,7 @@ class LoginCredentials extends React.Component {
             >
               <View style={localStyles.scrollContainer}>
                 <View style={localStyles.pianoteInnerContainer}>
-                  <Pianote fill={'#fb1b2f'} />
+                  <Pianote fill={colors.pianoteRed} />
                 </View>
                 <View>
                   <Text
@@ -317,12 +316,12 @@ class LoginCredentials extends React.Component {
                       borderWidth: 2,
                       borderRadius: 50,
                       alignSelf: 'center',
-                      borderColor: '#fb1b2f',
+                      borderColor: colors.pianoteRed,
                       width: onTablet ? '30%' : '50%',
                       backgroundColor:
                         this.state.email.length > 0 &&
                         this.state.password.length > 0
-                          ? '#fb1b2f'
+                          ? colors.pianoteRed
                           : 'transparent'
                     }
                   ]}
@@ -336,7 +335,7 @@ class LoginCredentials extends React.Component {
                         this.state.email.length > 0 &&
                         this.state.password.length > 0
                           ? 'white'
-                          : '#fb1b2f'
+                          : colors.pianoteRed
                     }}
                   >
                     LOG IN

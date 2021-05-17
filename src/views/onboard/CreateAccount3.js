@@ -29,6 +29,7 @@ import { reset } from '../../../AppNavigator';
 import { isNameUnique, avatarUpload } from '../../services/UserDataAuth';
 
 var data = new FormData();
+let localStyles;
 
 const isTablet = global.onTablet;
 const windowDim = Dimensions.get('window');
@@ -42,6 +43,8 @@ export default class CreateAccount3 extends React.Component {
   constructor(props) {
     super(props);
     Orientation.lockToPortrait();
+    localStyles = setStyles(colors, sizing);
+
     this.state = {
       page: 1,
       showImage: false,
@@ -287,7 +290,7 @@ export default class CreateAccount3 extends React.Component {
                       backgroundColor:
                         this.state.displayName.length === 0
                           ? 'transparent'
-                          : '#fb1b2f'
+                          : colors.pianoteRed
                     }
                   ]}
                 >
@@ -307,7 +310,7 @@ export default class CreateAccount3 extends React.Component {
                         fontSize: sizing.titleViewLesson,
                         color:
                           this.state.displayName.length === 0
-                            ? '#fb1b2f'
+                            ? colors.pianoteRed
                             : 'white'
                       }}
                     >
@@ -322,7 +325,9 @@ export default class CreateAccount3 extends React.Component {
                         localStyles.dot,
                         {
                           backgroundColor:
-                            this.state.page === 1 ? '#fb1b2f' : 'transparent'
+                            this.state.page === 1
+                              ? colors.pianoteRed
+                              : 'transparent'
                         }
                       ]}
                     />
@@ -331,7 +336,9 @@ export default class CreateAccount3 extends React.Component {
                         localStyles.dot,
                         {
                           backgroundColor:
-                            this.state.page === 2 ? '#fb1b2f' : 'transparent'
+                            this.state.page === 2
+                              ? colors.pianoteRed
+                              : 'transparent'
                         }
                       ]}
                     />
@@ -340,7 +347,9 @@ export default class CreateAccount3 extends React.Component {
                         localStyles.dot,
                         {
                           backgroundColor:
-                            this.state.page === 3 ? '#fb1b2f' : 'transparent'
+                            this.state.page === 3
+                              ? colors.pianoteRed
+                              : 'transparent'
                         }
                       ]}
                     />
@@ -349,7 +358,9 @@ export default class CreateAccount3 extends React.Component {
                         localStyles.dot,
                         {
                           backgroundColor:
-                            this.state.page === 4 ? '#fb1b2f' : 'transparent'
+                            this.state.page === 4
+                              ? colors.pianoteRed
+                              : 'transparent'
                         }
                       ]}
                     />
@@ -471,12 +482,12 @@ export default class CreateAccount3 extends React.Component {
                     height: '6%',
                     width: '40%',
                     borderRadius: 50,
-                    borderColor: '#fb1b2f',
+                    borderColor: colors.pianoteRed,
                     borderWidth: 1,
                     backgroundColor:
                       this.state.imageURI.length === 0
                         ? 'transparent'
-                        : '#fb1b2f'
+                        : colors.pianoteRed
                   }}
                 >
                   <TouchableOpacity
@@ -504,7 +515,9 @@ export default class CreateAccount3 extends React.Component {
                         fontFamily: 'RobotoCondensed-Bold',
                         fontSize: sizing.titleViewLesson,
                         color:
-                          this.state.imageURI.length === 0 ? '#fb1b2f' : 'white'
+                          this.state.imageURI.length === 0
+                            ? colors.pianoteRed
+                            : 'white'
                       }}
                     >
                       NEXT
@@ -520,7 +533,9 @@ export default class CreateAccount3 extends React.Component {
                         localStyles.dot,
                         {
                           backgroundColor:
-                            this.state.page === 1 ? '#fb1b2f' : 'transparent'
+                            this.state.page === 1
+                              ? colors.pianoteRed
+                              : 'transparent'
                         }
                       ]}
                     />
@@ -529,7 +544,9 @@ export default class CreateAccount3 extends React.Component {
                         localStyles.dot,
                         {
                           backgroundColor:
-                            this.state.page === 2 ? '#fb1b2f' : 'transparent'
+                            this.state.page === 2
+                              ? colors.pianoteRed
+                              : 'transparent'
                         }
                       ]}
                     />
@@ -538,7 +555,9 @@ export default class CreateAccount3 extends React.Component {
                         localStyles.dot,
                         {
                           backgroundColor:
-                            this.state.page === 3 ? '#fb1b2f' : 'transparent'
+                            this.state.page === 3
+                              ? colors.pianoteRed
+                              : 'transparent'
                         }
                       ]}
                     />
@@ -547,7 +566,9 @@ export default class CreateAccount3 extends React.Component {
                         localStyles.dot,
                         {
                           backgroundColor:
-                            this.state.page === 4 ? '#fb1b2f' : 'transparent'
+                            this.state.page === 4
+                              ? colors.pianoteRed
+                              : 'transparent'
                         }
                       ]}
                     />
@@ -559,7 +580,7 @@ export default class CreateAccount3 extends React.Component {
                       style={{
                         fontFamily: 'OpenSans-Bold',
                         fontSize: sizing.titleViewLesson,
-                        color: '#fb1b2f'
+                        color: colors.pianoteRed
                       }}
                     >
                       SKIP
@@ -739,7 +760,9 @@ export default class CreateAccount3 extends React.Component {
                     localStyles.dot,
                     {
                       backgroundColor:
-                        this.state.page === 1 ? '#fb1b2f' : 'transparent'
+                        this.state.page === 1
+                          ? colors.pianoteRed
+                          : 'transparent'
                     }
                   ]}
                 />
@@ -748,7 +771,9 @@ export default class CreateAccount3 extends React.Component {
                     localStyles.dot,
                     {
                       backgroundColor:
-                        this.state.page === 2 ? '#fb1b2f' : 'transparent'
+                        this.state.page === 2
+                          ? colors.pianoteRed
+                          : 'transparent'
                     }
                   ]}
                 />
@@ -757,7 +782,9 @@ export default class CreateAccount3 extends React.Component {
                     localStyles.dot,
                     {
                       backgroundColor:
-                        this.state.page === 3 ? '#fb1b2f' : 'transparent'
+                        this.state.page === 3
+                          ? colors.pianoteRed
+                          : 'transparent'
                     }
                   ]}
                 />
@@ -766,7 +793,9 @@ export default class CreateAccount3 extends React.Component {
                     localStyles.dot,
                     {
                       backgroundColor:
-                        this.state.page === 4 ? '#fb1b2f' : 'transparent'
+                        this.state.page === 4
+                          ? colors.pianoteRed
+                          : 'transparent'
                     }
                   ]}
                 />
@@ -788,7 +817,7 @@ export default class CreateAccount3 extends React.Component {
                   style={{
                     fontFamily: 'OpenSans-Bold',
                     fontSize: sizing.titleViewLesson,
-                    color: '#fb1b2f'
+                    color: colors.pianoteRed
                   }}
                 >
                   SKIP
@@ -896,7 +925,9 @@ export default class CreateAccount3 extends React.Component {
                       localStyles.dot,
                       {
                         backgroundColor:
-                          this.state.page === 1 ? '#fb1b2f' : 'transparent'
+                          this.state.page === 1
+                            ? colors.pianoteRed
+                            : 'transparent'
                       }
                     ]}
                   />
@@ -905,7 +936,9 @@ export default class CreateAccount3 extends React.Component {
                       localStyles.dot,
                       {
                         backgroundColor:
-                          this.state.page === 2 ? '#fb1b2f' : 'transparent'
+                          this.state.page === 2
+                            ? colors.pianoteRed
+                            : 'transparent'
                       }
                     ]}
                   />
@@ -914,7 +947,9 @@ export default class CreateAccount3 extends React.Component {
                       localStyles.dot,
                       {
                         backgroundColor:
-                          this.state.page === 3 ? '#fb1b2f' : 'transparent'
+                          this.state.page === 3
+                            ? colors.pianoteRed
+                            : 'transparent'
                       }
                     ]}
                   />
@@ -923,7 +958,9 @@ export default class CreateAccount3 extends React.Component {
                       localStyles.dot,
                       {
                         backgroundColor:
-                          this.state.page === 4 ? '#fb1b2f' : 'transparent'
+                          this.state.page === 4
+                            ? colors.pianoteRed
+                            : 'transparent'
                       }
                     ]}
                   />
@@ -945,15 +982,7 @@ export default class CreateAccount3 extends React.Component {
                 onPress={() => {
                   this.createAccount();
                 }}
-                style={[
-                  styles.centerContent,
-                  {
-                    width: '85%',
-                    height: '100%',
-                    borderRadius: 30,
-                    backgroundColor: '#fb1b2f'
-                  }
-                ]}
+                style={[styles.centerContent, localStyles.getStartedBtn]}
               >
                 <Text
                   style={{
@@ -976,22 +1005,9 @@ export default class CreateAccount3 extends React.Component {
                 this.refresh();
                 this.alert?.toggle();
               }}
-              style={{
-                marginTop: 20,
-                borderRadius: 50,
-                backgroundColor: colors.pianoteRed
-              }}
+              style={localStyles.tryBtn}
             >
-              <Text
-                style={[
-                  styles.modalButtonText,
-                  {
-                    padding: 10,
-                    fontSize: 15,
-                    color: '#ffffff'
-                  }
-                ]}
-              >
+              <Text style={[styles.modalButtonText, localStyles.tryBtnText]}>
                 TRY AGAIN
               </Text>
             </TouchableOpacity>
@@ -1004,143 +1020,160 @@ export default class CreateAccount3 extends React.Component {
   }
 }
 
-const localStyles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 15,
-    margin: 20,
-    height: 200,
-    width: '80%'
-  },
-  addDislayNameContainer: {
-    marginBottom: 2,
-    flexDirection: 'row',
-    paddingLeft: 20,
-    marginTop: '45%'
-  },
-  addDislayNameText: {
-    fontFamily: 'OpenSans-Bold',
-    fontSize: isTablet ? 24 : 16,
-    textAlign: 'left',
-    width: '100%',
-    paddingVertical: 10
-  },
-  displayNameTextInputContainer: {
-    height: '7%',
-    width: '95%',
-    borderRadius: 100,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    paddingLeft: isTablet ? 20 : 10,
-    flexDirection: 'row',
-    borderWidth: 1,
-    borderColor: '#c2c2c2'
-  },
-  descriptionText: {
-    fontFamily: 'OpenSans-Regular',
-    textAlign: 'left',
-    width: width,
-    paddingLeft: 20,
-    marginTop: 10
-  },
-  setName: {
-    height: '6%',
-    width: '40%',
-    marginTop: 50,
-    borderRadius: 100,
-    borderColor: '#fb1b2f',
-    borderWidth: 1
-  },
-  dotsContainerName: {
-    height: '3.5%',
-    marginTop: 20,
-    marginBottom: 30,
-    flexDirection: 'row'
-  },
-  dot: {
-    height: 10,
-    width: 10,
-    borderRadius: 100,
-    borderWidth: 1,
-    borderColor: '#fb1b2f',
-    marginHorizontal: 5
-  },
-  profileContainer: {
-    bottom: 0,
-    height: '90%',
-    width: width,
-    zIndex: 3,
-    elevation: 3
-  },
-  profileTextContainer: {
-    flexDirection: 'row',
-    paddingVertical: 10,
-    marginTop: '20%'
-  },
-  image: {
-    height: '22%',
-    width: '100%',
-    marginTop: 10,
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
-  imageButton: {
-    height: height * 0.17125,
-    width: height * 0.17125,
-    borderRadius: 500,
-    backgroundColor: '#fb1b2f'
-  },
-  fastimage: {
-    position: 'absolute',
-    height: '100%',
-    width: '100%',
-    borderRadius: 500,
-    zIndex: 5
-  },
-  x: {
-    position: 'absolute',
-    height: '22.5%',
-    width: '22.5%',
-    right: '4%',
-    top: '4%',
-    backgroundColor: '#0090d3',
-    borderRadius: 500,
-    zIndex: 5
-  },
-  profileImageText: {
-    width: width,
-    paddingVertical: 30,
-    fontFamily: 'OpenSans-Regular',
-    textAlign: 'center'
-  },
-  dotContainer: {
-    height: '3.5%',
-    marginTop: '50%',
-    flexDirection: 'row',
-    marginBottom: 30
-  },
-  reviewContainer: {
-    height: height,
-    width: width,
-    zIndex: 2
-  },
-  reviewText: {
-    fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 20 : 16,
-    marginTop: 5
-  },
-  circle: {
-    width: width * 0.15,
-    height: width * 0.15,
-    padding: 30,
-    borderRadius: 200,
-    backgroundColor: '#fb1b2f'
-  },
-  headerReview: {
-    fontFamily: 'OpenSans-Bold',
-    textAlign: 'center',
-    marginBottom: '4%',
-    borderBottomColor: '#dbdbdb',
-    borderBottomWidth: 0.75
-  }
-});
+const setStyles = (appColor, size) =>
+  StyleSheet.create({
+    container: {
+      backgroundColor: 'white',
+      borderRadius: 15,
+      margin: 20,
+      height: 200,
+      width: '80%'
+    },
+    addDislayNameContainer: {
+      marginBottom: 2,
+      flexDirection: 'row',
+      paddingLeft: 20,
+      marginTop: '45%'
+    },
+    addDislayNameText: {
+      fontFamily: 'OpenSans-Bold',
+      fontSize: isTablet ? 24 : 16,
+      textAlign: 'left',
+      width: '100%',
+      paddingVertical: 10
+    },
+    displayNameTextInputContainer: {
+      height: '7%',
+      width: '95%',
+      borderRadius: 100,
+      backgroundColor: 'white',
+      justifyContent: 'center',
+      paddingLeft: isTablet ? 20 : 10,
+      flexDirection: 'row',
+      borderWidth: 1,
+      borderColor: '#c2c2c2'
+    },
+    descriptionText: {
+      fontFamily: 'OpenSans-Regular',
+      textAlign: 'left',
+      width: width,
+      paddingLeft: 20,
+      marginTop: 10
+    },
+    setName: {
+      height: '6%',
+      width: '40%',
+      marginTop: 50,
+      borderRadius: 100,
+      borderColor: appColor.pianoteRed,
+      borderWidth: 1
+    },
+    dotsContainerName: {
+      height: '3.5%',
+      marginTop: 20,
+      marginBottom: 30,
+      flexDirection: 'row'
+    },
+    dot: {
+      height: 10,
+      width: 10,
+      borderRadius: 100,
+      borderWidth: 1,
+      borderColor: appColor.pianoteRed,
+      marginHorizontal: 5
+    },
+    profileContainer: {
+      bottom: 0,
+      height: '90%',
+      width: width,
+      zIndex: 3,
+      elevation: 3
+    },
+    profileTextContainer: {
+      flexDirection: 'row',
+      paddingVertical: 10,
+      marginTop: '20%'
+    },
+    image: {
+      height: '22%',
+      width: '100%',
+      marginTop: 10,
+      flexDirection: 'row',
+      justifyContent: 'center'
+    },
+    imageButton: {
+      height: height * 0.17125,
+      width: height * 0.17125,
+      borderRadius: 500,
+      backgroundColor: appColor.pianoteRed
+    },
+    fastimage: {
+      position: 'absolute',
+      height: '100%',
+      width: '100%',
+      borderRadius: 500,
+      zIndex: 5
+    },
+    x: {
+      position: 'absolute',
+      height: '22.5%',
+      width: '22.5%',
+      right: '4%',
+      top: '4%',
+      backgroundColor: '#0090d3',
+      borderRadius: 500,
+      zIndex: 5
+    },
+    profileImageText: {
+      width: width,
+      paddingVertical: 30,
+      fontFamily: 'OpenSans-Regular',
+      textAlign: 'center'
+    },
+    dotContainer: {
+      height: '3.5%',
+      marginTop: '50%',
+      flexDirection: 'row',
+      marginBottom: 30
+    },
+    reviewContainer: {
+      height: height,
+      width: width,
+      zIndex: 2
+    },
+    reviewText: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: isTablet ? 20 : 16,
+      marginTop: 5
+    },
+    circle: {
+      width: width * 0.15,
+      height: width * 0.15,
+      padding: 30,
+      borderRadius: 200,
+      backgroundColor: appColor.pianoteRed
+    },
+    headerReview: {
+      fontFamily: 'OpenSans-Bold',
+      textAlign: 'center',
+      marginBottom: '4%',
+      borderBottomColor: '#dbdbdb',
+      borderBottomWidth: 0.75
+    },
+    tryBtnText: {
+      padding: 10,
+      fontSize: 15,
+      color: '#ffffff'
+    },
+    tryBtn: {
+      marginTop: 20,
+      borderRadius: 50,
+      backgroundColor: appColor.pianoteRed
+    },
+    getStartedBtn: {
+      width: '85%',
+      height: '100%',
+      borderRadius: 30,
+      backgroundColor: appColor.pianoteRed
+    }
+  });

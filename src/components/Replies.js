@@ -15,10 +15,14 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { NetworkContext } from '../context/NetworkProvider';
 
 const onTablet = global.onTablet;
+let localStyles;
+
 export default class Replies extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
+    localStyles = setStyles(colors, sizing);
+
     this.state = {
       reply: '',
       isLoading: false,
@@ -54,66 +58,18 @@ export default class Replies extends React.Component {
   mapReplies = () => {
     return this.props.comment.replies?.map((reply, index) => {
       return (
-        <View
-          key={index}
-          style={{
-            backgroundColor: colors.mainBackground,
-            borderTopColor: colors.secondBackground,
-            flex: 1,
-            borderTopWidth: 0.25,
-            flexDirection: 'row',
-            paddingTop: 10,
-            paddingHorizontal: 10
-          }}
-        >
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'flex-start',
-              paddingBottom: 10
-            }}
-          >
+        <View key={index} style={localStyles.allRepliesContainer}>
+          <View style={localStyles.imageContainer}>
             <FastImage
-              style={{
-                height: onTablet ? 60 : 40,
-                width: onTablet ? 60 : 40,
-                borderRadius: 100,
-                marginTop: 10
-              }}
+              style={localStyles.replierImage}
               source={{ uri: reply.user['fields.profile_picture_image_url'] }}
               resizeMode={FastImage.resizeMode.stretch}
             />
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Bold',
-                fontSize: sizing.descriptionText,
-                marginTop: 5,
-                color: colors.pianoteGrey
-              }}
-            >
-              {reply.user.xp}
-            </Text>
+            <Text style={localStyles.xp}>{reply.user.xp} XP</Text>
           </View>
           <View style={{ flex: 1, paddingLeft: 10 }}>
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: sizing.descriptionText,
-                color: 'white',
-                paddingTop: 10
-              }}
-            >
-              {reply.comment}
-            </Text>
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: sizing.descriptionText,
-                color: colors.secondBackground,
-                paddingTop: 5,
-                paddingBottom: 10
-              }}
-            >
+            <Text style={localStyles.commentText}>{reply.comment}</Text>
+            <Text style={localStyles.userTags}>
               {reply.user['display_name']} | {reply.user.rank} |{' '}
               {this.lastPostTime(reply.created_on)}
             </Text>
@@ -143,22 +99,8 @@ export default class Replies extends React.Component {
                     />
                   </TouchableOpacity>
                   {reply.like_count > 0 && (
-                    <View
-                      style={{
-                        borderRadius: 40,
-                        backgroundColor: colors.notificationColor,
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-Regular',
-                          fontSize: sizing.descriptionText,
-                          color: colors.pianoteRed,
-                          paddingHorizontal: 5
-                        }}
-                      >
+                    <View style={localStyles.likeCountContainer}>
+                      <Text style={localStyles.likeNumText}>
                         {reply.like_count}{' '}
                         {reply.like_count === 1 ? 'LIKE' : 'LIKES'}
                       </Text>
@@ -228,66 +170,25 @@ export default class Replies extends React.Component {
                         />
                       </TouchableOpacity>
                     </View>
-                    <View
-                      style={{
-                        backgroundColor: colors.mainBackground,
-                        flex: 1,
-                        flexDirection: 'row',
-                        paddingTop: 10,
-                        paddingHorizontal: 10
-                      }}
-                    >
-                      <View
-                        style={{
-                          alignItems: 'center',
-                          justifyContent: 'flex-start',
-                          paddingBottom: 10
-                        }}
-                      >
+                    <View style={localStyles.commentContainer}>
+                      <View style={localStyles.imageContainer}>
                         <FastImage
-                          style={{
-                            height: onTablet ? 60 : 40,
-                            width: onTablet ? 60 : 40,
-                            borderRadius: 100,
-                            marginTop: 10
-                          }}
+                          style={localStyles.replierImage}
                           source={{
                             uri: user['fields.profile_picture_image_url']
                           }}
                           resizeMode={FastImage.resizeMode.stretch}
                         />
-                        <Text
-                          style={{
-                            fontFamily: 'OpenSans-Bold',
-                            fontSize: sizing.descriptionText,
-                            marginTop: 5,
-                            color: colors.pianoteGrey
-                          }}
-                        >
+                        <Text style={localStyles.xp}>
                           {this.changeXP(user.xp)}
                         </Text>
                       </View>
 
                       <View style={{ flex: 1, paddingLeft: 10 }}>
-                        <Text
-                          style={{
-                            fontFamily: 'OpenSans-Regular',
-                            fontSize: sizing.descriptionText,
-                            color: 'white',
-                            paddingTop: 10
-                          }}
-                        >
+                        <Text style={localStyles.commentText}>
                           {comment.comment}
                         </Text>
-                        <Text
-                          style={{
-                            fontFamily: 'OpenSans-Regular',
-                            fontSize: sizing.descriptionText,
-                            color: colors.secondBackground,
-                            paddingTop: 5,
-                            paddingBottom: 10
-                          }}
-                        >
+                        <Text style={localStyles.userTags}>
                           {user.display_name} | {user.rank} |{' '}
                           {this.lastPostTime(comment.created_on)}
                         </Text>
@@ -321,22 +222,8 @@ export default class Replies extends React.Component {
                                 />
                               </TouchableOpacity>
                               {comment.like_count > 0 && (
-                                <View
-                                  style={{
-                                    borderRadius: 40,
-                                    backgroundColor: colors.notificationColor,
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                  }}
-                                >
-                                  <Text
-                                    style={{
-                                      fontFamily: 'OpenSans-Regular',
-                                      fontSize: sizing.descriptionText,
-                                      color: colors.pianoteRed,
-                                      paddingHorizontal: 5
-                                    }}
-                                  >
+                                <View style={localStyles.likeCountContainer}>
+                                  <Text style={localStyles.likeNumText}>
                                     {comment.like_count}{' '}
                                     {comment.like_count === 1
                                       ? 'LIKE'
@@ -487,153 +374,141 @@ export default class Replies extends React.Component {
   };
 }
 
-const localStyles = StyleSheet.create({
-  replyContainer: {
-    paddingHorizontal: 10,
-    minHeight: 30,
-    flexDirection: 'row'
-  },
-  profileImage: {
-    height: onTablet ? 60 : 40,
-    width: onTablet ? 60 : 40,
-    paddingVertical: 10,
-    borderRadius: 100,
-    marginRight: 10
-  },
-  replyName: {
-    fontFamily: 'OpenSans-Regular',
-    fontSize: 10,
-    marginTop: 2,
-    color: 'grey'
-  },
-  commentContainer: {
-    flex: 1,
-    paddingLeft: 10,
-    marginTop: 3
-  },
-  displayNameText: {
-    fontFamily: 'OpenSans-Regular',
-    fontSize: onTablet ? 16 : 12,
-    color: '#445f73',
-    paddingVertical: 5
-  },
-  comment: {
-    paddingTop: 10,
-    fontSize: onTablet ? 16 : 12,
-    fontFamily: 'OpenSans-Regular',
-    color: 'white'
-  },
-  likeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 10
-  },
-  likeCountContainer: {
-    borderRadius: 40,
-    backgroundColor: '#002038',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  likeCount: {
-    fontFamily: 'OpenSans-Regular',
-    fontSize: onTablet ? 16 : 12,
-    color: '#fb1b2f',
-    paddingHorizontal: 10
-  },
-  componentContainer: {
-    zIndex: 2,
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    justifyContent: 'center',
-    backgroundColor: '#00101d'
-  },
-  commentHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    marginTop: 10
-  },
-  replyText: {
-    fontSize: onTablet ? 16 : 12,
-    marginVertical: 5,
-    textAlign: 'left',
-    fontFamily: 'RobotoCondensed-Bold',
-    color: '#445f73'
-  },
-  originalReply: {
-    paddingTop: 5,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-    minHeight: 30,
-    flexDirection: 'row'
-  },
-  replierImage: {
-    height: onTablet ? 60 : 40,
-    width: onTablet ? 60 : 40,
-    borderRadius: 100,
-    marginTop: 10
-  },
-  opXP: {
-    fontFamily: 'OpenSans-Bold',
-    fontSize: onTablet ? 16 : 12,
-    marginTop: 5,
-    color: 'grey'
-  },
-  commentText: {
-    fontFamily: 'OpenSans-Regular',
-    fontSize: onTablet ? 16 : 12,
-    color: 'white',
-    marginBottom: 7
-  },
-  userStats: {
-    fontFamily: 'OpenSans-Regular',
-    fontSize: onTablet ? 16 : 12,
-    color: '#445f73',
-    paddingTop: 5,
-    paddingBottom: 10
-  },
-  iconContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 10
-  },
-  addComment: {
-    width: '100%',
-    flexDirection: 'row',
-    paddingLeft: 10,
-    borderTopWidth: 0.5,
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#445f73',
-    borderTopColor: '#445f73',
-    alignItems: 'center'
-  },
-  makeReplyContainer: {
-    width: '80%',
-    paddingVertical: 5,
-    justifyContent: 'center'
-  },
-  addReplyText: {
-    textAlign: 'left',
-    fontFamily: 'OpenSans-Regular',
-    fontSize: onTablet ? 16 : 12,
-    color: 'white',
-    paddingVertical: 20
-  },
-  replierContainer: {
-    padding: 10,
-    alignItems: 'center',
-    flexDirection: 'row',
-    borderTopWidth: 0.5,
-    backgroundColor: '#00101d',
-    borderTopColor: '#445f73'
-  },
-  textInput: {
-    flex: 1,
-    fontSize: onTablet ? 16 : 12,
-    color: '#445f73',
-    fontFamily: 'OpenSans-Regular',
-    paddingVertical: 10,
-    backgroundColor: '#00101d'
-  }
-});
+const setStyles = (appColor, size) =>
+  StyleSheet.create({
+    profileImage: {
+      height: onTablet ? 60 : 40,
+      width: onTablet ? 60 : 40,
+      paddingVertical: 10,
+      borderRadius: 100,
+      marginRight: 10
+    },
+    commentContainer: {
+      backgroundColor: appColor.mainBackground,
+      flex: 1,
+      flexDirection: 'row',
+      padding: 10
+    },
+    comment: {
+      paddingTop: 10,
+      fontSize: onTablet ? 16 : 12,
+      fontFamily: 'OpenSans-Regular',
+      color: 'white'
+    },
+    likeCountContainer: {
+      borderRadius: 40,
+      backgroundColor: appColor.notificationColor,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    likeCount: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: onTablet ? 16 : 12,
+      color: appColor.pianoteRed,
+      paddingHorizontal: 10
+    },
+    componentContainer: {
+      zIndex: 2,
+      width: '100%',
+      height: '100%',
+      position: 'absolute',
+      justifyContent: 'center',
+      backgroundColor: appColor.mainBackground
+    },
+    commentHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: 10,
+      marginTop: 10
+    },
+    replyText: {
+      fontSize: onTablet ? 16 : 12,
+      marginVertical: 5,
+      textAlign: 'left',
+      fontFamily: 'RobotoCondensed-Bold',
+      color: appColor.secondBackground
+    },
+    replierImage: {
+      height: onTablet ? 60 : 40,
+      width: onTablet ? 60 : 40,
+      borderRadius: 100,
+      marginTop: 10
+    },
+    commentText: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: size.descriptionText,
+      color: 'white',
+      paddingTop: 10
+    },
+    addComment: {
+      width: '100%',
+      flexDirection: 'row',
+      paddingLeft: 10,
+      borderTopWidth: 0.5,
+      borderBottomWidth: 0.5,
+      borderBottomColor: appColor.secondBackground,
+      borderTopColor: appColor.secondBackground,
+      alignItems: 'center'
+    },
+    makeReplyContainer: {
+      width: '80%',
+      paddingVertical: 5,
+      justifyContent: 'center'
+    },
+    addReplyText: {
+      textAlign: 'left',
+      fontFamily: 'OpenSans-Regular',
+      fontSize: onTablet ? 16 : 12,
+      color: 'white',
+      paddingVertical: 20
+    },
+    replierContainer: {
+      padding: 10,
+      alignItems: 'center',
+      flexDirection: 'row',
+      borderTopWidth: 0.5,
+      backgroundColor: appColor.mainBackground,
+      borderTopColor: appColor.secondBackground
+    },
+    textInput: {
+      flex: 1,
+      fontSize: onTablet ? 16 : 12,
+      color: appColor.secondBackground,
+      fontFamily: 'OpenSans-Regular',
+      paddingVertical: 10,
+      backgroundColor: appColor.mainBackground
+    },
+    imageContainer: {
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      paddingBottom: 10
+    },
+    xp: {
+      fontFamily: 'OpenSans-Bold',
+      fontSize: size.descriptionText,
+      marginTop: 5,
+      color: appColor.pianoteGrey
+    },
+    userTags: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: size.descriptionText,
+      color: appColor.secondBackground,
+      paddingTop: 5,
+      paddingBottom: 10
+    },
+    likeNumText: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: size.descriptionText,
+      color: appColor.pianoteRed,
+      paddingHorizontal: 5
+    },
+    allRepliesContainer: {
+      backgroundColor: appColor.mainBackground,
+      borderTopColor: appColor.secondBackground,
+      flex: 1,
+      borderTopWidth: 0.25,
+      flexDirection: 'row',
+      paddingTop: 10,
+      paddingHorizontal: 10
+    }
+  });

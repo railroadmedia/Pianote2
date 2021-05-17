@@ -1,6 +1,4 @@
-import AsyncStorage from '@react-native-community/async-storage';
 import commonService from './common.service';
-import { Platform } from 'react-native';
 
 export async function likeContent(contentID) {
   return await commonService.tryCall(

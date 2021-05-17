@@ -119,7 +119,6 @@ export default class AssignmentResource extends React.Component {
   };
 
   render() {
-    console.log(this.props.data);
     let { width } = this.state;
     return (
       <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>

@@ -262,7 +262,9 @@ export default class Search extends React.Component {
                     name={'search'}
                     size={onTablet ? 35 : 25}
                     color={
-                      this.props.currentPage === 'SEARCH' ? '#fb1b2f' : 'grey'
+                      this.props.currentPage === 'SEARCH'
+                        ? colors.pianoteRed
+                        : 'grey'
                     }
                   />
                 </View>
@@ -324,7 +326,7 @@ export default class Search extends React.Component {
                       style={{
                         textAlign: 'center',
                         fontSize: onTablet ? 16 : 12,
-                        color: '#fb1b2f',
+                        color: colors.pianoteRed,
                         fontFamily: 'OpenSans-Bold'
                       }}
                     >

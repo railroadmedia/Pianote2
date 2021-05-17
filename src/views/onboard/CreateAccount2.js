@@ -247,11 +247,12 @@ export default class CreateAccount extends React.Component {
                     localStyles.savePass,
                     {
                       width: onTablet ? '30%' : '50%',
+                      borderColor: colors.pianoteRed,
                       backgroundColor:
                         this.state.password.length > 0 &&
                         this.state.confirmPassword.length > 0 &&
                         this.state.password === this.state.confirmPassword
-                          ? '#fb1b2f'
+                          ? colors.pianoteRed
                           : 'transparent'
                     }
                   ]}
@@ -265,7 +266,7 @@ export default class CreateAccount extends React.Component {
                           this.state.confirmPassword.length > 0 &&
                           this.state.password === this.state.confirmPassword
                             ? 'white'
-                            : '#fb1b2f',
+                            : colors.pianoteRed,
                         fontFamily: 'RobotoCondensed-Bold',
                         fontSize: onTablet ? 20 : 14,
                         textAlign: 'center',
@@ -354,7 +355,6 @@ const localStyles = StyleSheet.create({
     marginBottom: 10,
     borderWidth: 2,
     borderRadius: 50,
-    alignSelf: 'center',
-    borderColor: '#fb1b2f'
+    alignSelf: 'center'
   }
 });

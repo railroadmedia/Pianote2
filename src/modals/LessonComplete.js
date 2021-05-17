@@ -52,7 +52,7 @@ export default class LessonComplete extends React.Component {
               <Icon.Ionicons
                 name={'ios-trophy'}
                 size={onTablet ? 45 : 35}
-                color={'#fb1b2f'}
+                color={colors.pianoteRed}
               />
               <Text
                 style={[

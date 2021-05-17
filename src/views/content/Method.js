@@ -38,8 +38,8 @@ export default class Method extends React.Component {
       methodIsCompleted: props.route?.params.methodIsCompleted,
       showRestartCourse: false,
       id: null,
-      isStarted: false,
-      isCompleted: false,
+      started: false,
+      completed: false,
       showInfo: false,
       isLoadingAll: true,
       level: 1,
@@ -88,8 +88,8 @@ export default class Method extends React.Component {
     this.setState({
       items: response.levels,
       id: response.id,
-      isStarted: response.started,
-      isCompleted: response.completed,
+      started: response.started,
+      completed: response.completed,
       bannerNextLessonUrl: response.banner_button_url,
       isLoadingAll: false,
       xp: response.total_xp, //missing
@@ -109,8 +109,8 @@ export default class Method extends React.Component {
         showRestartCourse: false,
         methodIsStarted: false,
         methodIsCompleted: false,
-        isStarted: false,
-        isCompleted: false,
+        started: false,
+        completed: false,
         isLoadingAll: true,
         refreshing: true
       },

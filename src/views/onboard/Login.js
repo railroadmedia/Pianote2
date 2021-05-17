@@ -216,8 +216,9 @@ export default class Login extends React.Component {
               localStyles.dots,
               {
                 backgroundColor:
-                  this.state.page === dot ? '#fb1b2f' : 'transparent',
-                borderColor: this.state.page === dot ? '#fb1b2f' : 'grey'
+                  this.state.page === dot ? colors.pianoteRed : 'transparent',
+                borderColor:
+                  this.state.page === dot ? colors.pianoteRed : 'grey'
               }
             ]}
           />
@@ -302,7 +303,7 @@ export default class Login extends React.Component {
             <Pianote
               height={onTablet ? 80 : 60}
               width={onTablet ? 200 : 120}
-              fill={'#fb1b2f'}
+              fill={colors.pianoteRed}
               style={{ alignSelf: 'center' }}
             />
           </SafeAreaView>
@@ -339,7 +340,7 @@ export default class Login extends React.Component {
             <Pianote
               height={onTablet ? 80 : 60}
               width={onTablet ? 200 : 120}
-              fill={'#fb1b2f'}
+              fill={colors.pianoteRed}
               style={{ alignSelf: 'center' }}
             />
           </SafeAreaView>

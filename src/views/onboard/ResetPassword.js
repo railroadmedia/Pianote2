@@ -306,13 +306,13 @@ export default class ResetPassword extends React.Component {
                       borderWidth: 2,
                       borderRadius: 50,
                       alignSelf: 'center',
-                      borderColor: '#fb1b2f',
+                      borderColor: colors.pianoteRed,
                       width: onTablet ? '30%' : '50%',
                       backgroundColor:
                         this.state.password.length > 0 &&
                         this.state.confirmPassword.length > 0 &&
                         this.state.password === this.state.confirmPassword
-                          ? '#fb1b2f'
+                          ? colors.pianoteRed
                           : 'transparent'
                     }
                   ]}
@@ -327,7 +327,7 @@ export default class ResetPassword extends React.Component {
                         this.state.confirmPassword.length > 0 &&
                         this.state.password === this.state.confirmPassword
                           ? 'white'
-                          : '#fb1b2f'
+                          : colors.pianoteRed
                     }}
                   >
                     RESET PASSWORD

@@ -92,7 +92,7 @@ export default class ForgotPassword extends React.Component {
             >
               <View style={localStyles.pianoteContainer}>
                 <View style={localStyles.pianoteInnerContainer}>
-                  <Pianote fill={'#fb1b2f'} />
+                  <Pianote fill={colors.pianoteRed} />
                 </View>
                 <View>
                   <Text
@@ -143,10 +143,12 @@ export default class ForgotPassword extends React.Component {
                       borderWidth: 2,
                       borderRadius: 50,
                       alignSelf: 'center',
-                      borderColor: '#fb1b2f',
+                      borderColor: colors.pianoteRed,
                       width: onTablet ? '30%' : '50%',
                       backgroundColor:
-                        this.state.email.length > 0 ? '#fb1b2f' : 'transparent'
+                        this.state.email.length > 0
+                          ? colors.pianoteRed
+                          : 'transparent'
                     }
                   ]}
                 >
@@ -155,7 +157,10 @@ export default class ForgotPassword extends React.Component {
                       padding: 10,
                       fontSize: onTablet ? 20 : 14,
                       fontFamily: 'RobotoCondensed-Bold',
-                      color: this.state.email.length > 0 ? 'white' : '#fb1b2f'
+                      color:
+                        this.state.email.length > 0
+                          ? 'white'
+                          : colors.pianoteRed
                     }}
                   >
                     RESET PASSWORD

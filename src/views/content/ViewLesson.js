@@ -2,7 +2,6 @@ import React from 'react';
 import {
   View,
   Text,
-  Platform,
   StatusBar,
   TextInput,
   Dimensions,
@@ -21,7 +20,6 @@ import Icon from '../../assets/icons.js';
 import { Download_V2, offlineContent, DownloadResources } from 'RNDownload';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Replies from '../../components/Replies';
-import SoundSlice from '../../components/SoundSlice';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import Sort from '../../modals/Sort';
 import CustomModal from '../../modals/CustomModal';
@@ -995,7 +993,7 @@ class ViewLesson extends React.Component {
                   <View>
                     {this.state.showInfo && (
                       <>
-                        <Text style={localstyles.description}>
+                        <Text style={localStyles.description}>
                           {this.state.description}
                         </Text>
                         {this.state.chapters?.map(item => (
