@@ -16,7 +16,7 @@ import {
 import { connect } from 'react-redux';
 
 import DeviceInfo from 'react-native-device-info';
-import { SafeAreaView } from 'react-navigation';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import ExpandableView from './ExpandableView';
 
@@ -270,7 +270,7 @@ class Filters extends React.Component {
     return (
       <>
         <StatusBar
-          barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
+          barStyle={theme === 'light' ? 'dark-content' : 'light-content'}
         />
         <View style={disabled ? { opacity: 0.3 } : { opacity: 1 }}>
           <TouchableOpacity
