@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
-import { SafeAreaView } from 'react-navigation';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { check, x, sort } from './img/svgs';
 
@@ -87,10 +87,7 @@ export default class Sort extends React.PureComponent {
                 </TouchableOpacity>
               ))}
             </SafeAreaView>
-            <SafeAreaView
-              forceInset={{ bottom: 'always' }}
-              style={{ backgroundColor: 'black' }}
-            >
+            <SafeAreaView style={{ backgroundColor: 'black' }}>
               <TouchableOpacity
                 onPress={this.toggleModal}
                 style={{ padding: 20, flexDirection: 'row' }}

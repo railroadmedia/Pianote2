@@ -4,15 +4,18 @@ import {
   ActivityIndicator,
   Modal,
   PanResponder,
-  ScrollView,
+  FlatList,
   StyleSheet,
   Text,
+  Image,
   TouchableOpacity,
-  View
+  View,
+  StatusBar
 } from 'react-native';
 
+import { connect } from 'react-redux';
+
 import DeviceInfo from 'react-native-device-info';
-import FastImage from 'react-native-fast-image';
 import { SafeAreaView } from 'react-navigation';
 
 import ExpandableView from './ExpandableView';
@@ -28,29 +31,35 @@ let alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
   statusKeys = ['ALL', 'UPCOMING LIVE EVENTS', 'RECORDED EVENTS'],
   styleKeys = [],
   topicKeys = [],
+  artistKeys = [],
   difficulties;
 
-export default class Filters extends React.Component {
+class Filters extends React.Component {
   appliedFilters = {};
   originalFilters = {};
 
   stylesRenders = 0;
   topicsRenders = 0;
+  artistRenders = 0;
 
   tallestTopic = 0;
+  tallestArtist = 0;
   tallestStyle = 0;
 
   state = {
     loading: true,
     showModal: false,
     styleHeight: 0,
-    topicHeight: 0
+    topicHeight: 0,
+    artistHeight: 0
   };
 
   constructor(props) {
     super(props);
     Filters.contextType = commonService.Contexts;
     this.deepLinking(props.deepLinking);
+    if (props.user?.difficultySkillLevel)
+      this.appliedFilters.level = props.user.difficultySkillLevel;
   }
 
   componentWillUnmount() {
@@ -77,56 +86,50 @@ export default class Filters extends React.Component {
         url = url.replace('statuses[]=published', '');
       }
       let reqFields = url
-        .replace(/ & /g, 'tmpFilterContainingAnd')
-        .replace(/&/g, '')
-        .replace(/tmpFilterContainingAnd/g, ' & ')
-        .split('required_fields[]=')
-        .slice(1);
-      reqFields.map(rf => {
+        .split('required_fields[]=')[1]
+        ?.split('&')[0]
+        ?.split(',')[1];
+      if (reqFields) this.appliedFilters.level = parseInt(reqFields);
+      let inclFields = url
+        .replace(/included_fields/g, 'included_fieldstmpInclFields')
+        .split('&included_fields')
+        ?.filter(inclF => inclF.includes('tmpInclFields'))
+        ?.map(inclF =>
+          inclF.split('&required_fields')[0].replace('tmpInclFields[]=', '')
+        );
+      inclFields?.map(rf => {
         let deepFilters = rf.split(',');
         if (deepFilters[0] === 'topic')
           this.appliedFilters.topics = deepFilters.slice(1);
+        if (deepFilters[0] === 'artist')
+          this.appliedFilters.artists = deepFilters.slice(1);
         if (deepFilters[0] === 'style')
           this.appliedFilters.styles = deepFilters.slice(1);
         if (deepFilters[0] === 'difficulty' && parseInt(deepFilters.slice(1)))
           this.appliedFilters.level = parseInt(deepFilters.slice(1));
         if (deepFilters[0] === 'instructor')
-          this.appliedFilters.instructors = this.props.meta?.instructor
-            ?.filter(i =>
-              deepFilters.slice(1).some(si => parseInt(si) === i.id)
-            )
-            .map(i => ({
-              id: i.id,
-              name: i.fields?.find(f => f.key === 'name')?.value,
-              headShotPic: i.data?.find(d => d.key === 'head_shot_picture_url')
-                ?.value
-            }));
+          this.appliedFilters.instructors = this.props.meta?.instructor?.filter(
+            i => deepFilters.slice(1).some(si => parseInt(si) === i.id)
+          );
       });
     }
   };
 
   initFilters = () => {
     topicKeys = [];
+    artistKeys = [];
     styleKeys = [];
     instructorNames = [];
     if (this.state.showModal) {
-      setTimeout(() => {
-        let {
-          meta: { topic, style, instructor, difficulty } = {}
-        } = this.props;
-        if (topic) topicKeys = this.props.meta.topic?.map(t => t.toUpperCase());
-        if (style) styleKeys = this.props.meta.style?.map(s => s.toUpperCase());
-        if (!difficulties) difficulties = difficulty;
-        if (instructor)
-          instructorNames = instructor.map(i => ({
-            id: i.id,
-            name: i.name || i.fields?.find(f => f.key === 'name')?.value,
-            headShotPic:
-              i.head_shot_picture_url ||
-              i.data?.find(d => d.key === 'head_shot_picture_url')?.value
-          }));
-        this.setState({ loading: false });
-      }, 0);
+      let {
+        meta: { topic, artist, style, instructor, difficulty } = {}
+      } = this.props;
+      if (topic) topicKeys = topic?.map(t => t.toUpperCase());
+      if (style) styleKeys = style?.map(s => s.toUpperCase());
+      if (!difficulties) difficulties = difficulty;
+      if (instructor) instructorNames = instructor;
+      if (artist) artistKeys = artist?.map(a => a.toUpperCase());
+      this.setState({ loading: false });
     } else this.props.onApply();
   };
 
@@ -136,6 +139,9 @@ export default class Filters extends React.Component {
       filterQuery += `&required_fields[]=difficulty,${this.appliedFilters.level}`;
     this.appliedFilters.topics?.map(
       t => (filterQuery += `&included_fields[]=topic,${encodeURIComponent(t)}`)
+    );
+    this.appliedFilters.artists?.map(
+      a => (filterQuery += `&included_fields[]=artist,${encodeURIComponent(a)}`)
     );
     this.appliedFilters.styles?.map(
       s => (filterQuery += `&included_fields[]=style,${encodeURIComponent(s)}`)
@@ -215,8 +221,11 @@ export default class Filters extends React.Component {
     difficulties = undefined;
     if (!this.appliedFilters[filterType]) {
       this.appliedFilters[filterType] = [item];
-      if (item === 'ALL') delete this.appliedFilters[filterType];
-      this.apply();
+      if (filterType.match(/^(topics|artists|styles)$/)) {
+        if (item === 'ALL') delete this.appliedFilters[filterType];
+        this.apply();
+      }
+
       return;
     }
     let regex =
@@ -235,8 +244,10 @@ export default class Filters extends React.Component {
       : this.appliedFilters[filterType].concat(item);
     if (!this.appliedFilters[filterType].length)
       delete this.appliedFilters[filterType];
-    if (item === 'ALL') delete this.appliedFilters[filterType];
-    this.apply();
+    if (filterType.match(/^(topics|artists|styles)$/)) {
+      if (item === 'ALL') delete this.appliedFilters[filterType];
+      this.apply();
+    }
   };
 
   apply = () => {
@@ -251,13 +262,16 @@ export default class Filters extends React.Component {
   };
 
   render() {
-    let { disabled } = this.props;
-    let { content_type } = this.props.meta || {};
+    let { theme, disabled } = this.props;
+    let { showSkillLevel, content_type } = this.props.meta || {};
     let {
-      state: { showModal, topicHeight, styleHeight, loading }
+      state: { showModal, topicHeight, artistHeight, styleHeight, loading }
     } = this;
     return (
       <>
+        <StatusBar
+          barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
+        />
         <View style={disabled ? { opacity: 0.3 } : { opacity: 1 }}>
           <TouchableOpacity
             disabled={disabled}
@@ -279,6 +293,7 @@ export default class Filters extends React.Component {
               style={fStyles.touchableTitleContainer}
               onPress={() => {
                 topicKeys = [];
+                artistKeys = [];
                 styleKeys = [];
                 instructorNames = [];
                 let af = JSON.stringify(this.appliedFilters);
@@ -302,162 +317,285 @@ export default class Filters extends React.Component {
               style={fStyles.container}
             />
           ) : (
-            <ScrollView style={fStyles.container}>
-              <SkillSection
-                onApply={this.apply}
-                testID={'SkillSection'}
-                appliedFilters={this.appliedFilters}
-              />
-              {!!topicKeys.length && (
-                <View style={fStyles.filterSection}>
-                  <Text style={fStyles.sectionTitleText}>
-                    WHAT DO YOU WANT TO WORK ON?
-                  </Text>
-                  <View
-                    style={{
-                      marginTop: 10,
-                      flexWrap: 'wrap',
-                      flexDirection: 'row'
-                    }}
-                  >
-                    {topicKeys.map((topic, i) => (
-                      <View key={i} style={fStyles.touchableBorderedContainer}>
-                        <TouchableFiller
-                          item={topic}
-                          filterType={'topics'}
-                          toggleItem={this.toggleItem}
-                          testID={`TouchableFiller${i}`}
-                          appliedFilters={this.appliedFilters}
-                          selected={
-                            topic === 'ALL' &&
-                            !this.appliedFilters.topics?.length
-                              ? true
-                              : undefined
-                          }
-                          touchableTextStyle={fStyles.touchableTextBordered}
-                          touchableSelectedStyle={
-                            topicHeight
-                              ? {
-                                  ...fStyles.touchableBorderedSelected,
-                                  height: topicHeight
+            <FlatList
+              data={[]
+                .concat(
+                  showSkillLevel ? (
+                    <SkillSection
+                      key={'skillSection'}
+                      onApply={() => {
+                        this.props.setLoggedInUser?.({
+                          ...this.props.user,
+                          difficultySkillLevel: this.appliedFilters.level
+                        });
+                        this.apply();
+                      }}
+                      testID={'SkillSection'}
+                      appliedFilters={this.appliedFilters}
+                    />
+                  ) : (
+                    []
+                  )
+                )
+                .concat(
+                  topicKeys.length ? (
+                    <View style={fStyles.filterSection} key={'topicSection'}>
+                      <Text style={fStyles.sectionTitleText}>
+                        WHAT DO YOU WANT TO WORK ON?
+                      </Text>
+                      <View
+                        style={{
+                          marginTop: 10,
+                          flexWrap: 'wrap',
+                          flexDirection: 'row'
+                        }}
+                      >
+                        {topicKeys.map((topic, i) => (
+                          <View
+                            key={i}
+                            style={fStyles.touchableBorderedContainer}
+                          >
+                            <TouchableFiller
+                              item={topic}
+                              filterType={'topics'}
+                              toggleItem={this.toggleItem}
+                              testID={`TouchableFiller${i}`}
+                              appliedFilters={this.appliedFilters}
+                              selected={
+                                topic === 'ALL' &&
+                                !this.appliedFilters.topics?.length
+                                  ? true
+                                  : undefined
+                              }
+                              touchableTextStyle={fStyles.touchableTextBordered}
+                              touchableSelectedStyle={
+                                topicHeight
+                                  ? {
+                                      ...fStyles.touchableBorderedSelected,
+                                      height: topicHeight
+                                    }
+                                  : fStyles.touchableBorderedSelected
+                              }
+                              touchableStyle={
+                                topicHeight
+                                  ? {
+                                      ...fStyles.touchableBordered,
+                                      height: topicHeight
+                                    }
+                                  : fStyles.touchableBordered
+                              }
+                              touchableTextSelectedStyle={
+                                fStyles.touchableTextBorderedSelected
+                              }
+                              onLayout={({
+                                nativeEvent: {
+                                  layout: { height }
                                 }
-                              : fStyles.touchableBorderedSelected
-                          }
-                          touchableStyle={
-                            topicHeight
-                              ? {
-                                  ...fStyles.touchableBordered,
-                                  height: topicHeight
-                                }
-                              : fStyles.touchableBordered
-                          }
-                          touchableTextSelectedStyle={
-                            fStyles.touchableTextBorderedSelected
-                          }
-                          onLayout={({
-                            nativeEvent: {
-                              layout: { height }
-                            }
-                          }) => {
-                            this.topicsRenders++;
-                            this.tallestTopic =
-                              this.tallestTopic < height
-                                ? height
-                                : this.tallestTopic;
-                            if (this.topicsRenders === topicKeys.length)
-                              this.setState({ topicHeight: this.tallestTopic });
-                          }}
-                        />
+                              }) => {
+                                this.topicsRenders++;
+                                this.tallestTopic =
+                                  this.tallestTopic < height
+                                    ? height
+                                    : this.tallestTopic;
+                                if (this.topicsRenders === topicKeys.length)
+                                  this.setState({
+                                    topicHeight: this.tallestTopic
+                                  });
+                              }}
+                            />
+                          </View>
+                        ))}
                       </View>
-                    ))}
-                  </View>
-                </View>
-              )}
-              {!!styleKeys.length && (
-                <View style={fStyles.filterSection}>
-                  <Text style={fStyles.sectionTitleText}>
-                    WHAT STYLE YOU WANT TO PLAY?
-                  </Text>
-                  <View
-                    style={{
-                      marginTop: 10,
-                      flexWrap: 'wrap',
-                      flexDirection: 'row'
-                    }}
-                  >
-                    {styleKeys.map((style, i) => (
-                      <View key={i} style={fStyles.touchableBorderedContainer}>
-                        <TouchableFiller
-                          item={style}
-                          filterType={'styles'}
-                          toggleItem={this.toggleItem}
-                          testID={`TouchableFiller${i}`}
-                          appliedFilters={this.appliedFilters}
-                          selected={
-                            style === 'ALL' &&
-                            !this.appliedFilters.styles?.length
-                              ? true
-                              : undefined
-                          }
-                          touchableTextStyle={fStyles.touchableTextBordered}
-                          touchableSelectedStyle={
-                            styleHeight
-                              ? {
-                                  ...fStyles.touchableBorderedSelected,
-                                  height: styleHeight
+                    </View>
+                  ) : (
+                    []
+                  )
+                )
+                .concat(
+                  styleKeys.length ? (
+                    <View style={fStyles.filterSection} key={'styleSection'}>
+                      <Text style={fStyles.sectionTitleText}>
+                        WHAT STYLE YOU WANT TO PLAY?
+                      </Text>
+                      <View
+                        style={{
+                          marginTop: 10,
+                          flexWrap: 'wrap',
+                          flexDirection: 'row'
+                        }}
+                      >
+                        {styleKeys.map((style, i) => (
+                          <View
+                            key={i}
+                            style={fStyles.touchableBorderedContainer}
+                          >
+                            <TouchableFiller
+                              item={style}
+                              filterType={'styles'}
+                              toggleItem={this.toggleItem}
+                              testID={`TouchableFiller${i}`}
+                              appliedFilters={this.appliedFilters}
+                              selected={
+                                style === 'ALL' &&
+                                !this.appliedFilters.styles?.length
+                                  ? true
+                                  : undefined
+                              }
+                              touchableTextStyle={fStyles.touchableTextBordered}
+                              touchableSelectedStyle={
+                                styleHeight
+                                  ? {
+                                      ...fStyles.touchableBorderedSelected,
+                                      height: styleHeight
+                                    }
+                                  : fStyles.touchableBorderedSelected
+                              }
+                              touchableStyle={
+                                styleHeight
+                                  ? {
+                                      ...fStyles.touchableBordered,
+                                      height: styleHeight
+                                    }
+                                  : fStyles.touchableBordered
+                              }
+                              touchableTextSelectedStyle={
+                                fStyles.touchableTextBorderedSelected
+                              }
+                              onLayout={({
+                                nativeEvent: {
+                                  layout: { height }
                                 }
-                              : fStyles.touchableBorderedSelected
-                          }
-                          touchableStyle={
-                            styleHeight
-                              ? {
-                                  ...fStyles.touchableBordered,
-                                  height: styleHeight
-                                }
-                              : fStyles.touchableBordered
-                          }
-                          touchableTextSelectedStyle={
-                            fStyles.touchableTextBorderedSelected
-                          }
-                          onLayout={({
-                            nativeEvent: {
-                              layout: { height }
-                            }
-                          }) => {
-                            this.stylesRenders++;
-                            this.tallestStyle =
-                              this.tallestStyle < height
-                                ? height
-                                : this.tallestStyle;
-                            if (this.stylesRenders === styleKeys.length)
-                              this.setState({ styleHeight: this.tallestStyle });
-                          }}
-                        />
+                              }) => {
+                                this.stylesRenders++;
+                                this.tallestStyle =
+                                  this.tallestStyle < height
+                                    ? height
+                                    : this.tallestStyle;
+                                if (this.stylesRenders === styleKeys.length)
+                                  this.setState({
+                                    styleHeight: this.tallestStyle
+                                  });
+                              }}
+                            />
+                          </View>
+                        ))}
                       </View>
-                    ))}
-                  </View>
-                </View>
-              )}
-              {content_type?.join() === 'coach-stream' && (
-                <StatusSection appliedFilters={this.appliedFilters} />
-              )}
-              {!!instructorNames.length && (
-                <InstructorsSection
-                  toggleItem={this.toggleItem}
-                  testID={'InstructorsSection'}
-                  appliedFilters={this.appliedFilters}
-                />
-              )}
-              <ProgressSection
-                testID={'ProgressSection'}
-                appliedFilters={this.appliedFilters}
-              />
-            </ScrollView>
+                    </View>
+                  ) : (
+                    []
+                  )
+                )
+                .concat(
+                  artistKeys.length ? (
+                    <View style={fStyles.filterSection} key={'artistSection'}>
+                      <Text style={fStyles.sectionTitleText}>
+                        CHOOSE AN ARTIST
+                      </Text>
+                      <View
+                        style={{
+                          marginTop: 10,
+                          flexWrap: 'wrap',
+                          flexDirection: 'row'
+                        }}
+                      >
+                        {artistKeys.map((artist, i) => (
+                          <View
+                            key={i}
+                            style={fStyles.touchableBorderedContainer}
+                          >
+                            <TouchableFiller
+                              item={artist}
+                              filterType={'artists'}
+                              toggleItem={this.toggleItem}
+                              testID={`TouchableFiller${i}`}
+                              appliedFilters={this.appliedFilters}
+                              selected={
+                                artist === 'ALL' &&
+                                !this.appliedFilters.artists?.length
+                                  ? true
+                                  : undefined
+                              }
+                              touchableTextStyle={fStyles.touchableTextBordered}
+                              touchableSelectedStyle={
+                                artistHeight
+                                  ? {
+                                      ...fStyles.touchableBorderedSelected,
+                                      height: artistHeight
+                                    }
+                                  : fStyles.touchableBorderedSelected
+                              }
+                              touchableStyle={
+                                artistHeight
+                                  ? {
+                                      ...fStyles.touchableBordered,
+                                      height: artistHeight
+                                    }
+                                  : fStyles.touchableBordered
+                              }
+                              touchableTextSelectedStyle={
+                                fStyles.touchableTextBorderedSelected
+                              }
+                              onLayout={({
+                                nativeEvent: {
+                                  layout: { height }
+                                }
+                              }) => {
+                                this.artistsRenders++;
+                                this.tallestArtist =
+                                  this.tallestArtist < height
+                                    ? height
+                                    : this.tallestArtist;
+                                if (this.artistsRenders === artistKeys.length)
+                                  this.setState({
+                                    artistHeight: this.tallestArtist
+                                  });
+                              }}
+                            />
+                          </View>
+                        ))}
+                      </View>
+                    </View>
+                  ) : (
+                    []
+                  )
+                )
+                .concat(
+                  content_type?.join() === 'coach-stream' ? (
+                    <StatusSection
+                      appliedFilters={this.appliedFilters}
+                      key={'statusSection'}
+                    />
+                  ) : (
+                    []
+                  )
+                )
+                .concat(
+                  instructorNames.length ? (
+                    <InstructorsSection
+                      key={'instructorsSection'}
+                      toggleItem={this.toggleItem}
+                      testID={'InstructorsSection'}
+                      appliedFilters={this.appliedFilters}
+                    />
+                  ) : (
+                    []
+                  )
+                )
+                .concat(
+                  <ProgressSection
+                    key={'progressSection'}
+                    testID={'ProgressSection'}
+                    appliedFilters={this.appliedFilters}
+                  />
+                )}
+              keyExtractor={({ key }) => key}
+              style={fStyles.container}
+              initialNumToRender={0}
+              keyboardShouldPersistTaps='handled'
+              renderItem={({ item }) => item}
+            />
           )}
-          <SafeAreaView
-            forceInset={{ bottom: 'always' }}
-            style={fStyles.safeAreaBottomContainer}
-          >
+          <SafeAreaView style={fStyles.safeAreaBottomContainer}>
             <TouchableOpacity
               onPress={this.toggleModal}
               testID={'TouchableDoneApply'}
@@ -536,32 +674,31 @@ class SkillSection extends React.PureComponent {
   setDifficultyDescription = level => {
     switch (level) {
       case 'ALL':
-        return 'This will display all piano lessons regardless of their difficulty.';
+        return '';
       case 1:
-        return 'A level 1 pianist is just beginning and might not yet have any skills yet. A level 1 pianist will learn how to navigate the keyboard, play a C scale, chords and begin to build dexterity and control in their hands.';
+        return 'A Level 1 drummer should be able to hold the drumsticks and play a basic drum beat in time with music.';
       case 2:
-        return 'A level 2 pianist can play a C scale hands together, a chord progression in the key of C and understands basic rhythm.';
+        return 'A Level 2 drummer should be able to read basic note values, understand the drum notation key, play basic rock, punk, and metal beats, and play basic rudiments like the single stroke roll, double stroke roll, and single paradiddle.';
       case 3:
-        return 'A level 3 pianist can read basic notation and is gaining confidence in playing hands together and reading simple notation on the grand staff.';
+        return 'A Level 3 drummer should understand the motions of drumming, be able to play triplets, flams, and drags, create a basic roadmap for a song, and play styles like country and disco.';
       case 4:
-        return 'A level 4 pianist understands how to build and play both major and minor scales and the 1-5-6-4 chord progression. At level 4 you are beginning to play with dynamics and are becoming comfortable in moving your hands outside of “C position” as you play.';
+        return 'A Level 4 drummer should be able to use Moeller technique at a basic level, understand dotted notation, play in 3/4, 6/8, and 12/8, play basic jazz and blues patterns, and demonstrate 4-limb independence.';
       case 5:
-        return 'A level 5 pianist can play chord inversions and the G major scale as well as apply their knowledge of chord progressions to this new key. They can read notations that include accidentals and eighth notes.';
+        return 'A Level 5 drummer should be able to apply basic groupings to the drum-set, play styles like funk, jazz, soul, reggae, and bossa nova, understand ties, dynamic markings, and other basic elements of chart reading, and be able to demonstrate basic 4-limb independence in a jazz and rock setting.';
       case 6:
-        return 'A level 6 a pianist can play in the keys of F major and D minor and is using chord inversions while playing chord progressions.';
+        return 'A Level 6 drummer should understand odd time signatures like 5/4, 5/8, 7/4, and 7/8, be able to apply odd note groupings to the drum-set, play styles like hip-hop, R&B, cha-cha-cha, soca, and second line, and understand the basics of comping and trading solos.';
       case 7:
-        return 'A level 7 pianist can play with dynamics and the sustain pedal ,in 4/4 and ¾ time and is able to read and play most of the notation found within Pianote.';
+        return 'A Level 7 drummer should be able to demonstrate 4-limb independence in styles like jazz, rock, and metal at an intermediate level, demonstrate hand-to-foot combinations, understand and demonstrate bass drum techniques like double bass playing, heel-toe, and slide technique.';
       case 8:
-        return 'At level 8 a pianist understands the circle of 5th and is able to use it to help them play scales and songs in any key signature.';
+        return 'A Level 8 drummer should be able to navigate charts and lead sheets, play brushes at a basic level, play styles like samba and mozambique, and understand independence concepts like interpreting rhythms and interpreting stickings.';
       case 9:
-        return 'A level 9 pianist should be comfortable with the basics of improvisation and use a variety of left hand patterns and right hand fills as they create their own music. They also understand how to build and play 7th chords.';
+        return 'A Level 9 drummer should be able to play all 40 drum rudiments, play Afro-Cuban styles like mambo, nanigo, and songo, solo over a musical vamp, and demonstrate 4-limb independence in Afro-Cuban, Afro-Brazilian, and swing fStyles.';
       case 10:
-        return 'A level 10 pianist understands the 12 bar blues, the blues scale, and the 2-5-1 Jazz progression. By level 10 you can learn to play any song in our library and improvise in pop, blues or jazz styles.';
+        return 'A Level 10 drummer should understand advanced rhythmic concepts including polyrhythms, polymeters, metric modulation, and odd note subdivisions, play advanced Afro-Cuban and jazz styles, play drum solos in a variety of different settings and styles, and demonstrate 4-limb independence at an advanced level.';
     }
   };
 
   onAllLevel = () => {
-    difficulties = undefined;
     this.setState(
       ({ level }) => ({
         level: level === 'ALL' ? 1 : 'ALL'
@@ -772,7 +909,7 @@ class InstructorsSection extends React.Component {
             ))}
           </View>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-            {instructorNames.map(({ id, name, headShotPic }) => (
+            {instructorNames.map(({ id, name, head_shot_picture_url }) => (
               <View
                 key={id}
                 testID={`TouchableFillerInstructorNameContainer${id}`}
@@ -795,10 +932,10 @@ class InstructorsSection extends React.Component {
                     fStyles.touchableTextInstructorSelected
                   }
                 >
-                  <FastImage
+                  <Image
                     style={fStyles.touchableInstructorPic}
                     source={{
-                      uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,ar_1,c_fill,g_face/${headShotPic}`
+                      uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,ar_1,c_fill,g_face/${head_shot_picture_url}`
                     }}
                   />
                 </TouchableFiller>
@@ -956,6 +1093,16 @@ class StatusSection extends React.Component {
   }
 }
 
+const mapDispatchToProps = dispatch => ({
+  setLoggedInUser: user => dispatch(setLoggedInUser(user))
+});
+const mapStateToProps = state => ({
+  user: state.userState?.user,
+  theme: state.themeState?.theme
+});
+export default connect(mapStateToProps, mapDispatchToProps, null, {
+  forwardRef: true
+})(Filters);
 const fStyles = StyleSheet.create({
   touchableToggler: {
     alignSelf: 'center',
