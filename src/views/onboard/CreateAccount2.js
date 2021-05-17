@@ -122,13 +122,14 @@ export default class CreateAccount extends React.Component {
                 height={backButtonSize}
                 fill={'white'}
               />
-              <Text
-                style={[styles.modalHeaderText, localStyles.createAccountText]}
-              >
-                Create Account
-              </Text>
-              <View />
             </TouchableOpacity>
+            <Text
+              style={[styles.modalHeaderText, localStyles.createAccountText]}
+            >
+              Create Account
+            </Text>
+            <View />
+
             <ScrollView
               style={{ flex: 1, marginBottom: 40 }}
               keyboardShouldPersistTaps='handled'
@@ -287,14 +288,15 @@ export default class CreateAccount extends React.Component {
 
 const localStyles = StyleSheet.create({
   createAccountContainer: {
-    padding: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
+    position: 'absolute',
+    left: 15,
+    padding: 5,
+    alignItems: 'center'
   },
   createAccountText: {
     color: 'white',
-    fontSize: isTablet ? 36 : 24
+    fontSize: isTablet ? 36 : 24,
+    alignSelf: 'center'
   },
   createPasswordContainer: {
     flex: 1,

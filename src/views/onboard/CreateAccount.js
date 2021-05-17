@@ -88,12 +88,13 @@ export default class CreateAccount extends React.Component {
                 height={backButtonSize}
                 fill={'white'}
               />
-              <Text
-                style={[styles.modalHeaderText, localStyles.createAccountText]}
-              >
-                Create Account
-              </Text>
             </TouchableOpacity>
+            <Text
+              style={[styles.modalHeaderText, localStyles.createAccountText]}
+            >
+              Create Account
+            </Text>
+
             <ScrollView
               style={{ flex: 1 }}
               keyboardShouldPersistTaps='handled'
@@ -222,10 +223,10 @@ const localStyles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,.5)'
   },
   createAccountContainer: {
-    padding: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
+    position: 'absolute',
+    left: 15,
+    padding: 5,
+    alignItems: 'center'
   },
   emailContainer: {
     flex: 1,
@@ -241,7 +242,8 @@ const localStyles = StyleSheet.create({
   },
   createAccountText: {
     color: 'white',
-    fontSize: onTablet ? 36 : 24
+    fontSize: onTablet ? 36 : 24,
+    alignSelf: 'center'
   },
   container: {
     backgroundColor: 'white',
