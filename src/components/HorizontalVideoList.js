@@ -9,7 +9,6 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import Icon from '../assets/icons';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import FastImage from 'react-native-fast-image';
@@ -24,9 +23,6 @@ import Filters_V2 from './Filters_V2';
 import { navigate } from '../../AppNavigator';
 
 let greaterWDim;
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 const sortDict = {
   newest: 'NEWEST',
   oldest: 'OLDEST',
@@ -131,7 +127,6 @@ export default class HorizontalVideoList extends React.Component {
 
   like = contentID => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-
     for (i in this.state.items) {
       if (this.state.items[i].id === contentID) {
         let items = Object.assign([], this.state.items);
@@ -147,11 +142,7 @@ export default class HorizontalVideoList extends React.Component {
   changeType = word => {
     word = word.replace(/[- )(]/g, ' ').split(' ');
     let string = '';
-
-    for (i in word) {
-      string = string + word[i] + ' ';
-    }
-
+    for (i in word) string = string + word[i] + ' ';
     return string;
   };
 
@@ -255,22 +246,13 @@ export default class HorizontalVideoList extends React.Component {
       );
     } else {
       return (
-        <View
-          style={{
-            width: width,
-            height: '100%'
-          }}
-        >
-          <View style={{ flex: 1 }} />
-          <ActivityIndicator
-            size={onTablet ? 'large' : 'small'}
-            animating={true}
-            color={
-              this.props.isMethod ? colors.pianoteGrey : colors.secondBackground
-            }
-          />
-          <View style={{ flex: 1 }} />
-        </View>
+        <ActivityIndicator
+          size={onTablet ? 'large' : 'small'}
+          animating={true}
+          color={
+            this.props.isMethod ? colors.pianoteGrey : colors.secondBackground
+          }
+        />
       );
     }
   };
@@ -389,9 +371,9 @@ export default class HorizontalVideoList extends React.Component {
           horizontal={this.props.isTile ? false : true}
           style={{ width: '100%' }}
           showsHorizontalScrollIndicator={false}
-          onEndReached={() => {
-            this.props.callEndReached ? this.props.reachedEnd() : null;
-          }}
+          onEndReached={() =>
+            this.props.callEndReached ? this.props.reachedEnd() : null
+          }
           onEndReachedThreshold={1}
           ListFooterComponent={() => this.listFooter()}
           keyExtractor={(item, index) => index.toString()}
@@ -402,171 +384,13 @@ export default class HorizontalVideoList extends React.Component {
                 marginRight: 10,
                 marginBottom: this.props.isTile ? 10 : 0
               }}
-              onLongPress={() => {
-                this.setState({
-                  showModal: true,
-                  item
-                });
-              }}
+              onLongPress={() => this.setState({ showModal: true, item })}
               delayLongPress={250}
               onPress={() => this.navigate(item, index)}
             >
               <View style={{ width: '100%' }}>
                 <View style={[styles.centerContent, localStyles.progressItem]}>
-                  {this.props.isLive ? (
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          height: '100%',
-                          width: '100%',
-                          borderRadius: 10
-                        }
-                      ]}
-                    >
-                      <LinearGradient
-                        colors={[
-                          'transparent',
-                          'rgba(20, 20, 20, 0.7)',
-                          'rgba(0, 0, 0, 1)'
-                        ]}
-                        style={{
-                          borderRadius: 0,
-                          width: '100%',
-                          height: '100%',
-                          position: 'absolute',
-                          left: 0,
-                          bottom: 0
-                        }}
-                      />
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontFamily: 'OpenSans-Bold',
-                          position: 'absolute',
-                          fontSize: onTablet ? 16 : 12,
-                          left: 5,
-                          top: 10
-                        }}
-                      >
-                        UPCOMING EVENT
-                      </Text>
-                      <Text>
-                        <View>
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontFamily: 'OpenSans-Bold',
-                              fontSize: onTablet ? 60 : 40,
-                              textAlign: 'center'
-                            }}
-                          >
-                            02
-                          </Text>
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontFamily: 'OpenSans-Bold',
-                              top: 0,
-                              textAlign: 'center'
-                            }}
-                          >
-                            HOURS
-                          </Text>
-                        </View>
-                        <View>
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontFamily: 'OpenSans-Bold',
-                              fontSize: onTablet ? 60 : 40
-                            }}
-                          >
-                            {' '}
-                            :{' '}
-                          </Text>
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontFamily: 'OpenSans-Bold',
-                              top: 0,
-                              textAlign: 'center',
-                              color: 'transparent'
-                            }}
-                          >
-                            h
-                          </Text>
-                        </View>
-                        <View>
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontFamily: 'OpenSans-Bold',
-                              fontSize: onTablet ? 60 : 40,
-                              textAlign: 'center'
-                            }}
-                          >
-                            42
-                          </Text>
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontFamily: 'OpenSans-Bold',
-                              top: 0,
-                              textAlign: 'center'
-                            }}
-                          >
-                            MINUTES
-                          </Text>
-                        </View>
-                        <View>
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontFamily: 'OpenSans-Bold',
-                              fontSize: onTablet ? 60 : 40
-                            }}
-                          >
-                            {' '}
-                            :{' '}
-                          </Text>
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontFamily: 'OpenSans-Bold',
-                              top: 0,
-                              textAlign: 'center',
-                              color: 'transparent'
-                            }}
-                          >
-                            h
-                          </Text>
-                        </View>
-                        <View>
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontFamily: 'OpenSans-Bold',
-                              fontSize: onTablet ? 60 : 40,
-                              textAlign: 'center'
-                            }}
-                          >
-                            02
-                          </Text>
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontFamily: 'OpenSans-Bold',
-                              top: 0,
-                              textAlign: 'center'
-                            }}
-                          >
-                            SECONDS
-                          </Text>
-                        </View>
-                      </Text>
-                    </View>
-                  ) : item.started ? (
+                  {item.started ? (
                     <Progress
                       height={onTablet ? 55 : 45}
                       width={onTablet ? 55 : 45}
@@ -580,7 +404,6 @@ export default class HorizontalVideoList extends React.Component {
                     />
                   ) : null}
                 </View>
-
                 {isiOS ? (
                   <FastImage
                     style={[
@@ -652,39 +475,7 @@ export default class HorizontalVideoList extends React.Component {
                     </Text>
                   </View>
                 </View>
-                {this.props.isLive && (
-                  <TouchableOpacity
-                    onPress={() =>
-                      !item.isAddedToList
-                        ? this.addToMyList(item.id)
-                        : this.removeFromMyList(item.id)
-                    }
-                    style={{ paddingRight: 2.5 }}
-                  >
-                    <Icon.AntDesign
-                      name={!item.isAddedToList ? 'plus' : 'close'}
-                      size={sizing.myListButtonSize}
-                      color={colors.pianoteRed}
-                    />
-                  </TouchableOpacity>
-                )}
-                {new Date(item.publishedOn) > new Date() ||
-                this.props.isLive ? (
-                  <TouchableOpacity
-                    style={{ paddingRight: 5 }}
-                    onPress={() => {
-                      this.addToCalendarLessonTitle = item.title;
-                      this.addToCalendatLessonPublishDate = item.publishedOn;
-                      this.setState({ addToCalendarModal: true });
-                    }}
-                  >
-                    <Icon.FontAwesome
-                      size={sizing.infoButtonSize}
-                      name={'calendar-plus'}
-                      color={colors.pianoteRed}
-                    />
-                  </TouchableOpacity>
-                ) : !item.is_added_to_primary_playlist ? (
+                {!item.is_added_to_primary_playlist ? (
                   <TouchableOpacity
                     onPress={() => this.addToMyList(item.id)}
                     style={{ paddingRight: 2.5 }}
@@ -723,20 +514,14 @@ export default class HorizontalVideoList extends React.Component {
         <AddToCalendar
           isVisible={this.state.addToCalendarModal}
           hideAddToCalendar={() => this.setState({ addToCalendarModal: false })}
-          addEventToCalendar={() => {
-            this.addEventToCalendar();
-          }}
+          addEventToCalendar={() => this.addEventToCalendar()}
         />
         {this.state.showSort && (
           <Sort
-            hideSort={() => {
-              this.setState({ showSort: false });
-            }}
+            hideSort={() => this.setState({ showSort: false })}
             isMethod={this.props.isMethod}
             currentSort={this.props.currentSort}
-            changeSort={sort => {
-              this.props.changeSort(sort);
-            }}
+            changeSort={sort => this.props.changeSort(sort)}
           />
         )}
       </View>
