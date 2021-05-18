@@ -40,7 +40,9 @@ export default class Sort extends React.Component {
           <SafeAreaView
             style={{
               width: '100%',
-              backgroundColor: '#00101d'
+              backgroundColor: this.props.isMethod
+                ? 'black'
+                : colors.mainBackground
             }}
           >
             {(this.props.type === 'comments' ? sortComments : sortVideos).map(

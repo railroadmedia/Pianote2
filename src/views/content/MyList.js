@@ -223,7 +223,7 @@ class MyList extends React.Component {
               </Text>
             </View>
             <View style={[styles.centerContent, { flex: 0.15 }]}>
-              <EntypoIcon
+              <Icon.Entypo
                 name={'chevron-thin-right'}
                 s
                 size={onTablet ? 30 : 20}

@@ -268,7 +268,7 @@ export default class Schedule extends React.Component {
                         <TouchableOpacity
                           onPress={() => this.addToMyList(item.id)}
                         >
-                          <AntIcon
+                          <Icon.AntDesign
                             name={'plus'}
                             size={sizing.myListButtonSize}
                             color={colors.pianoteRed}
@@ -278,7 +278,7 @@ export default class Schedule extends React.Component {
                         <TouchableOpacity
                           onPress={() => this.removeFromMyList(item.id)}
                         >
-                          <AntIcon
+                          <Icon.AntDesign
                             name={'close'}
                             size={sizing.myListButtonSize}
                             color={colors.pianoteRed}
@@ -295,7 +295,7 @@ export default class Schedule extends React.Component {
                           this.setState({ addToCalendarModal: true });
                         }}
                       >
-                        <FontIcon
+                        <Icon.FontAwesome5
                           size={sizing.infoButtonSize}
                           name={'calendar-plus'}
                           color={colors.pianoteRed}
