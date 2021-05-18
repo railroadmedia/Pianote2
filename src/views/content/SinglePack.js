@@ -55,8 +55,8 @@ export default class SinglePack extends React.Component {
       thumbnail: '',
       logo: '',
       xp: 0,
-      isStarted: false,
-      isCompleted: false,
+      started: false,
+      completed: false,
       nextLessonUrl: '',
       isLoadingAll: true,
       refreshing: false,
@@ -93,8 +93,8 @@ export default class SinglePack extends React.Component {
         title: response.title,
         logo: response.pack_logo,
         description: response.description,
-        isStarted: response.started,
-        isCompleted: response.completed,
+        started: response.started,
+        completed: response.completed,
         xp: response.total_xp,
         videos: response.bundles || response.lessons,
         nextLessonUrl: response.next_lesson?.mobile_app_url,
@@ -343,14 +343,14 @@ export default class SinglePack extends React.Component {
                   <View style={{ width: '50%' }}>
                     <LongButton
                       type={
-                        this.state.isCompleted
+                        this.state.completed
                           ? 'RESET'
-                          : !this.state.isStarted
+                          : !this.state.started
                           ? 'START'
                           : 'CONTINUE'
                       }
                       pressed={() => {
-                        if (this.state.isCompleted) {
+                        if (this.state.completed) {
                           this.setState({ showRestartCourse: true });
                         } else {
                           navigate('VIEWLESSON', {

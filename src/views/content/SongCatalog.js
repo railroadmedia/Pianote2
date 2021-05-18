@@ -172,7 +172,7 @@ class SongCatalog extends React.Component {
 
   getSquareHeight = () => {
     if (onTablet) return 125;
-    if (Platform.OS === 'android') return height * 0.1375;
+    if (!isiOS) return height * 0.1375;
     return height * 0.115;
   };
 

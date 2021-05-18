@@ -71,8 +71,11 @@ export default class StartIcon extends React.Component {
             flex: 1,
             borderRadius: 500,
             backgroundColor:
-              this.props.type === 'MORE INFO' ? 'transparent' : '#fb1b2f',
-            borderColor: this.props.type === 'MORE INFO' ? 'white' : '#fb1b2f',
+              this.props.type === 'MORE INFO'
+                ? 'transparent'
+                : colors.pianoteRed,
+            borderColor:
+              this.props.type === 'MORE INFO' ? 'white' : colors.pianoteRed,
             borderWidth: 2
           }
         ]}

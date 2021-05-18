@@ -78,14 +78,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   text: {
-    fontFamily: 'OpenSans-Regular',
-    fontWeight: '400',
+    fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
     color: 'white'
   },
   boldText: {
-    fontFamily: 'OpenSans-Regular',
-    fontWeight: '600',
+    fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
     color: 'white'
   }

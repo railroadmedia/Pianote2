@@ -1,4 +1,4 @@
-import { Image, Platform } from 'react-native';
+import { Image } from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 export default {
   quality: 'Auto',

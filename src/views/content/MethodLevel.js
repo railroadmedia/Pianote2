@@ -41,8 +41,8 @@ export default class MethodLevel extends React.Component {
       items: [],
       level: props.route?.params.level,
       id: null,
-      isStarted: false,
-      isCompleted: false,
+      started: false,
+      completed: false,
       nextLesson: null,
       isLoadingAll: true,
       showInfo: false,
@@ -80,8 +80,8 @@ export default class MethodLevel extends React.Component {
       isLoadingAll: false,
       id: response.id,
       bannerNextLessonUrl: response.banner_button_url,
-      isStarted: response.started,
-      isCompleted: response.completed,
+      started: response.started,
+      completed: response.completed,
       description: response.description,
       isAddedToList: response.is_added_to_primary_playlist,
       progress: response.progress_percent,
@@ -109,8 +109,8 @@ export default class MethodLevel extends React.Component {
     this.setState(
       {
         items: [],
-        isStarted: false,
-        isCompleted: false,
+        started: false,
+        completed: false,
         showRestartCourse: false,
         refreshing: true
       },
@@ -273,14 +273,14 @@ export default class MethodLevel extends React.Component {
                   <LongButton
                     isMethod={true}
                     type={
-                      this.state.isCompleted
+                      this.state.completed
                         ? 'RESET'
-                        : !this.state.isStarted
+                        : !this.state.started
                         ? 'START'
                         : 'CONTINUE'
                     }
                     pressed={() => {
-                      if (this.state.isCompleted) {
+                      if (this.state.completed) {
                         this.setState({ showRestartCourse: true });
                       } else {
                         navigate('VIEWLESSON', {

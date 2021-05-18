@@ -52,7 +52,7 @@ export default class LessonComplete extends React.Component {
               <Icon.Ionicons
                 name={'ios-trophy'}
                 size={onTablet ? 45 : 35}
-                color={'#fb1b2f'}
+                color={colors.pianoteRed}
               />
               <Text
                 style={[
@@ -166,7 +166,7 @@ const localStyles = StyleSheet.create({
     backgroundColor: 'red'
   },
   youEarnedText: {
-    fontWeight: 'bold',
+    fontFamily: 'OpenSans-Bold',
     marginTop: 10,
     color: '#fb1b2f'
   },
@@ -175,7 +175,7 @@ const localStyles = StyleSheet.create({
     marginTop: 10
   },
   completeLesson: {
-    fontWeight: 'bold',
+    fontFamily: 'OpenSans-Bold',
     marginHorizontal: 20
   },
   upNextText: {

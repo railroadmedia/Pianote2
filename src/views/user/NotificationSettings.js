@@ -188,7 +188,7 @@ class NotificationSettings extends React.Component {
                   {
                     backgroundColor:
                       notifications_summary_frequency_minutes == 1
-                        ? '#fb1b2f'
+                        ? colors.pianoteRed
                         : colors.secondBackground,
                     borderRadius: 100,
                     width: onTablet ? 35 : 27.5,
@@ -225,7 +225,7 @@ class NotificationSettings extends React.Component {
                   {
                     backgroundColor:
                       notifications_summary_frequency_minutes == 1440
-                        ? '#fb1b2f'
+                        ? colors.pianoteRed
                         : colors.secondBackground,
                     borderRadius: 100,
                     width: onTablet ? 35 : 27.5,
@@ -263,7 +263,7 @@ class NotificationSettings extends React.Component {
                     backgroundColor:
                       notifications_summary_frequency_minutes == 0 ||
                       notifications_summary_frequency_minutes == null
-                        ? '#fb1b2f'
+                        ? colors.pianoteRed
                         : colors.secondBackground,
                     borderRadius: 100,
                     width: onTablet ? 35 : 27.5,

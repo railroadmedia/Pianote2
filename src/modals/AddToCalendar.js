@@ -45,7 +45,7 @@ export default class AddToCalendar extends React.Component {
             <TouchableOpacity
               style={[
                 localStyles.confirmAddition,
-                { justifyContent: 'center' }
+                { backgroundColor: colors.pianoteRed }
               ]}
               onPress={() => this.props.addEventToCalendar()}
             >
@@ -90,10 +90,10 @@ const localStyles = StyleSheet.create({
   confirmAddition: {
     marginTop: 15,
     borderRadius: 100,
-    backgroundColor: '#fb1b2f',
     marginHorizontal: 40,
     justifyContent: 'center',
-    height: onTablet ? 40 : 30
+    height: onTablet ? 40 : 30,
+    justifyContent: 'center'
   },
   confirmAdditionText: {
     color: 'white'

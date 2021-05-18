@@ -1,6 +1,4 @@
-import AsyncStorage from '@react-native-community/async-storage';
 import commonService from './common.service';
-import { Platform } from 'react-native';
 
 export async function likeContent(contentID) {
   return await commonService.tryCall(
@@ -42,7 +40,7 @@ export async function markComplete(contentID) {
     `${
       commonService.rootUrl
     }/musora-api/complete?content_id=${contentID}&device_type=${
-      Platform.OS === 'ios' ? 'ios' : 'android'
+      isiOS ? 'ios' : 'android'
     }`,
     'PUT'
   );

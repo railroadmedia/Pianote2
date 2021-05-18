@@ -1,5 +1,5 @@
 import React from 'react';
-import { Linking, View, Dimensions, Platform } from 'react-native';
+import { Linking, View, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import { Download_V2 } from 'RNDownload';
 import { bindActionCreators } from 'redux';
@@ -178,7 +178,7 @@ class LoadPage extends React.Component {
               height: '100%',
               width: '100%',
               zIndex: 4,
-              elevation: Platform.OS === 'android' ? 4 : 0,
+              elevation: isiOS ? 0 : 4,
               backgroundColor: 'black'
             }
           ]}
@@ -196,7 +196,7 @@ class LoadPage extends React.Component {
                 ? factorHorizontal
                 : factorVertical)
             }
-            fill={'#fb1b2f'}
+            fill={colors.pianoteRed}
           />
         </View>
       </View>

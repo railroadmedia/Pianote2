@@ -48,7 +48,7 @@ export default class MembershipExpired extends React.Component {
         <SafeAreaView style={{ flex: 1 }}>
           <View style={localStyles.container}>
             <View style={localStyles.pianoteContainer}>
-              <Pianote fill={'#fb1b2f'} />
+              <Pianote fill={colors.pianoteRed} />
             </View>
             <View>
               <Text style={localStyles.title}>

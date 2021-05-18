@@ -25,7 +25,7 @@ export default class AssignmentComplete extends React.Component {
               <Icon.Ionicons
                 name={'ios-trophy'}
                 size={onTablet ? 45 : 35}
-                color={'#fb1b2f'}
+                color={colors.pianoteRed}
               />
               <View
                 style={[
@@ -79,7 +79,7 @@ const localStyles = StyleSheet.create({
   },
   assignmentTitle: {
     marginHorizontal: 20,
-    fontWeight: 'bold'
+    fontFamily: 'OpenSans-Bold'
   },
   congratsText: {
     marginHorizontal: 20

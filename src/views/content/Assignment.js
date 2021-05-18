@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   Dimensions,
   SafeAreaView,
-  Modal
+  StyleSheet
 } from 'react-native';
 import SoundSlice from '../../components/SoundSlice.js';
 import Icon from '../../assets/icons.js';
@@ -18,11 +18,14 @@ import { NetworkContext } from '../../context/NetworkProvider';
 const windowDim = Dimensions.get('window');
 const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+let localStyles;
 
 export default class Assignment extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
+    localStyles = setStyles(colors, sizing);
+
     this.state = {
       hideTitles: false,
       showSheets: false,
@@ -52,171 +55,51 @@ export default class Assignment extends React.Component {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
-          style={{
-            flex: 1,
-            backgroundColor: colors.mainBackground
-          }}
+          style={localStyles.container}
         >
           {!this.state.hideTitles && (
             <>
-              <TouchableOpacity
-                onPress={this.props.onX}
-                style={{
-                  position: 'absolute',
-                  right: 10,
-                  top: 10,
-                  zIndex: 1
-                }}
-              >
-                <Icon.AntDesign
-                  name={'close'}
-                  size={sizing.myListButtonSize}
-                  color={'#ffffff'}
-                />
-              </TouchableOpacity>
-              <Text
-                style={{
-                  padding: 10,
-                  fontFamily: 'OpenSans-Bold',
-                  fontSize: sizing.verticalListTitleSmall,
-                  textAlign: 'center',
-                  color: colors.secondBackground
-                }}
-              >
-                ASSIGNMENT #{index}
-              </Text>
-              <Text
-                style={{
-                  fontSize: sizing.titleViewLesson,
-                  fontFamily: 'OpenSans-Bold',
-                  textAlign: 'center',
-                  color: 'white',
-                  paddingHorizontal: 10,
-                  marginBottom: 10
-                }}
-              >
-                {title}
-              </Text>
-              <View style={{ height: 10 }} />
-              {Array.isArray(timeCodes) ? (
-                timeCodes?.map(tc => (
-                  <View
-                    style={[
-                      styles.centerContent,
-                      {
-                        height: height * 0.025,
-                        width: '100%'
-                      }
-                    ]}
-                  >
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          width: '40%',
-                          height: '100%',
-                          borderRadius: 30,
-                          backgroundColor: '#ececec',
-                          alignSelf: 'center'
-                        }
-                      ]}
-                    >
-                      <TouchableOpacity
-                        onPress={() => this.props.onSeek?.(tc.value)}
-                        style={[
-                          styles.centerContent,
-                          {
-                            height: '100%',
-                            width: '100%',
-                            alignItems: 'center'
-                          }
-                        ]}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: 'OpenSans-Regular',
-                            fontWeight: '700',
-                            color: 'grey',
-                            fontSize: sizing.descriptionText,
-                            alignSelf: 'center'
-                          }}
-                        >
-                          SKIP VIDEO TO {formatTimeHHMMSS(tc.value)}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                ))
-              ) : !!timeCodes ? (
-                <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      height: height * 0.025,
-                      width: '100%'
-                    }
-                  ]}
+              <View style={localStyles.titleContainer}>
+                <TouchableOpacity
+                  onPress={this.props.onX}
+                  style={localStyles.xBtn}
                 >
-                  <View
-                    style={[
-                      styles.centerContent,
-                      {
-                        width: '40%',
-                        height: '100%',
-                        borderRadius: 30,
-                        backgroundColor: '#ececec',
-                        alignSelf: 'center'
-                      }
-                    ]}
-                  >
+                  <Icon.AntDesign
+                    name={'close'}
+                    size={sizing.myListButtonSize}
+                    color={'#ffffff'}
+                  />
+                </TouchableOpacity>
+                <Text style={localStyles.assignmentText}>
+                  ASSIGNMENT #{index}
+                </Text>
+                <Text style={localStyles.title}>{title}</Text>
+                {Array.isArray(timeCodes) ? (
+                  timeCodes?.map(tc => (
                     <TouchableOpacity
-                      onPress={() => this.props.onSeek?.(timeCodes)}
-                      style={[
-                        styles.centerContent,
-                        {
-                          height: '100%',
-                          width: '100%',
-                          alignItems: 'center'
-                        }
-                      ]}
+                      onPress={() => this.props.onSeek?.(tc.value)}
+                      style={[styles.centerContent, localStyles.timeCodeBtn]}
                     >
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-Regular',
-                          fontWeight: '700',
-                          color: 'grey',
-                          fontSize: sizing.descriptionText,
-                          alignSelf: 'center'
-                        }}
-                      >
-                        SKIP VIDEO TO {formatTimeHHMMSS(timeCodes)}
+                      <Text style={localStyles.timeCodeBtnText}>
+                        SKIP VIDEO TO {formatTimeHHMMSS(tc.value)}
                       </Text>
                     </TouchableOpacity>
-                  </View>
-                </View>
-              ) : null}
+                  ))
+                ) : !!timeCodes ? (
+                  <TouchableOpacity
+                    onPress={() => this.props.onSeek?.(timeCodes)}
+                    style={[styles.centerContent, localStyles.timeCodeBtn]}
+                  >
+                    <Text style={localStyles.timeCodeBtnText}>
+                      SKIP VIDEO TO {formatTimeHHMMSS(timeCodes)}
+                    </Text>
+                  </TouchableOpacity>
+                ) : null}
+              </View>
 
-              <View
-                style={{
-                  height: 1,
-                  borderBottomColor: colors.secondBackground,
-                  borderBottomWidth: 1
-                }}
-              />
               {description && (
                 <View key={'blurb'} style={{ width: '100%' }}>
-                  <Text
-                    style={{
-                      paddingVertical: '2%',
-                      paddingHorizontal: '5%',
-                      textAlign: 'center',
-                      fontSize: sizing.descriptionText,
-                      fontFamily: 'OpenSans-Regular',
-                      color: '#ffffff'
-                    }}
-                  >
-                    {description}
-                  </Text>
+                  <Text style={localStyles.description}>{description}</Text>
                 </View>
               )}
             </>
@@ -249,48 +132,17 @@ export default class Assignment extends React.Component {
                 style={[
                   styles.centerContent,
                   styles.heightButtons,
-                  {
-                    borderWidth: 2,
-                    borderColor: '#fb1b2f',
-                    width: '90%',
-                    alignSelf: 'center',
-                    borderRadius: 300,
-                    paddingHorizontal: 10,
-                    marginBottom: 7.5
-                  }
+                  localStyles.practiceBtn
                 ]}
               >
-                <Text
-                  style={{
-                    color: '#fb1b2f',
-                    fontFamily: 'RobotoCondensed-Bold',
-                    fontSize: sizing.verticalListTitleSmall
-                  }}
-                >
-                  PRACTICE
-                </Text>
+                <Text style={localStyles.practiceBtnText}>PRACTICE</Text>
               </TouchableOpacity>
             )}
             <TouchableOpacity
               onPress={() => this.props.onCompleteAssignment()}
-              style={[
-                styles.centerContent,
-                {
-                  backgroundColor: '#fb1b2f',
-                  width: '90%',
-                  alignSelf: 'center',
-                  borderRadius: 300
-                }
-              ]}
+              style={[styles.centerContent, localStyles.completeBtn]}
             >
-              <Text
-                style={{
-                  color: 'white',
-                  fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: sizing.verticalListTitleSmall,
-                  paddingVertical: 10
-                }}
-              >
+              <Text style={localStyles.completeBtnText}>
                 {this.props.assignmentProgress === 100
                   ? 'COMPLETED'
                   : 'COMPLETE ASSIGNMENT'}
@@ -301,17 +153,94 @@ export default class Assignment extends React.Component {
 
         <SoundSlice
           isVisible={this.state.showSoundSlice}
-          hideSoundSlice={() => {
-            this.setState({
-              showSoundSlice: false
-            });
-          }}
+          hideSoundSlice={() => this.setState({ showSoundSlice: false })}
           slug={slug}
         />
       </>
     );
   }
 }
+
+const setStyles = (appColor, size) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: appColor.mainBackground
+    },
+    xBtn: {
+      position: 'absolute',
+      right: 10,
+      top: 10,
+      zIndex: 1
+    },
+    assignmentText: {
+      padding: 10,
+      fontFamily: 'OpenSans-Bold',
+      fontSize: size.verticalListTitleSmall,
+      textAlign: 'center',
+      color: appColor.secondBackground
+    },
+    title: {
+      fontSize: size.titleViewLesson,
+      fontFamily: 'OpenSans-Bold',
+      textAlign: 'center',
+      color: 'white',
+      paddingHorizontal: 10,
+      marginBottom: 10
+    },
+    titleContainer: {
+      borderBottomColor: appColor.secondBackground,
+      borderBottomWidth: 1,
+      paddingBottom: 10
+    },
+    timeCodeBtn: {
+      borderRadius: 30,
+      backgroundColor: '#ececec',
+      alignSelf: 'center'
+    },
+    timeCodeBtnText: {
+      fontFamily: 'OpenSans-Bold',
+      color: 'grey',
+      fontSize: size.descriptionText,
+      alignSelf: 'center',
+      paddingHorizontal: 10
+    },
+    description: {
+      paddingVertical: '2%',
+      paddingHorizontal: '5%',
+      textAlign: 'center',
+      fontSize: size.descriptionText,
+      fontFamily: 'OpenSans-Regular',
+      color: '#ffffff'
+    },
+    practiceBtn: {
+      borderWidth: 2,
+      borderColor: appColor.pianoteRed,
+      width: '90%',
+      alignSelf: 'center',
+      borderRadius: 300,
+      paddingHorizontal: 10,
+      marginBottom: 7.5
+    },
+    practiceBtnText: {
+      color: appColor.pianoteRed,
+      fontFamily: 'RobotoCondensed-Bold',
+      fontSize: size.verticalListTitleSmall
+    },
+    completeBtn: {
+      backgroundColor: appColor.pianoteRed,
+      width: '90%',
+      alignSelf: 'center',
+      borderRadius: 300
+    },
+    completeBtnText: {
+      color: 'white',
+      fontFamily: 'RobotoCondensed-Bold',
+      fontSize: size.verticalListTitleSmall,
+      paddingVertical: 10
+    }
+  });
+
 function formatTimeHHMMSS(seconds) {
   let h = parseInt(seconds / 3600),
     m = parseInt((seconds - h * 3600) / 60),

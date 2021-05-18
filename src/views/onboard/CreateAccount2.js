@@ -122,13 +122,14 @@ export default class CreateAccount extends React.Component {
                 height={backButtonSize}
                 fill={'white'}
               />
-              <Text
-                style={[styles.modalHeaderText, localStyles.createAccountText]}
-              >
-                Create Account
-              </Text>
-              <View />
             </TouchableOpacity>
+            <Text
+              style={[styles.modalHeaderText, localStyles.createAccountText]}
+            >
+              Create Account
+            </Text>
+            <View />
+
             <ScrollView
               style={{ flex: 1, marginBottom: 40 }}
               keyboardShouldPersistTaps='handled'
@@ -150,9 +151,7 @@ export default class CreateAccount extends React.Component {
                     keyboardAppearance={'dark'}
                     placeholderTextColor={'grey'}
                     placeholder={'Password'}
-                    keyboardType={
-                      Platform.OS === 'android' ? 'default' : 'email-address'
-                    }
+                    keyboardType={isiOS ? 'email-address' : 'default'}
                     secureTextEntry={true}
                     onChangeText={password => this.setState({ password })}
                     style={localStyles.textinput}
@@ -201,9 +200,7 @@ export default class CreateAccount extends React.Component {
                     keyboardAppearance={'dark'}
                     placeholderTextColor={'grey'}
                     placeholder={'Confirm Password'}
-                    keyboardType={
-                      Platform.OS === 'android' ? 'default' : 'email-address'
-                    }
+                    keyboardType={isiOS ? 'email-address' : 'default'}
                     secureTextEntry={true}
                     onChangeText={confirmPassword =>
                       this.setState({ confirmPassword })
@@ -250,11 +247,12 @@ export default class CreateAccount extends React.Component {
                     localStyles.savePass,
                     {
                       width: onTablet ? '30%' : '50%',
+                      borderColor: colors.pianoteRed,
                       backgroundColor:
                         this.state.password.length > 0 &&
                         this.state.confirmPassword.length > 0 &&
                         this.state.password === this.state.confirmPassword
-                          ? '#fb1b2f'
+                          ? colors.pianoteRed
                           : 'transparent'
                     }
                   ]}
@@ -268,7 +266,7 @@ export default class CreateAccount extends React.Component {
                           this.state.confirmPassword.length > 0 &&
                           this.state.password === this.state.confirmPassword
                             ? 'white'
-                            : '#fb1b2f',
+                            : colors.pianoteRed,
                         fontFamily: 'RobotoCondensed-Bold',
                         fontSize: onTablet ? 20 : 14,
                         textAlign: 'center',
@@ -291,14 +289,15 @@ export default class CreateAccount extends React.Component {
 
 const localStyles = StyleSheet.create({
   createAccountContainer: {
-    padding: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
+    position: 'absolute',
+    left: 15,
+    padding: 5,
+    alignItems: 'center'
   },
   createAccountText: {
     color: 'white',
-    fontSize: isTablet ? 36 : 24
+    fontSize: isTablet ? 36 : 24,
+    alignSelf: 'center'
   },
   createPasswordContainer: {
     flex: 1,
@@ -356,7 +355,6 @@ const localStyles = StyleSheet.create({
     marginBottom: 10,
     borderWidth: 2,
     borderRadius: 50,
-    alignSelf: 'center',
-    borderColor: '#fb1b2f'
+    alignSelf: 'center'
   }
 });

@@ -41,7 +41,7 @@ export default class OverviewComplete extends React.Component {
                 <Icon.Ionicons
                   name={'ios-trophy'}
                   size={onTablet ? 45 : 35}
-                  color={'#fb1b2f'}
+                  color={colors.pianoteRed}
                 />
               </View>
               <View style={[styles.centerContent, { padding: 5 }]}>
@@ -87,7 +87,7 @@ const localStyles = StyleSheet.create({
   title: {
     marginHorizontal: 20,
     marginBottom: 15,
-    fontWeight: 'bold'
+    fontFamily: 'OpenSans-Bold'
   },
   xp: {
     color: '#fb1b2f'

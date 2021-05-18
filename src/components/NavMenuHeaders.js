@@ -45,7 +45,7 @@ export default class NavMenuHeaders extends React.Component {
             width: onTablet ? 135 : 88
           }}
         >
-          <Pianote fill={'#fb1b2f'} />
+          <Pianote fill={colors.pianoteRed} />
         </TouchableOpacity>
         <TouchableOpacity
           style={[

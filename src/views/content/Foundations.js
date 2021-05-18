@@ -36,8 +36,8 @@ export default class Foundations extends React.Component {
       showRestartCourse: false,
       bannerNextLessonUrl: '',
       id: null,
-      isStarted: false,
-      isCompleted: false,
+      started: false,
+      completed: false,
       showInfo: false,
       isLoadingAll: true,
       xp: 0,
@@ -81,8 +81,8 @@ export default class Foundations extends React.Component {
     this.setState({
       items: response.units,
       id: response.id,
-      isStarted: response.started,
-      isCompleted: response.completed,
+      started: response.started,
+      completed: response.completed,
       bannerNextLessonUrl: response.banner_button_url,
       isLoadingAll: false,
       totalLength: response.length_in_seconds,
@@ -101,8 +101,8 @@ export default class Foundations extends React.Component {
       {
         items: [],
         showRestartCourse: false,
-        isStarted: false,
-        isCompleted: false,
+        started: false,
+        completed: false,
         isLoadingAll: true,
         refreshing: true
       },
@@ -216,14 +216,14 @@ export default class Foundations extends React.Component {
                   <LongButton
                     isMethod={true}
                     type={
-                      this.state.isCompleted
+                      this.state.completed
                         ? 'RESET'
-                        : !this.state.isStarted
+                        : !this.state.started
                         ? 'START'
                         : 'CONTINUE'
                     }
                     pressed={() => {
-                      if (this.state.isCompleted) {
+                      if (this.state.completed) {
                         this.setState({ showRestartCourse: true });
                       } else {
                         this.goToLesson(this.state.bannerNextLessonUrl);
