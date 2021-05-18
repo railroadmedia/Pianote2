@@ -22,13 +22,9 @@ const isTablet = global.onTablet;
 
 class NotificationSettings extends React.Component {
   static contextType = NetworkContext;
-  constructor(props) {
-    super(props);
-  }
 
   changeNotificationStatus = datum => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-
     const {
       notify_weekly_update,
       notify_on_lesson_comment_reply,
