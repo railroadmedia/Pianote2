@@ -42,7 +42,6 @@ class SongCatalog extends React.Component {
       allSongs: [],
       currentSort: 'newest',
       page: 1,
-      outVideos: false,
       isPaging: false,
       filtering: false,
       refreshing: true,
@@ -60,9 +59,7 @@ class SongCatalog extends React.Component {
     this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   }
 
-  componentWillUnmount() {
-    this.refreshOnFocusListener?.();
-  }
+  componentWillUnmount = () => this.refreshOnFocusListener?.();
 
   async getContent() {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
@@ -92,12 +89,9 @@ class SongCatalog extends React.Component {
   initialValidData = (content, fromCache) => {
     try {
       let allVideos = content.all.data;
-
       let inprogressVideos = content.inProgress.data;
       return {
         allSongs: allVideos,
-        outVideos:
-          allVideos.length === 0 || content.all.data.length < 10 ? true : false,
         filtering: false,
         isPaging: false,
         progressSongs: inprogressVideos,
@@ -122,8 +116,6 @@ class SongCatalog extends React.Component {
 
     this.setState(state => ({
       allSongs: loadMore ? state.allSongs.concat(response.data) : response.data,
-      outVideos:
-        response.data.length === 0 || response.data.length < 10 ? true : false,
       filtering: false,
       refreshControl: false,
       isPaging: false,
@@ -131,44 +123,13 @@ class SongCatalog extends React.Component {
     }));
   };
 
-  changeSort = currentSort => {
-    this.setState(
-      {
-        allSongs: [],
-        currentSort,
-        outVideos: false,
-        isPaging: false,
-        page: 1
-      },
-      () => this.getAllSongs()
-    );
-  };
-
   handleScroll = event => {
-    if (
-      isCloseToBottom(event) &&
-      !this.state.isPaging &&
-      !this.state.outVideos
-    ) {
-      this.setState(
-        {
-          page: this.state.page + 1,
-          isPaging: true
-        },
-        () => this.getAllSongs(true)
+    if (isCloseToBottom(event) && !this.state.isPaging) {
+      this.setState({ page: this.state.page + 1, isPaging: true }, () =>
+        this.getAllSongs(true)
       );
     }
   };
-
-  refresh() {
-    this.setState(
-      {
-        refreshControl: true,
-        page: 1
-      },
-      () => this.getContent()
-    );
-  }
 
   getSquareHeight = () => {
     if (onTablet) return 125;
@@ -192,7 +153,11 @@ class SongCatalog extends React.Component {
                 tintColor={'transparent'}
                 colors={[colors.pianoteRed]}
                 refreshing={isiOS ? false : this.state.refreshControl}
-                onRefresh={() => this.refresh()}
+                onRefresh={() =>
+                  this.setState({ refreshControl: true, page: 1 }, () =>
+                    this.getContent()
+                  )
+                }
               />
             }
           >
@@ -236,25 +201,27 @@ class SongCatalog extends React.Component {
               containerBorderWidth={0}
               containerWidth={width}
               currentSort={this.state.currentSort}
-              changeSort={sort => this.changeSort(sort)} // change sort and reload videos
-              outVideos={this.state.outVideos} // if paging and out of videos
+              changeSort={sort =>
+                this.setState(
+                  {
+                    allSongs: [],
+                    currentSort: sort,
+                    isPaging: false,
+                    page: 1
+                  },
+                  () => this.getAllSongs()
+                )
+              }
               isSquare={true}
-              containerHeight={this.getSquareHeight()} // height per row
-              imageHeight={this.getSquareHeight()} // image height
-              imageWidth={this.getSquareHeight()} // image height
+              containerHeight={this.getSquareHeight()}
+              imageHeight={this.getSquareHeight()}
+              imageWidth={this.getSquareHeight()}
               applyFilters={filters =>
                 new Promise(res =>
-                  this.setState(
-                    {
-                      allSongs: [],
-                      outVideos: false,
-                      page: 1
-                    },
-                    () => {
-                      this.filterQuery = filters;
-                      this.getAllSongs().then(res);
-                    }
-                  )
+                  this.setState({ allSongs: [], page: 1 }, () => {
+                    this.filterQuery = filters;
+                    this.getAllSongs().then(res);
+                  })
                 )
               }
             />

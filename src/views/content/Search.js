@@ -36,7 +36,6 @@ export default class Search extends React.Component {
     this.state = {
       recentSearchResults: [],
       searchResults: [],
-      outVideos: false,
       isLoadingAll: false,
       isPaging: false,
       filtering: false,
@@ -81,7 +80,16 @@ export default class Search extends React.Component {
           }}
         >
           <TouchableOpacity
-            onPress={() => this.clickSearchRecent(row[0])}
+            onPress={() =>
+              this.setState(
+                {
+                  searchTerm: row[0],
+                  showCancel: true,
+                  searchResults: []
+                },
+                () => this.search()
+              )
+            }
             style={{
               justifyContent: 'center',
               paddingLeft: 10
@@ -126,9 +134,9 @@ export default class Search extends React.Component {
   }
 
   search = async () => {
-    if (this.context && !this.context.isConnected) {
+    if (this.context && !this.context.isConnected)
       return this.context.showNoConnectionAlert();
-    }
+
     this.setState({ filtering: true });
 
     let term = this.state.searchTerm;
@@ -179,8 +187,6 @@ export default class Search extends React.Component {
 
         this.setState({
           searchResults: [...this.state.searchResults, ...newContent],
-          outVideos:
-            newContent.length === 0 || newContent.length < 10 ? true : false,
           isLoadingAll: false,
           filtering: false,
           isPaging: false,
@@ -199,23 +205,8 @@ export default class Search extends React.Component {
     );
   }
 
-  clickSearchRecent = searchTerm => {
-    this.setState(
-      {
-        searchTerm,
-        showCancel: true,
-        searchResults: []
-      },
-      () => this.search()
-    );
-  };
-
   handleScroll = event => {
-    if (
-      isCloseToBottom(event) &&
-      !this.state.isPaging &&
-      !this.state.outVideos
-    ) {
+    if (isCloseToBottom(event) && !this.state.isPaging) {
       this.setState(
         {
           page: this.state.page + 1,
@@ -408,20 +399,12 @@ export default class Search extends React.Component {
                       currentSort={this.state.currentSort}
                       changeSort={sort => this.changeSort(sort)}
                       imageWidth={(onTablet ? 0.225 : 0.3) * width}
-                      outVideos={this.state.outVideos} // if paging and out of videos
                       applyFilters={filters =>
                         new Promise(res =>
-                          this.setState(
-                            {
-                              searchResults: [],
-                              outVideos: false,
-                              page: 1
-                            },
-                            () => {
-                              this.filterQuery = filters;
-                              this.search().then(res);
-                            }
-                          )
+                          this.setState({ searchResults: [], page: 1 }, () => {
+                            this.filterQuery = filters;
+                            this.search().then(res);
+                          })
                         )
                       }
                     />

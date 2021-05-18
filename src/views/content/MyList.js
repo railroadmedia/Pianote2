@@ -39,7 +39,6 @@ class MyList extends React.Component {
     this.state = {
       allLessons: [],
       page: 1,
-      outVideos: false,
       isLoadingAll: true,
       isPaging: false,
       refreshing: false,
@@ -76,8 +75,6 @@ class MyList extends React.Component {
         allLessons: loadMore
           ? this.state?.allLessons?.concat(newContent)
           : newContent,
-        outVideos:
-          newContent.length === 0 || newContent.length < 10 ? true : false,
         page: this.state?.page + 1 || 1,
         isLoadingAll: false,
         isPaging: false,
@@ -101,19 +98,9 @@ class MyList extends React.Component {
   };
 
   handleScroll = event => {
-    if (
-      isCloseToBottom(event) &&
-      !this.state.isPaging &&
-      !this.state.outVideos
-    ) {
+    if (isCloseToBottom(event) && !this.state.isPaging) {
       this.setState({ isPaging: true }, () => this.getMyList(true));
     }
-  };
-
-  refresh = () => {
-    this.setState({ refreshing: true, page: 1, outVideos: false }, () =>
-      this.getMyList()
-    );
   };
 
   render() {
@@ -129,7 +116,11 @@ class MyList extends React.Component {
             <RefreshControl
               tintColor={'transparent'}
               colors={[colors.pianoteRed]}
-              onRefresh={() => this.refresh()}
+              onRefresh={() =>
+                this.setState({ refreshing: true, page: 1 }, () =>
+                  this.getMyList()
+                )
+              }
               refreshing={isiOS ? false : this.state.refreshing}
             />
           }
@@ -245,21 +236,13 @@ class MyList extends React.Component {
             filters={this.metaFilters}
             applyFilters={filters =>
               new Promise(res =>
-                this.setState(
-                  {
-                    allLessons: [],
-                    outVideos: false,
-                    page: 1
-                  },
-                  () => {
-                    this.filterQuery = filters;
-                    this.getMyList().then(res);
-                  }
-                )
+                this.setState({ allLessons: [], page: 1 }, () => {
+                  this.filterQuery = filters;
+                  this.getMyList().then(res);
+                })
               )
             }
             removeItem={contentID => this.removeFromMyList(contentID)}
-            outVideos={this.state.outVideos}
             imageWidth={(onTablet ? 0.225 : 0.3) * width}
           />
         </ScrollView>

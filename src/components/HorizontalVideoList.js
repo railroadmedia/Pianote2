@@ -44,7 +44,6 @@ export default class HorizontalVideoList extends React.Component {
       showModal: false,
       addToCalendarModal: false,
       showSort: false,
-      outVideos: this.props.outVideos,
       isLoading: false,
       items: this.props.items
     };
@@ -56,9 +55,6 @@ export default class HorizontalVideoList extends React.Component {
       if (!this.state.isLoading) {
         this.setState({ isPaging: props.isPaging });
       }
-    }
-    if (props.outVideos !== this.state.outVideos) {
-      this.setState({ outVideos: props.outVideos });
     }
     if (props.isLoading !== this.state.isLoading) {
       this.setState({
@@ -233,10 +229,7 @@ export default class HorizontalVideoList extends React.Component {
   };
 
   listFooter = () => {
-    if (this.state.outVideos || !this.state.callEndReached) {
-      return <></>;
-    }
-
+    if (!this.state.callEndReached) return <></>;
     if (this.state.items.length > 0) {
       return (
         <View

@@ -36,7 +36,6 @@ export default class VerticalVideoList extends React.Component {
     super(props);
     this.state = {
       showModal: false,
-      outVideos: this.props.outVideos,
       isLoading: this.props.isLoading,
       showSort: false,
       items: this.props.items,
@@ -50,9 +49,6 @@ export default class VerticalVideoList extends React.Component {
       if (!this.state.isLoading) {
         this.setState({ isPaging: props.isPaging });
       }
-    }
-    if (props.outVideos !== this.state.outVideos) {
-      this.setState({ outVideos: props.outVideos });
     }
     if (props.isLoading !== this.state.isLoading) {
       this.setState({
@@ -68,17 +64,14 @@ export default class VerticalVideoList extends React.Component {
 
   showSpinner = () => {
     return (
-      <View style={[styles.centerContent, { minHeight: 40 }]}>
-        <View style={{ flex: 1 }} />
-        <ActivityIndicator
-          size={onTablet ? 'large' : 'small'}
-          animating={true}
-          color={
-            this.props.isMethod ? colors.pianoteGrey : colors.secondBackground
-          }
-        />
-        <View style={{ flex: 1 }} />
-      </View>
+      <ActivityIndicator
+        size={onTablet ? 'large' : 'small'}
+        animating={true}
+        style={[styles.centerContent, { minHeight: 40 }]}
+        color={
+          this.props.isMethod ? colors.pianoteGrey : colors.secondBackground
+        }
+      />
     );
   };
 
@@ -234,12 +227,8 @@ export default class VerticalVideoList extends React.Component {
   }
 
   renderMappedList = () => {
-    if (this.state.items?.length === 0 && this.state.outVideos) {
-      return;
-    } else if (this.state.isLoading) {
-      return this.showSpinner();
-    }
-
+    if (this.state.items?.length === 0) return;
+    if (this.state.isLoading) return this.showSpinner();
     return this.state.items?.map((row, index) => {
       return (
         <TouchableOpacity
@@ -682,27 +671,25 @@ export default class VerticalVideoList extends React.Component {
           <View style={{ marginHorizontal: 10 }}>
             {this.filters?.filterAppliedText}
           </View>
-          {this.state.items?.length === 0 &&
-            this.state.outVideos &&
-            !this.state.isLoading && (
-              <>
-                <Text
-                  style={{
-                    fontSize: sizing.descriptionText,
-                    color: this.props.isMethod
-                      ? 'white'
-                      : colors.secondBackground,
-                    fontFamily: 'OpenSans-Regular',
-                    textAlign: 'left',
-                    marginLeft: 10
-                  }}
-                >
-                  {this.props.title.includes('SEARCH RESULTS')
-                    ? ''
-                    : 'There are no results for this content type.'}
-                </Text>
-              </>
-            )}
+          {this.state.items?.length === 0 && !this.state.isLoading && (
+            <>
+              <Text
+                style={{
+                  fontSize: sizing.descriptionText,
+                  color: this.props.isMethod
+                    ? 'white'
+                    : colors.secondBackground,
+                  fontFamily: 'OpenSans-Regular',
+                  textAlign: 'left',
+                  marginLeft: 10
+                }}
+              >
+                {this.props.title.includes('SEARCH RESULTS')
+                  ? ''
+                  : 'There are no results for this content type.'}
+              </Text>
+            </>
+          )}
         </>
         <View style={{ flex: 1 }}>
           {this.renderMappedList()}

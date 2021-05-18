@@ -40,7 +40,6 @@ class StudentFocusShow extends React.Component {
     this.state = {
       thumbnailUrl: props.route?.params?.thumbnailUrl,
       allLessons: [],
-      outVideos: false,
       refreshing: false,
       isLoadingAll: true,
       isPaging: false,
@@ -61,9 +60,7 @@ class StudentFocusShow extends React.Component {
     this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   }
 
-  componentWillUnmount() {
-    this.refreshOnFocusListener?.();
-  }
+  componentWillUnmount = () => this.refreshOnFocusListener?.();
 
   getData = async () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
@@ -101,8 +98,6 @@ class StudentFocusShow extends React.Component {
         thumbnailUrl:
           content.thumbnail[this.props.route?.params?.type]?.thumbnailUrl,
         allLessons: newContent,
-        outVideos:
-          newContent.length === 0 || newContent.length < 10 ? true : false,
         page: 1,
         isLoadingAll: false,
         refreshing: fromCache,
@@ -137,8 +132,6 @@ class StudentFocusShow extends React.Component {
       allLessons: isLoadingMore
         ? state.allLessons.concat(newContent)
         : newContent,
-      outVideos:
-        newContent.length === 0 || newContent.length < 10 ? true : false,
       isLoadingAll: false,
       refreshing: false,
       filtering: false,
@@ -146,39 +139,12 @@ class StudentFocusShow extends React.Component {
     }));
   };
 
-  changeSort = currentSort => {
-    this.setState(
-      {
-        currentSort,
-        outVideos: false,
-        isPaging: false,
-        allLessons: [],
-        page: 1
-      },
-      () => this.getAllLessons()
-    );
-  };
-
   handleScroll = event => {
-    if (
-      isCloseToBottom(event) &&
-      !this.state.isPaging &&
-      !this.state.outVideos
-    ) {
-      this.setState(
-        {
-          page: this.state.page + 1,
-          isPaging: true
-        },
-        () => this.getAllLessons(true)
+    if (isCloseToBottom(event) && !this.state.isPaging) {
+      this.setState({ page: this.state.page + 1, isPaging: true }, () =>
+        this.getAllLessons(true)
       );
     }
-  };
-
-  refresh = () => {
-    this.setState({ refreshing: true, page: 1, outVideos: false }, () =>
-      this.getAllLessons()
-    );
   };
 
   render() {
@@ -202,7 +168,11 @@ class StudentFocusShow extends React.Component {
             <RefreshControl
               tint={'transparent'}
               colors={[colors.secondBackground]}
-              onRefresh={() => this.refresh()}
+              onRefresh={() =>
+                this.setState({ refreshing: true, page: 1 }, () =>
+                  this.getAllLessons()
+                )
+              }
               refreshing={isiOS ? false : this.state.refreshing}
             />
           }
@@ -271,23 +241,24 @@ class StudentFocusShow extends React.Component {
             }
             filters={this.metaFilters}
             currentSort={this.state.currentSort}
-            changeSort={sort => this.changeSort(sort)}
+            changeSort={sort =>
+              this.setState(
+                {
+                  currentSort: sort,
+                  isPaging: false,
+                  allLessons: [],
+                  page: 1
+                },
+                () => this.getAllLessons()
+              )
+            }
             imageWidth={(onTablet ? 0.225 : 0.3) * width}
-            outVideos={this.state.outVideos}
             applyFilters={filters =>
               new Promise(res =>
-                this.setState(
-                  {
-                    allLessons: [],
-                    outVideos: false,
-                    page: 1,
-                    filters
-                  },
-                  () => {
-                    this.filterQuery = filters;
-                    this.getAllLessons().then(res);
-                  }
-                )
+                this.setState({ allLessons: [], page: 1, filters }, () => {
+                  this.filterQuery = filters;
+                  this.getAllLessons().then(res);
+                })
               )
             }
           />

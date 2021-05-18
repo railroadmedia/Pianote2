@@ -39,7 +39,6 @@ class Course extends React.Component {
       progressCourses: [],
       allCourses: [],
       currentSort: 'newest',
-      outVideos: false,
       isPaging: false,
       refreshing: true,
       refreshControl: false,
@@ -87,8 +86,6 @@ class Course extends React.Component {
       progressCourses: inprogressVideos,
       refreshing: false,
       refreshControl: fromCache,
-      outVideos:
-        allVideos?.length === 0 || allVideos?.length < 10 ? true : false,
       filtering: false,
       isPaging: false,
       page: 1
@@ -105,44 +102,20 @@ class Course extends React.Component {
     );
 
     this.metaFilters = response?.meta?.filterOptions;
-
     this.setState(state => ({
       allCourses: loadMore
         ? state.allCourses.concat(response.data)
         : response.data,
-      outVideos:
-        response.data.length === 0 || response.data.length < 10 ? true : false,
       filtering: false,
       isPaging: false,
       refreshControl: false
     }));
   };
 
-  changeSort = currentSort => {
-    this.setState(
-      {
-        currentSort,
-        outVideos: false,
-        isPaging: false,
-        page: 1
-      },
-      () => this.getAllCourses()
-    );
-  };
-
   handleScroll = event => {
-    if (
-      isCloseToBottom(event) &&
-      !this.state.isPaging &&
-      !this.state.outVideos
-    ) {
+    if (isCloseToBottom(event) && !this.state.isPaging) {
       page = page + 1;
-      this.setState(
-        {
-          isPaging: true
-        },
-        () => this.getAllCourses(true)
-      );
+      this.setState({ isPaging: true }, () => this.getAllCourses(true));
     }
   };
 
@@ -204,27 +177,28 @@ class Course extends React.Component {
                 isPaging={this.state.isPaging}
                 filters={this.state.filters}
                 currentSort={this.state.currentSort}
-                changeSort={sort => this.changeSort(sort)}
+                changeSort={sort =>
+                  this.setState(
+                    {
+                      currentSort: sort,
+                      isPaging: false,
+                      page: 1
+                    },
+                    () => this.getAllCourses()
+                  )
+                }
                 filterResults={() => this.setState({ showFilters: true })}
                 applyFilters={filters =>
                   new Promise(res =>
-                    this.setState(
-                      {
-                        allCourses: [],
-                        outVideos: false,
-                        page: 1
-                      },
-                      () => {
-                        this.filterQuery = filters;
-                        this.getAllCourses().then(res);
-                      }
-                    )
+                    this.setState({ allCourses: [], page: 1 }, () => {
+                      this.filterQuery = filters;
+                      this.getAllCourses().then(res);
+                    })
                   )
                 }
-                outVideos={this.state.outVideos}
                 callEndReached={true}
                 reachedEnd={() => {
-                  if (!this.state.isPaging && !this.state.outVideos) {
+                  if (!this.state.isPaging) {
                     (page = page + 1),
                       this.setState({ isPaging: true }, () =>
                         this.getAllCourses()
@@ -246,24 +220,25 @@ class Course extends React.Component {
                 showSort={true}
                 filters={this.metaFilters}
                 currentSort={this.state.currentSort}
-                changeSort={sort => this.changeSort(sort)}
+                changeSort={sort =>
+                  this.setState(
+                    {
+                      currentSort: sort,
+                      isPaging: false,
+                      page: 1
+                    },
+                    () => this.getAllCourses()
+                  )
+                }
                 applyFilters={filters =>
                   new Promise(res =>
-                    this.setState(
-                      {
-                        allCourses: [],
-                        outVideos: false,
-                        page: 1
-                      },
-                      () => {
-                        this.filterQuery = filters;
-                        this.getAllCourses().then(res);
-                      }
-                    )
+                    this.setState({ allCourses: [], page: 1 }, () => {
+                      this.filterQuery = filters;
+                      this.getAllCourses().then(res);
+                    })
                   )
                 }
                 imageWidth={width * 0.26}
-                outVideos={this.state.outVideos}
               />
             )}
           </ScrollView>

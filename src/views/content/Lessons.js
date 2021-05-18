@@ -65,7 +65,6 @@ class Lessons extends React.Component {
       allLessons: [],
       currentSort: 'newest',
       page: 1,
-      outVideos: false,
       isPaging: false,
       filtering: false,
       currentLesson: [],
@@ -118,7 +117,6 @@ class Lessons extends React.Component {
 
   async getContent() {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-
     let content = await Promise.all([
       methodService.getMethod(),
       getAllContent(
@@ -129,7 +127,6 @@ class Lessons extends React.Component {
       ),
       getStartedContent('', 1)
     ]);
-
     this.metaFilters = content?.[1]?.meta?.filterOptions;
     this.props.cacheAndWriteLessons({
       all: content[1],
@@ -203,8 +200,6 @@ class Lessons extends React.Component {
         methodNextLessonUrl: method.banner_button_url,
         allLessons: allVideos,
         progressLessons: inprogressVideos,
-        outVideos:
-          allVideos.length === 0 || allVideos.length < 10 ? true : false,
         filtering: false,
         isPaging: false,
         lessonsStarted: inprogressVideos.length !== 0,
@@ -218,9 +213,7 @@ class Lessons extends React.Component {
 
   getMethod = async () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-
     const response = await methodService.getMethod();
-
     await AsyncStorage.multiSet([
       ['methodIsStarted', response.started.toString()],
       ['methodIsCompleted', response.completed.toString()]
@@ -246,8 +239,6 @@ class Lessons extends React.Component {
 
     this.setState({
       allLessons: [...this.state.allLessons, ...response.data],
-      outVideos:
-        response.data.length === 0 || response.data.length < 10 ? true : false,
       filtering: false,
       isPaging: false
     });
@@ -263,19 +254,6 @@ class Lessons extends React.Component {
         showRestartCourse: false
       },
       () => this.getMethod()
-    );
-  };
-
-  changeSort = async currentSort => {
-    await this.setState(
-      {
-        currentSort,
-        outVideos: false,
-        isPaging: true,
-        allLessons: [],
-        page: 1
-      },
-      () => this.getAllLessons()
     );
   };
 
@@ -311,44 +289,23 @@ class Lessons extends React.Component {
   };
 
   handleScroll = event => {
-    if (
-      isCloseToBottom(event) &&
-      !this.state.isPaging &&
-      !this.state.outVideos
-    ) {
-      this.setState(
-        {
-          page: this.state.page + 1,
-          isPaging: true
-        },
-        () => this.getAllLessons(true)
+    if (isCloseToBottom(event) && !this.state.isPaging) {
+      this.setState({ page: this.state.page + 1, isPaging: true }, () =>
+        this.getAllLessons(true)
       );
     }
   };
-
-  refresh() {
-    this.setState(
-      {
-        refreshControl: true,
-        inprogressVideos: [],
-        allLessons: [],
-        page: 1
-      },
-      this.getContent
-    );
-  }
 
   orientationListener = o => {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
 
-    if (isiOS) {
+    if (isiOS)
       if (onTablet) this.setState({ isLandscape });
-    } else {
-      Orientation.getAutoRotateState(isAutoRotateOn => {
-        if (isAutoRotateOn && onTablet) this.setState({ isLandscape });
-      });
-    }
+      else
+        Orientation.getAutoRotateState(isAutoRotateOn => {
+          if (isAutoRotateOn && onTablet) this.setState({ isLandscape });
+        });
   };
 
   getAspectRatio() {
@@ -373,7 +330,17 @@ class Lessons extends React.Component {
             refreshControl={
               <RefreshControl
                 tintColor={'transparent'}
-                onRefresh={() => this.refresh()}
+                onRefresh={() =>
+                  this.setState(
+                    {
+                      refreshControl: true,
+                      inprogressVideos: [],
+                      allLessons: [],
+                      page: 1
+                    },
+                    this.getContent
+                  )
+                }
                 colors={[colors.secondBackground]}
                 refreshing={isiOS ? false : this.state.refreshControl}
               />
@@ -871,26 +838,28 @@ class Lessons extends React.Component {
                 isPaging={this.state.isPaging}
                 filters={this.metaFilters}
                 currentSort={this.state.currentSort}
-                changeSort={sort => this.changeSort(sort)}
+                changeSort={sort => {
+                  this.setState(
+                    {
+                      currentSort: sort,
+                      isPaging: true,
+                      allLessons: [],
+                      page: 1
+                    },
+                    () => this.getAllLessons()
+                  );
+                }}
                 applyFilters={filters =>
                   new Promise(res =>
-                    this.setState(
-                      {
-                        allLessons: [],
-                        outVideos: false,
-                        page: 1
-                      },
-                      () => {
-                        this.filterQuery = filters;
-                        this.getAllLessons().then(res);
-                      }
-                    )
+                    this.setState({ allLessons: [], page: 1 }, () => {
+                      this.filterQuery = filters;
+                      this.getAllLessons().then(res);
+                    })
                   )
                 }
-                outVideos={this.state.outVideos} // if paging and out of videos
                 callEndReached={true}
                 reachedEnd={() => {
-                  if (!this.state.isPaging && !this.state.outVideos) {
+                  if (!this.state.isPaging) {
                     this.setState(
                       {
                         page: this.state.page + 1,
@@ -917,13 +886,22 @@ class Lessons extends React.Component {
                   showLength={false}
                   filters={this.metaFilters} // show filter list
                   currentSort={this.state.currentSort}
-                  changeSort={sort => this.changeSort(sort)} // change sort and reload videos
+                  changeSort={sort => {
+                    this.setState(
+                      {
+                        currentSort: sort,
+                        isPaging: true,
+                        allLessons: [],
+                        page: 1
+                      },
+                      () => this.getAllLessons()
+                    );
+                  }}
                   applyFilters={filters =>
                     new Promise(res =>
                       this.setState(
                         {
                           allLessons: [],
-                          outVideos: false,
                           page: 1
                         },
                         () => {
@@ -934,7 +912,6 @@ class Lessons extends React.Component {
                     )
                   }
                   imageWidth={width * 0.26} // image width
-                  outVideos={this.state.outVideos} // if paging and out of videos
                   getVideos={() => this.getVideos()}
                 />
               </View>

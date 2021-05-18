@@ -47,7 +47,6 @@ export default class SeeAll extends React.Component {
       allLessons: [],
       currentSort: 'newest',
       page: 1,
-      outVideos: false,
       refreshing: false,
       isLoadingAll: true,
       isPaging: false,
@@ -65,12 +64,9 @@ export default class SeeAll extends React.Component {
 
   async getAllLessons(loadMore) {
     this.setState({ filtering: true });
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = null;
     if (this.state.parent === 'My List') {
-      // use my list API call when navigating to see all from my list
       response = await getMyListContent(
         this.state.page,
         this.filterQuery,
@@ -103,8 +99,6 @@ export default class SeeAll extends React.Component {
 
     this.setState(state => ({
       allLessons: loadMore ? state.allLessons.concat(newContent) : newContent,
-      outVideos:
-        newContent.length === 0 || newContent.length < 10 ? true : false,
       isLoadingAll: false,
       refreshing: false,
       filtering: false,
@@ -113,25 +107,11 @@ export default class SeeAll extends React.Component {
   }
 
   handleScroll = event => {
-    if (
-      isCloseToBottom(event) &&
-      !this.state.isPaging &&
-      !this.state.outVideos
-    ) {
-      this.setState(
-        {
-          page: this.state.page + 1,
-          isPaging: true
-        },
-        () => this.getAllLessons(true)
+    if (isCloseToBottom(event) && !this.state.isPaging) {
+      this.setState({ page: this.state.page + 1, isPaging: true }, () =>
+        this.getAllLessons(true)
       );
     }
-  };
-
-  refresh = () => {
-    this.setState({ refreshing: true, outVideos: false, page: 1 }, () =>
-      this.getAllLessons()
-    );
   };
 
   render() {
@@ -166,7 +146,11 @@ export default class SeeAll extends React.Component {
             <RefreshControl
               colors={[colors.pianoteRed]}
               refreshing={this.state.refreshing}
-              onRefresh={() => this.refresh()}
+              onRefresh={() =>
+                this.setState({ refreshing: true, page: 1 }, () =>
+                  this.getAllLessons()
+                )
+              }
             />
           }
         >
@@ -193,20 +177,12 @@ export default class SeeAll extends React.Component {
                 this.getAllLessons();
             }} // change sort and reload videos
             imageWidth={(onTablet ? 0.225 : 0.3) * width}
-            outVideos={this.state.outVideos} // if paging and out of videos
             applyFilters={filters =>
               new Promise(res =>
-                this.setState(
-                  {
-                    allLessons: [],
-                    outVideos: false,
-                    page: 1
-                  },
-                  () => {
-                    this.filterQuery = filters;
-                    this.getAllLessons().then(res);
-                  }
-                )
+                this.setState({ allLessons: [], page: 1 }, () => {
+                  this.filterQuery = filters;
+                  this.getAllLessons().then(res);
+                })
               )
             }
           />
