@@ -10,8 +10,12 @@ import {
 } from 'react-native';
 
 import { ThreadCard } from '../commons/Cards';
-
-import { getFollowed, getTopics, connection } from '../services/forum.service';
+import DiscussionCard from '../commons/DiscussionCard';
+import {
+  getFollowed,
+  connection,
+  getDiscussions
+} from '../services/forum.service';
 
 import { pencil } from '../assets/svgs';
 
@@ -39,37 +43,51 @@ export default class Threads extends React.Component {
   }
 
   componentDidMount() {
-    Promise.all([getTopics(), getFollowed()]).then(([topics, followed]) => {
-      this.topics = topics.results;
-      this.followed = followed.results;
-      this.setState({ loading: false });
-    });
+    Promise.all([getDiscussions(), getFollowed()]).then(
+      ([topics, followed]) => {
+        this.topics = topics.results;
+        this.followed = followed.results;
+        console.log(this.topics);
+        this.setState({ loading: false });
+      }
+    );
   }
 
   navigate = (route, params) =>
     connection(true) && this.props.navigation.navigate(route, params);
 
-  renderFLItem = ({ item }) => (
-    <ThreadCard
-      onNavigate={() =>
-        this.navigate('Thread', {
-          title: item.title,
-          isDark: this.props.route.params.isDark,
-          appColor: this.props.route.params.appColor
-        })
-      }
-      appColor={this.props.route.params.appColor}
-      isDark={this.props.route.params.isDark}
-      data={item}
-    />
-  );
+  renderFLItem = ({ item }) => {
+    if (this.state.tab === 0)
+      return (
+        <DiscussionCard
+          data={item}
+          appColor={this.props.route.params.appColor}
+          isDark={this.props.route.params.isDark}
+          onNavigate={() => this.navigate('Thread')}
+        />
+      );
+    return (
+      <ThreadCard
+        onNavigate={() =>
+          this.navigate('Thread', {
+            title: item.title,
+            isDark: this.props.route.params.isDark,
+            appColor: this.props.route.params.appColor
+          })
+        }
+        appColor={this.props.route.params.appColor}
+        isDark={this.props.route.params.isDark}
+        data={item}
+      />
+    );
+  };
 
   loadMore = () => {
     if (!connection()) return;
     let { tab } = this.state;
     let fORt = tab ? 'followed' : 'topics';
     this.setState({ [`${fORt}LoadingMore`]: true }, () =>
-      (tab ? getFollowed : getTopics)(++this[`${fORt}Page`]).then(r => {
+      (tab ? getFollowed : getDiscussions)(++this[`${fORt}Page`]).then(r => {
         this[fORt].push(...r.results);
         this.setState({ [`${fORt}LoadingMore`]: false });
       })
@@ -81,15 +99,16 @@ export default class Threads extends React.Component {
     let { tab } = this.state;
     let fORt = tab ? 'followed' : 'topics';
     this.setState({ [`${fORt}Refreshing`]: true }, () =>
-      (tab ? getFollowed : getTopics)((this[`${fORt}Page`] = 1)).then(r => {
-        this[fORt] = r;
-        this.setState({ [`${fORt}Refreshing`]: false });
-      })
+      (tab ? getFollowed : getDiscussions)((this[`${fORt}Page`] = 1)).then(
+        r => {
+          this[fORt] = r;
+          this.setState({ [`${fORt}Refreshing`]: false });
+        }
+      )
     );
   };
 
   render() {
-    console.log('forums');
     let {
       followedLoadingMore,
       topicsLoadingMore,

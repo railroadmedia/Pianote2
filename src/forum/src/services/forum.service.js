@@ -13,9 +13,6 @@ export const NetworkContext = function () {
   return this.NetworkContext;
 };
 
-export const getDiscussions = function () {
-  return new Promise(res => setTimeout(() => res(mocks.discussion), 2000));
-};
 export const getTopic = function (page = 1) {
   /* TBR */
   return new Promise(res =>
@@ -27,7 +24,7 @@ export const getTopic = function (page = 1) {
   /*******/
   return this.tryCall(`${this.rootUrl}/TBD`);
 };
-export const getTopics = function (page = 1) {
+export const getDiscussions = function (page = 1) {
   return this.tryCall(
     `${this.rootUrl}/forums/api/discussions/index?page=${page}`
   );
