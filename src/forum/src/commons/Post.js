@@ -20,7 +20,7 @@ import {
 } from '../services/forum.service';
 
 let styles;
-export default class Comment extends React.PureComponent {
+export default class Post extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {

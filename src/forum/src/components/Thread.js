@@ -7,8 +7,7 @@ import {
   Text
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import Comment from '../commons/Comment';
-import CommentInput from '../commons/CommentInput';
+import Post from '../commons/Post';
 import {
   getDiscussions,
   addReply,
@@ -81,7 +80,7 @@ export default class Thread extends React.Component {
             </TouchableOpacity>
           )}
           renderItem={({ item }) => (
-            <Comment
+            <Post
               comment={item}
               appColor={appColor}
               isDark={isDark}
@@ -90,10 +89,6 @@ export default class Thread extends React.Component {
               onReplies={() => {}}
             />
           )}
-        />
-        <CommentInput
-          isDark={isDark}
-          onSubmit={discussion => this.addDiscussion(discussion)}
         />
       </SafeAreaView>
     );
