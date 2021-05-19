@@ -9,14 +9,14 @@ import {
   View
 } from 'react-native';
 
-import ForumsCard from '../commons/ForumsCard';
+import { ThreadCard } from '../commons/Cards';
 
 import { getFollowed, getTopics, connection } from '../services/forum.service';
 
 import { pencil } from '../assets/svgs';
 
 let styles;
-export default class Forums extends React.Component {
+export default class Threads extends React.Component {
   followedPage = 1;
   topicsPage = 1;
   followed = [];
@@ -50,9 +50,9 @@ export default class Forums extends React.Component {
     connection(true) && this.props.navigation.navigate(route, params);
 
   renderFLItem = ({ item }) => (
-    <ForumsCard
+    <ThreadCard
       onNavigate={() =>
-        this.navigate(this.state.tab ? 'Discussion' : 'Topic', {
+        this.navigate('Thread', {
           title: item.title,
           isDark: this.props.route.params.isDark,
           appColor: this.props.route.params.appColor
@@ -89,6 +89,7 @@ export default class Forums extends React.Component {
   };
 
   render() {
+    console.log('forums');
     let {
       followedLoadingMore,
       topicsLoadingMore,
@@ -174,7 +175,7 @@ export default class Forums extends React.Component {
                 this.setState({ createDiscussionHeight: layout.height + 15 })
               }
               onPress={() =>
-                this.props.navigation.navigate('CreateDiscussion', {
+                this.props.navigation.navigate('CRUD', {
                   isDark,
                   appColor
                 })

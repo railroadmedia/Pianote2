@@ -9,10 +9,9 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import ExpandableView from '../commons/ExpandableView';
-import MediaPicker from '../commons/MediaPicker';
 import forumService from '../services/forum.service';
 
-export default class CreateDiscussion extends React.Component {
+export default class CRUD extends React.Component {
   state = {
     title: '',
     category: 'Choose a category',
@@ -23,7 +22,7 @@ export default class CreateDiscussion extends React.Component {
   constructor(props) {
     super(props);
     let { isDark, appColor } = props.route.params;
-    CreateDiscussion.contextType = forumService.NetworkContext;
+    CRUD.contextType = forumService.NetworkContext;
 
     styles = setStyles(isDark, appColor);
   }
@@ -130,19 +129,6 @@ export default class CreateDiscussion extends React.Component {
             </Text>
           </TouchableOpacity>
         </ScrollView>
-        {this.state.showMediaPicker && (
-          <MediaPicker
-            isDark={isDark}
-            onClose={() => this.setState({ showMediaPicker: false })}
-            selectMediaType={selectedMediaType =>
-              this.setState({ selectedMediaType, showMediaPicker: false }, () =>
-                setTimeout(() => {
-                  this.descriptionInput.focus();
-                }, 100)
-              )
-            }
-          />
-        )}
       </SafeAreaView>
     );
   }

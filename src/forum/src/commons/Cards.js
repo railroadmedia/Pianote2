@@ -6,7 +6,7 @@ import AccessLevelAvatar from './AccessLevelAvatar';
 import { pin, arrowRight, post } from '../assets/svgs';
 
 let styles;
-export default class ForumsCard extends React.Component {
+export class ThreadCard extends React.Component {
   constructor(props) {
     super(props);
     let { isDark } = props;

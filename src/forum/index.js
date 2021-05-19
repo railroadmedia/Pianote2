@@ -7,16 +7,13 @@ import {
 } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import CreateDiscussion from './src/components/CreateDiscussion';
-import Forums from './src/components/Forums';
-import Discussion from './src/components/Discussion';
-import Topic from './src/components/Topic';
-import Edit from './src/components/Edit';
+import CRUD from './src/components/CRUD';
+import Threads from './src/components/Threads';
+import Thread from './src/components/Thread';
 
 import { arrowLeft } from './src/assets/svgs';
 
 import { setForumService } from './src/services/forum.service';
-import Replies from './src/components/Replies';
 
 const Stack = createStackNavigator();
 
@@ -68,39 +65,21 @@ export default ({
         })}
       >
         <Stack.Screen
-          name='Forums'
-          component={Forums}
-          options={{ title: 'Forums' }}
+          name='Threads'
+          component={Threads}
+          options={{ title: 'Threads' }}
           initialParams={params}
         />
         <Stack.Screen
-          name='Topic'
-          component={Topic}
-          options={({ route: { params } }) => ({ title: params.title })}
-          initialParams={params}
-        />
-        <Stack.Screen
-          name='CreateDiscussion'
-          component={CreateDiscussion}
+          name='CRUD'
+          component={CRUD}
           initialParams={params}
           options={{ title: 'Create Discussion' }}
         />
         <Stack.Screen
-          name='Edit'
-          component={Edit}
-          options={{ title: 'Edit Reply' }}
-          initialParams={params}
-        />
-        <Stack.Screen
-          name='Discussion'
-          component={Discussion}
+          name='Thread'
+          component={Thread}
           options={({ route: { params } }) => ({ title: params.title })}
-          initialParams={params}
-        />
-        <Stack.Screen
-          name='Replies'
-          component={Replies}
-          options={{ title: 'Replies' }}
           initialParams={params}
         />
       </Stack.Navigator>
