@@ -9,7 +9,7 @@ import {
   View
 } from 'react-native';
 
-import { ThreadCard } from '../commons/Cards';
+import ThreadCard from '../commons/ThreadCard';
 
 import { getFollowed, getTopics, connection } from '../services/forum.service';
 
