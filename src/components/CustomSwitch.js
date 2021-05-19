@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Animated } from 'react-native';
+import { withNavigation } from 'react-navigation';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
 
 let maxTranslateX;
@@ -7,20 +8,21 @@ export default class CustomSwitch extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
     super(props);
-    let on = props.isClicked;
+    let on = this.props.isClicked;
     if (!maxTranslateX) maxTranslateX = onTablet ? 60 - 32.5 : 52.5 - 28;
     this.state = { on };
     this.slider = new Animated.Value(on ? maxTranslateX : 0);
   }
 
   click = () => {
-    this.setState({ on: !this.state.on }, () => {
+    this.setState(({ on }) => {
       Animated.timing(this.slider, {
-        toValue: this.state.on ? 0 : maxTranslateX,
+        toValue: on ? 0 : maxTranslateX,
         duration: 100,
         useNativeDriver: true
       }).start();
-      this.props.onClick(this.state.on);
+      this.props.onClick(!on);
+      return { on: !on };
     });
   };
 
@@ -35,7 +37,7 @@ export default class CustomSwitch extends React.Component {
           borderRadius: 100,
           width: onTablet ? 60 : 52.5,
           height: onTablet ? 32.5 : 28,
-          backgroundColor: on ? colors.pianoteRed : colors.secondBackground,
+          backgroundColor: on ? '#fb1b2f' : colors.secondBackground,
           flexDirection: 'row'
         }}
       >
@@ -53,7 +55,7 @@ export default class CustomSwitch extends React.Component {
           <FontIcon
             name={on ? 'check' : 'times'}
             size={onTablet ? 20 : 17.5}
-            color={on ? colors.pianoteRed : colors.secondBackground}
+            color={on ? '#fb1b2f' : colors.secondBackground}
           />
         </Animated.View>
       </TouchableOpacity>
