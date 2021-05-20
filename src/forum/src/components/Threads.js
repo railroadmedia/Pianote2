@@ -5,49 +5,111 @@ import {
   RefreshControl,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View
 } from 'react-native';
 
 import ThreadCard from '../commons/ThreadCard';
 
-import { getFollowed, getTopics, connection } from '../services/forum.service';
+import {
+  getFollowedThreads,
+  getAllThreads,
+  connection
+} from '../services/forum.service';
 
-import { pencil } from '../assets/svgs';
+import { addThread, search } from '../assets/svgs';
+import Pagination from '../commons/Pagination';
 
 let styles;
 export default class Threads extends React.Component {
-  followedPage = 1;
-  topicsPage = 1;
+  followedResultsTotal = 0;
+  allResultsTotal = 0;
   followed = [];
-  topics = [];
+  all = [];
 
   state = {
     followedLoadingMore: false,
-    topicsLoadingMore: false,
+    allLoadingMore: false,
     tab: 0,
     loading: true,
     createDiscussionHeight: 0,
     followedRefreshing: false,
-    topicsRefreshing: false
+    allRefreshing: false
   };
 
   constructor(props) {
     super(props);
-    let { isDark, NetworkContext } = props.route.params;
+    let { isDark } = props.route.params;
     styles = setStyles(isDark);
   }
 
   componentDidMount() {
-    Promise.all([getTopics(), getFollowed()]).then(([topics, followed]) => {
-      this.topics = topics.results;
+    let { discussionId } = this.props.route.params;
+    Promise.all([
+      getAllThreads(discussionId),
+      getFollowedThreads(discussionId)
+    ]).then(([all, followed]) => {
+      console.log(all, followed);
+      this.all = all.results;
       this.followed = followed.results;
+      this.followedResultsTotal = followed.total_results;
+      this.allResultsTotal = all.total_results;
       this.setState({ loading: false });
     });
   }
 
   navigate = (route, params) =>
     connection(true) && this.props.navigation.navigate(route, params);
+
+  renderFLHeader = () => {
+    let { tab } = this.state;
+    let { isDark, appColor } = this.props.route.params;
+    return (
+      <View style={styles.headerContainer}>
+        {['All Threads', 'Followed Threads'].map((t, i) => (
+          <TouchableOpacity
+            key={t}
+            onPress={() => this.setState({ tab: i })}
+            style={[
+              styles.headerTOpacity,
+              tab === i ? { borderColor: appColor } : {}
+            ]}
+          >
+            <Text
+              style={[
+                styles.headerText,
+                tab === i ? { color: isDark ? 'white' : 'black' } : {}
+              ]}
+            >
+              {t}
+            </Text>
+          </TouchableOpacity>
+        ))}
+        <View
+          style={{
+            width: '100%',
+            marginVertical: 30,
+            alignItems: 'center',
+            backgroundColor: 'white',
+            flexDirection: 'row',
+            borderRadius: 99,
+            paddingLeft: 10
+          }}
+        >
+          {search({ height: 20, width: 20, fill: 'black' })}
+          <TextInput
+            autoCapitalize={'sentences'}
+            style={{ flex: 1, padding: 10 }}
+            placeholder='Search...'
+            placeholderTextColor={'grey'}
+            onChangeText={s => console.log(s)}
+            keyboardAppearance={isDark ? 'dark' : 'light'}
+          />
+        </View>
+      </View>
+    );
+  };
 
   renderFLItem = ({ item }) => (
     <ThreadCard
@@ -64,14 +126,17 @@ export default class Threads extends React.Component {
     />
   );
 
-  loadMore = () => {
+  changePage = page => {
     if (!connection()) return;
     let { tab } = this.state;
-    let fORt = tab ? 'followed' : 'topics';
-    this.setState({ [`${fORt}LoadingMore`]: true }, () =>
-      (tab ? getFollowed : getTopics)(++this[`${fORt}Page`]).then(r => {
-        this[fORt].push(...r.results);
-        this.setState({ [`${fORt}LoadingMore`]: false });
+    let { discussionId } = this.props.route.params;
+    let fORa = tab ? 'followed' : 'all';
+    this.setState({ [`${fORa}LoadingMore`]: true }, () =>
+      (tab ? getFollowedThreads : getAllThreads)(discussionId, page).then(r => {
+        this[fORa] = r.results;
+        this.setState({ [`${fORa}LoadingMore`]: false }, () =>
+          this.flatListRef.scrollToOffset({ offset: 0 })
+        );
       })
     );
   };
@@ -79,116 +144,102 @@ export default class Threads extends React.Component {
   refresh = () => {
     if (!connection()) return;
     let { tab } = this.state;
-    let fORt = tab ? 'followed' : 'topics';
-    this.setState({ [`${fORt}Refreshing`]: true }, () =>
-      (tab ? getFollowed : getTopics)((this[`${fORt}Page`] = 1)).then(r => {
-        this[fORt] = r;
-        this.setState({ [`${fORt}Refreshing`]: false });
+    let { discussionId } = this.props.route.params;
+    let fORa = tab ? 'followed' : 'all';
+    this.setState({ [`${fORa}Refreshing`]: true }, () =>
+      (tab ? getFollowedThreads : getAllThreads)(discussionId).then(r => {
+        this[fORa] = r;
+        this.setState({ [`${fORa}Refreshing`]: false });
       })
     );
   };
 
   render() {
-    console.log('forums');
     let {
       followedLoadingMore,
-      topicsLoadingMore,
+      allLoadingMore,
       tab,
       loading,
       createDiscussionHeight,
-      topicsRefreshing,
+      allRefreshing,
       followedRefreshing
     } = this.state;
-    let { isDark, appColor, BottomNavigator } = this.props.route.params;
-    return (
-      <>
-        <View style={styles.headerContainer}>
-          {['Topics', 'Followed'].map((t, i) => (
-            <TouchableOpacity
-              key={t}
-              onPress={() => this.setState({ tab: i })}
-              style={[
-                styles.headerTOpacity,
-                tab === i ? { borderColor: appColor } : {}
-              ]}
+    let { isDark, appColor } = this.props.route.params;
+    return loading ? (
+      <ActivityIndicator
+        size='large'
+        color={isDark ? 'white' : 'black'}
+        animating={true}
+        style={styles.loading}
+      />
+    ) : (
+      <View style={{ flex: 1 }}>
+        <FlatList
+          key={tab}
+          windowSize={10}
+          data={this[tab ? 'followed' : 'all']}
+          style={styles.fList}
+          initialNumToRender={1}
+          maxToRenderPerBatch={10}
+          onEndReachedThreshold={0.01}
+          removeClippedSubviews={true}
+          keyboardShouldPersistTaps='handled'
+          renderItem={this.renderFLItem}
+          ListHeaderComponent={this.renderFLHeader}
+          keyExtractor={item => item.id.toString()}
+          ref={r => (this.flatListRef = r)}
+          ListEmptyComponent={
+            <Text style={styles.emptyList}>
+              {tab ? 'You are not following any threads.' : 'No threads.'}
+            </Text>
+          }
+          ListFooterComponent={
+            <View
+              style={{
+                borderTopWidth: 1,
+                borderColor: '#445F74',
+                marginHorizontal: 15,
+                marginBottom: createDiscussionHeight
+              }}
             >
-              <Text
-                style={[
-                  styles.headerText,
-                  tab === i ? { color: isDark ? 'white' : 'black' } : {}
-                ]}
-              >
-                {t}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-        {loading ? (
-          <ActivityIndicator
-            size='large'
-            color={isDark ? 'white' : 'black'}
-            animating={true}
-            style={styles.loading}
-          />
-        ) : (
-          <View style={{ flex: 1 }}>
-            <FlatList
-              key={tab}
-              windowSize={10}
-              data={this[tab ? 'followed' : 'topics']}
-              style={styles.fList}
-              initialNumToRender={1}
-              maxToRenderPerBatch={10}
-              onEndReachedThreshold={0.01}
-              removeClippedSubviews={true}
-              keyboardShouldPersistTaps='handled'
-              renderItem={this.renderFLItem}
-              onEndReached={this.loadMore}
-              keyExtractor={item => item.id.toString()}
-              ListEmptyComponent={
-                <Text style={styles.emptyList}>
-                  {tab ? 'You are not following any threads. ' : 'No topics'}
-                </Text>
-              }
-              ListFooterComponent={
-                <ActivityIndicator
-                  size='small'
-                  color={isDark ? 'white' : 'black'}
-                  animating={tab ? followedLoadingMore : topicsLoadingMore}
-                  style={{
-                    padding: 15,
-                    marginBottom: createDiscussionHeight
-                  }}
-                />
-              }
-              refreshControl={
-                <RefreshControl
-                  colors={[isDark ? 'white' : 'black']}
-                  tintColor={isDark ? 'white' : 'black'}
-                  onRefresh={this.refresh}
-                  refreshing={tab ? followedRefreshing : topicsRefreshing}
-                />
-              }
+              <Pagination
+                isDark={isDark}
+                appColor={appColor}
+                length={this[`${tab ? 'followed' : 'all'}ResultsTotal`]}
+                onChangePage={this.changePage}
+              />
+              <ActivityIndicator
+                size='small'
+                color={isDark ? 'white' : 'black'}
+                animating={tab ? followedLoadingMore : allLoadingMore}
+                style={{ padding: 15 }}
+              />
+            </View>
+          }
+          refreshControl={
+            <RefreshControl
+              colors={[isDark ? 'white' : 'black']}
+              tintColor={isDark ? 'white' : 'black'}
+              onRefresh={this.refresh}
+              refreshing={tab ? followedRefreshing : allRefreshing}
             />
-            <TouchableOpacity
-              onLayout={({ nativeEvent: { layout } }) =>
-                this.setState({ createDiscussionHeight: layout.height + 15 })
-              }
-              onPress={() =>
-                this.props.navigation.navigate('CRUD', {
-                  isDark,
-                  appColor
-                })
-              }
-              style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}
-            >
-              {pencil({ height: 10, fill: 'white' })}
-              <Text style={styles.bottomText}>CREATE A DISCUSSION</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-        <BottomNavigator />
-      </>
+          }
+        />
+        <View
+          onLayout={({ nativeEvent: { layout } }) =>
+            this.setState({ createDiscussionHeight: layout.height + 15 })
+          }
+          onPress={() =>
+            this.props.navigation.navigate('CRUD', {
+              isDark,
+              appColor
+            })
+          }
+          style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}
+        >
+          {addThread({ height: 25, width: 25, fill: 'white' })}
+        </View>
+      </View>
     );
   }
 }
@@ -197,7 +248,8 @@ let setStyles = isDark =>
     headerContainer: {
       paddingHorizontal: 15,
       flexDirection: 'row',
-      backgroundColor: isDark ? '#00101D' : 'white'
+      backgroundColor: isDark ? '#00101D' : 'white',
+      flexWrap: 'wrap'
     },
     headerTOpacity: {
       paddingVertical: 15,
@@ -227,21 +279,9 @@ let setStyles = isDark =>
     },
     bottomTOpacity: {
       padding: 15,
-      width: '70%',
-      maxWidth: 300,
       position: 'absolute',
       borderRadius: 99,
       bottom: 15,
-      alignSelf: 'center',
-      justifyContent: 'center',
-      flexDirection: 'row',
-      alignItems: 'center'
-    },
-    bottomText: {
-      fontFamily: 'RobotoCondensed-Regular',
-      color: 'white',
-      fontWeight: '700',
-      fontSize: 18,
-      marginLeft: 10
+      right: 15
     }
   });
