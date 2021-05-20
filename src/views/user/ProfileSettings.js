@@ -309,7 +309,6 @@ class ProfileSettings extends React.Component {
             additionalBtn={
               <TouchableOpacity
                 onPress={() => {
-                  this.refresh();
                   this.alert?.toggle();
                 }}
                 style={{
@@ -341,7 +340,6 @@ class ProfileSettings extends React.Component {
           additionalBtn={
             <TouchableOpacity
               onPress={() => {
-                this.refresh();
                 this.alert?.toggle();
               }}
               style={{

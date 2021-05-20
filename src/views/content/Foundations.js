@@ -108,11 +108,6 @@ export default class Foundations extends React.Component {
     );
   };
 
-  refresh = () =>
-    this.setState({ refreshing: true }, () => {
-      this.getContent();
-    });
-
   getAspectRatio() {
     if (onTablet && this.state.isLandscape) return 3;
     if (onTablet && !this.state.isLandscape) return 2;
@@ -144,7 +139,11 @@ export default class Foundations extends React.Component {
             <RefreshControl
               colors={[colors.pianoteRed]}
               refreshing={this.state.refreshing}
-              onRefresh={() => this.refresh()}
+              onRefresh={() =>
+                this.setState({ refreshing: true }, () => {
+                  this.getContent();
+                })
+              }
             />
           }
         >

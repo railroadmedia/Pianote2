@@ -371,7 +371,6 @@ export default class CreateAccount3 extends React.Component {
               additionalBtn={
                 <TouchableOpacity
                   onPress={() => {
-                    this.refresh();
                     this.alert?.toggle();
                   }}
                   style={{
@@ -1000,7 +999,6 @@ export default class CreateAccount3 extends React.Component {
           additionalBtn={
             <TouchableOpacity
               onPress={() => {
-                this.refresh();
                 this.alert?.toggle();
               }}
               style={localStyles.tryBtn}

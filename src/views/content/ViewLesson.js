@@ -1448,7 +1448,7 @@ class ViewLesson extends React.Component {
           additionalBtn={
             <TouchableOpacity
               onPress={() => {
-                this.refresh();
+                this.setState({ isLoadingAll: true }, () => this.getContent());
                 this.alert?.toggle();
               }}
               style={{

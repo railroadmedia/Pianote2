@@ -117,9 +117,6 @@ class Course extends React.Component {
     }
   };
 
-  refresh = () =>
-    this.setState({ refreshControl: true, page: 1 }, this.getContent);
-
   render() {
     return (
       <View style={styles.mainContainer}>
@@ -134,7 +131,12 @@ class Course extends React.Component {
               <RefreshControl
                 tintColor={'transparent'}
                 colors={[colors.pianoteRed]}
-                onRefresh={() => this.refresh()}
+                onRefresh={() =>
+                  this.setState(
+                    { refreshControl: true, page: 1 },
+                    this.getContent
+                  )
+                }
                 refreshing={isiOS ? false : this.state.refreshControl}
               />
             }
