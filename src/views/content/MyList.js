@@ -51,9 +51,7 @@ class MyList extends React.Component {
     this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   }
 
-  componentWillUnmount() {
-    this.refreshOnFocusListener?.();
-  }
+  componentWillUnmount = () => this.refreshOnFocusListener?.();
 
   getMyList = async loadMore => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
@@ -70,7 +68,6 @@ class MyList extends React.Component {
   initialValidData = (content, loadMore, fromCache) => {
     try {
       const newContent = content.data;
-
       return {
         allLessons: loadMore
           ? this.state?.allLessons?.concat(newContent)

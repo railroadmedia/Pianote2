@@ -65,17 +65,11 @@ export default class Login extends React.Component {
 
   changePage(number) {
     number = Math.round(number.nativeEvent.contentOffset.x / width);
-    if (number === 0) {
-      this.setState({ page: 1 });
-    } else if (number === 1) {
-      this.setState({ page: 2 });
-    } else if (number === 2) {
-      this.setState({ page: 3 });
-    } else if (number === 3) {
-      this.setState({ page: 4 });
-    } else if (number === 4) {
-      this.setState({ page: 5 });
-    }
+    if (number === 0) this.setState({ page: 1 });
+    else if (number === 1) this.setState({ page: 2 });
+    else if (number === 2) this.setState({ page: 3 });
+    else if (number === 3) this.setState({ page: 4 });
+    else if (number === 4) this.setState({ page: 5 });
   }
 
   onLogin = () => navigate('LOGINCREDENTIALS');

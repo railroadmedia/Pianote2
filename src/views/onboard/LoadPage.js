@@ -150,11 +150,8 @@ class LoadPage extends React.Component {
 
   async handleNoConnection() {
     let email = await AsyncStorage.getItem('email');
-    if (email) {
-      return reset('DOWNLOADS');
-    } else {
-      reset('LOGINCREDENTIALS');
-    }
+    if (email) return reset('DOWNLOADS');
+    else reset('LOGINCREDENTIALS');
   }
 
   render() {

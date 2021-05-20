@@ -73,9 +73,8 @@ export default class SinglePack extends React.Component {
     Orientation.addDeviceOrientationListener(this.orientationListener);
   };
 
-  componentWillUnmount() {
+  componentWillUnmount = () =>
     Orientation.removeDeviceOrientationListener(this.orientationListener);
-  }
 
   getBundle = async () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
@@ -188,12 +187,6 @@ export default class SinglePack extends React.Component {
     }
   };
 
-  refresh = () => {
-    this.setState({ refreshing: true }, () => {
-      this.getBundle();
-    });
-  };
-
   getAspectRatio() {
     if (onTablet && this.state.isLandscape) return 3;
     if (onTablet && !this.state.isLandscape) return 2;
@@ -234,7 +227,11 @@ export default class SinglePack extends React.Component {
               <RefreshControl
                 colors={[colors.pianoteRed]}
                 refreshing={this.state.refreshing}
-                onRefresh={() => this.refresh()}
+                onRefresh={() =>
+                  this.setState({ refreshing: true }, () => {
+                    this.getBundle();
+                  })
+                }
               />
             }
           >

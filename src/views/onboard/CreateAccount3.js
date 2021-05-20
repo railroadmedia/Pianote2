@@ -70,9 +70,7 @@ export default class CreateAccount3 extends React.Component {
     }
   };
 
-  typingDisplayName = displayName => {
-    this.setState({ displayName });
-  };
+  typingDisplayName = displayName => this.setState({ displayName });
 
   chooseImage = async () => {
     await ImagePicker.showImagePicker(

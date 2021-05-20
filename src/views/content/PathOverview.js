@@ -168,9 +168,7 @@ export default class PathOverview extends React.Component {
   };
 
   onRestartCourse = () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     resetProgress(this.state.id);
     this.setState(
       {
@@ -181,12 +179,6 @@ export default class PathOverview extends React.Component {
       },
       () => this.getItems()
     );
-  };
-
-  refresh = () => {
-    this.setState({ refreshing: true }, () => {
-      this.getItems();
-    });
   };
 
   formatDifficulty() {
@@ -650,7 +642,11 @@ export default class PathOverview extends React.Component {
               <RefreshControl
                 colors={[colors.pianoteRed]}
                 refreshing={refreshing}
-                onRefresh={() => this.refresh()}
+                onRefresh={() =>
+                  this.setState({ refreshing: true }, () => {
+                    this.getItems();
+                  })
+                }
               />
             }
           >

@@ -24,15 +24,12 @@ export default class Downloads extends React.Component {
     };
   }
 
-  componentDidMount() {
-    this.dldEventListener =
+  componentDidMount = () =>
+    (this.dldEventListener =
       this.dldEventListener ||
-      Download_V2.addEventListener(this.percentageListener);
-  }
+      Download_V2.addEventListener(this.percentageListener));
 
-  componentWillUnmount() {
-    this.dldEventListener?.remove();
-  }
+  componentWillUnmount = () => this.dldEventListener?.remove();
 
   percentageListener = p => {
     let items = Object.values(offlineContent);
@@ -43,9 +40,7 @@ export default class Downloads extends React.Component {
       }));
   };
 
-  onDone = () => {
-    this.setState({ items: Object.values(offlineContent) });
-  };
+  onDone = () => this.setState({ items: Object.values(offlineContent) });
 
   navigate = item => {
     if (item.overview) {

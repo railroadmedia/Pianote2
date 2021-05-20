@@ -6,17 +6,13 @@ export default class StartIcon extends React.Component {
   sizing = type => {
     if (type === 'icon') {
       if (onTablet) {
-        if (this.props.isMethod) {
-          return 30;
-        }
+        if (this.props.isMethod) return 30;
         return 25;
       }
       return 20;
     } else {
       if (onTablet) {
-        if (this.props.isMethod) {
-          return 17.5;
-        }
+        if (this.props.isMethod) return 17.5;
         return 15;
       }
       return 12.5;

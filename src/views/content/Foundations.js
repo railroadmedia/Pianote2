@@ -55,9 +55,8 @@ export default class Foundations extends React.Component {
     this.getContent();
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () =>
     Orientation.removeDeviceOrientationListener(this.orientationListener);
-  }
 
   orientationListener = o => {
     if (o === 'UNKNOWN') return;
@@ -73,11 +72,8 @@ export default class Foundations extends React.Component {
   };
 
   getContent = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     const response = await foundationsService.getFoundation('foundations-2019');
-
     this.setState({
       items: response.units,
       id: response.id,
@@ -112,11 +108,10 @@ export default class Foundations extends React.Component {
     );
   };
 
-  refresh = () => {
+  refresh = () =>
     this.setState({ refreshing: true }, () => {
       this.getContent();
     });
-  };
 
   getAspectRatio() {
     if (onTablet && this.state.isLandscape) return 3;
@@ -124,14 +119,12 @@ export default class Foundations extends React.Component {
     return 1.8;
   }
 
-  goToLesson(url) {
+  goToLesson = url => {
     return navigate('VIEWLESSON', { url });
-  }
+  };
 
   getSquareHeight = () => {
-    if (onTablet) {
-      return 150;
-    }
+    if (onTablet) return 150;
     return width * 0.26;
   };
 

@@ -64,9 +64,8 @@ export default class MethodLevel extends React.Component {
     Orientation.addDeviceOrientationListener(this.orientationListener);
   };
 
-  componentWillUnmount() {
+  componentWillUnmount = () =>
     Orientation.removeDeviceOrientationListener(this.orientationListener);
-  }
 
   getContent = async () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
@@ -97,12 +96,6 @@ export default class MethodLevel extends React.Component {
     this.setState(state => ({ isAddedToList: !state.isAddedToList }));
   };
 
-  refresh = () => {
-    this.setState({ refreshing: true }, () => {
-      this.getContent();
-    });
-  };
-
   onRestartLevel = async () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     await resetProgress(this.state.id);
@@ -129,7 +122,6 @@ export default class MethodLevel extends React.Component {
   orientationListener = o => {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
-
     if (isiOS) {
       if (onTablet) this.setState({ isLandscape });
     } else {
@@ -153,7 +145,11 @@ export default class MethodLevel extends React.Component {
             <RefreshControl
               colors={[colors.pianoteRed]}
               refreshing={this.state.refreshing}
-              onRefresh={() => this.refresh()}
+              onRefresh={() =>
+                this.setState({ refreshing: true }, () => {
+                  this.getContent();
+                })
+              }
             />
           }
         >

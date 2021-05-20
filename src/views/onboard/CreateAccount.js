@@ -41,9 +41,7 @@ export default class CreateAccount extends React.Component {
   }
 
   verifyEmail = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     if (this.state.email.length > 0) {
       let email = encodeURIComponent(this.state.email);
       let response = await isEmailUnique(email);

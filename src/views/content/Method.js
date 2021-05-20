@@ -62,14 +62,12 @@ export default class Method extends React.Component {
     this.getContent();
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () =>
     Orientation.removeDeviceOrientationListener(this.orientationListener);
-  }
 
   orientationListener = o => {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
-
     if (isiOS) {
       if (onTablet) this.setState({ isLandscape });
     } else {
@@ -80,11 +78,8 @@ export default class Method extends React.Component {
   };
 
   getContent = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     const response = await methodService.getMethod();
-
     this.setState({
       items: response.levels,
       id: response.id,
@@ -120,12 +115,6 @@ export default class Method extends React.Component {
     );
   };
 
-  refresh = () => {
-    this.setState({ refreshing: true }, () => {
-      this.getContent();
-    });
-  };
-
   getAspectRatio() {
     if (onTablet && this.state.isLandscape) return 3;
     if (onTablet && !this.state.isLandscape) return 2;
@@ -137,9 +126,7 @@ export default class Method extends React.Component {
   }
 
   getSquareHeight = () => {
-    if (onTablet) {
-      return 150;
-    }
+    if (onTablet) return 150;
     return width * 0.26;
   };
 
@@ -159,7 +146,11 @@ export default class Method extends React.Component {
             <RefreshControl
               colors={[colors.pianoteRed]}
               refreshing={this.state.refreshing}
-              onRefresh={() => this.refresh()}
+              onRefresh={() =>
+                this.setState({ refreshing: true }, () => {
+                  this.getContent();
+                })
+              }
             />
           }
         >

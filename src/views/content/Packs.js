@@ -56,14 +56,12 @@ class Packs extends React.Component {
     this.getData();
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () =>
     Orientation.removeDeviceOrientationListener(this.orientationListener);
-  }
 
   orientationListener = o => {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
-
     if (isiOS) {
       if (onTablet) this.setState({ isLandscape });
     } else {
@@ -104,18 +102,10 @@ class Packs extends React.Component {
     );
   };
 
-  refresh = () => {
-    this.setState({ refreshing: true }, () => {
-      this.getData();
-    });
-  };
-
   getAspectRatio() {
     let { isLandscape } = this.state;
     if (onTablet) {
-      if (isLandscape) {
-        return 3;
-      }
+      if (isLandscape) return 3;
       return 2;
     }
     return 1.2;
@@ -139,7 +129,11 @@ class Packs extends React.Component {
             <RefreshControl
               tintColor={'transparent'}
               colors={[colors.pianoteRed]}
-              onRefresh={() => this.refresh()}
+              onRefresh={() =>
+                this.setState({ refreshing: true }, () => {
+                  this.getData();
+                })
+              }
               refreshing={isiOS ? false : this.state.refreshing}
             />
           }

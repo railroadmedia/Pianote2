@@ -87,23 +87,17 @@ class Profile extends React.Component {
     };
   }
 
-  componentDidMount() {
-    this.getNotifications(false);
-  }
+  componentDidMount = () => this.getNotifications(false);
 
   async getUserDetails() {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let userDetails = await getUserData();
     this.props.setLoggedInUser(userDetails);
     this.setState({ isLoading: false });
   }
 
   refresh = () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     this.setState({ isLoading: true }, () => this.getUserDetails());
   };
 
@@ -112,8 +106,6 @@ class Profile extends React.Component {
     if (loadMore) this.page++;
     else this.page = 1;
     let notifications = await getnotifications(this.page);
-    console.log('Notes: ', notifications);
-
     for (i in notifications.data) {
       let timeCreated =
         notifications.data[i].created_at?.slice(0, 10) +
@@ -248,11 +240,10 @@ class Profile extends React.Component {
     }
   };
 
-  loadMoreNotifications = () => {
+  loadMoreNotifications = () =>
     this.setState({ animateLoadMore: true }, () => {
       this.getNotifications(true);
     });
-  };
 
   render() {
     const {

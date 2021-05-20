@@ -45,16 +45,11 @@ class Settings extends React.Component {
   constructor(props) {
     super(props);
     localStyles = setStyles(this.props.theme === 'light', colors.pianoteRed);
-
-    this.state = {
-      showLogOut: false
-    };
+    this.state = { showLogOut: false };
   }
 
   manageSubscriptions = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let { isAppleAppSubscriber, isGoogleAppSubscriber } = this.props.user;
     if (isiOS) {
       if (isAppleAppSubscriber) {

@@ -40,9 +40,7 @@ class StudentFocusCatalog extends React.Component {
     this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   }
 
-  componentWillUnmount() {
-    this.refreshOnFocusListener?.();
-  }
+  componentWillUnmount = () => this.refreshOnFocusListener?.();
 
   async getData() {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
@@ -115,10 +113,6 @@ class StudentFocusCatalog extends React.Component {
     );
   };
 
-  refresh() {
-    this.setState({ refreshControl: true }, () => this.getData());
-  }
-
   render() {
     return (
       <View style={styles.mainContainer}>
@@ -135,7 +129,9 @@ class StudentFocusCatalog extends React.Component {
               <RefreshControl
                 tintColor={'transparent'}
                 colors={[colors.secondBackground]}
-                onRefresh={() => this.refresh()}
+                onRefresh={() =>
+                  this.setState({ refreshControl: true }, () => this.getData())
+                }
                 refreshing={isiOS ? false : this.state.refreshControl}
               />
             }

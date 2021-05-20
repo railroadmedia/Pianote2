@@ -22,7 +22,6 @@ export default class Replies extends React.Component {
   constructor(props) {
     super(props);
     localStyles = setStyles(colors, sizing);
-
     this.state = {
       reply: '',
       isLoading: false,

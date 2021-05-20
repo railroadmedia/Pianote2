@@ -49,7 +49,6 @@ export default class Schedule extends React.Component {
 
   componentDidMount = async () => {
     let items = await getScheduleContent();
-
     for (i in response) {
       let time = response[i].live_event_start_time
         ? response[i].live_event_start_time
@@ -58,7 +57,6 @@ export default class Schedule extends React.Component {
 
       response[i].timeData = { month: d.getMonth() };
     }
-
     this.setState({ items, isLoading: false });
   };
 

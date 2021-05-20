@@ -7,11 +7,7 @@ export default class OverviewComplete extends React.Component {
   changeType = word => {
     word = word.replace(/[- )(]/g, ' ').split(' ');
     let string = '';
-
-    for (i in word) {
-      string = string + word[i] + ' ';
-    }
-
+    for (i in word) string = string + word[i] + ' ';
     return string;
   };
 

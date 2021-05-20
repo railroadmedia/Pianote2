@@ -520,9 +520,6 @@ class ViewLesson extends React.Component {
     }
   };
 
-  refresh = () =>
-    this.setState({ isLoadingAll: true }, () => this.getContent());
-
   async onResetProgress() {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let { selectedAssignment, id } = this.state;
@@ -873,7 +870,11 @@ class ViewLesson extends React.Component {
                     <RefreshControl
                       colors={[colors.pianoteRed]}
                       refreshing={this.state.isLoadingAll}
-                      onRefresh={() => this.refresh()}
+                      onRefresh={() =>
+                        this.setState({ isLoadingAll: true }, () =>
+                          this.getContent()
+                        )
+                      }
                     />
                   }
                   style={localStyles.belowVideoContainer}

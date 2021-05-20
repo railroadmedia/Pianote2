@@ -59,7 +59,6 @@ class Course extends React.Component {
 
   async getContent() {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-
     let content = await Promise.all([
       getAllContent('course', this.state.currentSort, page, this.filterQuery),
       getStartedContent('course', 1)
@@ -80,7 +79,6 @@ class Course extends React.Component {
   initialValidData = (content, fromCache) => {
     let allVideos = content?.all?.data;
     let inprogressVideos = content?.inProgress?.data;
-
     return {
       allCourses: allVideos,
       progressCourses: inprogressVideos,
