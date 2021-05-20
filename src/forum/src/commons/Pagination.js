@@ -9,11 +9,10 @@ import {
 } from 'react-native';
 
 export default class Pagination extends React.Component {
-  state = { active: 1, showPagePicker: false };
-
   constructor(props) {
     super(props);
     this.pagesNo = Math.ceil(this.props.length / 10);
+    this.state = { active: props.active || 1, showPagePicker: false };
   }
 
   get pages() {
@@ -120,10 +119,10 @@ let styles = new StyleSheet.create({
   pagePickerContainer: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,.5)',
-    justifyContent: 'center',
     alignItems: 'center'
   },
   textInput: {
+    marginTop: '5%',
     backgroundColor: 'white',
     padding: 20,
     minWidth: '30%',

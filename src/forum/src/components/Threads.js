@@ -23,6 +23,8 @@ import Pagination from '../commons/Pagination';
 
 let styles;
 export default class Threads extends React.Component {
+  followedPage = 1;
+  allPage = 1;
   followedResultsTotal = 0;
   allResultsTotal = 0;
   followed = [];
@@ -131,6 +133,7 @@ export default class Threads extends React.Component {
     let { tab } = this.state;
     let { discussionId } = this.props.route.params;
     let fORa = tab ? 'followed' : 'all';
+    this[`${fORa}Page`] = page;
     this.setState({ [`${fORa}LoadingMore`]: true }, () =>
       (tab ? getFollowedThreads : getAllThreads)(discussionId, page).then(r => {
         this[fORa] = r.results;
@@ -203,6 +206,7 @@ export default class Threads extends React.Component {
               }}
             >
               <Pagination
+                active={this[`${tab ? 'followed' : 'all'}Page`]}
                 isDark={isDark}
                 appColor={appColor}
                 length={this[`${tab ? 'followed' : 'all'}ResultsTotal`]}
