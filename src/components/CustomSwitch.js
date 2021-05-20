@@ -1,6 +1,5 @@
 import React from 'react';
 import { TouchableOpacity, Animated } from 'react-native';
-import { withNavigation } from 'react-navigation';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
 
 let maxTranslateX;
