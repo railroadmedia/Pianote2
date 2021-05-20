@@ -10,6 +10,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import CRUD from './src/components/CRUD';
 import Threads from './src/components/Threads';
 import Thread from './src/components/Thread';
+import Discussions from './src/components/Discussions';
 
 import { arrowLeft } from './src/assets/svgs';
 
@@ -64,6 +65,12 @@ export default ({
           )
         })}
       >
+        <Stack.Screen
+          name='Discussions'
+          component={Discussions}
+          options={{ title: 'Forums' }}
+          initialParams={params}
+        />
         <Stack.Screen
           name='Threads'
           component={Threads}

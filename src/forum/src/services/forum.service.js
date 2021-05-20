@@ -14,7 +14,7 @@ export const NetworkContext = function () {
 };
 
 export const getDiscussions = function () {
-  return new Promise(res => setTimeout(() => res([]), 2000));
+  return this.tryCall(`${this.rootUrl}/forums/api/discussions/index`);
 };
 export const getAllThreads = function (discussionId, page = 1) {
   return this.tryCall(
