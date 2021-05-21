@@ -26,6 +26,19 @@ export const getAllThreads = function (discussionId, page = 1) {
 export const search = function (text) {
   return this.tryCall(`${this.rootUrl}/forums/api/search?term=${text}`);
 };
+export const followThread = function (id) {
+  return this.tryCall(`${this.rootUrl}/forums/api/thread/follow/${id}`);
+};
+export const unfollowThread = function (id) {
+  return this.tryCall(`${this.rootUrl}/forums/api/thread/unfollow/${id}`);
+};
+export const updateThread = function (id, body) {
+  return this.tryCall(
+    `${this.rootUrl}/forums/api/thread/update/${id}`,
+    'PATCH',
+    body
+  );
+};
 export const getDiscussion = function (page = 1) {
   return this.tryCall(`${this.rootUrl}/TBD`);
 };

@@ -12,6 +12,8 @@ import Threads from './src/components/Threads';
 import Thread from './src/components/Thread';
 import Discussions from './src/components/Discussions';
 
+import HeaderMenu from './src/commons/HeaderMenu';
+
 import { arrowLeft } from './src/assets/svgs';
 
 import { setForumService } from './src/services/forum.service';
@@ -24,9 +26,10 @@ const timingAnim = {
 };
 
 export default ({
+  navigation: { navigate },
   route: {
     params,
-    params: { tryCall, rootUrl, NetworkContext }
+    params: { tryCall, rootUrl, NetworkContext, isDark }
   }
 }) => {
   const networkContext = useContext(NetworkContext);
@@ -34,18 +37,18 @@ export default ({
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1, backgroundColor: params.isDark ? '#00101d' : 'white' }}
+      style={{ flex: 1, backgroundColor: isDark ? '#00101d' : 'white' }}
     >
       <Stack.Navigator
         screenOptions={({ navigation }) => ({
           gestureEnabled: false,
           transitionSpec: { open: timingAnim, close: timingAnim },
           headerStyle: {
-            backgroundColor: params.isDark ? '#00101d' : 'white',
+            backgroundColor: isDark ? '#00101d' : 'white',
             elevation: 0,
             shadowColor: 'transparent'
           },
-          headerTintColor: params.isDark ? 'white' : 'black',
+          headerTintColor: isDark ? 'white' : 'black',
           headerBackTitleVisible: false,
           headerTitleStyle: {
             fontFamily: 'OpenSans',
@@ -59,7 +62,7 @@ export default ({
             >
               {arrowLeft({
                 height: 20,
-                fill: params.isDark ? 'white' : 'black'
+                fill: isDark ? 'white' : 'black'
               })}
             </TouchableOpacity>
           )
@@ -68,13 +71,29 @@ export default ({
         <Stack.Screen
           name='Discussions'
           component={Discussions}
-          options={{ title: 'Forums' }}
+          options={{
+            title: 'Forums',
+            headerRight: () => (
+              <HeaderMenu
+                isDark={isDark}
+                onForumRules={() => navigate('Thread', { forumRules: true })}
+              />
+            )
+          }}
           initialParams={params}
         />
         <Stack.Screen
           name='Threads'
           component={Threads}
-          options={({ route: { params } }) => ({ title: params.title })}
+          options={({ route: { params } }) => ({
+            title: params.title,
+            headerRight: () => (
+              <HeaderMenu
+                isDark={isDark}
+                onForumRules={() => navigate('Thread', { forumRules: true })}
+              />
+            )
+          })}
           initialParams={params}
         />
         <Stack.Screen
@@ -86,7 +105,25 @@ export default ({
         <Stack.Screen
           name='Thread'
           component={Thread}
-          options={({ route: { params } }) => ({ title: params.title })}
+          options={({ navigation, route: { params } }) => ({
+            headerRight: () => (
+              <HeaderMenu
+                title={params.title}
+                isDark={isDark}
+                locked={params.locked}
+                pinned={params.pinned}
+                is_followed={params.is_followed}
+                id={params.id}
+                onEdit={() =>
+                  navigate('CRUD', { type: 'edit', threadId: params.threadId })
+                }
+                onForumRules={() => navigate('Thread', { forumRules: true })}
+                setHeaderTitle={headerTitle =>
+                  navigation.setOptions({ headerTitle })
+                }
+              />
+            )
+          })}
           initialParams={params}
         />
       </Stack.Navigator>

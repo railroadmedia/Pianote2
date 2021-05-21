@@ -101,7 +101,7 @@ export default class Threads extends React.Component {
     <ThreadCard
       onNavigate={() =>
         this.navigate('Thread', {
-          title: item.title,
+          ...item,
           isDark: this.props.route.params.isDark,
           appColor: this.props.route.params.appColor
         })
@@ -163,7 +163,7 @@ export default class Threads extends React.Component {
         style={styles.loading}
       />
     ) : (
-      <View style={{ flex: 1 }}>
+      <>
         <FlatList
           key={tab}
           windowSize={10}
@@ -234,7 +234,7 @@ export default class Threads extends React.Component {
             {addThread({ height: 25, width: 25, fill: 'white' })}
           </TouchableOpacity>
         </SafeAreaView>
-      </View>
+      </>
     );
   }
 }

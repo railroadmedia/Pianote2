@@ -8,131 +8,148 @@ Required fields:
 import React from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { SafeAreaView } from 'react-navigation';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import {
-  NetworkContext,
-  reportMessage,
-  deleteMessage
+  connection,
+  followThread,
+  unfollowThread,
+  updateThread
 } from '../services/forum.service';
 
-import { moderate, info } from '../assets/svgs';
+import { moderate, lock, pin } from '../assets/svgs';
 
-export default class Moderate extends React.Component {
-  state = { optionsVisible: false, deleteVisible: false, reportVisible: false };
+export default class HeaderMenu extends React.Component {
+  state = { showOptions: false };
 
   constructor(props) {
     super(props);
-    Moderate.contextType = NetworkContext();
+    const { locked, pinned, is_followed } = props;
+    if (props.id !== undefined)
+      Object.assign(this.state, { locked, pinned, is_followed });
   }
 
-  get connection() {
-    if (this.context.isConnected) return true;
-    this.context.showNoConnectionAlert();
+  componentDidMount() {
+    this.props.setHeaderTitle?.(this.renderHeaderTitle);
+    AsyncStorage.getItem('signShown').then(ss =>
+      this.setState({ signShown: !ss })
+    );
   }
 
-  onReport = () =>
-    this.close(() => {
-      if (!this.connection) return;
-      reportMessage(this.props.id);
-      this.setState({ optionsVisible: true, reportVisible: true }, () =>
-        setTimeout(this.close, 2000)
-      );
-    });
+  get options() {
+    let options = {};
+    let { locked, pinned, is_followed, signShown } = this.state;
+    if (this.props.id !== undefined) {
+      options.toggleSign = {
+        text: `${signShown ? 'Hide' : 'Show'} All Signatures`,
+        action: this.toggleSign
+      };
+      options.toggleLock = {
+        text: locked ? 'Unlock' : 'Lock',
+        action: this.toggleLock
+      };
+      options.togglePin = {
+        text: pinned ? 'Unpin' : 'Pin',
+        action: this.togglePin
+      };
+      options.edit = { text: 'Edit', action: this.props.onEdit };
+      options.toggleFollow = {
+        text: `${is_followed ? 'Unfollow' : 'Follow'} Thread`,
+        action: this.toggleFollow
+      };
+    }
+    options.forumRules = {
+      text: 'Forum Rules',
+      action: this.props.onForumRules
+    };
+    return options;
+  }
 
-  onDelete = () =>
-    this.close(() => {
-      if (!this.connection) return;
-      deleteMessage(this.props.id);
-      this.setState({ optionsVisible: true, deleteVisible: true });
-    });
-
-  onEdit = () => {
-    this.close();
-    if (!this.connection) return;
-    this.props.onEdit();
+  renderHeaderTitle = () => {
+    let { title, isDark } = this.props;
+    let { locked, pinned } = this.state;
+    return (
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{ marginRight: 5 }}>
+          {!!locked && lock({ width: 10, fill: isDark ? 'white' : 'black' })}
+        </View>
+        <View style={{ marginRight: 5 }}>
+          {!!pinned && pin({ width: 10, fill: isDark ? 'white' : 'black' })}
+        </View>
+        <Text style={styles.headerTitleText}>{title}</Text>
+      </View>
+    );
   };
 
-  delete = () => {
-    this.close();
-    if (!this.connection) return;
-    this.props.onDelete();
-  };
+  toggleModal = () =>
+    connection(true) &&
+    this.setState(({ showOptions }) => ({ showOptions: !showOptions }));
 
-  open = () => {
-    if (!this.connection) return;
-    this.setState({ optionsVisible: true });
-  };
-
-  close = callback =>
+  toggleSign = () =>
     this.setState(
-      { optionsVisible: false, deleteVisible: false, reportVisible: false },
-      callback
+      ({ signShown }) => ({ signShown: !signShown, showOptions: false }),
+      () => AsyncStorage.setItem('signShown', this.state.signShown ? '' : '1')
+    );
+
+  toggleLock = () =>
+    connection(true) &&
+    this.setState(
+      ({ locked }) => ({ locked: !locked, showOptions: false }),
+      () => {
+        updateThread(this.props.id, { pinned: this.state.pinned });
+        this.props.setHeaderTitle(this.renderHeaderTitle);
+      }
+    );
+
+  togglePin = () =>
+    connection(true) &&
+    this.setState(
+      ({ pinned }) => ({ pinned: !pinned, showOptions: false }),
+      () => {
+        updateThread(this.props.id, { locked: this.state.locked });
+        this.props.setHeaderTitle(this.renderHeaderTitle);
+      }
+    );
+
+  toggleFollow = () =>
+    connection(true) &&
+    this.setState(
+      ({ is_followed }) => ({ is_followed: !is_followed, showOptions: false }),
+      () =>
+        this.state.is_followed
+          ? followThread(this.props.id)
+          : unfollowThread(this.props.id)
     );
 
   render() {
-    let { optionsVisible, deleteVisible, reportVisible } = this.state;
-    let { appColor } = this.props;
+    let { showOptions } = this.state;
+    let { isDark } = this.props;
     return (
       <>
-        <TouchableOpacity style={{ padding: 10 }} onPress={this.open}>
-          {moderate({ width: 15, fill: appColor })}
+        <TouchableOpacity style={{ padding: 10 }} onPress={this.toggleModal}>
+          {moderate({ width: 15, fill: isDark ? 'white' : 'black' })}
         </TouchableOpacity>
         <Modal
-          animationType={'fade'}
-          onRequestClose={() => this.close()}
+          animationType={'slide'}
+          onRequestClose={() => this.toggleModal()}
           supportedOrientations={['portrait', 'landscape']}
           transparent={true}
-          visible={optionsVisible}
+          visible={showOptions}
         >
           <TouchableOpacity
             activeOpacity={1}
             style={styles.optionsContainer}
-            onPress={() => this.close()}
+            onPress={this.toggleModal}
           >
-            {reportVisible ? (
-              <SafeAreaView
-                style={styles.reportContainer}
-                forceInset={{ top: 'never', bottom: 'always' }}
-              >
-                {info({ width: 20, height: 20, fill: '#0BBE76' })}
-                <Text style={styles.reportText}>
-                  This post has been reported{`\n`}
-                  <Text style={{ fontFamily: 'OpenSans' }}>
-                    Our team is currently looking into this issue
-                  </Text>
-                </Text>
-              </SafeAreaView>
-            ) : (
-              <SafeAreaView
-                style={styles.options}
-                forceInset={{ top: 'never', bottom: 'always' }}
-              >
-                <View style={styles.pill} />
-                {deleteVisible ? (
-                  <>
-                    <Text style={styles.confirmDeleteText}>
-                      Are you sure you want to delete this post?
-                    </Text>
-                    <TouchableOpacity
-                      style={[
-                        styles.confirmationBtn,
-                        { backgroundColor: appColor }
-                      ]}
-                      onPress={this.delete}
-                    >
-                      <Text style={styles.confirmationBtnText}>CONFIRM</Text>
-                    </TouchableOpacity>
-                  </>
-                ) : (
-                  ['Report', 'Delete', 'Edit'].map(o => (
-                    <TouchableOpacity key={o} onPress={this[`on${o}`]}>
-                      <Text style={styles.optionText}>{o}</Text>
-                    </TouchableOpacity>
-                  ))
-                )}
-              </SafeAreaView>
-            )}
+            <SafeAreaView style={styles.options}>
+              <View style={styles.pill} />
+              {Object.values(this.options).map(({ text, action }) => (
+                <TouchableOpacity key={text} onPress={action}>
+                  <Text style={styles.optionText}>{text}</Text>
+                </TouchableOpacity>
+              ))}
+            </SafeAreaView>
           </TouchableOpacity>
         </Modal>
       </>
@@ -140,6 +157,12 @@ export default class Moderate extends React.Component {
   }
 }
 let styles = StyleSheet.create({
+  headerTitleText: {
+    fontFamily: 'OpenSans',
+    fontSize: 20,
+    fontWeight: '900',
+    color: isDark ? 'white' : 'black'
+  },
   optionsContainer: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -162,35 +185,5 @@ let styles = StyleSheet.create({
     paddingVertical: 10,
     color: 'white',
     fontFamily: 'OpenSans'
-  },
-  confirmDeleteText: {
-    paddingVertical: 20,
-    color: 'white',
-    textAlign: 'center',
-    fontFamily: 'OpenSans'
-  },
-  confirmationBtn: {
-    alignSelf: 'center',
-    padding: 10,
-    paddingHorizontal: 50,
-    borderRadius: 100,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  confirmationBtnText: {
-    color: 'white',
-    fontFamily: 'RobotoCondensed-Bold'
-  },
-  reportContainer: {
-    borderColor: '#0BBE76',
-    borderTopWidth: 5,
-    padding: 20,
-    flexDirection: 'row',
-    backgroundColor: '#081825'
-  },
-  reportText: {
-    paddingLeft: 20,
-    fontFamily: 'OpenSans-Bold',
-    color: 'white'
   }
 });
