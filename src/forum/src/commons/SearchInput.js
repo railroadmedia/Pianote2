@@ -43,7 +43,8 @@ let setStyles = isDark =>
       alignItems: 'center',
       marginHorizontal: 15,
       marginTop: 30,
-      marginBottom: 30
+      marginBottom: 30,
+      flex: 1
     },
     searchIcon: {
       position: 'absolute',
