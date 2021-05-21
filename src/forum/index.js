@@ -74,7 +74,7 @@ export default ({
         <Stack.Screen
           name='Threads'
           component={Threads}
-          options={{ title: 'Threads' }}
+          options={({ route: { params } }) => ({ title: params.title })}
           initialParams={params}
         />
         <Stack.Screen
