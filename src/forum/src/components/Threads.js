@@ -91,7 +91,7 @@ export default class Threads extends React.Component {
             </TouchableOpacity>
           ))}
         </View>
-        <SearchInput isDark={isDark} onSearch={s => console.log(s)} />
+        <SearchInput isDark={isDark} />
       </>
     );
   };

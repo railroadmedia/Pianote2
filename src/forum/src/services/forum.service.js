@@ -23,6 +23,9 @@ export const getAllThreads = function (discussionId, page = 1) {
     }`
   );
 };
+export const search = function (text) {
+  return this.tryCall(`${this.rootUrl}/forums/api/search?term=${text}`);
+};
 export const getDiscussion = function (page = 1) {
   return this.tryCall(`${this.rootUrl}/TBD`);
 };
