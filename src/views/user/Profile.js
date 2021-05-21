@@ -96,11 +96,6 @@ class Profile extends React.Component {
     this.setState({ isLoading: false });
   }
 
-  refresh = () => {
-    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    this.setState({ isLoading: true }, () => this.getUserDetails());
-  };
-
   async getNotifications(loadMore) {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     if (loadMore) this.page++;
@@ -241,9 +236,7 @@ class Profile extends React.Component {
   };
 
   loadMoreNotifications = () =>
-    this.setState({ animateLoadMore: true }, () => {
-      this.getNotifications(true);
-    });
+    this.setState({ animateLoadMore: true }, () => this.getNotifications(true));
 
   render() {
     const {
@@ -284,7 +277,11 @@ class Profile extends React.Component {
             refreshControl={
               <RefreshControl
                 refreshing={this.state.isLoading}
-                onRefresh={() => this.refresh()}
+                onRefresh={() =>
+                  this.setState({ isLoading: true }, () =>
+                    this.getUserDetails()
+                  )
+                }
                 colors={[colors.pianoteRed]}
                 tintColor={colors.pianoteRed}
               />
