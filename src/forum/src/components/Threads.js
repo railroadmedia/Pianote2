@@ -5,10 +5,11 @@ import {
   RefreshControl,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View
 } from 'react-native';
+
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import ThreadCard from '../commons/ThreadCard';
 
@@ -217,20 +218,22 @@ export default class Threads extends React.Component {
             />
           }
         />
-        <View
-          onLayout={({ nativeEvent: { layout } }) =>
-            this.setState({ createDiscussionHeight: layout.height + 15 })
-          }
-          onPress={() =>
-            this.props.navigation.navigate('CRUD', {
-              isDark,
-              appColor
-            })
-          }
-          style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}
-        >
-          {addThread({ height: 25, width: 25, fill: 'white' })}
-        </View>
+        <SafeAreaView style={styles.bottomTOpacitySafeArea}>
+          <TouchableOpacity
+            onLayout={({ nativeEvent: { layout } }) =>
+              this.setState({ createDiscussionHeight: layout.height + 15 })
+            }
+            onPress={() =>
+              this.props.navigation.navigate('CRUD', {
+                isDark,
+                appColor
+              })
+            }
+            style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}
+          >
+            {addThread({ height: 25, width: 25, fill: 'white' })}
+          </TouchableOpacity>
+        </SafeAreaView>
       </View>
     );
   }
@@ -255,10 +258,7 @@ let setStyles = isDark =>
       fontWeight: '700',
       color: '#445F74'
     },
-    fList: {
-      flex: 1,
-      backgroundColor: isDark ? '#00101D' : 'white'
-    },
+    fList: { flex: 1, backgroundColor: isDark ? '#00101D' : 'white' },
     loading: {
       flex: 1,
       backgroundColor: isDark ? '#00101D' : 'white',
@@ -271,9 +271,12 @@ let setStyles = isDark =>
     },
     bottomTOpacity: {
       padding: 15,
+      margin: 15,
+      borderRadius: 99
+    },
+    bottomTOpacitySafeArea: {
       position: 'absolute',
-      borderRadius: 99,
-      bottom: 15,
-      right: 15
+      bottom: 0,
+      alignSelf: 'flex-end'
     }
   });
