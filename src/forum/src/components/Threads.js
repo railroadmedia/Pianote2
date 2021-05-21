@@ -20,7 +20,7 @@ import {
 
 import { addThread } from '../assets/svgs';
 import Pagination from '../commons/Pagination';
-import SearchInput from '../commons/SearchInput';
+import Search from '../commons/Search';
 
 let styles;
 export default class Threads extends React.Component {
@@ -91,7 +91,7 @@ export default class Threads extends React.Component {
             </TouchableOpacity>
           ))}
         </View>
-        <SearchInput isDark={isDark} />
+        <Search isDark={isDark} />
       </>
     );
   };
