@@ -69,15 +69,15 @@ export default class Discussions extends React.Component {
 
   renderDiscussion = item => (
     <DiscussionCard
+      key={item.id}
       data={item}
       appColor={this.props.route.params.appColor}
       isDark={this.props.route.params.isDark}
       onNavigate={() =>
         this.navigate('Threads', {
           mobile_app_url: item.mobile_app_url,
-          id: item.id,
           title: item.title,
-          discussionId: item.category_id
+          discussionId: item.id
         })
       }
     />
