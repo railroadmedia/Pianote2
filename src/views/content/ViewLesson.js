@@ -376,9 +376,7 @@ class ViewLesson extends React.Component {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let { comments } = this.state;
     this.allCommentsNum -= 1;
-    this.setState({
-      comments: comments.filter(c => c.id !== id)
-    });
+    this.setState({ comments: comments.filter(c => c.id !== id) });
     commentsService.deleteComment(id);
   };
 
@@ -828,20 +826,12 @@ class ViewLesson extends React.Component {
                   assignment={this.state.selectedAssignment}
                   assignmentProgress={this.state.selectedAssignment.progress}
                   onAssignmentFullscreen={() =>
-                    this.setState({
-                      showVideo: !this.state.showVideo
-                    })
+                    this.setState({ showVideo: !this.state.showVideo })
                   }
-                  onX={() =>
-                    this.setState({
-                      selectedAssignment: null
-                    })
-                  }
+                  onX={() => this.setState({ selectedAssignment: null })}
                   onCompleteAssignment={() => {
                     if (this.state.selectedAssignment.progress === 100) {
-                      this.setState({
-                        showRestartCourse: true
-                      });
+                      this.setState({ showRestartCourse: true });
                     } else {
                       this.onComplete(this.state.selectedAssignment.id);
                     }
@@ -849,9 +839,8 @@ class ViewLesson extends React.Component {
                 />
               ) : (
                 <KeyboardAwareScrollView
-                  innerRef={ref => {
-                    this.scroll = ref;
-                  }}
+                  innerRef={ref => (this.scroll = ref)}
+                  style={localStyles.belowVideoContainer}
                   keyboardShouldPersistTaps='handled'
                   removeClippedSubviews={false}
                   showsVerticalScrollIndicator={false}
@@ -877,7 +866,6 @@ class ViewLesson extends React.Component {
                       }
                     />
                   }
-                  style={localStyles.belowVideoContainer}
                 >
                   <Text style={localStyles.lessonTitle}>
                     {this.state.lessonTitle}
@@ -913,7 +901,6 @@ class ViewLesson extends React.Component {
                           textAlign: 'center',
                           fontSize: sizing.descriptionText,
                           color: 'white'
-                          // marginTop: 5
                         }}
                       >
                         {this.state.isAddedToMyList ? 'Added' : 'My List'}
@@ -921,11 +908,7 @@ class ViewLesson extends React.Component {
                     </TouchableOpacity>
                     {this.state.resources && (
                       <TouchableOpacity
-                        onPress={() =>
-                          this.setState({
-                            showResDownload: true
-                          })
-                        }
+                        onPress={() => this.setState({ showResDownload: true })}
                         style={localStyles.iconBtn}
                       >
                         <Resources
@@ -1431,9 +1414,7 @@ class ViewLesson extends React.Component {
         {this.state.showSort && (
           <Sort
             type={'comments'}
-            hideSort={() => {
-              this.setState({ showSort: false });
-            }}
+            hideSort={() => this.setState({ showSort: false })}
             currentSort={this.state.sort}
             changeSort={sort => {
               this.setState({ sort }, () => {
@@ -1544,9 +1525,7 @@ class ViewLesson extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.userState.user
-});
+const mapStateToProps = state => ({ user: state.userState.user });
 
 export default connect(mapStateToProps, null)(ViewLesson);
 

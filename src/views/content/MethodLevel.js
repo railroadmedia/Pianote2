@@ -28,7 +28,6 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import methodService from '../../services/method.service';
 import { goBack, navigate } from '../../../AppNavigator';
 
-let greaterWDim;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
@@ -56,7 +55,6 @@ export default class MethodLevel extends React.Component {
         Dimensions.get('window').height < Dimensions.get('window').width,
       showRestartCourse: false
     };
-    greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
 
   componentDidMount = () => {

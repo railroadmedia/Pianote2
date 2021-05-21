@@ -29,7 +29,6 @@ const sortDict = {
   relevance: 'RELEVANCE'
 };
 const onTablet = global.onTablet;
-let greaterWDim;
 
 export default class VerticalVideoList extends React.Component {
   static contextType = NetworkContext;
@@ -47,9 +46,7 @@ export default class VerticalVideoList extends React.Component {
 
   componentWillReceiveProps = props => {
     if (props.isPaging !== this.state.isPaging) {
-      if (!this.state.isLoading) {
-        this.setState({ isPaging: props.isPaging });
-      }
+      if (!this.state.isLoading) this.setState({ isPaging: props.isPaging });
     }
     if (props.isLoading !== this.state.isLoading) {
       this.setState({
@@ -79,7 +76,7 @@ export default class VerticalVideoList extends React.Component {
     for (i in this.state.items) {
       if (this.state.items[i].id === contentID) {
         let items = Object.assign([], this.state.items);
-        items[i].isAddedToList = true;
+        items[i].is_added_to_primary_playlist = true;
         this.setState({ items });
       }
     }
@@ -91,7 +88,7 @@ export default class VerticalVideoList extends React.Component {
     for (i in this.state.items) {
       if (this.state.items[i].id === contentID) {
         let items = Object.assign([], this.state.items);
-        items[i].isAddedToList = false;
+        items[i].is_added_to_primary_playlist = false;
         this.setState({ items });
       }
     }
@@ -103,11 +100,7 @@ export default class VerticalVideoList extends React.Component {
   changeType = word => {
     word = word.replace(/[- )(]/g, ' ').split(' ');
     let string = '';
-
-    for (i in word) {
-      string = string + word[i] + ' ';
-    }
-
+    for (i in word) string = string + word[i] + ' ';
     return string;
   };
 
@@ -512,7 +505,7 @@ export default class VerticalVideoList extends React.Component {
                         color={colors.pianoteRed}
                       />
                     </TouchableOpacity>
-                  ) : row.is_added_to_primary_playlist ? (
+                  ) : (
                     <TouchableOpacity
                       onPress={() => this.removeFromMyList(row.id)}
                     >
@@ -522,7 +515,7 @@ export default class VerticalVideoList extends React.Component {
                         color={colors.pianoteRed}
                       />
                     </TouchableOpacity>
-                  ) : null}
+                  )}
                 </View>
               </View>
             )}

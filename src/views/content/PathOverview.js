@@ -34,7 +34,6 @@ import NextVideo from '../../components/NextVideo';
 import { ScrollView } from 'react-native-gesture-handler';
 import { goBack, navigate } from '../../../AppNavigator';
 
-let greaterWDim;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
@@ -72,7 +71,6 @@ export default class PathOverview extends React.Component {
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width
     };
-    greaterWDim = fullHeight < fullWidth ? fullHeight : fullWidth;
   }
 
   componentDidMount() {

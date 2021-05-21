@@ -345,9 +345,9 @@ class Lessons extends React.Component {
                 refreshing={isiOS ? false : this.state.refreshControl}
               />
             }
-            onScroll={({ nativeEvent }) => {
-              onTablet ? '' : this.handleScroll(nativeEvent);
-            }}
+            onScroll={({ nativeEvent }) =>
+              onTablet ? '' : this.handleScroll(nativeEvent)
+            }
             scrollEventThrottle={400}
           >
             {isiOS && this.state.refreshControl && (

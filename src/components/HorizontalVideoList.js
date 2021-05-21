@@ -22,7 +22,6 @@ import Progress from '../assets/img/svgs/progress.svg';
 import Filters_V2 from './Filters_V2';
 import { navigate } from '../../AppNavigator';
 
-let greaterWDim;
 const sortDict = {
   newest: 'NEWEST',
   oldest: 'OLDEST',
@@ -43,7 +42,6 @@ export default class HorizontalVideoList extends React.Component {
       isLoading: false,
       items: this.props.items
     };
-    greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
 
   componentWillReceiveProps = props => {
@@ -93,20 +91,12 @@ export default class HorizontalVideoList extends React.Component {
     }
   }
 
-  toggleMyList = () => {
-    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    this.state.isAddedToList
-      ? removeFromMyList(this.state.id)
-      : addToMyList(this.state.id);
-    this.setState(state => ({ isAddedToList: !state.isAddedToList }));
-  };
-
   addToMyList = contentID => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     for (i in this.state.items) {
       if (this.state.items[i].id === contentID) {
         let items = Object.assign([], this.state.items);
-        items[i].isAddedToList = true;
+        items[i].is_added_to_primary_playlist = true;
         this.setState({ items });
       }
     }
@@ -118,7 +108,7 @@ export default class HorizontalVideoList extends React.Component {
     for (i in this.state.items) {
       if (this.state.items[i].id === contentID) {
         let items = Object.assign([], this.state.items);
-        items[i].isAddedToList = false;
+        items[i].is_added_to_primary_playlist = false;
         this.setState({ items });
       }
     }
