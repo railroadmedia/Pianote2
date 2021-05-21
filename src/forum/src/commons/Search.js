@@ -1,21 +1,29 @@
 import React from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
-import { search } from '../assets/svgs';
+import { View, TextInput, StyleSheet, Modal } from 'react-native';
+import { search as searchSvg } from '../assets/svgs';
 
-export default class SearchInput extends React.Component {
+import { search } from '../services/forum.service';
+
+export default class Search extends React.Component {
+  state = { showSearchResults: false };
+
   constructor(props) {
     super(props);
     let { isDark } = props;
     styles = setStyles(isDark);
   }
 
-  render() {
-    let { isDark, onSearch } = this.props;
+  toggleSearchResults = text => {
+    /* code for results fetching and modal toggle goes here */
+  };
 
+  render() {
+    let { isDark } = this.props;
+    let { showSearchResults } = this.state;
     return (
       <View style={styles.inputContainer}>
         <View style={styles.searchIcon}>
-          {search({
+          {searchSvg({
             height: 15,
             width: 15,
             fill: isDark ? '#445F74' : '#97AABE'
@@ -28,9 +36,21 @@ export default class SearchInput extends React.Component {
           spellCheck={false}
           placeholder={'Search...'}
           placeholderTextColor={isDark ? '#445F74' : '#97AABE'}
-          returnKeyType='go'
-          onSubmitEditing={({ nativeEvent: { text } }) => onSearch(text)}
+          returnKeyType='search'
+          onSubmitEditing={({ nativeEvent: { text } }) =>
+            this.toggleSearchResults(text)
+          }
         />
+        <Modal
+          animationType={'fade'}
+          onRequestClose={this.toggleSearchResults}
+          supportedOrientations={['portrait', 'landscape']}
+          visible={showSearchResults}
+        >
+          {/*
+          Code for the entire search page goes here
+          */}
+        </Modal>
       </View>
     );
   }

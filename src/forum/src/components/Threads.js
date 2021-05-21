@@ -5,10 +5,11 @@ import {
   RefreshControl,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View
 } from 'react-native';
+
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import ThreadCard from '../commons/ThreadCard';
 
@@ -20,7 +21,7 @@ import {
 
 import { addThread } from '../assets/svgs';
 import Pagination from '../commons/Pagination';
-import SearchInput from '../commons/SearchInput';
+import Search from '../commons/Search';
 
 let styles;
 export default class Threads extends React.Component {
@@ -91,7 +92,7 @@ export default class Threads extends React.Component {
             </TouchableOpacity>
           ))}
         </View>
-        <SearchInput isDark={isDark} onSearch={s => console.log(s)} />
+        <Search isDark={isDark} />
       </>
     );
   };
@@ -133,8 +134,11 @@ export default class Threads extends React.Component {
     let { discussionId } = this.props.route.params;
     let fORa = tab ? 'followed' : 'all';
     this.setState({ [`${fORa}Refreshing`]: true }, () =>
-      (tab ? getFollowedThreads : getAllThreads)(discussionId).then(r => {
-        this[fORa] = r;
+      (tab ? getFollowedThreads : getAllThreads)(
+        discussionId,
+        this[`${fORa}Page`]
+      ).then(r => {
+        this[fORa] = r.results;
         this.setState({ [`${fORa}Refreshing`]: false });
       })
     );
@@ -195,12 +199,14 @@ export default class Threads extends React.Component {
                 length={this[`${tab ? 'followed' : 'all'}ResultsTotal`]}
                 onChangePage={this.changePage}
               />
-              <ActivityIndicator
-                size='small'
-                color={isDark ? 'white' : 'black'}
-                animating={tab ? followedLoadingMore : allLoadingMore}
-                style={{ padding: 15 }}
-              />
+              {(followedLoadingMore || allLoadingMore) && (
+                <ActivityIndicator
+                  size='small'
+                  color={isDark ? 'white' : 'black'}
+                  animating={true}
+                  style={{ padding: 15 }}
+                />
+              )}
             </View>
           }
           refreshControl={
@@ -212,20 +218,22 @@ export default class Threads extends React.Component {
             />
           }
         />
-        <TouchableOpacity
-          onLayout={({ nativeEvent: { layout } }) =>
-            this.setState({ createDiscussionHeight: layout.height + 15 })
-          }
-          onPress={() =>
-            this.props.navigation.navigate('CRUD', {
-              isDark,
-              appColor
-            })
-          }
-          style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}
-        >
-          {addThread({ height: 25, width: 25, fill: 'white' })}
-        </TouchableOpacity>
+        <SafeAreaView style={styles.bottomTOpacitySafeArea}>
+          <TouchableOpacity
+            onLayout={({ nativeEvent: { layout } }) =>
+              this.setState({ createDiscussionHeight: layout.height + 15 })
+            }
+            onPress={() =>
+              this.props.navigation.navigate('CRUD', {
+                isDark,
+                appColor
+              })
+            }
+            style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}
+          >
+            {addThread({ height: 25, width: 25, fill: 'white' })}
+          </TouchableOpacity>
+        </SafeAreaView>
       </View>
     );
   }
@@ -250,10 +258,7 @@ let setStyles = isDark =>
       fontWeight: '700',
       color: '#445F74'
     },
-    fList: {
-      flex: 1,
-      backgroundColor: isDark ? '#00101D' : 'white'
-    },
+    fList: { flex: 1, backgroundColor: isDark ? '#00101D' : 'white' },
     loading: {
       flex: 1,
       backgroundColor: isDark ? '#00101D' : 'white',
@@ -266,9 +271,12 @@ let setStyles = isDark =>
     },
     bottomTOpacity: {
       padding: 15,
+      margin: 15,
+      borderRadius: 99
+    },
+    bottomTOpacitySafeArea: {
       position: 'absolute',
-      borderRadius: 99,
-      bottom: 15,
-      right: 15
+      bottom: 0,
+      alignSelf: 'flex-end'
     }
   });
