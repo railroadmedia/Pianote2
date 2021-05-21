@@ -43,27 +43,30 @@ export default class Pagination extends React.Component {
     });
   };
 
-  togglePagePicker = () =>
+  togglePagePicker = () => {
+    delete this.pagePickerText;
     this.setState(({ showPagePicker }) => ({
       showPagePicker: !showPagePicker
     }));
+  };
 
   render() {
     let { active, showPagePicker } = this.state;
     let { appColor, isDark } = this.props;
     return (
       <View style={styles.container}>
-        {this.pages.map(p => (
+        {this.pages.map((p, i) => (
           <TouchableOpacity
+            key={i}
             onPress={() => this.changePage(p)}
             onLongPress={this.togglePagePicker}
             disabled={p === '...'}
             style={{ padding: 7 }}
           >
             <Text
-              key={p}
               style={{
-                color: active === p ? appColor : isDark ? '#445F74' : 'black'
+                color: active === p ? appColor : isDark ? '#445F74' : 'black',
+                fontWeight: active === p ? '700' : '400'
               }}
             >
               {p}
@@ -97,7 +100,6 @@ export default class Pagination extends React.Component {
                   if (this.pagePickerText)
                     this.changePage(parseInt(this.pagePickerText));
                   this.togglePagePicker();
-                  delete this.pagePickerText;
                 }}
                 style={{ backgroundColor: appColor, padding: 20 }}
               >
