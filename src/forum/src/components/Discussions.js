@@ -5,24 +5,25 @@ import {
   RefreshControl,
   StyleSheet,
   Text,
-  TouchableOpacity
+  View
 } from 'react-native';
 
 import DiscussionCard from '../commons/DiscussionCard';
 import ThreadCard from '../commons/ThreadCard';
 import SearchInput from '../commons/SearchInput';
+import Pagination from '../commons/Pagination';
 import {
   connection,
   getDiscussions,
   getFollowedThreads
 } from '../services/forum.service';
-import { addThread } from '../assets/svgs';
 
 let styles;
 export default class Discussions extends React.Component {
   page = 1;
   discussions = [];
   followedThreads = [];
+  followedThreadsTotal = 0;
 
   state = {
     loadingMore: false,
@@ -41,6 +42,8 @@ export default class Discussions extends React.Component {
       ([discussions, followed]) => {
         this.discussions = discussions.results;
         this.followedThreads = followed.results;
+
+        this.followedThreadsTotal = followed.total_results;
         this.setState({ loading: false });
       }
     );
@@ -73,22 +76,12 @@ export default class Discussions extends React.Component {
         this.navigate('Threads', {
           mobile_app_url: item.mobile_app_url,
           id: item.id,
-          title: item.title
+          title: item.title,
+          discussionId: item.category_id
         })
       }
     />
   );
-
-  loadMore = () => {
-    if (!connection()) return;
-
-    this.setState({ loadingMore: true }, () =>
-      getFollowedThreads(++this.page).then(r => {
-        this.followedThreads.push(...r.results);
-        this.setState({ loadingMore: false });
-      })
-    );
-  };
 
   refresh = () => {
     if (!connection()) return;
@@ -104,13 +97,27 @@ export default class Discussions extends React.Component {
     });
   };
 
+  changePage = page => {
+    if (!connection()) return;
+    console.log(page);
+    this.page = page;
+    this.setState({ loadingMore: true }, () =>
+      getFollowedThreads(page).then(r => {
+        this.followedThreads = r.results;
+        this.setState({ loadingMore: false }, () =>
+          this.flatListRef.scrollToOffset({ offset: 0 })
+        );
+      })
+    );
+  };
+
   search = text => {
     if (!connection()) return;
   };
 
   render() {
     let { loadingMore, loading, refreshing } = this.state;
-    let { appColor, BottomNavigator } = this.props.route.params;
+    let { appColor, BottomNavigator, isDark } = this.props.route.params;
     return (
       <>
         {loading ? (
@@ -127,12 +134,11 @@ export default class Discussions extends React.Component {
             style={styles.fList}
             initialNumToRender={1}
             maxToRenderPerBatch={10}
-            onEndReachedThreshold={0.01}
             removeClippedSubviews={true}
             keyboardShouldPersistTaps='handled'
             renderItem={this.renderFLItem}
             keyExtractor={item => item.id.toString()}
-            onEndReached={this.loadMore}
+            ref={r => (this.flatListRef = r)}
             refreshControl={
               <RefreshControl
                 colors={[appColor]}
@@ -145,12 +151,28 @@ export default class Discussions extends React.Component {
               <Text style={styles.emptyList}>You don't follow any threads</Text>
             }
             ListFooterComponent={
-              <ActivityIndicator
-                size='small'
-                color={appColor}
-                animating={loadingMore}
-                style={{ padding: 15 }}
-              />
+              <View
+                style={{
+                  borderTopWidth: 1,
+                  borderColor: '#445F74',
+                  marginHorizontal: 15,
+                  marginBottom: 10
+                }}
+              >
+                <Pagination
+                  active={this.page}
+                  isDark={isDark}
+                  appColor={appColor}
+                  length={this.followedThreadsTotal}
+                  onChangePage={this.changePage}
+                />
+                <ActivityIndicator
+                  size='small'
+                  color={appColor}
+                  animating={loadingMore}
+                  style={{ padding: 15 }}
+                />
+              </View>
             }
             ListHeaderComponent={
               <>
@@ -164,18 +186,7 @@ export default class Discussions extends React.Component {
             }
           />
         )}
-        <TouchableOpacity
-          style={styles.createDiscussionIcon}
-          onPress={() => {
-            // TODO: navigate to create discussion page
-          }}
-        >
-          {addThread({
-            width: 25,
-            height: 25,
-            fill: '#FFFFFF'
-          })}
-        </TouchableOpacity>
+
         <BottomNavigator />
       </>
     );
