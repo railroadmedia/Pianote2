@@ -4,7 +4,7 @@ import { search as searchSvg } from '../assets/svgs';
 
 import { search } from '../services/forum.service';
 
-export default class SearchInput extends React.Component {
+export default class Search extends React.Component {
   state = { showSearchResults: false };
 
   constructor(props) {
