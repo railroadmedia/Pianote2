@@ -75,7 +75,6 @@ export default class Discussions extends React.Component {
       isDark={this.props.route.params.isDark}
       onNavigate={() =>
         this.navigate('Threads', {
-          mobile_app_url: item.mobile_app_url,
           title: item.title,
           discussionId: item.id
         })

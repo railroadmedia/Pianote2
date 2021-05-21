@@ -212,7 +212,7 @@ export default class Threads extends React.Component {
             />
           }
         />
-        <View
+        <TouchableOpacity
           onLayout={({ nativeEvent: { layout } }) =>
             this.setState({ createDiscussionHeight: layout.height + 15 })
           }
@@ -225,7 +225,7 @@ export default class Threads extends React.Component {
           style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}
         >
           {addThread({ height: 25, width: 25, fill: 'white' })}
-        </View>
+        </TouchableOpacity>
       </View>
     );
   }
