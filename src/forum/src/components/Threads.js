@@ -18,8 +18,9 @@ import {
   connection
 } from '../services/forum.service';
 
-import { addThread, search } from '../assets/svgs';
+import { addThread } from '../assets/svgs';
 import Pagination from '../commons/Pagination';
+import SearchInput from '../commons/SearchInput';
 
 let styles;
 export default class Threads extends React.Component {
@@ -68,48 +69,30 @@ export default class Threads extends React.Component {
     let { tab } = this.state;
     let { isDark, appColor } = this.props.route.params;
     return (
-      <View style={styles.headerContainer}>
-        {['All Threads', 'Followed Threads'].map((t, i) => (
-          <TouchableOpacity
-            key={t}
-            onPress={() => this.setState({ tab: i })}
-            style={[
-              styles.headerTOpacity,
-              tab === i ? { borderColor: appColor } : {}
-            ]}
-          >
-            <Text
+      <>
+        <View style={styles.headerContainer}>
+          {['All Threads', 'Followed Threads'].map((t, i) => (
+            <TouchableOpacity
+              key={t}
+              onPress={() => this.setState({ tab: i })}
               style={[
-                styles.headerText,
-                tab === i ? { color: isDark ? 'white' : 'black' } : {}
+                styles.headerTOpacity,
+                tab === i ? { borderColor: appColor } : {}
               ]}
             >
-              {t}
-            </Text>
-          </TouchableOpacity>
-        ))}
-        <View
-          style={{
-            width: '100%',
-            marginVertical: 30,
-            alignItems: 'center',
-            backgroundColor: 'white',
-            flexDirection: 'row',
-            borderRadius: 99,
-            paddingLeft: 10
-          }}
-        >
-          {search({ height: 20, width: 20, fill: 'black' })}
-          <TextInput
-            autoCapitalize={'sentences'}
-            style={{ flex: 1, padding: 10 }}
-            placeholder='Search...'
-            placeholderTextColor={'grey'}
-            onChangeText={s => console.log(s)}
-            keyboardAppearance={isDark ? 'dark' : 'light'}
-          />
+              <Text
+                style={[
+                  styles.headerText,
+                  tab === i ? { color: isDark ? 'white' : 'black' } : {}
+                ]}
+              >
+                {t}
+              </Text>
+            </TouchableOpacity>
+          ))}
         </View>
-      </View>
+        <SearchInput isDark={isDark} onSearch={s => console.log(s)} />
+      </>
     );
   };
 
