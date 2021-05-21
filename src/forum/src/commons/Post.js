@@ -9,7 +9,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-import Moderate from './Moderate';
 import AccessLevelAvatar from './AccessLevelAvatar';
 
 import { like, likeOn, replies } from '../assets/svgs';
@@ -99,14 +98,6 @@ export default class Post extends React.PureComponent {
             <Text maxFontSizeMultiplier={1} style={styles.name}>
               {comment.user['display_name']}
             </Text>
-            <View style={{ marginRight: -10 }}>
-              <Moderate
-                id={comment.id}
-                appColor={appColor}
-                onEdit={this.props.onEdit}
-                onDelete={this.props.onDelete}
-              />
-            </View>
           </View>
           <Text maxFontSizeMultiplier={1} style={styles.comment}>
             {comment.comment}
