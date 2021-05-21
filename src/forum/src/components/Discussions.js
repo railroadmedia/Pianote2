@@ -10,7 +10,7 @@ import {
 
 import DiscussionCard from '../commons/DiscussionCard';
 import ThreadCard from '../commons/ThreadCard';
-import SearchInput from '../commons/SearchInput';
+import Search from '../commons/Search';
 import Pagination from '../commons/Pagination';
 import {
   connection,
@@ -75,7 +75,6 @@ export default class Discussions extends React.Component {
       isDark={this.props.route.params.isDark}
       onNavigate={() =>
         this.navigate('Threads', {
-          mobile_app_url: item.mobile_app_url,
           title: item.title,
           discussionId: item.id
         })
@@ -176,10 +175,7 @@ export default class Discussions extends React.Component {
             }
             ListHeaderComponent={
               <>
-                <SearchInput
-                  isDark={this.props.route.params.isDark}
-                  onSearch={text => this.search(text)}
-                />
+                <Search isDark={this.props.route.params.isDark} />
                 {this.discussions.map(item => this.renderDiscussion(item))}
                 <Text style={styles.sectionTitle}>FOLLOWED THREADS</Text>
               </>
