@@ -133,8 +133,11 @@ export default class Threads extends React.Component {
     let { discussionId } = this.props.route.params;
     let fORa = tab ? 'followed' : 'all';
     this.setState({ [`${fORa}Refreshing`]: true }, () =>
-      (tab ? getFollowedThreads : getAllThreads)(discussionId).then(r => {
-        this[fORa] = r;
+      (tab ? getFollowedThreads : getAllThreads)(
+        discussionId,
+        this[`${fORa}Page`]
+      ).then(r => {
+        this[fORa] = r.results;
         this.setState({ [`${fORa}Refreshing`]: false });
       })
     );
