@@ -55,13 +55,13 @@ export default class Pagination extends React.Component {
       <View style={styles.container}>
         {this.pages.map(p => (
           <TouchableOpacity
+            key={p}
             onPress={() => this.changePage(p)}
             onLongPress={this.togglePagePicker}
             disabled={p === '...'}
             style={{ padding: 7 }}
           >
             <Text
-              key={p}
               style={{
                 color: active === p ? appColor : isDark ? '#445F74' : 'black'
               }}
