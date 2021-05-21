@@ -195,12 +195,14 @@ export default class Threads extends React.Component {
                 length={this[`${tab ? 'followed' : 'all'}ResultsTotal`]}
                 onChangePage={this.changePage}
               />
-              <ActivityIndicator
-                size='small'
-                color={isDark ? 'white' : 'black'}
-                animating={tab ? followedLoadingMore : allLoadingMore}
-                style={{ padding: 15 }}
-              />
+              {(followedLoadingMore || allLoadingMore) && (
+                <ActivityIndicator
+                  size='small'
+                  color={isDark ? 'white' : 'black'}
+                  animating={true}
+                  style={{ padding: 15 }}
+                />
+              )}
             </View>
           }
           refreshControl={
