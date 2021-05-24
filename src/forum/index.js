@@ -100,7 +100,7 @@ export default ({
           name='CRUD'
           component={CRUD}
           initialParams={params}
-          options={{ title: 'Create Discussion' }}
+          options={{ title: 'Create Discussion', headerShown: false }}
         />
         <Stack.Screen
           name='Thread'

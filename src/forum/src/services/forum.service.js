@@ -32,11 +32,24 @@ export const followThread = function (id) {
 export const unfollowThread = function (id) {
   return this.tryCall(`${this.rootUrl}/forums/api/thread/unfollow/${id}`);
 };
+export const createThread = function (title, content, category_id) {
+  return this.tryCall(`${this.rootUrl}/forums/api/thread/store`, 'PUT', {
+    title,
+    first_post_content: content,
+    category_id
+  });
+};
 export const updateThread = function (id, body) {
   return this.tryCall(
     `${this.rootUrl}/forums/api/thread/update/${id}`,
     'PATCH',
     body
+  );
+};
+export const deleteThread = function (id) {
+  return this.tryCall(
+    `${this.rootUrl}/forums/api/thread/delete/${id}`,
+    'DELETE'
   );
 };
 export const getDiscussion = function (page = 1) {
@@ -68,4 +81,17 @@ export const reportMessage = function (id) {
 };
 export const addReply = function (reply) {
   return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { reply });
+};
+export const createPost = function (content, thread_id) {
+  return this.tryCall(`${this.rootUrl}/forums/api/post/store`, 'PUT', {
+    data: { content, thread_id }
+  });
+};
+export const editPost = function (id, content) {
+  return this.tryCall(`${this.rootUrl}/post/api/update/${id}`, 'PATCH', {
+    data: { content }
+  });
+};
+export const deletePost = function (id) {
+  return this.tryCall(`${this.rootUrl}/forums/api/post/delete/${id}`, 'DELETE');
 };

@@ -16,7 +16,8 @@ import ThreadCard from '../commons/ThreadCard';
 import {
   getFollowedThreads,
   getAllThreads,
-  connection
+  connection,
+  createThread
 } from '../services/forum.service';
 
 import { addThread } from '../assets/svgs';
@@ -144,6 +145,11 @@ export default class Threads extends React.Component {
     );
   };
 
+  createThread = async (title, content) => {
+    let { discussionId } = this.props.route.params;
+    createThread(title, content, discussionId);
+  };
+
   render() {
     let {
       followedLoadingMore,
@@ -226,7 +232,10 @@ export default class Threads extends React.Component {
             onPress={() =>
               this.props.navigation.navigate('CRUD', {
                 isDark,
-                appColor
+                appColor,
+                action: 'create',
+                type: 'thread',
+                onAction: this.createThread
               })
             }
             style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}
@@ -258,7 +267,10 @@ let setStyles = isDark =>
       fontWeight: '700',
       color: '#445F74'
     },
-    fList: { flex: 1, backgroundColor: isDark ? '#00101D' : 'white' },
+    fList: {
+      flex: 1,
+      backgroundColor: isDark ? '#00101D' : 'white'
+    },
     loading: {
       flex: 1,
       backgroundColor: isDark ? '#00101D' : 'white',
