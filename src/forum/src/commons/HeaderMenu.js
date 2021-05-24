@@ -20,18 +20,20 @@ import {
 
 import { moderate, lock, pin } from '../assets/svgs';
 
+let styles;
 export default class HeaderMenu extends React.Component {
   state = { showOptions: false };
 
   constructor(props) {
     super(props);
+    styles = setStyles(props.isDark);
     const { locked, pinned, is_followed } = props;
     if (props.id !== undefined)
       Object.assign(this.state, { locked, pinned, is_followed });
   }
 
   componentDidMount() {
-    this.props.setHeaderTitle?.(this.renderHeaderTitle);
+    this.props.setHeaderTitle?.(this.renderHeaderTitle());
     AsyncStorage.getItem('signShown').then(ss =>
       this.setState({ signShown: !ss })
     );
@@ -98,7 +100,7 @@ export default class HeaderMenu extends React.Component {
       ({ locked }) => ({ locked: !locked, showOptions: false }),
       () => {
         updateThread(this.props.id, { pinned: this.state.pinned });
-        this.props.setHeaderTitle(this.renderHeaderTitle);
+        this.props.setHeaderTitle(this.renderHeaderTitle());
       }
     );
 
@@ -108,7 +110,7 @@ export default class HeaderMenu extends React.Component {
       ({ pinned }) => ({ pinned: !pinned, showOptions: false }),
       () => {
         updateThread(this.props.id, { locked: this.state.locked });
-        this.props.setHeaderTitle(this.renderHeaderTitle);
+        this.props.setHeaderTitle(this.renderHeaderTitle());
       }
     );
 
@@ -156,34 +158,35 @@ export default class HeaderMenu extends React.Component {
     );
   }
 }
-let styles = StyleSheet.create({
-  headerTitleText: {
-    fontFamily: 'OpenSans',
-    fontSize: 20,
-    fontWeight: '900',
-    color: isDark ? 'white' : 'black'
-  },
-  optionsContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0,0,0,.5)'
-  },
-  options: {
-    backgroundColor: '#081825',
-    padding: 20,
-    borderTopEndRadius: 20,
-    borderTopStartRadius: 20
-  },
-  pill: {
-    width: '20%',
-    height: 2,
-    backgroundColor: 'white',
-    borderRadius: 1,
-    alignSelf: 'center'
-  },
-  optionText: {
-    paddingVertical: 10,
-    color: 'white',
-    fontFamily: 'OpenSans'
-  }
-});
+let setStyles = isDark =>
+  StyleSheet.create({
+    headerTitleText: {
+      fontFamily: 'OpenSans',
+      fontSize: 20,
+      fontWeight: '900',
+      color: isDark ? 'white' : 'black'
+    },
+    optionsContainer: {
+      flex: 1,
+      justifyContent: 'flex-end',
+      backgroundColor: 'rgba(0,0,0,.5)'
+    },
+    options: {
+      backgroundColor: '#081825',
+      padding: 20,
+      borderTopEndRadius: 20,
+      borderTopStartRadius: 20
+    },
+    pill: {
+      width: '20%',
+      height: 2,
+      backgroundColor: 'white',
+      borderRadius: 1,
+      alignSelf: 'center'
+    },
+    optionText: {
+      paddingVertical: 10,
+      color: 'white',
+      fontFamily: 'OpenSans'
+    }
+  });

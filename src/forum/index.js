@@ -75,6 +75,7 @@ export default ({
             title: 'Forums',
             headerRight: () => (
               <HeaderMenu
+                key={isDark}
                 isDark={isDark}
                 onForumRules={() => navigate('Thread', { forumRules: true })}
               />
@@ -89,6 +90,7 @@ export default ({
             title: params.title,
             headerRight: () => (
               <HeaderMenu
+                key={isDark}
                 isDark={isDark}
                 onForumRules={() => navigate('Thread', { forumRules: true })}
               />
@@ -109,6 +111,7 @@ export default ({
             headerRight: () => (
               <HeaderMenu
                 title={params.title}
+                key={isDark}
                 isDark={isDark}
                 locked={params.locked}
                 pinned={params.pinned}
