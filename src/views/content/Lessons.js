@@ -81,7 +81,7 @@ class Lessons extends React.Component {
       refreshing: !lessonsCache,
       refreshControl: true,
       showLive: false,
-      showUserInfo: true,
+      showUserInfo: false,
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width,
       ...this.initialValidData(lessonsCache, true)
