@@ -5,7 +5,7 @@ import FastImage from 'react-native-fast-image';
 
 const onTablet = global.onTablet;
 
-export default class ForumProfile extends React.Component {
+export default class UserInfo extends React.Component {
   componentDidMount = () => {
     console.log('get profile details');
   };
@@ -21,12 +21,12 @@ export default class ForumProfile extends React.Component {
         animationOutTiming={250}
         coverScreen={true}
         hasBackdrop={true}
-        onBackButtonPress={() => this.props.hideForumProfile()}
+        onBackButtonPress={() => this.props.hideUserInfo()}
       >
         <TouchableOpacity
           style={localStyles.modalContainer}
           activeOpacity={1}
-          onPress={() => this.props.hideForumProfile()}
+          onPress={() => this.props.hideUserInfo()}
         >
           <View style={localStyles.container}>
             <View
@@ -44,7 +44,7 @@ export default class ForumProfile extends React.Component {
                 }}
               >
                 <TouchableOpacity
-                  onPress={() => this.props.hideForumProfile()}
+                  onPress={() => this.props.hideUserInfo()}
                   style={{height: '100%', width: '100%', zIndex: 10}}
                 >
                   <Icon.Feather

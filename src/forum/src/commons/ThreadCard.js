@@ -6,29 +6,11 @@ import AccessLevelAvatar from './AccessLevelAvatar';
 import { pin, arrowRight, post } from '../assets/svgs';
 
 let styles;
-export default class ForumsCard extends React.Component {
+export default class ThreadCard extends React.Component {
   constructor(props) {
     super(props);
     let { isDark } = props;
     styles = setStyles(isDark);
-  }
-
-  get lastPostTime() {
-    let dif = new Date() - new Date(this.props.data?.latest_post?.created_at);
-    if (dif < 120 * 1000) return `1 Minute Ago`;
-    if (dif < 60 * 1000 * 60)
-      return `${(dif / 1000 / 60).toFixed()} Minutes Ago`;
-    if (dif < 60 * 1000 * 60 * 2) return `1 Hour Ago`;
-    if (dif < 60 * 1000 * 60 * 24)
-      return `${(dif / 1000 / 60 / 60).toFixed()} Hours Ago`;
-    if (dif < 60 * 1000 * 60 * 48) return `1 Day Ago`;
-    if (dif < 60 * 1000 * 60 * 24 * 30)
-      return `${(dif / 1000 / 60 / 60 / 24).toFixed()} Days Ago`;
-    if (dif < 60 * 1000 * 60 * 24 * 60) return `1 Month Ago`;
-    if (dif < 60 * 1000 * 60 * 24 * 30 * 12)
-      return `${(dif / 1000 / 60 / 60 / 24 / 30).toFixed()} Months Ago`;
-    if (dif < 60 * 1000 * 60 * 24 * 365 * 2) return `1 Year Ago`;
-    return `${(dif / 1000 / 60 / 60 / 24 / 365).toFixed()} Years Ago`;
   }
 
   render() {
@@ -40,11 +22,10 @@ export default class ForumsCard extends React.Component {
         author_access_level,
         title,
         pinned,
-        latest_post,
         post_count,
-        category,
-        image,
-        icon
+        published_on_formatted,
+        author_display_name,
+        latest_post
       }
     } = this.props;
     return (
@@ -53,34 +34,30 @@ export default class ForumsCard extends React.Component {
         onPress={this.props.onNavigate}
       >
         <AccessLevelAvatar
-          uri={image || author_avatar_url}
+          uri={author_avatar_url}
           height={60}
           appColor={appColor}
           tagHeight={8}
           accessLevelName={author_access_level}
         />
-
         <View style={{ paddingHorizontal: 10, flex: 1 }}>
           <Text style={styles.title}>
-            {!!pinned && pin({ width: 10, fill: isDark ? 'white' : 'black' })}
-            {!!pinned && ' '}
+            {!!pinned && (
+              <>{pin({ width: 10, fill: isDark ? 'white' : 'black' })} </>
+            )}
             {title}
           </Text>
           <Text style={styles.lastPost}>
-            Last Post{' '}
-            <Text style={{ fontWeight: '900' }}>{this.lastPostTime}</Text> By{' '}
-            <Text style={{ fontWeight: '900' }}>
-              {latest_post?.author_display_name}
-            </Text>
+            Started On{' '}
+            <Text style={{ fontWeight: '700' }}>{published_on_formatted}</Text>{' '}
+            By <Text style={{ fontWeight: '700' }}>{author_display_name}</Text>
           </Text>
           <Text style={styles.topicName}>
-            {category
-              ? `${category} - ${post_count} Replies`
-              : post({ height: 10, fill: '#445F74' })}
-            {!category && ` ${post_count} Posts`}
+            {`${post_count} Replies`} · {latest_post.created_at_diff} · By{' '}
+            {latest_post.author_display_name}
           </Text>
         </View>
-        {arrowRight({ height: 10, fill: isDark ? 'white' : 'black' })}
+        {arrowRight({ height: 15, fill: isDark ? 'white' : 'black' })}
       </TouchableOpacity>
     );
   }
@@ -92,8 +69,7 @@ let setStyles = isDark =>
       backgroundColor: isDark ? '#081825' : 'white',
       alignItems: 'center',
       padding: 10,
-      margin: 15,
-      marginBottom: 0,
+      marginBottom: 15,
       borderRadius: 5,
       elevation: 5,
       shadowColor: 'black',
@@ -105,14 +81,13 @@ let setStyles = isDark =>
       fontFamily: 'OpenSans',
       color: isDark ? 'white' : 'black',
       fontSize: 20,
-      fontWeight: '900'
+      fontWeight: '700'
     },
     lastPost: {
       fontFamily: 'OpenSans',
       fontWeight: '100',
       color: '#445F74',
       fontSize: 14,
-      fontStyle: 'italic',
       paddingVertical: 5
     },
     topicName: {

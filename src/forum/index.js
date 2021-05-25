@@ -7,16 +7,16 @@ import {
 } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import CreateDiscussion from './src/components/CreateDiscussion';
-import Forums from './src/components/Forums';
-import Discussion from './src/components/Discussion';
-import Topic from './src/components/Topic';
-import Edit from './src/components/Edit';
+import CRUD from './src/components/CRUD';
+import Threads from './src/components/Threads';
+import Thread from './src/components/Thread';
+import Discussions from './src/components/Discussions';
+
+import HeaderMenu from './src/commons/HeaderMenu';
 
 import { arrowLeft } from './src/assets/svgs';
 
 import { setForumService } from './src/services/forum.service';
-import Replies from './src/components/Replies';
 
 const Stack = createStackNavigator();
 
@@ -26,9 +26,10 @@ const timingAnim = {
 };
 
 export default ({
+  navigation: { navigate },
   route: {
     params,
-    params: { tryCall, rootUrl, NetworkContext }
+    params: { tryCall, rootUrl, NetworkContext, isDark }
   }
 }) => {
   const networkContext = useContext(NetworkContext);
@@ -36,18 +37,18 @@ export default ({
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1, backgroundColor: params.isDark ? '#00101d' : 'white' }}
+      style={{ flex: 1, backgroundColor: isDark ? '#00101d' : 'white' }}
     >
       <Stack.Navigator
         screenOptions={({ navigation }) => ({
           gestureEnabled: false,
           transitionSpec: { open: timingAnim, close: timingAnim },
           headerStyle: {
-            backgroundColor: params.isDark ? '#00101d' : 'white',
+            backgroundColor: isDark ? '#00101d' : 'white',
             elevation: 0,
             shadowColor: 'transparent'
           },
-          headerTintColor: params.isDark ? 'white' : 'black',
+          headerTintColor: isDark ? 'white' : 'black',
           headerBackTitleVisible: false,
           headerTitleStyle: {
             fontFamily: 'OpenSans',
@@ -61,46 +62,77 @@ export default ({
             >
               {arrowLeft({
                 height: 20,
-                fill: params.isDark ? 'white' : 'black'
+                fill: isDark ? 'white' : 'black'
               })}
             </TouchableOpacity>
           )
         })}
       >
         <Stack.Screen
-          name='Forums'
-          component={Forums}
-          options={{ title: 'Forums' }}
+          name='Discussions'
+          component={Discussions}
+          options={{
+            title: 'Forums',
+            headerRight: () => (
+              <HeaderMenu
+                key={isDark}
+                isDark={isDark}
+                onForumRules={() => navigate('Thread', { forumRules: true })}
+              />
+            )
+          }}
           initialParams={params}
         />
         <Stack.Screen
-          name='Topic'
-          component={Topic}
-          options={({ route: { params } }) => ({ title: params.title })}
+          name='Threads'
+          component={Threads}
+          options={({ route: { params } }) => ({
+            title: params.title,
+            headerRight: () => (
+              <HeaderMenu
+                key={isDark}
+                isDark={isDark}
+                onForumRules={() => navigate('Thread', { forumRules: true })}
+              />
+            )
+          })}
           initialParams={params}
         />
         <Stack.Screen
-          name='CreateDiscussion'
-          component={CreateDiscussion}
+          name='CRUD'
+          component={CRUD}
           initialParams={params}
-          options={{ title: 'Create Discussion' }}
+          options={{ title: 'Create Discussion', headerShown: false }}
         />
         <Stack.Screen
-          name='Edit'
-          component={Edit}
-          options={{ title: 'Edit Reply' }}
-          initialParams={params}
-        />
-        <Stack.Screen
-          name='Discussion'
-          component={Discussion}
-          options={({ route: { params } }) => ({ title: params.title })}
-          initialParams={params}
-        />
-        <Stack.Screen
-          name='Replies'
-          component={Replies}
-          options={{ title: 'Replies' }}
+          name='Thread'
+          component={Thread}
+          options={({ navigation, route: { params } }) => ({
+            headerRight: () => (
+              <HeaderMenu
+                title={params.title}
+                key={isDark}
+                isDark={isDark}
+                locked={params.locked}
+                pinned={params.pinned}
+                is_followed={params.is_followed}
+                id={params.id}
+                onEdit={() =>
+                  navigate('CRUD', {
+                    type: 'thread',
+                    action: 'edit',
+                    threadId: params.threadId,
+                    title: params.title,
+                    onDone: params.onDone
+                  })
+                }
+                onForumRules={() => navigate('Thread', { forumRules: true })}
+                setHeaderTitle={headerTitle =>
+                  navigation.setOptions({ headerTitle })
+                }
+              />
+            )
+          })}
           initialParams={params}
         />
       </Stack.Navigator>
