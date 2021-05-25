@@ -4,23 +4,20 @@ import Icon from '../../../assets/icons';
 import FastImage from 'react-native-fast-image';
 
 const onTablet = global.onTablet;
+let styles;
 
 export default class UserInfo extends React.Component {
   constructor(props) {
     super(props);
-    let { isDark, appColor, data } = props.route.params;
-    styles = setStyles(isDark, appColor);
+    styles = setStyles(this.props.isDark, this.props.appColor);
   }
 
-  componentDidMount = () => {
-    console.log('get profile details');
-  };
-
   render = () => {
+    let data = this.props.data;
     return (
       <Modal
         transparent={true}
-        visible={true}
+        visible={this.props.isVisible}
         style={styles.modalContainer}
         animation={'slideInUp'}
         animationInTiming={250}
@@ -29,245 +26,161 @@ export default class UserInfo extends React.Component {
         hasBackdrop={true}
         onBackButtonPress={() => this.props.hideUserInfo()}
       >
-        <TouchableOpacity
-          style={localStyles.modalContainer}
-          activeOpacity={1}
-          onPress={() => this.props.hideUserInfo()}
-        >
-          <View style={localStyles.container}>
-            <View
-              style={{
-                marginTop: 30,
-                height: '10%',
-                width: '100%'
-              }}
-            >
-              <View
-                style={{
-                  position: 'absolute',
-                  left: onTablet ? 20 : 15,
-                  zIndex: 10
-                }}
+        <View style={styles.modalContainer} activeOpacity={1}>
+          <TouchableOpacity
+            onPress={() => this.props.hideUserInfo()}
+            style={{ height: '15%' }}
+          />
+          <View style={styles.container}>
+            <View style={styles.curveTopEdges}>
+              <TouchableOpacity
+                onPress={() => this.props.hideUserInfo()}
+                style={styles.xContainer}
               >
-                <TouchableOpacity
-                  onPress={() => this.props.hideUserInfo()}
-                  style={{ height: '100%', width: '100%', zIndex: 10 }}
-                >
-                  <Icon.Feather
-                    size={onTablet ? 50 : 27.5}
-                    name={'x'}
-                    color={'white'}
-                  />
-                </TouchableOpacity>
-              </View>
-              <Text
-                style={{
-                  justifyContent: 'center',
-                  textAlign: 'center',
-                  fontSize: onTablet ? 24 : 20,
-                  fontFamily: 'OpenSans-Bold',
-                  color: 'white'
-                }}
-              >
-                Jim Jones
-              </Text>
+                <Icon.Feather
+                  size={onTablet ? 30 : 25}
+                  name={'x'}
+                  color={this.props.isDark ? 'white' : 'black'}
+                />
+              </TouchableOpacity>
+              <Text style={styles.headerText}>{data.user}</Text>
               <FastImage
-                style={localStyles.profilePicture}
+                style={styles.profilePicture}
                 source={{
                   uri:
                     'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
                 }}
                 resizeMode={FastImage.resizeMode.cover}
               />
-
-              <Text style={[styles.childHeaderText, localStyles.rankText]}>
-                MASTER LEVEL II
+              <Text style={[styles.headerText, styles.rankText]}>
+                {data.rank}
               </Text>
-              <Text style={[localStyles.usernameText, styles.childHeaderText]}>
-                kenton
+              <Text style={styles.levelText}>LEVEL {data.level}</Text>
+              <Text style={styles.memberSinceText}>
+                {this.props.appName} MEMBER SINCE {data.date}
               </Text>
-              <Text style={[localStyles.memberSinceText]}>kenton</Text>
-              <View
-                style={{
-                  marginTop: 20,
-                  padding: 10,
-                  flexDirection: 'row',
-                  borderBottomColor: '#445f73',
-                  borderBottomWidth: 0.25
-                }}
-              >
-                <Text
-                  style={{
-                    flex: 0.2,
-                    paddingHorizontal: 10,
-                    textAlign: 'center',
-                    color: '#fb1b2f',
-                    fontSize: 20,
-                    justifyContent: 'center',
-                    fontFamily: 'OpenSans-Bold',
-                    textAlign: 'left'
-                  }}
-                >
-                  12,234
-                </Text>
-                <Text
-                  style={{
-                    flex: 0.8,
-                    color: '#445f73',
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 16,
-                    alignSelf: 'center'
-                  }}
-                >
-                  Total XP
-                </Text>
+              <View style={styles.statsContainer}>
+                <Text style={styles.numberText}>{data.totalXP}</Text>
+                <Text style={styles.itemText}>Total XP</Text>
               </View>
-              <View
-                style={{
-                  padding: 10,
-                  flexDirection: 'row',
-                  borderBottomColor: '#445f73',
-                  borderBottomWidth: 0.25
-                }}
-              >
-                <Text
-                  style={{
-                    flex: 0.2,
-                    paddingHorizontal: 10,
-                    textAlign: 'center',
-                    color: '#fb1b2f',
-                    fontSize: 20,
-                    justifyContent: 'center',
-                    fontFamily: 'OpenSans-Bold',
-                    textAlign: 'left'
-                  }}
-                >
-                  912
-                </Text>
-                <Text
-                  style={{
-                    flex: 0.8,
-                    color: '#445f73',
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 16,
-                    alignSelf: 'center'
-                  }}
-                >
-                  Total posts
-                </Text>
+              <View style={styles.statsContainer}>
+                <Text style={styles.numberText}>{data.totalPosts}</Text>
+                <Text style={styles.itemText}>Total posts</Text>
               </View>
-              <View
-                style={{
-                  padding: 10,
-                  flexDirection: 'row',
-                  borderBottomColor: '#445f73',
-                  borderBottomWidth: 0.25
-                }}
-              >
-                <Text
-                  style={{
-                    flex: 0.2,
-                    paddingHorizontal: 10,
-                    textAlign: 'center',
-                    color: '#fb1b2f',
-                    fontSize: 20,
-                    justifyContent: 'center',
-                    fontFamily: 'OpenSans-Bold',
-                    textAlign: 'left'
-                  }}
-                >
-                  735
-                </Text>
-                <Text
-                  style={{
-                    flex: 0.8,
-                    color: '#445f73',
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 16,
-                    alignSelf: 'center'
-                  }}
-                >
-                  Days as a member
-                </Text>
+              <View style={styles.statsContainer}>
+                <Text style={styles.numberText}>{data.daysMember}</Text>
+                <Text style={styles.itemText}>Days as a member</Text>
               </View>
-              <View
-                style={{
-                  padding: 10,
-                  flexDirection: 'row',
-                  borderBottomColor: '#445f73',
-                  borderBottomWidth: 0.25
-                }}
-              >
-                <Text
-                  style={{
-                    flex: 0.2,
-                    paddingHorizontal: 10,
-                    textAlign: 'center',
-                    color: '#fb1b2f',
-                    fontSize: 20,
-                    justifyContent: 'center',
-                    fontFamily: 'OpenSans-Bold',
-                    textAlign: 'left'
-                  }}
-                >
-                  627
-                </Text>
-                <Text
-                  style={{
-                    flex: 0.8,
-                    color: '#445f73',
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 16,
-                    alignSelf: 'center'
-                  }}
-                >
-                  Total post likes
-                </Text>
+              <View style={styles.statsContainer}>
+                <Text style={styles.numberText}>{data.totalLikes}</Text>
+                <Text style={styles.itemText}>Total post likes</Text>
               </View>
             </View>
           </View>
-        </TouchableOpacity>
+        </View>
       </Modal>
     );
   };
 }
 
-const localStyles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,.5)',
-    justifyContent: 'flex-end'
-  },
-  profilePicture: {
-    height: 125,
-    aspectRatio: 1,
-    borderRadius: 65,
-    marginTop: 40,
-    marginBottom: 15,
-    alignSelf: 'center',
-    borderWidth: 2,
-    borderColor: 'red'
-  },
-  container: {
-    borderTopRightRadius: 25,
-    borderTopLeftRadius: 25,
-    backgroundColor: '#081826',
-    height: '80%',
-    elevation: 10
-  },
-  memberSinceText: {
-    fontFamily: 'OpenSans-Regular',
-    fontSize: onTablet ? 16 : 20,
-    textAlign: 'center',
-    color: '#445f73'
-  },
-  rankText: {
-    paddingHorizontal: 10,
-    textAlign: 'center',
-    color: '#fb1b2f',
-    fontSize: 20,
-    justifyContent: 'center',
-    fontFamily: 'OpenSans-Bold',
-    textAlign: 'left'
-  }
-});
+let setStyles = (isDark, appColor) =>
+  StyleSheet.create({
+    modalContainer: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,.5)',
+      justifyContent: 'flex-end'
+    },
+    container: {
+      borderTopRightRadius: onTablet ? 50 : 35,
+      borderTopLeftRadius: onTablet ? 50 : 35,
+      backgroundColor: isDark ? '#081826' : '#F7F9FC',
+      height: '85%',
+      elevation: 10
+    },
+    headerText: {
+      fontSize: onTablet ? 24 : 18,
+      color: isDark ? 'white' : 'black',
+      fontFamily: 'OpenSans-ExtraBold',
+      alignSelf: 'center',
+      textAlign: 'center'
+    },
+    levelText: {
+      fontSize: onTablet ? 16 : 14,
+      color: isDark ? 'white' : 'black',
+      fontFamily: 'OpenSans-Bold',
+      alignSelf: 'center',
+      textAlign: 'center',
+      marginBottom: 15
+    },
+    centerContent: {
+      justifyContent: 'center',
+      alignContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'stretch'
+    },
+    profilePicture: {
+      height: onTablet ? 150 : 120,
+      aspectRatio: 1,
+      borderRadius: 200,
+      marginTop: onTablet ? 40 : 30,
+      marginBottom: 5,
+      alignSelf: 'center',
+      borderWidth: 2,
+      borderColor: appColor
+    },
+    memberSinceText: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: onTablet ? 16 : 14,
+      textAlign: 'center',
+      color: isDark ? '#445f73' : 'black',
+      paddingBottom: 20
+    },
+    rankText: {
+      paddingHorizontal: 10,
+      textAlign: 'center',
+      color: appColor,
+      fontSize: onTablet ? 20 : 18,
+      justifyContent: 'center',
+      fontFamily: 'OpenSans-Bold',
+      textAlign: 'center'
+    },
+    itemText: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: onTablet ? 16 : 14,
+      textAlign: 'center',
+      color: isDark ? '#445f73' : 'black',
+      textAlign: 'left',
+      flex: 0.8
+    },
+    numberText: {
+      flex: 0.2,
+      paddingHorizontal: 10,
+      textAlign: 'center',
+      color: appColor,
+      fontSize: onTablet ? 20 : 18,
+      justifyContent: 'center',
+      fontFamily: 'OpenSans-Bold',
+      textAlign: 'center',
+      textAlign: 'center'
+    },
+    curveTopEdges: {
+      marginTop: 30,
+      height: '10%',
+      width: '100%'
+    },
+    statsContainer: {
+      padding: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderBottomColor: isDark ? '#445f73' : 'black',
+      borderBottomWidth: 0.25
+    },
+    xContainer: {
+      height: '100%',
+      width: '100%',
+      zIndex: 10,
+      position: 'absolute',
+      left: onTablet ? 20 : 15,
+      zIndex: 10
+    }
+  });

@@ -81,6 +81,7 @@ class Lessons extends React.Component {
       refreshing: !lessonsCache,
       refreshControl: true,
       showLive: false,
+      showUserInfo: true,
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width,
       ...this.initialValidData(lessonsCache, true)
@@ -954,13 +955,28 @@ class Lessons extends React.Component {
         <AddToCalendar
           isVisible={this.state.addToCalendarModal}
           hideAddToCalendar={() => this.setState({ addToCalendarModal: false })}
-          addEventToCalendar={() => {
-            this.addEventToCalendar();
-          }}
+          addEventToCalendar={() => this.addEventToCalendar()}
         />
         <UserInfo
-          isVisible={true}
-          hideUserInfo={() => this.setState({ addToCalendarModal: false })}
+          isVisible={this.state.showUserInfo}
+          hideUserInfo={() =>
+            this.setState({ showUserInfo: !this.state.showUserInfo })
+          }
+          isDark={true}
+          appName={'PIANOTE'}
+          appColor={colors.pianoteRed}
+          data={{
+            totalXP: 12232,
+            totalPosts: 923,
+            daysMember: 723,
+            totalLikes: 123,
+            user: 'kentonpalmer',
+            date: '2019',
+            rank: 'MASTER II',
+            level: '2.3',
+            url:
+              'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+          }}
         />
         <NavigationBar currentPage={'LESSONS'} isMethod={true} />
       </View>

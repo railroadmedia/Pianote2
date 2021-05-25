@@ -12,7 +12,6 @@ export const networkContext = function () {
 export const NetworkContext = function () {
   return this.NetworkContext;
 };
-
 export const getDiscussions = function () {
   return this.tryCall(`${this.rootUrl}/forums/api/discussions/index`);
 };
