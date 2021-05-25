@@ -16,8 +16,7 @@ import ThreadCard from '../commons/ThreadCard';
 import {
   getFollowedThreads,
   getAllThreads,
-  connection,
-  createThread
+  connection
 } from '../services/forum.service';
 
 import { addThread } from '../assets/svgs';
@@ -100,13 +99,15 @@ export default class Threads extends React.Component {
 
   renderFLItem = ({ item }) => (
     <ThreadCard
-      onNavigate={() =>
+      onNavigate={() => {
         this.navigate('Thread', {
           ...item,
+          threadId: item.id,
           isDark: this.props.route.params.isDark,
-          appColor: this.props.route.params.appColor
-        })
-      }
+          appColor: this.props.route.params.appColor,
+          onDone: this.refresh
+        });
+      }}
       appColor={this.props.route.params.appColor}
       isDark={this.props.route.params.isDark}
       data={item}
@@ -145,11 +146,6 @@ export default class Threads extends React.Component {
     );
   };
 
-  createThread = async (title, content) => {
-    let { discussionId } = this.props.route.params;
-    createThread(title, content, discussionId);
-  };
-
   render() {
     let {
       followedLoadingMore,
@@ -160,7 +156,7 @@ export default class Threads extends React.Component {
       allRefreshing,
       followedRefreshing
     } = this.state;
-    let { isDark, appColor } = this.props.route.params;
+    let { isDark, appColor, discussionId } = this.props.route.params;
     return loading ? (
       <ActivityIndicator
         size='large'
@@ -230,12 +226,13 @@ export default class Threads extends React.Component {
               this.setState({ createDiscussionHeight: layout.height + 15 })
             }
             onPress={() =>
-              this.props.navigation.navigate('CRUD', {
+              this.navigate('CRUD', {
                 isDark,
                 appColor,
                 action: 'create',
                 type: 'thread',
-                onAction: this.createThread
+                discussionId,
+                onDone: this.refresh
               })
             }
             style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}

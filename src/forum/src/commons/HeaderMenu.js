@@ -55,7 +55,7 @@ export default class HeaderMenu extends React.Component {
         text: pinned ? 'Unpin' : 'Pin',
         action: this.togglePin
       };
-      options.edit = { text: 'Edit', action: this.props.onEdit };
+      options.edit = { text: 'Edit', action: this.onEdit };
       options.toggleFollow = {
         text: `${is_followed ? 'Unfollow' : 'Follow'} Thread`,
         action: this.toggleFollow
@@ -122,6 +122,13 @@ export default class HeaderMenu extends React.Component {
         this.state.is_followed
           ? followThread(this.props.id)
           : unfollowThread(this.props.id)
+    );
+
+  onEdit = () =>
+    connection(true) &&
+    this.setState(
+      () => ({ showOptions: false }),
+      () => this.props.onEdit()
     );
 
   render() {

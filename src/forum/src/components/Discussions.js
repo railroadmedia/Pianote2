@@ -54,13 +54,15 @@ export default class Discussions extends React.Component {
 
   renderFLItem = ({ item }) => (
     <ThreadCard
-      onNavigate={() =>
+      onNavigate={() => {
         this.navigate('Thread', {
-          title: item.title,
+          ...item,
+          threadId: item.id,
           isDark: this.props.route.params.isDark,
-          appColor: this.props.route.params.appColor
-        })
-      }
+          appColor: this.props.route.params.appColor,
+          onDone: this.refresh
+        });
+      }}
       appColor={this.props.route.params.appColor}
       isDark={this.props.route.params.isDark}
       data={item}

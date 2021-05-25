@@ -82,14 +82,12 @@ export const reportMessage = function (id) {
 export const addReply = function (reply) {
   return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { reply });
 };
-export const createPost = function (content, thread_id) {
-  return this.tryCall(`${this.rootUrl}/forums/api/post/store`, 'PUT', {
-    data: { content, thread_id }
-  });
+export const createPost = function (body) {
+  return this.tryCall(`${this.rootUrl}/forums/api/post/store`, 'PUT', body);
 };
 export const editPost = function (id, content) {
   return this.tryCall(`${this.rootUrl}/post/api/update/${id}`, 'PATCH', {
-    data: { content }
+    content
   });
 };
 export const deletePost = function (id) {

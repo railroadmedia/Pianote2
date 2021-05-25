@@ -118,7 +118,13 @@ export default ({
                 is_followed={params.is_followed}
                 id={params.id}
                 onEdit={() =>
-                  navigate('CRUD', { type: 'edit', threadId: params.threadId })
+                  navigate('CRUD', {
+                    type: 'thread',
+                    action: 'edit',
+                    threadId: params.threadId,
+                    title: params.title,
+                    onDone: params.onDone
+                  })
                 }
                 onForumRules={() => navigate('Thread', { forumRules: true })}
                 setHeaderTitle={headerTitle =>
