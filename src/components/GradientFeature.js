@@ -1,8 +1,5 @@
-/*
- * GradientFeature
- */
 import React from 'react';
-import { View, Platform } from 'react-native';
+import { View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 const colorDict = {
@@ -15,11 +12,6 @@ const colorDict = {
 };
 
 export default class GradientFeature extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   render = () => {
     let {
       color,
@@ -39,8 +31,7 @@ export default class GradientFeature extends React.Component {
           width: '100%',
           position: 'absolute',
           zIndex: isNaN(zIndex) ? 2 : zIndex,
-          elevation:
-            Platform.OS === 'android' ? (isNaN(elevation) ? 2 : elevation) : 0
+          elevation: !isiOS ? (isNaN(elevation) ? 2 : elevation) : 0
         }}
       >
         <LinearGradient

@@ -1,43 +1,25 @@
-/**
- * LessonComplete
- */
 import React from 'react';
 import {
   View,
   Text,
-  TouchableWithoutFeedback,
   TouchableOpacity,
   StyleSheet,
-  Dimensions
+  Dimensions,
+  Modal
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
+import Icon from '../assets/icons';
+import ApprovedTeacher from '../assets/img/svgs/approved-teacher.svg';
 
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
 export default class LessonComplete extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   changeType = word => {
     word = word.replace(/[- )(]/g, ' ').split(' ');
     let string = '';
-
-    for (let i = 0; i < word.length; i++) {
-      if (word[i] !== 'and') {
-        word[i] = word[i][0].toUpperCase() + word[i].substr(1);
-      }
-    }
-
-    for (i in word) {
-      string = string + word[i] + ' ';
-    }
-
+    for (i in word) string = string + word[i] + ' ';
     return string;
   };
 
@@ -51,85 +33,104 @@ export default class LessonComplete extends React.Component {
       type
     } = this.props;
     return (
-      <TouchableWithoutFeedback
-        onPress={() => this.props.hideLessonComplete()}
-        style={styles.container}
+      <Modal
+        visible={this.props.isVisible}
+        transparent={true}
+        style={styles.modalContainer}
+        animation={'slideInUp'}
+        animationInTiming={250}
+        animationOutTiming={250}
+        coverScreen={true}
+        hasBackdrop={true}
       >
-        <View style={[styles.centerContent, styles.container]}>
-          <View style={localStyles.container}>
-            <View style={styles.centerContent}>
-              <IonIcon
+        <TouchableOpacity
+          onPress={() => this.props.hideLessonComplete()}
+          style={[styles.centerContent, localStyles.modalContainer]}
+        >
+          <View style={[styles.centerContent, styles.container]}>
+            <View style={localStyles.container}>
+              <Icon.Ionicons
                 name={'ios-trophy'}
                 size={onTablet ? 45 : 35}
-                color={'#fb1b2f'}
+                color={colors.pianoteRed}
               />
-            </View>
-            <Text style={[styles.modalHeaderText, localStyles.headerText]}>
-              {this.changeType(type)}
-              {'\n'}Complete
-            </Text>
-            <View style={[styles.centerContent, localStyles.imageContainer]}>
-              <FastImage
-                style={localStyles.image}
-                resizeMode={FastImage.resizeMode.cover}
-                source={{
-                  uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                    width * 0.55 * 2
-                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${completedLessonImg}`
-                }}
+              <Text
+                style={[
+                  styles.modalHeaderText,
+                  localStyles.headerText,
+                  { textTransform: 'capitalize' }
+                ]}
               >
-                <View
-                  style={[
-                    styles.centerContent,
-                    localStyles.approvedTeacherContainer
-                  ]}
+                {this.changeType(type)}
+                {'\n'}Complete
+              </Text>
+              <View style={[styles.centerContent, localStyles.imageContainer]}>
+                <FastImage
+                  style={localStyles.image}
+                  resizeMode={FastImage.resizeMode.cover}
+                  source={{
+                    uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
+                      width * 0.55 * 2
+                    )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${completedLessonImg}`
+                  }}
+                >
+                  <View
+                    style={[
+                      styles.centerContent,
+                      localStyles.approvedTeacherContainer
+                    ]}
+                  />
+                  <ApprovedTeacher
+                    height={onTablet ? 70 : 45}
+                    width={onTablet ? 70 : 45}
+                    fill={'white'}
+                  />
+                </FastImage>
+              </View>
+              <Text style={[styles.modalBodyText, localStyles.congratsText]}>
+                Congratulations! You completed
+              </Text>
+              <Text style={[styles.modalBodyText, localStyles.completeLesson]}>
+                {completedLessonTitle}
+              </Text>
+              <Text style={[styles.modalBodyText, localStyles.youEarnedText]}>
+                YOU EARNED {completedLessonXp} XP!
+              </Text>
+              <Text style={[styles.modalBodyText, localStyles.upNextText]}>
+                up next:
+              </Text>
+              <TouchableOpacity
+                style={[styles.centerContent, localStyles.image2Container]}
+                onPress={onGoToNext}
+              >
+                <FastImage
+                  style={localStyles.image2}
+                  resizeMode={FastImage.resizeMode.cover}
+                  source={{
+                    uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
+                      width * 0.55 * 2
+                    )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
+                      nextLesson?.thumbnail_url
+                    }`
+                  }}
                 />
-                <ApprovedTeacher
-                  height={onTablet ? 70 : 45}
-                  width={onTablet ? 70 : 45}
-                  fill={'white'}
-                />
-              </FastImage>
+              </TouchableOpacity>
+              <Text style={[styles.modalHeaderText, localStyles.videoTitle]}>
+                {nextLesson?.title}
+              </Text>
             </View>
-            <Text style={[styles.modalBodyText, localStyles.congratsText]}>
-              Congratulations! You completed
-            </Text>
-            <Text style={[styles.modalBodyText, localStyles.completeLesson]}>
-              {completedLessonTitle}
-            </Text>
-            <Text style={[styles.modalBodyText, localStyles.youEarnedText]}>
-              YOU EARNED {completedLessonXp} XP!
-            </Text>
-            <Text style={[styles.modalBodyText, localStyles.upNextText]}>
-              up next:
-            </Text>
-            <TouchableOpacity
-              style={[styles.centerContent, localStyles.image2Container]}
-              onPress={onGoToNext}
-            >
-              <FastImage
-                style={localStyles.image2}
-                resizeMode={FastImage.resizeMode.cover}
-                source={{
-                  uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                    width * 0.55 * 2
-                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${nextLesson?.getData(
-                    'thumbnail_url'
-                  )}`
-                }}
-              />
-            </TouchableOpacity>
-            <Text style={[styles.modalHeaderText, localStyles.videoTitle]}>
-              {nextLesson?.getField('title')}
-            </Text>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableOpacity>
+      </Modal>
     );
   };
 }
 
 const localStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
   container: {
     borderRadius: 10,
     margin: 20,
@@ -165,7 +166,7 @@ const localStyles = StyleSheet.create({
     backgroundColor: 'red'
   },
   youEarnedText: {
-    fontWeight: 'bold',
+    fontFamily: 'OpenSans-Bold',
     marginTop: 10,
     color: '#fb1b2f'
   },
@@ -174,7 +175,7 @@ const localStyles = StyleSheet.create({
     marginTop: 10
   },
   completeLesson: {
-    fontWeight: 'bold',
+    fontFamily: 'OpenSans-Bold',
     marginHorizontal: 20
   },
   upNextText: {

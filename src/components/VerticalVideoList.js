@@ -1,27 +1,21 @@
-/**
- * VerticalVideoList
- */
 import React from 'react';
 import {
   View,
   Text,
   ActivityIndicator,
   TouchableOpacity,
-  Platform,
-  Image
+  Image,
+  StyleSheet
 } from 'react-native';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
-import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import FontIcon from 'react-native-vector-icons/FontAwesome5';
-
+import Icon from '../assets/icons';
 import { addToMyList, removeFromMyList } from '../services/UserActions';
-import Relevance from '../modals/Relevance';
+import Sort from '../modals/Sort';
 import ContentModal from '../modals/ContentModal';
 import GradientFeature from '../components/GradientFeature';
-import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
-import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
+import ApprovedTeacher from '../assets/img/svgs/approved-teacher.svg';
+import Progress from '../assets/img/svgs/progress.svg';
 import { NetworkContext } from '../context/NetworkProvider';
 import AddToCalendar from '../modals/AddToCalendar';
 import Filters_V2 from './Filters_V2';
@@ -34,8 +28,7 @@ const sortDict = {
   trending: 'TRENDING',
   relevance: 'RELEVANCE'
 };
-
-let greaterWDim;
+const onTablet = global.onTablet;
 
 export default class VerticalVideoList extends React.Component {
   static contextType = NetworkContext;
@@ -43,11 +36,9 @@ export default class VerticalVideoList extends React.Component {
     super(props);
     this.state = {
       showModal: false,
-      outVideos: this.props.outVideos,
       isLoading: this.props.isLoading,
-      showRelevance: false,
+      showSort: false,
       items: this.props.items,
-
       isPaging: false,
       addToCalendarModal: false
     };
@@ -55,12 +46,7 @@ export default class VerticalVideoList extends React.Component {
 
   componentWillReceiveProps = props => {
     if (props.isPaging !== this.state.isPaging) {
-      if (!this.state.isLoading) {
-        this.setState({ isPaging: props.isPaging });
-      }
-    }
-    if (props.outVideos !== this.state.outVideos) {
-      this.setState({ outVideos: props.outVideos });
+      if (!this.state.isLoading) this.setState({ isPaging: props.isPaging });
     }
     if (props.isLoading !== this.state.isLoading) {
       this.setState({
@@ -68,88 +54,68 @@ export default class VerticalVideoList extends React.Component {
         items: [...this.state.items, ...props.items]
       });
     } else if (props.items !== this.state.items) {
-      this.setState({
-        items: props.items
-      });
+      this.setState({ items: props.items });
     }
   };
 
   showSpinner = () => {
     return (
-      <View style={[styles.centerContent, { minHeight: 40 }]}>
-        <View style={{ flex: 1 }} />
-        <ActivityIndicator
-          size={onTablet ? 'large' : 'small'}
-          animating={true}
-          color={
-            this.props.isMethod ? colors.pianoteGrey : colors.secondBackground
-          }
-        />
-        <View style={{ flex: 1 }} />
-      </View>
+      <ActivityIndicator
+        size={onTablet ? 'large' : 'small'}
+        animating={true}
+        style={[styles.centerContent, { minHeight: 40 }]}
+        color={
+          this.props.isMethod ? colors.pianoteGrey : colors.secondBackground
+        }
+      />
     );
   };
 
   addToMyList = contentID => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     for (i in this.state.items) {
-      if (this.state.items[i].id == contentID) {
-        this.state.items[i].isAddedToList = true;
+      if (this.state.items[i].id === contentID) {
+        let items = Object.assign([], this.state.items);
+        items[i].is_added_to_primary_playlist = true;
+        this.setState({ items });
       }
     }
     addToMyList(contentID);
-    this.setState({ items: this.state.items });
   };
 
   removeFromMyList = contentID => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     for (i in this.state.items) {
-      if (this.state.items[i].id == contentID) {
-        this.state.items[i].isAddedToList = false;
+      if (this.state.items[i].id === contentID) {
+        let items = Object.assign([], this.state.items);
+        items[i].is_added_to_primary_playlist = false;
+        this.setState({ items });
       }
     }
     removeFromMyList(contentID);
     // if on my list page and user removes then delete item from listview
-    if (this.props.type == 'MYLIST') {
-      this.props.removeItem(contentID);
-    }
-    this.setState({ items: this.state.items });
+    if (this.props.type === 'MYLIST') this.props.removeItem(contentID);
   };
 
   changeType = word => {
     word = word.replace(/[- )(]/g, ' ').split(' ');
     let string = '';
-
-    for (let i = 0; i < word.length; i++) {
-      if (word[i] !== 'and') {
-        word[i] = word[i][0].toUpperCase() + word[i].substr(1);
-      }
-    }
-
-    for (i in word) {
-      string = string + word[i] + ' ';
-    }
-
+    for (i in word) string = string + word[i] + ' ';
     return string;
   };
 
   like = contentID => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     for (i in this.state.items) {
-      if (this.state.items[i].id == contentID) {
-        this.state.items[i].isLiked = !this.state.items[i].isLiked;
-        this.state.items[i].like_count = this.state.items[i].isLiked
-          ? this.state.items[i].like_count + 1
-          : this.state.items[i].like_count - 1;
+      if (this.state.items[i].id === contentID) {
+        let items = Object.assign([], this.state.items);
+        items[i].isLiked = !items[i].isLiked;
+        items[i].like_count = items[i].isLiked
+          ? items[i].like_count + 1
+          : items[i].like_count - 1;
+        this.setState({ items });
       }
     }
-    this.setState({ items: this.state.items });
   };
 
   addEventToCalendar = () => {
@@ -189,8 +155,8 @@ export default class VerticalVideoList extends React.Component {
         });
       case 'song':
         if (content.lesson_count === 1)
-          return navigate('VIDEOPLAYER', {
-            id: content.currentLessonId
+          return navigate('VIEWLESSON', {
+            id: content.lessons?.[0]?.id
           });
         return navigate('PATHOVERVIEW', {
           data: content,
@@ -216,7 +182,7 @@ export default class VerticalVideoList extends React.Component {
           isFoundations: true
         });
       case 'learning-path-lesson':
-        return navigate('VIDEOPLAYER', {
+        return navigate('VIEWLESSON', {
           url: content.mobile_app_url
         });
       case 'pack':
@@ -228,23 +194,21 @@ export default class VerticalVideoList extends React.Component {
           url: content.mobile_app_url
         });
       case 'pack-bundle-lesson':
-        return navigate('VIDEOPLAYER', {
+        return navigate('VIEWLESSON', {
           url: content.mobile_app_url
         });
       default:
-        return navigate('VIDEOPLAYER', {
+        return navigate('VIEWLESSON', {
           id: content.id
         });
     }
   };
 
   getImageUrl(thumbnail, publishDate) {
-    if (thumbnail.includes('var/mobile') || thumbnail.includes('data/user'))
+    if (thumbnail?.includes('var/mobile') || thumbnail?.includes('data/user'))
       return thumbnail;
-    if (thumbnail.includes('http')) {
-      return `https://cdn.musora.com/image/fetch/w_${Math.round(
-        this.props.imageWidth * 2
-      )},ar_${
+    if (thumbnail?.includes('http')) {
+      return `https://cdn.musora.com/image/fetch/w_250,ar_${
         this.props.isSquare ? '1' : '16:9'
       },fl_lossy,q_auto:eco,c_fill,g_face/${thumbnail}`;
     }
@@ -255,34 +219,20 @@ export default class VerticalVideoList extends React.Component {
   }
 
   renderMappedList = () => {
-    if (this.state.items.length == 0 && this.state.outVideos) {
-      return;
-    } else if (this.state.isLoading) {
-      return this.showSpinner();
-    }
-
-    return this.state.items.map((row, index) => {
+    if (this.state.items?.length === 0) return;
+    if (this.state.isLoading) return this.showSpinner();
+    return this.state.items?.map((row, index) => {
       return (
         <TouchableOpacity
           key={index}
           onLongPress={() => {
-            row.type == 'learning-path-level' || row.type == 'unit'
+            row.type === 'learning-path-level' || row.type === 'unit'
               ? null
-              : this.setState({
-                  showModal: true,
-                  item: row
-                });
+              : this.setState({ showModal: true, item: row });
           }}
           onPress={() => this.navigate(row, index)}
         >
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              marginLeft: 10,
-              paddingVertical: onTablet ? 10 : 5
-            }}
-          >
+          <View style={localStyles.videoContainer}>
             <View
               style={{
                 width: this.props.imageWidth,
@@ -290,19 +240,15 @@ export default class VerticalVideoList extends React.Component {
                 borderRadius: 5
               }}
             >
-              {row.isCompleted && (
+              {row.completed && (
                 <View
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    aspectRatio: this.props.isSquare ? 1 : 16 / 9,
-                    borderRadius: 5,
-                    zIndex: 1,
-                    opacity: 0.2,
-                    backgroundColor: colors.pianoteRed
-                  }}
+                  style={[
+                    localStyles.rowComplete,
+                    {
+                      aspectRatio: this.props.isSquare ? 1 : 16 / 9,
+                      backgroundColor: colors.pianoteRed
+                    }
+                  ]}
                 />
               )}
               <View
@@ -317,13 +263,13 @@ export default class VerticalVideoList extends React.Component {
                   }
                 ]}
               >
-                {row.isStarted ? (
+                {row.started ? (
                   <Progress
                     height={onTablet ? 60 : 35}
                     width={onTablet ? 60 : 35}
                     fill={'white'}
                   />
-                ) : row.isCompleted ? (
+                ) : row.completed ? (
                   <ApprovedTeacher
                     height={onTablet ? 70 : 45}
                     width={onTablet ? 70 : 45}
@@ -380,17 +326,7 @@ export default class VerticalVideoList extends React.Component {
                 </>
               )}
               {this.props.isMethodLevel && (
-                <View
-                  style={{
-                    height: '100%',
-                    width: '100%',
-                    position: 'absolute',
-                    left: 0,
-                    top: 0,
-                    zIndex: 15,
-                    elevation: 15
-                  }}
-                >
+                <View style={localStyles.gradientContainer}>
                   <GradientFeature
                     color={'red'}
                     opacity={1}
@@ -399,41 +335,32 @@ export default class VerticalVideoList extends React.Component {
                   />
                   <View style={{ flex: 2.5 }} />
                   <Text
-                    style={{
-                      zIndex: 20,
-                      elevation: 20,
-                      textAlign: 'center',
-                      marginBottom: 5,
-                      color: 'white',
-                      fontFamily: 'RobotoCondensed-Bold',
-                      fontSize: sizing.titleVideoPlayer
-                    }}
+                    style={[
+                      localStyles.levelText,
+                      {
+                        fontSize: sizing.titleViewLesson
+                      }
+                    ]}
                   >
                     LEVEL {index + 1}
                   </Text>
                 </View>
               )}
-              {Platform.OS === 'ios' ? (
+              {isiOS ? (
                 <FastImage
-                  style={{
-                    flex: 1,
-                    borderRadius: 5
-                  }}
+                  style={{ flex: 1, borderRadius: 5 }}
                   source={{
-                    uri: this.getImageUrl(row.thumbnail, row.publishedOn)
+                    uri: this.getImageUrl(row.thumbnail_url, row.published_on)
                   }}
                   resizeMode={FastImage.resizeMode.cover}
                 />
               ) : (
                 <Image
-                  style={{
-                    flex: 1,
-                    borderRadius: 5
-                  }}
+                  style={{ flex: 1, borderRadius: 5 }}
                   source={{
-                    uri: this.getImageUrl(row.thumbnail, row.publishedOn)
+                    uri: this.getImageUrl(row.thumbnail_url, row.published_on)
                   }}
-                  resizeMode='cover'
+                  resizeMode={'cover'}
                 />
               )}
             </View>
@@ -449,8 +376,7 @@ export default class VerticalVideoList extends React.Component {
                   style={{
                     fontSize: sizing.descriptionText,
                     textAlign: 'left',
-                    fontWeight: 'bold',
-                    fontFamily: 'OpenSans-Regular',
+                    fontFamily: 'OpenSans-Bold',
                     color: colors.pianoteRed
                   }}
                 >
@@ -462,8 +388,7 @@ export default class VerticalVideoList extends React.Component {
                 style={{
                   fontSize: sizing.descriptionText,
                   textAlign: 'left',
-                  fontWeight: 'bold',
-                  fontFamily: 'OpenSans-Regular',
+                  fontFamily: 'OpenSans-Bold',
                   color: 'white'
                 }}
               >
@@ -500,8 +425,10 @@ export default class VerticalVideoList extends React.Component {
                       fontFamily: 'OpenSans-Regular'
                     }}
                   >
-                    {Math.floor(row.duration / 60)}{' '}
-                    {Math.floor(row.duration / 60) == 1 ? 'min' : 'mins'}
+                    {Math.floor(row.length_in_seconds / 60)}{' '}
+                    {Math.floor(row.length_in_seconds / 60) === 1
+                      ? 'min'
+                      : 'mins'}
                   </Text>
                 )}
                 {this.props.showLines && (
@@ -529,7 +456,8 @@ export default class VerticalVideoList extends React.Component {
                         ? colors.pianoteGrey
                         : colors.secondBackground,
                       textAlign: 'left',
-                      fontFamily: 'OpenSans-Regular'
+                      fontFamily: 'OpenSans-Regular',
+                      textTransform: 'capitalize'
                     }}
                   >
                     {this.changeType(row.type)}/{' '}
@@ -547,7 +475,7 @@ export default class VerticalVideoList extends React.Component {
                       fontFamily: 'OpenSans-Regular'
                     }}
                   >
-                    {row.artist}
+                    {row.artist || row.instructors?.join(', ')}
                   </Text>
                 )}
               </View>
@@ -555,39 +483,39 @@ export default class VerticalVideoList extends React.Component {
             {!this.props.isMethodLevel && (
               <View style={{ width: 45 }}>
                 <View style={[styles.centerContent, { flex: 1 }]}>
-                  {new Date(row.publishedOn) > new Date() ? (
+                  {new Date(row.published_on) > new Date() ? (
                     <TouchableOpacity
                       onPress={() => {
                         this.addToCalendarLessonTitle = row.title;
-                        this.addToCalendatLessonPublishDate = row.publishedOn;
+                        this.addToCalendatLessonPublishDate = row.published_on;
                         this.setState({ addToCalendarModal: true });
                       }}
                     >
-                      <FontIcon
+                      <Icon.FontAwesome5
                         size={sizing.myListButtonSize}
                         name={'calendar-plus'}
                         color={colors.pianoteRed}
                       />
                     </TouchableOpacity>
-                  ) : !row.isAddedToList ? (
+                  ) : !row.is_added_to_primary_playlist ? (
                     <TouchableOpacity onPress={() => this.addToMyList(row.id)}>
-                      <AntIcon
+                      <Icon.AntDesign
                         name={'plus'}
                         size={sizing.myListButtonSize}
                         color={colors.pianoteRed}
                       />
                     </TouchableOpacity>
-                  ) : row.isAddedToList ? (
+                  ) : (
                     <TouchableOpacity
                       onPress={() => this.removeFromMyList(row.id)}
                     >
-                      <AntIcon
+                      <Icon.AntDesign
                         name={'close'}
                         size={sizing.myListButtonSize}
                         color={colors.pianoteRed}
                       />
                     </TouchableOpacity>
-                  ) : null}
+                  )}
                 </View>
               </View>
             )}
@@ -602,81 +530,48 @@ export default class VerticalVideoList extends React.Component {
       <View>
         <>
           {this.props.showFilter && (
-            <View
-              style={{
-                flexDirection: 'row',
-                marginLeft: 10,
-                marginTop: 5,
-                marginBottom: 2.5
-              }}
-            >
-              <View style={{ flex: 1, flexDirection: 'row' }}>
-                <View style={{ flex: 1, justifyContent: 'center' }}>
-                  {this.props.showLargeTitle ? (
-                    <Text
-                      numberOfLines={1}
-                      style={{
-                        fontSize: onTablet ? 28 : 20,
-                        color: 'white',
-                        fontFamily: 'OpenSans-ExtraBold'
-                      }}
-                    >
-                      {this.props.title}
-                    </Text>
-                  ) : (
-                    <Text
-                      numberOfLines={1}
-                      style={{
-                        fontSize: sizing.verticalListTitleSmall,
-                        textAlign: 'left',
-                        fontFamily: 'RobotoCondensed-Bold',
-                        color: this.props.isMethod
-                          ? 'white'
-                          : colors.secondBackground
-                      }}
-                    >
-                      {this.props.title}
-                    </Text>
-                  )}
-                </View>
-                <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      width: 45,
-                      flexDirection: 'row'
-                    }
-                  ]}
-                >
+            <View style={localStyles.filterContainer}>
+              <View style={localStyles.titleContainer}>
+                {this.props.showLargeTitle ? (
+                  <Text numberOfLines={1} style={localStyles.largeTitle}>
+                    {this.props.title}
+                  </Text>
+                ) : (
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontSize: sizing.verticalListTitleSmall,
+                      textAlign: 'left',
+                      fontFamily: 'RobotoCondensed-Bold',
+                      color: this.props.isMethod
+                        ? 'white'
+                        : colors.secondBackground
+                    }}
+                  >
+                    {this.props.title}
+                  </Text>
+                )}
+
+                <View style={[styles.centerContent, localStyles.SortButton]}>
                   {this.props.showSort && (
                     <TouchableOpacity
-                      style={[
-                        styles.centerContent,
-                        {
-                          flexDirection: 'row',
-                          position: 'absolute',
-                          right: 45,
-                          height: '100%'
-                        }
-                      ]}
-                      onPress={() => {
-                        this.setState({
-                          showRelevance: !this.state.showRelevance
-                        });
-                      }}
+                      style={[styles.centerContent, localStyles.sortContainer]}
+                      onPress={() =>
+                        this.setState({ showSort: !this.state.showSort })
+                      }
                     >
                       <Text
-                        style={{
-                          color: colors.pianoteRed,
-                          fontSize: sizing.videoTitleText,
-                          fontFamily: 'OpenSans-Regular',
-                          paddingRight: 5,
-                          justifyContent: 'flex-end'
-                        }}
+                        style={[
+                          localStyles.sortText,
+                          {
+                            color: colors.pianoteRed,
+                            fontSize: sizing.videoTitleText
+                          }
+                        ]}
                       >
                         {sortDict[this.props.currentSort]}
                       </Text>
-                      <FontIcon
+                      <Icon.FontAwesome5
                         size={onTablet ? 20 : 15}
                         name={'sort-amount-down'}
                         color={colors.pianoteRed}
@@ -702,57 +597,34 @@ export default class VerticalVideoList extends React.Component {
           <View style={{ marginHorizontal: 10 }}>
             {this.filters?.filterAppliedText}
           </View>
-          {this.state.items.length == 0 &&
-            this.state.outVideos &&
-            !this.state.isLoading && (
-              <>
-                <Text
-                  style={{
-                    fontSize: sizing.descriptionText,
-                    color: this.props.isMethod
-                      ? 'white'
-                      : colors.secondBackground,
-                    fontFamily: 'OpenSans-Regular',
-                    textAlign: 'left',
-                    marginLeft: 10
-                  }}
-                >
-                  {this.props.title.includes('SEARCH RESULTS')
-                    ? ''
-                    : 'There are no results for this content type.'}
-                </Text>
-              </>
-            )}
-        </>
-        <View style={{ flex: 1 }}>
-          {this.renderMappedList()}
-          {this.state.isPaging && !this.state.isLoading && (
-            <View
-              style={[styles.centerContent, { minHeight: 20, marginTop: 20 }]}
+          {this.state.items?.length === 0 && !this.state.isLoading && (
+            <Text
+              style={{
+                fontSize: sizing.descriptionText,
+                color: this.props.isMethod ? 'white' : colors.secondBackground,
+                fontFamily: 'OpenSans-Regular',
+                textAlign: 'left',
+                marginLeft: 10
+              }}
             >
-              <ActivityIndicator
-                size={onTablet ? 'large' : 'small'}
-                animating={true}
-                color={
-                  this.props.isMethod
-                    ? colors.pianoteGrey
-                    : colors.secondBackground
-                }
-              />
-            </View>
+              {this.props.title.includes('SEARCH RESULTS')
+                ? ''
+                : 'There are no results for this content type.'}
+            </Text>
           )}
-          <View style={{ flex: 1 }} />
-        </View>
-        <Modal
-          isVisible={this.state.showModal}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
-          onBackButtonPress={() => this.setState({ showModal: false })}
-        >
+        </>
+        {this.renderMappedList()}
+        {this.state.isPaging && !this.state.isLoading && (
+          <ActivityIndicator
+            size={onTablet ? 'large' : 'small'}
+            style={[styles.centerContent, { minHeight: 20, marginTop: 20 }]}
+            animating={true}
+            color={
+              this.props.isMethod ? colors.pianoteGrey : colors.secondBackground
+            }
+          />
+        )}
+        {this.state.showModal && (
           <ContentModal
             data={this.state.item}
             hideContentModal={() => this.setState({ showModal: false })}
@@ -760,48 +632,87 @@ export default class VerticalVideoList extends React.Component {
             addToMyList={contentID => this.addToMyList(contentID)}
             removeFromMyList={contentID => this.removeFromMyList(contentID)}
           />
-        </Modal>
-        <Modal
-          isVisible={this.state.showRelevance}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={false}
-          backdropColor={'white'}
-          backdropOpacity={0.79}
-          onBackButtonPress={() => this.setState({ showRelevance: false })}
-        >
-          <Relevance
-            hideRelevance={() => {
-              this.setState({ showRelevance: false });
-            }}
+        )}
+        {this.state.showSort && (
+          <Sort
+            hideSort={() => this.setState({ showSort: false })}
             isMethod={this.props.isMethod}
             currentSort={this.props.currentSort}
-            changeSort={sort => {
-              this.props.changeSort(sort);
-            }}
+            changeSort={sort => this.props.changeSort(sort)}
           />
-        </Modal>
-        <Modal
-          isVisible={this.state.addToCalendarModal}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
+        )}
+        <AddToCalendar
           onBackButtonPress={() => this.setState({ addToCalendarModal: false })}
-        >
-          <AddToCalendar
-            hideAddToCalendar={() =>
-              this.setState({ addToCalendarModal: false })
-            }
-            addEventToCalendar={() => this.addEventToCalendar()}
-          />
-        </Modal>
+          isVisible={this.state.addToCalendarModal}
+          hideAddToCalendar={() => this.setState({ addToCalendarModal: false })}
+          addEventToCalendar={() => this.addEventToCalendar()}
+        />
       </View>
     );
   };
 }
+
+const localStyles = StyleSheet.create({
+  videoContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    marginLeft: 10,
+    paddingVertical: onTablet ? 10 : 5
+  },
+  levelText: {
+    zIndex: 20,
+    elevation: 20,
+    textAlign: 'center',
+    marginBottom: 5,
+    color: 'white',
+    fontFamily: 'RobotoCondensed-Bold'
+  },
+  gradientContainer: {
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    zIndex: 15,
+    elevation: 15
+  },
+  rowComplete: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    borderRadius: 5,
+    zIndex: 1,
+    opacity: 0.2
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    marginLeft: 10,
+    marginVertical: 5
+  },
+  largeTitle: {
+    fontSize: onTablet ? 28 : 20,
+    color: 'white',
+    fontFamily: 'OpenSans-ExtraBold'
+  },
+  titleContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+    flexDirection: 'row'
+  },
+  sortContainer: {
+    flexDirection: 'row',
+    position: 'absolute',
+    right: 45,
+    height: '100%'
+  },
+  sortText: {
+    fontFamily: 'OpenSans-Regular',
+    paddingRight: 5,
+    justifyContent: 'flex-end'
+  },
+  SortButton: {
+    width: 45,
+    flexDirection: 'row'
+  }
+});

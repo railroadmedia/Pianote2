@@ -1,6 +1,3 @@
-/**
- * PathOverview
- */
 import React from 'react';
 import {
   View,
@@ -13,20 +10,14 @@ import {
   FlatList
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { ContentModel } from '@musora/models';
-import Modal from 'react-native-modal';
 import { Download_V2 } from 'RNDownload';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from '../../assets/icons.js';
+import Back from '../../assets/img/svgs/back.svg';
 import Orientation from 'react-native-orientation-locker';
-
-import StartIcon from '../../components/StartIcon';
-import ContinueIcon from '../../components/ContinueIcon';
-import ResetIcon from '../../components/ResetIcon';
+import LongButton from '../../components/LongButton';
 import NavigationBar from '../../components/NavigationBar';
-import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
-import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
+import ApprovedTeacher from '../../assets/img/svgs/approved-teacher.svg';
+import Progress from '../../assets/img/svgs/progress.svg';
 import RestartCourse from '../../modals/RestartCourse';
 import contentService from '../../services/content.service';
 import { NetworkContext } from '../../context/NetworkProvider';
@@ -43,25 +34,23 @@ import NextVideo from '../../components/NextVideo';
 import { ScrollView } from 'react-native-gesture-handler';
 import { goBack, navigate } from '../../../AppNavigator';
 
-let greaterWDim;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 
 export default class PathOverview extends React.Component {
   static contextType = NetworkContext;
-
   constructor(props) {
     super(props);
     this.state = {
-      data: props.route?.params?.data,
+      id: props.route?.params?.data?.id,
+      mobile_app_url: props.route?.params?.data?.mobile_app_url,
       items: props.route?.params?.items || [],
       isAddedToList: props.route?.params?.data?.isAddedToList,
       thumbnail: props.route?.params?.data?.thumbnail,
-      artist:
-        typeof props.route?.params?.data?.artist == 'object'
-          ? props.route?.params?.data?.artist.join(', ')
-          : props.route?.params?.data?.artist,
+      description: props.route?.params?.data?.description,
+      title: props.route?.params?.data?.title,
+      artist: '',
       isMethod: props.route?.params?.isMethod,
       isFoundations: props.route?.params?.isFoundations,
       xp: props.route?.params?.data?.total_xp,
@@ -69,21 +58,19 @@ export default class PathOverview extends React.Component {
       completed: props.route?.params?.data?.completed,
       nextLesson: props.route?.params?.data?.next_lesson,
       difficulty: props.route?.params?.data?.difficulty,
-      type: '',
       showInfo: false,
-      totalLength: 0,
       isLiked: false,
-      likeCount: 0,
       showRestartCourse: false,
-      progress: 0,
-      isLoadingAll: props.route?.params?.items?.length ? false : true,
       refreshing: false,
+      totalLength: 0,
+      likeCount: 0,
+      progress: 0,
       levelNum: 0,
       bannerNextLessonUrl: '',
+      type: '',
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width
     };
-    greaterWDim = fullHeight < fullWidth ? fullHeight : fullWidth;
   }
 
   componentDidMount() {
@@ -95,7 +82,7 @@ export default class PathOverview extends React.Component {
   orientationListener = o => {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
-    if (Platform.OS === 'ios') {
+    if (isiOS) {
       if (onTablet) this.setState({ isLandscape });
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
@@ -105,93 +92,61 @@ export default class PathOverview extends React.Component {
   };
 
   getItems = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let res;
     if (this.state.isFoundations) {
-      res = await foundationsService.getUnit(this.state.data.mobile_app_url);
+      res = await foundationsService.getUnit(this.state.mobile_app_url);
     } else if (this.state.isMethod) {
-      res = await methodService.getMethodContent(
-        this.state.data.mobile_app_url
-      );
+      res = await methodService.getMethodContent(this.state.mobile_app_url);
     } else {
-      res = await contentService.getContent(this.state.data.id);
+      res = await contentService.getContent(this.state.id);
     }
     this.setState({
+      id: res.id,
+      mobile_app_url: res.mobile_app_url,
       likeCount: res.like_count,
       isLiked: res.is_liked_by_current_user,
       isAddedToList: res.is_added_to_primary_playlist,
-      totalLength: res.length_in_seconds,
+      totalLength: res.total_length_in_seconds,
       started: res.started,
       completed: res.completed,
-      nextLesson: res.next_lesson ? new ContentModel(res.next_lesson) : null,
+      nextLesson: res.next_lesson,
       levelNum: res.level_position + '.' + res.course_position,
       progress: res.progress_percent,
-      difficulty: res.fields.find(f => f.key === 'difficulty')?.value,
-      thumbnail: res.data.find(f => f.key === 'thumbnail_url')?.value,
-      xp: res.total_xp,
+      difficulty: res.difficulty,
+      thumbnail: res.thumbnail_url,
+      description: res.description,
+      title: res.title,
+      xp: res.xp,
       type: res.type,
       bannerNextLessonUrl: res.banner_button_url,
-      artist:
-        res.type === 'song'
-          ? res.fields.find(f => f.key === 'artist')?.value
-          : new ContentModel(
-              res.fields.find(f => f.key === 'instructor')?.value
-            )?.getField('name'),
+      artist: res.artist,
+      instructor: res.instructor,
       isLoadingAll: false,
       refreshing: false,
-      items:
-        res?.lessons?.map(l => {
-          l = new ContentModel(l);
-          let duration = l.post.fields.find(f => f.key === 'video')
-            ? new ContentModel(l.getFieldMulti('video')[0])?.getField(
-                'length_in_seconds'
-              )
-            : 0;
-          return {
-            title: l.getField('title'),
-            thumbnail: l.getData('thumbnail_url'),
-            type: l.type,
-            id: l.id,
-            mobile_app_url: l.post.mobile_app_url,
-            duration: duration < 60 ? 60 : duration,
-            isAddedToList: l.isAddedToList,
-            isStarted: l.isStarted,
-            isCompleted: l.isCompleted,
-            progress_percent: l.post.progress_percent
-          };
-        }) || []
+      items: res.lessons
     });
   };
 
   toggleMyList = id => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    if (id === this.state.data.id) {
-      if (this.state.isAddedToList) {
-        removeFromMyList(id);
-      } else {
-        addToMyList(id);
-      }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    if (id === this.state.id) {
+      if (this.state.isAddedToList) removeFromMyList(id);
+      else addToMyList(id);
     } else {
       const lesson = this.state.items.find(f => f.id === id);
-      if (lesson.isAddedToList) {
-        removeFromMyList(id);
-      } else {
-        addToMyList(id);
-      }
+      if (lesson.is_added_to_primary_playlist) removeFromMyList(id);
+      else addToMyList(id);
     }
 
     this.setState(state => ({
       isAddedToList:
-        id === state.data.id ? !state.isAddedToList : state.isAddedToList,
+        id === state.id ? !state.isAddedToList : state.isAddedToList,
       items: state.items.map(c =>
         c.id === id
           ? {
               ...c,
-              isAddedToList: !c.isAddedToList
+              is_added_to_primary_playlist: !c.is_added_to_primary_playlist
             }
           : c
       )
@@ -199,14 +154,9 @@ export default class PathOverview extends React.Component {
   };
 
   toggleLike = () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    if (this.state.isLiked) {
-      unlikeContent(this.state.data.id);
-    } else {
-      likeContent(this.state.data.id);
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    if (this.state.isLiked) unlikeContent(this.state.id);
+    else likeContent(this.state.id);
     this.setState({
       isLiked: !this.state.isLiked,
       likeCount: this.state.isLiked
@@ -215,11 +165,9 @@ export default class PathOverview extends React.Component {
     });
   };
 
-  onRestartCourse = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    resetProgress(this.state.data.id);
+  onRestartCourse = () => {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    resetProgress(this.state.id);
     this.setState(
       {
         started: false,
@@ -229,12 +177,6 @@ export default class PathOverview extends React.Component {
       },
       () => this.getItems()
     );
-  };
-
-  refresh = () => {
-    this.setState({ refreshing: true }, () => {
-      this.getItems();
-    });
   };
 
   formatDifficulty() {
@@ -263,14 +205,14 @@ export default class PathOverview extends React.Component {
   goToLesson(lesson) {
     if (lesson) {
       if (this.state.isMethod) {
-        return navigate('VIDEOPLAYER', {
+        return navigate('VIEWLESSON', {
           url: lesson,
-          parentId: this.state.data?.id
+          parentId: this.state.id
         });
       }
-      return navigate('VIDEOPLAYER', {
+      return navigate('VIEWLESSON', {
         id: lesson,
-        parentId: this.state.data?.id
+        parentId: this.state.id
       });
     }
   }
@@ -330,11 +272,11 @@ export default class PathOverview extends React.Component {
                 fontFamily: 'OpenSans-Bold',
                 color: 'white',
                 textAlign: 'center',
-                fontSize: sizing.titleVideoPlayer,
+                fontSize: sizing.titleViewLesson,
                 marginTop: 10
               }}
             >
-              {this.state.data.title}
+              {this.state.title}
             </Text>
           )}
           <Text
@@ -351,7 +293,12 @@ export default class PathOverview extends React.Component {
               }
             ]}
           >
-            {this.state.artist?.toUpperCase()} |{' '}
+            {this.state.artist?.toUpperCase() ||
+              this.state.instructor
+                ?.map(i => i.name)
+                .join(', ')
+                .toUpperCase()}
+            |{' '}
             {this.state.isMethod && !this.state.isFoundations
               ? 'LEVEL ' + this.state.levelNum
               : this.formatDifficulty()}{' '}
@@ -367,29 +314,25 @@ export default class PathOverview extends React.Component {
               }
             ]}
           >
-            <View style={{ flex: 1, flexDirection: 'row' }}>
-              <View style={{ flex: 0.5 }} />
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'flex-end'
+              }}
+            >
               <TouchableOpacity
                 style={{
-                  flex: 0.5,
-                  alignItems: 'center'
+                  paddingHorizontal: 10
                 }}
-                onPress={() => this.toggleMyList(this.state.data.id)}
+                onPress={() => this.toggleMyList(this.state.id)}
               >
                 <View style={[styles.centerContent, { flexDirection: 'row' }]}>
-                  {!this.state.isAddedToList ? (
-                    <AntIcon
-                      name={'plus'}
-                      size={sizing.myListButtonSize}
-                      color={colors.pianoteRed}
-                    />
-                  ) : (
-                    <AntIcon
-                      name={'close'}
-                      size={sizing.myListButtonSize}
-                      color={colors.pianoteRed}
-                    />
-                  )}
+                  <Icon.AntDesign
+                    name={!this.state.isAddedToList ? 'plus' : 'close'}
+                    size={sizing.myListButtonSize}
+                    color={colors.pianoteRed}
+                  />
                 </View>
                 <Text
                   style={{
@@ -403,40 +346,38 @@ export default class PathOverview extends React.Component {
               </TouchableOpacity>
             </View>
             <View style={{ width: '50%' }}>
-              {this.state.completed ? (
-                <ResetIcon
-                  isMethod={true}
-                  pressed={() => this.setState({ showRestartCourse: true })}
-                />
-              ) : this.state.started ? (
-                <ContinueIcon
-                  isMethod={true}
-                  pressed={() =>
+              <LongButton
+                isMethod={true}
+                type={
+                  this.state.completed
+                    ? 'RESET'
+                    : !this.state.started
+                    ? 'START'
+                    : 'CONTINUE'
+                }
+                pressed={() => {
+                  if (this.state.completed) {
+                    this.setState({ showRestartCourse: true });
+                  } else {
                     this.goToLesson(
                       this.state.isMethod
                         ? this.state.bannerNextLessonUrl
                         : this.state.nextLesson?.id
-                    )
+                    );
                   }
-                />
-              ) : (
-                <StartIcon
-                  isMethod={true}
-                  pressed={() =>
-                    this.goToLesson(
-                      this.state.isMethod
-                        ? this.state.bannerNextLessonUrl
-                        : this.state.nextLesson?.id
-                    )
-                  }
-                />
-              )}
+                }}
+              />
             </View>
-            <View style={{ flex: 1, flexDirection: 'row' }}>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'flex-start'
+              }}
+            >
               <TouchableOpacity
                 style={{
-                  flex: 0.5,
-                  alignItems: 'center'
+                  paddingHorizontal: 15
                 }}
                 onPress={() => {
                   this.setState({
@@ -445,7 +386,7 @@ export default class PathOverview extends React.Component {
                 }}
               >
                 <View style={[styles.centerContent, { flexDirection: 'row' }]}>
-                  <AntIcon
+                  <Icon.AntDesign
                     name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
                     size={sizing.infoButtonSize}
                     color={colors.pianoteRed}
@@ -461,7 +402,6 @@ export default class PathOverview extends React.Component {
                   Info
                 </Text>
               </TouchableOpacity>
-              <View style={{ flex: 0.5 }} />
             </View>
           </View>
         </View>
@@ -470,14 +410,14 @@ export default class PathOverview extends React.Component {
           <View
             style={[
               {
-                paddingHorizontal: 10 * 2
+                paddingHorizontal: 20
               },
               this.state.isLandscape
                 ? { marginHorizontal: '10%' }
                 : { width: '100%' }
             ]}
           >
-            {this.state.data.description !== 'TBD' && (
+            {!!this.state.description && (
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
@@ -487,7 +427,7 @@ export default class PathOverview extends React.Component {
                   textAlign: 'center'
                 }}
               >
-                {this.state.data.description}
+                {this.state.description}
               </Text>
             )}
             <View style={{ paddingHorizontal: '20%' }}>
@@ -593,7 +533,7 @@ export default class PathOverview extends React.Component {
                       marginTop: 5
                     }}
                   >
-                    <AntIcon
+                    <Icon.AntDesign
                       name={this.state.isLiked ? 'like1' : 'like2'}
                       size={sizing.myListButtonSize}
                       color={colors.pianoteRed}
@@ -604,8 +544,8 @@ export default class PathOverview extends React.Component {
                 </TouchableOpacity>
                 <Download_V2
                   entity={{
-                    id: this.state.data.id,
-                    content: contentService.getContent(this.state.data.id, true)
+                    id: this.state.id,
+                    content: contentService.getContent(this.state.id, true)
                   }}
                   styles={{
                     flex: 1,
@@ -659,7 +599,7 @@ export default class PathOverview extends React.Component {
                       marginTop: 5
                     }}
                   >
-                    <MaterialIcon
+                    <Icon.MaterialCommunityIcons
                       name={'replay'}
                       size={sizing.myListButtonSize}
                       color={colors.pianoteRed}
@@ -679,216 +619,217 @@ export default class PathOverview extends React.Component {
   render() {
     const { isMethod, items, refreshing, isLandscape, nextLesson } = this.state;
     return (
-      <SafeAreaView
-        forceInset={{ top: onTablet ? 'never' : 'never' }}
-        style={[
-          {
-            flex: 1,
-            backgroundColor: isMethod ? 'black' : colors.mainBackground
-          }
-        ]}
-      >
-        <StatusBar
-          backgroundColor={isMethod ? 'black' : colors.mainBackground}
-          barStyle={'light-content'}
-        />
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl
-              colors={[colors.pianoteRed]}
-              refreshing={refreshing}
-              onRefresh={() => this.refresh()}
-            />
-          }
-        >
-          {this.renderHeader()}
-          <FlatList
-            style={{
+      <>
+        <SafeAreaView
+          forceInset={{ top: onTablet ? 'never' : 'never' }}
+          style={[
+            {
               flex: 1,
-              marginLeft: onTablet ? (isLandscape ? '10%' : '2%') : 0,
-              backgroundColor: isMethod ? 'black' : colors.mainBackground,
-              marginBottom: 10,
-              alignSelf: 'center',
-              paddingHorizontal: onTablet ? 0 : 10,
-              width: '100%'
-            }}
-            numColumns={onTablet ? 3 : 1}
-            data={items}
-            keyboardShouldPersistTaps='handled'
-            keyExtractor={content => content.id.toString()}
-            removeClippedSubviews={true}
-            renderItem={({ item, index }) => (
-              <TouchableOpacity
-                onPress={() =>
-                  this.goToLesson(isMethod ? item.mobile_app_url : item.id)
+              backgroundColor: isMethod ? 'black' : colors.mainBackground
+            }
+          ]}
+        >
+          <StatusBar
+            backgroundColor={isMethod ? 'black' : colors.mainBackground}
+            barStyle={'light-content'}
+          />
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                colors={[colors.pianoteRed]}
+                refreshing={refreshing}
+                onRefresh={() =>
+                  this.setState({ refreshing: true }, () => {
+                    this.getItems();
+                  })
                 }
-                style={[
-                  {
-                    width: onTablet
-                      ? `${isLandscape ? 86 / 3 : 94 / 3}%` // 86 = 100 - 10(=marginRight) - 4(=2*marginleft); 94 = 100 - 2(=marginRight) - 4 (=2*marginLeft)
-                      : '100%',
-                    paddingVertical: 3.5,
-                    flexDirection: onTablet ? 'column' : 'row'
-                  },
-                  isLandscape && index % 3 === 2
-                    ? { marginRight: '10%' }
-                    : { marginRight: '2%' }
-                ]}
-              >
-                <ImageBackground
-                  imageStyle={{ borderRadius: 5 }}
-                  style={{
-                    width: onTablet ? '100%' : width * 0.26,
-                    aspectRatio: 16 / 9
-                  }}
-                  source={{
-                    uri: item.thumbnail?.includes('https')
-                      ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                          width
-                        )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
-                          item.thumbnail
-                        }`
-                      : item.thumbnail
-                  }}
-                  resizeMode='cover'
-                >
-                  {item.isCompleted && (
-                    <View
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        aspectRatio: 16 / 9,
-                        borderRadius: 5,
-                        zIndex: 1,
-                        opacity: 0.2,
-                        backgroundColor: colors.pianoteRed
-                      }}
-                    />
-                  )}
-
-                  <View
-                    style={[
-                      styles.centerContent,
-                      {
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        aspectRatio: 16 / 9,
-                        zIndex: 2
-                      }
-                    ]}
-                  >
-                    {item.isStarted ? (
-                      <Progress
-                        height={onTablet ? 60 : 35}
-                        width={onTablet ? 60 : 35}
-                        fill={'white'}
-                      />
-                    ) : item.isCompleted ? (
-                      <ApprovedTeacher
-                        height={onTablet ? 70 : 45}
-                        width={onTablet ? 70 : 45}
-                        fill={'white'}
-                      />
-                    ) : null}
-                  </View>
-                </ImageBackground>
-                <View
+              />
+            }
+          >
+            {this.renderHeader()}
+            <FlatList
+              style={{
+                flex: 1,
+                marginLeft: onTablet ? (isLandscape ? '10%' : '2%') : 0,
+                backgroundColor: isMethod ? 'black' : colors.mainBackground,
+                marginBottom: 10,
+                alignSelf: 'center',
+                paddingHorizontal: onTablet ? 0 : 10,
+                width: '100%'
+              }}
+              numColumns={onTablet ? 3 : 1}
+              data={items}
+              keyboardShouldPersistTaps='handled'
+              keyExtractor={content => content.id.toString()}
+              removeClippedSubviews={true}
+              renderItem={({ item, index }) => (
+                <TouchableOpacity
+                  onPress={() =>
+                    this.goToLesson(isMethod ? item.mobile_app_url : item.id)
+                  }
                   style={[
                     {
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between'
+                      width: onTablet
+                        ? `${isLandscape ? 86 / 3 : 94 / 3}%` // 86 = 100 - 10(=marginRight) - 4(=2*marginleft); 94 = 100 - 2(=marginRight) - 4 (=2*marginLeft)
+                        : '100%',
+                      paddingVertical: 3.5,
+                      flexDirection: onTablet ? 'column' : 'row'
                     },
-                    onTablet ? { width: '100%' } : { flex: 1 }
+                    isLandscape && index % 3 === 2
+                      ? { marginRight: '10%' }
+                      : { marginRight: '2%' }
                   ]}
                 >
-                  <View style={{ width: '80%' }}>
-                    <View style={{ flex: 1 }} />
-                    <Text
-                      numberOfLines={1}
-                      style={{
-                        fontSize: onTablet ? 16 : 14,
-                        textAlign: 'left',
-                        fontFamily: 'OpenSans-Bold',
-                        color: 'white',
-                        paddingHorizontal: onTablet ? 0 : 5,
-                        marginTop: onTablet ? 10 : 2.5
-                      }}
-                    >
-                      {item.title}
-                    </Text>
-                    <Text
-                      numberOfLines={1}
-                      style={{
-                        fontSize: sizing.descriptionText,
-                        color: this.props.isMethod
-                          ? colors.pianoteGrey
-                          : colors.secondBackground,
-                        textAlign: 'left',
-                        fontFamily: 'OpenSans-Regular',
-                        paddingHorizontal: onTablet ? 0 : 5
-                      }}
-                    >
-                      {Math.floor(item.duration / 60)}{' '}
-                      {Math.floor(item.duration / 60) == 1 ? 'min' : 'mins'}
-                    </Text>
-                    <View style={{ flex: 1 }} />
-                  </View>
+                  <ImageBackground
+                    imageStyle={{ borderRadius: 5 }}
+                    style={{
+                      width: onTablet ? '100%' : width * 0.26,
+                      aspectRatio: 16 / 9
+                    }}
+                    source={{
+                      uri: item.thumbnail_url?.includes('https')
+                        ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                            width
+                          )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
+                            item.thumbnail_url
+                          }`
+                        : item.thumbnail_url
+                    }}
+                    resizeMode='cover'
+                  >
+                    {item.completed && (
+                      <View
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          aspectRatio: 16 / 9,
+                          borderRadius: 5,
+                          zIndex: 1,
+                          opacity: 0.2,
+                          backgroundColor: colors.pianoteRed
+                        }}
+                      />
+                    )}
 
-                  <TouchableOpacity onPress={() => this.toggleMyList(item.id)}>
-                    <AntIcon
-                      name={item.isAddedToList ? 'close' : 'plus'}
-                      size={sizing.myListButtonSize}
-                      color={colors.pianoteRed}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-        </ScrollView>
-        {nextLesson && (
-          <NextVideo
-            item={nextLesson}
-            progress={this.state.progress}
-            type={
-              this.state.isFoundations
-                ? 'Lesson'
-                : isMethod
-                ? 'COURSE'
-                : this.state.type.toUpperCase()
-            }
-            onNextLesson={() =>
-              this.goToLesson(
-                this.state.isMethod
-                  ? nextLesson.post?.mobile_app_url
-                  : nextLesson.id
-              )
-            }
-            isMethod={isMethod}
-          />
-        )}
-        <Modal
-          key={'restartCourse'}
-          isVisible={this.state.showRestartCourse}
-          style={{
-            margin: 0,
-            flex: 1
-          }}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
-          onBackButtonPress={() => this.setState({ showRestartCourse: false })}
-        >
+                    <View
+                      style={[
+                        styles.centerContent,
+                        {
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          aspectRatio: 16 / 9,
+                          zIndex: 2
+                        }
+                      ]}
+                    >
+                      {item.started ? (
+                        <Progress
+                          height={onTablet ? 60 : 35}
+                          width={onTablet ? 60 : 35}
+                          fill={'white'}
+                        />
+                      ) : item.completed ? (
+                        <ApprovedTeacher
+                          height={onTablet ? 70 : 45}
+                          width={onTablet ? 70 : 45}
+                          fill={'white'}
+                        />
+                      ) : null}
+                    </View>
+                  </ImageBackground>
+                  <View
+                    style={[
+                      {
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                      },
+                      onTablet ? { width: '100%' } : { flex: 1 }
+                    ]}
+                  >
+                    <View style={{ width: '80%' }}>
+                      <Text
+                        numberOfLines={1}
+                        style={{
+                          fontSize: onTablet ? 16 : 14,
+                          textAlign: 'left',
+                          fontFamily: 'OpenSans-Bold',
+                          color: 'white',
+                          paddingHorizontal: onTablet ? 0 : 5,
+                          marginTop: onTablet ? 10 : 2.5
+                        }}
+                      >
+                        {item.title}
+                      </Text>
+                      <Text
+                        numberOfLines={1}
+                        style={{
+                          fontSize: sizing.descriptionText,
+                          color: this.props.isMethod
+                            ? colors.pianoteGrey
+                            : colors.secondBackground,
+                          textAlign: 'left',
+                          fontFamily: 'OpenSans-Regular',
+                          paddingHorizontal: onTablet ? 0 : 5
+                        }}
+                      >
+                        {item.length_in_seconds
+                          ? Math.floor(item.length_in_seconds / 60)
+                          : 0}{' '}
+                        {Math.floor(item.length_in_seconds / 60) === 1
+                          ? 'min'
+                          : 'mins'}
+                      </Text>
+                    </View>
+
+                    <TouchableOpacity
+                      onPress={() => this.toggleMyList(item.id)}
+                    >
+                      <Icon.AntDesign
+                        name={
+                          item.is_added_to_primary_playlist ? 'close' : 'plus'
+                        }
+                        size={sizing.myListButtonSize}
+                        color={colors.pianoteRed}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </TouchableOpacity>
+              )}
+            />
+          </ScrollView>
+          {nextLesson && (
+            <NextVideo
+              item={nextLesson}
+              progress={this.state.progress}
+              type={
+                this.state.isFoundations
+                  ? 'Lesson'
+                  : isMethod
+                  ? 'COURSE'
+                  : this.state.type.toUpperCase()
+              }
+              onNextLesson={() =>
+                this.goToLesson(
+                  this.state.isMethod
+                    ? nextLesson.mobile_app_url
+                    : nextLesson.id
+                )
+              }
+              isMethod={isMethod}
+            />
+          )}
           <RestartCourse
+            isVisible={this.state.showRestartCourse}
+            onBackButtonPress={() =>
+              this.setState({ showRestartCourse: false })
+            }
             hideRestartCourse={() => {
               this.setState({
                 showRestartCourse: false
@@ -897,12 +838,12 @@ export default class PathOverview extends React.Component {
             type={this.state.type}
             onRestart={this.onRestartCourse}
           />
-        </Modal>
+        </SafeAreaView>
         <NavigationBar
           currentPage={'LessonsPathOverview'}
           isMethod={isMethod}
         />
-      </SafeAreaView>
+      </>
     );
   }
 }

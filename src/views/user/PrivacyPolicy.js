@@ -1,6 +1,3 @@
-/**
- * PrivacyPolicy
- */
 import React from 'react';
 import {
   View,
@@ -11,17 +8,13 @@ import {
   StyleSheet,
   Linking
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
+import Back from '../../assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';
 
-export default class PrivacyPolicy extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+const onTablet = global.onTablet;
 
+export default class PrivacyPolicy extends React.Component {
   render() {
     return (
       <SafeAreaView style={{ flex: 1 }}>
@@ -880,8 +873,8 @@ const localStyles = StyleSheet.create({
     padding: 15
   },
   title: {
-    fontWeight: 'bold',
-    fontSize: DeviceInfo.isTablet() ? 28 : 20,
+    fontFamily: 'OpenSans-Bold',
+    fontSize: onTablet ? 28 : 20,
     alignSelf: 'center',
     textAlign: 'center'
   },
@@ -892,7 +885,7 @@ const localStyles = StyleSheet.create({
   subtitle: {
     paddingBottom: 5,
     marginTop: 25,
-    fontWeight: 'bold',
+    fontFamily: 'OpenSans-Bold',
     marginBottom: 0
   },
   contact: {

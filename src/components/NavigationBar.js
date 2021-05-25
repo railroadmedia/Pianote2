@@ -1,29 +1,19 @@
-/**
- * Taskbar for navigation
- */
 import React from 'react';
 import FastImage from 'react-native-fast-image';
 import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import DeviceInfo from 'react-native-device-info';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import AsyncStorage from '@react-native-community/async-storage';
-import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from '../assets/icons';
 import { NetworkContext } from '../context/NetworkProvider';
-import { navigate, reset } from '../../AppNavigator';
+import { navigate } from '../../AppNavigator';
+import { connect } from 'react-redux';
 
-import commonService from '../services/common.service';
+const onTablet = global.onTablet;
 
-export default class NavigationBar extends React.Component {
+class NavigationBar extends React.Component {
   static contextType = NetworkContext;
-
   constructor(props) {
     super(props);
     this.state = {
-      profileImage: '',
-      onMain: false,
       secondaryColor: this.props.isMethod
         ? colors.pianoteGrey
         : colors.secondBackground,
@@ -31,27 +21,8 @@ export default class NavigationBar extends React.Component {
     };
   }
 
-  componentDidMount = async () => {
-    let profileImage = await AsyncStorage.getItem('profileURI');
-    this.setState({
-      profileImage: profileImage || ''
-    });
-  };
-
   profile = () => {
-    if (this.state.profileImage.length == 0) {
-      return (
-        <AntIcon
-          name={'user'}
-          color={
-            this.props.currentPage == 'PROFILE'
-              ? 'white'
-              : this.state.secondaryColor
-          }
-          size={onTablet ? 40 : 30}
-        />
-      );
-    } else {
+    if (this.props.user.profile_picture_url) {
       return (
         <FastImage
           style={{
@@ -61,11 +32,23 @@ export default class NavigationBar extends React.Component {
               ? colors.pianoteGrey
               : colors.secondBackground
           }}
-          source={{ uri: this.state.profileImage }}
+          source={{ uri: this.props.user.profile_picture_url }}
           resizeMode={FastImage.resizeMode.cover}
         />
       );
     }
+
+    return (
+      <Icon.AntDesign
+        name={'user'}
+        color={
+          this.props.currentPage === 'PROFILE'
+            ? 'white'
+            : this.state.secondaryColor
+        }
+        size={onTablet ? 40 : 30}
+      />
+    );
   };
 
   render = () => {
@@ -90,11 +73,11 @@ export default class NavigationBar extends React.Component {
                   : navigate(isPackOnly ? 'PACKS' : 'LESSONS');
               }}
             >
-              <SimpleLineIcon
+              <Icon.SimpleLineIcons
                 name={'home'}
                 size={onTablet ? 35 : 27.5}
                 color={
-                  this.props.currentPage == 'LESSONS'
+                  this.props.currentPage === 'LESSONS'
                     ? this.state.primaryColor
                     : this.state.secondaryColor
                 }
@@ -107,57 +90,22 @@ export default class NavigationBar extends React.Component {
                   : navigate('SEARCH');
               }}
             >
-              <EvilIcons
+              <Icon.EvilIcons
                 name={'search'}
                 size={onTablet ? 55 : 40}
                 color={
-                  this.props.currentPage == 'SEARCH'
+                  this.props.currentPage === 'SEARCH'
                     ? this.state.primaryColor
                     : this.state.secondaryColor
                 }
               />
             </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                aspectRatio: 1,
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-              onPress={() => {
-                !this.context.isConnected
-                  ? this.context.showNoConnectionAlert()
-                  : navigate('Forum', {
-                      NetworkContext,
-                      tryCall: commonService.tryCall,
-                      rootUrl: commonService.rootUrl,
-                      isDark: true,
-                      BottomNavigator: NavigationBar,
-                      appColor: colors.pianoteRed
-                    });
-              }}
-            >
-              <Text
-                style={{
-                  color: this.state[
-                    this.props.currentPage == 'Forum'
-                      ? 'primaryColor'
-                      : 'secondaryColor'
-                  ]
-                }}
-              >
-                F
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                navigate('DOWNLOADS');
-              }}
-            >
-              <MaterialIcon
+            <TouchableOpacity onPress={() => navigate('DOWNLOADS')}>
+              <Icon.MaterialCommunityIcons
                 name={'arrow-collapse-down'}
                 size={onTablet ? 40 : 30}
                 color={
-                  this.props.currentPage == 'DOWNLOAD'
+                  this.props.currentPage === 'DOWNLOAD'
                     ? this.state.primaryColor
                     : this.state.secondaryColor
                 }
@@ -173,13 +121,13 @@ export default class NavigationBar extends React.Component {
               <View
                 style={[
                   localStyles.navIconContainer,
-                  this.state.profileImage.length > 0
+                  this.props.user.profile_picture_url
                     ? null
                     : styles.centerContent,
                   {
                     borderColor:
                       this.props.currentPage == 'PROFILE' &&
-                      this.state.profileImage.length > 0
+                      this.props.user.profile_picture_url
                         ? 'white'
                         : 'transparent'
                   }
@@ -195,12 +143,18 @@ export default class NavigationBar extends React.Component {
   };
 }
 
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+export default connect(mapStateToProps, null)(NavigationBar);
+
 const localStyles = StyleSheet.create({
   navIconContainer: {
     borderRadius: 100,
     borderWidth: 2.25,
-    height: DeviceInfo.isTablet() ? 40 : 30,
-    width: DeviceInfo.isTablet() ? 40 : 30
+    height: onTablet ? 40 : 30,
+    width: onTablet ? 40 : 30
   },
   navContainer: {
     alignSelf: 'stretch',

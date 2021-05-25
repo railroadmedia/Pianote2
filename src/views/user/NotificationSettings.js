@@ -1,100 +1,68 @@
-/**
- * NotificationSettings
- */
 import React from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
-  ActivityIndicator,
   ScrollView,
   StatusBar,
   StyleSheet
 } from 'react-native';
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
-import DeviceInfo from 'react-native-device-info';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import FontIcon from 'react-native-vector-icons/FontAwesome';
-import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
-import CustomSwitch from 'Pianote2/src/components/CustomSwitch.js';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import commonService from '../../services/common.service';
+import Back from '../../assets/img/svgs/back.svg';
+import Icon from '../../assets/icons.js';
+import CustomSwitch from '../../components/CustomSwitch.js';
+import NavigationBar from '../../components/NavigationBar.js';
+import { changeNotificationSettings } from '../../services/notification.service';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';
+import { connect } from 'react-redux';
+import { setLoggedInUser } from '../../redux/UserActions';
 
-export default class NotificationSettings extends React.Component {
+const isTablet = global.onTablet;
+
+class NotificationSettings extends React.Component {
   static contextType = NetworkContext;
-  constructor(props) {
-    super(props);
-    this.state = {
-      notifications_summary_frequency_minutes: 0,
-      notify_on_forum_followed_thread_reply: false,
-      notify_on_forum_post_like: false,
-      notify_on_forum_post_reply: false,
-      notify_on_lesson_comment_like: false,
-      notify_on_lesson_comment_reply: false,
-      notify_weekly_update: false,
-      isLoading: true
+
+  changeNotificationStatus = datum => {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    const {
+      notify_weekly_update,
+      notify_on_lesson_comment_reply,
+      notify_on_lesson_comment_like,
+      notify_on_forum_followed_thread_reply,
+      notify_on_forum_post_like,
+      notifications_summary_frequency_minutes
+    } = datum;
+
+    this.props.setLoggedInUser({
+      ...this.props.user,
+      notify_weekly_update,
+      notify_on_lesson_comment_reply,
+      notify_on_lesson_comment_like,
+      notify_on_forum_followed_thread_reply,
+      notify_on_forum_post_like,
+      notifications_summary_frequency_minutes
+    });
+    const body = {
+      data: {
+        type: 'user',
+        attributes: datum
+      }
     };
-  }
-
-  componentDidMount() {
-    getUserData().then(userData =>
-      this.setState({
-        notifications_summary_frequency_minutes:
-          userData?.notifications_summary_frequency_minutes,
-        notify_on_forum_followed_thread_reply:
-          userData?.notify_on_forum_followed_thread_reply,
-        notify_on_forum_post_like: userData?.notify_on_forum_post_like,
-        notify_on_forum_post_reply: userData?.notify_on_forum_post_reply,
-        notify_on_lesson_comment_like: userData?.notify_on_lesson_comment_like,
-        notify_on_lesson_comment_reply:
-          userData?.notify_on_lesson_comment_reply,
-        notify_weekly_update: userData?.notify_weekly_update,
-        isLoading: false
-      })
-    );
-  }
-
-  changeNotificationStatus = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-
-    try {
-      const body = {
-        data: {
-          type: 'user',
-          attributes: {
-            notifications_summary_frequency_minutes: this.state
-              .notifications_summary_frequency_minutes,
-            notify_on_forum_post_like: this.state.notify_on_forum_post_like,
-            notify_on_forum_post_reply: this.state.notify_on_forum_post_reply,
-            notify_on_lesson_comment_like: this.state
-              .notify_on_lesson_comment_like,
-            notify_on_lesson_comment_reply: this.state
-              .notify_on_lesson_comment_reply,
-            notify_weekly_update: this.state.notify_weekly_update
-          }
-        }
-      };
-
-      let response = await commonService.tryCall(
-        `${commonService.rootUrl}/usora/api/profile/update`,
-        'POST',
-        body
-      );
-
-      console.log('response to change notification: ', response);
-    } catch (error) {
-      console.log('ERROR: ', error);
-    }
+    changeNotificationSettings(body);
   };
 
   render() {
+    const {
+      notify_weekly_update,
+      notify_on_lesson_comment_reply,
+      notify_on_lesson_comment_like,
+      notify_on_forum_followed_thread_reply,
+      notify_on_forum_post_like,
+      notifications_summary_frequency_minutes
+    } = this.props.user;
     return (
-      <View style={styles.container}>
+      <>
         <SafeAreaView
           forceInset={{ top: onTablet ? 'never' : 'always' }}
           style={[
@@ -107,16 +75,7 @@ export default class NotificationSettings extends React.Component {
             barStyle={'light-content'}
           />
           <View style={localStyles.header}>
-            <TouchableOpacity
-              style={{ flex: 1 }}
-              onPress={() => {
-                this.state.currentlyView == 'Profile Settings'
-                  ? goBack()
-                  : this.setState({
-                      currentlyView: 'Profile Settings'
-                    });
-              }}
-            >
+            <TouchableOpacity style={{ flex: 1 }} onPress={() => goBack()}>
               <Back
                 width={backButtonSize}
                 height={backButtonSize}
@@ -128,245 +87,233 @@ export default class NotificationSettings extends React.Component {
             </Text>
             <View style={{ flex: 1 }} />
           </View>
-          {this.state.isLoading && (
-            <View style={[styles.centerContent, styles.mainContainer]}>
-              <ActivityIndicator
-                size={onTablet ? 'large' : 'small'}
-                animating={true}
-                color={colors.secondBackground}
+
+          <ScrollView style={styles.mainContainer}>
+            <Text style={localStyles.noteTypeText}>Notification Types</Text>
+            <View style={localStyles.textContainer}>
+              <Text style={localStyles.text}>Weekly community updates</Text>
+              <CustomSwitch
+                isClicked={notify_weekly_update}
+                onClick={bool =>
+                  this.changeNotificationStatus({
+                    notify_weekly_update: bool,
+                    notify_on_lesson_comment_reply,
+                    notify_on_lesson_comment_like,
+                    notify_on_forum_followed_thread_reply,
+                    notify_on_forum_post_like,
+                    notifications_summary_frequency_minutes
+                  })
+                }
               />
             </View>
-          )}
-          {!this.state.isLoading && (
-            <ScrollView style={styles.mainContainer}>
-              <View style={localStyles.noteTypeContainer}>
-                <Text style={localStyles.noteTypeText}>Notification Types</Text>
-              </View>
-              <View style={localStyles.textContainer}>
-                <Text style={localStyles.text}>Weekly community updates</Text>
-                <CustomSwitch
-                  isClicked={this.state.notify_weekly_update}
-                  clicked={bool => {
-                    console.log('bool: ', bool),
-                      this.setState(
-                        {
-                          notify_weekly_update: bool
-                        },
-                        () => this.changeNotificationStatus()
-                      );
-                  }}
-                />
-              </View>
+            <View style={localStyles.textContainer}>
+              <Text style={localStyles.text}>Comment replies</Text>
+              <CustomSwitch
+                isClicked={notify_on_lesson_comment_reply}
+                onClick={bool =>
+                  this.changeNotificationStatus({
+                    notify_on_lesson_comment_reply: bool,
+                    notify_weekly_update,
+                    notify_on_lesson_comment_like,
+                    notify_on_forum_followed_thread_reply,
+                    notify_on_forum_post_like,
+                    notifications_summary_frequency_minutes
+                  })
+                }
+              />
+            </View>
+            <View style={localStyles.textContainer}>
+              <Text style={localStyles.text}>Comment likes</Text>
+              <CustomSwitch
+                isClicked={notify_on_lesson_comment_like}
+                onClick={bool =>
+                  this.changeNotificationStatus({
+                    notify_on_lesson_comment_like: bool,
+                    notify_on_lesson_comment_reply,
+                    notify_weekly_update,
+                    notify_on_forum_followed_thread_reply,
+                    notify_on_forum_post_like,
+                    notifications_summary_frequency_minutes
+                  })
+                }
+              />
+            </View>
+            <View style={localStyles.textContainer}>
+              <Text style={localStyles.text}>Forum post replies</Text>
+              <CustomSwitch
+                isClicked={notify_on_forum_followed_thread_reply}
+                onClick={bool =>
+                  this.changeNotificationStatus({
+                    notify_on_forum_followed_thread_reply: bool,
+                    notify_on_lesson_comment_like,
+                    notify_on_lesson_comment_reply,
+                    notify_weekly_update,
+                    notify_on_forum_post_like,
+                    notifications_summary_frequency_minutes
+                  })
+                }
+              />
+            </View>
+            <View style={localStyles.textContainer}>
+              <Text style={localStyles.text}>Forum post likes</Text>
+              <CustomSwitch
+                isClicked={notify_on_forum_post_like}
+                onClick={bool =>
+                  this.changeNotificationStatus({
+                    notify_on_forum_post_like: bool,
+                    notify_on_forum_followed_thread_reply,
+                    notify_on_lesson_comment_like,
+                    notify_on_lesson_comment_reply,
+                    notify_weekly_update,
+                    notifications_summary_frequency_minutes
+                  })
+                }
+              />
+            </View>
 
-              <View style={localStyles.textContainer}>
-                <Text style={localStyles.text}>Comment replies</Text>
-                <CustomSwitch
-                  isClicked={this.state.notify_on_lesson_comment_reply}
-                  clicked={bool => {
-                    this.setState(
-                      {
-                        notify_on_lesson_comment_reply: bool
-                      },
-                      () => this.changeNotificationStatus()
-                    );
-                  }}
-                />
-              </View>
-              <View style={localStyles.textContainer}>
-                <Text style={localStyles.text}>Comment likes</Text>
-                <CustomSwitch
-                  isClicked={this.state.notify_on_lesson_comment_like}
-                  clicked={bool => {
-                    this.setState(
-                      {
-                        notify_on_lesson_comment_like: bool
-                      },
-                      () => this.changeNotificationStatus()
-                    );
-                  }}
-                />
-              </View>
-
-              <View style={localStyles.textContainer}>
-                <Text style={localStyles.text}>Forum post replies</Text>
-                <CustomSwitch
-                  isClicked={this.state.notify_on_forum_post_reply}
-                  clicked={bool => {
-                    this.setState(
-                      {
-                        notify_on_forum_post_reply: bool
-                      },
-                      () => this.changeNotificationStatus()
-                    );
-                  }}
-                />
-              </View>
-              <View style={localStyles.textContainer}>
-                <Text style={localStyles.text}>Forum post likes</Text>
-                <CustomSwitch
-                  isClicked={this.state.notify_on_forum_post_like}
-                  clicked={bool => {
-                    this.setState(
-                      {
-                        notify_on_forum_post_like: bool
-                      },
-                      () => this.changeNotificationStatus()
-                    );
-                  }}
-                />
-              </View>
-              <View style={localStyles.border} />
-              <View style={localStyles.emailNotificationFrequency}>
-                <Text style={[localStyles.text, { paddingVertical: 10 }]}>
-                  Email Notification Frequency
-                </Text>
-              </View>
-
-              <View style={localStyles.textContainer}>
-                <Text style={localStyles.text}>Immediate</Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.setState(
-                      {
-                        notifications_summary_frequency_minutes: 1
-                      },
-                      () => this.changeNotificationStatus()
-                    );
-                  }}
-                  style={[
-                    styles.centerContent,
-                    {
-                      backgroundColor:
-                        this.state.notifications_summary_frequency_minutes == 1
-                          ? '#fb1b2f'
-                          : colors.secondBackground,
-                      borderRadius: 100,
-                      width: onTablet ? 35 : 27.5,
-                      height: onTablet ? 35 : 27.5
-                    }
-                  ]}
-                >
-                  {this.state.notifications_summary_frequency_minutes == 1 && (
-                    <FontIcon
-                      name={'check'}
-                      size={onTablet ? 25 : 20}
-                      color={'white'}
-                    />
-                  )}
-                  {this.state.notifications_summary_frequency_minutes !== 1 && (
-                    <EntypoIcon
+            <View style={localStyles.border} />
+            <Text style={[localStyles.text, { padding: 10 }]}>
+              Email Notification Frequency
+            </Text>
+            <View style={localStyles.textContainer}>
+              <Text style={localStyles.text}>Immediate</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  this.changeNotificationStatus({
+                    notifications_summary_frequency_minutes: 1
+                  });
+                }}
+                style={[
+                  styles.centerContent,
+                  {
+                    backgroundColor:
+                      notifications_summary_frequency_minutes == 1
+                        ? '#fb1b2f'
+                        : colors.secondBackground,
+                    borderRadius: 100,
+                    width: onTablet ? 35 : 27.5,
+                    height: onTablet ? 35 : 27.5
+                  }
+                ]}
+              >
+                {notifications_summary_frequency_minutes == 1 && (
+                  <Icon.FontAwesome
+                    name={'check'}
+                    size={onTablet ? 25 : 20}
+                    color={'white'}
+                  />
+                )}
+                {notifications_summary_frequency_minutes !== 1 && (
+                  <Icon.Entypo
+                    name={'cross'}
+                    size={onTablet ? 35 : 25}
+                    color={'white'}
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
+            <View style={localStyles.textContainer}>
+              <Text style={localStyles.text}>Once per day</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  this.changeNotificationStatus({
+                    notifications_summary_frequency_minutes: 1440
+                  });
+                }}
+                style={[
+                  styles.centerContent,
+                  {
+                    backgroundColor:
+                      notifications_summary_frequency_minutes == 1440
+                        ? '#fb1b2f'
+                        : colors.secondBackground,
+                    borderRadius: 100,
+                    width: onTablet ? 35 : 27.5,
+                    height: onTablet ? 35 : 27.5
+                  }
+                ]}
+              >
+                {notifications_summary_frequency_minutes == 1440 && (
+                  <Icon.FontAwesome
+                    name={'check'}
+                    size={onTablet ? 25 : 20}
+                    color={'white'}
+                  />
+                )}
+                {notifications_summary_frequency_minutes !== 1440 && (
+                  <Icon.Entypo
+                    name={'cross'}
+                    size={onTablet ? 35 : 25}
+                    color={'white'}
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
+            <View style={localStyles.textContainer}>
+              <Text style={localStyles.text}>Never</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  this.changeNotificationStatus({
+                    notifications_summary_frequency_minutes: 0
+                  });
+                }}
+                style={[
+                  styles.centerContent,
+                  {
+                    backgroundColor:
+                      notifications_summary_frequency_minutes == 0 ||
+                      notifications_summary_frequency_minutes == null
+                        ? '#fb1b2f'
+                        : colors.secondBackground,
+                    borderRadius: 100,
+                    width: onTablet ? 35 : 27.5,
+                    height: onTablet ? 35 : 27.5
+                  }
+                ]}
+              >
+                {(notifications_summary_frequency_minutes == 0 ||
+                  notifications_summary_frequency_minutes == null) && (
+                  <Icon.FontAwesome
+                    name={'check'}
+                    size={onTablet ? 25 : 20}
+                    color={'white'}
+                  />
+                )}
+                {notifications_summary_frequency_minutes !== 0 &&
+                  notifications_summary_frequency_minutes !== null && (
+                    <Icon.Entypo
                       name={'cross'}
                       size={onTablet ? 35 : 25}
                       color={'white'}
                     />
                   )}
-                </TouchableOpacity>
-              </View>
-
-              <View style={localStyles.textContainer}>
-                <Text style={localStyles.text}>Once per day</Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.setState(
-                      {
-                        notifications_summary_frequency_minutes: 1440
-                      },
-                      () => this.changeNotificationStatus()
-                    );
-                  }}
-                  style={[
-                    styles.centerContent,
-                    {
-                      backgroundColor:
-                        this.state.notifications_summary_frequency_minutes ==
-                        1440
-                          ? '#fb1b2f'
-                          : colors.secondBackground,
-                      borderRadius: 100,
-                      width: onTablet ? 35 : 27.5,
-                      height: onTablet ? 35 : 27.5
-                    }
-                  ]}
-                >
-                  {this.state.notifications_summary_frequency_minutes ==
-                    1440 && (
-                    <FontIcon
-                      name={'check'}
-                      size={onTablet ? 25 : 20}
-                      color={'white'}
-                    />
-                  )}
-                  {this.state.notifications_summary_frequency_minutes !==
-                    1440 && (
-                    <EntypoIcon
-                      name={'cross'}
-                      size={onTablet ? 35 : 25}
-                      color={'white'}
-                    />
-                  )}
-                </TouchableOpacity>
-              </View>
-
-              <View style={localStyles.textContainer}>
-                <Text style={localStyles.text}>Never</Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.setState(
-                      {
-                        notifications_summary_frequency_minutes: 0
-                      },
-                      () => this.changeNotificationStatus()
-                    );
-                  }}
-                  style={[
-                    styles.centerContent,
-                    {
-                      backgroundColor:
-                        this.state.notifications_summary_frequency_minutes ==
-                          0 ||
-                        this.state.notifications_summary_frequency_minutes ==
-                          null
-                          ? '#fb1b2f'
-                          : colors.secondBackground,
-                      borderRadius: 100,
-                      width: onTablet ? 35 : 27.5,
-                      height: onTablet ? 35 : 27.5
-                    }
-                  ]}
-                >
-                  {(this.state.notifications_summary_frequency_minutes == 0 ||
-                    this.state.notifications_summary_frequency_minutes ==
-                      null) && (
-                    <FontIcon
-                      name={'check'}
-                      size={onTablet ? 25 : 20}
-                      color={'white'}
-                    />
-                  )}
-                  {this.state.notifications_summary_frequency_minutes !== 0 &&
-                    this.state.notifications_summary_frequency_minutes !==
-                      null && (
-                      <EntypoIcon
-                        name={'cross'}
-                        size={onTablet ? 35 : 25}
-                        color={'white'}
-                      />
-                    )}
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
-          )}
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
 
           <NavigationBar currentPage={'PROFILE'} pad={true} />
         </SafeAreaView>
         <SafeAreaView
           forceInset={'never'}
           style={[{ backgroundColor: colors.mainBackground }]}
-        ></SafeAreaView>
-      </View>
+        />
+      </>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+const mapDispatchToProps = dispatch => ({
+  setLoggedInUser: user => dispatch(setLoggedInUser(user))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NotificationSettings);
 
 const localStyles = StyleSheet.create({
   container: {
@@ -381,7 +328,7 @@ const localStyles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#081826',
-    padding: DeviceInfo.isTablet() ? 22.5 : 15
+    padding: isTablet ? 22.5 : 15
   },
   title: {
     textAlign: 'center',
@@ -391,12 +338,13 @@ const localStyles = StyleSheet.create({
     paddingLeft: 10,
     width: '100%',
     justifyContent: 'center',
-    fontSize: DeviceInfo.isTablet() ? 18 : 14
+    fontSize: isTablet ? 18 : 14
   },
   noteTypeText: {
     marginTop: 10,
+    marginLeft: 10,
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 22 : 16,
+    fontSize: isTablet ? 22 : 16,
     color: '#445f73',
     paddingVertical: 5
   },
@@ -408,7 +356,7 @@ const localStyles = StyleSheet.create({
   },
   text: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 18 : 14,
+    fontSize: isTablet ? 18 : 14,
     color: '#445f73'
   },
   emailNotificationFrequency: {

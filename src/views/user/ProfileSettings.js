@@ -1,6 +1,3 @@
-/**
- * ProfileSettings
- */
 import React from 'react';
 import {
   View,
@@ -9,159 +6,117 @@ import {
   TouchableOpacity,
   TextInput,
   StatusBar,
-  StyleSheet,
-  Dimensions
+  StyleSheet
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
-import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import ImagePicker from 'react-native-image-picker';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import AsyncStorage from '@react-native-community/async-storage';
+import Icon from '../../assets/icons.js';
+import Back from '../../assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
-import DisplayName from '../../modals/DisplayName.js';
-import ProfileImage from '../../modals/ProfileImage.js';
 import NavigationBar from '../../components/NavigationBar.js';
+import CustomModal from '../../modals/CustomModal';
 import commonService from '../../services/common.service.js';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import Loading from '../../components/Loading.js';
 import { goBack, reset } from '../../../AppNavigator.js';
+import {
+  isNameUnique,
+  updateName,
+  avatarUpload
+} from '../../services/UserDataAuth.js';
+import { connect } from 'react-redux';
+import { setLoggedInUser } from '../../redux/UserActions.js';
 
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
+const isTablet = global.onTablet;
 
-export default class ProfileSettings extends React.Component {
+class ProfileSettings extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
     this.state = {
-      showDisplayName: false,
-      showProfileImage: false,
       isLoading: false,
       currentlyView: 'Profile Settings',
       displayName: '',
-      currentPassword: '',
-      newPassword: '',
-      retypeNewPassword: '',
       email: '',
       imageURI: '',
       imageType: '',
       imageName: '',
-      passwordKey: '',
       imagePath: ''
     };
   }
 
-  componentDidMount = async () => {
-    let imageURI = await AsyncStorage.getItem('profileURI');
+  componentDidMount() {
     this.setState({
-      imageURI: imageURI || '',
+      imageURI: this.props.user.profile_picture_url,
       currentlyView:
-        this.props.route?.params?.data == 'Profile Photo'
+        this.props.route?.params?.data === 'Profile Photo'
           ? 'Profile Photo'
           : 'Profile Settings'
     });
-  };
+  }
 
   async save() {
     this.setState({ isLoading: true });
     this.loadingRef?.toggleLoading(true);
-    if (this.state.currentlyView == 'Display Name') {
+    if (this.state.currentlyView === 'Display Name') {
       await this.changeName();
-    } else if (this.state.currentlyView == 'Profile Photo') {
+    } else if (this.state.currentlyView === 'Profile Photo') {
       await this.changeImage();
-    } else if (this.state.currentlyView == 'Password') {
-      await this.changePassword();
     }
     this.loadingRef?.toggleLoading(false);
     this.setState({ isLoading: false });
   }
 
-  changePassword = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    const email = await AsyncStorage.getItem('email');
-
-    const { response, error } = await userForgotPassword({ email });
-
-    this.setState({ showChangePassword: true });
-  };
-
   changeName = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     // check if display name available
-    let response = await fetch(
-      `${commonService.rootUrl}/usora/is-display-name-unique?display_name=${this.state.displayName}`
-    );
-    response = await response.json();
+    let response = await isNameUnique(this.state.displayName);
 
     if (response.unique) {
-      let nameResponse = await commonService.tryCall(
-        `${commonService.rootUrl}/api/profile/update`,
-        'POST',
-        {
-          display_name: this.state.displayName
-        }
-      );
-      await AsyncStorage.setItem('displayName', this.state.displayName);
+      await updateName(this.state.displayName);
+      this.props.setLoggedInUser({
+        ...this.props.user,
+        display_name: this.state.displayName
+      });
       reset('PROFILE');
     } else {
-      this.setState({ showDisplayName: true });
+      this.alertDisplay?.toggle(
+        'This display name is already in use.',
+        'Please try again.'
+      );
     }
   };
 
   changeImage = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     const data = new FormData();
-
     data.append('file', {
       name: this.state.imageName,
       type: this.state.imageType,
       uri: this.state.imageURI
     });
     data.append('target', this.state.imageName);
-    try {
-      if (this.state.imageURI !== '') {
-        let response = await fetch(
-          `${commonService.rootUrl}/api/avatar/upload`,
-          {
-            method: 'POST',
-            headers: { Authorization: `Bearer ${token}` },
-            body: data
-          }
-        );
-        if (response.status == 413) {
-          this.setState({ showProfileImage: true });
-          return;
-        }
-        let url = await response.json();
-        if (url.data[0].url) {
-          await commonService.tryCall(
-            `${commonService.rootUrl}/api/profile/update`,
-            'POST',
-            { file: url == '' ? url : url.data[0].url }
-          );
-          await AsyncStorage.setItem(
-            'profileURI',
-            url == '' ? url : url.data[0].url
-          );
-          reset('PROFILE');
-        }
+    if (this.state.imageURI !== '') {
+      let response = await avatarUpload(data);
+      if (response.status === 413) {
+        this.alert?.toggle('Profile image is too large.', 'Please try again.');
+        return;
       }
-    } catch (error) {}
+      let url = await response.json();
+      if (url.data[0].url) {
+        await commonService.tryCall(
+          `${commonService.rootUrl}/musora-api/profile/update`,
+          'POST',
+          { file: url === '' ? url : url.data[0].url }
+        );
+        this.props.setLoggedInUser({
+          ...this.props.user,
+          profile_picture_url: url.data[0].url
+        });
+
+        reset('PROFILE');
+      }
+    }
   };
 
   chooseImage = async () => {
@@ -175,9 +130,7 @@ export default class ProfileSettings extends React.Component {
         maxWidth: 1000
       },
       response => {
-        if (response.didCancel) {
-        } else if (response.error) {
-        } else {
+        if (!response.didCancel && !response.error) {
           this.setState({
             imageURI: response.uri,
             imageType: response.type,
@@ -221,7 +174,7 @@ export default class ProfileSettings extends React.Component {
             )}
           </View>
 
-          {this.state.currentlyView == 'Profile Settings' && (
+          {this.state.currentlyView === 'Profile Settings' && (
             <ScrollView style={{ flex: 1 }}>
               <TouchableOpacity
                 style={[styles.centerContent, localStyles.displayContainer]}
@@ -232,8 +185,7 @@ export default class ProfileSettings extends React.Component {
                 }
               >
                 <Text style={localStyles.settingsText}>Display Name</Text>
-                <View style={{ flex: 1 }} />
-                <AntIcon
+                <Icon.AntDesign
                   name={'right'}
                   size={onTablet ? 30 : 20}
                   color={colors.secondBackground}
@@ -248,8 +200,7 @@ export default class ProfileSettings extends React.Component {
                 }}
               >
                 <Text style={localStyles.settingsText}>Profile Photo</Text>
-                <View style={{ flex: 1 }} />
-                <AntIcon
+                <Icon.AntDesign
                   name={'right'}
                   size={onTablet ? 30 : 20}
                   color={colors.secondBackground}
@@ -257,7 +208,7 @@ export default class ProfileSettings extends React.Component {
               </TouchableOpacity>
             </ScrollView>
           )}
-          {this.state.currentlyView == 'Display Name' && (
+          {this.state.currentlyView === 'Display Name' && (
             <ScrollView style={styles.mainContainer}>
               <TextInput
                 autoCapitalize={'none'}
@@ -282,7 +233,7 @@ export default class ProfileSettings extends React.Component {
               </Text>
             </ScrollView>
           )}
-          {this.state.currentlyView == 'Profile Photo' && (
+          {this.state.currentlyView === 'Profile Photo' && (
             <ScrollView style={{ flex: 1 }}>
               <View style={[localStyles.scrollContainer, styles.centerContent]}>
                 {this.state.imageURI !== '' && (
@@ -305,7 +256,7 @@ export default class ProfileSettings extends React.Component {
                         })
                       }
                     >
-                      <EntypoIcon
+                      <Icon.Entypo
                         name={'cross'}
                         size={onTablet ? 30 : 22.5}
                         color={colors.secondBackground}
@@ -318,12 +269,12 @@ export default class ProfileSettings extends React.Component {
                   </View>
                 )}
 
-                {this.state.imageURI == '' && (
+                {this.state.imageURI === '' && (
                   <TouchableOpacity
                     onPress={() => this.chooseImage()}
                     style={styles.centerContent}
                   >
-                    <AntIcon
+                    <Icon.AntDesign
                       name={'plus'}
                       size={onTablet ? 80 : 65}
                       color={'white'}
@@ -340,7 +291,7 @@ export default class ProfileSettings extends React.Component {
                 onPress={() => this.chooseImage()}
                 style={[styles.centerContent, localStyles.imageContainer]}
               >
-                <IonIcon
+                <Icon.Ionicons
                   size={onTablet ? 50 : 35}
                   name={'ios-camera'}
                   color={colors.secondBackground}
@@ -350,74 +301,80 @@ export default class ProfileSettings extends React.Component {
             </ScrollView>
           )}
 
-          {this.state.currentlyView == 'Profile Settings' && (
+          {this.state.currentlyView === 'Profile Settings' && (
             <NavigationBar currentPage={'PROFILE'} pad={true} />
           )}
-
-          <Modal
-            isVisible={this.state.showDisplayName}
-            style={[
-              styles.centerContent,
-              {
-                margin: 0,
-                flex: 1
-              }
-            ]}
-            animation={'slideInUp'}
-            animationInTiming={350}
-            animationOutTiming={350}
-            coverScreen={true}
-            hasBackdrop={true}
-            onBackButtonPress={() =>
-              this.setState({
-                showDisplayName: false
-              })
+          <CustomModal
+            ref={r => (this.alertDisplay = r)}
+            additionalBtn={
+              <TouchableOpacity
+                onPress={() => {
+                  this.alert?.toggle();
+                }}
+                style={{
+                  marginTop: 20,
+                  borderRadius: 50,
+                  backgroundColor: colors.pianoteRed
+                }}
+              >
+                <Text
+                  style={[
+                    styles.modalButtonText,
+                    {
+                      padding: 10,
+                      fontSize: 15,
+                      color: '#ffffff'
+                    }
+                  ]}
+                >
+                  TRY AGAIN
+                </Text>
+              </TouchableOpacity>
             }
-          >
-            <DisplayName
-              hideDisplayName={() => {
-                this.setState({
-                  showDisplayName: false
-                });
-              }}
-            />
-          </Modal>
-          <Modal
-            isVisible={this.state.showProfileImage}
-            style={[styles.centerContent, styles.modalContainer]}
-            animation={'slideInUp'}
-            animationInTiming={350}
-            animationOutTiming={350}
-            coverScreen={true}
-            hasBackdrop={true}
-            onBackButtonPress={() =>
-              this.setState({
-                showProfileImage: false
-              })
-            }
-          >
-            <ProfileImage
-              hideProfileImage={() => {
-                this.setState({
-                  showProfileImage: false
-                });
-              }}
-            />
-          </Modal>
+            onClose={() => {}}
+          />
         </SafeAreaView>
         <Loading ref={ref => (this.loadingRef = ref)} />
+        <CustomModal
+          ref={r => (this.alert = r)}
+          additionalBtn={
+            <TouchableOpacity
+              onPress={() => {
+                this.alert?.toggle();
+              }}
+              style={{
+                marginTop: 20,
+                borderRadius: 50,
+                backgroundColor: colors.pianoteRed
+              }}
+            >
+              <Text
+                style={[
+                  styles.modalButtonText,
+                  {
+                    padding: 10,
+                    fontSize: 15,
+                    color: '#ffffff'
+                  }
+                ]}
+              >
+                TRY AGAIN
+              </Text>
+            </TouchableOpacity>
+          }
+          onClose={() => {}}
+        />
         <SafeAreaView style={{ position: 'absolute', zIndex: 3 }}>
           <TouchableOpacity
             onPress={() => {
               this.state.isLoading
                 ? null
-                : this.state.currentlyView == 'Profile Settings'
+                : this.state.currentlyView === 'Profile Settings'
                 ? goBack()
                 : this.setState({ currentlyView: 'Profile Settings' });
             }}
             style={{ padding: 10 }}
           >
-            <View style={{ flex: 1 }} />
             <Back
               width={backButtonSize}
               height={backButtonSize}
@@ -430,10 +387,20 @@ export default class ProfileSettings extends React.Component {
   }
 }
 
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+const mapDispatchToProps = dispatch => ({
+  setLoggedInUser: user => dispatch(setLoggedInUser(user))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileSettings);
+
 const localStyles = StyleSheet.create({
   settingsText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 20 : 16,
+    fontSize: isTablet ? 20 : 16,
     color: '#445f73'
   },
   myProfileSettings: {
@@ -443,40 +410,42 @@ const localStyles = StyleSheet.create({
     padding: 15
   },
   save: {
-    fontSize: DeviceInfo.isTablet() ? 20 : 14,
+    fontSize: isTablet ? 20 : 14,
     fontFamily: 'OpenSans-Bold',
     color: '#fb1b2f',
     textAlign: 'right',
     alignSelf: 'flex-end'
   },
   displayContainer: {
-    height: DeviceInfo.isTablet() ? 70 : 50,
+    height: isTablet ? 70 : 50,
     width: '100%',
     borderBottomColor: '#445f73',
     borderBottomWidth: 1,
     borderTopWidth: 1,
     borderTopColor: '#445f73',
     flexDirection: 'row',
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    justifyContent: 'space-between'
   },
   profilePhoto: {
-    height: DeviceInfo.isTablet() ? 70 : 50,
+    height: isTablet ? 70 : 50,
     width: '100%',
     borderBottomColor: '#445f73',
     borderBottomWidth: 1,
     flexDirection: 'row',
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    justifyContent: 'space-between'
   },
   textInput: {
     fontFamily: 'OpenSans-Regular',
     paddingHorizontal: 10,
     width: '100%',
-    fontSize: DeviceInfo.isTablet() ? 20 : 16,
+    fontSize: isTablet ? 20 : 16,
     color: '#445f73'
   },
   text: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 18 : 14,
+    fontSize: isTablet ? 18 : 14,
     paddingVertical: '2%',
     paddingHorizontal: 10,
     color: '#445f73'
@@ -486,7 +455,7 @@ const localStyles = StyleSheet.create({
     marginTop: 10
   },
   image: {
-    width: DeviceInfo.isTablet() ? 200 : 150,
+    width: isTablet ? 200 : 150,
     aspectRatio: 1,
     borderRadius: 200,
     marginTop: 25
@@ -500,7 +469,7 @@ const localStyles = StyleSheet.create({
   },
   imageText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 18 : 14,
+    fontSize: isTablet ? 18 : 14,
     paddingVertical: 30,
     paddingHorizontal: 20,
     color: '#445f73',
@@ -508,8 +477,8 @@ const localStyles = StyleSheet.create({
   },
   imageContainer: {
     alignSelf: 'center',
-    height: DeviceInfo.isTablet() ? 90 : 70,
-    width: DeviceInfo.isTablet() ? 90 : 70,
+    height: isTablet ? 90 : 70,
+    width: isTablet ? 90 : 70,
     borderRadius: 500,
     borderColor: '#445f73',
     borderWidth: 2

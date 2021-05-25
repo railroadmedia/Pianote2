@@ -1,32 +1,27 @@
-/**
- * AddToCalendar
- */
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  StyleSheet
-} from 'react-native';
-import DeviceInfo from 'react-native-device-info';
-import FontIcon from 'react-native-vector-icons/FontAwesome5';
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import Icon from '../assets/icons';
+
+const onTablet = global.onTablet;
 
 export default class AddToCalendar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      password: ''
-    };
-  }
-
   render = () => {
     return (
-      <TouchableWithoutFeedback
-        style={styles.container}
-        onPress={() => this.props.hideAddToCalendar()}
+      <Modal
+        visible={this.props.isVisible}
+        transparent={true}
+        style={styles.modalContainer}
+        animation={'slideInUp'}
+        animationInTiming={250}
+        animationOutTiming={250}
+        coverScreen={true}
+        hasBackdrop={true}
       >
-        <View style={[styles.container, styles.centerContent]}>
+        <TouchableOpacity
+          style={[styles.centerContent, localStyles.modalContainer]}
+          activeOpacity={1}
+          onPress={() => this.props.hideAddToCalendar()}
+        >
           <View style={localStyles.container}>
             <Text
               style={[
@@ -41,7 +36,7 @@ export default class AddToCalendar extends React.Component {
               Add this lesson to your calendar to{'\n'} be notified when it's
               available
             </Text>
-            <FontIcon
+            <Icon.FontAwesome5
               size={onTablet ? 70 : 50}
               name={'calendar-plus'}
               color={colors.pianoteRed}
@@ -50,7 +45,7 @@ export default class AddToCalendar extends React.Component {
             <TouchableOpacity
               style={[
                 localStyles.confirmAddition,
-                { justifyContent: 'center' }
+                { backgroundColor: colors.pianoteRed }
               ]}
               onPress={() => this.props.addEventToCalendar()}
             >
@@ -64,13 +59,17 @@ export default class AddToCalendar extends React.Component {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableOpacity>
+      </Modal>
     );
   };
 }
 
 const localStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
   container: {
     backgroundColor: 'white',
     paddingBottom: 15,
@@ -91,10 +90,10 @@ const localStyles = StyleSheet.create({
   confirmAddition: {
     marginTop: 15,
     borderRadius: 100,
-    backgroundColor: '#fb1b2f',
     marginHorizontal: 40,
     justifyContent: 'center',
-    height: DeviceInfo.isTablet() ? 40 : 30
+    height: onTablet ? 40 : 30,
+    justifyContent: 'center'
   },
   confirmAdditionText: {
     color: 'white'

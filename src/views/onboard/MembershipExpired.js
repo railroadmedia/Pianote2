@@ -1,6 +1,3 @@
-/**
- * MembershipExpired
- */
 import React from 'react';
 import {
   View,
@@ -10,17 +7,17 @@ import {
   ActivityIndicator
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import DeviceInfo from 'react-native-device-info';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
+import Pianote from '../../assets/img/svgs/pianote.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
 import { navigate } from '../../../AppNavigator';
 
+const isTablet = global.onTablet;
+
 export default class MembershipExpired extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       email: props.route?.params?.email,
       password: props.route?.params?.password
@@ -42,7 +39,7 @@ export default class MembershipExpired extends React.Component {
       <FastImage
         style={{ flex: 1 }}
         resizeMode={FastImage.resizeMode.cover}
-        source={require('Pianote2/src/assets/img/imgs/lisa-foundations.png')}
+        source={require('../../../src/assets/img/imgs/lisa-foundations.png')}
       >
         <LinearGradient
           style={localStyles.linearStyle}
@@ -51,7 +48,7 @@ export default class MembershipExpired extends React.Component {
         <SafeAreaView style={{ flex: 1 }}>
           <View style={localStyles.container}>
             <View style={localStyles.pianoteContainer}>
-              <Pianote fill={'#fb1b2f'} />
+              <Pianote fill={colors.pianoteRed} />
             </View>
             <View>
               <Text style={localStyles.title}>
@@ -108,7 +105,7 @@ const localStyles = StyleSheet.create({
     height: '70%'
   },
   buttonText: {
-    fontSize: DeviceInfo.isTablet() ? 24 : 16,
+    fontSize: isTablet ? 24 : 16,
     textAlign: 'center',
     color: 'white',
     fontFamily: 'RobotoCondensed-Bold',
@@ -117,19 +114,19 @@ const localStyles = StyleSheet.create({
   pianoteContainer: {
     alignSelf: 'center',
     alignItems: 'center',
-    width: DeviceInfo.isTablet() ? '20%' : '30%',
+    width: isTablet ? '20%' : '30%',
     aspectRatio: 177 / 53 //svg's viewbox viewBox="0 0 177 53"
   },
   title: {
     fontFamily: 'OpenSans-ExtraBold',
-    fontSize: DeviceInfo.isTablet() ? 32 : 24,
+    fontSize: isTablet ? 32 : 24,
     padding: 10,
     textAlign: 'center',
     color: 'white'
   },
   description: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 22 : 16,
+    fontSize: isTablet ? 22 : 16,
     paddingBottom: 25,
     paddingHorizontal: 10,
     textAlign: 'center',
@@ -143,4 +140,3 @@ const localStyles = StyleSheet.create({
     marginTop: 10
   }
 });
-// borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,

@@ -1,6 +1,3 @@
-/**
- * StudentFocusShow
- */
 import React from 'react';
 import {
   View,
@@ -13,18 +10,13 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
+import Back from '../../assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
-
 import { NetworkContext } from '../../context/NetworkProvider';
-
 import NavigationBar from '../../components/NavigationBar';
 import VerticalVideoList from '../../components/VerticalVideoList';
-
 import { getAllContent, getStudentFocusTypes } from '../../services/GetContent';
-
 import { cacheAndWritePodcasts } from '../../redux/PodcastsCacheActions';
 import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
 import { goBack, refreshOnFocusListener } from '../../../AppNavigator';
@@ -48,15 +40,14 @@ class StudentFocusShow extends React.Component {
     this.state = {
       thumbnailUrl: props.route?.params?.thumbnailUrl,
       allLessons: [],
-      currentSort: 'newest',
-      page: 1,
-      outVideos: false,
       refreshing: false,
       isLoadingAll: true,
       isPaging: false,
       filtering: false,
+      page: 1,
+      currentSort: 'newest',
       ...this.initialValidData(
-        props.route?.params?.type == 'quick-tips'
+        props.route?.params?.type === 'quick-tips'
           ? props.quickTipsCache
           : props.podcastsCache,
         true
@@ -69,9 +60,7 @@ class StudentFocusShow extends React.Component {
     this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   }
 
-  componentWillUnmount() {
-    this.refreshOnFocusListener?.();
-  }
+  componentWillUnmount = () => this.refreshOnFocusListener?.();
 
   getData = async () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
@@ -86,7 +75,7 @@ class StudentFocusShow extends React.Component {
     ]);
     this.metaFilters = content?.[1]?.meta?.filterOptions;
     this.props[
-      this.props.route?.params?.type == 'quick-tips'
+      this.props.route?.params?.type === 'quick-tips'
         ? 'cacheAndWriteQuickTips'
         : 'cacheAndWritePodcasts'
     ]({
@@ -103,36 +92,13 @@ class StudentFocusShow extends React.Component {
 
   initialValidData = (content, fromCache) => {
     try {
-      const newContent = content.all.data.map(data => {
-        return new ContentModel(data);
-      });
-
-      let items = [];
-      for (let i in newContent) {
-        items.push({
-          title: newContent[i].getField('title'),
-          artist: this.getArtist(newContent[i]),
-          thumbnail: newContent[i].getData('thumbnail_url'),
-          publishedOn:
-            newContent[i].publishedOn.slice(0, 10) +
-            'T' +
-            newContent[i].publishedOn.slice(11, 16),
-          type: newContent[i].post.type,
-          id: newContent[i].id,
-          isAddedToList: newContent[i].isAddedToList,
-          isStarted: newContent[i].isStarted,
-          isCompleted: newContent[i].isCompleted,
-          progress_percent: newContent[i].post.progress_percent
-        });
-      }
+      const newContent = content.all.data;
 
       return {
         thumbnailUrl:
           content.thumbnail[this.props.route?.params?.type]?.thumbnailUrl,
-        allLessons: items,
-        outVideos:
-          items.length == 0 || content.all.data.length < 20 ? true : false,
-        page: this.state?.page + 1 || 1,
+        allLessons: newContent,
+        page: 1,
         isLoadingAll: false,
         refreshing: fromCache,
         filtering: false,
@@ -152,9 +118,7 @@ class StudentFocusShow extends React.Component {
 
   getAllLessons = async isLoadingMore => {
     this.setState({ filtering: true });
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = await getAllContent(
       this.props.route?.params?.type,
       this.state.currentSort,
@@ -162,32 +126,12 @@ class StudentFocusShow extends React.Component {
       this.filterQuery
     );
     this.metaFilters = response?.meta?.filterOptions;
-    const newContent = await response.data.map(data => {
-      return new ContentModel(data);
-    });
+    const newContent = response.data;
 
-    let items = [];
-    for (let i in newContent) {
-      items.push({
-        title: newContent[i].getField('title'),
-        artist: this.getArtist(newContent[i]),
-        thumbnail: newContent[i].getData('thumbnail_url'),
-        publishedOn:
-          newContent[i].publishedOn.slice(0, 10) +
-          'T' +
-          newContent[i].publishedOn.slice(11, 16),
-        type: newContent[i].post.type,
-        id: newContent[i].id,
-        isAddedToList: newContent[i].isAddedToList,
-        isStarted: newContent[i].isStarted,
-        isCompleted: newContent[i].isCompleted,
-        progress_percent: newContent[i].post.progress_percent
-      });
-    }
     this.setState(state => ({
-      allLessons: isLoadingMore ? state.allLessons.concat(items) : items,
-      outVideos: items.length == 0 || response.data.length < 20 ? true : false,
-      page: this.state.page + 1,
+      allLessons: isLoadingMore
+        ? state.allLessons.concat(newContent)
+        : newContent,
       isLoadingAll: false,
       refreshing: false,
       filtering: false,
@@ -195,72 +139,12 @@ class StudentFocusShow extends React.Component {
     }));
   };
 
-  changeSort = async currentSort => {
-    this.setState(
-      {
-        currentSort,
-        outVideos: false,
-        isPaging: false,
-        allLessons: [],
-        page: 1
-      },
-      () => this.getAllLessons()
-    );
-  };
-
-  getVideos = async () => {
-    // change page before getting more lessons if paging
-    if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () =>
+  handleScroll = event => {
+    if (isCloseToBottom(event) && !this.state.isPaging) {
+      this.setState({ page: this.state.page + 1, isPaging: true }, () =>
         this.getAllLessons(true)
       );
     }
-  };
-
-  getArtist = newContent => {
-    if (newContent.post.type == 'song') {
-      if (typeof newContent.post.artist !== 'undefined') {
-        return newContent.post.artist;
-      } else {
-        for (i in newContent.post.fields) {
-          if (newContent.post.fields[i].key == 'artist') {
-            return newContent.post.fields[i].value;
-          }
-        }
-      }
-    } else {
-      try {
-        if (newContent.getField('instructor') !== 'TBD') {
-          return newContent.getField('instructor').fields[0].value;
-        } else {
-          return newContent.getField('instructor').name;
-        }
-      } catch (error) {
-        return '';
-      }
-    }
-  };
-
-  handleScroll = async event => {
-    if (
-      isCloseToBottom(event) &&
-      !this.state.isPaging &&
-      !this.state.outVideos
-    ) {
-      this.setState(
-        {
-          page: this.state.page + 1,
-          isPaging: true
-        },
-        () => this.getAllLessons(true)
-      );
-    }
-  };
-
-  refresh = () => {
-    this.setState({ refreshing: true, page: 1, outVideos: false }, () =>
-      this.getAllLessons()
-    );
   };
 
   render() {
@@ -284,7 +168,11 @@ class StudentFocusShow extends React.Component {
             <RefreshControl
               tint={'transparent'}
               colors={[colors.secondBackground]}
-              onRefresh={() => this.refresh()}
+              onRefresh={() =>
+                this.setState({ refreshing: true, page: 1 }, () =>
+                  this.getAllLessons()
+                )
+              }
               refreshing={isiOS ? false : this.state.refreshing}
             />
           }
@@ -317,7 +205,8 @@ class StudentFocusShow extends React.Component {
                 paddingHorizontal: '20%',
                 width: '100%',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                marginBottom: 25
               }}
             >
               <FastImage
@@ -335,7 +224,6 @@ class StudentFocusShow extends React.Component {
               />
             </View>
           </View>
-          <View style={{ height: 25 }} />
           <VerticalVideoList
             items={this.state.allLessons}
             title={'EPISODES'}
@@ -346,31 +234,31 @@ class StudentFocusShow extends React.Component {
             showArtist={true}
             showLength={false}
             showFilter={
-              this.props.route?.params?.type == 'quick-tips' ? true : false
+              this.props.route?.params?.type === 'quick-tips' ? true : false
             }
             showSort={
-              this.props.route?.params?.type == 'quick-tips' ? true : false
+              this.props.route?.params?.type === 'quick-tips' ? true : false
             }
             filters={this.metaFilters}
             currentSort={this.state.currentSort}
-            changeSort={sort => this.changeSort(sort)}
+            changeSort={sort =>
+              this.setState(
+                {
+                  currentSort: sort,
+                  isPaging: false,
+                  allLessons: [],
+                  page: 1
+                },
+                () => this.getAllLessons()
+              )
+            }
             imageWidth={(onTablet ? 0.225 : 0.3) * width}
-            outVideos={this.state.outVideos}
-            getVideos={() => this.getVideos()}
             applyFilters={filters =>
               new Promise(res =>
-                this.setState(
-                  {
-                    allLessons: [],
-                    outVideos: false,
-                    page: 1,
-                    filters
-                  },
-                  () => {
-                    this.filterQuery = filters;
-                    this.getAllLessons().then(res);
-                  }
-                )
+                this.setState({ allLessons: [], page: 1, filters }, () => {
+                  this.filterQuery = filters;
+                  this.getAllLessons().then(res);
+                })
               )
             }
           />

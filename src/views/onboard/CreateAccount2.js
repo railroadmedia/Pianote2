@@ -1,6 +1,3 @@
-/**
- * CreateAccount
- */
 import React from 'react';
 import {
   View,
@@ -12,20 +9,19 @@ import {
   ScrollView,
   StyleSheet
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
-import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import AsyncStorage from '@react-native-community/async-storage';
-import PasswordMatch from '../../modals/PasswordMatch';
 import Back from '../../assets/img/svgs/back';
-import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
-import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
-import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
+import GradientFeature from '../../components/GradientFeature.js';
+import PasswordHidden from '../../assets/img/svgs/passwordHidden.svg';
+import PasswordVisible from '../../assets/img/svgs/passwordVisible.svg';
 import { signUp, getUserData } from '../../services/UserDataAuth';
 import { NetworkContext } from '../../context/NetworkProvider';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
 import { goBack, navigate } from '../../../AppNavigator';
+
+const isTablet = global.onTablet;
 
 export default class CreateAccount extends React.Component {
   static contextType = NetworkContext;
@@ -42,10 +38,8 @@ export default class CreateAccount extends React.Component {
   }
 
   savePassword = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    if (this.state.password == this.state.confirmPassword) {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    if (this.state.password === this.state.confirmPassword) {
       if (this.state.password.length > 7) {
         if (this.props.route?.params?.purchase) {
           let response = await signUp(
@@ -57,18 +51,12 @@ export default class CreateAccount extends React.Component {
           );
           console.log(response);
           if (response.meta) {
-            try {
-              await AsyncStorage.multiSet([
-                ['loggedIn', 'true'],
-                ['email', encodeURIComponent(this.state.email)],
-                ['password', encodeURIComponent(this.state.password)]
-              ]);
-            } catch (e) {
-              console.log(e);
-            }
+            await AsyncStorage.multiSet([
+              ['email', encodeURIComponent(this.state.email)],
+              ['password', encodeURIComponent(this.state.password)]
+            ]);
 
             let userData = await getUserData();
-
             let currentDate = new Date().getTime() / 1000;
             let userExpDate =
               new Date(userData.expirationDate).getTime() / 1000;
@@ -102,8 +90,6 @@ export default class CreateAccount extends React.Component {
           });
         }
       }
-    } else {
-      this.setState({ showPasswordMatch: true });
     }
   };
 
@@ -112,7 +98,7 @@ export default class CreateAccount extends React.Component {
       <FastImage
         style={{ flex: 1 }}
         resizeMode={FastImage.resizeMode.cover}
-        source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
+        source={require('../../../src/assets/img/imgs/backgroundHands.png')}
       >
         <GradientFeature
           zIndex={0}
@@ -136,15 +122,16 @@ export default class CreateAccount extends React.Component {
                 height={backButtonSize}
                 fill={'white'}
               />
-              <Text
-                style={[styles.modalHeaderText, localStyles.createAccountText]}
-              >
-                Create Account
-              </Text>
-              <View />
             </TouchableOpacity>
+            <Text
+              style={[styles.modalHeaderText, localStyles.createAccountText]}
+            >
+              Create Account
+            </Text>
+            <View />
+
             <ScrollView
-              style={{ flex: 1 }}
+              style={{ flex: 1, marginBottom: 40 }}
               keyboardShouldPersistTaps='handled'
               contentInsetAdjustmentBehavior='never'
               contentContainerStyle={this.state.scrollViewContentFlex}
@@ -153,7 +140,6 @@ export default class CreateAccount extends React.Component {
                 <Text style={localStyles.createPasswordText}>
                   Create a password
                 </Text>
-                <View style={{ height: 7.5 }} />
                 <View style={localStyles.passInput}>
                   <TextInput
                     autoCorrect={false}
@@ -165,9 +151,7 @@ export default class CreateAccount extends React.Component {
                     keyboardAppearance={'dark'}
                     placeholderTextColor={'grey'}
                     placeholder={'Password'}
-                    keyboardType={
-                      Platform.OS == 'android' ? 'default' : 'email-address'
-                    }
+                    keyboardType={isiOS ? 'email-address' : 'default'}
                     secureTextEntry={true}
                     onChangeText={password => this.setState({ password })}
                     style={localStyles.textinput}
@@ -199,11 +183,11 @@ export default class CreateAccount extends React.Component {
                     )}
                   </TouchableOpacity>
                 </View>
-                <View style={{ height: 27.5 }} />
-                <Text style={localStyles.createPasswordText}>
+                <Text
+                  style={[localStyles.createPasswordText, { marginTop: 25 }]}
+                >
                   Confirm password
                 </Text>
-                <View style={{ height: 7.5 }} />
                 <View style={localStyles.passInput}>
                   <TextInput
                     style={localStyles.textinput}
@@ -216,9 +200,7 @@ export default class CreateAccount extends React.Component {
                     keyboardAppearance={'dark'}
                     placeholderTextColor={'grey'}
                     placeholder={'Confirm Password'}
-                    keyboardType={
-                      Platform.OS == 'android' ? 'default' : 'email-address'
-                    }
+                    keyboardType={isiOS ? 'email-address' : 'default'}
                     secureTextEntry={true}
                     onChangeText={confirmPassword =>
                       this.setState({ confirmPassword })
@@ -251,22 +233,26 @@ export default class CreateAccount extends React.Component {
                     )}
                   </TouchableOpacity>
                 </View>
-                <View style={{ height: 10 }} />
-                <Text style={localStyles.characters}>
+                <Text style={[localStyles.characters, { marginTop: 10 }]}>
                   Use at least 8 characters
                 </Text>
                 <TouchableOpacity
-                  onPress={() => this.savePassword()}
+                  onPress={() => {
+                    if (this.state.password === this.state.confirmPassword) {
+                      this.savePassword();
+                    }
+                  }}
                   style={[
                     styles.centerContent,
                     localStyles.savePass,
                     {
                       width: onTablet ? '30%' : '50%',
+                      borderColor: colors.pianoteRed,
                       backgroundColor:
                         this.state.password.length > 0 &&
                         this.state.confirmPassword.length > 0 &&
-                        this.state.password == this.state.confirmPassword
-                          ? '#fb1b2f'
+                        this.state.password === this.state.confirmPassword
+                          ? colors.pianoteRed
                           : 'transparent'
                     }
                   ]}
@@ -278,9 +264,9 @@ export default class CreateAccount extends React.Component {
                         color:
                           this.state.password.length > 0 &&
                           this.state.confirmPassword.length > 0 &&
-                          this.state.password == this.state.confirmPassword
+                          this.state.password === this.state.confirmPassword
                             ? 'white'
-                            : '#fb1b2f',
+                            : colors.pianoteRed,
                         fontFamily: 'RobotoCondensed-Bold',
                         fontSize: onTablet ? 20 : 14,
                         textAlign: 'center',
@@ -292,30 +278,8 @@ export default class CreateAccount extends React.Component {
                   </Text>
                 </TouchableOpacity>
               </View>
-              <View style={{ marginBottom: 40 }}>
-                <CreateAccountStepCounter step={2} />
-              </View>
+              <CreateAccountStepCounter step={2} />
             </ScrollView>
-            <Modal
-              isVisible={this.state.showPasswordMatch}
-              style={[styles.centerContent, styles.modalContainer]}
-              animation={'slideInUp'}
-              animationInTiming={450}
-              animationOutTiming={450}
-              coverScreen={true}
-              hasBackdrop={true}
-              onBackButtonPress={() =>
-                this.setState({ showPasswordMatch: false })
-              }
-            >
-              <PasswordMatch
-                hidePasswordMatch={() => {
-                  this.setState({
-                    showPasswordMatch: false
-                  });
-                }}
-              />
-            </Modal>
           </KeyboardAvoidingView>
         </SafeAreaView>
       </FastImage>
@@ -325,14 +289,15 @@ export default class CreateAccount extends React.Component {
 
 const localStyles = StyleSheet.create({
   createAccountContainer: {
-    padding: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
+    position: 'absolute',
+    left: 15,
+    padding: 5,
+    alignItems: 'center'
   },
   createAccountText: {
     color: 'white',
-    fontSize: DeviceInfo.isTablet() ? 36 : 24
+    fontSize: isTablet ? 36 : 24,
+    alignSelf: 'center'
   },
   createPasswordContainer: {
     flex: 1,
@@ -341,13 +306,14 @@ const localStyles = StyleSheet.create({
   },
   createPasswordText: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: DeviceInfo.isTablet() ? 24 : 16,
+    fontSize: isTablet ? 24 : 16,
     textAlign: 'left',
     color: 'white',
     paddingLeft: 15
   },
   passInput: {
     borderRadius: 100,
+    marginTop: 7.5,
     marginHorizontal: 15,
     justifyContent: 'center',
     backgroundColor: 'white'
@@ -357,7 +323,7 @@ const localStyles = StyleSheet.create({
     color: 'black',
     borderRadius: 100,
     marginHorizontal: 15,
-    fontSize: DeviceInfo.isTablet() ? 20 : 14,
+    fontSize: isTablet ? 20 : 14,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
@@ -380,7 +346,7 @@ const localStyles = StyleSheet.create({
   characters: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'left',
-    fontSize: DeviceInfo.isTablet() ? 18 : 14,
+    fontSize: isTablet ? 18 : 14,
     color: 'white',
     paddingLeft: 15,
     marginBottom: 40
@@ -389,7 +355,6 @@ const localStyles = StyleSheet.create({
     marginBottom: 10,
     borderWidth: 2,
     borderRadius: 50,
-    alignSelf: 'center',
-    borderColor: '#fb1b2f'
+    alignSelf: 'center'
   }
 });

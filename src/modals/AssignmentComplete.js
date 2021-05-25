@@ -1,77 +1,72 @@
-/**
- * AssignmentComplete
- */
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions
-} from 'react-native';
-
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
+import Icon from '../assets/icons';
 
 export default class AssignmentComplete extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   render = () => {
     return (
-      <BlurView style={styles.container} blurAmount={5}>
-        <TouchableOpacity
-          style={[styles.container, styles.centerContent]}
-          onPress={() => this.props.hideAssignmentComplete()}
-        >
-          <View style={localStyles.container}>
-            <View style={[styles.centerContent]}>
-              <IonIcon
+      <Modal
+        visible={this.props.isVisible}
+        transparent={true}
+        style={styles.modalContainer}
+        animation={'slideInUp'}
+        animationInTiming={250}
+        animationOutTiming={250}
+        coverScreen={false}
+        hasBackdrop={false}
+      >
+        <BlurView style={styles.container} blurAmount={5}>
+          <TouchableOpacity
+            style={[styles.centerContent, localStyles.modalContainer]}
+            onPress={() => this.props.hideAssignmentComplete()}
+          >
+            <View style={localStyles.container}>
+              <Icon.Ionicons
                 name={'ios-trophy'}
                 size={onTablet ? 45 : 35}
-                color={'#fb1b2f'}
+                color={colors.pianoteRed}
               />
+              <View
+                style={[
+                  styles.centerContent,
+                  localStyles.assignmentCompleteContainer
+                ]}
+              >
+                <Text style={styles.modalHeaderText}>Assignment Complete</Text>
+              </View>
+              <View>
+                <Text style={[styles.modalBodyText, localStyles.congratsText]}>
+                  Congratulations! You completed
+                </Text>
+                <Text
+                  style={[styles.modalBodyText, localStyles.assignmentTitle]}
+                >
+                  {this.props.title}
+                </Text>
+                <Text style={[styles.modalButtonText, localStyles.xpText]}>
+                  YOU EARNED {this.props.xp} XP!
+                </Text>
+              </View>
             </View>
-            <View
-              style={[
-                styles.centerContent,
-                localStyles.assignmentCompleteContainer
-              ]}
-            >
-              <Text style={[styles.modalHeaderText]}>Assignment Complete</Text>
-            </View>
-            <View>
-              <Text style={[styles.modalBodyText, localStyles.congratsText]}>
-                Congratulations! You completed
-              </Text>
-              <Text style={[styles.modalBodyText, localStyles.assignmentTitle]}>
-                {this.props.title}
-              </Text>
-              <Text style={[styles.modalButtonText, localStyles.xpText]}>
-                YOU EARNED {this.props.xp} XP!
-              </Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-      </BlurView>
+          </TouchableOpacity>
+        </BlurView>
+      </Modal>
     );
   };
 }
 
 const localStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
   container: {
     backgroundColor: 'white',
     borderRadius: 10,
-    padding: 30
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    padding: 15
   },
   assignmentCompleteContainer: {
     padding: 5,
@@ -84,7 +79,7 @@ const localStyles = StyleSheet.create({
   },
   assignmentTitle: {
     marginHorizontal: 20,
-    fontWeight: 'bold'
+    fontFamily: 'OpenSans-Bold'
   },
   congratsText: {
     marginHorizontal: 20

@@ -1,6 +1,3 @@
-/**
- * NewMembership
- */
 import React from 'react';
 import {
   View,
@@ -13,8 +10,8 @@ import {
   PixelRatio,
   StyleSheet
 } from 'react-native';
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
-import AntIcon from 'react-native-vector-icons/AntDesign';
+import Back from '../../assets/img/svgs/back.svg';
+import Icon from '../../assets/icons.js';
 import AsyncStorage from '@react-native-community/async-storage';
 import Orientation from 'react-native-orientation-locker';
 import { SafeAreaView } from 'react-navigation';
@@ -22,7 +19,6 @@ import RNIap, {
   purchaseErrorListener,
   purchaseUpdatedListener
 } from 'react-native-iap';
-
 import { signUp, restorePurchase } from '../../services/UserDataAuth';
 import CustomModal from '../../modals/CustomModal';
 import Loading from '../../components/Loading';
@@ -111,29 +107,24 @@ export default class NewMembership extends React.Component {
       );
 
       if (response.meta) {
-        try {
-          await AsyncStorage.multiSet([
-            ['loggedIn', 'true'],
-            ['email', this.state.email],
-            ['password', this.state.password]
-          ]);
-        } catch (e) {}
-        try {
-          // finish transaction
-          await RNIap.finishTransaction(purchase, false);
-          // if new user no pack only then create account
-          if (this.state.newUser === 'SIGNUP' && global.isPackOnly == false) {
-            navigate('CREATEACCOUNT3', {
-              data: {
-                email: this.state.email,
-                password: this.state.password,
-                plan: ''
-              }
-            });
-          } else {
-            navigate('LOADPAGE');
-          }
-        } catch (e) {}
+        await AsyncStorage.multiSet([
+          ['email', this.state.email],
+          ['password', this.state.password]
+        ]);
+        // finish transaction
+        await RNIap.finishTransaction(purchase, false);
+        // if new user no pack only then create account
+        if (this.state.newUser === 'SIGNUP' && !global.isPackOnly) {
+          navigate('CREATEACCOUNT3', {
+            data: {
+              email: this.state.email,
+              password: this.state.password,
+              plan: ''
+            }
+          });
+        } else {
+          navigate('LOADPAGE');
+        }
       } else {
         let { title, detail } = response.errors[0];
         Alert.alert(title, detail, [{ text: 'OK' }], {
@@ -211,8 +202,7 @@ export default class NewMembership extends React.Component {
               style={{ position: 'absolute', left: 15, padding: 5 }}
               onPress={() => {
                 if (onTablet) Orientation.unlockAllOrientations();
-                this.props.route?.params?.type == 'SIGNUP' ||
-                global.isPackOnly == true
+                this.props.route?.params?.type === 'SIGNUP' || global.isPackOnly
                   ? goBack()
                   : navigate('LOGINCREDENTIALS');
               }}
@@ -242,7 +232,7 @@ export default class NewMembership extends React.Component {
                 }}
               >
                 {`${
-                  this.state.newUser == 'EXPIRED'
+                  this.state.newUser === 'EXPIRED'
                     ? 'Start your new\n membership TODAY'
                     : 'Start your 7-Day \n FREE Trial Today'
                 }`}
@@ -256,7 +246,7 @@ export default class NewMembership extends React.Component {
                 }}
               >
                 {`${
-                  this.state.newUser == 'EXPIRED'
+                  this.state.newUser === 'EXPIRED'
                     ? 'Choose the perfect plan that matches your learning style.'
                     : `Your first 7 days are on us. Choose the\nplan that will start after your trial ends.`
                 }`}
@@ -314,7 +304,7 @@ export default class NewMembership extends React.Component {
                   >
                     <Text style={styles.planBtnText}>
                       {`START YOUR\n${
-                        this.state.newUser == 'EXPIRED'
+                        this.state.newUser === 'EXPIRED'
                           ? 'MEMBERSHIP'
                           : '7-DAY FREE TRIAL'
                       }`}
@@ -390,7 +380,7 @@ export default class NewMembership extends React.Component {
                   >
                     <Text style={styles.planBtnText}>
                       {`START YOUR\n${
-                        this.state.newUser == 'EXPIRED'
+                        this.state.newUser === 'EXPIRED'
                           ? 'MEMBERSHIP'
                           : '7-DAY FREE TRIAL'
                       }`}
@@ -399,7 +389,7 @@ export default class NewMembership extends React.Component {
                 </View>
               </View>
             </View>
-            {this.state.newUser == 'SIGNUP' && (
+            {this.state.newUser === 'SIGNUP' && (
               <View
                 style={{
                   zIndex: 5,
@@ -420,7 +410,7 @@ export default class NewMembership extends React.Component {
               }}
             >
               {this.state.benefits.map((benefit, i) => {
-                if (!this.state.newUser == 'EXPIRED' || i > 0) {
+                if (!this.state.newUser === 'EXPIRED' || i > 0) {
                   return (
                     <View>
                       <View
@@ -431,7 +421,7 @@ export default class NewMembership extends React.Component {
                           alignItems: 'center'
                         }}
                       >
-                        <AntIcon
+                        <Icon.AntDesign
                           name={'check'}
                           size={onTablet ? 1.3 * fontIndex : 2 * fontIndex}
                           color={'white'}
@@ -455,7 +445,7 @@ export default class NewMembership extends React.Component {
               })}
               <TouchableOpacity
                 onPress={() => {
-                  this.state.newUser == 'SIGNUP'
+                  this.state.newUser === 'SIGNUP'
                     ? navigate('LOGINCREDENTIALS')
                     : this.restorePurchases();
                 }}
@@ -467,12 +457,12 @@ export default class NewMembership extends React.Component {
                     { fontSize: onTablet ? 1.2 * fontIndex : 1.5 * fontIndex }
                   ]}
                 >
-                  {this.state.newUser == 'SIGNUP'
+                  {this.state.newUser === 'SIGNUP'
                     ? 'Already A Member? Log In.'
                     : 'Restore purchases'}
                 </Text>
               </TouchableOpacity>
-              {this.state.newUser == 'SIGNUP' && (
+              {this.state.newUser === 'SIGNUP' && (
                 <TouchableOpacity
                   style={{
                     paddingTop: 5,
@@ -503,7 +493,7 @@ export default class NewMembership extends React.Component {
                 aspectRatio: 1,
                 top: '50%'
               }}
-            ></View>
+            />
           </View>
           <Loading
             ref={ref => {

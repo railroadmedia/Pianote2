@@ -1,6 +1,3 @@
-/**
- * CreateAccount
- */
 import React from 'react';
 import {
   View,
@@ -8,29 +5,31 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Platform,
   ScrollView,
-  StyleSheet
+  StyleSheet,
+  Modal
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
-
 import Back from '../../assets/img/svgs/back';
 import CheckEmail from '../../modals/CheckEmail.js';
-import ValidateEmail from '../../modals/ValidateEmail.js';
 import GradientFeature from '../../components/GradientFeature.js';
-import commonService from '../../services/common.service.js';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
 import Orientation from 'react-native-orientation-locker';
-import DeviceInfo from 'react-native-device-info';
 import { navigate } from '../../../AppNavigator';
+import { isEmailUnique } from '../../services/UserDataAuth';
+
+const onTablet = global.onTablet;
+let localStyles;
 
 export default class CreateAccount extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
+
+    localStyles = setStyles(colors, sizing);
+
     if (onTablet) Orientation.unlockAllOrientations();
     else Orientation.lockToPortrait();
     this.state = {
@@ -41,33 +40,23 @@ export default class CreateAccount extends React.Component {
     };
   }
 
-  verifyEmail = () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+  verifyEmail = async () => {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     if (this.state.email.length > 0) {
       let email = encodeURIComponent(this.state.email);
-      fetch(`${commonService.rootUrl}/usora/api/is-email-unique?email=${email}`)
-        .then(response => response.json())
-        .then(response => {
-          console.log(response);
-          if (response?.exists) {
-            this.setState({ showCheckEmail: true });
-          } else if (
-            response?.errors?.email ==
-            'The email must be a valid email address.'
-          ) {
-            this.setState({ showValidateEmail: true });
-          } else {
-            navigate('CREATEACCOUNT2', {
-              email: this.state.email,
-              purchase: this.props.route?.params?.purchase
-            });
-          }
-        })
-        .catch(error => {
-          console.log('API Error: ', error);
+      let response = await isEmailUnique(email);
+      if (response?.exists) {
+        this.setState({ showCheckEmail: true });
+      } else if (
+        response?.errors?.email === 'The email must be a valid email address.'
+      ) {
+        this.setState({ showValidateEmail: true });
+      } else {
+        navigate('CREATEACCOUNT2', {
+          email: this.state.email,
+          purchase: this.props.route?.params?.purchase
         });
+      }
     }
   };
 
@@ -76,7 +65,7 @@ export default class CreateAccount extends React.Component {
       <FastImage
         style={{ flex: 1 }}
         resizeMode={FastImage.resizeMode.cover}
-        source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
+        source={require('../../../src/assets/img/imgs/backgroundHands.png')}
       >
         <GradientFeature
           zIndex={0}
@@ -100,13 +89,13 @@ export default class CreateAccount extends React.Component {
                 height={backButtonSize}
                 fill={'white'}
               />
-              <Text
-                style={[styles.modalHeaderText, localStyles.createAccountText]}
-              >
-                Create Account
-              </Text>
-              <View />
             </TouchableOpacity>
+            <Text
+              style={[styles.modalHeaderText, localStyles.createAccountText]}
+            >
+              Create Account
+            </Text>
+
             <ScrollView
               style={{ flex: 1 }}
               keyboardShouldPersistTaps='handled'
@@ -121,9 +110,7 @@ export default class CreateAccount extends React.Component {
                     autoCorrect={false}
                     autoCapitalize={'none'}
                     onBlur={() =>
-                      this.setState({
-                        scrollViewContentFlex: { flex: 1 }
-                      })
+                      this.setState({ scrollViewContentFlex: { flex: 1 } })
                     }
                     onFocus={() =>
                       this.setState({
@@ -133,11 +120,7 @@ export default class CreateAccount extends React.Component {
                     keyboardAppearance={'dark'}
                     placeholderTextColor={'grey'}
                     placeholder={'Email Address'}
-                    keyboardType={
-                      Platform.OS == 'android'
-                        ? 'visible-password'
-                        : 'email-address'
-                    }
+                    keyboardType={isiOS ? 'email-address' : 'visible-password'}
                     onChangeText={email => this.setState({ email })}
                     style={localStyles.textInput}
                   />
@@ -149,10 +132,9 @@ export default class CreateAccount extends React.Component {
                       localStyles.verifyContainer,
                       {
                         width: onTablet ? '30%' : '50%',
-                        marginTop: 15,
                         backgroundColor:
                           this.state.email.length > 0
-                            ? '#fb1b2f'
+                            ? colors.pianoteRed
                             : 'transparent'
                       }
                     ]}
@@ -162,7 +144,9 @@ export default class CreateAccount extends React.Component {
                         styles.modalButtonText,
                         {
                           color:
-                            this.state.email.length > 0 ? 'white' : '#fb1b2f',
+                            this.state.email.length > 0
+                              ? 'white'
+                              : colors.pianoteRed,
                           fontFamily: 'RobotoCondensed-Bold',
                           fontSize: onTablet ? 20 : 14,
                           textAlign: 'center',
@@ -177,27 +161,20 @@ export default class CreateAccount extends React.Component {
                 <CreateAccountStepCounter step={1} />
               </View>
             </ScrollView>
-            <Modal
+
+            <CheckEmail
               isVisible={this.state.showCheckEmail}
-              style={[styles.centerContent, styles.modalContainer]}
-              animation={'slideInUp'}
-              animationInTiming={350}
-              animationOutTiming={350}
-              coverScreen={true}
-              hasBackdrop={true}
-              onBackButtonPress={() => this.setState({ showCheckEmail: false })}
-            >
-              <CheckEmail
-                hideCheckEmail={() =>
-                  this.setState({
-                    showCheckEmail: false
-                  })
-                }
-              />
-            </Modal>
+              hideCheckEmail={() =>
+                this.setState({
+                  showCheckEmail: false
+                })
+              }
+            />
+
             <Modal
-              isVisible={this.state.showValidateEmail}
-              style={[styles.centerContent, styles.modalContainer]}
+              visible={this.state.showValidateEmail}
+              transparent={true}
+              style={[styles.centerContent, localStyles.modalContainer]}
               animation={'slideInUp'}
               animationInTiming={350}
               animationOutTiming={350}
@@ -207,13 +184,33 @@ export default class CreateAccount extends React.Component {
                 this.setState({ showValidateEmail: false })
               }
             >
-              <ValidateEmail
-                hideValidateEmail={() => {
-                  this.setState({
-                    showValidateEmail: false
-                  });
-                }}
-              />
+              <TouchableOpacity
+                style={[styles.container, styles.centerContent]}
+                onPress={() => this.setState({ showValidateEmail: false })}
+              >
+                <View style={[styles.container, styles.centerContent]}>
+                  <View style={localStyles.containerModal}>
+                    <Text style={[styles.modalHeaderText, localStyles.title]}>
+                      The email must be a valid {'\n'}email address.
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() =>
+                        this.setState({ showValidateEmail: false })
+                      }
+                      style={localStyles.tryAgain}
+                    >
+                      <Text
+                        style={[
+                          styles.modalCancelButtonText,
+                          localStyles.tryAgainText
+                        ]}
+                      >
+                        TRY AGAIN
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </TouchableOpacity>
             </Modal>
           </KeyboardAvoidingView>
         </SafeAreaView>
@@ -222,51 +219,86 @@ export default class CreateAccount extends React.Component {
   }
 }
 
-const localStyles = StyleSheet.create({
-  createAccountContainer: {
-    padding: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  emailContainer: {
-    flex: 1,
-    justifyContent: 'space-between',
-    marginBottom: 20
-  },
-  emailText: {
-    fontFamily: 'OpenSans-Bold',
-    fontSize: DeviceInfo.isTablet() ? 24 : 16,
-    textAlign: 'left',
-    color: 'white',
-    paddingLeft: 15
-  },
-  createAccountText: {
-    color: 'white',
-    fontSize: DeviceInfo.isTablet() ? 36 : 24
-  },
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 15,
-    margin: 20,
-    height: 200,
-    width: '80%'
-  },
-  textInput: {
-    padding: 15,
-    marginTop: 14,
-    color: 'black',
-    borderRadius: 100,
-    marginHorizontal: 15,
-    fontSize: DeviceInfo.isTablet() ? 20 : 14,
-    backgroundColor: 'white',
-    fontFamily: 'OpenSans-Regular'
-  },
-  verifyContainer: {
-    marginBottom: 20,
-    borderWidth: 2,
-    borderRadius: 50,
-    alignSelf: 'center',
-    borderColor: '#fb1b2f'
-  }
-});
+const setStyles = (appColor, size) =>
+  StyleSheet.create({
+    modalContainer: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,.5)'
+    },
+    createAccountContainer: {
+      position: 'absolute',
+      left: 15,
+      padding: 5,
+      alignItems: 'center'
+    },
+    emailContainer: {
+      flex: 1,
+      justifyContent: 'space-between',
+      marginBottom: 20
+    },
+    emailText: {
+      fontFamily: 'OpenSans-Bold',
+      fontSize: onTablet ? 24 : 16,
+      textAlign: 'left',
+      color: 'white',
+      paddingLeft: 15
+    },
+    createAccountText: {
+      color: 'white',
+      fontSize: onTablet ? 36 : 24,
+      alignSelf: 'center'
+    },
+    container: {
+      backgroundColor: 'white',
+      borderRadius: 15,
+      margin: 20,
+      height: 200,
+      width: '80%'
+    },
+    textInput: {
+      padding: 15,
+      marginTop: 14,
+      color: 'black',
+      borderRadius: 100,
+      marginHorizontal: 15,
+      fontSize: onTablet ? 20 : 14,
+      backgroundColor: 'white',
+      fontFamily: 'OpenSans-Regular'
+    },
+    verifyContainer: {
+      marginBottom: 20,
+      borderWidth: 2,
+      borderRadius: 50,
+      alignSelf: 'center',
+      borderColor: appColor.pianoteRed,
+      marginTop: 15
+    },
+    containerModal: {
+      backgroundColor: 'white',
+      borderRadius: 15,
+      paddingBottom: 5,
+      paddingTop: 20,
+      backgroundColor: 'white'
+    },
+    title: {
+      paddingHorizontal: 20,
+      marginBottom: 10
+    },
+    loginContainer: {
+      borderRadius: 45,
+      backgroundColor: appColor.pianoteRed,
+      marginHorizontal: 20,
+      marginVertical: 5
+    },
+    loginText: {
+      color: 'white',
+      paddingVertical: 10
+    },
+    tryAgain: {
+      paddingHorizontal: 20,
+      marginVertical: 10
+    },
+    tryAgainText: {
+      color: appColor.pianoteRed
+    }
+  });

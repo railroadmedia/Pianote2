@@ -1,6 +1,3 @@
-/**
- * SongCatalog
- */
 import React from 'react';
 import {
   View,
@@ -12,14 +9,12 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { ContentModel } from '@musora/models';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
 import { getStartedContent, getAllContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
-
 import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
 import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
@@ -47,10 +42,8 @@ class SongCatalog extends React.Component {
       allSongs: [],
       currentSort: 'newest',
       page: 1,
-      outVideos: false,
       isPaging: false,
       filtering: false,
-      started: true,
       refreshing: true,
       refreshControl: false,
       ...this.initialValidData(songsCache, true)
@@ -66,9 +59,7 @@ class SongCatalog extends React.Component {
     this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   }
 
-  componentWillUnmount() {
-    this.refreshOnFocusListener?.();
-  }
+  componentWillUnmount = () => this.refreshOnFocusListener?.();
 
   async getContent() {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
@@ -79,8 +70,9 @@ class SongCatalog extends React.Component {
         this.state.page,
         this.filterQuery
       ),
-      getStartedContent('song')
+      getStartedContent('song', 1)
     ]);
+
     this.metaFilters = content?.[0]?.meta?.filterOptions;
     this.props.cacheAndWriteSongs({
       all: content[0],
@@ -96,25 +88,13 @@ class SongCatalog extends React.Component {
 
   initialValidData = (content, fromCache) => {
     try {
-      let allVideos = this.setData(
-        content.all.data.map(data => {
-          return new ContentModel(data);
-        })
-      );
-
-      let inprogressVideos = this.setData(
-        content.inProgress.data.map(data => {
-          return new ContentModel(data);
-        })
-      );
+      let allVideos = content.all.data;
+      let inprogressVideos = content.inProgress.data;
       return {
         allSongs: allVideos,
-        outVideos:
-          allVideos.length == 0 || content.all.data.length < 20 ? true : false,
         filtering: false,
         isPaging: false,
         progressSongs: inprogressVideos,
-        started: inprogressVideos.length !== 0,
         refreshing: false,
         refreshControl: fromCache
       };
@@ -125,9 +105,7 @@ class SongCatalog extends React.Component {
 
   getAllSongs = async loadMore => {
     this.setState({ filtering: true });
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = await getAllContent(
       'song',
       this.state.currentSort,
@@ -136,15 +114,8 @@ class SongCatalog extends React.Component {
     );
     this.metaFilters = response?.meta?.filterOptions;
 
-    const newContent = await response.data.map(data => {
-      return new ContentModel(data);
-    });
-
-    let items = this.setData(newContent);
-
     this.setState(state => ({
-      allSongs: loadMore ? state.allSongs.concat(items) : items,
-      outVideos: items.length == 0 || response.data.length < 20 ? true : false,
+      allSongs: loadMore ? state.allSongs.concat(response.data) : response.data,
       filtering: false,
       refreshControl: false,
       isPaging: false,
@@ -152,99 +123,18 @@ class SongCatalog extends React.Component {
     }));
   };
 
-  setData(newContent) {
-    let items = [];
-    for (let i in newContent) {
-      items.push({
-        title: newContent[i].getField('title'),
-        artist: newContent[i].getField('artist'),
-        thumbnail: newContent[i].getData('thumbnail_url'),
-        type: newContent[i].post.type,
-        publishedOn:
-          newContent[i].publishedOn.slice(0, 10) +
-          'T' +
-          newContent[i].publishedOn.slice(11, 16),
-        description: newContent[i]
-          .getData('description')
-          .replace(/(<([^>]+)>)/g, '')
-          .replace(/&nbsp;/g, '')
-          .replace(/&amp;/g, '&')
-          .replace(/&#039;/g, "'")
-          .replace(/&quot;/g, '"')
-          .replace(/&gt;/g, '>')
-          .replace(/&lt;/g, '<'),
-        xp: newContent[i].post.xp,
-        id: newContent[i].post.id,
-        currentLessonId: newContent[i].post?.song_part_id,
-        lesson_count: newContent[i].post.lesson_count,
-        like_count: newContent[i].post.like_count,
-        isLiked: newContent[i].post.is_liked_by_current_user,
-        isAddedToList: newContent[i].isAddedToList,
-        isStarted: newContent[i].isStarted,
-        isCompleted: newContent[i].isCompleted,
-        progress_percent: newContent[i].post.progress_percent
-      });
-    }
-    return items;
-  }
-
-  changeSort = currentSort => {
-    this.setState(
-      {
-        allSongs: [],
-        currentSort,
-        outVideos: false,
-        isPaging: false,
-        page: 1
-      },
-      () => this.getAllSongs()
-    );
-  };
-
-  getVideos = () => {
-    if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () =>
+  handleScroll = event => {
+    if (isCloseToBottom(event) && !this.state.isPaging) {
+      this.setState({ page: this.state.page + 1, isPaging: true }, () =>
         this.getAllSongs(true)
       );
     }
   };
 
-  handleScroll = event => {
-    if (
-      isCloseToBottom(event) &&
-      !this.state.isPaging &&
-      !this.state.outVideos
-    ) {
-      this.setState(
-        {
-          page: this.state.page + 1,
-          isPaging: true
-        },
-        () => this.getAllSongs(true)
-      );
-    }
-  };
-
-  refresh() {
-    this.setState(
-      {
-        refreshControl: true,
-        page: 1
-      },
-      () => this.getContent()
-    );
-  }
-
   getSquareHeight = () => {
-    if (onTablet) {
-      return 125;
-    } else {
-      if (Platform.OS == 'android') {
-        return height * 0.1375;
-      } else {
-        return height * 0.115;
-      }
-    }
+    if (onTablet) return 125;
+    if (!isiOS) return height * 0.1375;
+    return height * 0.115;
   };
 
   render() {
@@ -263,7 +153,11 @@ class SongCatalog extends React.Component {
                 tintColor={'transparent'}
                 colors={[colors.pianoteRed]}
                 refreshing={isiOS ? false : this.state.refreshControl}
-                onRefresh={() => this.refresh()}
+                onRefresh={() =>
+                  this.setState({ refreshControl: true, page: 1 }, () =>
+                    this.getContent()
+                  )
+                }
               />
             }
           >
@@ -275,7 +169,7 @@ class SongCatalog extends React.Component {
               />
             )}
             <Text style={styles.contentPageHeader}>Songs</Text>
-            {this.state.started && (
+            {!!this.state.progressSongs.length && (
               <View style={styles.mainContainer}>
                 <HorizontalVideoList
                   hideFilterButton={true}
@@ -289,7 +183,6 @@ class SongCatalog extends React.Component {
                   isSquare={true}
                   items={this.state.progressSongs}
                 />
-                <View style={{ height: 5 }} />
               </View>
             )}
             <VerticalVideoList
@@ -308,25 +201,27 @@ class SongCatalog extends React.Component {
               containerBorderWidth={0}
               containerWidth={width}
               currentSort={this.state.currentSort}
-              changeSort={sort => this.changeSort(sort)} // change sort and reload videos
-              outVideos={this.state.outVideos} // if paging and out of videos
+              changeSort={sort =>
+                this.setState(
+                  {
+                    allSongs: [],
+                    currentSort: sort,
+                    isPaging: false,
+                    page: 1
+                  },
+                  () => this.getAllSongs()
+                )
+              }
               isSquare={true}
-              containerHeight={this.getSquareHeight()} // height per row
-              imageHeight={this.getSquareHeight()} // image height
-              imageWidth={this.getSquareHeight()} // image height
+              containerHeight={this.getSquareHeight()}
+              imageHeight={this.getSquareHeight()}
+              imageWidth={this.getSquareHeight()}
               applyFilters={filters =>
                 new Promise(res =>
-                  this.setState(
-                    {
-                      allSongs: [],
-                      outVideos: false,
-                      page: 1
-                    },
-                    () => {
-                      this.filterQuery = filters;
-                      this.getAllSongs().then(res);
-                    }
-                  )
+                  this.setState({ allSongs: [], page: 1 }, () => {
+                    this.filterQuery = filters;
+                    this.getAllSongs().then(res);
+                  })
                 )
               }
             />

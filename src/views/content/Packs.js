@@ -1,27 +1,18 @@
-/**
- * Packs
- */
 import React from 'react';
 import {
   View,
   TouchableOpacity,
   ActivityIndicator,
-  Platform,
   FlatList,
   RefreshControl,
   Dimensions,
   ImageBackground
 } from 'react-native';
 import { connect } from 'react-redux';
-import Modal from 'react-native-modal';
 import { bindActionCreators } from 'redux';
-import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
-
-import StartIcon from '../../components/StartIcon';
-import MoreInfoIcon from '../../components/MoreInfoIcon';
+import LongButton from '../../components/LongButton';
 import RestartCourse from '../../modals/RestartCourse';
-import ContinueIcon from '../../components/ContinueIcon';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import GradientFeature from '../../components/GradientFeature';
@@ -29,17 +20,8 @@ import { resetProgress } from '../../services/UserActions';
 import packsService from '../../services/packs.service';
 import { NetworkContext } from '../../context/NetworkProvider';
 import Orientation from 'react-native-orientation-locker';
-
 import { cacheAndWritePacks } from '../../redux/PacksCacheActions';
-import ResetIcon from '../../components/ResetIcon';
 import { navigate } from '../../../AppNavigator';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
 
 let greaterWDim;
 class Packs extends React.Component {
@@ -49,15 +31,19 @@ class Packs extends React.Component {
     let { packsCache } = props;
     this.state = {
       packs: [],
+      id: '',
       headerPackImg: '',
       headerPackLogo: '',
       headerPackUrl: '',
       headerPackNextLessonUrl: '',
       headerPackCompleted: false,
       headerPackStarted: false,
-      isLoading: true,
       refreshing: false,
       showRestartCourse: false,
+      headerPackImg: '',
+      headerPackLogo: '',
+      headerPackUrl: '',
+      headerPackNextLessonUrl: '',
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width,
       ...this.initialValidData(packsCache, true)
@@ -70,15 +56,13 @@ class Packs extends React.Component {
     this.getData();
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () =>
     Orientation.removeDeviceOrientationListener(this.orientationListener);
-  }
 
   orientationListener = o => {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
-
-    if (Platform.OS === 'ios') {
+    if (isiOS) {
       if (onTablet) this.setState({ isLandscape });
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
@@ -95,62 +79,33 @@ class Packs extends React.Component {
   }
 
   initialValidData = (content, fromCache) => {
-    try {
-      const newContent = content.myPacks.map(data => {
-        return new ContentModel(data);
-      });
-      const topHeaderPack = new ContentModel(content.topHeaderPack);
-
-      let items = [];
-      for (let i in newContent) {
-        items.push({
-          id: newContent[i].id,
-          thumbnail: newContent[i].getData('thumbnail_url'),
-          logo: newContent[i].getData('logo_image_url'),
-          bundle_count: newContent[i].post.bundle_count,
-          mobile_app_url: newContent[i].post.mobile_app_url
-        });
-      }
-
-      return {
-        packs: items,
-        isLoading: false,
-        refreshing: fromCache,
-        showRestartCourse: false,
-        headerPackImg: topHeaderPack.getData('thumbnail_url'),
-        headerPackLogo: topHeaderPack.getData('logo_image_url'),
-        headerPackUrl: topHeaderPack.post.mobile_app_url,
-        headerPackCompleted: topHeaderPack.isCompleted,
-        headerPackStarted: topHeaderPack.isStarted,
-        headerPackNextLessonUrl: topHeaderPack.post.next_lesson_mobile_app_url
-      };
-    } catch (e) {
-      return {};
-    }
+    return {
+      packs: content?.myPacks,
+      isLoading: false,
+      refreshing: fromCache,
+      showRestartCourse: false,
+      id: content?.topHeaderPack?.id,
+      headerPackImg: content?.topHeaderPack?.thumbnail,
+      headerPackLogo: content?.topHeaderPack?.pack_logo,
+      headerPackUrl: content?.topHeaderPack?.mobile_app_url,
+      headerPackCompleted: content?.topHeaderPack?.completed,
+      headerPackStarted: content?.topHeaderPack?.started,
+      headerPackNextLessonUrl: content?.topHeaderPack?.next_lesson_url
+    };
   };
 
   onRestartPack = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     await resetProgress(this.state.id);
     this.setState({ refreshing: true, showRestartCourse: false }, () =>
       this.getData()
     );
   };
 
-  refresh = () => {
-    this.setState({ refreshing: true }, () => {
-      this.getData();
-    });
-  };
-
   getAspectRatio() {
     let { isLandscape } = this.state;
     if (onTablet) {
-      if (isLandscape) {
-        return 3;
-      }
+      if (isLandscape) return 3;
       return 2;
     }
     return 1.2;
@@ -174,7 +129,11 @@ class Packs extends React.Component {
             <RefreshControl
               tintColor={'transparent'}
               colors={[colors.pianoteRed]}
-              onRefresh={() => this.refresh()}
+              onRefresh={() =>
+                this.setState({ refreshing: true }, () => {
+                  this.getData();
+                })
+              }
               refreshing={isiOS ? false : this.state.refreshing}
             />
           }
@@ -249,44 +208,30 @@ class Packs extends React.Component {
                   ]}
                 >
                   <View style={{ flex: 1 }} />
-                  <View
-                    style={{
-                      width: onTablet ? 200 : '45%'
-                    }}
-                  >
-                    {this.state.headerPackCompleted ? (
-                      <ResetIcon
-                        pressed={() =>
-                          this.setState({
-                            showRestartCourse: true
-                          })
-                        }
-                      />
-                    ) : !this.state.headerPackStarted ? (
-                      <StartIcon
-                        pressed={() =>
-                          navigate('VIDEOPLAYER', {
+                  <View style={{ width: onTablet ? 200 : '45%' }}>
+                    <LongButton
+                      type={
+                        this.state.headerPackCompleted
+                          ? 'RESET'
+                          : !this.state.headerPackStarted
+                          ? 'START'
+                          : 'CONTINUE'
+                      }
+                      pressed={() => {
+                        if (this.state.headerPackCompleted) {
+                          this.setState({ showRestartCourse: true });
+                        } else {
+                          navigate('VIEWLESSON', {
                             url: this.state.headerPackNextLessonUrl
-                          })
+                          });
                         }
-                      />
-                    ) : (
-                      <ContinueIcon
-                        pressed={() =>
-                          navigate('VIDEOPLAYER', {
-                            url: this.state.headerPackNextLessonUrl
-                          })
-                        }
-                      />
-                    )}
+                      }}
+                    />
                   </View>
                   <View style={onTablet ? { width: 10 } : { flex: 0.5 }} />
-                  <View
-                    style={{
-                      width: onTablet ? 200 : '45%'
-                    }}
-                  >
-                    <MoreInfoIcon
+                  <View style={{ width: onTablet ? 200 : '45%' }}>
+                    <LongButton
+                      type={'MORE INFO'}
                       pressed={() => {
                         navigate('SINGLEPACK', {
                           url: this.state.headerPackUrl
@@ -346,7 +291,7 @@ class Packs extends React.Component {
                       source={{
                         uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
                           (((0.9 * greaterWDim) / 3) >> 0) * 2
-                        }/${item.logo}`
+                        }/${item.pack_logo}`
                       }}
                       resizeMode={FastImage.resizeMode.contain}
                     />
@@ -357,26 +302,17 @@ class Packs extends React.Component {
           )}
         />
         <NavigationBar currentPage={'PACKS'} />
-        <Modal
+        <RestartCourse
           isVisible={this.state.showRestartCourse}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
           onBackButtonPress={() => this.setState({ showRestartCourse: false })}
-        >
-          <RestartCourse
-            hideRestartCourse={() => {
-              this.setState({
-                showRestartCourse: false
-              });
-            }}
-            type='pack'
-            onRestart={() => this.onRestartPack()}
-          />
-        </Modal>
+          hideRestartCourse={() => {
+            this.setState({
+              showRestartCourse: false
+            });
+          }}
+          type='pack'
+          onRestart={() => this.onRestartPack()}
+        />
       </View>
     );
   }

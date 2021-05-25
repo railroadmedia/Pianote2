@@ -1,6 +1,3 @@
-/**
- * Index
- */
 import {
   AppRegistry,
   Dimensions,
@@ -21,7 +18,7 @@ import {
   showNotification
 } from './src/services/notification.service';
 import AsyncStorage from '@react-native-community/async-storage';
-import { navigate, reset } from './AppNavigator';
+import { navigate } from './AppNavigator';
 import navigationService from './src/services/navigation.service';
 import commonService from './src/services/common.service';
 
@@ -39,7 +36,7 @@ PushNotification.configure({
     message,
     id
   }) {
-    let isLoggedIn = await AsyncStorage.getItem('loggedIn');
+    let email = await AsyncStorage.getItem('email');
     if (type.includes('forum') && userInteraction) {
       // if the type is forum, link to website forums
       if (foreground) {
@@ -49,7 +46,7 @@ PushNotification.configure({
       }
     }
 
-    if (token || isLoggedIn) {
+    if (token || email) {
       // if logged in with token
       if ((isiOS || (!isiOS && userInteraction)) && !type.includes('forum')) {
         if (type.includes('aggregated')) {
@@ -61,7 +58,7 @@ PushNotification.configure({
         } else if (commentId || mobile_app_url) {
           global.notifNavigation = true;
 
-          navigate('VIDEOPLAYER', {
+          navigate('VIEWLESSON', {
             commentId,
             url: mobile_app_url
           });
@@ -102,24 +99,23 @@ global.onTablet = DeviceInfo.isTablet();
 global.loadedFromNotification = false;
 global.isiOS = Platform.OS === 'ios';
 global.styles = require('Pianote2/src/assets/styles/styles.js');
-global.isConnected = true;
 global.isPackOnly = false;
 global.fallbackThumb =
   'https://dmmior4id2ysr.cloudfront.net/assets/images/pianote_fallback_thumb.jpg';
-(global.backButtonSize = DeviceInfo.isTablet() ? 30 : 22.5),
-  (global.colors = {
-    mainBackground: '#00101d',
-    secondBackground: '#445f73',
-    thirdBackground: '#081826',
-    notificationColor: '#002038',
-    pianoteRed: '#fb1b2f',
-    pianoteGrey: '#6e777a'
-  });
+global.backButtonSize = DeviceInfo.isTablet() ? 30 : 22.5;
+global.colors = {
+  mainBackground: '#00101d',
+  secondBackground: '#445f73',
+  thirdBackground: '#081826',
+  notificationColor: '#002038',
+  pianoteRed: '#fb1b2f',
+  pianoteGrey: '#6e777a'
+};
 global.sizing = {
   descriptionText: onTablet ? 16 : 12,
   infoButtonSize: onTablet ? 22.5 : 17.5,
   myListButtonSize: onTablet ? 28 : 22,
-  titleVideoPlayer: onTablet ? 24 : 18,
+  titleViewLesson: onTablet ? 24 : 18,
   videoTitleText: onTablet ? 16 : 14,
   verticalListTitleSmall: onTablet ? 18 : 14
 };

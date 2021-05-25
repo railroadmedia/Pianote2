@@ -25,16 +25,14 @@ export default class NetworkProvider extends React.PureComponent {
     };
   }
 
-  componentDidMount() {
-    this.unsubscribe = NetInfo.addEventListener(this.handleConnectivityChange);
-  }
+  componentDidMount = () =>
+    (this.unsubscribe = NetInfo.addEventListener(
+      this.handleConnectivityChange
+    ));
 
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
+  componentWillUnmount = () => this.unsubscribe();
 
   handleConnectivityChange = state => {
-    global.isConnected = state.isConnected;
     this.setState({ isConnected: state.isConnected });
   };
 

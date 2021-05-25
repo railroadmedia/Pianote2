@@ -36,7 +36,7 @@ function decideWhereToRedirect() {
       return navigate('STUDENTFOCUSSHOW', { type: 'quick-tips', url });
     }
     if (url.includes('quick-tips')) {
-      return navigate('VIDEOPLAYER', { id });
+      return navigate('VIEWLESSON', { id });
     }
     if (
       url.endsWith('student-reviews') ||
@@ -45,7 +45,7 @@ function decideWhereToRedirect() {
       return navigate('STUDENTFOCUSSHOW', { type: 'student-review', url });
     }
     if (url.includes('student-reviews')) {
-      return navigate('VIDEOPLAYER', { id });
+      return navigate('VIEWLESSON', { id });
     }
     if (
       url.endsWith('question-and-answer') ||
@@ -54,13 +54,13 @@ function decideWhereToRedirect() {
       return navigate('STUDENTFOCUSSHOW', { type: 'question-and-answer', url });
     }
     if (url.includes('question-and-answer')) {
-      return navigate('VIDEOPLAYER', { id });
+      return navigate('VIEWLESSON', { id });
     }
     if (url.endsWith('podcasts') || (url.includes('podcasts') && isNaN(id))) {
       return navigate('STUDENTFOCUSSHOW', { type: 'podcasts', url });
     }
     if (url.includes('podcasts')) {
-      return navigate('VIDEOPLAYER', { id });
+      return navigate('VIEWLESSON', { id });
     }
     if (
       url.endsWith('boot-camps') ||
@@ -69,19 +69,19 @@ function decideWhereToRedirect() {
       return navigate('STUDENTFOCUSSHOW', { type: 'boot-camps', url });
     }
     if (url.includes('boot-camps')) {
-      return navigate('VIDEOPLAYER', { id });
+      return navigate('VIEWLESSON', { id });
     }
     if (url.includes('courses')) {
       if (url.split('/').length - 1 === 6) {
         return navigate('PATHOVERVIEW', { data: { id }, isMethod: false });
       }
-      return navigate('VIDEOPLAYER', { id });
+      return navigate('VIEWLESSON', { id });
     }
     if (url.includes('songs')) {
       if (url.split('/').length - 1 === 6) {
         return navigate('PATHOVERVIEW', { data: { id }, isMethod: false });
       }
-      return navigate('VIDEOPLAYER', { id });
+      return navigate('VIEWLESSON', { id });
     }
     if (url.endsWith('lists')) {
       return navigate('MYLIST', { url });
@@ -92,7 +92,7 @@ function decideWhereToRedirect() {
           return navigate('METHODLEVEL', {
             url:
               commonService.rootUrl +
-              '/api/members/learning-paths' +
+              '/musora-api/members/learning-paths' +
               url.substr(url.indexOf('/pianote-method'))
           });
         }
@@ -104,14 +104,17 @@ function decideWhereToRedirect() {
             data: {
               mobile_app_url:
                 commonService.rootUrl +
-                '/api/members/learning-path-courses/' +
+                '/musora-api/members/learning-path-courses/' +
                 id
             },
             isMethod: true
           });
         }
-        return navigate('VIDEOPLAYER', {
-          url: commonService.rootUrl + '/api/members/learning-path-lesson/' + id
+        return navigate('VIEWLESSON', {
+          url:
+            commonService.rootUrl +
+            '/musora-api/members/learning-path-lesson/' +
+            id
         });
       } else if (url.includes('foundations')) {
         if (url.split('/').length - 1 === 6) {
@@ -125,15 +128,17 @@ function decideWhereToRedirect() {
             data: {
               mobile_app_url:
                 commonService.rootUrl +
-                '/api/members/learning-path-levels/foundations-2019/' +
+                '/musora-api/members/learning-path-levels/foundations-2019/' +
                 slug
             },
             isFoundations: true
           });
         }
-        return navigate('VIDEOPLAYER', {
+        return navigate('VIEWLESSON', {
           url:
-            commonService.rootUrl + '/api/members/learning-path-lessons/' + id
+            commonService.rootUrl +
+            '/musora-api/members/learning-path-lessons/' +
+            id
         });
       }
     }
@@ -167,17 +172,19 @@ function decideWhereToRedirect() {
   if (url.includes('packs') && !isNaN(id)) {
     if (url.split('/').length - 1 === 8)
       return navigate('SINGLEPACK', {
-        url: commonService.rootUrl + '/api/members/pack/' + id
+        url: commonService.rootUrl + '/musora-api/members/pack/' + id
       });
-    return navigate('VIDEOPLAYER', {
-      url: commonService.rootUrl + '/api/content/' + id
+    return navigate('VIEWLESSON', {
+      url: commonService.rootUrl + '/musora-api/content/' + id
     });
   }
   if (url.includes('packs') && isNaN(id)) {
     if (url.split('/').length - 1 === 5)
       return navigate('SINGLEPACK', {
         url:
-          commonService.rootUrl + '/api' + url.substr(url.indexOf('/members'))
+          commonService.rootUrl +
+          '/musora-api' +
+          url.substr(url.indexOf('/members'))
       });
   }
 }

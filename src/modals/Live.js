@@ -1,50 +1,44 @@
-/**
- * Live
- */
 import React from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   StyleSheet,
   Dimensions
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import DeviceInfo from 'react-native-device-info';
-import { navigate } from 'Pianote2/AppNavigator';
+import { navigate } from '../../AppNavigator';
+
+const isTablet = global.onTablet;
 
 export default class Live extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      liveLesson: this.props.liveLesson[0]
-    };
-  }
-
   changeType = word => {
-    if (!word) return;
+    if (word) {
+      try {
+        word = word.replace(/[- )(]/g, ' ').split(' ');
+      } catch {}
 
-    let string = '';
+      let string = '';
 
-    for (let i = 0; i < word.length; i++) {
-      if (word[i] !== 'and') {
-        word[i] = word[i][0].toUpperCase() + word[i].substr(1);
+      for (let i = 0; i < word.length; i++) {
+        if (word[i] !== 'and') {
+          word[i] = word[i][0].toUpperCase() + word[i].substr(1);
+        }
       }
-    }
 
-    for (i in word) {
-      string = string + word[i];
-      if (Number(i) < word.length - 1) string = string + ', ';
-    }
+      for (i in word) {
+        string = string + word[i];
+        if (Number(i) < word.length - 1) string = string + ' / ';
+      }
 
-    return string;
+      return string;
+    }
   };
 
   render = () => {
     return (
-      <TouchableWithoutFeedback
-        style={styles.container}
+      <TouchableOpacity
+        style={[styles.centerContent, localStyles.modalContainer]}
         onPress={() => this.props.hideLive()}
       >
         <View style={[styles.container, styles.centerContent]}>
@@ -57,11 +51,13 @@ export default class Live extends React.Component {
                   borderRadius: 500
                 }}
                 source={{
-                  uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                    (Dimensions.get('window').width - 20) * 2
-                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
-                    this.props.liveLesson[0]?.thumbnail_url
-                  }`
+                  uri: this.props.liveLesson.thumbnail_url
+                    ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                        (Dimensions.get('window').width - 20) * 2
+                      )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
+                        this.props.liveLesson.thumbnail_url
+                      }`
+                    : fallbackThumb
                 }}
                 resizeMode={FastImage.resizeMode.cover}
               />
@@ -95,9 +91,10 @@ export default class Live extends React.Component {
                   position: 'absolute',
                   fontSize: onTablet ? 16 : 14,
                   marginTop: 20,
+                  textTransform: 'capitalize'
                 }}
               >
-                {this.changeType(this.props.liveLesson[0]?.instructors)}
+                {this.changeType(this.props.liveLesson?.instructors)}
               </Text>{' '}
               just went live. {'\n'}Would you like to join?
             </Text>
@@ -118,8 +115,7 @@ export default class Live extends React.Component {
                 { justifyContent: 'center', marginTop: 0 }
               ]}
               onPress={() => {
-                navigate('LIVE'), 
-                this.props.hideLive();
+                navigate('LIVE'), this.props.hideLive();
               }}
             >
               <Text style={[styles.modalButtonText, localStyles.watchText]}>
@@ -138,12 +134,16 @@ export default class Live extends React.Component {
             </TouchableOpacity>
           </View>
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     );
   };
 }
 
 const localStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
   container: {
     backgroundColor: 'white',
     paddingBottom: 15,
@@ -154,7 +154,7 @@ const localStyles = StyleSheet.create({
   live: {
     marginTop: 15,
     paddingHorizontal: 30,
-    fontSize: DeviceInfo.isTablet() ? 14 : 12
+    fontSize: isTablet ? 14 : 12
   },
   calendarIcon: {
     paddingTop: 7.5,
@@ -168,7 +168,7 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#fb1b2f',
     marginHorizontal: 70,
     justifyContent: 'center',
-    height: DeviceInfo.isTablet() ? 40 : 30
+    height: isTablet ? 40 : 30
   },
   cancelButton: {
     marginTop: 5,
@@ -178,7 +178,7 @@ const localStyles = StyleSheet.create({
     borderColor: '#fb1b2f',
     marginHorizontal: 70,
     justifyContent: 'center',
-    height: DeviceInfo.isTablet() ? 40 : 30
+    height: isTablet ? 40 : 30
   },
   watchText: {
     color: 'white'

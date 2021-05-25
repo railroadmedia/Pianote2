@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import { Platform } from 'react-native';
 import commonService from './common.service';
 
 export async function getToken(userEmail, userPass, purchases) {
@@ -14,99 +13,77 @@ export async function getToken(userEmail, userPass, purchases) {
 
   let email = userEmail || data.email;
   let password = userPass || data.password;
-  email = encodeURIComponent(email);
-  password = encodeURIComponent(password);
 
-  let response = await fetch(
-    `${commonService.rootUrl}/usora/api/login?email=${email}&password=${password}`,
-    {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: purchases ? JSON.stringify(purchases) : {}
-    }
-  );
+  const body = purchases ? { email, password, purchases } : { email, password };
 
-  if (response.status == 500) {
+  let response = await fetch(`${commonService.rootUrl}/musora-api/login`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+
+  if (response.status === 500) {
     return 500;
   } else {
     response = await response.json();
     if (response.success) {
       token = response.token;
-      await AsyncStorage.multiSet([
-        ['userId', JSON.stringify(response.userId)]
-      ]);
     }
     return response;
   }
 }
 
 export async function getUserData() {
-  // return profile details
-  try {
-    await getToken();
-    let userData = await fetch(`${commonService.rootUrl}/api/profile`, {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    if (typeof userData.error == 'undefined') {
-      userData = await userData.json();
-      // if received data, update data
-      await AsyncStorage.multiSet([
-        ['totalXP', userData.totalXp.toString()],
-        ['rank', userData.xpRank.toString()],
-        ['userId', userData.id.toString()],
-        ['displayName', userData.display_name.toString()],
-        ['profileURI', userData.profile_picture_url.toString()],
-        ['joined', userData.created_at.toString()],
-        [
-          'weeklyCommunityUpdatesClicked',
-          userData.notify_weekly_update.toString()
-        ],
-        [
-          'commentRepliesClicked',
-          userData.notify_on_lesson_comment_reply.toString()
-        ],
-        [
-          'commentLikesClicked',
-          userData.notify_on_lesson_comment_like.toString()
-        ],
-        [
-          'forumPostRepliesClicked',
-          userData.notify_on_forum_post_reply.toString()
-        ],
-        [
-          'forumPostLikesClicked',
-          userData.notify_on_forum_post_like.toString()
-        ],
-        [
-          'notifications_summary_frequency_minutes',
-          userData.notify_weekly_update == null ||
-          userData.notify_weekly_update == ''
-            ? 'null'
-            : userData.notify_weekly_update.toString()
-        ]
-      ]);
-    }
+  return commonService.tryCall(`${commonService.rootUrl}/api/profile`);
+}
 
-    return userData;
+export async function avatarUpload(data) {
+  try {
+    return await fetch(`${commonService.rootUrl}/musora-api/avatar/upload`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: data
+    });
   } catch (error) {}
 }
 
 export async function forgotPass(emailAddress) {
   return commonService.tryCall(
-    `${commonService.rootUrl}/api/forgot?email=${emailAddress}`,
+    `${commonService.rootUrl}/musora-api/forgot?email=${emailAddress}`,
     'PUT'
   );
 }
 
 export async function changePassword(email, pass, token) {
   return commonService.tryCall(
-    `${commonService.rootUrl}/api/change-password`,
+    `${commonService.rootUrl}/musora-api/change-password`,
     'PUT',
     {
       pass1: pass,
       user_login: email,
       rp_key: token
+    }
+  );
+}
+
+export async function isNameUnique(name) {
+  return commonService.tryCall(
+    `${commonService.rootUrl}/usora/api/is-display-name-unique?display_name=${name}`
+  );
+}
+
+export async function isEmailUnique(email) {
+  return commonService.tryCall(
+    `${commonService.rootUrl}/usora/api/is-email-unique?email=${email}`
+  );
+}
+
+export async function updateName(name) {
+  return commonService.tryCall(
+    `${commonService.rootUrl}/musora-api/profile/update`,
+    'POST',
+    {
+      display_name: name
     }
   );
 }
@@ -133,7 +110,7 @@ export async function signUp(
   let platform = '';
   let receiptType = '';
   let attributes;
-  if (Platform.OS === 'ios') {
+  if (isiOS) {
     platform = 'apple';
     receiptType = 'appleReceipt';
     attributes = {
@@ -189,10 +166,10 @@ export async function signUp(
 }
 
 export async function restorePurchase(purchases) {
-  let platform = Platform.OS === 'ios' ? 'apple' : 'google';
+  let platform = isiOS ? 'apple' : 'google';
   try {
     let response = await fetch(
-      `${commonService.rootUrl}/mobile-app/${platform}/restore`,
+      `${commonService.rootUrl}/mobile-app/api/${platform}/restore`,
       {
         method: 'POST',
         headers: {
@@ -200,9 +177,7 @@ export async function restorePurchase(purchases) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(
-          Platform.OS === 'ios'
-            ? { receipt: purchases[0].transactionReceipt }
-            : { purchases }
+          isiOS ? { receipt: purchases[0].transactionReceipt } : { purchases }
         )
       }
     );
@@ -215,19 +190,17 @@ export async function restorePurchase(purchases) {
 }
 
 export async function validateSignUp(purchases) {
-  let platform = Platform.OS === 'ios' ? 'apple' : 'google';
+  let platform = isiOS ? 'apple' : 'google';
   try {
     let response = await fetch(
-      `${commonService.rootUrl}/mobile-app/${platform}/signup`,
+      `${commonService.rootUrl}/mobile-app/api/${platform}/signup`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(
-          Platform.OS === 'ios'
-            ? { receipt: purchases[0].transactionReceipt }
-            : { purchases }
+          isiOS ? { receipt: purchases[0].transactionReceipt } : { purchases }
         )
       }
     );

@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Modal} from 'react-native';
-import Icon from '../assets/icons';
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import Icon from '../../../assets/icons';
 import FastImage from 'react-native-fast-image';
 
 const onTablet = global.onTablet;
@@ -8,8 +8,8 @@ const onTablet = global.onTablet;
 export default class UserInfo extends React.Component {
   constructor(props) {
     super(props);
-    let {isDark} = props.route.params;
-    styles = setStyles(isDark);
+    let { isDark, appColor, data } = props.route.params;
+    styles = setStyles(isDark, appColor);
   }
 
   componentDidMount = () => {
@@ -39,19 +39,19 @@ export default class UserInfo extends React.Component {
               style={{
                 marginTop: 30,
                 height: '10%',
-                width: '100%',
+                width: '100%'
               }}
             >
               <View
                 style={{
                   position: 'absolute',
                   left: onTablet ? 20 : 15,
-                  zIndex: 10,
+                  zIndex: 10
                 }}
               >
                 <TouchableOpacity
                   onPress={() => this.props.hideUserInfo()}
-                  style={{height: '100%', width: '100%', zIndex: 10}}
+                  style={{ height: '100%', width: '100%', zIndex: 10 }}
                 >
                   <Icon.Feather
                     size={onTablet ? 50 : 27.5}
@@ -66,7 +66,7 @@ export default class UserInfo extends React.Component {
                   textAlign: 'center',
                   fontSize: onTablet ? 24 : 20,
                   fontFamily: 'OpenSans-Bold',
-                  color: 'white',
+                  color: 'white'
                 }}
               >
                 Jim Jones
@@ -75,7 +75,7 @@ export default class UserInfo extends React.Component {
                 style={localStyles.profilePicture}
                 source={{
                   uri:
-                    'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png',
+                    'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
                 }}
                 resizeMode={FastImage.resizeMode.cover}
               />
@@ -93,7 +93,7 @@ export default class UserInfo extends React.Component {
                   padding: 10,
                   flexDirection: 'row',
                   borderBottomColor: '#445f73',
-                  borderBottomWidth: 0.25,
+                  borderBottomWidth: 0.25
                 }}
               >
                 <Text
@@ -105,7 +105,7 @@ export default class UserInfo extends React.Component {
                     fontSize: 20,
                     justifyContent: 'center',
                     fontFamily: 'OpenSans-Bold',
-                    textAlign: 'left',
+                    textAlign: 'left'
                   }}
                 >
                   12,234
@@ -116,7 +116,7 @@ export default class UserInfo extends React.Component {
                     color: '#445f73',
                     fontFamily: 'OpenSans-Regular',
                     fontSize: 16,
-                    alignSelf: 'center',
+                    alignSelf: 'center'
                   }}
                 >
                   Total XP
@@ -127,7 +127,7 @@ export default class UserInfo extends React.Component {
                   padding: 10,
                   flexDirection: 'row',
                   borderBottomColor: '#445f73',
-                  borderBottomWidth: 0.25,
+                  borderBottomWidth: 0.25
                 }}
               >
                 <Text
@@ -139,7 +139,7 @@ export default class UserInfo extends React.Component {
                     fontSize: 20,
                     justifyContent: 'center',
                     fontFamily: 'OpenSans-Bold',
-                    textAlign: 'left',
+                    textAlign: 'left'
                   }}
                 >
                   912
@@ -150,7 +150,7 @@ export default class UserInfo extends React.Component {
                     color: '#445f73',
                     fontFamily: 'OpenSans-Regular',
                     fontSize: 16,
-                    alignSelf: 'center',
+                    alignSelf: 'center'
                   }}
                 >
                   Total posts
@@ -161,7 +161,7 @@ export default class UserInfo extends React.Component {
                   padding: 10,
                   flexDirection: 'row',
                   borderBottomColor: '#445f73',
-                  borderBottomWidth: 0.25,
+                  borderBottomWidth: 0.25
                 }}
               >
                 <Text
@@ -173,7 +173,7 @@ export default class UserInfo extends React.Component {
                     fontSize: 20,
                     justifyContent: 'center',
                     fontFamily: 'OpenSans-Bold',
-                    textAlign: 'left',
+                    textAlign: 'left'
                   }}
                 >
                   735
@@ -184,7 +184,7 @@ export default class UserInfo extends React.Component {
                     color: '#445f73',
                     fontFamily: 'OpenSans-Regular',
                     fontSize: 16,
-                    alignSelf: 'center',
+                    alignSelf: 'center'
                   }}
                 >
                   Days as a member
@@ -195,7 +195,7 @@ export default class UserInfo extends React.Component {
                   padding: 10,
                   flexDirection: 'row',
                   borderBottomColor: '#445f73',
-                  borderBottomWidth: 0.25,
+                  borderBottomWidth: 0.25
                 }}
               >
                 <Text
@@ -207,7 +207,7 @@ export default class UserInfo extends React.Component {
                     fontSize: 20,
                     justifyContent: 'center',
                     fontFamily: 'OpenSans-Bold',
-                    textAlign: 'left',
+                    textAlign: 'left'
                   }}
                 >
                   627
@@ -218,7 +218,7 @@ export default class UserInfo extends React.Component {
                     color: '#445f73',
                     fontFamily: 'OpenSans-Regular',
                     fontSize: 16,
-                    alignSelf: 'center',
+                    alignSelf: 'center'
                   }}
                 >
                   Total post likes
@@ -236,7 +236,7 @@ const localStyles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,.5)',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
   },
   profilePicture: {
     height: 125,
@@ -246,20 +246,20 @@ const localStyles = StyleSheet.create({
     marginBottom: 15,
     alignSelf: 'center',
     borderWidth: 2,
-    borderColor: 'red',
+    borderColor: 'red'
   },
   container: {
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
     backgroundColor: '#081826',
     height: '80%',
-    elevation: 10,
+    elevation: 10
   },
   memberSinceText: {
     fontFamily: 'OpenSans-Regular',
     fontSize: onTablet ? 16 : 20,
     textAlign: 'center',
-    color: '#445f73',
+    color: '#445f73'
   },
   rankText: {
     paddingHorizontal: 10,
@@ -268,6 +268,6 @@ const localStyles = StyleSheet.create({
     fontSize: 20,
     justifyContent: 'center',
     fontFamily: 'OpenSans-Bold',
-    textAlign: 'left',
-  },
+    textAlign: 'left'
+  }
 });

@@ -1,22 +1,19 @@
 import React from 'react';
-import { PanResponder, View, Dimensions, ScrollView } from 'react-native';
-
+import { PanResponder, View, ScrollView, Dimensions } from 'react-native';
 import ImageSvg from 'react-native-remote-svg';
 import PDFView from 'react-native-view-pdf';
 import { SafeAreaView } from 'react-navigation';
-
 import { NetworkContext } from '../../context/NetworkProvider';
 
 export default class AssignmentResource extends React.Component {
   static contextType = NetworkContext;
   state = {
     scroll: true,
-    width: 0
+    width: Dimensions.get('window').width
   };
 
   constructor(props) {
     super(props);
-
     this.panResponder = PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
       onStartShouldSetPanResponder: () => true,
@@ -96,22 +93,23 @@ export default class AssignmentResource extends React.Component {
           marginVertical: 10
         }}
       >
-        {this.props.data?.map((dot, index) => (
-          <View
-            key={index}
-            style={[
-              {
-                height: 10,
-                width: 10,
-                marginRight: 10,
-                borderRadius: 50
-              },
-              index === i
-                ? { backgroundColor: colors.pianoteRed }
-                : { backgroundColor: colors.secondBackground }
-            ]}
-          />
-        ))}
+        {this.props.data.length > 1 &&
+          this.props.data?.map((dot, index) => (
+            <View
+              key={index}
+              style={[
+                {
+                  height: 10,
+                  width: 10,
+                  marginRight: 10,
+                  borderRadius: 50
+                },
+                index === i
+                  ? { backgroundColor: colors.pianoteRed }
+                  : { backgroundColor: colors.secondBackground }
+              ]}
+            />
+          ))}
       </View>
     );
   }
@@ -152,7 +150,7 @@ export default class AssignmentResource extends React.Component {
             style={{ flexDirection: 'row' }}
           >
             {this.props.data?.map((sheet, i) => (
-              <View>
+              <View key={i}>
                 {sheet.value.includes('.pdf') ? (
                   <>
                     <PDFView

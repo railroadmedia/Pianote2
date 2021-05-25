@@ -1,6 +1,3 @@
-/**
- * Terms
- */
 import React from 'react';
 import {
   View,
@@ -10,17 +7,13 @@ import {
   StatusBar,
   StyleSheet
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
+import Back from '../../assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';
 
-export default class Terms extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+const onTablet = global.onTablet;
 
+export default class Terms extends React.Component {
   render() {
     return (
       <SafeAreaView style={{ flex: 1 }}>
@@ -380,7 +373,6 @@ export default class Terms extends React.Component {
               support@pianote.com.
             </Text>
           </Text>
-          <View style={{ height: 25 }} />
         </ScrollView>
       </SafeAreaView>
     );
@@ -399,19 +391,20 @@ const localStyles = StyleSheet.create({
     padding: 10
   },
   title: {
-    fontWeight: Platform.OS == 'android' ? 'bold' : '800',
-    fontSize: DeviceInfo.isTablet() ? 28 : 20,
+    fontFamily: 'OpenSans-Bold',
+    fontSize: onTablet ? 28 : 20,
     alignSelf: 'center',
     textAlign: 'center'
   },
   scrollContainer: {
     flex: 1,
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
+    paddingBottom: 25
   },
   subtitle: {
     paddingBottom: 5,
     marginTop: 25,
-    fontWeight: 'bold',
+    fontFamily: 'OpenSans-Bold',
     marginBottom: 0
   }
 });

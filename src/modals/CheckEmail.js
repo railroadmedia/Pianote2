@@ -1,66 +1,71 @@
-/**
- * CheckEmail
- */
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  StyleSheet
-} from 'react-native';
-import DeviceInfo from 'react-native-device-info';
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { navigate } from '../../AppNavigator';
 
-export default class CheckEmail extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+const onTablet = global.onTablet;
 
+export default class CheckEmail extends React.Component {
   render = () => {
     return (
-      <TouchableWithoutFeedback
-        style={[styles.container, styles.centerContent]}
-        onPress={() => this.props.hideCheckEmail()}
+      <Modal
+        visible={this.props.isVisible}
+        transparent={true}
+        animation={'slideInUp'}
+        animationInTiming={350}
+        animationOutTiming={350}
+        coverScreen={true}
+        hasBackdrop={true}
+        onBackButtonPress={() => this.props.hideCheckEmail()}
       >
-        <View style={[styles.container, styles.centerContent]}>
-          <View style={localStyles.container}>
-            <Text style={[styles.modalHeaderText, localStyles.title]}>
-              This email is already {'\n'} connected to an account.
-            </Text>
-            <Text style={[styles.modalBodyText, localStyles.title]}>
-              Do you want to log in instead?
-            </Text>
-            <TouchableOpacity
-              style={localStyles.loginContainer}
-              onPress={() => {
-                navigate('LOGINCREDENTIALS');
-                this.props.hideCheckEmail();
-              }}
-            >
-              <Text style={[styles.modalButtonText, localStyles.loginText]}>
-                LOG IN
+        <TouchableOpacity
+          style={[styles.centerContent, localStyles.modalContainer]}
+          onPress={() => this.props.hideCheckEmail()}
+        >
+          <View style={[styles.container, styles.centerContent]}>
+            <View style={localStyles.container}>
+              <Text style={[styles.modalHeaderText, localStyles.title]}>
+                This email is already {'\n'} connected to an account.
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => this.props.hideCheckEmail()}
-              style={localStyles.tryAgain}
-            >
-              <Text
-                style={[styles.modalCancelButtonText, localStyles.tryAgainText]}
+              <Text style={[styles.modalBodyText, localStyles.title]}>
+                Do you want to log in instead?
+              </Text>
+              <TouchableOpacity
+                style={localStyles.loginContainer}
+                onPress={() => {
+                  navigate('LOGINCREDENTIALS');
+                  this.props.hideCheckEmail();
+                }}
               >
-                TRY AGAIN
-              </Text>
-            </TouchableOpacity>
+                <Text style={[styles.modalButtonText, localStyles.loginText]}>
+                  LOG IN
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.props.hideCheckEmail()}
+                style={localStyles.tryAgain}
+              >
+                <Text
+                  style={[
+                    styles.modalCancelButtonText,
+                    localStyles.tryAgainText
+                  ]}
+                >
+                  TRY AGAIN
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableOpacity>
+      </Modal>
     );
   };
 }
 
 const localStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
   container: {
     backgroundColor: 'white',
     borderRadius: 15,
@@ -78,7 +83,7 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#fb1b2f',
     marginHorizontal: 40,
     marginVertical: 5,
-    height: DeviceInfo.isTablet() ? 45 : 35
+    height: onTablet ? 45 : 35
   },
   loginText: {
     color: 'white',

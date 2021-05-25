@@ -1,44 +1,28 @@
-/**
- * Foundations
- */
 import React from 'react';
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
-  Platform,
   RefreshControl,
   Dimensions,
   ImageBackground
 } from 'react-native';
-import Modal from 'react-native-modal';
-import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import AsyncStorage from '@react-native-community/async-storage';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import AntIcon from 'react-native-vector-icons/AntDesign';
+import Icon from '../../assets/icons.js';
 import LinearGradient from 'react-native-linear-gradient';
 import Orientation from 'react-native-orientation-locker';
-
-import ResetIcon from '../../components/ResetIcon';
+import LongButton from '../../components/LongButton';
 import NextVideo from '../../components/NextVideo';
-import StartIcon from '../../components/StartIcon';
 import RestartCourse from '../../modals/RestartCourse';
-import ContinueIcon from '../../components/ContinueIcon';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
-import {
-  likeContent,
-  unlikeContent,
-  resetProgress
-} from '../../services/UserActions';
+import { resetProgress } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 import foundationsService from '../../services/foundations.service';
 import { navigate } from '../../../AppNavigator';
 
-let greaterWDim;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
@@ -47,21 +31,15 @@ export default class Foundations extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-
     this.state = {
       items: [],
       showRestartCourse: false,
       bannerNextLessonUrl: '',
       id: null,
-      isStarted: false,
-      isCompleted: false,
-      isLiked: false,
-      likeCount: 0,
+      started: false,
+      completed: false,
       showInfo: false,
       isLoadingAll: true,
-      totalLength: 0,
-      level: 1,
-      profileImage: '',
       xp: 0,
       description: '',
       nextLesson: null,
@@ -70,29 +48,21 @@ export default class Foundations extends React.Component {
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width
     };
-    greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     Orientation.addDeviceOrientationListener(this.orientationListener);
-
-    let profileImage = await AsyncStorage.getItem('profileURI');
-    if (profileImage) {
-      this.setState({ profileImage });
-    }
-
     this.getContent();
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () =>
     Orientation.removeDeviceOrientationListener(this.orientationListener);
-  }
 
   orientationListener = o => {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
 
-    if (Platform.OS === 'ios') {
+    if (isiOS) {
       if (onTablet) this.setState({ isLandscape });
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
@@ -102,106 +72,33 @@ export default class Foundations extends React.Component {
   };
 
   getContent = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    const response = new ContentModel(
-      await foundationsService.getFoundation('foundations-2019')
-    );
-
-    const newContent = response.post.units.map(data => {
-      return new ContentModel(data);
-    });
-
-    let items = [];
-    for (let i in newContent) {
-      items.push({
-        title: newContent[i].getField('title'),
-        artist: newContent[i].post.fields
-          .filter(d => d.key === 'instructor')
-          .map(s => ({
-            value: s.value.fields.find(f => f.key === 'name').value
-          }))
-          .reduce((r, obj) => r.concat(obj.value, '  '), []),
-        thumbnail: newContent[i].getData('thumbnail_url'),
-        type: newContent[i].post.type,
-        isStarted: newContent[i].isStarted,
-        isCompleted: newContent[i].isCompleted,
-        publishedOn:
-          newContent[i].publishedOn.slice(0, 10) +
-          'T' +
-          newContent[i].publishedOn.slice(11, 16),
-        description: newContent[i]
-          .getData('description')
-          .replace(/(<([^>]+)>)/g, '')
-          .replace(/&nbsp;/g, '')
-          .replace(/&amp;/g, '&')
-          .replace(/&#039;/g, "'")
-          .replace(/&quot;/g, '"')
-          .replace(/&gt;/g, '>')
-          .replace(/&lt;/g, '<'),
-        id: newContent[i].id,
-        progress_percent: newContent[i].post.progress_percent,
-        mobile_app_url: newContent[i].post.mobile_app_url
-      });
-    }
-
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    const response = await foundationsService.getFoundation('foundations-2019');
     this.setState({
-      items: items,
+      items: response.units,
       id: response.id,
-      isStarted: response.isStarted,
-      isCompleted: response.isCompleted,
-      bannerNextLessonUrl: response.post.banner_button_url,
-      isLiked: response.post.is_liked_by_current_user,
-      likeCount: response.likeCount,
+      started: response.started,
+      completed: response.completed,
+      bannerNextLessonUrl: response.banner_button_url,
       isLoadingAll: false,
-      totalLength: response.post.length_in_seconds,
-      xp: response.post.total_xp,
-      description: response
-        .getData('description')
-        .replace(/(<([^>]+)>)/g, '')
-        .replace(/&nbsp;/g, '')
-        .replace(/&amp;/g, '&')
-        .replace(/&#039;/g, "'")
-        .replace(/&quot;/g, '"')
-        .replace(/&gt;/g, '>')
-        .replace(/&lt;/g, '<'),
-      progress: response.post.progress_percent,
-      nextLesson: new ContentModel(response.post.next_lesson),
+      totalLength: response.length_in_seconds,
+      xp: response.total_xp,
+      description: response.description,
+      progress: response.progress_percent,
+      nextLesson: response.next_lesson,
       refreshing: false
     });
   };
 
-  toggleLike = () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    if (this.state.isLiked) {
-      unlikeContent(this.state.id);
-    } else {
-      likeContent(this.state.id);
-    }
-    this.setState({
-      isLiked: !this.state.isLiked,
-      likeCount: this.state.isLiked
-        ? this.state.likeCount - 1
-        : this.state.likeCount + 1
-    });
-  };
-
   onRestartMethod = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-
-    this.setState({ items: [], showRestartCourse: false });
-
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     await resetProgress(this.state.id);
-
     this.setState(
       {
-        isStarted: false,
-        isCompleted: false,
+        items: [],
+        showRestartCourse: false,
+        started: false,
+        completed: false,
         isLoadingAll: true,
         refreshing: true
       },
@@ -211,28 +108,19 @@ export default class Foundations extends React.Component {
     );
   };
 
-  refresh = () => {
-    this.setState({ refreshing: true }, () => {
-      this.getContent();
-    });
-  };
-
   getAspectRatio() {
     if (onTablet && this.state.isLandscape) return 3;
     if (onTablet && !this.state.isLandscape) return 2;
     return 1.8;
   }
 
-  goToLesson(url) {
-    return navigate('VIDEOPLAYER', { url });
-  }
+  goToLesson = url => {
+    return navigate('VIEWLESSON', { url });
+  };
 
   getSquareHeight = () => {
-    if (onTablet) {
-      return 150;
-    } else {
-      return width * 0.26;
-    }
+    if (onTablet) return 150;
+    return width * 0.26;
   };
 
   render() {
@@ -251,7 +139,11 @@ export default class Foundations extends React.Component {
             <RefreshControl
               colors={[colors.pianoteRed]}
               refreshing={this.state.refreshing}
-              onRefresh={() => this.refresh()}
+              onRefresh={() =>
+                this.setState({ refreshing: true }, () => {
+                  this.getContent();
+                })
+              }
             />
           }
         >
@@ -262,7 +154,7 @@ export default class Foundations extends React.Component {
               aspectRatio: this.getAspectRatio(),
               justifyContent: 'flex-end'
             }}
-            source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
+            source={require('../../../src/assets/img/imgs/backgroundHands.png')}
           >
             <LinearGradient
               colors={[
@@ -296,7 +188,7 @@ export default class Foundations extends React.Component {
                     alignSelf: 'center',
                     marginBottom: onTablet ? '2%' : '4%'
                   }}
-                  source={require('Pianote2/src/assets/img/imgs/foundations-logo-white.png')}
+                  source={require('../../../src/assets/img/imgs/foundations-logo-white.png')}
                   resizeMode={FastImage.resizeMode.contain}
                 />
               </View>
@@ -313,32 +205,23 @@ export default class Foundations extends React.Component {
               >
                 <View style={{ flex: 1 }} />
                 <View style={{ width: '50%' }}>
-                  {this.state.isCompleted ? (
-                    <ResetIcon
-                      isMethod={true}
-                      pressed={() =>
-                        this.setState({
-                          showRestartCourse: true
-                        })
+                  <LongButton
+                    isMethod={true}
+                    type={
+                      this.state.completed
+                        ? 'RESET'
+                        : !this.state.started
+                        ? 'START'
+                        : 'CONTINUE'
+                    }
+                    pressed={() => {
+                      if (this.state.completed) {
+                        this.setState({ showRestartCourse: true });
+                      } else {
+                        this.goToLesson(this.state.bannerNextLessonUrl);
                       }
-                    />
-                  ) : this.state.isStarted ? (
-                    <ContinueIcon
-                      isMethod={true}
-                      pressed={() =>
-                        this.goToLesson(this.state.bannerNextLessonUrl)
-                      }
-                    />
-                  ) : (
-                    !this.state.isStarted && (
-                      <StartIcon
-                        isMethod={true}
-                        pressed={() =>
-                          this.goToLesson(this.state.bannerNextLessonUrl)
-                        }
-                      />
-                    )
-                  )}
+                    }}
+                  />
                 </View>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
                   <TouchableOpacity
@@ -352,7 +235,7 @@ export default class Foundations extends React.Component {
                       });
                     }}
                   >
-                    <AntIcon
+                    <Icon.AntDesign
                       name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
                       size={onTablet ? 20 : 15}
                       color={colors.pianoteRed}
@@ -388,7 +271,7 @@ export default class Foundations extends React.Component {
                   textAlign: 'center'
                 }}
               >
-                {this.state.description !== 'TBD' ? this.state.description : ''}
+                {this.state.description || ''}
               </Text>
               <View>
                 <View
@@ -400,7 +283,6 @@ export default class Foundations extends React.Component {
                     }
                   ]}
                 >
-                  <View style={{ flex: 1 }} />
                   <View
                     style={[
                       styles.centerContent,
@@ -464,7 +346,6 @@ export default class Foundations extends React.Component {
                       XP
                     </Text>
                   </View>
-                  <View style={{ flex: 1 }} />
                 </View>
                 <View
                   style={[
@@ -491,8 +372,7 @@ export default class Foundations extends React.Component {
                       }
                     ]}
                   >
-                    <View style={{ flex: 1 }} />
-                    <MaterialIcon
+                    <Icon.MaterialCommunityIcons
                       name={'replay'}
                       size={onTablet ? 28 : 20}
                       color={colors.pianoteRed}
@@ -536,34 +416,23 @@ export default class Foundations extends React.Component {
             />
           </View>
         </ScrollView>
-        <Modal
-          isVisible={this.state.showRestartCourse}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
+        <RestartCourse
           onBackButtonPress={() => this.setState({ showRestartCourse: false })}
-        >
-          <RestartCourse
-            hideRestartCourse={() => {
-              this.setState({
-                showRestartCourse: false
-              });
-            }}
-            type='method'
-            onRestart={() => this.onRestartMethod()}
-          />
-        </Modal>
+          isVisible={this.state.showRestartCourse}
+          hideRestartCourse={() => {
+            this.setState({ showRestartCourse: false });
+          }}
+          type='method'
+          onRestart={() => this.onRestartMethod()}
+        />
         {!this.state.isLoadingAll && this.state.nextLesson && (
           <NextVideo
             item={this.state.nextLesson}
             isMethod={true}
             progress={this.state.progress}
-            type='FOUNDATIONS'
+            type={'FOUNDATIONS'}
             onNextLesson={() =>
-              this.goToLesson(this.state.nextLesson.post.mobile_app_url)
+              this.goToLesson(this.state.nextLesson.mobile_app_url)
             }
           />
         )}

@@ -1,28 +1,24 @@
-/**
- * PasswordEmailMatch
- */
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  StyleSheet
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 
 export default class PasswordEmailMatch extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   render = () => {
     return (
-      <TouchableWithoutFeedback
-        style={styles.container}
-        onPress={() => this.props.hidePasswordEmailMatch()}
+      <Modal
+        visible={this.props.isVisible}
+        transparent={true}
+        style={styles.modalContainer}
+        animation={'slideInUp'}
+        animationInTiming={250}
+        animationOutTiming={250}
+        coverScreen={true}
+        hasBackdrop={true}
+        onBackButtonPress={() => this.props.hidePasswordEmailMatch()}
       >
-        <View style={[styles.container, styles.centerContent]}>
+        <TouchableOpacity
+          style={[styles.centerContent, localStyles.modalContainer]}
+          onPress={() => this.props.hidePasswordEmailMatch()}
+        >
           <View style={localStyles.container}>
             <Text
               numberOfLines={2}
@@ -54,13 +50,17 @@ export default class PasswordEmailMatch extends React.Component {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableOpacity>
+      </Modal>
     );
   };
 }
 
 const localStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
   container: {
     backgroundColor: 'white',
     borderRadius: 15,

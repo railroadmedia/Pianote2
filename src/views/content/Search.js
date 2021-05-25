@@ -1,20 +1,15 @@
-/**
- * Search
- */
 import React from 'react';
 import {
   View,
   Text,
   TextInput,
-  Animated,
   TouchableOpacity,
   ScrollView,
   Dimensions,
   ActivityIndicator,
   StatusBar
 } from 'react-native';
-import { ContentModel } from '@musora/models';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import Icon from '../../assets/icons.js';
 import AsyncStorage from '@react-native-community/async-storage';
 import { SafeAreaView } from 'react-navigation';
 import NavigationBar from '../../components/NavigationBar';
@@ -40,18 +35,16 @@ export default class Search extends React.Component {
     super(props);
     this.state = {
       recentSearchResults: [],
-
       searchResults: [],
-      currentSort: 'newest',
-      page: 1,
-      outVideos: false,
-      isLoadingAll: false, // all lessons
-      isPaging: false, // scrolling more
-      filtering: false, // filtering
+      isLoadingAll: false,
+      isPaging: false,
+      filtering: false,
       searchEntered: false,
       showCancel: false,
       noResults: false,
       numSearchResults: null,
+      page: 1,
+      currentSort: 'newest',
       searchTerm: ''
     };
     const url = props.route?.params?.url;
@@ -64,7 +57,6 @@ export default class Search extends React.Component {
   }
 
   async componentDidMount() {
-    // get recent searches from memory
     let recentSearchResults = await AsyncStorage.getItem('recentSearches');
     if (recentSearchResults) {
       recentSearchResults = await JSON.parse(recentSearchResults);
@@ -88,7 +80,16 @@ export default class Search extends React.Component {
           }}
         >
           <TouchableOpacity
-            onPress={() => this.clickSearchRecent(row[0])}
+            onPress={() =>
+              this.setState(
+                {
+                  searchTerm: row[0],
+                  showCancel: true,
+                  searchResults: []
+                },
+                () => this.search()
+              )
+            }
             style={{
               justifyContent: 'center',
               paddingLeft: 10
@@ -120,8 +121,7 @@ export default class Search extends React.Component {
           <Text
             style={{
               fontSize: onTablet ? 20 : 14,
-              fontFamily: 'OpenSans-Regular',
-              fontWeight: 'bold',
+              fontFamily: 'OpenSans-Bold',
               color: 'white',
               paddingTop: 10
             }}
@@ -134,21 +134,21 @@ export default class Search extends React.Component {
   }
 
   search = async () => {
-    if (this.context && !this.context.isConnected) {
+    if (this.context && !this.context.isConnected)
       return this.context.showNoConnectionAlert();
-    }
+
     this.setState({ filtering: true });
 
     let term = this.state.searchTerm;
     if (term.length > 0) {
       var isNewTerm = true;
 
-      if (this.state.searchResults == 0) {
+      if (this.state.searchResults === 0) {
         this.setState({ isLoadingAll: true });
       }
 
       for (i in this.state.recentSearchResults) {
-        if (this.state.recentSearchResults[i][0] == term) {
+        if (this.state.recentSearchResults[i][0] === term) {
           isNewTerm = false;
         }
       }
@@ -174,7 +174,7 @@ export default class Search extends React.Component {
         this.state.page,
         this.filterQuery
       );
-      if (response.data.length == 0) {
+      if (response.data.length === 0) {
         this.setState({
           searchEntered: false,
           isLoadingAll: false,
@@ -183,49 +183,10 @@ export default class Search extends React.Component {
         });
       } else {
         this.metaFilters = response?.meta?.filterOptions;
-        let newContent = await response.data.map(data => {
-          return new ContentModel(data);
-        });
+        let newContent = response.data;
 
-        let items = [];
-        for (let i in newContent) {
-          items.push({
-            title: newContent[i].getField('title'),
-            artist: this.getArtist(newContent[i]),
-            thumbnail: newContent[i].getData('thumbnail_url'),
-            type: newContent[i].post.type,
-            publishedOn:
-              newContent[i].publishedOn.slice(0, 10) +
-              'T' +
-              newContent[i].publishedOn.slice(11, 16),
-            description: newContent[i]
-              .getData('description')
-              .replace(/(<([^>]+)>)/g, '')
-              .replace(/&nbsp;/g, '')
-              .replace(/&amp;/g, '&')
-              .replace(/&#039;/g, "'")
-              .replace(/&quot;/g, '"')
-              .replace(/&gt;/g, '>')
-              .replace(/&lt;/g, '<'),
-            xp: newContent[i].post.xp,
-            id: newContent[i].id,
-            mobile_app_url: newContent[i].post.mobile_app_url,
-            lesson_count: newContent[i].post.lesson_count,
-            currentLessonId: newContent[i].post?.song_part_id,
-            like_count: newContent[i].post.like_count,
-            duration: this.getDuration(newContent[i]),
-            isLiked: newContent[i].post.is_liked_by_current_user,
-            isAddedToList: newContent[i].isAddedToList,
-            isStarted: newContent[i].isStarted,
-            isCompleted: newContent[i].isCompleted,
-            bundle_count: newContent[i].post.bundle_count,
-            progress_percent: newContent[i].post.progress_percent
-          });
-        }
         this.setState({
-          searchResults: [...this.state.searchResults, ...items],
-          outVideos:
-            items.length == 0 || response.data.length < 20 ? true : false,
+          searchResults: [...this.state.searchResults, ...newContent],
           isLoadingAll: false,
           filtering: false,
           isPaging: false,
@@ -236,46 +197,6 @@ export default class Search extends React.Component {
     }
   };
 
-  getArtist = newContent => {
-    if (newContent.post.type == 'song') {
-      if (typeof newContent.post.artist !== 'undefined') {
-        return newContent.post.artist;
-      } else {
-        for (i in newContent.post.fields) {
-          if (newContent.post.fields[i].key == 'artist') {
-            return newContent.post.fields[i].value;
-          }
-        }
-      }
-    } else {
-      try {
-        if (newContent.getField('instructor') !== 'TBD') {
-          return newContent.getField('instructor').fields[0].value;
-        } else {
-          return newContent.getField('instructor').name;
-        }
-      } catch (error) {
-        return '';
-      }
-    }
-  };
-
-  getDuration = newContent => {
-    var data = 0;
-    try {
-      for (i in newContent.fields) {
-        if (newContent.fields[i].key == 'video') {
-          var data = newContent.fields[i].value.fields;
-          for (var i = 0; i < data.length; i++) {
-            if (data[i].key == 'length_in_seconds') {
-              return data[i].value;
-            }
-          }
-        }
-      }
-    } catch (error) {}
-  };
-
   async clearRecent() {
     await this.setState({ recentSearchResults: [] });
     await AsyncStorage.setItem(
@@ -284,30 +205,8 @@ export default class Search extends React.Component {
     );
   }
 
-  clickSearchRecent = searchTerm => {
-    this.setState(
-      {
-        searchTerm,
-        showCancel: true,
-        searchResults: []
-      },
-      () => this.search()
-    );
-  };
-
-  getVideos = () => {
-    // change page before getting more lessons if paging
-    if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () => this.search());
-    }
-  };
-
   handleScroll = event => {
-    if (
-      isCloseToBottom(event) &&
-      !this.state.isPaging &&
-      !this.state.outVideos
-    ) {
+    if (isCloseToBottom(event) && !this.state.isPaging) {
       this.setState(
         {
           page: this.state.page + 1,
@@ -350,11 +249,13 @@ export default class Search extends React.Component {
                 <View
                   style={[styles.centerContent, { width: onTablet ? 60 : 40 }]}
                 >
-                  <EvilIcons
+                  <Icon.EvilIcons
                     name={'search'}
                     size={onTablet ? 35 : 25}
                     color={
-                      this.props.currentPage == 'SEARCH' ? '#fb1b2f' : 'grey'
+                      this.props.currentPage === 'SEARCH'
+                        ? colors.pianoteRed
+                        : 'grey'
                     }
                   />
                 </View>
@@ -416,7 +317,7 @@ export default class Search extends React.Component {
                       style={{
                         textAlign: 'center',
                         fontSize: onTablet ? 16 : 12,
-                        color: '#fb1b2f',
+                        color: colors.pianoteRed,
                         fontFamily: 'OpenSans-Bold'
                       }}
                     >
@@ -426,7 +327,7 @@ export default class Search extends React.Component {
                 )}
               </View>
             </View>
-            {this.state.searchResults.length == 0 && (
+            {this.state.searchResults.length === 0 && (
               <View style={[styles.centerContent, styles.recentSearches]}>
                 {(!this.state.searchEntered ||
                   this.state.searchResults.length > 0) && (
@@ -472,7 +373,8 @@ export default class Search extends React.Component {
             <View style={{ flex: 1, marginBottom: '2%' }}>
               {!this.state.searchEntered &&
                 !this.state.isLoadingAll &&
-                !this.state.noResults && <View>{this.mapRecentResults()}</View>}
+                !this.state.noResults &&
+                this.mapRecentResults()}
               {this.state.searchEntered &&
                 !this.state.noResults &&
                 !this.state.isLoadingAll && (
@@ -497,20 +399,12 @@ export default class Search extends React.Component {
                       currentSort={this.state.currentSort}
                       changeSort={sort => this.changeSort(sort)}
                       imageWidth={(onTablet ? 0.225 : 0.3) * width}
-                      outVideos={this.state.outVideos} // if paging and out of videos
                       applyFilters={filters =>
                         new Promise(res =>
-                          this.setState(
-                            {
-                              searchResults: [],
-                              outVideos: false,
-                              page: 1
-                            },
-                            () => {
-                              this.filterQuery = filters;
-                              this.search().then(res);
-                            }
-                          )
+                          this.setState({ searchResults: [], page: 1 }, () => {
+                            this.filterQuery = filters;
+                            this.search().then(res);
+                          })
                         )
                       }
                     />
@@ -535,7 +429,6 @@ export default class Search extends React.Component {
               )}
               {!this.state.isLoadingAll && this.state.noResults && (
                 <View
-                  key={'noResults'}
                   style={{
                     flex: 1,
                     borderTopWidth: 1,

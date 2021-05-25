@@ -1,8 +1,6 @@
 'use strict';
 
 import { Dimensions } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
-
 var React = require('react-native');
 
 const windowDim = Dimensions.get('window');
@@ -10,6 +8,7 @@ const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const onTablet = global.onTablet;
 
 var { StyleSheet } = React;
 
@@ -21,7 +20,7 @@ module.exports = StyleSheet.create({
   },
   heightButtons: {
     // the height of buttons like start / more info on lessons
-    height: DeviceInfo.isTablet() ? 45 : 35
+    height: onTablet ? 45 : 35
   },
   activityIndicator: {
     // style for putting on spinners
@@ -30,7 +29,7 @@ module.exports = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12
+    fontSize: onTablet ? 16 : 12
   },
   searchContainer: {
     marginTop: '4%',
@@ -63,7 +62,7 @@ module.exports = StyleSheet.create({
   },
   childHeaderText: {
     // used on search, see all, downloads,
-    fontSize: DeviceInfo.isTablet() ? 28 : 20,
+    fontSize: onTablet ? 28 : 20,
     color: 'white',
     fontFamily: 'OpenSans-ExtraBold',
     alignSelf: 'center',
@@ -82,8 +81,8 @@ module.exports = StyleSheet.create({
   },
   tabRightContainerText: {
     // container used for my list in progress & on settings
-    paddingLeft: DeviceInfo.isTablet() ? 10 : 5,
-    fontSize: DeviceInfo.isTablet() ? 24 : 20,
+    paddingLeft: onTablet ? 10 : 5,
+    fontSize: onTablet ? 24 : 20,
     textAlign: 'left',
     fontFamily: 'RobotoCondensed-Bold',
     color: '#445f73'
@@ -102,29 +101,29 @@ module.exports = StyleSheet.create({
   },
   contentPageHeader: {
     paddingLeft: 10,
-    fontSize: DeviceInfo.isTablet() ? 34 : 26,
+    fontSize: onTablet ? 34 : 26,
     color: 'white',
     fontFamily: 'OpenSans-ExtraBold'
   },
   modalHeaderText: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: DeviceInfo.isTablet() ? 24 : 18
+    fontSize: onTablet ? 24 : 18
   },
   modalCancelButtonText: {
     textAlign: 'center',
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12
+    fontSize: onTablet ? 16 : 12
   },
   modalButtonText: {
     textAlign: 'center',
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12
+    fontSize: onTablet ? 16 : 12
   },
   modalBodyText: {
     textAlign: 'center',
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12
+    fontSize: onTablet ? 16 : 12
   },
   centerContent: {
     justifyContent: 'center',
@@ -138,8 +137,8 @@ module.exports = StyleSheet.create({
     borderRadius: 200
   },
   innerRedButton: {
-    width: DeviceInfo.isTablet() ? width * 0.15 : width * 0.225,
-    height: DeviceInfo.isTablet() ? width * 0.15 : width * 0.225
+    width: onTablet ? width * 0.15 : width * 0.225,
+    height: onTablet ? width * 0.15 : width * 0.225
   },
   buttonContainer: {
     flexDirection: 'row',

@@ -1,6 +1,3 @@
-/**
- * Course
- */
 import React from 'react';
 import {
   View,
@@ -12,21 +9,19 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { ContentModel } from '@musora/models';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
 import { getStartedContent, getAllContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 import NavigationBar from '../../components/NavigationBar';
-
 import { cacheAndWriteCourses } from '../../redux/CoursesCacheActions';
 import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
+var page = 1;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
   return (
@@ -44,11 +39,7 @@ class Course extends React.Component {
       progressCourses: [],
       allCourses: [],
       currentSort: 'newest',
-      page: 1,
-      outVideos: false,
-      isPaging: false, // scrolling more
-      filtering: false, // filtering
-      started: true, // if started lesson
+      isPaging: false,
       refreshing: true,
       refreshControl: false,
       ...this.initialValidData(coursesCache, true)
@@ -64,22 +55,13 @@ class Course extends React.Component {
     this.refreshOnFocusListener = refreshOnFocusListener.call(this);
   }
 
-  componentWillUnmount() {
-    this.refreshOnFocusListener?.();
-  }
+  componentWillUnmount = () => this.refreshOnFocusListener?.();
 
   async getContent() {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let content = await Promise.all([
-      getAllContent(
-        'course',
-        this.state.currentSort,
-        this.state.page,
-        this.filterQuery
-      ),
-      getStartedContent('course')
+      getAllContent('course', this.state.currentSort, page, this.filterQuery),
+      getStartedContent('course', 1)
     ]);
     this.metaFilters = content?.[0]?.meta?.filterOptions;
     this.props.cacheAndWriteCourses({
@@ -95,139 +77,45 @@ class Course extends React.Component {
   }
 
   initialValidData = (content, fromCache) => {
-    try {
-      let allVideos = this.setData(
-        content.all.data.map(data => {
-          return new ContentModel(data);
-        })
-      );
-
-      let inprogressVideos = this.setData(
-        content.inProgress.data.map(data => {
-          return new ContentModel(data);
-        })
-      );
-
-      return {
-        allCourses: allVideos,
-        progressCourses: inprogressVideos,
-        refreshing: false,
-        refreshControl: fromCache,
-        outVideos:
-          allVideos.length == 0 || content.all.data.length < 20 ? true : false,
-        filtering: false,
-        isPaging: false,
-        page: this.state?.page + 1 || 1,
-        started: inprogressVideos.length !== 0
-      };
-    } catch (e) {
-      return {};
-    }
+    let allVideos = content?.all?.data;
+    let inprogressVideos = content?.inProgress?.data;
+    return {
+      allCourses: allVideos,
+      progressCourses: inprogressVideos,
+      refreshing: false,
+      refreshControl: fromCache,
+      filtering: false,
+      isPaging: false,
+      page: 1
+    };
   };
 
   getAllCourses = async loadMore => {
-    this.setState({ filtering: true });
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = await getAllContent(
       'course',
       this.state.currentSort,
-      this.state.page,
+      page,
       this.filterQuery
     );
+
     this.metaFilters = response?.meta?.filterOptions;
-    const newContent = await response.data.map(data => {
-      return new ContentModel(data);
-    });
-
-    let items = this.setData(newContent);
-
     this.setState(state => ({
-      allCourses: loadMore ? state.allCourses.concat(items) : items,
-      outVideos: items.length == 0 || response.data.length < 20 ? true : false,
+      allCourses: loadMore
+        ? state.allCourses.concat(response.data)
+        : response.data,
       filtering: false,
       isPaging: false,
-      refreshControl: false,
-      page: this.state.page + 1
+      refreshControl: false
     }));
   };
 
-  setData(newContent) {
-    let items = [];
-    for (let i in newContent) {
-      items.push({
-        title: newContent[i].getField('title'),
-        artist: newContent[i].getField('instructor').fields[0].value,
-        thumbnail: newContent[i].getData('thumbnail_url'),
-        type: newContent[i].post.type,
-        publishedOn:
-          newContent[i].publishedOn.slice(0, 10) +
-          'T' +
-          newContent[i].publishedOn.slice(11, 16),
-        description: newContent[i]
-          .getData('description')
-          .replace(/(<([^>]+)>)/g, '')
-          .replace(/&nbsp;/g, '')
-          .replace(/&amp;/g, '&')
-          .replace(/&#039;/g, "'")
-          .replace(/&quot;/g, '"')
-          .replace(/&gt;/g, '>')
-          .replace(/&lt;/g, '<'),
-        xp: newContent[i].post.xp,
-        id: newContent[i].id,
-        like_count: newContent[i].likeCount,
-        isLiked: newContent[i].post.is_liked_by_current_user,
-        isAddedToList: newContent[i].isAddedToList,
-        isStarted: newContent[i].isStarted,
-        isCompleted: newContent[i].isCompleted,
-        progress_percent: newContent[i].post.progress_percent
-      });
-    }
-
-    return items;
-  }
-
-  changeSort = currentSort => {
-    this.setState(
-      {
-        currentSort,
-        outVideos: false,
-        isPaging: false,
-        page: 1
-      },
-      () => this.getAllCourses()
-    );
-  };
-
-  getVideos = async () => {
-    // change page before getting more lessons if paging
-    if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () =>
-        this.getAllCourses(true)
-      );
-    }
-  };
-
   handleScroll = event => {
-    if (
-      isCloseToBottom(event) &&
-      !this.state.isPaging &&
-      !this.state.outVideos
-    ) {
-      this.setState(
-        {
-          page: this.state.page + 1,
-          isPaging: true
-        },
-        () => this.getAllCourses(true)
-      );
+    if (isCloseToBottom(event) && !this.state.isPaging) {
+      page = page + 1;
+      this.setState({ isPaging: true }, () => this.getAllCourses(true));
     }
   };
-
-  refresh() {
-    this.setState({ refreshControl: true, page: 1 }, this.getContent);
-  }
 
   render() {
     return (
@@ -243,7 +131,12 @@ class Course extends React.Component {
               <RefreshControl
                 tintColor={'transparent'}
                 colors={[colors.pianoteRed]}
-                onRefresh={() => this.refresh()}
+                onRefresh={() =>
+                  this.setState(
+                    { refreshControl: true, page: 1 },
+                    this.getContent
+                  )
+                }
                 refreshing={isiOS ? false : this.state.refreshControl}
               />
             }
@@ -256,7 +149,7 @@ class Course extends React.Component {
               />
             )}
             <Text style={styles.contentPageHeader}>Courses</Text>
-            {this.state.started && (
+            {!!this.state.progressCourses?.length && (
               <HorizontalVideoList
                 hideFilterButton={true}
                 Title={'CONTINUE'}
@@ -284,35 +177,32 @@ class Course extends React.Component {
                 isPaging={this.state.isPaging}
                 filters={this.state.filters}
                 currentSort={this.state.currentSort}
-                changeSort={sort => this.changeSort(sort)}
+                changeSort={sort =>
+                  this.setState(
+                    {
+                      currentSort: sort,
+                      isPaging: false,
+                      page: 1
+                    },
+                    () => this.getAllCourses()
+                  )
+                }
                 filterResults={() => this.setState({ showFilters: true })}
                 applyFilters={filters =>
                   new Promise(res =>
-                    this.setState(
-                      {
-                        allCourses: [],
-                        outVideos: false,
-                        page: 1
-                      },
-                      () => {
-                        this.filterQuery = filters;
-                        this.getAllCourses().then(res);
-                      }
-                    )
+                    this.setState({ allCourses: [], page: 1 }, () => {
+                      this.filterQuery = filters;
+                      this.getAllCourses().then(res);
+                    })
                   )
                 }
-                outVideos={this.state.outVideos}
-                getVideos={() => this.getVideos()}
                 callEndReached={true}
                 reachedEnd={() => {
-                  if (!this.state.isPaging && !this.state.outVideos) {
-                    this.setState(
-                      {
-                        page: this.state.page + 1,
-                        isPaging: true
-                      },
-                      () => this.getAllCourses()
-                    );
+                  if (!this.state.isPaging) {
+                    (page = page + 1),
+                      this.setState({ isPaging: true }, () =>
+                        this.getAllCourses()
+                      );
                   }
                 }}
               />
@@ -330,25 +220,25 @@ class Course extends React.Component {
                 showSort={true}
                 filters={this.metaFilters}
                 currentSort={this.state.currentSort}
-                changeSort={sort => this.changeSort(sort)}
-                applyFilters={filters =>
-                  new Promise(res =>
-                    this.setState(
-                      {
-                        allCourses: [],
-                        outVideos: false,
-                        page: 1
-                      },
-                      () => {
-                        this.filterQuery = filters;
-                        this.getAllCourses().then(res);
-                      }
-                    )
+                changeSort={sort =>
+                  this.setState(
+                    {
+                      currentSort: sort,
+                      isPaging: false,
+                      page: 1
+                    },
+                    () => this.getAllCourses()
                   )
                 }
-                imageWidth={width * 0.26} // image width
-                outVideos={this.state.outVideos}
-                getVideos={() => this.getVideos()}
+                applyFilters={filters =>
+                  new Promise(res =>
+                    this.setState({ allCourses: [], page: 1 }, () => {
+                      this.filterQuery = filters;
+                      this.getAllCourses().then(res);
+                    })
+                  )
+                }
+                imageWidth={width * 0.26}
               />
             )}
           </ScrollView>

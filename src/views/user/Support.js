@@ -1,6 +1,3 @@
-/**
- * Support
- */
 import React from 'react';
 import {
   View,
@@ -10,32 +7,28 @@ import {
   ScrollView,
   StyleSheet
 } from 'react-native';
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
+import Back from '../../assets/img/svgs/back.svg';
 import Intercom from 'react-native-intercom';
-import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';
+import { connect } from 'react-redux';
 
-export default class Support extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+const isTablet = global.onTablet;
 
+class Support extends React.Component {
   componentDidMount = async () => {
-    const userData = await getUserData();
+    const { id, email, phone_number, display_name } = this.props.user;
     await Intercom.registerIdentifiedUser({
-      userId: 'musora_' + userData.id.toString()
+      userId: 'musora_' + id.toString()
     });
     await Intercom.updateUser({
-      email: userData.email,
-      phone: userData.phone_number ? userData.phone_number.toString() : '',
-      user_id: 'musora_' + userData.id.toString(),
-      name: userData.display_name,
+      email: email,
+      phone: phone_number ? phone_number.toString() : '',
+      user_id: 'musora_' + id.toString(),
+      name: display_name,
       custom_attributes: {
-        // unique_id: auth.unique_id.toString(),
         app_build_number: '0.0.' + DeviceInfo.getBuildNumber()
       }
     });
@@ -61,198 +54,106 @@ export default class Support extends React.Component {
     );
   }
 
-  onUnreadChange(event) {
-    console.log(event);
-  }
+  onUnreadChange = event => console.log(event);
 
-  onIntercomPress = () => {
-    Intercom.displayMessenger();
-  };
+  onIntercomPress = () => Intercom.displayMessenger();
 
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
-        <View
-          style={{
-            flex: 1,
-            alignSelf: 'stretch',
-            backgroundColor: colors.mainBackground
-          }}
-        >
+        <View style={[styles.centerContent, { flex: 0.07 }]}>
           <View
-            key={'header'}
             style={[
               styles.centerContent,
               {
-                flex: 0.1
+                position: 'absolute',
+                left: 0,
+                paddingLeft: 10,
+                bottom: 0,
+                height: 50,
+                width: 50
               }
             ]}
           >
-            <View
+            <TouchableOpacity
+              onPress={() => goBack()}
               style={[
                 styles.centerContent,
                 {
-                  position: 'absolute',
-                  left: 0,
-                  paddingLeft: 10,
-                  bottom: 0,
-                  height: 50,
-                  width: 50
+                  height: '100%',
+                  width: '100%'
                 }
               ]}
             >
-              <TouchableOpacity
-                onPress={() => goBack()}
-                style={[
-                  styles.centerContent,
-                  {
-                    height: '100%',
-                    width: '100%'
-                  }
-                ]}
-              >
-                <Back
-                  width={backButtonSize}
-                  height={backButtonSize}
-                  fill={colors.secondBackground}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={{ flex: 0.66 }} />
-            <Text
-              style={[
-                styles.childHeaderText,
-                { color: colors.secondBackground }
-              ]}
-            >
-              Support
-            </Text>
-            <View style={{ flex: 0.33 }} />
+              <Back
+                width={backButtonSize}
+                height={backButtonSize}
+                fill={colors.secondBackground}
+              />
+            </TouchableOpacity>
           </View>
-
-          <ScrollView
-            key={'contentContainer'}
-            style={{ flex: 1 }}
-            contentContainerStyle={{ flexGrow: 1 }}
+          <Text
+            style={[styles.childHeaderText, { color: colors.secondBackground }]}
           >
-            <View style={{ height: '15%' }} />
-            <TouchableOpacity
-              onPress={() => this.onIntercomPress()}
-              style={[styles.centerContent, localStyles.button]}
-            >
-              <Text
-                style={{
-                  fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: onTablet ? 20 : 16,
-                  color: 'white',
-                  paddingVertical: 15
-                }}
-              >
-                LIVE CHAT SUPPORT
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => Linking.openURL('mailto:support@musora.com')}
-              style={[styles.centerContent, localStyles.button]}
-            >
-              <Text
-                style={{
-                  fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: onTablet ? 20 : 16,
-                  color: 'white',
-                  paddingVertical: 15
-                }}
-              >
-                EMAIL SUPPORT
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => Linking.openURL(`tel:${'18004398921'}`)}
-              style={[styles.centerContent, localStyles.button]}
-            >
-              <Text
-                style={{
-                  fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: onTablet ? 20 : 16,
-                  color: 'white',
-                  paddingVertical: 15
-                }}
-              >
-                PHONE SUPPORT
-              </Text>
-            </TouchableOpacity>
-
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: onTablet ? 18 : 14,
-                opacity: 0.8,
-                color: colors.secondBackground,
-                textAlign: 'center',
+            Support
+          </Text>
+        </View>
+        <ScrollView style={{ flex: 1 }}>
+          <TouchableOpacity
+            onPress={() => this.onIntercomPress()}
+            style={[
+              styles.centerContent,
+              localStyles.button,
+              { marginTop: '30%' }
+            ]}
+          >
+            <Text style={localStyles.buttonText}>LIVE CHAT SUPPORT</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => Linking.openURL('mailto:support@musora.com')}
+            style={[styles.centerContent, localStyles.button]}
+          >
+            <Text style={localStyles.buttonText}>EMAIL SUPPORT</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => Linking.openURL(`tel:${'18004398921'}`)}
+            style={[styles.centerContent, localStyles.button]}
+          >
+            <Text style={localStyles.buttonText}>PHONE SUPPORT</Text>
+          </TouchableOpacity>
+          <Text
+            style={[
+              localStyles.phoneEmailText,
+              {
                 padding: 10,
                 paddingTop: 20
-              }}
-            >
-              EMAIL
-            </Text>
-
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: onTablet ? 18 : 14,
-                textAlign: 'center',
-                color: 'white',
-                padding: 5
-              }}
-            >
-              support@musora.com
-            </Text>
-
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: onTablet ? 18 : 14,
-                opacity: 0.8,
-                color: colors.secondBackground,
-                textAlign: 'center',
-                padding: 10
-              }}
-            >
-              PHONE
-            </Text>
-
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: onTablet ? 18 : 14,
-                textAlign: 'center',
-                color: 'white',
-                padding: 5
-              }}
-            >
-              1-800-439-8921
-            </Text>
-
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: onTablet ? 18 : 14,
-                textAlign: 'center',
-                color: 'white',
-                padding: 5
-              }}
-            >
-              1-604-855-7605
-            </Text>
-          </ScrollView>
-        </View>
+              }
+            ]}
+          >
+            EMAIL
+          </Text>
+          <Text style={localStyles.phoneNumberEmailAddress}>
+            support@musora.com
+          </Text>
+          <Text style={localStyles.phoneEmailText}>PHONE</Text>
+          <Text style={localStyles.phoneNumberEmailAddress}>
+            1-800-439-8921
+          </Text>
+          <Text style={localStyles.phoneNumberEmailAddress}>
+            1-604-855-7605
+          </Text>
+        </ScrollView>
         <NavigationBar currentPage={'PROFILE'} pad={true} />
       </SafeAreaView>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+export default connect(mapStateToProps, null)(Support);
 
 const localStyles = StyleSheet.create({
   button: {
@@ -261,5 +162,25 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#fb1b2f',
     alignSelf: 'center',
     marginVertical: 5
+  },
+  buttonText: {
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: isTablet ? 20 : 16,
+    color: 'white',
+    paddingVertical: 15
+  },
+  phoneEmailText: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: isTablet ? 18 : 14,
+    color: '#445f73',
+    textAlign: 'center',
+    padding: 10
+  },
+  phoneNumberEmailAddress: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: isTablet ? 18 : 14,
+    textAlign: 'center',
+    color: 'white',
+    padding: 5
   }
 });

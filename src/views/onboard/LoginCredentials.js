@@ -1,6 +1,3 @@
-/**
- * LoginCredentials
- */
 import React from 'react';
 import {
   View,
@@ -12,38 +9,35 @@ import {
   KeyboardAvoidingView,
   StyleSheet
 } from 'react-native';
-
 import RNIap from 'react-native-iap';
-import Modal from 'react-native-modal';
 import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
-import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-community/async-storage';
 import Orientation from 'react-native-orientation-locker';
-
 import Back from '../../assets/img/svgs/back';
 import Pianote from '../../assets/img/svgs/pianote';
 import PasswordHidden from '../../assets/img/svgs/passwordHidden.svg';
 import PasswordVisible from '../../assets/img/svgs/passwordVisible.svg';
-
 import { updateFcmToken } from '../../services/notification.service';
 import {
   getToken,
   getUserData,
   restorePurchase
 } from '../../services/UserDataAuth.js';
-
 import Loading from '../../components/Loading.js';
 import GradientFeature from '../../components/GradientFeature';
-
 import CustomModal from '../../modals/CustomModal.js';
 import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { goBack, navigate, reset } from '../../../AppNavigator';
 import commonService from '../../services/common.service';
 import navigationService from '../../services/navigation.service';
+import { connect } from 'react-redux';
+import { setLoggedInUser } from '../../redux/UserActions';
 
-export default class LoginCredentials extends React.Component {
+const isTablet = global.onTablet;
+
+class LoginCredentials extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
@@ -92,9 +86,7 @@ export default class LoginCredentials extends React.Component {
   };
 
   login = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
 
     Keyboard.dismiss();
     this.loadingRef?.toggleLoading(true);
@@ -108,13 +100,14 @@ export default class LoginCredentials extends React.Component {
       // store user data
       updateFcmToken();
       await AsyncStorage.multiSet([
-        ['loggedIn', 'true'],
         ['email', this.state.email],
         ['password', this.state.password]
       ]);
 
       // checkmembership status
       let userData = await getUserData();
+      this.props.setLoggedInUser(userData);
+
       if (commonService.urlToOpen !== '') {
         return navigationService.decideWhereToRedirect();
       }
@@ -155,7 +148,7 @@ export default class LoginCredentials extends React.Component {
     this.loadingRef?.toggleLoading();
     try {
       const purchases = await RNIap.getAvailablePurchases();
-      console.log(purchases);
+
       if (!purchases.length) {
         this.loadingRef?.toggleLoading();
         return this.customModal.toggle(
@@ -198,7 +191,7 @@ export default class LoginCredentials extends React.Component {
       <FastImage
         style={{ flex: 1 }}
         resizeMode={FastImage.resizeMode.cover}
-        source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
+        source={require('../../../src/assets/img/imgs/backgroundHands.png')}
       >
         <GradientFeature
           zIndex={0}
@@ -221,7 +214,7 @@ export default class LoginCredentials extends React.Component {
             >
               <View style={localStyles.scrollContainer}>
                 <View style={localStyles.pianoteInnerContainer}>
-                  <Pianote fill={'#fb1b2f'} />
+                  <Pianote fill={colors.pianoteRed} />
                 </View>
                 <View>
                   <Text
@@ -240,15 +233,9 @@ export default class LoginCredentials extends React.Component {
                 </View>
                 <TextInput
                   onBlur={() =>
-                    this.setState({
-                      scrollViewContentFlex: { flex: 1 }
-                    })
+                    this.setState({ scrollViewContentFlex: { flex: 1 } })
                   }
-                  onFocus={() =>
-                    this.setState({
-                      scrollViewContentFlex: {}
-                    })
-                  }
+                  onFocus={() => this.setState({ scrollViewContentFlex: {} })}
                   autoCorrect={false}
                   value={this.state.email}
                   autoCapitalize={'none'}
@@ -329,12 +316,12 @@ export default class LoginCredentials extends React.Component {
                       borderWidth: 2,
                       borderRadius: 50,
                       alignSelf: 'center',
-                      borderColor: '#fb1b2f',
+                      borderColor: colors.pianoteRed,
                       width: onTablet ? '30%' : '50%',
                       backgroundColor:
                         this.state.email.length > 0 &&
                         this.state.password.length > 0
-                          ? '#fb1b2f'
+                          ? colors.pianoteRed
                           : 'transparent'
                     }
                   ]}
@@ -348,7 +335,7 @@ export default class LoginCredentials extends React.Component {
                         this.state.email.length > 0 &&
                         this.state.password.length > 0
                           ? 'white'
-                          : '#fb1b2f'
+                          : colors.pianoteRed
                     }}
                   >
                     LOG IN
@@ -403,25 +390,15 @@ export default class LoginCredentials extends React.Component {
             this.loadingRef = ref;
           }}
         />
-        <Modal
+
+        <PasswordEmailMatch
           isVisible={this.state.showPasswordEmailMatch}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
-          onBackButtonPress={() =>
-            this.setState({ showPasswordEmailMatch: false })
-          }
-        >
-          <PasswordEmailMatch
-            errorMessage={this.state.loginErrorMessage}
-            hidePasswordEmailMatch={() => {
-              this.setState({ showPasswordEmailMatch: false });
-            }}
-          />
-        </Modal>
+          errorMessage={this.state.loginErrorMessage}
+          hidePasswordEmailMatch={() => {
+            this.setState({ showPasswordEmailMatch: false });
+          }}
+        />
+
         <CustomModal
           ref={ref => {
             this.customModal = ref;
@@ -431,6 +408,12 @@ export default class LoginCredentials extends React.Component {
     );
   }
 }
+
+const mapDispatchToProps = dispatch => ({
+  setLoggedInUser: user => dispatch(setLoggedInUser(user))
+});
+
+export default connect(null, mapDispatchToProps)(LoginCredentials);
 
 const localStyles = StyleSheet.create({
   container: {
@@ -448,7 +431,7 @@ const localStyles = StyleSheet.create({
   pianoteInnerContainer: {
     alignSelf: 'center',
     alignItems: 'center',
-    width: DeviceInfo.isTablet() ? '30%' : '45%',
+    width: isTablet ? '30%' : '45%',
     aspectRatio: 177 / 53
   },
   email: {
@@ -457,13 +440,13 @@ const localStyles = StyleSheet.create({
     color: 'black',
     borderRadius: 100,
     marginHorizontal: 15,
-    fontSize: DeviceInfo.isTablet() ? 20 : 14,
+    fontSize: isTablet ? 20 : 14,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
   greyText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    fontSize: isTablet ? 16 : 12,
     color: 'grey',
     textAlign: 'center',
     textDecorationLine: 'underline'
@@ -502,7 +485,7 @@ const localStyles = StyleSheet.create({
     padding: 15,
     color: 'black',
     marginRight: 45,
-    fontSize: DeviceInfo.isTablet() ? 20 : 14,
+    fontSize: isTablet ? 20 : 14,
     fontFamily: 'OpenSans-Regular'
   }
 });

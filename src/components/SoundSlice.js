@@ -1,89 +1,76 @@
-/**
- * SoundSlice
- */
 import React from 'react';
-import { View, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, SafeAreaView, TouchableOpacity, Modal } from 'react-native';
 import { WebView } from 'react-native-webview';
-import FeatherIcon from 'react-native-vector-icons/Feather';
-import IdleTimerManager from 'react-native-idle-timer';
+import Icon from '../assets/icons';
 
 export default class SoundSlice extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+  componentDidMount = () => this.webView?.enableIdleTimer?.();
 
-  componentDidMount() {
-    IdleTimerManager.setIdleTimerDisabled(true);
-  }
-
-  componentWillUnmount() {
-    IdleTimerManager.setIdleTimerDisabled(false);
-  }
+  componentWillUnmount = () => this.webView?.disableIdleTimer?.();
 
   render = () => {
     return (
-      <SafeAreaView
-        style={{
-          flexDirection: 'row',
-          backgroundColor: 'black'
-        }}
-        forceInset={{ top: 'always' }}
+      <Modal
+        visible={this.props.isVisible}
+        style={[styles.centerContent, styles.modalContainer]}
+        animation={'slideInUp'}
+        animationInTiming={350}
+        animationOutTiming={350}
+        coverScreen={true}
+        hasBackdrop={true}
+        onBackButtonPress={() => this.setState({ showSoundSlice: false })}
       >
-        <View style={styles.container}>
-          <View
-            style={{
-              height: '100%',
-              width: '100%',
-              backgroundColor: 'white'
-            }}
-          >
-            <View style={{ height: '20%' }}>
-              <View
-                style={{
-                  position: 'absolute',
-                  top: onTablet ? 20 : 10,
-                  left: onTablet ? 20 : 10,
-                  zIndex: 10
-                }}
-              >
-                <View style={{ flex: 1 }} />
-                <TouchableOpacity
-                  onPress={() => {
-                    this.props.hideSoundSlice();
-                  }}
+        <SafeAreaView
+          style={{ flexDirection: 'row', backgroundColor: 'black' }}
+          forceInset={{ top: 'always' }}
+        >
+          <View style={styles.container}>
+            <View
+              style={{
+                height: '100%',
+                width: '100%',
+                backgroundColor: 'white'
+              }}
+            >
+              <View style={{ height: '20%' }}>
+                <View
                   style={{
-                    height: '100%',
-                    width: '100%',
+                    position: 'absolute',
+                    top: onTablet ? 20 : 10,
+                    left: onTablet ? 20 : 10,
                     zIndex: 10
                   }}
                 >
-                  <FeatherIcon
-                    size={onTablet ? 50 : 35}
-                    name={'x'}
-                    color={'black'}
-                  />
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => this.props.hideSoundSlice()}
+                    style={{ height: '100%', width: '100%', zIndex: 10 }}
+                  >
+                    <Icon.Feather
+                      size={onTablet ? 50 : 35}
+                      name={'x'}
+                      color={'black'}
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-            <WebView
-              style={{ flex: 1 }}
-              javaScriptEnabled={true}
-              domStorageEnabled={true}
-              startInLoadingState={true}
-              allowsInlineMediaPlayback={true}
-              automaticallyAdjustContentInsets={true}
-              mediaPlaybackRequiresUserAction={false}
-              ignoreSilentHardwareSwitch={true}
-              source={{
-                uri: `https://www.soundslice.com/${
-                  /^\d+$/.test(this.props.slug) ? 'scores' : 'slices'
-                }/${
-                  this.props.slug
-                }/embed/?api=1&scroll_type=2&branding=0&enable_mixer=0`,
-                headers: { referer: 'https://www.drumeo.com/' }
-              }}
-              injectedJavaScript={`
+              <WebView
+                style={{ flex: 1 }}
+                javaScriptEnabled={true}
+                domStorageEnabled={true}
+                startInLoadingState={true}
+                allowsInlineMediaPlayback={true}
+                automaticallyAdjustContentInsets={true}
+                mediaPlaybackRequiresUserAction={false}
+                ignoreSilentHardwareSwitch={true}
+                source={{
+                  uri: `https://www.soundslice.com/${
+                    /^\d+$/.test(this.props.slug) ? 'scores' : 'slices'
+                  }/${
+                    this.props.slug
+                  }/embed/?api=1&scroll_type=2&branding=0&enable_mixer=0`,
+                  headers: { referer: 'https://www.drumeo.com/' }
+                }}
+                injectedJavaScript={`
                               setTimeout(() => {
                                   var video = document.createElement('video');
 
@@ -96,10 +83,11 @@ export default class SoundSlice extends React.Component {
 
                               }, 500)
                           `}
-            />
+              />
+            </View>
           </View>
-        </View>
-      </SafeAreaView>
+        </SafeAreaView>
+      </Modal>
     );
   };
 }

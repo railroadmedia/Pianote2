@@ -1,17 +1,15 @@
-/**
- * XpRank
- */
 import React from 'react';
 import {
   View,
   Text,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   StyleSheet,
-  Dimensions
+  Dimensions,
+  Modal
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import ProgressCircle from 'react-native-progress-circle';
 
+const isTablet = global.onTablet;
 const ranks = [
   0,
   100,
@@ -36,35 +34,33 @@ const ranks = [
 ];
 
 export default class XpRank extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      rankProgress: null,
-      XP: this.props.xp,
-      rank: this.props.rank,
-      nextRank: null
-    };
-  }
+  nextRank = () => {
+    return ranks.find(r => this.props.xp < r) || 100000000;
+  };
 
-  componentDidMount() {
-    for (i in ranks) {
-      if (this.state.XP >= ranks[i] && this.state.XP < ranks[Number(i) + 1]) {
-        this.setState({
-          nextRank: ranks[Number(i) + 1],
-          rankProgress: (this.state.XP / ranks[Number(i) + 1]) * 100
-        });
-      }
-    }
-  }
+  rankProgress = () => {
+    return (this.props.xp / this.nextRank()) * 100;
+  };
 
   render = () => {
     return (
-      <TouchableWithoutFeedback
-        style={styles.container}
-        onPress={() => this.props.hideXpRank()}
+      <Modal
+        transparent={true}
+        visible={true}
+        style={styles.modalContainer}
+        animation={'slideInUp'}
+        animationInTiming={250}
+        animationOutTiming={250}
+        coverScreen={true}
+        hasBackdrop={true}
+        onBackButtonPress={() => this.props.hideXpRank()}
       >
-        <View style={[styles.container, styles.centerContent]}>
-          <View style={localStyles.container}>
+        <TouchableOpacity
+          style={[styles.centerContent, localStyles.modalContainer]}
+          activeOpacity={1}
+          onPress={() => this.props.hideXpRank()}
+        >
+          <View style={[localStyles.container, styles.centerContent]}>
             <Text style={[styles.modalHeaderText, localStyles.title]}>
               Your XP Rank
             </Text>
@@ -72,47 +68,38 @@ export default class XpRank extends React.Component {
               You earn XP by completing lessons,{'\n'}
               commenting on videos and more!
             </Text>
-            <View style={localStyles.description}>
-              <View
-                style={[
-                  styles.centerContent,
-                  localStyles.ProgressCircleContainer
-                ]}
-              >
-                <ProgressCircle
-                  percent={this.state.rankProgress}
-                  radius={
-                    (DeviceInfo.isTablet() ? 0.2 : 0.27) *
-                    Dimensions.get('window').width
-                  }
-                  borderWidth={5}
-                  shadowColor={'pink'}
-                  color={'red'}
-                  bgColor={'white'}
-                >
-                  <View style={{ transform: [{ rotate: '45deg' }] }}>
-                    <Text style={localStyles.XPtext}>
-                      {Number(this.state.XP).toLocaleString()}
-                    </Text>
-                    <Text style={localStyles.rankText}>{this.state.rank}</Text>
-                  </View>
-                </ProgressCircle>
-              </View>
-            </View>
+            <ProgressCircle
+              percent={this.rankProgress()}
+              radius={(onTablet ? 0.2 : 0.27) * Dimensions.get('window').width}
+              borderWidth={5}
+              shadowColor={'pink'}
+              color={'red'}
+              bgColor={'white'}
+            >
+              <Text style={localStyles.XPtext}>
+                {Number(this.props.xp).toLocaleString()}
+              </Text>
+              <Text style={localStyles.rankText}>{this.props.rank}</Text>
+            </ProgressCircle>
             <Text style={[styles.modalBodyText, localStyles.nextRank]}>
-              Next rank: {this.state.nextRank}
+              Next rank: {this.nextRank()}
             </Text>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableOpacity>
+      </Modal>
     );
   };
 }
 
 const localStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
   container: {
     borderRadius: 15,
     backgroundColor: 'white',
+    marginHorizontal: '10%',
     elevation: 10
   },
   title: {
@@ -122,7 +109,7 @@ const localStyles = StyleSheet.create({
   description: {
     paddingHorizontal: 20,
     marginVertical: 10,
-    fontSize: DeviceInfo.isTablet() ? 18 : 14
+    fontSize: isTablet ? 18 : 14
   },
   ProgressCircleContainer: {
     transform: [{ rotate: '315deg' }]
@@ -130,17 +117,17 @@ const localStyles = StyleSheet.create({
   XPtext: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: DeviceInfo.isTablet() ? 34 : 26
+    fontSize: isTablet ? 34 : 26
   },
   rankText: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: DeviceInfo.isTablet() ? 24 : 18
+    fontSize: isTablet ? 24 : 18
   },
   nextRank: {
     color: 'grey',
     paddingHorizontal: 40,
     marginVertical: 10,
-    fontSize: DeviceInfo.isTablet() ? 18 : 14
+    fontSize: isTablet ? 18 : 14
   }
 });

@@ -5,10 +5,7 @@ import { Provider } from 'react-redux';
 import { Text, Linking, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Orientation from 'react-native-orientation-locker';
-import DeviceInfo from 'react-native-device-info';
 import AppNavigator, { reset } from './AppNavigator';
-
-import NavigationService from './src/services/navigation.service';
 
 import packsReducer from './src/redux/PacksCacheReducer';
 import songsReducer from './src/redux/SongsCacheReducer';
@@ -18,6 +15,7 @@ import lessonsReducer from './src/redux/LessonsCacheReducer';
 import podcastsReducer from './src/redux/PodcastsCacheReducer';
 import quickTipsReducer from './src/redux/QuickTipsCacheReducer';
 import studentFocusReducer from './src/redux/StudentFocusCacheReducer';
+import userReducer from './src/redux/UserReducer';
 import commonService from './src/services/common.service';
 
 const store = createStore(
@@ -29,7 +27,8 @@ const store = createStore(
     ...coursesReducer,
     ...podcastsReducer,
     ...quickTipsReducer,
-    ...studentFocusReducer
+    ...studentFocusReducer,
+    userState: userReducer
   })
 );
 
@@ -38,7 +37,7 @@ export default class App extends React.Component {
     Text.defaultProps = {};
     Text.defaultProps.maxFontSizeMultiplier = 1;
     super(props);
-    if (DeviceInfo.isTablet()) Orientation.unlockAllOrientations();
+    if (onTablet) Orientation.unlockAllOrientations();
     else Orientation.lockToPortrait();
     global.notifNavigation = false;
   }

@@ -1,6 +1,3 @@
-/**
- * Profile
- */
 import React from 'react';
 import {
   View,
@@ -10,141 +7,100 @@ import {
   FlatList,
   Linking,
   StatusBar,
-  StyleSheet
+  StyleSheet,
+  RefreshControl
 } from 'react-native';
-import Modal from 'react-native-modal';
-import FastImage from 'react-native-fast-image';
-import DeviceInfo from 'react-native-device-info';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import AsyncStorage from '@react-native-community/async-storage';
-import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
-import Settings from 'Pianote2/src/assets/img/svgs/settings.svg';
 
+import FastImage from 'react-native-fast-image';
+import Icon from '../../assets/icons.js';
+import Chat from '../../assets/img/svgs/chat.svg';
+import Settings from '../../assets/img/svgs/settings.svg';
 import XpRank from '../../modals/XpRank.js';
 import { getUserData } from '../../services/UserDataAuth.js';
 import NavigationBar from '../../components/NavigationBar.js';
 import ReplyNotification from '../../modals/ReplyNotification.js';
-import commonService from '../../services/common.service';
 import { NetworkContext } from '../../context/NetworkProvider';
 import {
   getnotifications,
-  removeNotification
+  removeNotification,
+  changeNotificationSettings
 } from '../../services/notification.service';
 import { SafeAreaView } from 'react-navigation';
 import { navigate } from '../../../AppNavigator.js';
+import { setLoggedInUser } from '../../redux/UserActions.js';
+import { connect } from 'react-redux';
 
+const isTablet = global.onTablet;
+let localStyles;
 const messageDict = {
-  'lesson comment reply': [
-    'replied to your comment.',
-    true,
-    'orange',
-    'comment reply notifications'
-  ], // notify_on_lesson_comment_reply: this.state.notify_on_lesson_comment_reply,
-  'lesson comment liked': [
-    'liked your comment.',
-    true,
-    'blue',
-    'comment like notifications'
-  ], // notify_on_forum_post_like: this.state.notify_on_forum_post_like,
-  'forum post reply': [
-    'replied to your forum post.',
-    true,
-    'orange',
-    'forum post reply notifications'
-  ], // notify_on_forum_post_reply: this.state.notify_on_forum_post_reply,
-  'forum post liked': [
-    'liked your forum post.',
-    true,
-    'blue',
-    'forum post like notifications'
-  ], // notify_on_lesson_comment_like: this.state.notify_on_lesson_comment_like,
-  'forum post in followed thread': [
-    'post in followed thread.',
-    false,
-    'orange',
-    'forum post reply notifications'
-  ],
-  'new content releases': [
-    '',
-    false,
-    'red',
-    'new content release notifications'
-  ] // notify_weekly_update: this.state.notify_weekly_update,
+  'lesson comment reply': {
+    message: 'replied to your comment.',
+    new: true,
+    color: 'orange',
+    type: 'comment reply notifications',
+    field: 'notify_on_lesson_comment_reply'
+  },
+  'lesson comment liked': {
+    message: 'liked your comment.',
+    new: true,
+    color: 'blue',
+    type: 'comment like notifications',
+    field: 'notify_on_lesson_comment_like'
+  },
+  'forum post liked': {
+    message: 'liked your forum post.',
+    new: true,
+    color: 'blue',
+    type: 'forum post like notifications',
+    field: 'notify_on_forum_post_like'
+  },
+  'forum post in followed thread': {
+    message: 'post in followed thread.',
+    new: false,
+    color: 'orange',
+    type: 'forum post reply notifications',
+    field: 'notify_on_forum_followed_thread_reply'
+  },
+  'new content releases': {
+    message: '',
+    new: false,
+    color: 'red',
+    type: 'new content release notifications'
+  }
 };
 
-export default class Profile extends React.Component {
+class Profile extends React.Component {
   static contextType = NetworkContext;
   page = 1;
   constructor(props) {
     super(props);
+
+    localStyles = setStyles(this.props.theme === 'light', colors.pianoteRed);
+
     this.state = {
-      profileImage: '',
-      xp: '',
       notifications: [],
       showXpRank: false,
       showReplyNotification: false,
-      memberSince: '',
-      isLoading: true,
+      isLoading: false,
       animateLoadMore: false,
-      clickedNotificationStatus: false,
-      notify_on_forum_followed_thread_reply: false,
-      notify_on_forum_post_like: false,
-      notify_on_forum_post_reply: false,
-      notify_on_lesson_comment_like: false,
-      notify_on_lesson_comment_reply: false,
-      notify_weekly_update: false
+      clickedNotification: null
     };
   }
 
-  componentDidMount() {
-    AsyncStorage.multiGet([
-      'totalXP',
-      'rank',
-      'profileURI',
-      'displayName',
-      'joined'
-    ]).then(data =>
-      this.setState({
-        xp: this.changeXP(data[0][1]),
-        rank: data[1][1],
-        profileImage: data[2][1],
-        username: data[3][1],
-        memberSince: data[4][1]
-      })
-    );
+  componentDidMount = () => this.getNotifications(false);
 
-    getUserData().then(userData => {
-      this.setState({
-        notifications_summary_frequency_minutes:
-          userData?.notifications_summary_frequency_minutes,
-        notify_on_forum_followed_thread_reply:
-          userData?.notify_on_forum_followed_thread_reply,
-        notify_on_forum_post_like: userData?.notify_on_forum_post_like,
-        notify_on_forum_post_reply: userData?.notify_on_forum_post_reply,
-        notify_on_lesson_comment_like: userData?.notify_on_lesson_comment_like,
-        notify_on_lesson_comment_reply:
-          userData?.notify_on_lesson_comment_reply,
-        notify_weekly_update: userData?.notify_weekly_update
-      });
-      this.getNotifications(false);
-    });
+  async getUserDetails() {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    let userDetails = await getUserData();
+    this.props.setLoggedInUser(userDetails);
+    this.setState({ isLoading: false });
   }
 
   async getNotifications(loadMore) {
-    console.log('Load more: ', loadMore);
-
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     if (loadMore) this.page++;
     else this.page = 1;
     let notifications = await getnotifications(this.page);
-    console.log('Notes: ', notifications);
-
     for (i in notifications.data) {
       let timeCreated =
         notifications.data[i].created_at?.slice(0, 10) +
@@ -179,7 +135,7 @@ export default class Profile extends React.Component {
         ? state.notifications.concat(notifications.data)
         : notifications.data,
       isLoading: false,
-      animateLoadMore: notifications.data?.length == 0 ? false : true
+      animateLoadMore: notifications.data?.length === 0 ? false : true
     }));
   }
 
@@ -197,93 +153,99 @@ export default class Profile extends React.Component {
     }
   };
 
-  removeNotification = async notificationId => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+  removeNotification = notificationId => {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     this.setState(state => ({
-      notifications: state.notifications.filter(c => c.id !== notificationId)
+      notifications: state.notifications.filter(c => c.id !== notificationId),
+      clickedNotification: null,
+      showReplyNotification: false
     }));
     removeNotification(notificationId);
   };
 
-  checkNotificationTypeStatus = async item => {
-    let type = messageDict[item.type][0];
-    if (type == 'replied to your comment.') {
-      this.setState({
-        clickedNotificationStatus: this.state.notify_on_lesson_comment_reply
-      });
-    } else if (type == 'liked your comment.') {
-      this.setState({
-        clickedNotificationStatus: this.state.notify_on_lesson_comment_like
-      });
-    } else if (type == 'replied to your forum post.') {
-      this.setState({
-        clickedNotificationStatus: this.state.notify_on_forum_post_reply
-      });
-    } else if (type == 'liked your forum post.') {
-      this.setState({
-        clickedNotificationStatus: this.state.notify_on_forum_post_like
-      });
-    } else if (type == 'post in followed thread.') {
-      this.setState({
-        clickedNotificationStatus: this.state
-          .notify_on_forum_followed_thread_reply
-      });
-    } else if (type == '') {
-      this.setState({
-        clickedNotificationStatus: this.state.notify_weekly_update
-      });
-    }
-  };
+  turnOfffNotifications = async type => {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    this.setState({ showReplyNotification: false, clickedNotification: {} });
+    const {
+      notify_on_lesson_comment_reply,
+      notify_on_lesson_comment_like,
+      notify_on_forum_followed_thread_reply,
+      notify_on_forum_post_like
+    } = this.props.user;
+    let attributes;
 
-  turnOfffNotifications = async data => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
+    if (type === 'lesson comment reply') {
+      this.props.setLoggedInUser({
+        ...this.props.user,
+        notify_on_lesson_comment_reply: !notify_on_lesson_comment_reply
+      });
+      attributes = {
+        notify_on_lesson_comment_reply: !notify_on_lesson_comment_reply
+      };
+    } else if (type === 'lesson comment liked') {
+      this.props.setLoggedInUser({
+        ...this.props.user,
+        notify_on_lesson_comment_like: !notify_on_lesson_comment_like
+      });
+      attributes = {
+        notify_on_lesson_comment_like: !notify_on_lesson_comment_like
+      };
+    } else if (type === 'forum post liked') {
+      this.props.setLoggedInUser({
+        ...this.props.user,
+        notify_on_forum_post_like: !notify_on_forum_post_like
+      });
+      attributes = {
+        notify_on_forum_post_like: !notify_on_forum_post_like
+      };
+    } else if (type === 'forum post in followed thread') {
+      this.props.setLoggedInUser({
+        ...this.props.user,
+        notify_on_forum_followed_thread_reply: !notify_on_forum_followed_thread_reply
+      });
+      attributes = {
+        notify_on_forum_followed_thread_reply: !notify_on_forum_followed_thread_reply
+      };
     }
-    this.setState(data);
-    try {
-      let response = await commonService.tryCall(
-        `${commonService.rootUrl}/usora/api/profile/update`,
-        'PATCH',
-        {
-          data: {
-            type: 'user',
-            attributes: data
-          }
-        }
-      );
-    } catch (error) {
-      console.log('ERROR: ', error);
-    }
+
+    const body = {
+      data: {
+        type: 'user',
+        attributes
+      }
+    };
+    changeNotificationSettings(body);
   };
 
   openNotification = notification => {
     if (notification.type === 'new content releases') {
-      navigate('VIDEOPLAYER', {
+      navigate('VIEWLESSON', {
         url: notification.content.mobile_app_url
       });
     } else if (
       notification.type === 'lesson comment reply' ||
       notification.type === 'lesson comment liked'
     ) {
-      navigate('VIDEOPLAYER', {
+      navigate('VIEWLESSON', {
         comment: notification.comment,
         url: notification.content.mobile_app_url
       });
     } else {
-      console.log('LINKING URL: ', notification.url);
       Linking.openURL(notification.url);
     }
   };
 
-  loadMoreNotifications = () => {
-    this.setState({ animateLoadMore: true }, () => {
-      this.getNotifications(true);
-    });
-  };
+  loadMoreNotifications = () =>
+    this.setState({ animateLoadMore: true }, () => this.getNotifications(true));
 
   render() {
+    const {
+      profile_picture_url,
+      display_name,
+      created_at,
+      totalXp,
+      xpRank
+    } = this.props.user;
     return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBar
@@ -312,101 +274,96 @@ export default class Profile extends React.Component {
             keyExtractor={(item, index) => index.toString()}
             onEndReached={this.loadMoreNotifications}
             onEndReachedThreshold={0.01}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.isLoading}
+                onRefresh={() =>
+                  this.setState({ isLoading: true }, () =>
+                    this.getUserDetails()
+                  )
+                }
+                colors={[colors.pianoteRed]}
+                tintColor={colors.pianoteRed}
+              />
+            }
             ListHeaderComponent={() => (
               <>
-                <View
-                  style={[
-                    styles.centerContent,
-                    { marginTop: onTablet ? 40 : 20 }
-                  ]}
-                >
-                  <View style={localStyles.imageContainer}>
-                    <View
-                      style={[styles.centerContent, localStyles.profilePic]}
+                <View style={styles.centerContent}>
+                  <View>
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigate('PROFILESETTINGS', {
+                          data: 'Profile Photo'
+                        })
+                      }
+                      style={localStyles.cameraBtn}
                     >
-                      <TouchableOpacity
-                        onPress={() =>
-                          navigate('PROFILESETTINGS', {
-                            data: 'Profile Photo'
-                          })
-                        }
-                        style={[styles.centerContent, styles.container]}
-                      >
-                        <IonIcon
-                          size={onTablet ? 24 : 18}
-                          name={'ios-camera'}
-                          color={colors.pianoteRed}
-                        />
-                      </TouchableOpacity>
-                    </View>
+                      <Icon.Ionicons
+                        size={onTablet ? 24 : 18}
+                        name={'ios-camera'}
+                        color={colors.pianoteRed}
+                      />
+                    </TouchableOpacity>
                     <FastImage
-                      style={localStyles.profileImageBackground}
+                      style={localStyles.profilePicture}
                       source={{
                         uri:
-                          this.state.profileImage !== ''
-                            ? this.state.profileImage
-                            : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                          profile_picture_url ||
+                          'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
                       }}
                       resizeMode={FastImage.resizeMode.cover}
                     />
                   </View>
-                  <View style={styles.centerContent}>
-                    <Text
-                      style={[localStyles.usernameText, styles.childHeaderText]}
-                    >
-                      {this.state.username}
-                    </Text>
-                    <Text style={localStyles.memberSinceText}>
-                      MEMBER SINCE {this.state.memberSince?.slice(0, 4)}
-                    </Text>
-                  </View>
+                  <Text
+                    style={[localStyles.usernameText, styles.childHeaderText]}
+                  >
+                    {display_name}
+                  </Text>
+                  <Text style={localStyles.memberSinceText}>
+                    MEMBER SINCE {created_at?.slice(0, 4)}
+                  </Text>
                 </View>
-                <View style={localStyles.rankText}>
+
+                <View style={localStyles.rankContainer}>
                   <TouchableOpacity
+                    style={localStyles.center}
                     onPress={() => this.setState({ showXpRank: true })}
                   >
                     <Text style={localStyles.redXpRank}>XP</Text>
-                    <Text style={localStyles.whiteXpRank}>{this.state.xp}</Text>
+                    <Text style={localStyles.whiteXpRank}>{totalXp}</Text>
                   </TouchableOpacity>
-                  <View style={{ width: 60 }} />
                   <TouchableOpacity
                     onPress={() => this.setState({ showXpRank: true })}
+                    style={localStyles.center}
                   >
                     <Text style={localStyles.redXpRank}>RANK</Text>
-                    <Text style={localStyles.whiteXpRank}>
-                      {this.state.rank}
-                    </Text>
+                    <Text style={localStyles.whiteXpRank}>{xpRank}</Text>
                   </TouchableOpacity>
                 </View>
-                <View style={localStyles.notificationContainer}>
-                  <Text
-                    style={[
-                      localStyles.notificationText,
-                      {
-                        fontSize: sizing.verticalListTitleSmall,
-                        paddingVertical: 15,
-                        paddingLeft: 10,
-                        fontFamily: 'OpenSans-ExtraBold',
-                        color: 'white'
-                      }
-                    ]}
-                  >
-                    NOTIFICATIONS
-                  </Text>
-                </View>
+                <Text
+                  style={[
+                    localStyles.notificationText,
+                    {
+                      fontSize: sizing.verticalListTitleSmall,
+                      paddingVertical: 15,
+                      paddingLeft: 10,
+                      fontFamily: 'OpenSans-ExtraBold',
+                      color: 'white'
+                    }
+                  ]}
+                >
+                  NOTIFICATIONS
+                </Text>
               </>
             )}
             ListEmptyComponent={() =>
               this.state.isLoading ? (
-                <View
-                  style={[styles.centerContent, localStyles.activityContainer]}
-                >
-                  <ActivityIndicator
-                    size={onTablet ? 'large' : 'small'}
-                    animating={true}
-                    color={colors.secondBackground}
-                  />
-                </View>
+                <ActivityIndicator
+                  size={onTablet ? 'large' : 'small'}
+                  animating={true}
+                  color={colors.secondBackground}
+                  style={{ margin: 20 }}
+                />
               ) : (
                 <Text style={localStyles.noNotificationText}>
                   No New Notifications...
@@ -427,6 +384,7 @@ export default class Profile extends React.Component {
                 style={[
                   localStyles.notification,
                   {
+                    paddingLeft: 10,
                     backgroundColor:
                       index % 2
                         ? colors.mainBackground
@@ -435,298 +393,273 @@ export default class Profile extends React.Component {
                 ]}
                 onPress={() => this.openNotification(item)}
               >
-                <View style={localStyles.innerNotificationContainer}>
-                  <View style={localStyles.messageContainer}>
-                    {messageDict[item.type][2] == 'red' && (
-                      <View
-                        style={[
-                          styles.centerContent,
-                          localStyles.iconContainer,
-                          { backgroundColor: 'red' }
-                        ]}
-                      >
-                        <FontAwesome
-                          size={sizing.infoButtonSize}
-                          color={'white'}
-                          name={'video-camera'}
-                        />
-                      </View>
-                    )}
-                    {messageDict[item.type][2] == 'orange' && (
-                      <View
-                        style={[
-                          styles.centerContent,
-                          localStyles.iconContainer,
-                          { backgroundColor: 'orange' }
-                        ]}
-                      >
-                        <Chat
-                          height={sizing.infoButtonSize}
-                          width={sizing.infoButtonSize}
-                          fill={'white'}
-                        />
-                      </View>
-                    )}
-                    {messageDict[item.type][2] == 'blue' && (
-                      <View
-                        style={[
-                          styles.centerContent,
-                          localStyles.iconContainer,
-                          { backgroundColor: 'blue' }
-                        ]}
-                      >
-                        <AntIcon
-                          size={sizing.infoButtonSize}
-                          color={'white'}
-                          name={'like1'}
-                        />
-                      </View>
-                    )}
-                    <FastImage
-                      style={{
-                        height: onTablet ? 60 : 40,
-                        width: onTablet ? 60 : 40,
-                        paddingVertical: 10,
-                        borderRadius: 100,
-                        marginRight: 10
-                      }}
-                      source={{
-                        uri:
-                          item.type == 'new content releases'
-                            ? item.content.thumbnail_url
-                            : item.sender
-                            ? item.sender.profile_image_url
-                            : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-                      }}
-                      resizeMode={FastImage.resizeMode.stretch}
-                    />
-                  </View>
+                <View style={localStyles.messageContainer}>
+                  {item.type === 'new content releases' ? (
+                    <View
+                      style={[
+                        styles.centerContent,
+                        localStyles.iconContainer,
+                        { backgroundColor: 'red' }
+                      ]}
+                    >
+                      <Icon.FontAwesome
+                        size={sizing.infoButtonSize}
+                        color={'white'}
+                        name={'video-camera'}
+                      />
+                    </View>
+                  ) : item.type === 'lesson comment reply' ||
+                    item.type === 'forum post in followed thread' ? (
+                    <View
+                      style={[
+                        styles.centerContent,
+                        localStyles.iconContainer,
+                        { backgroundColor: 'orange' }
+                      ]}
+                    >
+                      <Chat
+                        height={sizing.infoButtonSize}
+                        width={sizing.infoButtonSize}
+                        fill={'white'}
+                      />
+                    </View>
+                  ) : (
+                    <View
+                      style={[
+                        styles.centerContent,
+                        localStyles.iconContainer,
+                        { backgroundColor: 'blue' }
+                      ]}
+                    >
+                      <Icon.AntDesign
+                        size={sizing.infoButtonSize}
+                        color={'white'}
+                        name={'like1'}
+                      />
+                    </View>
+                  )}
+                  <FastImage
+                    style={{
+                      height: onTablet ? 60 : 40,
+                      width: onTablet ? 60 : 40,
+                      paddingVertical: 10,
+                      borderRadius: 100,
+                      marginRight: 10
+                    }}
+                    source={{
+                      uri:
+                        item.type === 'new content releases'
+                          ? item.content.thumbnail_url
+                          : item.sender
+                          ? item.sender.profile_image_url
+                          : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                    }}
+                    resizeMode={FastImage.resizeMode.stretch}
+                  />
                 </View>
                 <View style={{ flex: 0.975, paddingLeft: 20 }}>
-                  <View style={{ flex: 1, justifyContent: 'center' }}>
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-ExtraBold',
-                        color: 'white'
-                      }}
-                    >
-                      <Text style={localStyles.boldNotificationText}>
-                        {messageDict[item.type][1] ? '' : 'NEW - '}
-                      </Text>
-                      {item.type == 'new content releases'
-                        ? item.content.display_name
-                        : item.sender?.display_name}
-                      <Text style={localStyles.messageTypeText}>
-                        {' '}
-                        {messageDict[item.type][0]}
-                      </Text>
+                  <Text
+                    style={{
+                      fontFamily: 'OpenSans-ExtraBold',
+                      color: 'white'
+                    }}
+                  >
+                    <Text style={localStyles.boldNotificationText}>
+                      {messageDict[item.type].new ? '' : 'NEW - '}
                     </Text>
-                    <Text style={localStyles.createdAtText}>
-                      {item.created_at}
+                    {item.type === 'new content releases'
+                      ? item.content.display_name
+                      : item.sender?.display_name}
+                    <Text style={localStyles.messageTypeText}>
+                      {' '}
+                      {messageDict[item.type].message}
                     </Text>
-                  </View>
+                  </Text>
+                  <Text style={localStyles.createdAtText}>
+                    {item.created_at}
+                  </Text>
                 </View>
-                <View>
-                  <View style={{ flexDirection: 'row' }}>
-                    <TouchableOpacity
-                      style={localStyles.threeDotsContainer}
-                      onPress={() => {
-                        this.checkNotificationTypeStatus(item);
-                        this.setState({
-                          showReplyNotification: true,
-                          clickedNotification: item
-                        });
-                      }}
-                    >
-                      <EntypoIcon
-                        size={sizing.infoButtonSize}
-                        name={'dots-three-horizontal'}
-                        color={colors.secondBackground}
-                      />
-                    </TouchableOpacity>
-                  </View>
+                <View style={{ flexDirection: 'row' }}>
+                  <TouchableOpacity
+                    style={localStyles.threeDotsContainer}
+                    onPress={() => {
+                      this.setState({
+                        showReplyNotification: true,
+                        clickedNotification: item
+                      });
+                    }}
+                  >
+                    <Icon.Entypo
+                      size={sizing.infoButtonSize}
+                      name={'dots-three-horizontal'}
+                      color={colors.secondBackground}
+                    />
+                  </TouchableOpacity>
                 </View>
               </TouchableOpacity>
             )}
           />
         </View>
-        <Modal
-          isVisible={this.state.showXpRank}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
-          onBackButtonPress={() => this.setState({ showXpRank: false })}
-        >
+        {this.state.showXpRank && (
           <XpRank
             hideXpRank={() => this.setState({ showXpRank: false })}
-            xp={this.state.xp}
-            rank={this.state.rank}
+            xp={totalXp}
+            rank={xpRank}
           />
-        </Modal>
-        <Modal
-          isVisible={this.state.showReplyNotification}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
-          onBackButtonPress={() =>
-            this.setState({ showReplyNotification: false })
-          }
-        >
+        )}
+
+        {this.state.showReplyNotification && (
           <ReplyNotification
-            removeNotification={data => {
-              this.setState({ showReplyNotification: false });
-              this.removeNotification(data.id);
-            }}
-            turnOfffNotifications={data => {
-              this.setState({ showReplyNotification: false });
-              this.turnOfffNotifications(data);
-            }}
+            removeNotification={notificationId =>
+              this.removeNotification(notificationId)
+            }
+            turnOfffNotifications={() =>
+              this.turnOfffNotifications(this.state.clickedNotification?.type)
+            }
             hideReplyNotification={() => {
               this.setState({ showReplyNotification: false });
             }}
             data={this.state.clickedNotification}
-            notificationStatus={this.state.clickedNotificationStatus}
+            notificationStatus={
+              this.props.user[
+                messageDict[this.state.clickedNotification?.type]?.field
+              ]
+            }
           />
-        </Modal>
+        )}
+
         <NavigationBar currentPage={'PROFILE'} pad={true} />
       </SafeAreaView>
     );
   }
 }
 
-const localStyles = StyleSheet.create({
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10
-  },
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 15,
-    margin: 20,
-    height: 200,
-    width: '80%'
-  },
-  imageContainer: {
-    borderRadius: 250,
-    borderWidth: 2,
-    borderColor: '#fb1b2f',
-    height: DeviceInfo.isTablet() ? 200 : 150,
-    width: DeviceInfo.isTablet() ? 200 : 150,
-    aspectRatio: 1,
-    marginBottom: 20,
-    marginTop: 10
-  },
-  profilePic: {
-    position: 'absolute',
-    zIndex: 10,
-    elevation: 10,
-    top: DeviceInfo.isTablet() ? -20 : -15,
-    right: DeviceInfo.isTablet() ? -20 : -15,
-    height: DeviceInfo.isTablet() ? 40 : 30,
-    width: DeviceInfo.isTablet() ? 40 : 30,
-    borderRadius: 100,
-    borderColor: '#fb1b2f',
-    borderWidth: 1
-  },
-  profileImageBackground: {
-    height: '100%',
-    width: '100%',
-    borderRadius: 250,
-    backgroundColor: '#445f73'
-  },
-  usernameText: {
-    fontFamily: 'OpenSans-ExtraBold',
-    textAlign: 'center',
-    color: 'white',
-    paddingBottom: 5
-  },
-  memberSinceText: {
-    fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
-    textAlign: 'center',
-    color: '#445f73'
-  },
-  rankText: {
-    marginTop: 20,
-    borderTopColor: '#445f73',
-    borderTopWidth: 0.5,
-    borderBottomColor: '#445f73',
-    borderBottomWidth: 0.5,
-    paddingVertical: 20,
-    backgroundColor: '#00101d',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  redXpRank: {
-    color: '#fb1b2f',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
-    fontFamily: 'OpenSans-Bold',
-    textAlign: 'center'
-  },
-  whiteXpRank: {
-    color: 'white',
-    fontSize: DeviceInfo.isTablet() ? 26 : 20,
-    fontFamily: 'OpenSans-ExtraBold',
-    textAlign: 'center'
-  },
-  notificationContainer: {
-    elevation: 1
-  },
-  activityContainer: {
-    flex: 1,
-    marginTop: 20
-  },
-  noNotificationText: {
-    fontFamily: 'OpenSans-ExtraBold',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
-    textAlign: 'left',
-    paddingLeft: 10,
-    color: 'white'
-  },
-  notification: {
-    flexDirection: 'row',
-    paddingVertical: 20
-  },
-  innerNotificationContainer: {
-    paddingLeft: 10,
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  iconContainer: {
-    position: 'absolute',
-    bottom: -5,
-    right: -5,
-    height: DeviceInfo.isTablet() ? 35 : 25,
-    width: DeviceInfo.isTablet() ? 35 : 25,
-    borderRadius: 100,
-    zIndex: 5
-  },
-  boldNotificationText: {
-    fontFamily: 'OpenSans-ExtraBold',
-    fontSize: DeviceInfo.isTablet() ? 16 : 14,
-    color: 'white'
-  },
-  messageTypeText: {
-    fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
-    color: 'white'
-  },
-  createdAtText: {
-    marginTop: 1,
-    fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
-    color: '#445f73'
-  },
-  threeDotsContainer: {
-    justifyContent: 'center'
-  }
+const mapStateToProps = state => ({
+  user: state.userState.user
 });
+
+const mapDispatchToProps = dispatch => ({
+  setLoggedInUser: user => dispatch(setLoggedInUser(user))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+
+const setStyles = (isLight, appColor) =>
+  StyleSheet.create({
+    headerContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: 10
+    },
+    profilePicture: {
+      height: 125,
+      aspectRatio: 1,
+      borderRadius: 65,
+      marginTop: 30,
+      marginBottom: 15
+    },
+    usernameText: {
+      paddingBottom: 5
+    },
+    memberSinceText: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: isTablet ? 16 : 12,
+      textAlign: 'center',
+      color: isLight ? '#97AABE' : '#445f73'
+    },
+    rankContainer: {
+      borderTopColor: isLight ? '#97AABE' : '#445f73',
+      borderTopWidth: 1,
+      borderBottomColor: isLight ? '#97AABE' : '#445f73',
+      borderBottomWidth: 1,
+      paddingVertical: 20,
+      backgroundColor: isLight ? '#F7F9FC' : '#00101d',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-around',
+      marginTop: 20
+    },
+    redXpRank: {
+      color: appColor,
+      fontSize: isTablet ? 16 : 12,
+      fontFamily: 'OpenSans-Bold',
+      textAlign: 'center'
+    },
+    whiteXpRank: {
+      color: 'white',
+      fontSize: isTablet ? 26 : 20,
+      fontFamily: 'OpenSans-ExtraBold',
+      textAlign: 'center'
+    },
+    notificationContainer: {
+      elevation: 1
+    },
+    activityContainer: {
+      flex: 1,
+      marginTop: 20
+    },
+    noNotificationText: {
+      fontFamily: 'OpenSans-ExtraBold',
+      fontSize: isTablet ? 16 : 12,
+      textAlign: 'left',
+      paddingLeft: 10,
+      color: isLight ? '#00101D' : '#EDEEEF'
+    },
+    notification: {
+      flexDirection: 'row',
+      paddingVertical: 20
+    },
+    innerNotificationContainer: {
+      paddingLeft: 10,
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+    iconContainer: {
+      position: 'absolute',
+      bottom: -5,
+      right: -5,
+      height: isTablet ? 35 : 25,
+      width: isTablet ? 35 : 25,
+      borderRadius: 100,
+      zIndex: 5
+    },
+    center: {
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    boldNotificationText: {
+      fontFamily: 'OpenSans-ExtraBold',
+      fontSize: isTablet ? 16 : 14,
+      color: isLight ? '#00101D' : '#EDEEEF'
+    },
+    messageTypeText: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: isTablet ? 16 : 12,
+      color: isLight ? '#00101D' : '#EDEEEF'
+    },
+    createdAtText: {
+      marginTop: 1,
+      fontFamily: 'OpenSans-Regular',
+      fontSize: isTablet ? 16 : 12,
+      color: isLight ? '#97AABE' : '#445f73'
+    },
+    threeDotsContainer: {
+      justifyContent: 'center'
+    },
+    cameraBtn: {
+      flex: 0,
+      backgroundColor: isLight ? '#F7F9FC' : '#00101d',
+      borderColor: appColor,
+      borderWidth: 1,
+      height: 35,
+      width: 35,
+      borderRadius: 17,
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'absolute',
+      left: 90,
+      top: 30,
+      zIndex: 2
+    }
+  });

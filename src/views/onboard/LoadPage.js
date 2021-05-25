@@ -1,18 +1,12 @@
-/**
- * LoadPage
- */
 import React from 'react';
-import { Linking, View, Dimensions, Platform } from 'react-native';
-
+import { Linking, View, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
-import Modal from 'react-native-modal';
 import { Download_V2 } from 'RNDownload';
 import { bindActionCreators } from 'redux';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-community/async-storage';
 import { getToken, getUserData } from '../../services/UserDataAuth';
 import { notif, updateFcmToken } from '../../services/notification.service';
-
 import { cachePacks } from '../../redux/PacksCacheActions';
 import { cacheSongs } from '../../redux/SongsCacheActions';
 import { cacheMyList } from '../../redux/MyListCacheActions';
@@ -21,16 +15,13 @@ import { cacheLessons } from '../../redux/LessonsCacheActions';
 import { cachePodcasts } from '../../redux/PodcastsCacheActions';
 import { cacheQuickTips } from '../../redux/QuickTipsCacheActions';
 import { cacheStudentFocus } from '../../redux/StudentFocusCacheActions';
-
 import Pianote from '../../assets/img/svgs/pianote';
-
-import NoConnection from '../../modals/NoConnection';
-
 import { NetworkContext } from '../../context/NetworkProvider';
 import RNFetchBlob from 'rn-fetch-blob';
 import commonService from '../../services/common.service';
 import navigationService from '../../services/navigation.service';
-import { currentScene, navigate, reset } from '../../../AppNavigator';
+import { navigate, reset } from '../../../AppNavigator';
+import { setLoggedInUser } from '../../redux/UserActions';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -54,13 +45,9 @@ const cache = [
 ];
 class LoadPage extends React.Component {
   static contextType = NetworkContext;
-
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   async componentDidMount() {
+    //requestTrackingPermission();
+
     Download_V2.resumeAll()?.then(async () => {
       this.loadCache();
       await SplashScreen.hide();
@@ -79,34 +66,34 @@ class LoadPage extends React.Component {
         return i;
       }, {});
       await AsyncStorage.removeItem('resetKey');
-      const { email, resetKey, password, loggedIn, forumUrl } = data;
+      const { email, resetKey, password, forumUrl } = data;
 
       if (!this.context.isConnected) {
-        if (loggedIn && !global.loadedFromNotification) {
+        if (email && !global.loadedFromNotification) {
           return navigate('DOWNLOADS');
         } else {
           return navigate('LOGIN');
         }
         // if no connection and logged in
-      } else if (!loggedIn && !global.loadedFromNotification) {
+      } else if (!email && !global.loadedFromNotification) {
         // if not logged in
         if (resetKey) return reset('RESETPASSWORD', { resetKey, email });
         return reset('LOGIN');
       } else {
         // get token
         const res = await getToken(email, password);
-        if (res == 500) {
-          this.setState({ showNoConnection: true });
+        if (res === 500) {
+          return this.context.showNoConnectionAlert();
         } else if (res.success) {
           updateFcmToken();
-          await AsyncStorage.multiSet([['loggedIn', 'true']]);
           let userData = await getUserData();
+          this.props.setLoggedInUser(userData);
           let { lessonUrl, commentId } = notif;
           if (commonService.urlToOpen) {
             return navigationService.decideWhereToRedirect();
           } else if (lessonUrl && commentId) {
             // if lesson or comment notification go to video
-            reset('VIDEOPLAYER', { url: lessonUrl, commentId });
+            reset('VIEWLESSON', { url: lessonUrl, commentId });
           } else if (global.loadedFromNotification) {
             // if going to profile page
             reset('PROFILE');
@@ -142,7 +129,7 @@ class LoadPage extends React.Component {
               });
             }
           }
-        } else if (!res.success || loggedIn == false || loggedIn == 'false') {
+        } else if (!res.success || !email) {
           // is not logged in
           if (resetKey) return reset('RESETPASSWORD', { resetKey, email });
           return reset('LOGIN');
@@ -162,12 +149,9 @@ class LoadPage extends React.Component {
   };
 
   async handleNoConnection() {
-    let isLoggedIn = await AsyncStorage.getItem('loggedIn');
-    if (isLoggedIn == 'true') {
-      return reset('DOWNLOADS');
-    } else {
-      reset('LOGINCREDENTIALS');
-    }
+    let email = await AsyncStorage.getItem('email');
+    if (email) return reset('DOWNLOADS');
+    else reset('LOGINCREDENTIALS');
   }
 
   render() {
@@ -191,7 +175,7 @@ class LoadPage extends React.Component {
               height: '100%',
               width: '100%',
               zIndex: 4,
-              elevation: Platform.OS == 'android' ? 4 : 0,
+              elevation: isiOS ? 0 : 4,
               backgroundColor: 'black'
             }
           ]}
@@ -209,26 +193,9 @@ class LoadPage extends React.Component {
                 ? factorHorizontal
                 : factorVertical)
             }
-            fill={'#fb1b2f'}
+            fill={colors.pianoteRed}
           />
         </View>
-        <Modal
-          isVisible={this.state.showNoConnection}
-          style={[styles.centerContent, styles.modalContainer]}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
-          onBackButtonPress={() => this.setState({ showNoConnection: false })}
-        >
-          <NoConnection
-            hideNoConnection={() => {
-              this.setState({ showNoConnection: false }),
-                this.handleNoConnection();
-            }}
-          />
-        </Modal>
       </View>
     );
   }
@@ -243,7 +210,8 @@ const mapDispatchToProps = dispatch =>
       cacheCourses,
       cachePodcasts,
       cacheQuickTips,
-      cacheStudentFocus
+      cacheStudentFocus,
+      setLoggedInUser: user => dispatch(setLoggedInUser(user))
     },
     dispatch
   );

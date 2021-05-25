@@ -1,6 +1,3 @@
-/**
- *  Router
- */
 import React from 'react';
 import { Dimensions, Easing } from 'react-native';
 import { NavigationContainer, StackActions } from '@react-navigation/native';
@@ -11,21 +8,21 @@ import Forum from './src/forum/index';
 // content
 import StudentFocusCatalog from './src/views/content/StudentFocusCatalog';
 import StudentFocusShow from './src/views/content/StudentFocusShow';
-import VideoPlayerSong from './src/views/content/VideoPlayerSong';
+import Assignment from './src/views/content/Assignment';
 import Schedule from './src/views/content/Schedule';
-import VideoPlayer from './src/views/content/VideoPlayer';
+import ViewLesson from './src/views/content/ViewLesson';
 import SongCatalog from './src/views/content/SongCatalog';
 import PathOverview from './src/views/content/PathOverview';
 import SinglePack from './src/views/content/SinglePack';
 import Downloads from './src/views/content/Downloads';
 import Lessons from './src/views/content/Lessons';
+import Live from './src/views/content/Live';
 import SeeAll from './src/views/content/SeeAll';
 import Course from './src/views/content/Course';
 import MyList from './src/views/content/MyList';
 import Search from './src/views/content/Search';
 import Method from './src/views/content/Method';
 import Packs from './src/views/content/Packs';
-import Live from './src/views/content/Live';
 import MethodLevel from './src/views/content/MethodLevel';
 import Foundations from './src/views/content/Foundations';
 
@@ -38,11 +35,10 @@ import ForgotPassword from './src/views/onboard/ForgotPassword';
 import NewMembership from './src/views/onboard/NewMembership';
 import CreateAccount from './src/views/onboard/CreateAccount';
 import SupportSignUp from './src/views/onboard/SupportSignUp';
-import WelcomeBack from './src/views/onboard/WelcomeBack';
-import GetRestarted from './src/views/onboard/GetRestarted';
 import LoadPage from './src/views/onboard/LoadPage';
 import Login from './src/views/onboard/Login';
 import ResetPassword from './src/views/onboard/ResetPassword';
+
 // user
 import NotificationSettings from './src/views/user/NotificationSettings';
 import ProfileSettings from './src/views/user/ProfileSettings';
@@ -54,7 +50,6 @@ import Terms from './src/views/user/Terms';
 import NetworkProvider from './src/context/NetworkProvider';
 
 const Stack = createStackNavigator();
-
 const navigationRef = React.createRef();
 
 export function navigate(name, params = {}) {
@@ -119,19 +114,15 @@ export default () => (
         <Stack.Screen name='LOGINCREDENTIALS' component={LoginCredentials} />
         <Stack.Screen name='SUPPORTSIGNUP' component={SupportSignUp} />
         <Stack.Screen name='FORGOTPASSWORD' component={ForgotPassword} />
+        <Stack.Screen name='NEWMEMBERSHIP' component={NewMembership} />
+        <Stack.Screen name='RESETPASSWORD' component={ResetPassword} />
+        <Stack.Screen name='CREATEACCOUNT' component={CreateAccount} />
         <Stack.Screen name='CREATEACCOUNT2' component={CreateAccount2} />
         <Stack.Screen
           name='CREATEACCOUNT3'
           component={CreateAccount3}
-          options={{
-            gestureEnabled: false
-          }}
+          options={{ gestureEnabled: false }}
         />
-        <Stack.Screen name='CREATEACCOUNT' component={CreateAccount} />
-        <Stack.Screen name='NEWMEMBERSHIP' component={NewMembership} />
-        <Stack.Screen name='GETRESTARTED' component={GetRestarted} />
-        <Stack.Screen name='WELCOMEBACK' component={WelcomeBack} />
-        <Stack.Screen name='RESETPASSWORD' component={ResetPassword} />
         {/* user */}
         <Stack.Screen
           name='NOTIFICATIONSETTINGS'
@@ -153,17 +144,17 @@ export default () => (
           component={StudentFocusCatalog}
         />
         <Stack.Screen name='STUDENTFOCUSSHOW' component={StudentFocusShow} />
-        <Stack.Screen name='VIDEOPLAYERSONG' component={VideoPlayerSong} />
+        <Stack.Screen name='ASSIGNMENT' component={Assignment} />
         <Stack.Screen name='METHODLEVEL' component={MethodLevel} />
+        <Stack.Screen name='METHOD' component={Method} />
         <Stack.Screen name='LIVE' component={Live} />
         <Stack.Screen name='SCHEDULE' component={Schedule} />
-        <Stack.Screen name='METHOD' component={Method} />
         <Stack.Screen name='FOUNDATIONS' component={Foundations} />
         <Stack.Screen name='PATHOVERVIEW' component={PathOverview} />
         <Stack.Screen name='SONGCATALOG' component={SongCatalog} />
         <Stack.Screen
-          name='VIDEOPLAYER'
-          component={VideoPlayer}
+          name='VIEWLESSON'
+          component={ViewLesson}
           options={{
             gestureEnabled: false
           }}

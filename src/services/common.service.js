@@ -1,5 +1,5 @@
-import { getToken } from 'Pianote2/src/services/UserDataAuth.js';
-import { updateFcmToken } from 'Pianote2/src/services/notification.service.js';
+import { getToken } from '../../src/services/UserDataAuth.js';
+import { updateFcmToken } from '../../src/services/notification.service.js';
 
 export let cache = {};
 export default {
@@ -31,7 +31,10 @@ export default {
       });
       let json = await response.json();
       // if error, get new token call again
-      if (json.error == 'TOKEN_EXPIRED' || json.error == 'Token not provided') {
+      if (
+        json.error === 'TOKEN_EXPIRED' ||
+        json.error === 'Token not provided'
+      ) {
         // reset global token
         await getToken();
         updateFcmToken();

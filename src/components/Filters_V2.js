@@ -10,21 +10,17 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-
-import DeviceInfo from 'react-native-device-info';
 import FastImage from 'react-native-fast-image';
 import { SafeAreaView } from 'react-navigation';
-
 import ExpandableView from './ExpandableView';
-
 import { NetworkContext } from '../context/NetworkProvider';
-
 import ArrowLeft from '../assets/img/svgs/arrowLeft';
 import Filters from '../assets/img/svgs/filters';
 
+let fStyles;
 let alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
   instructorNames = [],
-  isTablet = DeviceInfo.isTablet(),
+  isTablet = global.onTablet,
   progressTypes = ['ALL', 'IN PROGRESS', 'COMPLETED'],
   statusKeys = ['ALL', 'UPCOMING LIVE EVENTS', 'RECORDED EVENTS'],
   styleKeys = [],
@@ -35,13 +31,10 @@ export default class Filters_V2 extends React.Component {
   static contextType = NetworkContext;
   appliedFilters = {};
   originalFilters = {};
-
   stylesRenders = 0;
   topicsRenders = 0;
-
   tallestTopic = 0;
   tallestStyle = 0;
-
   state = {
     loading: true,
     showModal: false,
@@ -51,16 +44,14 @@ export default class Filters_V2 extends React.Component {
 
   constructor(props) {
     super(props);
+    fStyles = setStyles(colors, sizing);
+
     this.deepLinking(props.deepLinking);
   }
 
-  componentDidMount() {
-    this.props.reference?.(this);
-  }
+  componentDidMount = () => this.props.reference?.(this);
 
-  componentWillUnmount() {
-    difficulties = undefined;
-  }
+  componentWillUnmount = () => (difficulties = undefined);
 
   deepLinking = url => {
     if (url) {
@@ -125,9 +116,8 @@ export default class Filters_V2 extends React.Component {
         if (instructor)
           instructorNames = instructor.map(i => ({
             id: i.id,
-            name: i.fields?.find(f => f.key === 'name')?.value,
-            headShotPic: i.data?.find(d => d.key === 'head_shot_picture_url')
-              ?.value
+            name: i.name,
+            headShotPic: i.head_shot_picture_url
           }));
         this.setState({ loading: false });
       }, 0);
@@ -265,7 +255,7 @@ export default class Filters_V2 extends React.Component {
             onPress={this.toggleModal}
             style={fStyles.touchableToggler}
           >
-            <Filters width={18} height={18} fill={'#fb1b2f'} />
+            <Filters width={18} height={18} fill={colors.pianoteRed} />
           </TouchableOpacity>
         </View>
         <Modal
@@ -299,7 +289,7 @@ export default class Filters_V2 extends React.Component {
             <ActivityIndicator
               size='large'
               animating={true}
-              color={'#fb1b2f'}
+              color={colors.pianoteRed}
               style={fStyles.container}
             />
           ) : (
@@ -526,6 +516,7 @@ class SkillSection extends React.PureComponent {
 
   constructor(props) {
     super(props);
+    fStyles = setStyles(colors, sizing);
 
     if (props.appliedFilters.level) {
       if (props.appliedFilters.level < 1) props.appliedFilters.level = 1;
@@ -648,7 +639,7 @@ class SkillSection extends React.PureComponent {
             level === 'ALL'
               ? {
                   ...fStyles.touchableAll,
-                  backgroundColor: '#fb1b2f',
+                  backgroundColor: colors.pianoteRed,
                   borderColor: 'transparent'
                 }
               : fStyles.touchableAll
@@ -677,6 +668,8 @@ class TouchableFiller extends React.Component {
 
   constructor(props) {
     super(props);
+    fStyles = setStyles(colors, sizing);
+
     if (props.appliedFilters[props.filterType])
       this.state.selected = props.appliedFilters[props.filterType].some(
         af =>
@@ -729,7 +722,7 @@ class InstructorsSection extends React.Component {
     if (filterType === 'instructorLetters') {
       this.setState(({ instructorLetters }) => ({
         instructorLetters: instructorLetters.includes(item)
-          ? instructorLetters.filter(il => il != item)
+          ? instructorLetters.filter(il => il !== item)
           : instructorLetters.concat(item)
       }));
     } else this.props.toggleItem(filterType, item);
@@ -817,6 +810,7 @@ class ProgressSection extends React.Component {
 
   constructor(props) {
     super(props);
+    fStyles = setStyles(colors, sizing);
 
     if (props.appliedFilters.progress)
       this.state.selected = props.appliedFilters.progress[0];
@@ -828,7 +822,7 @@ class ProgressSection extends React.Component {
         selected: selected && selected === item ? 'ALL' : item
       }),
       () =>
-        this.state.selected && this.state.selected != 'ALL'
+        this.state.selected && this.state.selected !== 'ALL'
           ? (this.props.appliedFilters.progress = [this.state.selected])
           : delete this.props.appliedFilters.progress
     );
@@ -879,6 +873,8 @@ class StatusSection extends React.Component {
 
   constructor(props) {
     super(props);
+    fStyles = setStyles(colors, sizing);
+
     if (props.appliedFilters.status)
       this.state.selected = props.appliedFilters.status[0];
   }
@@ -889,7 +885,7 @@ class StatusSection extends React.Component {
         selected: selected && selected === item ? 'ALL' : item
       }),
       () =>
-        this.state.selected && this.state.selected != 'ALL'
+        this.state.selected && this.state.selected !== 'ALL'
           ? (this.props.appliedFilters.status = [this.state.selected])
           : delete this.props.appliedFilters.status
     );
@@ -957,238 +953,239 @@ class StatusSection extends React.Component {
   }
 }
 
-const fStyles = StyleSheet.create({
-  touchableToggler: {
-    alignSelf: 'center',
-    borderColor: '#fb1b2f',
-    borderRadius: 15,
-    borderWidth: 1,
-    padding: 5
-  },
-  textAppliedFilters: {
-    color: '#445f73',
-    flex: 1,
-    fontFamily: 'RobotoCondensed-Regular',
-    paddingBottom: 5,
-    textTransform: 'uppercase'
-  },
-  safeAreaTitleContainer: {
-    backgroundColor: '#081826'
-  },
-  touchableTitleContainer: {
-    justifyContent: 'center',
-    padding: 15
-  },
-  textTitle: {
-    color: 'white',
-    fontFamily: 'OpenSans-Bold',
-    fontSize: isTablet ? 20 : 18,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    textAlign: 'center',
-    textTransform: 'capitalize'
-  },
-  container: {
-    backgroundColor: '#00101d',
-    flex: 1
-  },
-  filterSection: {
-    borderBottomColor: '#081826',
-    borderBottomWidth: 1,
-    paddingHorizontal: 15,
-    paddingVertical: 25
-  },
-  filterSectionNoPadding: {
-    borderBottomColor: '#081826',
-    borderBottomWidth: 1,
-    paddingHorizontal: 15,
-    paddingVertical: 0
-  },
-  sectionTitleText: {
-    color: '#445f73',
-    fontFamily: 'RobotoCondensed-Bold',
-    fontSize: isTablet ? 22 : 20
-  },
-  skillSectionsContainer: {
-    borderRadius: 2.5,
-    flexDirection: 'row',
-    marginVertical: 15,
-    overflow: 'hidden'
-  },
-  skillSection: {
-    backgroundColor: '#445f73',
-    flex: 0.2,
-    height: 5,
-    marginHorizontal: 1
-  },
-  skillSectionBar: {
-    backgroundColor: '#fb1b2f',
-    borderRadius: 2.5,
-    height: 5,
-    position: 'absolute',
-    width: '100%'
-  },
-  skillSectionDot: {
-    backgroundColor: '#fb1b2f',
-    borderRadius: 8,
-    height: 16,
-    position: 'absolute',
-    width: 16
-  },
-  levelText: {
-    color: 'white',
-    fontFamily: 'OpenSans-Semibold',
-    fontSize: isTablet ? 32 : 30,
-    textAlign: 'center'
-  },
-  levelDescriptionText: {
-    color: 'white',
-    padding: 10,
-    textAlign: 'center'
-  },
-  touchableAll: {
-    alignSelf: 'center',
-    borderColor: '#445f73',
-    borderRadius: 50,
-    borderWidth: 1,
-    justifyContent: 'center',
-    padding: 10,
-    paddingHorizontal: 50
-  },
-  touchableBorderedContainer: {
-    padding: 3,
-    width: `${100 / (isTablet ? 5 : 3)}%`
-  },
-  touchableBorderedContainerProgress: {
-    flex: 1,
-    padding: 3
-  },
-  touchableBordered: {
-    borderColor: '#445f73',
-    borderRadius: 50,
-    borderWidth: 1,
-    justifyContent: 'center',
-    padding: 10
-  },
-  touchableBorderedSelected: {
-    backgroundColor: '#fb1b2f',
-    borderColor: 'transparent',
-    borderRadius: 50,
-    borderWidth: 1,
-    justifyContent: 'center',
-    padding: 10
-  },
-  touchableTextBordered: {
-    color: '#445f73',
-    fontFamily: 'OpenSans-Semibold',
-    fontSize: isTablet ? 12 : 10,
-    textAlign: 'center',
-    textTransform: 'uppercase'
-  },
-  touchableTextBorderedSelected: {
-    color: 'white',
-    fontFamily: 'OpenSans-Semibold',
-    fontSize: isTablet ? 12 : 10,
-    textAlign: 'center',
-    textTransform: 'uppercase'
-  },
-  expandableDetails: {
-    color: '#445f73',
-    fontFamily: 'OpenSans',
-    fontSize: isTablet ? 14 : 12,
-    paddingVertical: 10
-  },
-  touchableContainerInstructorLetter: {
-    padding: 3,
-    width: `${Math.round(10000 / (isTablet ? 13 : 9)) / 100}%`
-  },
-  touchableInstructorLetter: {
-    aspectRatio: 1,
-    borderColor: '#445f73',
-    borderRadius: 100,
-    borderWidth: 1,
-    justifyContent: 'center'
-  },
-  touchableInstructorLetterSelected: {
-    aspectRatio: 1,
-    backgroundColor: '#fb1b2f',
-    borderColor: '#fb1b2f',
-    borderRadius: 100,
-    borderWidth: 1,
-    justifyContent: 'center'
-  },
-  touchableTextInstructorLetter: {
-    color: '#445f73',
-    textAlign: 'center',
-    fontFamily: 'OpenSans-Semibold'
-  },
-  touchableTextInstructorLetterSelected: {
-    color: 'white',
-    textAlign: 'center',
-    fontFamily: 'OpenSans-Semibold'
-  },
-  touchableContainerInstructor: {
-    padding: 5,
-    width: `${100 / (isTablet ? 8 : 4)}%`
-  },
-  touchableInstructorPic: {
-    aspectRatio: 1,
-    borderRadius: 100,
-    width: '50%'
-  },
-  touchableInstructor: { alignItems: 'center' },
-  touchableInstructorSelected: {
-    alignItems: 'center',
-    backgroundColor: '#fb1b2f'
-  },
-  touchableTextInstructor: {
-    color: '#445f73',
-    textAlign: 'center',
-    fontFamily: 'OpenSans-Semibold'
-  },
-  touchableTextInstructorSelected: {
-    color: 'white',
-    textAlign: 'center',
-    fontFamily: 'OpenSans-Semibold'
-  },
-  safeAreaBottomContainer: {
-    backgroundColor: '#00101d',
-    flexDirection: 'row'
-  },
-  touchableDoneAndApply: {
-    backgroundColor: '#fb1b2f',
-    borderRadius: 50,
-    flex: 1,
-    margin: 20,
-    marginVertical: 10,
-    paddingVertical: 15,
-    justifyContent: 'center'
-  },
-  touchableTextDoneAndApply: {
-    color: 'white',
-    fontFamily: 'RobotoCondensed-Bold',
-    textAlign: 'center',
-    fontSize: isTablet ? 15 : 12.5,
-    fontFamily: 'RobotoCondensed-Bold'
-  },
-  touchableReset: {
-    borderColor: 'white',
-    borderRadius: 50,
-    borderWidth: 2,
-    flex: 1,
-    justifyContent: 'center',
-    margin: 20,
-    marginVertical: 10,
-    marginLeft: 0,
-    padding: 0,
-    paddingVertical: 15
-  },
-  touchableTextReset: {
-    color: 'white',
-    fontFamily: 'RobotoCondensed-Bold',
-    textAlign: 'center',
-    fontSize: isTablet ? 15 : 12.5,
-    fontFamily: 'RobotoCondensed-Bold'
-  }
-});
+const setStyles = (appColor, size) =>
+  StyleSheet.create({
+    touchableToggler: {
+      alignSelf: 'center',
+      borderColor: appColor.pianoteRed,
+      borderRadius: 15,
+      borderWidth: 1,
+      padding: 5
+    },
+    textAppliedFilters: {
+      color: appColor.secondBackground,
+      flex: 1,
+      fontFamily: 'RobotoCondensed-Regular',
+      paddingBottom: 5,
+      textTransform: 'uppercase'
+    },
+    safeAreaTitleContainer: {
+      backgroundColor: appColor.thirdBackground
+    },
+    touchableTitleContainer: {
+      justifyContent: 'center',
+      padding: 15
+    },
+    textTitle: {
+      color: 'white',
+      fontFamily: 'OpenSans-Bold',
+      fontSize: isTablet ? 20 : 18,
+      left: 0,
+      position: 'absolute',
+      right: 0,
+      textAlign: 'center',
+      textTransform: 'capitalize'
+    },
+    container: {
+      backgroundColor: appColor.mainBackground,
+      flex: 1
+    },
+    filterSection: {
+      borderBottomColor: appColor.thirdBackground,
+      borderBottomWidth: 1,
+      paddingHorizontal: 15,
+      paddingVertical: 25
+    },
+    filterSectionNoPadding: {
+      borderBottomColor: appColor.thirdBackground,
+      borderBottomWidth: 1,
+      paddingHorizontal: 15,
+      paddingVertical: 0
+    },
+    sectionTitleText: {
+      color: appColor.secondBackground,
+      fontFamily: 'RobotoCondensed-Bold',
+      fontSize: isTablet ? 22 : 20
+    },
+    skillSectionsContainer: {
+      borderRadius: 2.5,
+      flexDirection: 'row',
+      marginVertical: 15,
+      overflow: 'hidden'
+    },
+    skillSection: {
+      backgroundColor: appColor.secondBackground,
+      flex: 0.2,
+      height: 5,
+      marginHorizontal: 1
+    },
+    skillSectionBar: {
+      backgroundColor: appColor.pianoteRed,
+      borderRadius: 2.5,
+      height: 5,
+      position: 'absolute',
+      width: '100%'
+    },
+    skillSectionDot: {
+      backgroundColor: appColor.pianoteRed,
+      borderRadius: 8,
+      height: 16,
+      position: 'absolute',
+      width: 16
+    },
+    levelText: {
+      color: 'white',
+      fontFamily: 'OpenSans-Semibold',
+      fontSize: isTablet ? 32 : 30,
+      textAlign: 'center'
+    },
+    levelDescriptionText: {
+      color: 'white',
+      padding: 10,
+      textAlign: 'center'
+    },
+    touchableAll: {
+      alignSelf: 'center',
+      borderColor: appColor.secondBackground,
+      borderRadius: 50,
+      borderWidth: 1,
+      justifyContent: 'center',
+      padding: 10,
+      paddingHorizontal: 50
+    },
+    touchableBorderedContainer: {
+      padding: 3,
+      width: `${100 / (isTablet ? 5 : 3)}%`
+    },
+    touchableBorderedContainerProgress: {
+      flex: 1,
+      padding: 3
+    },
+    touchableBordered: {
+      borderColor: appColor.secondBackground,
+      borderRadius: 50,
+      borderWidth: 1,
+      justifyContent: 'center',
+      padding: 10
+    },
+    touchableBorderedSelected: {
+      backgroundColor: appColor.pianoteRed,
+      borderColor: 'transparent',
+      borderRadius: 50,
+      borderWidth: 1,
+      justifyContent: 'center',
+      padding: 10
+    },
+    touchableTextBordered: {
+      color: appColor.secondBackground,
+      fontFamily: 'OpenSans-Semibold',
+      fontSize: isTablet ? 12 : 10,
+      textAlign: 'center',
+      textTransform: 'uppercase'
+    },
+    touchableTextBorderedSelected: {
+      color: 'white',
+      fontFamily: 'OpenSans-Semibold',
+      fontSize: isTablet ? 12 : 10,
+      textAlign: 'center',
+      textTransform: 'uppercase'
+    },
+    expandableDetails: {
+      color: appColor.secondBackground,
+      fontFamily: 'OpenSans',
+      fontSize: isTablet ? 14 : 12,
+      paddingVertical: 10
+    },
+    touchableContainerInstructorLetter: {
+      padding: 3,
+      width: `${Math.round(10000 / (isTablet ? 13 : 9)) / 100}%`
+    },
+    touchableInstructorLetter: {
+      aspectRatio: 1,
+      borderColor: appColor.secondBackground,
+      borderRadius: 100,
+      borderWidth: 1,
+      justifyContent: 'center'
+    },
+    touchableInstructorLetterSelected: {
+      aspectRatio: 1,
+      backgroundColor: appColor.pianoteRed,
+      borderColor: appColor.pianoteRed,
+      borderRadius: 100,
+      borderWidth: 1,
+      justifyContent: 'center'
+    },
+    touchableTextInstructorLetter: {
+      color: appColor.secondBackground,
+      textAlign: 'center',
+      fontFamily: 'OpenSans-Semibold'
+    },
+    touchableTextInstructorLetterSelected: {
+      color: 'white',
+      textAlign: 'center',
+      fontFamily: 'OpenSans-Semibold'
+    },
+    touchableContainerInstructor: {
+      padding: 5,
+      width: `${100 / (isTablet ? 8 : 4)}%`
+    },
+    touchableInstructorPic: {
+      aspectRatio: 1,
+      borderRadius: 100,
+      width: '50%'
+    },
+    touchableInstructor: { alignItems: 'center' },
+    touchableInstructorSelected: {
+      alignItems: 'center',
+      backgroundColor: appColor.pianoteRed
+    },
+    touchableTextInstructor: {
+      color: appColor.secondBackground,
+      textAlign: 'center',
+      fontFamily: 'OpenSans-Semibold'
+    },
+    touchableTextInstructorSelected: {
+      color: 'white',
+      textAlign: 'center',
+      fontFamily: 'OpenSans-Semibold'
+    },
+    safeAreaBottomContainer: {
+      backgroundColor: appColor.mainBackground,
+      flexDirection: 'row'
+    },
+    touchableDoneAndApply: {
+      backgroundColor: appColor.pianoteRed,
+      borderRadius: 50,
+      flex: 1,
+      margin: 20,
+      marginVertical: 10,
+      paddingVertical: 15,
+      justifyContent: 'center'
+    },
+    touchableTextDoneAndApply: {
+      color: 'white',
+      fontFamily: 'RobotoCondensed-Bold',
+      textAlign: 'center',
+      fontSize: isTablet ? 15 : 12.5,
+      fontFamily: 'RobotoCondensed-Bold'
+    },
+    touchableReset: {
+      borderColor: 'white',
+      borderRadius: 50,
+      borderWidth: 2,
+      flex: 1,
+      justifyContent: 'center',
+      margin: 20,
+      marginVertical: 10,
+      marginLeft: 0,
+      padding: 0,
+      paddingVertical: 15
+    },
+    touchableTextReset: {
+      color: 'white',
+      fontFamily: 'RobotoCondensed-Bold',
+      textAlign: 'center',
+      fontSize: isTablet ? 15 : 12.5,
+      fontFamily: 'RobotoCondensed-Bold'
+    }
+  });

@@ -1,80 +1,69 @@
-/**
- * OverviewComplete
- */
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-
-const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;
+import Icon from '../assets/icons';
 
 export default class OverviewComplete extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   changeType = word => {
     word = word.replace(/[- )(]/g, ' ').split(' ');
     let string = '';
-
-    for (let i = 0; i < word.length; i++) {
-      if (word[i] !== 'and') {
-        word[i] = word[i][0].toUpperCase() + word[i].substr(1);
-      }
-    }
-
-    for (i in word) {
-      string = string + word[i] + ' ';
-    }
-
+    for (i in word) string = string + word[i] + ' ';
     return string;
   };
 
   render = () => {
     return (
-      <BlurView style={[styles.container, styles.centerContent]} blurAmount={5}>
-        <TouchableOpacity
-          style={[styles.centerContent, styles.container]}
-          onPress={() => this.props.hideOverviewComplete()}
+      <Modal
+        visible={this.props.isVisible}
+        transparent={true}
+        style={styles.modalContainer}
+        animation={'slideInUp'}
+        animationInTiming={250}
+        animationOutTiming={250}
+        coverScreen={true}
+        hasBackdrop={true}
+        onBackButtonPress={() => this.props.hideOverviewComplete()}
+      >
+        <BlurView
+          style={[styles.container, styles.centerContent]}
+          blurAmount={5}
         >
-          <View style={localStyles.container}>
-            <View style={[styles.centerContent]}>
-              <IonIcon
-                name={'ios-trophy'}
-                size={onTablet ? 45 : 35}
-                color={'#fb1b2f'}
-              />
-            </View>
-            <View style={[styles.centerContent, { padding: 5 }]}>
-              <Text style={[styles.modalHeaderText]}>
-                {this.changeType(this.props.type).toUpperCase()}
-                {'\n'}Complete
+          <TouchableOpacity
+            style={[styles.centerContent, styles.container]}
+            onPress={() => this.props.hideOverviewComplete()}
+          >
+            <View style={localStyles.container}>
+              <View style={[styles.centerContent]}>
+                <Icon.Ionicons
+                  name={'ios-trophy'}
+                  size={onTablet ? 45 : 35}
+                  color={colors.pianoteRed}
+                />
+              </View>
+              <View style={[styles.centerContent, { padding: 5 }]}>
+                <Text
+                  style={[
+                    styles.modalHeaderText,
+                    { textTransform: 'capitalize' }
+                  ]}
+                >
+                  {this.changeType(this.props.type).toUpperCase()}
+                  {'\n'}Complete
+                </Text>
+              </View>
+              <Text style={[styles.modalBodyText, localStyles.congrats]}>
+                Congratulations! You completed
+              </Text>
+              <Text style={[styles.modalBodyText, localStyles.title]}>
+                {this.props.title}
+              </Text>
+              <Text style={[styles.modalButtonText, localStyles.xp]}>
+                YOU EARNED {this.props.xp} XP!
               </Text>
             </View>
-            <Text style={[styles.modalBodyText, localStyles.congrats]}>
-              Congratulations! You completed
-            </Text>
-            <Text style={[styles.modalBodyText, localStyles.title]}>
-              {this.props.title}
-            </Text>
-            <Text style={[styles.modalButtonText, localStyles.xp]}>
-              YOU EARNED {this.props.xp} XP!
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </BlurView>
+          </TouchableOpacity>
+        </BlurView>
+      </Modal>
     );
   };
 }
@@ -94,7 +83,7 @@ const localStyles = StyleSheet.create({
   title: {
     marginHorizontal: 20,
     marginBottom: 15,
-    fontWeight: 'bold'
+    fontFamily: 'OpenSans-Bold'
   },
   xp: {
     color: '#fb1b2f'

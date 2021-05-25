@@ -1,38 +1,31 @@
-/**
- * Settings
- */
 import React from 'react';
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
-  Platform,
+  TouchableWithoutFeedback,
   Alert,
   StatusBar,
   StyleSheet,
-  Linking
+  Linking,
+  Modal
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import RNIap from 'react-native-iap';
-import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import LogOut from '../../modals/LogOut.js';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
-import FeatherIcon from 'react-native-vector-icons/Feather';
-import FontIcon from 'react-native-vector-icons/FontAwesome';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
+import AsyncStorage from '@react-native-community/async-storage';
+import Intercom from 'react-native-intercom';
+import Icon from '../../assets/icons.js';
+import Back from '../../assets/img/svgs/back.svg';
+import NavigationBar from '../../components/NavigationBar.js';
 import Loading from '../../components/Loading.js';
 import CustomModal from '../../modals/CustomModal.js';
 import { logOut, restorePurchase } from '../../services/UserDataAuth.js';
 import { SafeAreaView } from 'react-navigation';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import commonService from '../../services/common.service.js';
-
 import { cacheAndWriteCourses } from '../../redux/CoursesCacheActions';
 import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 import { cacheAndWriteMyList } from '../../redux/MyListCacheActions';
@@ -42,23 +35,23 @@ import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
 import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
 import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
 import { goBack, navigate, reset } from '../../../AppNavigator.js';
+import { setLoggedInUser } from '../../redux/UserActions.js';
+
+const isTablet = global.onTablet;
+let localStyles;
 
 class Settings extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    this.state = {
-      showLogOut: false
-    };
+    localStyles = setStyles(this.props.theme === 'light', colors.pianoteRed);
+    this.state = { showLogOut: false };
   }
 
   manageSubscriptions = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    const userData = await getUserData();
-    let { isAppleAppSubscriber, isGoogleAppSubscriber } = userData;
-    if (Platform.OS === 'ios') {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    let { isAppleAppSubscriber, isGoogleAppSubscriber } = this.props.user;
+    if (isiOS) {
       if (isAppleAppSubscriber) {
         Alert.alert(
           'Manage Subscription',
@@ -138,7 +131,7 @@ class Settings extends React.Component {
           'All purchases restored'
         );
       }
-      if (Platform.OS === 'android') {
+      if (!isiOS) {
         purchases = purchases.map(m => {
           return {
             purchase_token: m.purchaseToken,
@@ -157,6 +150,7 @@ class Settings extends React.Component {
       if (restoreResponse.email) {
         this.loadingRef?.toggleLoading();
         await logOut();
+        this.props.setLoggedInUser({});
         this.loadingRef?.toggleLoading();
         navigate('LOGINCREDENTIALS', {
           email: restoreResponse.email
@@ -165,7 +159,7 @@ class Settings extends React.Component {
         return Alert.alert(
           'Restore',
           `This ${
-            Platform.OS === 'ios' ? 'Apple' : 'Google'
+            isiOS ? 'Apple' : 'Google'
           } account is already linked to another Pianote account. Please login with that account.`,
           [{ text: 'OK' }],
           { cancelable: false }
@@ -180,6 +174,24 @@ class Settings extends React.Component {
         'Please try Again later.'
       );
     }
+  };
+
+  logOut = () => {
+    [
+      'cacheAndWriteCourses',
+      'cacheAndWriteLessons',
+      'cacheAndWriteMyList',
+      'cacheAndWritePacks',
+      'cacheAndWritePodcasts',
+      'cacheAndWriteQuickTips',
+      'cacheAndWriteSongs',
+      'cacheAndWriteStudentFocus'
+    ].map(redux => this.props[redux]({}));
+    logOut();
+    this.props.setLoggedInUser({});
+    Intercom.logout();
+    AsyncStorage.clear();
+    reset('LOGIN');
   };
 
   render() {
@@ -207,180 +219,123 @@ class Settings extends React.Component {
         </View>
 
         <ScrollView style={styles.mainContainer}>
-          <TouchableOpacity
-            style={[
-              styles.centerContent,
-              localStyles.container,
-              {
-                borderTopWidth: 1,
-                borderTopColor: '#445f73'
-              }
-            ]}
-            onPress={() => {
-              navigate('PROFILESETTINGS');
-            }}
-          >
-            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
-              <FeatherIcon
-                name={'user'}
+          {[
+            {
+              nav: () => navigate('PROFILESETTINGS'),
+              title: 'Profile Settings',
+              icon: (
+                <Icon.Feather
+                  name={'user'}
+                  size={onTablet ? 30 : 20}
+                  color={colors.pianoteRed}
+                />
+              )
+            },
+            {
+              nav: () => navigate('NOTIFICATIONSETTINGS'),
+              title: 'Notification Settings',
+              icon: (
+                <Icon.Ionicons
+                  name={'ios-notifications-outline'}
+                  color={colors.pianoteRed}
+                  size={onTablet ? 35 : 27.5}
+                />
+              )
+            },
+            {
+              nav: this.manageSubscriptions,
+              title: 'Manage Subscriptions',
+              icon: (
+                <Icon.AntDesign
+                  name={'folder1'}
+                  size={onTablet ? 30 : 20}
+                  color={colors.pianoteRed}
+                />
+              )
+            },
+            {
+              nav: this.restorePurchase,
+              title: 'Restore Purchases',
+              icon: (
+                <Icon.AntDesign
+                  name={'creditcard'}
+                  size={onTablet ? 30 : 20}
+                  color={colors.pianoteRed}
+                />
+              )
+            },
+            {
+              nav: () => navigate('SUPPORT'),
+              title: 'Support',
+              icon: (
+                <Icon.FontAwesome
+                  name={'support'}
+                  size={onTablet ? 30 : 20}
+                  color={colors.pianoteRed}
+                />
+              )
+            },
+            {
+              nav: () => navigate('TERMS'),
+              title: 'Terms of Use',
+              icon: (
+                <Icon.AntDesign
+                  name={'form'}
+                  size={onTablet ? 30 : 20}
+                  color={colors.pianoteRed}
+                />
+              )
+            },
+            {
+              nav: () => navigate('PRIVACYPOLICY'),
+              title: 'Privacy Policy',
+              icon: (
+                <Icon.FontAwesome
+                  name={'shield'}
+                  color={colors.pianoteRed}
+                  size={onTablet ? 32.5 : 22.5}
+                />
+              )
+            },
+            {
+              nav: () => this.setState({ showLogOut: true }),
+              title: 'Log Out',
+              icon: (
+                <Icon.AntDesign
+                  name={'poweroff'}
+                  color={colors.pianoteRed}
+                  size={onTablet ? 30 : 20}
+                />
+              )
+            }
+          ].map(item => (
+            <TouchableOpacity
+              key={item.title}
+              style={[
+                styles.centerContent,
+                localStyles.container,
+                {
+                  borderTopWidth: 1,
+                  borderTopColor: '#445f73'
+                }
+              ]}
+              onPress={item.nav}
+            >
+              <View style={{ flexDirection: 'row' }}>
+                <View
+                  style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
+                >
+                  {item.icon}
+                </View>
+                <Text style={localStyles.settingsText}>{item.title}</Text>
+              </View>
+              <Icon.AntDesign
+                name={'right'}
                 size={onTablet ? 30 : 20}
-                color={colors.pianoteRed}
+                color={colors.secondBackground}
               />
-            </View>
-            <Text style={localStyles.settingsText}>Profile Settings</Text>
-            <View style={{ flex: 1 }} />
-            <AntIcon
-              name={'right'}
-              size={onTablet ? 30 : 20}
-              color={colors.secondBackground}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            key={'notificationSettings'}
-            onPress={() => {
-              navigate('NOTIFICATIONSETTINGS');
-            }}
-            style={[styles.centerContent, localStyles.container]}
-          >
-            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
-              <IonIcon
-                name={'ios-notifications-outline'}
-                color={colors.pianoteRed}
-                size={onTablet ? 35 : 27.5}
-              />
-            </View>
-            <Text style={localStyles.settingsText}>Notification Settings</Text>
-            <View style={{ flex: 1 }} />
-            <AntIcon
-              name={'right'}
-              size={onTablet ? 30 : 20}
-              color={colors.secondBackground}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.centerContent, localStyles.container]}
-            onPress={this.manageSubscriptions}
-          >
-            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
-              <AntIcon
-                name={'folder1'}
-                size={onTablet ? 30 : 20}
-                color={colors.pianoteRed}
-              />
-            </View>
-            <Text style={localStyles.settingsText}>Manage Subscriptions</Text>
-            <View style={{ flex: 1 }} />
-            <AntIcon
-              name={'right'}
-              size={onTablet ? 30 : 20}
-              color={colors.secondBackground}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            key={'restorePurchase'}
-            onPress={this.restorePurchase}
-            style={[styles.centerContent, localStyles.container]}
-          >
-            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
-              <AntIcon
-                name={'creditcard'}
-                size={onTablet ? 30 : 20}
-                color={colors.pianoteRed}
-              />
-            </View>
-            <Text style={localStyles.settingsText}>Restore Purchases</Text>
-            <View style={{ flex: 1 }} />
-            <AntIcon
-              name={'right'}
-              size={onTablet ? 30 : 20}
-              color={colors.secondBackground}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.centerContent, localStyles.container]}
-            onPress={() => {
-              navigate('SUPPORT');
-            }}
-          >
-            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
-              <FontIcon
-                name={'support'}
-                size={onTablet ? 30 : 20}
-                color={colors.pianoteRed}
-              />
-            </View>
-            <Text style={localStyles.settingsText}>Support</Text>
-            <View style={{ flex: 1 }} />
-            <AntIcon
-              name={'right'}
-              size={onTablet ? 30 : 20}
-              color={colors.secondBackground}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.centerContent, localStyles.container]}
-            onPress={() => {
-              navigate('TERMS');
-            }}
-          >
-            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
-              <AntIcon
-                name={'form'}
-                size={onTablet ? 30 : 20}
-                color={colors.pianoteRed}
-              />
-            </View>
-            <Text style={localStyles.settingsText}>Terms of Use</Text>
-            <View style={{ flex: 1 }} />
-            <AntIcon
-              name={'right'}
-              size={onTablet ? 30 : 20}
-              color={colors.secondBackground}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.centerContent, localStyles.container]}
-            onPress={() => {
-              navigate('PRIVACYPOLICY');
-            }}
-          >
-            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
-              <FontIcon
-                name={'shield'}
-                color={colors.pianoteRed}
-                size={onTablet ? 32.5 : 22.5}
-              />
-            </View>
-            <Text style={localStyles.settingsText}>Privacy Policy</Text>
-            <View style={{ flex: 1 }} />
-            <AntIcon
-              name={'right'}
-              size={onTablet ? 30 : 20}
-              color={colors.secondBackground}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.centerContent, localStyles.container]}
-            onPress={() => {
-              this.setState({ showLogOut: true });
-            }}
-          >
-            <View style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}>
-              <AntIcon
-                name={'poweroff'}
-                color={colors.pianoteRed}
-                size={onTablet ? 30 : 20}
-              />
-            </View>
-            <Text style={localStyles.settingsText}>Log Out</Text>
-            <View style={{ flex: 1 }} />
-            <AntIcon
-              name={'right'}
-              size={onTablet ? 30 : 20}
-              color={colors.secondBackground}
-            />
-          </TouchableOpacity>
+            </TouchableOpacity>
+          ))}
           <Text style={[localStyles.settingsText, localStyles.appText]}>
             APP VERSION {DeviceInfo.getVersion()}
           </Text>
@@ -390,9 +345,9 @@ class Settings extends React.Component {
             </Text>
           )}
         </ScrollView>
-
         <Modal
-          isVisible={this.state.showLogOut}
+          visible={this.state.showLogOut}
+          transparent={true}
           style={[styles.centerContent, styles.modalContainer]}
           animation={'slideInUp'}
           animationInTiming={250}
@@ -401,23 +356,39 @@ class Settings extends React.Component {
           hasBackdrop={true}
           onBackButtonPress={() => this.setState({ showLogOut: false })}
         >
-          <LogOut
-            onLogout={() =>
-              [
-                'cacheAndWriteCourses',
-                'cacheAndWriteLessons',
-                'cacheAndWriteMyList',
-                'cacheAndWritePacks',
-                'cacheAndWritePodcasts',
-                'cacheAndWriteQuickTips',
-                'cacheAndWriteSongs',
-                'cacheAndWriteStudentFocus'
-              ].map(redux => this.props[redux]({}))
-            }
-            hideLogOut={() => {
-              this.setState({ showLogOut: false });
-            }}
-          />
+          <TouchableOpacity
+            style={[styles.centerContent, localStyles.modalContainer]}
+            onPress={() => this.setState({ showLogOut: false })}
+          >
+            <View style={[styles.centerContent, styles.container]}>
+              <View style={localStyles.container2}>
+                <Text style={[styles.modalHeaderText, localStyles.title]}>
+                  Log Out
+                </Text>
+                <Text style={[styles.modalBodyText, localStyles.description]}>
+                  Are you sure that you want to log out?
+                </Text>
+                <TouchableOpacity
+                  style={[styles.centerContent, localStyles.logoutText]}
+                  onPress={() => this.logOut()}
+                >
+                  <Text style={[styles.modalButtonText, localStyles.logout]}>
+                    LOG OUT
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.centerContent, localStyles.cancelContainter]}
+                  onPress={() => this.setState({ showLogOut: false })}
+                >
+                  <Text
+                    style={[styles.modalCancelButtonText, localStyles.cancel]}
+                  >
+                    CANCEL
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </TouchableOpacity>
         </Modal>
         <Loading
           ref={ref => {
@@ -461,39 +432,6 @@ class Settings extends React.Component {
   }
 }
 
-const localStyles = StyleSheet.create({
-  container: {
-    height: DeviceInfo.isTablet() ? 70 : 50,
-    width: '100%',
-    borderBottomColor: '#445f73',
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    paddingRight: 10
-  },
-  settingsText: {
-    fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 20 : 16,
-    color: '#445f73'
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15
-  },
-  appText: {
-    marginTop: 10,
-    textAlign: 'center',
-    fontSize: DeviceInfo.isTablet() ? 18 : 12
-  },
-  buildText: {
-    fontFamily: 'OpenSans-Regular',
-    textAlign: 'center',
-    color: '#445f73',
-    marginTop: 10,
-    fontSize: DeviceInfo.isTablet() ? 18 : 12
-  }
-});
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
@@ -504,9 +442,90 @@ const mapDispatchToProps = dispatch =>
       cacheAndWritePodcasts,
       cacheAndWriteQuickTips,
       cacheAndWriteSongs,
-      cacheAndWriteStudentFocus
+      cacheAndWriteStudentFocus,
+      setLoggedInUser: user => dispatch(setLoggedInUser(user))
     },
     dispatch
   );
 
-export default connect(null, mapDispatchToProps)(Settings);
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Settings);
+
+const setStyles = (isLight, appColor) =>
+  StyleSheet.create({
+    modalContainer: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,.5)'
+    },
+    container: {
+      height: isTablet ? 70 : 50,
+      width: '100%',
+      borderBottomColor: isLight ? '#97AABE' : '#445f73',
+      borderBottomWidth: 1,
+      flexDirection: 'row',
+      paddingRight: 10,
+      justifyContent: 'space-between'
+    },
+    container2: {
+      backgroundColor: 'white',
+      borderRadius: 15,
+      margin: 20
+    },
+    title: {
+      marginTop: 20,
+      paddingHorizontal: 20
+    },
+    description: {
+      paddingHorizontal: 30,
+      marginTop: 10,
+      marginBottom: 5,
+      fontSize: isTablet ? 18 : 14
+    },
+    logoutText: {
+      backgroundColor: appColor,
+      borderRadius: 40,
+      marginVertical: 15,
+      marginHorizontal: 30,
+      fontFamily: 'OpenSans-Bold',
+      height: isTablet ? 40 : 30,
+      textAlign: 'center'
+    },
+    logout: {
+      color: 'white',
+      fontSize: isTablet ? 18 : 14
+    },
+    cancelContainter: {
+      paddingHorizontal: 20,
+      marginBottom: 15
+    },
+    cancel: {
+      color: 'grey',
+      fontSize: isTablet ? 16 : 12
+    },
+    settingsText: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: isTablet ? 20 : 16,
+      color: isLight ? '#97AABE' : '#445f73'
+    },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: 15
+    },
+    appText: {
+      marginTop: 10,
+      textAlign: 'center',
+      fontSize: isTablet ? 18 : 12
+    },
+    buildText: {
+      fontFamily: 'OpenSans-Regular',
+      textAlign: 'center',
+      color: isLight ? '#97AABE' : '#445f73',
+      marginTop: 10,
+      fontSize: isTablet ? 18 : 12
+    }
+  });

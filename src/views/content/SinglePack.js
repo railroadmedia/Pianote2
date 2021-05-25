@@ -1,6 +1,3 @@
-/**
- * SinglePack
- */
 import React from 'react';
 import {
   View,
@@ -11,21 +8,17 @@ import {
   ActivityIndicator,
   Dimensions,
   ImageBackground,
-  StatusBar
+  StatusBar,
+  Modal
 } from 'react-native';
-import Modal from 'react-native-modal';
 import { Download_V2 } from 'RNDownload';
 import { SafeAreaView } from 'react-navigation';
-import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Back from '../../assets/img/svgs/back.svg';
+import Icon from '../../assets/icons.js';
 import Orientation from 'react-native-orientation-locker';
 import { DownloadResources } from 'RNDownload';
-import StartIcon from '../../components/StartIcon';
-import ResetIcon from '../../components/ResetIcon';
-import ContinueIcon from '../../components/ContinueIcon';
+import LongButton from '../../components/LongButton';
 import NavigationBar from '../../components/NavigationBar';
 import GradientFeature from '../../components/GradientFeature';
 import VerticalVideoList from '../../components/VerticalVideoList';
@@ -37,7 +30,7 @@ import {
   resetProgress
 } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
-import Resources from 'Pianote2/src/assets/img/svgs/resources';
+import Resources from '../../assets/img/svgs/resources';
 import { goBack, navigate, push } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
@@ -51,6 +44,7 @@ export default class SinglePack extends React.Component {
     super(props);
     this.state = {
       showInfo: false,
+      showRestartCourse: false,
       isDisplayingLessons: true,
       videos: [],
       id: '',
@@ -61,8 +55,8 @@ export default class SinglePack extends React.Component {
       thumbnail: '',
       logo: '',
       xp: 0,
-      isStarted: false,
-      isCompleted: false,
+      started: false,
+      completed: false,
       nextLessonUrl: '',
       isLoadingAll: true,
       refreshing: false,
@@ -79,72 +73,35 @@ export default class SinglePack extends React.Component {
     Orientation.addDeviceOrientationListener(this.orientationListener);
   };
 
-  componentWillUnmount() {
+  componentWillUnmount = () =>
     Orientation.removeDeviceOrientationListener(this.orientationListener);
-  }
 
   getBundle = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     // get bundles
     const response = await packsService.getPack(this.state.url);
-    console.log(response);
-    const newContent = new ContentModel(response);
-    const lessons = newContent.post.lessons.map(rl => {
-      return new ContentModel(rl);
-    });
     // if more than one bundle then display bundles otherwise show videos
-    if (newContent.post.bundle_count > 1)
+    if (response.bundle_number > 1)
       this.setState({ isDisplayingLessons: false });
-    let items = [];
-    try {
-      for (let i in lessons) {
-        items.push({
-          title: lessons[i].getField('title'),
-          type: lessons[i].post.type,
-          thumbnail: lessons[i].getData('thumbnail_url'),
-          id: lessons[i].id,
-          publishedOn:
-            lessons[i].publishedOn.slice(0, 10) +
-            'T' +
-            lessons[i].publishedOn.slice(11, 16),
-          duration:
-            newContent.post.bundle_count > 1
-              ? 0
-              : new ContentModel(
-                  lessons[i].getFieldMulti('video')[0]
-                )?.getField('length_in_seconds'),
 
-          isAddedToList: lessons[i].isAddedToList,
-          isStarted: lessons[i].isStarted,
-          isCompleted: lessons[i].isCompleted,
-          progress_percent: lessons[i].post.progress_percent,
-          mobile_app_url: lessons[i].post.mobile_app_url
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
     this.setState(
       {
-        id: newContent.id,
-        isAddedToList: newContent.isAddedToList,
-        thumbnail:
-          newContent.post.thumbnail_url || newContent.getData('thumbnail_url'),
-        title: newContent.getField('title'),
-        logo: newContent.post.pack_logo,
-        description: newContent.getData('description'),
-        isStarted: newContent.isStarted,
-        isCompleted: newContent.isCompleted,
-        xp: newContent.xp,
-        videos: items,
-        nextLessonUrl: newContent.post.next_lesson_mobile_app_url,
+        id: response.id,
+        isAddedToList: response.is_added_to_primary_playlist,
+        thumbnail: response.thumbnail_url || response.thumbnail,
+        title: response.title,
+        logo: response.pack_logo,
+        description: response.description,
+        started: response.started,
+        completed: response.completed,
+        xp: response.total_xp,
+        videos: response.bundles || response.lessons,
+        nextLessonUrl: response.next_lesson?.mobile_app_url,
         isLoadingAll: false,
         refreshing: false,
-        resources: newContent.post.resources
-          ? Object.keys(newContent.post.resources).map(key => {
-              return newContent.post.resources[key];
+        resources: response.resources
+          ? Object.keys(response.resources).map(key => {
+              return response.resources[key];
             })
           : null
       },
@@ -193,7 +150,6 @@ export default class SinglePack extends React.Component {
   decideExtension = url => {
     const lastDot = url.lastIndexOf('.');
     const extension = url.substr(lastDot + 1).toLowerCase();
-
     return extension;
   };
 
@@ -204,9 +160,7 @@ export default class SinglePack extends React.Component {
   };
 
   async resetProgress() {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     await resetProgress(this.state.id);
     this.setState({ showRestartCourse: false, refreshing: true }, () =>
       this.getBundle()
@@ -214,22 +168,16 @@ export default class SinglePack extends React.Component {
   }
 
   toggleMyList = () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    if (this.state.isAddedToList) {
-      removeFromMyList(this.state.id);
-    } else {
-      addToMyList(this.state.id);
-    }
-    this.setState({
-      isAddedToList: !this.state.isAddedToList
-    });
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    this.state.isAddedToList
+      ? removeFromMyList(this.state.id)
+      : addToMyList(this.state.id);
+    this.setState({ isAddedToList: !this.state.isAddedToList });
   };
 
   navigate = row => {
     if (this.state.isDisplayingLessons) {
-      navigate('VIDEOPLAYER', {
+      navigate('VIEWLESSON', {
         url: row.mobile_app_url
       });
     } else {
@@ -239,16 +187,9 @@ export default class SinglePack extends React.Component {
     }
   };
 
-  refresh = () => {
-    this.setState({ refreshing: true }, () => {
-      this.getBundle();
-    });
-  };
-
   getAspectRatio() {
     if (onTablet && this.state.isLandscape) return 3;
     if (onTablet && !this.state.isLandscape) return 2;
-
     return 1.8;
   }
 
@@ -256,7 +197,7 @@ export default class SinglePack extends React.Component {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
-    if (Platform.OS === 'ios') {
+    if (isiOS) {
       if (onTablet) this.setState({ isLandscape });
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
@@ -286,7 +227,11 @@ export default class SinglePack extends React.Component {
               <RefreshControl
                 colors={[colors.pianoteRed]}
                 refreshing={this.state.refreshing}
-                onRefresh={() => this.refresh()}
+                onRefresh={() =>
+                  this.setState({ refreshing: true }, () => {
+                    this.getBundle();
+                  })
+                }
               />
             }
           >
@@ -359,31 +304,27 @@ export default class SinglePack extends React.Component {
                     }
                   ]}
                 >
-                  <View style={{ flex: 1, flexDirection: 'row' }}>
-                    <View style={{ flex: 0.5 }} />
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: 'row',
+                      justifyContent: 'flex-end'
+                    }}
+                  >
                     <TouchableOpacity
                       style={{
-                        flex: 0.5,
-                        alignItems: 'center'
+                        paddingHorizontal: 10
                       }}
                       onPress={() => {
                         this.toggleMyList();
                       }}
                     >
-                      <View style={[styles.centerContent]}>
-                        {!this.state.isAddedToList ? (
-                          <AntIcon
-                            name={'plus'}
-                            size={sizing.myListButtonSize}
-                            color={colors.pianoteRed}
-                          />
-                        ) : (
-                          <AntIcon
-                            name={'close'}
-                            size={sizing.myListButtonSize}
-                            color={colors.pianoteRed}
-                          />
-                        )}
+                      <View style={styles.centerContent}>
+                        <Icon.AntDesign
+                          name={!this.state.isAddedToList ? 'plus' : 'close'}
+                          size={sizing.myListButtonSize}
+                          color={colors.pianoteRed}
+                        />
                       </View>
                       <Text
                         style={{
@@ -397,39 +338,35 @@ export default class SinglePack extends React.Component {
                     </TouchableOpacity>
                   </View>
                   <View style={{ width: '50%' }}>
-                    {this.state.isCompleted ? (
-                      <ResetIcon
-                        pressed={() =>
-                          this.setState({
-                            showRestartCourse: true
-                          })
-                        }
-                      />
-                    ) : !this.state.isStarted ? (
-                      <StartIcon
-                        pressed={() => {
-                          navigate('VIDEOPLAYER', {
+                    <LongButton
+                      type={
+                        this.state.completed
+                          ? 'RESET'
+                          : !this.state.started
+                          ? 'START'
+                          : 'CONTINUE'
+                      }
+                      pressed={() => {
+                        if (this.state.completed) {
+                          this.setState({ showRestartCourse: true });
+                        } else {
+                          navigate('VIEWLESSON', {
                             url: this.state.nextLessonUrl
                           });
-                        }}
-                      />
-                    ) : (
-                      this.state.isStarted && (
-                        <ContinueIcon
-                          pressed={() =>
-                            navigate('VIDEOPLAYER', {
-                              url: this.state.nextLessonUrl
-                            })
-                          }
-                        />
-                      )
-                    )}
+                        }
+                      }}
+                    />
                   </View>
-                  <View style={{ flex: 1, flexDirection: 'row' }}>
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: 'row',
+                      justifyContent: 'flex-start'
+                    }}
+                  >
                     <TouchableOpacity
                       style={{
-                        flex: 0.5,
-                        alignItems: 'center'
+                        paddingHorizontal: 15
                       }}
                       onPress={() => {
                         this.setState({
@@ -440,7 +377,7 @@ export default class SinglePack extends React.Component {
                       <View
                         style={[styles.centerContent, { flexDirection: 'row' }]}
                       >
-                        <AntIcon
+                        <Icon.AntDesign
                           name={
                             this.state.showInfo ? 'infocirlce' : 'infocirlceo'
                           }
@@ -459,7 +396,6 @@ export default class SinglePack extends React.Component {
                         Info
                       </Text>
                     </TouchableOpacity>
-                    <View style={{ flex: 0.5 }} />
                   </View>
                 </View>
               </View>
@@ -552,14 +488,14 @@ export default class SinglePack extends React.Component {
                       }
                     ]}
                   >
-                    {(this.state.id == 262875 ? false : true) && (
+                    {(this.state.id === 262875 ? false : true) && (
                       <Download_V2
                         entity={{
                           id: this.state.id,
                           content: packsService.getPack(this.state.url, true)
                         }}
                         styles={{
-                          flex: this.state.id == 262875 ? 1 : 0,
+                          flex: this.state.id === 262875 ? 1 : 0,
                           touchable: { flex: 1 },
                           iconSize: {
                             width: sizing.myListButtonSize,
@@ -600,7 +536,7 @@ export default class SinglePack extends React.Component {
                         });
                       }}
                     >
-                      <MaterialIcon
+                      <Icon.MaterialCommunityIcons
                         size={sizing.myListButtonSize}
                         name={'replay'}
                         color={colors.pianoteRed}
@@ -669,7 +605,6 @@ export default class SinglePack extends React.Component {
                 showLength={this.state.isDisplayingLessons ? true : false}
                 showLines={!this.state.isDisplayingLessons}
                 imageWidth={onTablet ? width * 0.225 : width * 0.3}
-                outVideos={this.state.outVideos} // if paging and out of videos
                 navigator={row => this.navigate(row)}
               />
             </View>
@@ -694,7 +629,8 @@ export default class SinglePack extends React.Component {
 
         <NavigationBar currentPage={'SINGLEPACK'} />
         <Modal
-          isVisible={this.state.showResDownload}
+          visible={this.state.showResDownload}
+          transparent={true}
           onDismiss={() => this.modalDismissed}
           style={[
             styles.modalContainer,
@@ -713,8 +649,7 @@ export default class SinglePack extends React.Component {
                 {
                   showResDownload: false
                 },
-                () =>
-                  Platform.OS === 'ios' ? (this.modalDismissed = res) : res()
+                () => (isiOS ? (this.modalDismissed = res) : res())
               )
             )
           }
@@ -739,38 +674,23 @@ export default class SinglePack extends React.Component {
                   {
                     showResDownload: false
                   },
-                  () =>
-                    Platform.OS === 'ios' ? (this.modalDismissed = res) : res()
+                  () => (isiOS ? (this.modalDismissed = res) : res())
                 )
               );
             }}
           />
         </Modal>
-
-        <Modal
-          key={'restartCourse'}
+        <RestartCourse
           isVisible={this.state.showRestartCourse}
-          style={{
-            margin: 0,
-            flex: 1
-          }}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={true}
           onBackButtonPress={() => this.setState({ showRestartCourse: false })}
-        >
-          <RestartCourse
-            hideRestartCourse={() => {
-              this.setState({
-                showRestartCourse: false
-              });
-            }}
-            type='pack'
-            onRestart={() => this.resetProgress()}
-          />
-        </Modal>
+          hideRestartCourse={() => {
+            this.setState({
+              showRestartCourse: false
+            });
+          }}
+          type='pack'
+          onRestart={() => this.resetProgress()}
+        />
       </SafeAreaView>
     );
   }

@@ -1,6 +1,3 @@
-/**
- * forgotPassword
- */
 import React from 'react';
 import {
   View,
@@ -17,10 +14,9 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
-import DeviceInfo from 'react-native-device-info';
 import Back from '../../assets/img/svgs/back';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
-import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
+import Pianote from '../../assets/img/svgs/pianote.svg';
+import GradientFeature from '../../../src/components/GradientFeature.js';
 import { forgotPass } from '../../services/UserDataAuth';
 import CustomModal from '../../modals/CustomModal';
 import Loading from '../../components/Loading';
@@ -28,6 +24,7 @@ import { openInbox } from 'react-native-email-link';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { goBack, navigate } from '../../../AppNavigator';
 
+const isTablet = global.onTablet;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
@@ -41,16 +38,11 @@ export default class ForgotPassword extends React.Component {
   constructor(props) {
     super(props);
     this.forgotPassword - this.forgotPassword.bind(this);
-    this.state = {
-      email: '',
-      secureTextEntry: true
-    };
+    this.state = { email: '' };
   }
 
   forgotPassword = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     this.loadingRef?.toggleLoading();
     this.textInput.clear();
     const response = await forgotPass(this.state.email);
@@ -73,7 +65,7 @@ export default class ForgotPassword extends React.Component {
       <FastImage
         style={{ flex: 1 }}
         resizeMode={FastImage.resizeMode.cover}
-        source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
+        source={require('../../../src/assets/img/imgs/backgroundHands.png')}
       >
         <GradientFeature
           zIndex={0}
@@ -100,7 +92,7 @@ export default class ForgotPassword extends React.Component {
             >
               <View style={localStyles.pianoteContainer}>
                 <View style={localStyles.pianoteInnerContainer}>
-                  <Pianote fill={'#fb1b2f'} />
+                  <Pianote fill={colors.pianoteRed} />
                 </View>
                 <View>
                   <Text
@@ -129,7 +121,6 @@ export default class ForgotPassword extends React.Component {
                     Piano Lessons Experience.
                   </Text>
                 </View>
-
                 <TextInput
                   ref={ref => {
                     this.textInput = ref;
@@ -141,7 +132,6 @@ export default class ForgotPassword extends React.Component {
                   onChangeText={email => this.setState({ email })}
                   style={localStyles.email}
                 />
-
                 <TouchableHighlight
                   underlayColor={'transparent'}
                   onPress={() => {
@@ -153,10 +143,12 @@ export default class ForgotPassword extends React.Component {
                       borderWidth: 2,
                       borderRadius: 50,
                       alignSelf: 'center',
-                      borderColor: '#fb1b2f',
+                      borderColor: colors.pianoteRed,
                       width: onTablet ? '30%' : '50%',
                       backgroundColor:
-                        this.state.email.length > 0 ? '#fb1b2f' : 'transparent'
+                        this.state.email.length > 0
+                          ? colors.pianoteRed
+                          : 'transparent'
                     }
                   ]}
                 >
@@ -165,7 +157,10 @@ export default class ForgotPassword extends React.Component {
                       padding: 10,
                       fontSize: onTablet ? 20 : 14,
                       fontFamily: 'RobotoCondensed-Bold',
-                      color: this.state.email.length > 0 ? 'white' : '#fb1b2f'
+                      color:
+                        this.state.email.length > 0
+                          ? 'white'
+                          : colors.pianoteRed
                     }}
                   >
                     RESET PASSWORD
@@ -278,7 +273,7 @@ const localStyles = StyleSheet.create({
   pianoteInnerContainer: {
     alignSelf: 'center',
     alignItems: 'center',
-    width: DeviceInfo.isTablet() ? '30%' : '50%',
+    width: isTablet ? '30%' : '50%',
     aspectRatio: 177 / 53
   },
   email: {
@@ -286,14 +281,14 @@ const localStyles = StyleSheet.create({
     marginVertical: 20,
     color: 'black',
     borderRadius: 100,
-    fontSize: DeviceInfo.isTablet() ? 20 : 14,
+    fontSize: isTablet ? 20 : 14,
     marginHorizontal: 15,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
   greyText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 16 : 12,
+    fontSize: isTablet ? 16 : 12,
     color: 'grey',
     textAlign: 'center',
     textDecorationLine: 'underline'
