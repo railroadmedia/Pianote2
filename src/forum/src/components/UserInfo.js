@@ -6,6 +6,12 @@ import FastImage from 'react-native-fast-image';
 const onTablet = global.onTablet;
 
 export default class UserInfo extends React.Component {
+  constructor(props) {
+    super(props);
+    let {isDark} = props.route.params;
+    styles = setStyles(isDark);
+  }
+
   componentDidMount = () => {
     console.log('get profile details');
   };
