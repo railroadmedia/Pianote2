@@ -75,8 +75,6 @@
 	<string>Allow Pianote access to your photos to upload a profile picture.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow Pianote access to your photos to upload a profile picture.</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>Allow Pianote access to your data to optimize our in app experience.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>OpenSans-Bold.ttf</string>
