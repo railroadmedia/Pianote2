@@ -41,7 +41,7 @@ import Live from '../../modals/Live';
 import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
-import UserInfo from '/Users/kentonp/Pianote2/src/forum/src/components/UserInfo.js';
+import UserInfo from '../../forum/src/components/UserInfo';
 
 var page = 1;
 const windowDim = Dimensions.get('window');
