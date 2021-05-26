@@ -6,6 +6,7 @@ import Icon from '../assets/icons';
 import { NetworkContext } from '../context/NetworkProvider';
 import { navigate } from '../../AppNavigator';
 import { connect } from 'react-redux';
+import commonService from '../services/common.service';
 
 const onTablet = global.onTablet;
 
@@ -22,7 +23,7 @@ class NavigationBar extends React.Component {
   }
 
   profile = () => {
-    if (this.props.user.profile_picture_url) {
+    if (this.props.user?.profile_picture_url) {
       return (
         <FastImage
           style={{
@@ -100,6 +101,38 @@ class NavigationBar extends React.Component {
                 }
               />
             </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                aspectRatio: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+              onPress={() => {
+                !this.context.isConnected
+                  ? this.context.showNoConnectionAlert()
+                  : navigate('Forum', {
+                      NetworkContext,
+                      tryCall: commonService.tryCall,
+                      rootUrl: commonService.rootUrl,
+                      isDark: true,
+                      BottomNavigator: NavigationBar,
+                      appColor: colors.pianoteRed
+                    });
+              }}
+            >
+              <Text
+                style={{
+                  color: this.state[
+                    this.props.currentPage == 'Forum'
+                      ? 'primaryColor'
+                      : 'secondaryColor'
+                  ]
+                }}
+              >
+                F
+              </Text>
+            </TouchableOpacity>
+
             <TouchableOpacity onPress={() => navigate('DOWNLOADS')}>
               <Icon.MaterialCommunityIcons
                 name={'arrow-collapse-down'}
@@ -121,13 +154,13 @@ class NavigationBar extends React.Component {
               <View
                 style={[
                   localStyles.navIconContainer,
-                  this.props.user.profile_picture_url
+                  this.props.user?.profile_picture_url
                     ? null
                     : styles.centerContent,
                   {
                     borderColor:
                       this.props.currentPage == 'PROFILE' &&
-                      this.props.user.profile_picture_url
+                      this.props.user?.profile_picture_url
                         ? 'white'
                         : 'transparent'
                   }
