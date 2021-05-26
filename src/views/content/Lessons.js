@@ -37,7 +37,6 @@ import {
 import { addToMyList, removeFromMyList } from '../../services/UserActions';
 import RestartCourse from '../../modals/RestartCourse';
 import AddToCalendar from '../../modals/AddToCalendar';
-import ForumProfile from '../../modals/ForumProfile';
 import Live from '../../modals/Live';
 import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 import { NetworkContext } from '../../context/NetworkProvider';
@@ -957,10 +956,6 @@ class Lessons extends React.Component {
           addEventToCalendar={() => {
             this.addEventToCalendar();
           }}
-        />
-        <ForumProfile
-          isVisible={true}
-          hideForumProfile={() => this.setState({ addToCalendarModal: false })}
         />
         <NavigationBar currentPage={'LESSONS'} isMethod={true} />
       </View>
