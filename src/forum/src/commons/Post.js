@@ -1,8 +1,8 @@
 /**
- * PROPS: comment, onEdit, onReplies, onDelete, appColor, isDark
- * comment: comment to be displayed
+ * PROPS: post, onEdit, onReplies, onDelete, appColor, isDark
+ * post: post to be displayed
  * onEdit(): simple navigation to 'Edit' page
- * onDelete(): callback after delete called (for refreshing comments)
+ * onDelete(): callback after delete called (for refreshing posts)
  * onReplies(): simple navigation to 'Replies' page
  */
 
@@ -10,156 +10,129 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 import AccessLevelAvatar from './AccessLevelAvatar';
-
-import { like, likeOn, replies } from '../assets/svgs';
-import {
-  likeComment,
-  disLikeComment,
-  connection
-} from '../services/forum.service';
+import HTMLRenderer from './HTMLRenderer';
+import { like, likeOn } from '../assets/svgs';
+import { likePost, disLikePost, connection } from '../services/forum.service';
 
 let styles;
-export default class Post extends React.PureComponent {
+export default class Post extends React.Component {
   constructor(props) {
     super(props);
+    const { post, isDark, appColor } = props;
     this.state = {
-      isLiked: props.comment.is_liked,
-      likeCount: props.comment.like_count
+      isLiked: post.is_liked,
+      likeCount: post.like_count
     };
-    styles = setStyles(props.isDark);
-  }
-
-  get parseXpValue() {
-    try {
-      let { xp } = this.props.comment.user;
-      if (xp >= 1000000) return `${(xp / 1000000).toFixed(1)} M XP`;
-      if (xp >= 10000) return `${(xp / 10000).toFixed(1)} K XP`;
-      return `${xp} XP`;
-    } catch (e) {
-      return '';
-    }
+    styles = setStyles(isDark, appColor);
   }
 
   toggleLike = () => {
     if (!connection(true)) return;
-    let { id } = this.props.comment;
+    let { id } = this.props.post;
     this.setState(({ isLiked, likeCount }) => {
       if (isLiked) {
         likeCount--;
-        disLikeComment(id);
+        disLikePost(id);
       } else {
         likeCount++;
-        likeComment(id);
+        likePost(id);
       }
       return { likeCount, isLiked: !isLiked };
     });
   };
 
   render() {
-    return <View />;
+    let { isLiked, likeCount } = this.state;
+    let { post, appColor, index, isDark } = this.props;
+
     return (
-      <View style={{ flexDirection: 'row', marginTop: 15 }}>
-        <View style={{ marginHorizontal: 15 }}>
-          <AccessLevelAvatar
-            uri={comment.user['fields.profile_picture_image_url']}
-            height={38}
-            appColor={appColor}
-            tagHeight={4}
-            accessLevelName={comment.user.accessLevelName}
-          />
-          <Text maxFontSizeMultiplier={1} style={styles.xp}>
-            {comment.user ? comment.user.xp_level : ''}
-          </Text>
-          <Text maxFontSizeMultiplier={1} style={styles.xp}>
-            {this.parseXpValue}
+      <View style={{ marginHorizontal: 15, marginBottom: 10 }}>
+        <View style={styles.header}>
+          <View style={styles.userDetails}>
+            <AccessLevelAvatar
+              uri={post.author.avatar_url}
+              height={45}
+              appColor={appColor}
+              tagHeight={4}
+              accessLevelName={post.author.access_level}
+            />
+            <View style={{ marginLeft: 5 }}>
+              <Text style={styles.name}>{post.author.display_name}</Text>
+              <Text style={styles.xp}>
+                {post.author.total_posts} Posts - {post.author.xp_rank} - Level{' '}
+                {post.author.level_rank}
+              </Text>
+            </View>
+          </View>
+          <Text style={styles.xp}>
+            {new Date(post.published_on).toDateString().substring(4)} #{index}
           </Text>
         </View>
-        <View style={{ flex: 1, paddingRight: 15 }}>
-          <View style={styles.commentHeaderContainer}>
-            <Text maxFontSizeMultiplier={1} style={styles.name}>
-              {comment.user['display_name']}
-            </Text>
-          </View>
-          <Text maxFontSizeMultiplier={1} style={styles.comment}>
-            {comment.comment}
-          </Text>
-          <Text maxFontSizeMultiplier={1} style={styles.timeStamp}>
-            {this.lastPostTime}
-          </Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <TouchableOpacity
-              onPress={this.toggleLike}
-              style={{ padding: 5, marginLeft: -5 }}
-            >
-              {(isLiked ? likeOn : like)({
-                height: 20,
-                width: 20,
-                fill: appColor
-              })}
-            </TouchableOpacity>
-            {likeCount > 0 && (
-              <TouchableOpacity
-                testID='showLikesBtn'
-                style={styles.likesNoContainer}
-              >
-                <Text
-                  maxFontSizeMultiplier={1}
-                  style={{ ...styles.likesNoText, color: appColor }}
-                >
-                  {`${likeCount} LIKE${likeCount === 1 ? '' : 'S'}`}
-                </Text>
-              </TouchableOpacity>
-            )}
-            {!!onReplies && (
-              <TouchableOpacity
-                testID='replyBtn'
-                onPress={onReplies}
-                style={{ padding: 5 }}
-              >
-                {replies({ height: 20, width: 20, fill: appColor })}
-              </TouchableOpacity>
-            )}
-          </View>
-          {!!onReplies && !!comment.replies?.length && (
-            <Text style={styles.viewReplies} onPress={onReplies}>
-              VIEW {comment.replies.length} REPL
-              {comment.replies.length === 1 ? 'Y' : 'IES'}
-            </Text>
-          )}
+        <HTMLRenderer
+          html={post.content}
+          customStyle={{ color: isDark ? '#FFFFFF' : '#00101D' }}
+        />
+        <View style={styles.likeContainer}>
+          <TouchableOpacity
+            onPress={this.toggleLike}
+            style={{ padding: 5, marginLeft: -5 }}
+          >
+            {(isLiked ? likeOn : like)({
+              height: 15,
+              width: 15,
+              fill: appColor
+            })}
+          </TouchableOpacity>
+          {likeCount > 0 && <Text style={styles.likesNoText}>{likeCount}</Text>}
+          <TouchableOpacity>
+            <Text style={styles.replyText}>REPLY</Text>
+          </TouchableOpacity>
         </View>
+        {post.author.signature && (
+          <View style={styles.signatureContainer}>
+            <HTMLRenderer
+              html={post.author.signature}
+              customStyle={styles.signature}
+            />
+          </View>
+        )}
       </View>
     );
   }
 }
 
-let setStyles = isDark =>
+let setStyles = (isDark, appColor) =>
   StyleSheet.create({
-    commentHeaderContainer: {
+    header: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between'
     },
+    userDetails: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
     xp: {
-      fontSize: 10,
-      fontFamily: 'RobotoCondensed-Bold',
+      fontSize: 12,
+      fontFamily: 'OpenSans',
       alignSelf: 'center',
-      color: '#445F74'
+      color: isDark ? '#445F74' : '#00101D'
     },
     name: {
-      fontSize: 16,
+      fontSize: 14,
       fontFamily: 'OpenSans-Bold',
       color: isDark ? '#FFFFFF' : '#00101D'
     },
-    comment: {
+    post: {
       fontSize: 14,
       fontFamily: 'OpenSans',
       color: isDark ? '#FFFFFF' : '#00101D'
     },
-    timeStamp: {
-      fontSize: 11,
-      paddingVertical: 5,
-      fontFamily: 'OpenSans',
-      color: '#445F74'
+    likeContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginVertical: 10
     },
     likesNoContainer: {
       padding: 5,
@@ -168,14 +141,24 @@ let setStyles = isDark =>
       backgroundColor: isDark ? '#001f38' : '#97AABE'
     },
     likesNoText: {
-      fontSize: 10,
-      fontFamily: 'OpenSans'
-    },
-    viewReplies: {
       fontSize: 11,
-      paddingVertical: 5,
       fontFamily: 'OpenSans',
-      color: '#445F74',
-      fontWeight: '600'
+      color: appColor,
+      marginRight: 5
+    },
+    replyText: {
+      color: isDark ? '#445F74' : '#00101D',
+      fontSize: 10,
+      fontFamily: 'RobotoCondensed-Bold'
+    },
+    signatureContainer: {
+      borderTopColor: isDark ? '#445F74' : '#00101D',
+      borderTopWidth: 1,
+      paddingVertical: 5
+    },
+    signature: {
+      color: isDark ? '#445F74' : '#00101D',
+      fontFamily: 'OpenSans',
+      fontSize: 10
     }
   });

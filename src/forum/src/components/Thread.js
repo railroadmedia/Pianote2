@@ -60,9 +60,11 @@ export default class Thread extends React.Component {
       <SafeAreaView style={styles.container}>
         <FlatList
           style={styles.container}
-          data={this.state.thread.posts}
+          data={this.state.thread.posts?.slice(0, 10)}
           keyboardShouldPersistTaps='handled'
-          keyExtractor={like => like.id.toString()}
+          keyExtractor={post => post.id.toString()}
+          initialNumToRender={1}
+          maxToRenderPerBatch={10}
           refreshControl={
             <RefreshControl
               colors={[appColor]}
@@ -76,9 +78,10 @@ export default class Thread extends React.Component {
               <Text style={styles.buttonText}>Follow</Text>
             </TouchableOpacity>
           )}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <Post
-              comment={item}
+              post={item}
+              index={index + 1}
               appColor={appColor}
               isDark={isDark}
               onEdit={() => navigate('CRUD')}

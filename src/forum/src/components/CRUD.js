@@ -16,11 +16,15 @@ import {
   View,
   Text,
   ScrollView,
-  TextInput,
+  TextInput
 } from 'react-native';
-import {SafeAreaView} from 'react-navigation';
-import {RichEditor, RichToolbar, actions} from 'react-native-pell-rich-editor';
-import {InsertLinkModal} from '../commons/InsertLinkModal';
+import { SafeAreaView } from 'react-navigation';
+import {
+  RichEditor,
+  RichToolbar,
+  actions
+} from 'react-native-pell-rich-editor';
+import { InsertLinkModal } from '../commons/InsertLinkModal';
 import {
   connection,
   createPost,
@@ -28,7 +32,7 @@ import {
   deletePost,
   deleteThread,
   editPost,
-  updateThread,
+  updateThread
 } from '../services/forum.service';
 
 let styles;
@@ -38,9 +42,9 @@ export default class CRUD extends React.Component {
 
   constructor(props) {
     super(props);
-    let {isDark, appColor, title} = props.route.params;
+    let { isDark, appColor, title } = props.route.params;
     this.state = {
-      title,
+      title
     };
     styles = setStyles(isDark, appColor);
   }
@@ -72,26 +76,26 @@ export default class CRUD extends React.Component {
       discussionId,
       threadId,
       postId,
-      onDone,
+      onDone
     } = this.props.route.params;
 
     let html = await this.richText.current?.getContentHtml();
     if (type === 'thread') {
       if (action === 'create') {
-        createThread(this.state.title, html, discussionId);
+        await createThread(this.state.title, html, discussionId);
       } else {
-        updateThread(threadId, {title: this.state.title});
+        await updateThread(threadId, { title: this.state.title });
       }
     } else {
       if (action === 'create') {
-        createPost({content: html, thread_id: threadId});
+        await createPost({ content: html, thread_id: threadId });
       } else if (action === 'edit') {
-        editPost(postId, html);
+        await editPost(postId, html);
       } else {
-        createPost({
+        await createPost({
           content: html,
           thread_id: threadId,
-          parent_ids: parentIds,
+          parent_ids: parentIds
         });
       }
     }
@@ -101,21 +105,21 @@ export default class CRUD extends React.Component {
 
   onDelete = async () => {
     if (!connection()) return;
-    const {type, threadId, postId, onDone} = this.props.route.params;
+    const { type, threadId, postId, onDone } = this.props.route.params;
 
     if (type === 'thread') {
       await deleteThread(threadId);
       this.props.navigation.goBack();
       this.props.navigation.goBack();
     } else {
-      deletePost(postId);
+      await deletePost(postId);
     }
 
     onDone?.();
   };
 
   render() {
-    const {isDark, appColor, action, type, posts} = this.props.route.params;
+    const { isDark, appColor, action, type, posts } = this.props.route.params;
 
     return (
       <SafeAreaView style={styles.container}>
@@ -143,9 +147,9 @@ export default class CRUD extends React.Component {
           </TouchableOpacity>
         </View>
         <ScrollView
-          style={{flex: 1, margin: 15}}
-          keyboardShouldPersistTaps="handled"
-          contentInsetAdjustmentBehavior="never"
+          style={{ flex: 1, margin: 15 }}
+          keyboardShouldPersistTaps='handled'
+          contentInsetAdjustmentBehavior='never'
         >
           {action === 'reply' || action === 'multiQuote'
             ? posts?.map((post, index) => (
@@ -162,9 +166,9 @@ export default class CRUD extends React.Component {
             <TextInput
               style={styles.titleInput}
               placeholderTextColor={isDark ? '#445F74' : '#00101D'}
-              placeholder="Title"
+              placeholder='Title'
               value={this.state.title}
-              onChangeText={title => this.setState({title})}
+              onChangeText={title => this.setState({ title })}
             />
           )}
           {!(type === 'thread' && action === 'edit') && (
@@ -186,7 +190,7 @@ export default class CRUD extends React.Component {
                   actions.insertOrderedList,
                   actions.insertLink,
                   actions.insertImage,
-                  actions.insertVideo,
+                  actions.insertVideo
                 ]}
               />
               <RichEditor
@@ -225,45 +229,45 @@ let setStyles = (isDark, appColor) =>
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingHorizontal: 15,
-      paddingVertical: 7,
+      paddingVertical: 7
     },
     cancelBtn: {
       fontFamily: 'OpenSans',
       fontSize: 14,
-      color: isDark ? '#445F74' : '#00101D',
+      color: isDark ? '#445F74' : '#00101D'
     },
     actionBtn: {
       fontFamily: 'OpenSans',
       fontSize: 14,
-      color: appColor,
+      color: appColor
     },
     headerTitle: {
       fontFamily: 'OpenSans-Bold',
       fontSize: 16,
-      color: isDark ? '#FFFFFF' : '#000000',
+      color: isDark ? '#FFFFFF' : '#000000'
     },
     container: {
       flex: 1,
-      backgroundColor: isDark ? '#00101D' : '#F7F9FC',
+      backgroundColor: isDark ? '#00101D' : '#F7F9FC'
     },
     richTextEditor: {
-      minHeight: 300,
+      minHeight: 300
     },
     richBar: {
       backgroundColor: '#001424',
       borderColor: '#002039',
-      borderWidth: 4,
+      borderWidth: 4
     },
     flatStyle: {
-      paddingHorizontal: 12,
+      paddingHorizontal: 12
     },
     editorStyle: {
       backgroundColor: '#002039',
-      color: '#ffffff',
+      color: '#ffffff'
     },
     replyEditor: {
       marginBottom: 15,
-      backgroundColor: '#002039',
+      backgroundColor: '#002039'
     },
     deleteBtn: {
       backgroundColor: appColor,
@@ -271,18 +275,18 @@ let setStyles = (isDark, appColor) =>
       minHeight: 50,
       justifyContent: 'center',
       alignItems: 'center',
-      marginHorizontal: 20,
+      marginHorizontal: 20
     },
     deleteBtnText: {
       textAlign: 'center',
       fontFamily: 'RobotoCondensed-Bold',
       fontSize: 15,
-      color: '#FFFFFF',
+      color: '#FFFFFF'
     },
     titleInput: {
       marginBottom: 15,
       backgroundColor: '#002039',
       borderRadius: 5,
-      color: '#FFFFFF',
-    },
+      color: '#FFFFFF'
+    }
   });

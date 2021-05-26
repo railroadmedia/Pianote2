@@ -68,10 +68,10 @@ export const getFollowedThreads = function (discussionId, page = 1) {
     }`
   );
 };
-export const likeComment = function (id) {
+export const likePost = function (id) {
   return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { id });
 };
-export const disLikeComment = function (id) {
+export const disLikePost = function (id) {
   return this.tryCall(`${this.rootUrl}/TBD`, 'DELETE', { id });
 };
 export const updateMessage = function (message) {

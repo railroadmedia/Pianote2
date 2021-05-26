@@ -11,6 +11,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@native-html/iframe-plugin": "^1.1.2",
     "@ptomasroos/react-native-multi-slider": "^2.2.2",
     "@react-native-community/async-storage": "^1.7.1",
     "@react-native-community/blur": "^3.3.1",
@@ -58,6 +59,7 @@
     "react-native-push-notification": "^7.2.3",
     "react-native-reanimated": "^2.0.0",
     "react-native-remote-svg": "git+https://github.com/railroadmedia/react-native-remote-svg.git#bogdan-vol-drumeo-mobile-patches",
+    "react-native-render-html": "^5.1.0",
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "^2.18.1",
     "react-native-splash-screen": "^3.2.0",
