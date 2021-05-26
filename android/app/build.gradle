@@ -131,8 +131,8 @@ android {
         applicationId "com.pianote2"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 93
-        versionName "1.2.3"
+        versionCode 94
+        versionName "1.2.4"
         multiDexEnabled true
     }
     signingConfigs {
