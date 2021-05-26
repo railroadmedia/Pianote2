@@ -22,6 +22,14 @@ export const getAllThreads = function (discussionId, page = 1) {
     }`
   );
 };
+export const getThread = function (threadId, page = 1) {
+  console.log(
+    `${this.rootUrl}/forums/api/thread/show/${threadId}?page=${page}`
+  );
+  return this.tryCall(
+    `${this.rootUrl}/forums/api/thread/show/${threadId}?page=${page}`
+  );
+};
 export const search = function (text) {
   return this.tryCall(`${this.rootUrl}/forums/api/search?term=${text}`);
 };
@@ -50,9 +58,6 @@ export const deleteThread = function (id) {
     `${this.rootUrl}/forums/api/thread/delete/${id}`,
     'DELETE'
   );
-};
-export const getDiscussion = function (page = 1) {
-  return this.tryCall(`${this.rootUrl}/TBD`);
 };
 export const getFollowedThreads = function (discussionId, page = 1) {
   return this.tryCall(

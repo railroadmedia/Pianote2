@@ -8,16 +8,12 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Post from '../commons/Post';
-import {
-  getDiscussions,
-  addReply,
-  connection
-} from '../services/forum.service';
+import { addReply, connection, getThread } from '../services/forum.service';
 
 let styles;
 export default class Thread extends React.Component {
   state = {
-    discussions: [],
+    thread: [],
     refreshing: false
   };
   constructor(props) {
@@ -28,13 +24,15 @@ export default class Thread extends React.Component {
   }
 
   componentDidMount() {
-    this.getDiscussions();
+    this.getThread();
   }
 
-  async getDiscussions() {
+  async getThread() {
     if (connection(true)) {
-      let discussions = await getDiscussions();
-      this.setState({ discussions, refreshing: false });
+      const { threadId } = this.props.route.params;
+      let thread = await getThread(threadId);
+      console.log(thread);
+      this.setState({ thread, refreshing: false });
     }
   }
 
@@ -51,7 +49,6 @@ export default class Thread extends React.Component {
   }
 
   render() {
-    console.log('disc');
     let {
       route: {
         params: { isDark, appColor }
@@ -63,7 +60,7 @@ export default class Thread extends React.Component {
       <SafeAreaView style={styles.container}>
         <FlatList
           style={styles.container}
-          data={this.state.discussions}
+          data={this.state.thread.posts}
           keyboardShouldPersistTaps='handled'
           keyExtractor={like => like.id.toString()}
           refreshControl={
