@@ -155,6 +155,7 @@ export default class CRUD extends React.Component {
           {action === 'reply' || action === 'multiQuote'
             ? posts?.map((post, index) => (
                 <HTMLRenderer
+                  key={index}
                   html={post}
                   customStyle={{ color: isDark ? '#FFFFFF' : '#00101D' }}
                 />

@@ -28,8 +28,7 @@ export default class Post extends React.Component {
     const { post, isDark, appColor } = props;
     this.state = {
       isLiked: post.is_liked_by_viewer,
-      likeCount: post.like_count,
-      showMenu: false
+      likeCount: post.like_count
     };
     styles = setStyles(isDark, appColor);
   }
@@ -50,7 +49,7 @@ export default class Post extends React.Component {
   };
 
   render() {
-    let { isLiked, likeCount, showMenu } = this.state;
+    let { isLiked, likeCount } = this.state;
     let { post, appColor, index, isDark } = this.props;
 
     return (
