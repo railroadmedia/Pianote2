@@ -31,7 +31,7 @@ export default ({
   navigation: { navigate },
   route: {
     params,
-    params: { tryCall, rootUrl, NetworkContext, isDark }
+    params: { tryCall, rootUrl, NetworkContext, isDark, loggesInUserId }
   }
 }) => {
   const networkContext = useContext(NetworkContext);

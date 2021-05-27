@@ -114,10 +114,11 @@ export default class Thread extends React.Component {
   };
 
   renderFLItem = ({ item, index }) => {
-    let { isDark, appColor } = this.props.route.params;
+    let { isDark, appColor, loggesInUserId } = this.props.route.params;
     return (
       <Post
         signShown={this.state.signShown}
+        loggesInUserId={loggesInUserId}
         post={item}
         index={index + 1}
         appColor={appColor}

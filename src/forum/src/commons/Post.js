@@ -7,14 +7,7 @@
  */
 
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Modal,
-  Dimensions
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 import AccessLevelAvatar from './AccessLevelAvatar';
 import HTMLRenderer from './HTMLRenderer';
@@ -32,7 +25,7 @@ export function closeMenu() {
 export default class Post extends React.Component {
   constructor(props) {
     super(props);
-    const { post, isDark, appColor } = props;
+    const { post, isDark, appColor, loggesInUserId } = props;
     this.state = {
       isLiked: post.is_liked_by_viewer,
       likeCount: post.like_count,
@@ -56,49 +49,32 @@ export default class Post extends React.Component {
     });
   };
 
+  renderMenu = () => (
+    <View style={styles.menuContainer}>
+      <View style={styles.menu}>
+        <TouchableOpacity style={styles.menuItemBtn}>
+          <Text style={[styles.menuItem, styles.borderRight]}>Report</Text>
+        </TouchableOpacity>
+        {this.props.loggesInUserId === this.props.post.author_id && (
+          <TouchableOpacity style={styles.menuItemBtn}>
+            <Text style={[styles.menuItem, styles.borderRight]}>Edit</Text>
+          </TouchableOpacity>
+        )}
+        <TouchableOpacity style={styles.menuItemBtn}>
+          <Text style={styles.menuItem}>MultiQuote</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.triangle} />
+    </View>
+  );
+
   render() {
     let { isLiked, likeCount, showMenu } = this.state;
-    let { post, appColor, index, isDark } = this.props;
+    let { post, appColor, index, isDark, signShown } = this.props;
 
     return (
       <>
-        {showMenu && (
-          <View style={styles.menuContainer}>
-            <View style={styles.menu}>
-              <TouchableOpacity style={styles.menuItemBtn}>
-                <Text
-                  style={[
-                    styles.menuItem,
-                    {
-                      borderRightColor: '#00101D',
-                      borderRightWidth: 1
-                    }
-                  ]}
-                >
-                  Report
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.menuItemBtn}>
-                <Text
-                  style={[
-                    styles.menuItem,
-                    {
-                      borderRightColor: '#00101D',
-                      borderRightWidth: 1
-                    }
-                  ]}
-                >
-                  Edit
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.menuItemBtn}>
-                <Text style={styles.menuItem}>MUltiQuote</Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.triangle} />
-          </View>
-        )}
+        {showMenu && this.renderMenu()}
         <TouchableOpacity
           style={[
             styles.container,
@@ -155,7 +131,7 @@ export default class Post extends React.Component {
               <Text style={styles.replyText}>REPLY</Text>
             </TouchableOpacity>
           </View>
-          {post.author.signature && (
+          {signShown && post.author.signature && (
             <View style={styles.signatureContainer}>
               <HTMLRenderer
                 html={post.author.signature}
@@ -172,7 +148,7 @@ export default class Post extends React.Component {
 let setStyles = (isDark, appColor) =>
   StyleSheet.create({
     container: {
-      marginHorizontal: 15,
+      paddingHorizontal: 15,
       marginBottom: 10,
       position: 'relative'
     },
@@ -280,5 +256,9 @@ let setStyles = (isDark, appColor) =>
       borderWidth: 1,
       borderColor: 'red',
       alignItems: 'center'
+    },
+    borderRight: {
+      borderRightColor: '#00101D',
+      borderRightWidth: 1
     }
   });
