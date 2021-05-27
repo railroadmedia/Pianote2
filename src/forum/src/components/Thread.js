@@ -4,117 +4,275 @@ import {
   RefreshControl,
   StyleSheet,
   TouchableOpacity,
-  Text
+  Text,
+  ActivityIndicator,
+  View
 } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
-import Post from '../commons/Post';
-import { addReply, connection, getThread } from '../services/forum.service';
+
+import AsyncStorage from '@react-native-community/async-storage';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import Pagination from '../commons/Pagination';
+import Post, { closeMenu } from '../commons/Post';
+import NavigationHeader from '../commons/NavigationHeader';
+
+import { connection, getThread } from '../services/forum.service';
+
+import { post } from '../assets/svgs';
 
 let styles;
 export default class Thread extends React.Component {
+  page = 1;
+  thread = {};
   state = {
-    thread: [],
+    loading: true,
+    signShown: true,
+    createPostHeight: 0,
+    loadingMore: false,
     refreshing: false
   };
+
   constructor(props) {
     super(props);
     let { isDark, appColor } = props.route.params;
-
     styles = setStyles(isDark, appColor);
   }
 
   componentDidMount() {
-    this.getThread();
+    this.props.navigation.setOptions({
+      header: () => (
+        <NavigationHeader
+          {...this.props}
+          title={this.props.route.params.title}
+          onToggleSign={signShown => this.setState({ signShown })}
+          onDoneEditing={() => {}}
+        />
+      )
+    });
+    const { threadId } = this.props.route.params;
+    Promise.all([getThread(threadId), AsyncStorage.getItem('signShown')]).then(
+      ([thread, signShown]) => {
+        this.thread = thread;
+        this.setState({ loading: false, signShown: !!signShown });
+      }
+    );
   }
 
-  async getThread() {
-    if (connection(true)) {
-      const { threadId } = this.props.route.params;
-      let thread = await getThread(threadId);
-      console.log(thread);
-      this.setState({ thread, refreshing: false });
-    }
-  }
+  navigate = (route, params) =>
+    connection(true) && this.props.navigation.navigate(route, params);
 
-  refresh() {
-    if (connection(true)) {
-      this.setState({ refreshing: true }, () => this.getDiscussions());
-    }
-  }
+  renderFLHeader = () => {
+    let { isDark, appColor } = this.props.route.params;
+    let { loadingMore } = this.state;
+    return (
+      <View
+        style={{
+          borderBottomWidth: 1,
+          borderColor: '#445F74',
+          marginHorizontal: 15,
+          marginBottom: 20
+        }}
+      >
+        <Pagination
+          active={this.page}
+          isDark={isDark}
+          appColor={appColor}
+          length={this.thread.post_count}
+          onChangePage={this.changePage}
+        />
+        {loadingMore && (
+          <ActivityIndicator
+            size='small'
+            color={isDark ? 'white' : 'black'}
+            animating={true}
+            style={{ padding: 15 }}
+          />
+        )}
+      </View>
+    );
+  };
 
-  addDiscussion(discussion) {
-    if (connection(true)) {
-      addReply(discussion);
-    }
-  }
+  renderFLItem = ({ item, index }) => {
+    let { isDark, appColor, loggesInUserId } = this.props.route.params;
+    return (
+      <Post
+        signShown={this.state.signShown}
+        loggesInUserId={loggesInUserId}
+        post={item}
+        index={index + 1 + 10 * (this.page - 1)}
+        appColor={appColor}
+        isDark={isDark}
+        onEdit={() => navigate('CRUD')}
+        onDelete={() => {}}
+        onReplies={() => {}}
+      />
+    );
+  };
+
+  renderFLFooter = () => {
+    let { isDark, appColor } = this.props.route.params;
+    let { createPostHeight, loadingMore } = this.state;
+    return (
+      <View
+        style={{
+          borderTopWidth: 1,
+          borderColor: '#445F74',
+          marginHorizontal: 15,
+          marginBottom: createPostHeight
+        }}
+      >
+        <Pagination
+          active={this.page}
+          isDark={isDark}
+          appColor={appColor}
+          length={this.thread.post_count}
+          onChangePage={this.changePage}
+        />
+        {loadingMore && (
+          <ActivityIndicator
+            size='small'
+            color={isDark ? 'white' : 'black'}
+            animating={true}
+            style={{ padding: 15 }}
+          />
+        )}
+      </View>
+    );
+  };
+
+  refresh = () => {
+    if (!connection()) return;
+    let { threadId } = this.props.route.params;
+    this.setState({ refreshing: true }, () =>
+      getThread(threadId, this.page).then(thread => {
+        this.thread = thread;
+        this.setState({ refreshing: false });
+      })
+    );
+  };
+
+  changePage = page => {
+    if (!connection()) return;
+    let { threadId } = this.props.route.params;
+    this.setState({ loadingMore: true }, () =>
+      getThread(threadId, page).then(thread => {
+        this.page = page;
+        this.thread = thread;
+        this.setState({ loadingMore: false }, () =>
+          this.flatListRef.scrollToOffset({ offset: 0 })
+        );
+      })
+    );
+  };
 
   render() {
-    let {
-      route: {
-        params: { isDark, appColor }
-      },
-      navigation: { navigate }
-    } = this.props;
-
-    return (
-      <SafeAreaView style={styles.container}>
+    let { loading, refreshing } = this.state;
+    let { isDark, appColor, threadId } = this.props.route.params;
+    return loading ? (
+      <ActivityIndicator
+        size='large'
+        color={isDark ? 'white' : 'black'}
+        animating={true}
+        style={styles.loading}
+      />
+    ) : (
+      <TouchableOpacity
+        activeOpacity={1}
+        style={{ flex: 1 }}
+        onPress={closeMenu}
+      >
         <FlatList
-          style={styles.container}
-          data={this.state.thread.posts?.slice(0, 10)}
-          keyboardShouldPersistTaps='handled'
-          keyExtractor={post => post.id.toString()}
-          initialNumToRender={1}
+          windowSize={10}
+          data={this.thread.posts}
+          style={styles.fList}
+          initialNumToRender={10}
           maxToRenderPerBatch={10}
+          onEndReachedThreshold={0.01}
+          removeClippedSubviews={false}
+          keyboardShouldPersistTaps='handled'
+          renderItem={this.renderFLItem}
+          ListHeaderComponent={this.renderFLHeader}
+          keyExtractor={item => item.id.toString()}
+          ref={r => (this.flatListRef = r)}
+          ListEmptyComponent={
+            <Text style={styles.emptyList}>{'No posts.'}</Text>
+          }
+          ListFooterComponent={this.renderFLFooter}
           refreshControl={
             <RefreshControl
-              colors={[appColor]}
-              tintColor={appColor}
-              onRefresh={() => this.refresh()}
-              refreshing={this.state.refreshing}
+              colors={[isDark ? 'white' : 'black']}
+              tintColor={isDark ? 'white' : 'black'}
+              onRefresh={this.refresh}
+              refreshing={refreshing}
             />
           }
-          ListHeaderComponent={() => (
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Follow</Text>
-            </TouchableOpacity>
-          )}
-          renderItem={({ item, index }) => (
-            <Post
-              post={item}
-              index={index + 1}
-              appColor={appColor}
-              isDark={isDark}
-              onEdit={() => navigate('CRUD')}
-              onDelete={() => {}}
-              onReplies={() => {}}
-            />
-          )}
         />
-      </SafeAreaView>
+        <SafeAreaView style={styles.bottomTOpacitySafeArea}>
+          <TouchableOpacity
+            onLayout={({ nativeEvent: { layout } }) =>
+              this.setState({ createPostHeight: layout.height + 15 })
+            }
+            onPress={() =>
+              this.navigate('CRUD', {
+                isDark,
+                appColor,
+                action: 'create',
+                type: 'post',
+                threadId,
+                onDone: this.refresh
+              })
+            }
+            style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}
+          >
+            {post({ height: 25, width: 25, fill: 'white' })}
+          </TouchableOpacity>
+        </SafeAreaView>
+      </TouchableOpacity>
     );
   }
 }
-let setStyles = (isDark, appColor) =>
+let setStyles = isDark =>
   StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: isDark ? '#00101D' : '#F7F9FC'
+    headerContainer: {
+      paddingHorizontal: 15,
+      flexDirection: 'row',
+      backgroundColor: isDark ? '#00101D' : 'white',
+      flexWrap: 'wrap'
     },
-    button: {
-      alignSelf: 'center',
-      paddingVertical: 5,
-      paddingHorizontal: 30,
-      borderColor: appColor,
-      backgroundColor: isDark ? '#00101D' : '#F7F9FC',
-      borderWidth: 2,
-      borderRadius: 25,
-      justifyContent: 'center',
+    headerTOpacity: {
+      paddingVertical: 15,
+      marginRight: 15,
+      borderBottomWidth: 2,
+      borderColor: isDark ? '#00101D' : 'white'
+    },
+    headerText: {
+      fontFamily: 'OpenSans',
+      fontSize: 20,
+      fontWeight: '700',
+      color: '#445F74'
+    },
+    fList: {
+      flex: 1,
+      backgroundColor: isDark ? '#00101D' : 'white'
+    },
+    loading: {
+      flex: 1,
+      backgroundColor: isDark ? '#00101D' : 'white',
       alignItems: 'center'
     },
-    buttonText: {
-      textAlign: 'center',
-      fontFamily: 'RobotoCondensed-Bold',
-      fontSize: 15,
-      color: appColor
+    emptyList: {
+      color: isDark ? '#445F74' : 'black',
+      fontFamily: 'OpenSans',
+      padding: 15
+    },
+    bottomTOpacity: {
+      padding: 15,
+      margin: 15,
+      borderRadius: 99
+    },
+    bottomTOpacitySafeArea: {
+      position: 'absolute',
+      bottom: 0,
+      alignSelf: 'flex-end'
     }
   });

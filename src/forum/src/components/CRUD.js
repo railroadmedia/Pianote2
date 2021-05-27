@@ -34,6 +34,7 @@ import {
   editPost,
   updateThread
 } from '../services/forum.service';
+import HTMLRenderer from '../commons/HTMLRenderer';
 
 let styles;
 
@@ -153,12 +154,10 @@ export default class CRUD extends React.Component {
         >
           {action === 'reply' || action === 'multiQuote'
             ? posts?.map((post, index) => (
-                <RichEditor
+                <HTMLRenderer
                   key={index}
-                  disabled={true}
-                  editorStyle={styles.editorStyle}
-                  style={styles.replyEditor}
-                  initialContentHTML={post}
+                  html={post}
+                  customStyle={{ color: isDark ? '#FFFFFF' : '#00101D' }}
                 />
               ))
             : null}
@@ -181,7 +180,7 @@ export default class CRUD extends React.Component {
                 disabledIconTint={'#bfbfbf'}
                 onPressAddImage={() => this.onInsertLink('Image')}
                 onInsertLink={() => this.onInsertLink('Link')}
-                insertVideo={() => this.onInsertLink('Video')}
+                insertVideo={() => this.onInsertLink('Video')} // TODO: change video to be added in iframe instead of in video tag
                 actions={[
                   actions.setBold,
                   actions.setItalic,

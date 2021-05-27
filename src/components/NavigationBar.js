@@ -116,7 +116,8 @@ class NavigationBar extends React.Component {
                       rootUrl: commonService.rootUrl,
                       isDark: true,
                       BottomNavigator: NavigationBar,
-                      appColor: colors.pianoteRed
+                      appColor: colors.pianoteRed,
+                      loggesInUserId: this.props.user.id
                     });
               }}
             >

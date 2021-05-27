@@ -23,9 +23,6 @@ export const getAllThreads = function (discussionId, page = 1) {
   );
 };
 export const getThread = function (threadId, page = 1) {
-  console.log(
-    `${this.rootUrl}/forums/api/thread/show/${threadId}?page=${page}`
-  );
   return this.tryCall(
     `${this.rootUrl}/forums/api/thread/show/${threadId}?page=${page}`
   );
@@ -34,10 +31,13 @@ export const search = function (text) {
   return this.tryCall(`${this.rootUrl}/forums/api/search?term=${text}`);
 };
 export const followThread = function (id) {
-  return this.tryCall(`${this.rootUrl}/forums/api/thread/follow/${id}`);
+  return this.tryCall(`${this.rootUrl}/forums/api/thread/follow/${id}`, 'PUT');
 };
 export const unfollowThread = function (id) {
-  return this.tryCall(`${this.rootUrl}/forums/api/thread/unfollow/${id}`);
+  return this.tryCall(
+    `${this.rootUrl}/forums/api/thread/unfollow/${id}`,
+    'DELETE'
+  );
 };
 export const createThread = function (title, content, category_id) {
   return this.tryCall(`${this.rootUrl}/forums/api/thread/store`, 'PUT', {
@@ -69,10 +69,10 @@ export const getFollowedThreads = function (discussionId, page = 1) {
   );
 };
 export const likePost = function (id) {
-  return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { id });
+  return this.tryCall(`${this.rootUrl}/forums/api/post/like/${id}`, 'PUT');
 };
 export const disLikePost = function (id) {
-  return this.tryCall(`${this.rootUrl}/TBD`, 'DELETE', { id });
+  return this.tryCall(`${this.rootUrl}/forums/api/post/unlike/${id}`, 'DELETE');
 };
 export const updateMessage = function (message) {
   return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { message });

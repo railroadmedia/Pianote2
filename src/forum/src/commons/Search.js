@@ -10,7 +10,7 @@ import {
 import { search as searchSvg } from '../assets/svgs';
 import { search } from '../services/forum.service';
 import Icon from '../../../assets/icons.js';
-import { Header } from 'react-native-elements';
+// import { Header } from 'react-native-elements';
 import Back from '../../../assets/img/svgs/back.svg';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -61,7 +61,7 @@ export default class Search extends React.Component {
           visible={showSearchResults}
         >
           <SafeAreaView style={styles.modalContainer} activeOpacity={1}>
-            <Header
+            {/* <Header
               backgroundColor={'#00101d'}
               placement='center'
               leftComponent={
@@ -88,7 +88,7 @@ export default class Search extends React.Component {
                   />
                 </TouchableOpacity>
               }
-            />
+            /> */}
             <View style={styles.inputContainer}>
               <View style={styles.searchIcon}>
                 {searchSvg({

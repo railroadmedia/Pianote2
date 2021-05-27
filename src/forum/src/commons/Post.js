@@ -7,7 +7,14 @@
  */
 
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Modal,
+  TextInput,
+  TouchableOpacity
+} from 'react-native';
 
 import AccessLevelAvatar from './AccessLevelAvatar';
 import HTMLRenderer from './HTMLRenderer';
@@ -15,13 +22,22 @@ import { like, likeOn } from '../assets/svgs';
 import { likePost, disLikePost, connection } from '../services/forum.service';
 
 let styles;
+let menusToBeClosed = [];
+
+export function closeMenu() {
+  menusToBeClosed.map(mtbc => mtbc());
+  menusToBeClosed = [];
+}
+
 export default class Post extends React.Component {
   constructor(props) {
     super(props);
     const { post, isDark, appColor } = props;
     this.state = {
-      isLiked: post.is_liked,
-      likeCount: post.like_count
+      isLiked: post.is_liked_by_viewer,
+      likeCount: post.like_count,
+      showMenu: false,
+      showReportModal: false
     };
     styles = setStyles(isDark, appColor);
   }
@@ -41,68 +57,156 @@ export default class Post extends React.Component {
     });
   };
 
+  renderMenu = () => (
+    <View style={styles.menuContainer}>
+      <View style={styles.menu}>
+        <TouchableOpacity
+          style={styles.menuItemBtn}
+          onPress={() => {
+            this.setState({ showReportModal: true });
+          }}
+        >
+          <Text style={[styles.menuItem, styles.borderRight]}>Report</Text>
+        </TouchableOpacity>
+        {this.props.loggesInUserId === this.props.post.author_id && (
+          <TouchableOpacity
+            style={styles.menuItemBtn}
+            onPress={this.props.onEdit}
+          >
+            <Text style={[styles.menuItem, styles.borderRight]}>Edit</Text>
+          </TouchableOpacity>
+        )}
+        <TouchableOpacity
+          style={styles.menuItemBtn}
+          onPress={this.props.onMultiQuote}
+        >
+          <Text style={styles.menuItem}>MultiQuote</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.triangle} />
+    </View>
+  );
+
   render() {
-    let { isLiked, likeCount } = this.state;
-    let { post, appColor, index, isDark } = this.props;
+    let { isLiked, likeCount, showMenu, showReportModal } = this.state;
+    let { post, appColor, index, isDark, signShown, onReply } = this.props;
 
     return (
-      <View style={{ marginHorizontal: 15, marginBottom: 10 }}>
-        <View style={styles.header}>
-          <View style={styles.userDetails}>
-            <AccessLevelAvatar
-              uri={post.author.avatar_url}
-              height={45}
-              appColor={appColor}
-              tagHeight={4}
-              accessLevelName={post.author.access_level}
-            />
-            <View style={{ marginLeft: 5 }}>
-              <Text style={styles.name}>{post.author.display_name}</Text>
-              <Text style={styles.xp}>
-                {post.author.total_posts} Posts - {post.author.xp_rank} - Level{' '}
-                {post.author.level_rank}
-              </Text>
+      <>
+        {showMenu && this.renderMenu()}
+        <TouchableOpacity
+          activeOpacity={1}
+          style={[
+            styles.container,
+            showMenu
+              ? { backgroundColor: '#002039' }
+              : { backgroundColor: '#081825' }
+          ]}
+          onPress={() => {
+            closeMenu();
+            menusToBeClosed.push(() => this.setState({ showMenu: false }));
+            this.setState({ showMenu: true });
+          }}
+        >
+          <View style={styles.header}>
+            <View style={styles.userDetails}>
+              <AccessLevelAvatar
+                uri={post.author.avatar_url}
+                height={45}
+                appColor={appColor}
+                tagHeight={4}
+                accessLevelName={post.author.access_level}
+              />
+              <View style={{ marginLeft: 5 }}>
+                <Text style={styles.name}>{post.author.display_name}</Text>
+                <Text style={styles.xp}>
+                  {post.author.total_posts} Posts - {post.author.xp_rank} -
+                  Level {post.author.level_rank}
+                </Text>
+              </View>
             </View>
+            <Text style={styles.xp}>
+              {new Date(post.published_on).toDateString().substring(4)} #{index}
+            </Text>
           </View>
-          <Text style={styles.xp}>
-            {new Date(post.published_on).toDateString().substring(4)} #{index}
-          </Text>
-        </View>
-        <HTMLRenderer
-          html={post.content}
-          customStyle={{ color: isDark ? '#FFFFFF' : '#00101D' }}
-        />
-        <View style={styles.likeContainer}>
-          <TouchableOpacity
-            onPress={this.toggleLike}
-            style={{ padding: 5, marginLeft: -5 }}
+          <HTMLRenderer
+            html={post.content}
+            customStyle={{ color: isDark ? '#FFFFFF' : '#00101D' }}
+          />
+          <View style={styles.likeContainer}>
+            <TouchableOpacity
+              onPress={this.toggleLike}
+              style={{ padding: 5, marginLeft: -5 }}
+            >
+              {(isLiked ? likeOn : like)({
+                height: 15,
+                width: 15,
+                fill: appColor
+              })}
+            </TouchableOpacity>
+            {likeCount > 0 && (
+              <Text style={styles.likesNoText}>{likeCount}</Text>
+            )}
+            <TouchableOpacity onPress={onReply}>
+              <Text style={styles.replyText}>REPLY</Text>
+            </TouchableOpacity>
+          </View>
+          {signShown && post.author.signature && (
+            <View style={styles.signatureContainer}>
+              <HTMLRenderer
+                html={post.author.signature}
+                customStyle={styles.signature}
+              />
+            </View>
+          )}
+        </TouchableOpacity>
+
+        {showReportModal && (
+          <Modal
+            visible={true}
+            transparent={true}
+            animationType={'slide'}
+            onRequestClose={() => this.setState({ showReportModal: false })}
+            supportedOrientations={['portrait', 'landscape']}
           >
-            {(isLiked ? likeOn : like)({
-              height: 15,
-              width: 15,
-              fill: appColor
-            })}
-          </TouchableOpacity>
-          {likeCount > 0 && <Text style={styles.likesNoText}>{likeCount}</Text>}
-          <TouchableOpacity>
-            <Text style={styles.replyText}>REPLY</Text>
-          </TouchableOpacity>
-        </View>
-        {post.author.signature && (
-          <View style={styles.signatureContainer}>
-            <HTMLRenderer
-              html={post.author.signature}
-              customStyle={styles.signature}
-            />
-          </View>
+            <TouchableOpacity
+              style={styles.modalContainer}
+              onPress={() => this.setState({ showReportModal: false })}
+            >
+              <View style={styles.innerModal}>
+                <Text style={styles.modalTitle}>Report Post</Text>
+                <Text style={styles.modalText}>
+                  What's the reason you're reporting this post?
+                </Text>
+                <TextInput
+                  style={styles.titleInput}
+                  placeholderTextColor={isDark ? '#445F74' : '#00101D'}
+                  placeholder='Report'
+                  onChangeText={text => (this.text = text)}
+                />
+                <View style={styles.btnsContainer}>
+                  <TouchableOpacity style={styles.modalBtn}>
+                    <Text style={styles.modalBtnText}>Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={{ flex: 1 }}>
+                    <Text style={styles.modalBtnText}>Ok</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableOpacity>
+          </Modal>
         )}
-      </View>
+      </>
     );
   }
 }
 
 let setStyles = (isDark, appColor) =>
   StyleSheet.create({
+    container: {
+      paddingHorizontal: 15,
+      marginBottom: 10
+    },
     header: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -160,5 +264,99 @@ let setStyles = (isDark, appColor) =>
       color: isDark ? '#445F74' : '#00101D',
       fontFamily: 'OpenSans',
       fontSize: 10
+    },
+    menuContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: isDark ? '#00101D' : '#F7F9FC',
+      position: 'absolute',
+      top: -35,
+      alignSelf: 'center'
+    },
+    triangle: {
+      width: 0,
+      height: 0,
+      backgroundColor: 'transparent',
+      borderStyle: 'solid',
+      borderTopWidth: 10,
+      borderRightWidth: 5,
+      borderBottomWidth: 0,
+      borderLeftWidth: 5,
+      borderTopColor: appColor,
+      borderRightColor: 'transparent',
+      borderBottomColor: 'transparent',
+      borderLeftColor: 'transparent'
+    },
+    menu: {
+      backgroundColor: appColor,
+      flexDirection: 'row'
+    },
+    menuItemBtn: {
+      width: 70
+    },
+    menuItem: {
+      color: '#FFFFFF',
+      fontFamily: 'OpenSans',
+      fontSize: 10,
+      flex: 1,
+      paddingVertical: 5,
+      textAlign: 'center'
+    },
+    modalContainer: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,.5)',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    borderRight: {
+      borderRightColor: '#00101D',
+      borderRightWidth: 1
+    },
+    titleInput: {
+      marginVertical: 10,
+      backgroundColor: isDark ? '#000000' : '#FFFFFF',
+      borderRadius: 5,
+      color: isDark ? '#FFFFFF' : '#000000',
+      height: 35
+    },
+    innerModal: {
+      backgroundColor: isDark ? '#002039' : '#E1E6EB',
+      padding: 15,
+      paddingBottom: 0,
+      borderRadius: 10
+    },
+    modalTitle: {
+      fontFamily: 'OpenSans-Bold',
+      fontSize: 14,
+      color: isDark ? '#FFFFFF' : '#000000',
+      alignSelf: 'center',
+      textAlign: 'center',
+      padding: 5
+    },
+    modalText: {
+      fontFamily: 'OpenSans',
+      fontSize: 12,
+      color: isDark ? '#FFFFFF' : '#000000',
+      alignSelf: 'center',
+      textAlign: 'center',
+      padding: 5
+    },
+    btnsContainer: {
+      flexDirection: 'row',
+      borderTopWidth: 1,
+      borderTopColor: '#00101D'
+    },
+    modalBtnText: {
+      fontFamily: 'OpenSans',
+      fontSize: 12,
+      color: isDark ? '#FFFFFF' : '#000000',
+      textAlign: 'center',
+      paddingVertical: 10
+    },
+    modalBtn: {
+      flex: 1,
+      borderRightColor: '#00101D',
+      borderRightWidth: 1
     }
   });
