@@ -54,113 +54,62 @@ export default class Post extends React.Component {
     let { post, appColor, index, isDark } = this.props;
 
     return (
-      <>
-        {showMenu && (
-          <Modal
-            transparent={true}
-            visible={showMenu}
-            onRequestClose={() => this.setState({ showMenu: false })}
-            onBackButtonPress={() => this.setState({ showMenu: false })}
+      <TouchableOpacity
+        style={[styles.container]}
+        onPress={() => {
+          this.props.onShowMenu();
+        }}
+      >
+        <View style={styles.header}>
+          <View style={styles.userDetails}>
+            <AccessLevelAvatar
+              uri={post.author.avatar_url}
+              height={45}
+              appColor={appColor}
+              tagHeight={4}
+              accessLevelName={post.author.access_level}
+            />
+            <View style={{ marginLeft: 5 }}>
+              <Text style={styles.name}>{post.author.display_name}</Text>
+              <Text style={styles.xp}>
+                {post.author.total_posts} Posts - {post.author.xp_rank} - Level{' '}
+                {post.author.level_rank}
+              </Text>
+            </View>
+          </View>
+          <Text style={styles.xp}>
+            {new Date(post.published_on).toDateString().substring(4)} #{index}
+          </Text>
+        </View>
+        <HTMLRenderer
+          html={post.content}
+          customStyle={{ color: isDark ? '#FFFFFF' : '#00101D' }}
+        />
+        <View style={styles.likeContainer}>
+          <TouchableOpacity
+            onPress={this.toggleLike}
+            style={{ padding: 5, marginLeft: -5 }}
           >
-            <TouchableOpacity
-              style={styles.modalContainer}
-              onPress={() => this.setState({ showMenu: false })}
-            ></TouchableOpacity>
-          </Modal>
-        )}
-        {showMenu && (
-          <View style={styles.menuContainer}>
-            <View style={styles.menu}>
-              <TouchableOpacity style={styles.menuItemBtn}>
-                <Text
-                  style={[
-                    styles.menuItem,
-                    { borderRightColor: '#00101D', borderRightWidth: 1 }
-                  ]}
-                >
-                  Report
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.menuItemBtn}>
-                <Text
-                  style={[
-                    styles.menuItem,
-                    { borderRightColor: '#00101D', borderRightWidth: 1 }
-                  ]}
-                >
-                  Edit
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.menuItemBtn}>
-                <Text style={styles.menuItem}>MUltiQuote</Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.triangle} />
+            {(isLiked ? likeOn : like)({
+              height: 15,
+              width: 15,
+              fill: appColor
+            })}
+          </TouchableOpacity>
+          {likeCount > 0 && <Text style={styles.likesNoText}>{likeCount}</Text>}
+          <TouchableOpacity>
+            <Text style={styles.replyText}>REPLY</Text>
+          </TouchableOpacity>
+        </View>
+        {post.author.signature && (
+          <View style={styles.signatureContainer}>
+            <HTMLRenderer
+              html={post.author.signature}
+              customStyle={styles.signature}
+            />
           </View>
         )}
-        <TouchableOpacity
-          style={[
-            styles.container,
-            showMenu
-              ? { backgroundColor: '#002039' }
-              : { backgroundColor: '#081825' }
-          ]}
-          onPress={() => this.setState({ showMenu: true })}
-        >
-          <View style={styles.header}>
-            <View style={styles.userDetails}>
-              <AccessLevelAvatar
-                uri={post.author.avatar_url}
-                height={45}
-                appColor={appColor}
-                tagHeight={4}
-                accessLevelName={post.author.access_level}
-              />
-              <View style={{ marginLeft: 5 }}>
-                <Text style={styles.name}>{post.author.display_name}</Text>
-                <Text style={styles.xp}>
-                  {post.author.total_posts} Posts - {post.author.xp_rank} -
-                  Level {post.author.level_rank}
-                </Text>
-              </View>
-            </View>
-            <Text style={styles.xp}>
-              {new Date(post.published_on).toDateString().substring(4)} #{index}
-            </Text>
-          </View>
-          <HTMLRenderer
-            html={post.content}
-            customStyle={{ color: isDark ? '#FFFFFF' : '#00101D' }}
-          />
-          <View style={styles.likeContainer}>
-            <TouchableOpacity
-              onPress={this.toggleLike}
-              style={{ padding: 5, marginLeft: -5 }}
-            >
-              {(isLiked ? likeOn : like)({
-                height: 15,
-                width: 15,
-                fill: appColor
-              })}
-            </TouchableOpacity>
-            {likeCount > 0 && (
-              <Text style={styles.likesNoText}>{likeCount}</Text>
-            )}
-            <TouchableOpacity>
-              <Text style={styles.replyText}>REPLY</Text>
-            </TouchableOpacity>
-          </View>
-          {post.author.signature && (
-            <View style={styles.signatureContainer}>
-              <HTMLRenderer
-                html={post.author.signature}
-                customStyle={styles.signature}
-              />
-            </View>
-          )}
-        </TouchableOpacity>
-      </>
+      </TouchableOpacity>
     );
   }
 }
@@ -229,52 +178,5 @@ let setStyles = (isDark, appColor) =>
       color: isDark ? '#445F74' : '#00101D',
       fontFamily: 'OpenSans',
       fontSize: 10
-    },
-    menuContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: isDark ? '#00101D' : '#F7F9FC',
-      position: 'absolute',
-      top: -35,
-      alignSelf: 'center'
-    },
-    triangle: {
-      width: 0,
-      height: 0,
-      backgroundColor: 'transparent',
-      borderStyle: 'solid',
-      borderTopWidth: 10,
-      borderRightWidth: 5,
-      borderBottomWidth: 0,
-      borderLeftWidth: 5,
-      borderTopColor: appColor,
-      borderRightColor: 'transparent',
-      borderBottomColor: 'transparent',
-      borderLeftColor: 'transparent'
-    },
-    menu: {
-      backgroundColor: appColor,
-      flexDirection: 'row'
-    },
-    menuItemBtn: {
-      width: 70
-    },
-    menuItem: {
-      color: '#FFFFFF',
-      fontFamily: 'OpenSans',
-      fontSize: 10,
-      flex: 1,
-      paddingVertical: 5,
-      textAlign: 'center'
-    },
-    modalContainer: {
-      flex: 1,
-      height: '100%',
-      width: '100%',
-      backgroundColor: 'transparent',
-      borderWidth: 1,
-      borderColor: 'red',
-      alignItems: 'center'
     }
   });
