@@ -139,7 +139,7 @@ export default class HeaderMenu extends React.Component {
     let { isDark } = this.props;
     return (
       <>
-        <TouchableOpacity style={{ padding: 10 }} onPress={this.toggleModal}>
+        <TouchableOpacity style={{ padding: 15 }} onPress={this.toggleModal}>
           {moderate({ width: 20, fill: isDark ? 'white' : 'black' })}
         </TouchableOpacity>
         <Modal
