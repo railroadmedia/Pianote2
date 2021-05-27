@@ -100,7 +100,12 @@ export default class Post extends React.Component {
           </View>
         )}
         <TouchableOpacity
-          style={[styles.container]}
+          style={[
+            styles.container,
+            showMenu
+              ? { backgroundColor: '#002039' }
+              : { backgroundColor: '#081825' }
+          ]}
           onPress={() => {
             closeMenu();
             menusToBeClosed.push(() => this.setState({ showMenu: false }));
