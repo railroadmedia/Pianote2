@@ -34,6 +34,7 @@ import {
   editPost,
   updateThread
 } from '../services/forum.service';
+import HTMLRenderer from '../commons/HTMLRenderer';
 
 let styles;
 
@@ -153,12 +154,9 @@ export default class CRUD extends React.Component {
         >
           {action === 'reply' || action === 'multiQuote'
             ? posts?.map((post, index) => (
-                <RichEditor
-                  key={index}
-                  disabled={true}
-                  editorStyle={styles.editorStyle}
-                  style={styles.replyEditor}
-                  initialContentHTML={post}
+                <HTMLRenderer
+                  html={post}
+                  customStyle={{ color: isDark ? '#FFFFFF' : '#00101D' }}
                 />
               ))
             : null}
