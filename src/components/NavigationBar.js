@@ -122,20 +122,16 @@ class NavigationBar extends React.Component {
                     });
               }}
             >
-              <Text
-                style={{
-                  fontSize: onTablet ? 36 : 28,
-                  color: this.state[
-                    this.props.currentPage == 'Forum'
-                      ? 'primaryColor'
-                      : 'secondaryColor'
-                  ],
-                }}
-              >
-                F
-              </Text>
+              <Icon.Ionicons
+                name={'chatbubbles-outline'}
+                size={onTablet ? 40 : 30}
+                color={
+                  this.props.currentPage === 'FORUM'
+                    ? this.state.primaryColor
+                    : this.state.secondaryColor
+                }
+              />
             </TouchableOpacity>
-
             <TouchableOpacity onPress={() => navigate('DOWNLOADS')}>
               <Icon.MaterialCommunityIcons
                 name={'arrow-collapse-down'}
