@@ -106,37 +106,7 @@ export default ({
           initialParams={params}
           options={{ title: 'Create Discussion', headerShown: false }}
         />
-        <Stack.Screen
-          name='Thread'
-          component={Thread}
-          options={({ navigation, route: { params } }) => ({
-            headerRight: () => (
-              <HeaderMenu
-                title={params.title}
-                key={isDark}
-                isDark={isDark}
-                locked={params.locked}
-                pinned={params.pinned}
-                is_followed={params.is_followed}
-                id={params.id}
-                onEdit={() =>
-                  navigate('CRUD', {
-                    type: 'thread',
-                    action: 'edit',
-                    threadId: params.threadId,
-                    title: params.title,
-                    onDone: params.onDone
-                  })
-                }
-                onForumRules={() => navigate('Thread', { forumRules: true })}
-                setHeaderTitle={headerTitle =>
-                  navigation.setOptions({ headerTitle })
-                }
-              />
-            )
-          })}
-          initialParams={params}
-        />
+        <Stack.Screen name='Thread' component={Thread} initialParams={params} />
       </Stack.Navigator>
     </KeyboardAvoidingView>
   );
