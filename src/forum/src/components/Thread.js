@@ -12,9 +12,9 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import HeaderMenu from '../commons/HeaderMenu';
 import Pagination from '../commons/Pagination';
 import Post, { closeMenu } from '../commons/Post';
+import NavigationHeader from '../commons/NavigationHeader';
 
 import { connection, getThread } from '../services/forum.service';
 
@@ -39,11 +39,19 @@ export default class Thread extends React.Component {
   }
 
   componentDidMount() {
+    this.props.navigation.setOptions({
+      header: () => (
+        <NavigationHeader
+          {...this.props}
+          title={this.props.route.params.title}
+          onToggleSign={signShown => this.setState({ signShown })}
+        />
+      )
+    });
     const { threadId } = this.props.route.params;
     Promise.all([getThread(threadId), AsyncStorage.getItem('signShown')]).then(
       ([thread, signShown]) => {
         this.thread = thread;
-        this.setHeader({ ...this.props.route.params, ...thread });
         this.setState({ loading: false, signShown: !!signShown });
       }
     );
@@ -51,34 +59,6 @@ export default class Thread extends React.Component {
 
   navigate = (route, params) =>
     connection(true) && this.props.navigation.navigate(route, params);
-
-  setHeader = params => {
-    let { navigation } = this.props;
-    navigation.setOptions({
-      headerRight: () => (
-        <HeaderMenu
-          title={params.title}
-          isDark={params.isDark}
-          locked={params.locked}
-          pinned={params.pinned}
-          is_followed={params.is_followed}
-          id={params.id}
-          onEdit={() =>
-            navigate('CRUD', {
-              type: 'thread',
-              action: 'edit',
-              threadId: params.threadId,
-              title: params.title,
-              onDone: params.onDone
-            })
-          }
-          onForumRules={() => navigate('Thread', { forumRules: true })}
-          setHeaderTitle={headerTitle => navigation.setOptions({ headerTitle })}
-          onToggleSign={signShown => this.setState({ signShown })}
-        />
-      )
-    });
-  };
 
   renderFLHeader = () => {
     let { isDark, appColor } = this.props.route.params;

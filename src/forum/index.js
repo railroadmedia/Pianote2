@@ -12,11 +12,7 @@ import Threads from './src/components/Threads';
 import Thread from './src/components/Thread';
 import Discussions from './src/components/Discussions';
 
-import Search from '../../src/forum/src/commons/Search.js';
-
-import HeaderMenu from './src/commons/HeaderMenu';
-
-import { arrowLeft } from './src/assets/svgs';
+import NavigationHeader from './src/commons/NavigationHeader';
 
 import { setForumService } from './src/services/forum.service';
 
@@ -44,58 +40,23 @@ export default ({
       <Stack.Navigator
         screenOptions={({ navigation }) => ({
           gestureEnabled: false,
-          transitionSpec: { open: timingAnim, close: timingAnim },
-          headerStyle: {
-            backgroundColor: isDark ? '#00101d' : 'white',
-            elevation: 0,
-            shadowColor: 'transparent'
-          },
-          headerTintColor: isDark ? 'white' : 'black',
-          headerBackTitleVisible: false,
-          headerTitleStyle: {
-            fontFamily: 'OpenSans',
-            fontSize: 20,
-            fontWeight: '900'
-          },
-          headerLeft: () => (
-            <TouchableOpacity
-              style={{ paddingHorizontal: 15 }}
-              onPress={navigation.goBack}
-            >
-              {arrowLeft({
-                height: 20,
-                fill: isDark ? 'white' : 'black'
-              })}
-            </TouchableOpacity>
-          )
+          transitionSpec: { open: timingAnim, close: timingAnim }
         })}
       >
         <Stack.Screen
           name='Discussions'
           component={Discussions}
-          options={{
-            title: 'Forums',
-            headerRight: () => (
-              <HeaderMenu
-                key={isDark}
-                isDark={isDark}
-                onForumRules={() => navigate('Thread', { forumRules: true })}
-              />
-            )
-          }}
+          options={props => ({
+            header: () => <NavigationHeader {...props} title={'Forums'} />
+          })}
           initialParams={params}
         />
         <Stack.Screen
           name='Threads'
           component={Threads}
-          options={({ route: { params } }) => ({
-            title: params.title,
-            headerRight: () => (
-              <HeaderMenu
-                key={isDark}
-                isDark={isDark}
-                onForumRules={() => navigate('Thread', { forumRules: true })}
-              />
+          options={props => ({
+            header: () => (
+              <NavigationHeader {...props} title={props.route.params.title} />
             )
           })}
           initialParams={params}
@@ -104,14 +65,13 @@ export default ({
           name='CRUD'
           component={CRUD}
           initialParams={params}
-          options={{ title: 'Create Discussion', headerShown: false }}
+          options={props => ({
+            header: () => (
+              <NavigationHeader {...props} title={props.route.params.action} />
+            )
+          })}
         />
-        <Stack.Screen
-          name='Thread'
-          component={Thread}
-          initialParams={params}
-          options={{ title: '' }}
-        />
+        <Stack.Screen name='Thread' component={Thread} initialParams={params} />
       </Stack.Navigator>
     </KeyboardAvoidingView>
   );
