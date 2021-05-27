@@ -77,7 +77,9 @@ export default class HeaderMenu extends React.Component {
         <View style={{ marginRight: 5 }}>
           {!!pinned && pin({ width: 10, fill: isDark ? 'white' : 'black' })}
         </View>
-        <Text style={styles.headerTitleText}>{title}</Text>
+        <Text style={styles.headerTitleText} numberOfLines={1}>
+          {title}
+        </Text>
       </View>
     );
   };
@@ -89,7 +91,10 @@ export default class HeaderMenu extends React.Component {
   toggleSign = () =>
     this.setState(
       ({ signShown }) => ({ signShown: !signShown, showOptions: false }),
-      () => AsyncStorage.setItem('signShown', this.state.signShown ? '' : '1')
+      () => {
+        this.props.onToggleSign(this.state.signShown);
+        AsyncStorage.setItem('signShown', this.state.signShown ? '' : '1');
+      }
     );
 
   toggleLock = () =>
@@ -135,7 +140,7 @@ export default class HeaderMenu extends React.Component {
     return (
       <>
         <TouchableOpacity style={{ padding: 10 }} onPress={this.toggleModal}>
-          {moderate({ width: 15, fill: isDark ? 'white' : 'black' })}
+          {moderate({ width: 20, fill: isDark ? 'white' : 'black' })}
         </TouchableOpacity>
         <Modal
           animationType={'slide'}
@@ -168,7 +173,8 @@ let setStyles = isDark =>
     headerTitleText: {
       fontFamily: 'OpenSans-ExtraBold',
       fontSize: 20,
-      color: isDark ? 'white' : 'black'
+      color: isDark ? 'white' : 'black',
+      paddingHorizontal: 20
     },
     optionsContainer: {
       flex: 1,
