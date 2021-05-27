@@ -38,10 +38,11 @@ export default ({
       style={{ flex: 1, backgroundColor: isDark ? '#00101d' : 'white' }}
     >
       <Stack.Navigator
-        screenOptions={({ navigation }) => ({
+        headerMode={'screen'}
+        screenOptions={{
           gestureEnabled: false,
           transitionSpec: { open: timingAnim, close: timingAnim }
-        })}
+        }}
       >
         <Stack.Screen
           name='Discussions'
@@ -65,11 +66,7 @@ export default ({
           name='CRUD'
           component={CRUD}
           initialParams={params}
-          options={props => ({
-            header: () => (
-              <NavigationHeader {...props} title={props.route.params.action} />
-            )
-          })}
+          options={{ headerShown: false }}
         />
         <Stack.Screen name='Thread' component={Thread} initialParams={params} />
       </Stack.Navigator>

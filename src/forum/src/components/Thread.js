@@ -45,6 +45,7 @@ export default class Thread extends React.Component {
           {...this.props}
           title={this.props.route.params.title}
           onToggleSign={signShown => this.setState({ signShown })}
+          onDoneEditing={() => {}}
         />
       )
     });

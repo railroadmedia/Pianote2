@@ -115,7 +115,7 @@ export default class NavigationHeader extends React.Component {
             action: 'edit',
             threadId,
             title,
-            onDone: () => {}
+            onDone: this.props.onDoneEditing
           })
       );
     }
