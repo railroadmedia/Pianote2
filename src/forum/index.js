@@ -12,6 +12,8 @@ import Threads from './src/components/Threads';
 import Thread from './src/components/Thread';
 import Discussions from './src/components/Discussions';
 
+import Search from '../../src/forum/src/commons/Search.js';
+
 import HeaderMenu from './src/commons/HeaderMenu';
 
 import { arrowLeft } from './src/assets/svgs';

@@ -1,6 +1,6 @@
 import React from 'react';
 import FastImage from 'react-native-fast-image';
-import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Icon from '../assets/icons';
 import { NetworkContext } from '../context/NetworkProvider';
@@ -110,7 +110,7 @@ class NavigationBar extends React.Component {
               onPress={() => {
                 !this.context.isConnected
                   ? this.context.showNoConnectionAlert()
-                  : navigate('Forum', {
+                  : navigate('FORUM', {
                       NetworkContext,
                       tryCall: commonService.tryCall,
                       rootUrl: commonService.rootUrl,
@@ -120,19 +120,16 @@ class NavigationBar extends React.Component {
                     });
               }}
             >
-              <Text
-                style={{
-                  color: this.state[
-                    this.props.currentPage == 'Forum'
-                      ? 'primaryColor'
-                      : 'secondaryColor'
-                  ]
-                }}
-              >
-                F
-              </Text>
+              <Icon.Ionicons
+                name={'chatbubbles-outline'}
+                size={onTablet ? 40 : 30}
+                color={
+                  this.props.currentPage === 'FORUM'
+                    ? this.state.primaryColor
+                    : this.state.secondaryColor
+                }
+              />
             </TouchableOpacity>
-
             <TouchableOpacity onPress={() => navigate('DOWNLOADS')}>
               <Icon.MaterialCommunityIcons
                 name={'arrow-collapse-down'}
