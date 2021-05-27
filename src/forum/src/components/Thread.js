@@ -14,7 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import HeaderMenu from '../commons/HeaderMenu';
 import Pagination from '../commons/Pagination';
-import Post from '../commons/Post';
+import Post, { closeMenu } from '../commons/Post';
 
 import { connection, getThread } from '../services/forum.service';
 
@@ -196,15 +196,19 @@ export default class Thread extends React.Component {
         style={styles.loading}
       />
     ) : (
-      <>
+      <TouchableOpacity
+        activeOpacity={1}
+        style={{ flex: 1 }}
+        onPress={closeMenu}
+      >
         <FlatList
           windowSize={10}
           data={this.thread.posts}
           style={styles.fList}
-          initialNumToRender={1}
+          initialNumToRender={10}
           maxToRenderPerBatch={10}
           onEndReachedThreshold={0.01}
-          removeClippedSubviews={true}
+          removeClippedSubviews={false}
           keyboardShouldPersistTaps='handled'
           renderItem={this.renderFLItem}
           ListHeaderComponent={this.renderFLHeader}
@@ -243,7 +247,7 @@ export default class Thread extends React.Component {
             {post({ height: 25, width: 25, fill: 'white' })}
           </TouchableOpacity>
         </SafeAreaView>
-      </>
+      </TouchableOpacity>
     );
   }
 }
