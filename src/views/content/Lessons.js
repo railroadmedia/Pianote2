@@ -41,7 +41,7 @@ import Live from '../../modals/Live';
 import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
-import UserInfo from '../../forum/src/components/UserInfo';
+import UserInfo from '/Users/kentonp/Pianote2/src/forum/src/components/UserInfo.js';
 
 var page = 1;
 const windowDim = Dimensions.get('window');
@@ -965,6 +965,44 @@ class Lessons extends React.Component {
           isDark={true}
           appName={'PIANOTE'}
           appColor={colors.pianoteRed}
+          postDict={{
+            author_access_level: 'piano',
+            author_avatar_url:
+              'https://d2vyvo0tyx8ig5.cloudfront.net/avatars/412470_1610337691197-1610337692-412470.jpg',
+            author_display_name: 'Mark Nicholson',
+            author_id: 412470,
+            category: 'General Piano Discussion',
+            category_id: 1,
+            category_slug: 'general-piano-discussion',
+            created_at: '2021-01-26 02:43:27',
+            deleted_at: null,
+            id: 1886,
+            is_followed: 0,
+            is_read: 0,
+            last_post_id: 36625,
+            last_post_published_on: '2021-03-04 19:04:10',
+            last_post_user_id: 405877,
+            latest_post: {
+              id: 36625,
+              created_at: '2021-03-04 19:04:10',
+              created_at_diff: '2 months ago',
+              author_id: 405877,
+              author_display_name: 'Michael F'
+            },
+            locked: 0,
+            mobile_app_url:
+              'http://staging.pianote.com/forums/api/thread/show/1886',
+            pinned: 0,
+            post_count: 60,
+            published_on: '2021-01-26 02:43:27',
+            published_on_formatted: 'Jan 26, 2021',
+            slug: 'show-us-your-workspaces',
+            state: 'published',
+            title: 'Show Us Your Workspaces!',
+            updated_at: '2021-01-26 02:43:27',
+            version_master_id: null,
+            version_saved_at: null
+          }}
           data={{
             totalXP: 12232,
             totalPosts: 923,
