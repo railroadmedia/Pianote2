@@ -106,7 +106,12 @@ export default ({
           initialParams={params}
           options={{ title: 'Create Discussion', headerShown: false }}
         />
-        <Stack.Screen name='Thread' component={Thread} initialParams={params} />
+        <Stack.Screen
+          name='Thread'
+          component={Thread}
+          initialParams={params}
+          options={{ title: '' }}
+        />
       </Stack.Navigator>
     </KeyboardAvoidingView>
   );

@@ -171,10 +171,10 @@ export default class HeaderMenu extends React.Component {
 let setStyles = isDark =>
   StyleSheet.create({
     headerTitleText: {
-      fontFamily: 'OpenSans-ExtraBold',
+      fontWeight: '900',
       fontSize: 20,
       color: isDark ? 'white' : 'black',
-      paddingHorizontal: 20
+      fontFamily: 'OpenSans'
     },
     optionsContainer: {
       flex: 1,

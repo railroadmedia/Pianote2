@@ -31,10 +31,13 @@ export const search = function (text) {
   return this.tryCall(`${this.rootUrl}/forums/api/search?term=${text}`);
 };
 export const followThread = function (id) {
-  return this.tryCall(`${this.rootUrl}/forums/api/thread/follow/${id}`);
+  return this.tryCall(`${this.rootUrl}/forums/api/thread/follow/${id}`, 'PUT');
 };
 export const unfollowThread = function (id) {
-  return this.tryCall(`${this.rootUrl}/forums/api/thread/unfollow/${id}`);
+  return this.tryCall(
+    `${this.rootUrl}/forums/api/thread/unfollow/${id}`,
+    'DELETE'
+  );
 };
 export const createThread = function (title, content, category_id) {
   return this.tryCall(`${this.rootUrl}/forums/api/thread/store`, 'PUT', {

@@ -39,11 +39,11 @@ export default class Thread extends React.Component {
   }
 
   componentDidMount() {
-    this.setHeader();
     const { threadId } = this.props.route.params;
     Promise.all([getThread(threadId), AsyncStorage.getItem('signShown')]).then(
       ([thread, signShown]) => {
         this.thread = thread;
+        this.setHeader({ ...this.props.route.params, ...thread });
         this.setState({ loading: false, signShown: !!signShown });
       }
     );
@@ -52,14 +52,12 @@ export default class Thread extends React.Component {
   navigate = (route, params) =>
     connection(true) && this.props.navigation.navigate(route, params);
 
-  setHeader = () => {
+  setHeader = params => {
     let { navigation } = this.props;
-    let { params } = this.props.route;
     navigation.setOptions({
       headerRight: () => (
         <HeaderMenu
           title={params.title}
-          key={params.isDark}
           isDark={params.isDark}
           locked={params.locked}
           pinned={params.pinned}
