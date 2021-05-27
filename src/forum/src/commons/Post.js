@@ -29,7 +29,8 @@ export default class Post extends React.Component {
     this.state = {
       isLiked: post.is_liked_by_viewer,
       likeCount: post.like_count,
-      showMenu: false
+      showMenu: false,
+      showReportModal: false
     };
     styles = setStyles(isDark, appColor);
   }
@@ -52,15 +53,24 @@ export default class Post extends React.Component {
   renderMenu = () => (
     <View style={styles.menuContainer}>
       <View style={styles.menu}>
-        <TouchableOpacity style={styles.menuItemBtn}>
+        <TouchableOpacity
+          style={styles.menuItemBtn}
+          onPress={() => this.setState({ showReportModal: true })}
+        >
           <Text style={[styles.menuItem, styles.borderRight]}>Report</Text>
         </TouchableOpacity>
         {this.props.loggesInUserId === this.props.post.author_id && (
-          <TouchableOpacity style={styles.menuItemBtn}>
+          <TouchableOpacity
+            style={styles.menuItemBtn}
+            onPress={this.props.onEdit}
+          >
             <Text style={[styles.menuItem, styles.borderRight]}>Edit</Text>
           </TouchableOpacity>
         )}
-        <TouchableOpacity style={styles.menuItemBtn}>
+        <TouchableOpacity
+          style={styles.menuItemBtn}
+          onPress={this.props.onMultiQuote}
+        >
           <Text style={styles.menuItem}>MultiQuote</Text>
         </TouchableOpacity>
       </View>
@@ -76,6 +86,7 @@ export default class Post extends React.Component {
       <>
         {showMenu && this.renderMenu()}
         <TouchableOpacity
+          activeOpacity={1}
           style={[
             styles.container,
             showMenu
