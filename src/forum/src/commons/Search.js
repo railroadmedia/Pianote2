@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, StyleSheet, Modal } from 'react-native';
+import { View, TextInput, Text, StyleSheet, Modal } from 'react-native';
 import { search as searchSvg } from '../assets/svgs';
 
 import { search } from '../services/forum.service';
@@ -45,11 +45,11 @@ export default class Search extends React.Component {
           animationType={'fade'}
           onRequestClose={this.toggleSearchResults}
           supportedOrientations={['portrait', 'landscape']}
-          visible={showSearchResults}
+          visible={true} // showSearchResults
         >
-          {/*
-          Code for the entire search page goes here
-          */}
+          <View style={styles.modalContainer} activeOpacity={1}>
+            <Text>hello</Text>
+          </View>
         </Modal>
       </View>
     );

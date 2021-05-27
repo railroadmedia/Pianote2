@@ -168,7 +168,7 @@ export default () => (
         <Stack.Screen name='SEARCH' component={Search} />
         <Stack.Screen name='PACKS' component={Packs} />
         <Stack.Screen
-          name='Forum'
+          name='FORUM'
           component={Forum}
           options={{ gestureEnabled: false }}
         />

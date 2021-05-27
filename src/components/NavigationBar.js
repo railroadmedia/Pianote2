@@ -1,11 +1,11 @@
 import React from 'react';
 import FastImage from 'react-native-fast-image';
-import {View, TouchableOpacity, StyleSheet} from 'react-native';
-import {SafeAreaView} from 'react-navigation';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import Icon from '../assets/icons';
-import {NetworkContext} from '../context/NetworkProvider';
-import {navigate} from '../../AppNavigator';
-import {connect} from 'react-redux';
+import { NetworkContext } from '../context/NetworkProvider';
+import { navigate } from '../../AppNavigator';
+import { connect } from 'react-redux';
 import commonService from '../services/common.service';
 
 const onTablet = global.onTablet;
@@ -18,7 +18,7 @@ class NavigationBar extends React.Component {
       secondaryColor: this.props.isMethod
         ? colors.pianoteGrey
         : colors.secondBackground,
-      primaryColor: this.props.isMethod ? colors.pianoteRed : 'white',
+      primaryColor: this.props.isMethod ? colors.pianoteRed : 'white'
     };
   }
 
@@ -31,9 +31,9 @@ class NavigationBar extends React.Component {
             borderRadius: 100,
             backgroundColor: this.props.isMethod
               ? colors.pianoteGrey
-              : colors.secondBackground,
+              : colors.secondBackground
           }}
-          source={{uri: this.props.user.profile_picture_url}}
+          source={{ uri: this.props.user.profile_picture_url }}
           resizeMode={FastImage.resizeMode.cover}
         />
       );
@@ -59,15 +59,13 @@ class NavigationBar extends React.Component {
           left: 'never',
           right: 'never',
           top: 'never',
-          bottom: this.props.pad ? 'never' : 'always',
+          bottom: this.props.pad ? 'never' : 'always'
         }}
         style={{
-          backgroundColor: this.props.isMethod
-            ? 'black'
-            : colors.mainBackground,
+          backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground
         }}
       >
-        <View style={{justifyContent: 'center'}}>
+        <View style={{ justifyContent: 'center' }}>
           <View style={localStyles.navContainer}>
             <TouchableOpacity
               onPress={() => {
@@ -107,18 +105,18 @@ class NavigationBar extends React.Component {
               style={{
                 aspectRatio: 1,
                 justifyContent: 'center',
-                alignItems: 'center',
+                alignItems: 'center'
               }}
               onPress={() => {
                 !this.context.isConnected
                   ? this.context.showNoConnectionAlert()
-                  : navigate('Forum', {
+                  : navigate('FORUM', {
                       NetworkContext,
                       tryCall: commonService.tryCall,
                       rootUrl: commonService.rootUrl,
                       isDark: true,
                       BottomNavigator: NavigationBar,
-                      appColor: colors.pianoteRed,
+                      appColor: colors.pianoteRed
                     });
               }}
             >
@@ -161,8 +159,8 @@ class NavigationBar extends React.Component {
                       this.props.currentPage == 'PROFILE' &&
                       this.props.user?.profile_picture_url
                         ? 'white'
-                        : 'transparent',
-                  },
+                        : 'transparent'
+                  }
                 ]}
               >
                 {this.profile()}
@@ -176,7 +174,7 @@ class NavigationBar extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.userState.user,
+  user: state.userState.user
 });
 
 export default connect(mapStateToProps, null)(NavigationBar);
@@ -186,13 +184,13 @@ const localStyles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 2.25,
     height: onTablet ? 40 : 30,
-    width: onTablet ? 40 : 30,
+    width: onTablet ? 40 : 30
   },
   navContainer: {
     alignSelf: 'stretch',
     padding: 10,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignContent: 'space-around',
-  },
+    alignContent: 'space-around'
+  }
 });

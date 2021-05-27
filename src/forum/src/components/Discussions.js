@@ -185,7 +185,7 @@ export default class Discussions extends React.Component {
           />
         )}
 
-        <BottomNavigator />
+        <BottomNavigator currentPage={'FORUM'} />
       </>
     );
   }
