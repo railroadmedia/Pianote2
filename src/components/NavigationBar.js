@@ -1,6 +1,6 @@
 import React from 'react';
 import FastImage from 'react-native-fast-image';
-import {View, TouchableOpacity, StyleSheet, Text} from 'react-native';
+import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-navigation';
 import Icon from '../assets/icons';
 import {NetworkContext} from '../context/NetworkProvider';

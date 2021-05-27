@@ -5,24 +5,24 @@ import {
   ScrollView,
   Dimensions,
   RefreshControl,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
-import { getStartedContent, getAllContent } from '../../services/GetContent';
-import { NetworkContext } from '../../context/NetworkProvider';
+import {getStartedContent, getAllContent} from '../../services/GetContent';
+import {NetworkContext} from '../../context/NetworkProvider';
 import NavigationBar from '../../components/NavigationBar';
-import { cacheAndWriteCourses } from '../../redux/CoursesCacheActions';
-import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
+import {cacheAndWriteCourses} from '../../redux/CoursesCacheActions';
+import {navigate, refreshOnFocusListener} from '../../../AppNavigator';
 
 var page = 1;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
   const paddingToBottom = 20;
   return (
     layoutMeasurement.height + contentOffset.y >=
@@ -34,7 +34,7 @@ class Course extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    let { coursesCache } = props;
+    let {coursesCache} = props;
     this.state = {
       progressCourses: [],
       allCourses: [],
@@ -42,13 +42,13 @@ class Course extends React.Component {
       isPaging: false,
       refreshing: true,
       refreshControl: false,
-      ...this.initialValidData(coursesCache, true)
+      ...this.initialValidData(coursesCache, true),
     };
   }
 
   componentDidMount() {
     let deepFilters = decodeURIComponent(this.props.route?.params?.url).split(
-      '?'
+      '?',
     )[1];
     this.filterQuery = deepFilters && `&${deepFilters}`;
     this.getContent();
@@ -61,18 +61,18 @@ class Course extends React.Component {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let content = await Promise.all([
       getAllContent('course', this.state.currentSort, page, this.filterQuery),
-      getStartedContent('course', 1)
+      getStartedContent('course', 1),
     ]);
     this.metaFilters = content?.[0]?.meta?.filterOptions;
     this.props.cacheAndWriteCourses({
       all: content[0],
-      inProgress: content[1]
+      inProgress: content[1],
     });
     this.setState(
       this.initialValidData({
         all: content[0],
-        inProgress: content[1]
-      })
+        inProgress: content[1],
+      }),
     );
   }
 
@@ -86,34 +86,34 @@ class Course extends React.Component {
       refreshControl: fromCache,
       filtering: false,
       isPaging: false,
-      page: 1
+      page: 1,
     };
   };
 
-  getAllCourses = async loadMore => {
+  getAllCourses = async (loadMore) => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = await getAllContent(
       'course',
       this.state.currentSort,
       page,
-      this.filterQuery
+      this.filterQuery,
     );
 
     this.metaFilters = response?.meta?.filterOptions;
-    this.setState(state => ({
+    this.setState((state) => ({
       allCourses: loadMore
         ? state.allCourses.concat(response.data)
         : response.data,
       filtering: false,
       isPaging: false,
-      refreshControl: false
+      refreshControl: false,
     }));
   };
 
-  handleScroll = event => {
+  handleScroll = (event) => {
     if (isCloseToBottom(event) && !this.state.isPaging) {
       page = page + 1;
-      this.setState({ isPaging: true }, () => this.getAllCourses(true));
+      this.setState({isPaging: true}, () => this.getAllCourses(true));
     }
   };
 
@@ -126,15 +126,15 @@ class Course extends React.Component {
             style={styles.mainContainer}
             showsVerticalScrollIndicator={false}
             contentInsetAdjustmentBehavior={'never'}
-            onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
+            onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
             refreshControl={
               <RefreshControl
                 tintColor={'transparent'}
                 colors={[colors.pianoteRed]}
                 onRefresh={() =>
                   this.setState(
-                    { refreshControl: true, page: 1 },
-                    this.getContent
+                    {refreshControl: true, page: 1},
+                    this.getContent,
                   )
                 }
                 refreshing={isiOS ? false : this.state.refreshControl}
@@ -156,7 +156,7 @@ class Course extends React.Component {
                 seeAll={() =>
                   navigate('SEEALL', {
                     title: 'Continue',
-                    parent: 'Courses'
+                    parent: 'Courses',
                   })
                 }
                 items={this.state.progressCourses}
@@ -169,7 +169,7 @@ class Course extends React.Component {
                 seeAll={() =>
                   navigate('SEEALL', {
                     title: 'Courses',
-                    parent: 'Courses'
+                    parent: 'Courses',
                   })
                 }
                 items={this.state.allCourses}
@@ -177,31 +177,31 @@ class Course extends React.Component {
                 isPaging={this.state.isPaging}
                 filters={this.state.filters}
                 currentSort={this.state.currentSort}
-                changeSort={sort =>
+                changeSort={(sort) =>
                   this.setState(
                     {
                       currentSort: sort,
                       isPaging: false,
-                      page: 1
+                      page: 1,
                     },
-                    () => this.getAllCourses()
+                    () => this.getAllCourses(),
                   )
                 }
-                filterResults={() => this.setState({ showFilters: true })}
-                applyFilters={filters =>
-                  new Promise(res =>
-                    this.setState({ allCourses: [], page: 1 }, () => {
+                filterResults={() => this.setState({showFilters: true})}
+                applyFilters={(filters) =>
+                  new Promise((res) =>
+                    this.setState({allCourses: [], page: 1}, () => {
                       this.filterQuery = filters;
                       this.getAllCourses().then(res);
-                    })
+                    }),
                   )
                 }
                 callEndReached={true}
                 reachedEnd={() => {
                   if (!this.state.isPaging) {
                     (page = page + 1),
-                      this.setState({ isPaging: true }, () =>
-                        this.getAllCourses()
+                      this.setState({isPaging: true}, () =>
+                        this.getAllCourses(),
                       );
                   }
                 }}
@@ -220,22 +220,22 @@ class Course extends React.Component {
                 showSort={true}
                 filters={this.metaFilters}
                 currentSort={this.state.currentSort}
-                changeSort={sort =>
+                changeSort={(sort) =>
                   this.setState(
                     {
                       currentSort: sort,
                       isPaging: false,
-                      page: 1
+                      page: 1,
                     },
-                    () => this.getAllCourses()
+                    () => this.getAllCourses(),
                   )
                 }
-                applyFilters={filters =>
-                  new Promise(res =>
-                    this.setState({ allCourses: [], page: 1 }, () => {
+                applyFilters={(filters) =>
+                  new Promise((res) =>
+                    this.setState({allCourses: [], page: 1}, () => {
                       this.filterQuery = filters;
                       this.getAllCourses().then(res);
-                    })
+                    }),
                   )
                 }
                 imageWidth={width * 0.26}
@@ -245,7 +245,7 @@ class Course extends React.Component {
         ) : (
           <ActivityIndicator
             size='large'
-            style={{ flex: 1 }}
+            style={{flex: 1}}
             color={colors.secondBackground}
           />
         )}
@@ -254,8 +254,8 @@ class Course extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({ coursesCache: state.coursesCache });
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheAndWriteCourses }, dispatch);
+const mapStateToProps = (state) => ({coursesCache: state.coursesCache});
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators({cacheAndWriteCourses}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Course);
