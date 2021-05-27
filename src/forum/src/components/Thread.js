@@ -119,7 +119,7 @@ export default class Thread extends React.Component {
       <Post
         signShown={this.state.signShown}
         post={item}
-        index={index + 1}
+        index={index + 1 + 10 * (this.page - 1)}
         appColor={appColor}
         isDark={isDark}
         onEdit={() => navigate('CRUD')}
@@ -174,9 +174,9 @@ export default class Thread extends React.Component {
   changePage = page => {
     if (!connection()) return;
     let { threadId } = this.props.route.params;
-    this.page = page;
     this.setState({ loadingMore: true }, () =>
       getThread(threadId, page).then(thread => {
+        this.page = page;
         this.thread = thread;
         this.setState({ loadingMore: false }, () =>
           this.flatListRef.scrollToOffset({ offset: 0 })
