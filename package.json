@@ -40,6 +40,7 @@
     "react-native-carousel-view": "^0.5.1",
     "react-native-clean-project": "^3.4.0",
     "react-native-device-info": "^7.3.1",
+    "react-native-elements": "^3.4.1",
     "react-native-email-link": "^1.9.2",
     "react-native-fast-image": "^7.0.2",
     "react-native-fix-image": "^2.1.0",

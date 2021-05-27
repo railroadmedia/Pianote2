@@ -7,7 +7,6 @@ Required fields:
 */
 import React from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -23,7 +22,6 @@ import { moderate, lock, pin } from '../assets/svgs';
 let styles;
 export default class HeaderMenu extends React.Component {
   state = { showOptions: false };
-
   constructor(props) {
     super(props);
     styles = setStyles(props.isDark);
@@ -168,9 +166,8 @@ export default class HeaderMenu extends React.Component {
 let setStyles = isDark =>
   StyleSheet.create({
     headerTitleText: {
-      fontFamily: 'OpenSans',
+      fontFamily: 'OpenSans-ExtraBold',
       fontSize: 20,
-      fontWeight: '900',
       color: isDark ? 'white' : 'black'
     },
     optionsContainer: {
