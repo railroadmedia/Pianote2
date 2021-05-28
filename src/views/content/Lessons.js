@@ -28,6 +28,7 @@ import NavMenuHeaders from '../../components/NavMenuHeaders';
 import GradientFeature from '../../components/GradientFeature';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
+import UserInfo from '../../forum/src/components/UserInfo.js';
 import methodService from '../../services/method.service.js';
 import {
   getStartedContent,
@@ -41,7 +42,6 @@ import Live from '../../modals/Live';
 import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
-import UserInfo from '../../forum/src/components/UserInfo.js';
 
 var page = 1;
 const windowDim = Dimensions.get('window');
