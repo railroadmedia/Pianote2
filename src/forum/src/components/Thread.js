@@ -6,7 +6,9 @@ import {
   TouchableOpacity,
   Text,
   ActivityIndicator,
-  View
+  View,
+  Modal,
+  TextInput
 } from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
@@ -29,7 +31,10 @@ export default class Thread extends React.Component {
     signShown: true,
     createPostHeight: 0,
     loadingMore: false,
-    refreshing: false
+    refreshing: false,
+    showMenu: false,
+    menuIndex: -1,
+    showReportModal: false
   };
 
   constructor(props) {
@@ -92,22 +97,116 @@ export default class Thread extends React.Component {
     );
   };
 
+  renderMenu = post => (
+    <View style={styles.menuContainer}>
+      <View style={styles.menu}>
+        <TouchableOpacity
+          style={styles.menuItemBtn}
+          onPress={() => {
+            this.setState({
+              showReportModal: true,
+              showMenu: false,
+              menuIndex: -1
+            });
+          }}
+        >
+          <Text style={[styles.menuItem, styles.borderRight]}>Report</Text>
+        </TouchableOpacity>
+        {this.props.route.params.loggesInUserId === post.author_id && (
+          <TouchableOpacity
+            style={styles.menuItemBtn}
+            onPress={this.props.onEdit}
+          >
+            <Text style={[styles.menuItem, styles.borderRight]}>Edit</Text>
+          </TouchableOpacity>
+        )}
+        <TouchableOpacity
+          style={styles.menuItemBtn}
+          onPress={this.props.onMultiQuote}
+        >
+          <Text style={styles.menuItem}>MultiQuote</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.triangle} />
+    </View>
+  );
+
   renderFLItem = ({ item, index }) => {
     let { isDark, appColor, loggesInUserId } = this.props.route.params;
     return (
-      <Post
-        signShown={this.state.signShown}
-        loggesInUserId={loggesInUserId}
-        post={item}
-        index={index + 1 + 10 * (this.page - 1)}
-        appColor={appColor}
-        isDark={isDark}
-        onEdit={() => navigate('CRUD')}
-        onDelete={() => {}}
-        onReplies={() => {}}
-      />
+      <View
+        style={[
+          this.state.showMenu && this.state.menuIndex === index
+            ? { backgroundColor: '#002039' }
+            : { backgroundColor: '#081825' }
+        ]}
+      >
+        <View
+          style={{ height: 35, backgroundColor: isDark ? '#00101D' : 'white' }}
+        ></View>
+        {this.state.showMenu &&
+          this.state.menuIndex === index &&
+          this.renderMenu(item, index)}
+        <Post
+          signShown={this.state.signShown}
+          loggesInUserId={loggesInUserId}
+          post={item}
+          index={index + 1 + 10 * (this.page - 1)}
+          appColor={appColor}
+          isDark={isDark}
+          onDelete={() => {}}
+          onReplies={() => {}}
+          onShowMenu={() => {
+            this.setState(state => ({
+              showMenu: index === state.menuIndex ? false : true,
+              menuIndex: index === state.menuIndex ? -1 : index
+            }));
+          }}
+        />
+        {this.state.showReportModal && this.renderReportModal()}
+      </View>
     );
   };
+
+  renderReportModal = () => (
+    <Modal
+      visible={this.state.showReportModal}
+      transparent={true}
+      animationType={'slide'}
+      onRequestClose={() => this.setState({ showReportModal: false })}
+      supportedOrientations={['portrait', 'landscape']}
+      style={styles.modalContainer}
+    >
+      <TouchableOpacity
+        style={styles.modalContainer}
+        onPress={() => this.setState({ showReportModal: false })}
+      >
+        <View style={styles.innerModal}>
+          <Text style={styles.modalTitle}>Report Post</Text>
+          <Text style={styles.modalText}>
+            What's the reason you're reporting this post?
+          </Text>
+          <TextInput
+            style={styles.titleInput}
+            placeholderTextColor={isDark ? '#445F74' : '#00101D'}
+            placeholder='Report'
+            onChangeText={text => (this.text = text)}
+          />
+          <View style={styles.btnsContainer}>
+            <TouchableOpacity
+              style={styles.modalBtn}
+              onPress={() => this.setState({ showReportModal: false })}
+            >
+              <Text style={styles.modalBtnText}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flex: 1 }}>
+              <Text style={styles.modalBtnText}>Ok</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </TouchableOpacity>
+    </Modal>
+  );
 
   renderFLFooter = () => {
     let { isDark, appColor } = this.props.route.params;
@@ -179,7 +278,7 @@ export default class Thread extends React.Component {
       <TouchableOpacity
         activeOpacity={1}
         style={{ flex: 1 }}
-        onPress={closeMenu}
+        onPress={() => this.setState({ showMenu: false, menuIndex: -1 })}
       >
         <FlatList
           windowSize={10}
@@ -231,7 +330,7 @@ export default class Thread extends React.Component {
     );
   }
 }
-let setStyles = isDark =>
+let setStyles = (isDark, appColor) =>
   StyleSheet.create({
     headerContainer: {
       paddingHorizontal: 15,
@@ -274,5 +373,100 @@ let setStyles = isDark =>
       position: 'absolute',
       bottom: 0,
       alignSelf: 'flex-end'
+    },
+    menuContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: isDark ? '#00101D' : '#F7F9FC',
+      position: 'absolute',
+      top: 0,
+      alignSelf: 'center',
+      zIndex: 50
+    },
+    triangle: {
+      width: 0,
+      height: 0,
+      backgroundColor: 'transparent',
+      borderStyle: 'solid',
+      borderTopWidth: 10,
+      borderRightWidth: 5,
+      borderBottomWidth: 0,
+      borderLeftWidth: 5,
+      borderTopColor: appColor,
+      borderRightColor: 'transparent',
+      borderBottomColor: 'transparent',
+      borderLeftColor: 'transparent'
+    },
+    menu: {
+      backgroundColor: appColor,
+      flexDirection: 'row'
+    },
+    menuItemBtn: {
+      width: 70
+    },
+    menuItem: {
+      color: '#FFFFFF',
+      fontFamily: 'OpenSans',
+      fontSize: 10,
+      flex: 1,
+      paddingVertical: 5,
+      textAlign: 'center'
+    },
+    modalContainer: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,.3)',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    borderRight: {
+      borderRightColor: '#00101D',
+      borderRightWidth: 1
+    },
+    titleInput: {
+      marginVertical: 10,
+      backgroundColor: isDark ? '#000000' : '#FFFFFF',
+      borderRadius: 5,
+      color: isDark ? '#FFFFFF' : '#000000',
+      height: 35
+    },
+    innerModal: {
+      backgroundColor: isDark ? '#002039' : '#E1E6EB',
+      padding: 15,
+      paddingBottom: 0,
+      borderRadius: 10
+    },
+    modalTitle: {
+      fontFamily: 'OpenSans-Bold',
+      fontSize: 14,
+      color: isDark ? '#FFFFFF' : '#000000',
+      alignSelf: 'center',
+      textAlign: 'center',
+      padding: 5
+    },
+    modalText: {
+      fontFamily: 'OpenSans',
+      fontSize: 12,
+      color: isDark ? '#FFFFFF' : '#000000',
+      alignSelf: 'center',
+      textAlign: 'center',
+      padding: 5
+    },
+    btnsContainer: {
+      flexDirection: 'row',
+      borderTopWidth: 1,
+      borderTopColor: '#00101D'
+    },
+    modalBtnText: {
+      fontFamily: 'OpenSans',
+      fontSize: 12,
+      color: isDark ? '#FFFFFF' : '#000000',
+      textAlign: 'center',
+      paddingVertical: 10
+    },
+    modalBtn: {
+      flex: 1,
+      borderRightColor: '#00101D',
+      borderRightWidth: 1
     }
   });

@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   },
   childHeaderText: {
     // used on search, see all, downloads,
-    fontSize: onTablet ? 28 : 20,
+    fontSize: global.onTablet ? 28 : 20,
     color: 'white',
     fontFamily: 'OpenSans-ExtraBold',
     alignSelf: 'center',
