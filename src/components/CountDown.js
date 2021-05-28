@@ -45,27 +45,29 @@ export default class CountDown extends React.Component {
   render = () => {
     return (
       <View
-        style={[
-          styles.centerContent,
-          {
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            zIndex: 1
-          }
-        ]}
+        style={{
+          position: 'absolute',
+          justifyContent: 'center',
+          alignContent: 'center',
+          alignItems: 'center',
+          alignSelf: 'stretch',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 1
+        }}
       >
         <View
-          style={[
-            styles.centerContent,
-            {
-              height: '100%',
-              width: '100%',
-              borderRadius: 10
-            }
-          ]}
+          style={{
+            justifyContent: 'center',
+            alignContent: 'center',
+            alignItems: 'center',
+            alignSelf: 'stretch',
+            height: '100%',
+            width: '100%',
+            borderRadius: 10
+          }}
         >
           <LinearGradient
             colors={[

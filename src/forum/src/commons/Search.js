@@ -10,7 +10,6 @@ import {
 import { search as searchSvg } from '../assets/svgs';
 import { search } from '../services/forum.service';
 import Icon from '../../../assets/icons.js';
-import { Header } from 'react-native-elements';
 import Back from '../../../assets/img/svgs/back.svg';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import NavigationHeader from '../../src/commons/NavigationHeader';
@@ -33,6 +32,10 @@ export default class Search extends React.Component {
   navigate = (route, params) =>
     connection(true) && this.props.navigation.navigate(route, params);
 
+  async wait() {
+    await setTimeout(() => this.props.submitEditing(), 225);
+  }
+
   render() {
     let { isDark } = this.props;
     let { showSearchResults } = this.state;
@@ -52,7 +55,9 @@ export default class Search extends React.Component {
           spellCheck={false}
           placeholder={'Search...'}
           placeholderTextColor={isDark ? '#445F74' : '#97AABE'}
-          returnKeyType='search'
+          returnKeyType={'search'}
+          onFocus={() => this.props.onFocus()}
+          onEndEditing={() => this.wait()}
           onSubmitEditing={({ nativeEvent: { text } }) =>
             this.toggleSearchResults(text)
           }
@@ -66,7 +71,11 @@ export default class Search extends React.Component {
           <SafeAreaView style={styles.modalContainer} activeOpacity={1}>
             <NavigationHeader
               {...this.props}
+              navigation={{
+                goBack: () => this.setState({ showSearchResults: false })
+              }}
               title={'All Forums'}
+              route={{ name: 'Search', params: { isDark: true } }}
               onToggleSign={signShown => this.setState({ signShown })}
               onDoneEditing={() => {}}
             />
@@ -130,6 +139,11 @@ export default class Search extends React.Component {
 
 let setStyles = isDark =>
   StyleSheet.create({
+    bottomTOpacitySafeArea: {
+      position: 'absolute',
+      bottom: 0,
+      alignSelf: 'flex-end'
+    },
     modalContainer: {
       backgroundColor: '#00101d',
       flex: 1

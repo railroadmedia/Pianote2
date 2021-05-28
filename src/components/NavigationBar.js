@@ -154,7 +154,7 @@ class NavigationBar extends React.Component {
                   localStyles.navIconContainer,
                   this.props.user?.profile_picture_url
                     ? null
-                    : styles.centerContent,
+                    : localStyles.centerContent,
                   {
                     borderColor:
                       this.props.currentPage == 'PROFILE' &&
@@ -193,5 +193,11 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignContent: 'space-around'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
   }
 });

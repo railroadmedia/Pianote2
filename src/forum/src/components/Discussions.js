@@ -28,7 +28,8 @@ export default class Discussions extends React.Component {
   state = {
     loadingMore: false,
     loading: true,
-    refreshing: false
+    refreshing: false,
+    showNavBar: true
   };
 
   constructor(props) {
@@ -177,13 +178,18 @@ export default class Discussions extends React.Component {
             }
             ListHeaderComponent={
               <>
-                <Search isDark={this.props.route.params.isDark} />
+                <Search
+                  onFocus={() => this.setState({ showNavBar: false })}
+                  submitEditing={() => this.setState({ showNavBar: true })}
+                  isDark={this.props.route.params.isDark}
+                />
                 {this.discussions.map(item => this.renderDiscussion(item))}
                 <Text style={styles.sectionTitle}>FOLLOWED THREADS</Text>
               </>
             }
           />
         )}
+
         <BottomNavigator currentPage={'FORUM'} />
       </>
     );

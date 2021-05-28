@@ -39,7 +39,6 @@ export default class Thread extends React.Component {
   }
 
   componentDidMount() {
-    console.log('hi');
     this.props.navigation.setOptions({
       header: () => (
         <NavigationHeader

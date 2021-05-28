@@ -11,7 +11,7 @@ const height =
 const onTablet = global.onTablet;
 
 var { StyleSheet } = React;
-
+//
 module.exports = StyleSheet.create({
   modalContainer: {
     // simple container for modals
