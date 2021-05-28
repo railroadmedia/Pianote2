@@ -61,26 +61,22 @@ export default class StartIcon extends React.Component {
   render = () => {
     return (
       <View
-        style={[
-          styles.centerContent,
-          {
-            flex: 1,
-            borderRadius: 500,
-            backgroundColor:
-              this.props.type === 'MORE INFO'
-                ? 'transparent'
-                : colors.pianoteRed,
-            borderColor:
-              this.props.type === 'MORE INFO' ? 'white' : colors.pianoteRed,
-            borderWidth: 2
-          }
-        ]}
+        style={{
+          alignItems: 'center',
+          flex: 1,
+          borderRadius: 500,
+          backgroundColor:
+            this.props.type === 'MORE INFO' ? 'transparent' : colors.pianoteRed,
+          borderColor:
+            this.props.type === 'MORE INFO' ? 'white' : colors.pianoteRed,
+          borderWidth: 2
+        }}
       >
         <TouchableOpacity
           onPress={() => this.props.pressed()}
           style={[
-            styles.centerContent,
             {
+              alignItems: 'center',
               flex: 1,
               flexDirection: 'row'
             }
@@ -88,13 +84,12 @@ export default class StartIcon extends React.Component {
         >
           {this.whatIcon()}
           <Text
-            style={[
-              styles.buttonText,
-              {
-                marginLeft: '2.5%',
-                fontSize: this.sizing('font')
-              }
-            ]}
+            style={{
+              color: 'white',
+              fontFamily: 'RobotoCondensed-Bold',
+              marginLeft: '2.5%',
+              fontSize: this.sizing('font')
+            }}
           >
             {this.props.type}
           </Text>

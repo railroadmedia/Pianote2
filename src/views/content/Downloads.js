@@ -4,7 +4,8 @@ import {
   Text,
   FlatList,
   TouchableOpacity,
-  StatusBar
+  StatusBar,
+  StyleSheet
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import NavigationBar from '../../../src/components/NavigationBar.js';
@@ -168,6 +169,7 @@ export default class Downloads extends React.Component {
                     }}
                   >
                     <Text
+                      numberOfLines={2}
                       style={{
                         fontSize: sizing.videoTitleText,
                         marginBottom: 2,
@@ -245,3 +247,39 @@ export default class Downloads extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    backgroundColor: '#00101d',
+    flex: 1
+  },
+  packsContainer: {
+    flex: 1,
+    backgroundColor: '#081826'
+  },
+  childHeaderText: {
+    // used on search, see all, downloads,
+    fontSize: onTablet ? 28 : 20,
+    color: 'white',
+    fontFamily: 'OpenSans-ExtraBold',
+    alignSelf: 'center',
+    textAlign: 'center'
+  },
+  childHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#081826',
+    padding: 10
+  },
+  container: {
+    flex: 1,
+    alignSelf: 'stretch'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  }
+});

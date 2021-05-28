@@ -214,14 +214,11 @@ export default class HorizontalVideoList extends React.Component {
     if (this.state.items.length > 0) {
       return (
         <View
-          style={[
-            styles.centerContent,
-            {
-              flex: 1,
-              marginHorizontal: 40,
-              flexDirection: 'row'
-            }
-          ]}
+          style={{
+            flex: 1,
+            marginHorizontal: 40,
+            flexDirection: 'row'
+          }}
         >
           <View style={{ flex: 3 }} />
           <ActivityIndicator
@@ -295,13 +292,7 @@ export default class HorizontalVideoList extends React.Component {
                       <>
                         <View style={{ flex: 1 }} />
                         <TouchableOpacity
-                          style={[
-                            styles.centerContent,
-                            {
-                              flexDirection: 'row',
-                              marginRight: 5
-                            }
-                          ]}
+                          style={{ flexDirection: 'row', marginRight: 5 }}
                           onPress={() => {
                             this.setState({
                               showSort: !this.state.showSort
@@ -379,7 +370,9 @@ export default class HorizontalVideoList extends React.Component {
               onPress={() => this.navigate(item, index)}
             >
               <View style={{ width: '100%' }}>
-                <View style={[styles.centerContent, localStyles.progressItem]}>
+                <View
+                  style={[localStyles.centerContent, localStyles.progressItem]}
+                >
                   {item.started ? (
                     <Progress
                       height={onTablet ? 55 : 45}
@@ -563,5 +556,11 @@ const localStyles = StyleSheet.create({
   },
   typeContainer: {
     flexDirection: 'row'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
   }
 });

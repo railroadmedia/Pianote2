@@ -111,6 +111,7 @@ global.colors = {
   pianoteRed: '#fb1b2f',
   pianoteGrey: '#6e777a'
 };
+isDark = false;
 global.sizing = {
   descriptionText: onTablet ? 16 : 12,
   infoButtonSize: onTablet ? 22.5 : 17.5,
