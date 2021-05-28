@@ -1,16 +1,12 @@
 import React, { useContext } from 'react';
-import {
-  Easing,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableOpacity
-} from 'react-native';
+import { Easing, KeyboardAvoidingView, Platform } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import CRUD from './src/components/CRUD';
 import Threads from './src/components/Threads';
 import Thread from './src/components/Thread';
 import Discussions from './src/components/Discussions';
+import Search from './src/commons/Search.js';
 
 import NavigationHeader from './src/commons/NavigationHeader';
 
@@ -69,6 +65,7 @@ export default ({
           options={{ headerShown: false }}
         />
         <Stack.Screen name='Thread' component={Thread} initialParams={params} />
+        <Stack.Screen name='Search' component={Search} initialParams={params} />
       </Stack.Navigator>
     </KeyboardAvoidingView>
   );

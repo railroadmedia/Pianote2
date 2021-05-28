@@ -10,9 +10,10 @@ import {
 import { search as searchSvg } from '../assets/svgs';
 import { search } from '../services/forum.service';
 import Icon from '../../../assets/icons.js';
-// import { Header } from 'react-native-elements';
+import { Header } from 'react-native-elements';
 import Back from '../../../assets/img/svgs/back.svg';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import NavigationHeader from '../../src/commons/NavigationHeader';
 
 export default class Search extends React.Component {
   state = { showSearchResults: false };
@@ -21,6 +22,8 @@ export default class Search extends React.Component {
     let { isDark } = props;
     styles = setStyles(isDark);
   }
+
+  componentDidMount = () => {};
 
   toggleSearchResults = text => {
     /* code for results fetching and modal toggle goes here */
@@ -61,7 +64,14 @@ export default class Search extends React.Component {
           visible={showSearchResults}
         >
           <SafeAreaView style={styles.modalContainer} activeOpacity={1}>
-            {/* <Header
+            <NavigationHeader
+              {...this.props}
+              title={'All Forums'}
+              onToggleSign={signShown => this.setState({ signShown })}
+              onDoneEditing={() => {}}
+            />
+            {/* 
+            <Header
               backgroundColor={'#00101d'}
               placement='center'
               leftComponent={
@@ -88,7 +98,8 @@ export default class Search extends React.Component {
                   />
                 </TouchableOpacity>
               }
-            /> */}
+            />
+             */}
             <View style={styles.inputContainer}>
               <View style={styles.searchIcon}>
                 {searchSvg({
