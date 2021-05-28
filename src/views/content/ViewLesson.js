@@ -1310,7 +1310,7 @@ class ViewLesson extends React.Component {
           visible={this.state.showResDownload}
           transparent={true}
           onDismiss={() => this.modalDismissed}
-          style={styles.modalContainer}
+          style={{ margin: 0, flex: 1 }}
           animation={'slideInUp'}
           animationInTiming={350}
           animationOutTiming={350}
@@ -1458,7 +1458,7 @@ class ViewLesson extends React.Component {
           <Modal
             visible={this.state.showMakeComment}
             transparent={true}
-            style={styles.modalContainer}
+            style={{ margin: 0, flex: 1 }}
             backdropColor={'transparent'}
             animation={'slideInUp'}
             animationInTiming={350}

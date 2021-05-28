@@ -10,7 +10,7 @@ export default class AddToCalendar extends React.Component {
       <Modal
         visible={this.props.isVisible}
         transparent={true}
-        style={styles.modalContainer}
+        style={{ margin: 0, flex: 1 }}
         animation={'slideInUp'}
         animationInTiming={250}
         animationOutTiming={250}
@@ -18,7 +18,7 @@ export default class AddToCalendar extends React.Component {
         hasBackdrop={true}
       >
         <TouchableOpacity
-          style={[styles.centerContent, localStyles.modalContainer]}
+          style={[localStyles.centerContent, { margin: 0, flex: 1 }]}
           activeOpacity={1}
           onPress={() => this.props.hideAddToCalendar()}
         >
@@ -97,5 +97,11 @@ const localStyles = StyleSheet.create({
   },
   confirmAdditionText: {
     color: 'white'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
   }
 });

@@ -174,7 +174,7 @@ export default class CreateAccount extends React.Component {
             <Modal
               visible={this.state.showValidateEmail}
               transparent={true}
-              style={[styles.centerContent, localStyles.modalContainer]}
+              style={[styles.centerContent, { margin: 0, flex: 1 }]}
               animation={'slideInUp'}
               animationInTiming={350}
               animationOutTiming={350}

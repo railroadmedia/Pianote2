@@ -63,7 +63,10 @@ export default class VerticalVideoList extends React.Component {
       <ActivityIndicator
         size={onTablet ? 'large' : 'small'}
         animating={true}
-        style={[styles.centerContent, { minHeight: 40 }]}
+        style={{
+          justifyContent: 'center',
+          minHeight: 40
+        }}
         color={
           this.props.isMethod ? colors.pianoteGrey : colors.secondBackground
         }
@@ -253,7 +256,7 @@ export default class VerticalVideoList extends React.Component {
               )}
               <View
                 style={[
-                  styles.centerContent,
+                  localStyles.centerContent,
                   {
                     position: 'absolute',
                     width: '100%',
@@ -281,7 +284,7 @@ export default class VerticalVideoList extends React.Component {
                 <>
                   <View
                     style={[
-                      styles.centerContent,
+                      localStyles.centerContent,
                       {
                         top: -3,
                         height: 3,
@@ -303,7 +306,7 @@ export default class VerticalVideoList extends React.Component {
                   </View>
                   <View
                     style={[
-                      styles.centerContent,
+                      localStyles.centerContent,
                       {
                         position: 'absolute',
                         top: -6,
@@ -482,7 +485,7 @@ export default class VerticalVideoList extends React.Component {
             </View>
             {!this.props.isMethodLevel && (
               <View style={{ width: 45 }}>
-                <View style={[styles.centerContent, { flex: 1 }]}>
+                <View style={[localStyles.centerContent, { flex: 1 }]}>
                   {new Date(row.published_on) > new Date() ? (
                     <TouchableOpacity
                       onPress={() => {
@@ -533,7 +536,7 @@ export default class VerticalVideoList extends React.Component {
             <View style={localStyles.filterContainer}>
               <View style={localStyles.titleContainer}>
                 {this.props.showLargeTitle ? (
-                  <Text numberOfLines={1} style={localStyles.largeTitle}>
+                  <Text numberOfLines={1} style={locallargeTitle}>
                     {this.props.title}
                   </Text>
                 ) : (
@@ -552,10 +555,15 @@ export default class VerticalVideoList extends React.Component {
                   </Text>
                 )}
 
-                <View style={[styles.centerContent, localStyles.SortButton]}>
+                <View
+                  style={[localStyles.centerContent, localStyles.SortButton]}
+                >
                   {this.props.showSort && (
                     <TouchableOpacity
-                      style={[styles.centerContent, localStyles.sortContainer]}
+                      style={[
+                        localStyles.centerContent,
+                        localStyles.sortContainer
+                      ]}
                       onPress={() =>
                         this.setState({ showSort: !this.state.showSort })
                       }
@@ -617,7 +625,10 @@ export default class VerticalVideoList extends React.Component {
         {this.state.isPaging && !this.state.isLoading && (
           <ActivityIndicator
             size={onTablet ? 'large' : 'small'}
-            style={[styles.centerContent, { minHeight: 20, marginTop: 20 }]}
+            style={[
+              localStyles.centerContent,
+              { minHeight: 20, marginTop: 20 }
+            ]}
             animating={true}
             color={
               this.props.isMethod ? colors.pianoteGrey : colors.secondBackground
@@ -714,5 +725,11 @@ const localStyles = StyleSheet.create({
   SortButton: {
     width: 45,
     flexDirection: 'row'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
   }
 });

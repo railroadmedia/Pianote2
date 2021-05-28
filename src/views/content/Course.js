@@ -119,11 +119,11 @@ class Course extends React.Component {
 
   render() {
     return (
-      <View style={styles.mainContainer}>
+      <View style={{ backgroundColor: '#00101d', flex: 1 }}>
         <NavMenuHeaders currentPage={'LESSONS'} parentPage={'COURSES'} />
         {!this.state.refreshing ? (
           <ScrollView
-            style={styles.mainContainer}
+            style={{ backgroundColor: '#00101d', flex: 1 }}
             showsVerticalScrollIndicator={false}
             contentInsetAdjustmentBehavior={'never'}
             onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
@@ -144,11 +144,20 @@ class Course extends React.Component {
             {isiOS && this.state.refreshControl && (
               <ActivityIndicator
                 size='small'
-                style={styles.activityIndicator}
+                style={{ padding: 20 }}
                 color={colors.secondBackground}
               />
             )}
-            <Text style={styles.contentPageHeader}>Courses</Text>
+            <Text
+              style={{
+                paddingLeft: 10,
+                fontSize: onTablet ? 34 : 26,
+                color: 'white',
+                fontFamily: 'OpenSans-ExtraBold'
+              }}
+            >
+              Courses
+            </Text>
             {!!this.state.progressCourses?.length && (
               <HorizontalVideoList
                 hideFilterButton={true}

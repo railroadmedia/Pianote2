@@ -24,7 +24,7 @@ export default class RestartCourse extends React.Component {
       >
         <TouchableOpacity
           onPress={() => this.props.hideRestartCourse()}
-          style={[styles.centerContent, localStyles.modalContainer]}
+          style={[styles.centerContent, { margin: 0, flex: 1 }]}
         >
           <View style={[styles.centerContent, styles.container]}>
             <View style={localStyles.container}>

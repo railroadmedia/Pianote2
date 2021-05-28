@@ -632,12 +632,11 @@ export default class SinglePack extends React.Component {
           visible={this.state.showResDownload}
           transparent={true}
           onDismiss={() => this.modalDismissed}
-          style={[
-            styles.modalContainer,
-            {
-              justifyContent: 'flex-end'
-            }
-          ]}
+          style={{
+            margin: 0,
+            flex: 1,
+            justifyContent: 'flex-end'
+          }}
           animation={'slideInUp'}
           animationInTiming={350}
           animationOutTiming={350}

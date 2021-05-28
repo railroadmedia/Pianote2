@@ -112,7 +112,7 @@ export default class NextVideo extends React.Component {
               Mins
             </Text>
           </View>
-          <View style={[styles.centerContent, localStyles.play]}>
+          <View style={[localStyles.centerContent, localStyles.play]}>
             <Icon.Entypo
               name={'controller-play'}
               size={onTablet ? 35 : 22.5}
@@ -129,6 +129,12 @@ const localStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     height: 1.5
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
   },
   nextLesson: {
     marginTop: 5,

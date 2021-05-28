@@ -170,7 +170,7 @@ export default class Post extends React.Component {
             supportedOrientations={['portrait', 'landscape']}
           >
             <TouchableOpacity
-              style={styles.modalContainer}
+              style={{ margin: 0, flex: 1 }}
               onPress={() => this.setState({ showReportModal: false })}
             >
               <View style={styles.innerModal}>

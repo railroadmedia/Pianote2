@@ -36,7 +36,7 @@ export default class LessonComplete extends React.Component {
       <Modal
         visible={this.props.isVisible}
         transparent={true}
-        style={styles.modalContainer}
+        style={{ margin: 0, flex: 1 }}
         animation={'slideInUp'}
         animationInTiming={250}
         animationOutTiming={250}
@@ -45,7 +45,7 @@ export default class LessonComplete extends React.Component {
       >
         <TouchableOpacity
           onPress={() => this.props.hideLessonComplete()}
-          style={[styles.centerContent, localStyles.modalContainer]}
+          style={[styles.centerContent, { margin: 0, flex: 1 }]}
         >
           <View style={[styles.centerContent, styles.container]}>
             <View style={localStyles.container}>

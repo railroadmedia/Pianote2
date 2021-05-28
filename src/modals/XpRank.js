@@ -47,7 +47,7 @@ export default class XpRank extends React.Component {
       <Modal
         transparent={true}
         visible={true}
-        style={styles.modalContainer}
+        style={{ margin: 0, flex: 1 }}
         animation={'slideInUp'}
         animationInTiming={250}
         animationOutTiming={250}
@@ -56,7 +56,7 @@ export default class XpRank extends React.Component {
         onBackButtonPress={() => this.props.hideXpRank()}
       >
         <TouchableOpacity
-          style={[styles.centerContent, localStyles.modalContainer]}
+          style={[styles.centerContent, { margin: 0, flex: 1 }]}
           activeOpacity={1}
           onPress={() => this.props.hideXpRank()}
         >

@@ -16,7 +16,7 @@ export default class OverviewComplete extends React.Component {
       <Modal
         visible={this.props.isVisible}
         transparent={true}
-        style={styles.modalContainer}
+        style={{ margin: 0, flex: 1 }}
         animation={'slideInUp'}
         animationInTiming={250}
         animationOutTiming={250}

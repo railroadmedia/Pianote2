@@ -13,8 +13,11 @@ import { NetworkContext } from '../context/NetworkProvider';
 import { navigate } from '../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const onTablet = global.onTablet;
 const navigationOptions = [
   {
     title: 'Home',
@@ -125,7 +128,7 @@ export default class NavigationMenu extends React.Component {
               }
             }}
             style={[
-              styles.centerContent,
+              localStyles.centerContent,
               {
                 height: height / 10
               }
@@ -189,8 +192,8 @@ export default class NavigationMenu extends React.Component {
         <TouchableOpacity
           onPress={() => this.props.onClose(false)}
           style={[
-            styles.centerContent,
-            styles.redButton,
+            localStyles.centerContent,
+            localStyles.redButton,
             {
               height: onTablet ? 80 : 65,
               width: onTablet ? 80 : 65,
@@ -217,5 +220,29 @@ const localStyles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  buttonText: {
+    color: 'white',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: onTablet ? 16 : 12
+  },
+  container: {
+    flex: 1,
+    alignSelf: 'stretch'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  redButton: {
+    zIndex: 5,
+    backgroundColor: '#fb1b2f',
+    borderRadius: 200
+  },
+  innerRedButton: {
+    width: onTablet ? width * 0.15 : width * 0.225,
+    height: onTablet ? width * 0.15 : width * 0.225
   }
 });

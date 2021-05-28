@@ -75,7 +75,7 @@ export default class ContentModal extends React.Component {
       <Modal
         visible={true}
         transparent={true}
-        style={styles.modalContainer}
+        style={{ margin: 0, flex: 1 }}
         animation={'slideInUp'}
         animationInTiming={250}
         animationOutTiming={250}
@@ -84,7 +84,7 @@ export default class ContentModal extends React.Component {
         onBackButtonPress={() => this.props.hideContentModal()}
       >
         <TouchableOpacity
-          style={[styles.centerContent, localStyles.modalContainer]}
+          style={[styles.centerContent, { margin: 0, flex: 1 }]}
           onPress={() => this.props.hideContentModal()}
         >
           <View style={[styles.container, styles.centerContent]}>
@@ -150,7 +150,7 @@ export default class ContentModal extends React.Component {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.centerContent}
+                  style={localStyles.centerContent}
                   onPress={() => this.toggleMyList(this.state.id)}
                 >
                   <Icon.AntDesign
@@ -290,5 +290,11 @@ const localStyles = StyleSheet.create({
     fontFamily: 'OpenSans-Regular',
     fontSize: onTablet ? 16 : 12,
     textAlign: 'left'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
   }
 });

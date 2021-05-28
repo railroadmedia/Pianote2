@@ -53,7 +53,7 @@ class ReplyNotification extends React.Component {
       <Modal
         transparent={true}
         visible={true}
-        style={styles.modalContainer}
+        style={{ margin: 0, flex: 1 }}
         animation={'slideInUp'}
         animationInTiming={250}
         animationOutTiming={250}
@@ -64,7 +64,7 @@ class ReplyNotification extends React.Component {
         supportedOrientations={['portrait', 'landscape']}
       >
         <TouchableOpacity
-          style={localStyles.modalContainer}
+          style={{ margin: 0, flex: 1 }}
           onPress={hideReplyNotification}
         >
           <View

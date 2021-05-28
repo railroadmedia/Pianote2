@@ -48,15 +48,13 @@ export default class NavMenuHeaders extends React.Component {
           <Pianote fill={colors.pianoteRed} />
         </TouchableOpacity>
         <TouchableOpacity
-          style={[
-            styles.centerContent,
-            {
-              flexDirection: 'row',
-              paddingRight: 10,
-              flex: 1,
-              justifyContent: 'flex-end'
-            }
-          ]}
+          style={{
+            alignItems: 'center',
+            flexDirection: 'row',
+            paddingRight: 10,
+            flex: 1,
+            justifyContent: 'flex-end'
+          }}
           onPress={() => {
             !this.context.isConnected
               ? this.context.showNoConnectionAlert()
@@ -94,7 +92,7 @@ export default class NavMenuHeaders extends React.Component {
           />
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.centerContent, { paddingRight: 10 }]}
+          style={{ paddingRight: 10, justifyContent: 'center' }}
           onPress={() => {
             !this.context.isConnected
               ? this.context.showNoConnectionAlert()
@@ -121,7 +119,7 @@ export default class NavMenuHeaders extends React.Component {
               ? this.context.showNoConnectionAlert()
               : navigate('MYLIST');
           }}
-          style={styles.centerContent}
+          style={{ justifyContent: 'center' }}
         >
           <Text
             numberOfLines={1}
@@ -142,7 +140,7 @@ export default class NavMenuHeaders extends React.Component {
         <Modal
           visible={this.state.showModalMenu}
           transparent={true}
-          style={styles.modalContainer}
+          style={{ margin: 0, flex: 1 }}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

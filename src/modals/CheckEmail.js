@@ -18,7 +18,7 @@ export default class CheckEmail extends React.Component {
         onBackButtonPress={() => this.props.hideCheckEmail()}
       >
         <TouchableOpacity
-          style={[styles.centerContent, localStyles.modalContainer]}
+          style={[styles.centerContent, { margin: 0, flex: 1 }]}
           onPress={() => this.props.hideCheckEmail()}
         >
           <View style={[styles.container, styles.centerContent]}>

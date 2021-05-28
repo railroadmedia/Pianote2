@@ -3,22 +3,24 @@ import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
 import Icon from '../assets/icons';
 
+const onTablet = global.onTablet;
+
 export default class AssignmentComplete extends React.Component {
   render = () => {
     return (
       <Modal
         visible={this.props.isVisible}
         transparent={true}
-        style={styles.modalContainer}
+        style={{ margin: 0, flex: 1 }}
         animation={'slideInUp'}
         animationInTiming={250}
         animationOutTiming={250}
         coverScreen={false}
         hasBackdrop={false}
       >
-        <BlurView style={styles.container} blurAmount={5}>
+        <BlurView style={{ flex: 1, alignSelf: 'stretch' }} blurAmount={5}>
           <TouchableOpacity
-            style={[styles.centerContent, localStyles.modalContainer]}
+            style={[localStyles.centerContent, { margin: 0, flex: 1 }]}
             onPress={() => this.props.hideAssignmentComplete()}
           >
             <View style={localStyles.container}>
@@ -29,22 +31,29 @@ export default class AssignmentComplete extends React.Component {
               />
               <View
                 style={[
-                  styles.centerContent,
+                  localStyles.centerContent,
                   localStyles.assignmentCompleteContainer
                 ]}
               >
-                <Text style={styles.modalHeaderText}>Assignment Complete</Text>
+                <Text style={localStyles.modalHeaderText}>
+                  Assignment Complete
+                </Text>
               </View>
               <View>
-                <Text style={[styles.modalBodyText, localStyles.congratsText]}>
+                <Text
+                  style={[localStyles.modalBodyText, localStyles.congratsText]}
+                >
                   Congratulations! You completed
                 </Text>
                 <Text
-                  style={[styles.modalBodyText, localStyles.assignmentTitle]}
+                  style={[
+                    localStyles.modalBodyText,
+                    localStyles.assignmentTitle
+                  ]}
                 >
                   {this.props.title}
                 </Text>
-                <Text style={[styles.modalButtonText, localStyles.xpText]}>
+                <Text style={[localStyles.modalButtonText, localStyles.xpText]}>
                   YOU EARNED {this.props.xp} XP!
                 </Text>
               </View>
@@ -60,6 +69,21 @@ const localStyles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,.5)'
+  },
+  modalButtonText: {
+    textAlign: 'center',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: onTablet ? 16 : 12
+  },
+  modalBodyText: {
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Regular',
+    fontSize: onTablet ? 16 : 12
+  },
+  modalHeaderText: {
+    fontFamily: 'OpenSans-Bold',
+    textAlign: 'center',
+    fontSize: onTablet ? 24 : 18
   },
   container: {
     backgroundColor: 'white',
@@ -83,5 +107,11 @@ const localStyles = StyleSheet.create({
   },
   congratsText: {
     marginHorizontal: 20
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
   }
 });

@@ -7,7 +7,7 @@ export default class PasswordEmailMatch extends React.Component {
       <Modal
         visible={this.props.isVisible}
         transparent={true}
-        style={styles.modalContainer}
+        style={{ margin: 0, flex: 1 }}
         animation={'slideInUp'}
         animationInTiming={250}
         animationOutTiming={250}
@@ -16,7 +16,7 @@ export default class PasswordEmailMatch extends React.Component {
         onBackButtonPress={() => this.props.hidePasswordEmailMatch()}
       >
         <TouchableOpacity
-          style={[styles.centerContent, localStyles.modalContainer]}
+          style={[styles.centerContent, { margin: 0, flex: 1 }]}
           onPress={() => this.props.hidePasswordEmailMatch()}
         >
           <View style={localStyles.container}>

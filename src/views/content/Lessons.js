@@ -355,7 +355,7 @@ class Lessons extends React.Component {
             {isiOS && this.state.refreshControl && (
               <ActivityIndicator
                 size='small'
-                style={styles.activityIndicator}
+                style={{ padding: 20 }}
                 color={colors.pianoteGrey}
               />
             )}
@@ -940,7 +940,7 @@ class Lessons extends React.Component {
         <Modal
           visible={this.state.showLive}
           transparent={true}
-          style={styles.modalContainer}
+          style={{ margin: 0, flex: 1 }}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

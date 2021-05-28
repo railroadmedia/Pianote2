@@ -38,7 +38,7 @@ export default class Live extends React.Component {
   render = () => {
     return (
       <TouchableOpacity
-        style={[styles.centerContent, localStyles.modalContainer]}
+        style={[styles.centerContent, { margin: 0, flex: 1 }]}
         onPress={() => this.props.hideLive()}
       >
         <View style={[styles.container, styles.centerContent]}>

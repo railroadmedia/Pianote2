@@ -15,6 +15,8 @@ import { SafeAreaView } from 'react-navigation';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { navigate } from '../../../AppNavigator';
 
+const onTablet = global.onTablet;
+
 export default class Downloads extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
@@ -258,7 +260,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#081826'
   },
   childHeaderText: {
-    // used on search, see all, downloads,
     fontSize: onTablet ? 28 : 20,
     color: 'white',
     fontFamily: 'OpenSans-ExtraBold',

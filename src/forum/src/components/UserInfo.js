@@ -18,7 +18,7 @@ export default class UserInfo extends React.Component {
       <Modal
         transparent={true}
         visible={this.props.isVisible}
-        style={styles.modalContainer}
+        style={{ margin: 0, flex: 1 }}
         animation={'slideInUp'}
         animationInTiming={250}
         animationOutTiming={250}

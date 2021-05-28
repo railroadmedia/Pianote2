@@ -12,7 +12,14 @@ export default class SoundSlice extends React.Component {
     return (
       <Modal
         visible={this.props.isVisible}
-        style={[styles.centerContent, styles.modalContainer]}
+        style={{
+          margin: 0,
+          flex: 1,
+          justifyContent: 'center',
+          alignContent: 'center',
+          alignItems: 'center',
+          alignSelf: 'stretch'
+        }}
         animation={'slideInUp'}
         animationInTiming={350}
         animationOutTiming={350}
@@ -24,7 +31,7 @@ export default class SoundSlice extends React.Component {
           style={{ flexDirection: 'row', backgroundColor: 'black' }}
           forceInset={{ top: 'always' }}
         >
-          <View style={styles.container}>
+          <View style={{ flex: 1, alignSelf: 'stretch' }}>
             <View
               style={{
                 height: '100%',

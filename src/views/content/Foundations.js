@@ -134,7 +134,7 @@ export default class Foundations extends React.Component {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
-          style={styles.methodContainer}
+          style={{ flex: 1, backgroundColor: 'black' }}
           refreshControl={
             <RefreshControl
               colors={[colors.pianoteRed]}
@@ -180,7 +180,14 @@ export default class Foundations extends React.Component {
                 opacity: 1
               }}
             >
-              <View style={styles.centerContent}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignContent: 'center',
+                  alignItems: 'center',
+                  alignSelf: 'stretch'
+                }}
+              >
                 <FastImage
                   style={{
                     width: '70%',
