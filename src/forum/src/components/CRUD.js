@@ -63,7 +63,25 @@ export default class CRUD extends React.Component {
       } else if (type === 'Image') {
         this.richText.current?.insertImage(url);
       } else {
-        this.richText.current?.insertVideo(url);
+        if (url.includes('<iframe')) this.richText.current?.insertHTML(url);
+        else if (url.includes('youtube.com'))
+          this.richText.current?.insertHTML(
+            `<p><iframe src="https://www.youtube.com/embed/${url.slice(
+              url.indexOf('watch?v=') + 8,
+              url.length
+            )}" width="560" height="314" allowfullscreen="allowfullscreen"></iframe></p>`
+          );
+        else if (url.includes('vimeo.com'))
+          this.richText.current?.insertHTML(
+            `<p><iframe src="https://player.vimeo.com/video/${url.slice(
+              url.indexOf('.com/') + 5,
+              url.length
+            )}" width="425" height="350" allowfullscreen="allowfullscreen"></iframe></p>`
+          );
+        else
+          this.richText.current?.insertHTML(
+            `<video controls="controls" width="300" height="150"><source src=${url} /></video>`
+          );
       }
     }
   };
@@ -180,7 +198,7 @@ export default class CRUD extends React.Component {
                 disabledIconTint={'#bfbfbf'}
                 onPressAddImage={() => this.onInsertLink('Image')}
                 onInsertLink={() => this.onInsertLink('Link')}
-                insertVideo={() => this.onInsertLink('Video')} // TODO: change video to be added in iframe instead of in video tag
+                insertVideo={() => this.onInsertLink('Video')}
                 actions={[
                   actions.setBold,
                   actions.setItalic,
@@ -254,19 +272,19 @@ let setStyles = (isDark, appColor) =>
     },
     richBar: {
       backgroundColor: '#001424',
-      borderColor: '#002039',
+      borderColor: isDark ? '#002039' : '#E1E6EB',
       borderWidth: 4
     },
     flatStyle: {
       paddingHorizontal: 12
     },
     editorStyle: {
-      backgroundColor: '#002039',
+      backgroundColor: isDark ? '#002039' : '#E1E6EB',
       color: '#ffffff'
     },
     replyEditor: {
       marginBottom: 15,
-      backgroundColor: '#002039'
+      backgroundColor: isDark ? '#002039' : '#E1E6EB'
     },
     deleteBtn: {
       backgroundColor: appColor,
@@ -284,7 +302,7 @@ let setStyles = (isDark, appColor) =>
     },
     titleInput: {
       marginBottom: 15,
-      backgroundColor: '#002039',
+      backgroundColor: isDark ? '#002039' : '#E1E6EB',
       borderRadius: 5,
       color: '#FFFFFF'
     }

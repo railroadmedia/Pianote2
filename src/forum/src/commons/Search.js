@@ -10,7 +10,6 @@ import {
 import { search as searchSvg } from '../assets/svgs';
 import { search } from '../services/forum.service';
 import Icon from '../../../assets/icons.js';
-import { Header } from 'react-native-elements';
 import Back from '../../../assets/img/svgs/back.svg';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import NavigationHeader from '../../src/commons/NavigationHeader';

@@ -1,12 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
+import { connect } from 'react-redux';
+
 import AccessLevelAvatar from './AccessLevelAvatar';
 
-import { pin, arrowRight, post } from '../assets/svgs';
+import { pin, arrowRight } from '../assets/svgs';
 
 let styles;
-export default class ThreadCard extends React.Component {
+class ThreadCard extends React.Component {
   constructor(props) {
     super(props);
     let { isDark } = props;
@@ -17,7 +19,7 @@ export default class ThreadCard extends React.Component {
     let {
       appColor,
       isDark,
-      data: {
+      thread: {
         author_avatar_url,
         author_access_level,
         title,
@@ -97,3 +99,8 @@ let setStyles = isDark =>
       fontWeight: '100'
     }
   });
+
+const mapStateToProps = ({ threads }, props) => ({
+  thread: threads[props.reduxKey]?.[props.id]
+});
+export default connect(mapStateToProps)(ThreadCard);

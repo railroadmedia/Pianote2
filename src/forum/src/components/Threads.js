@@ -11,7 +11,12 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { connect, batch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import ThreadCard from '../commons/ThreadCard';
+
+import { setAllThreads, setFollowedThreads } from '../redux/ThreadActions';
 
 import {
   getFollowedThreads,
@@ -24,7 +29,7 @@ import Pagination from '../commons/Pagination';
 import Search from '../commons/Search';
 
 let styles;
-export default class Threads extends React.Component {
+class Threads extends React.Component {
   followedPage = 1;
   allPage = 1;
   followedResultsTotal = 0;
@@ -49,18 +54,30 @@ export default class Threads extends React.Component {
   }
 
   componentDidMount() {
+    let reFocused;
+    this.refreshOnFocusListener = this.props.navigation?.addListener(
+      'focus',
+      () => (reFocused ? this.refresh?.() : (reFocused = true))
+    );
     let { discussionId } = this.props.route.params;
     Promise.all([
       getAllThreads(discussionId),
       getFollowedThreads(discussionId)
     ]).then(([all, followed]) => {
-      console.log(all, followed);
-      this.all = all.results;
-      this.followed = followed.results;
+      this.all = all.results.map(r => r.id);
+      this.followed = followed.results.map(r => r.id);
       this.followedResultsTotal = followed.total_results;
       this.allResultsTotal = all.total_results;
-      this.setState({ loading: false });
+      batch(() => {
+        this.props.setAllThreads(all.results);
+        this.props.setFollowedThreads(followed.results);
+        this.setState({ loading: false });
+      });
     });
+  }
+
+  componentWillUnmount() {
+    this.refreshOnFocusListener?.();
   }
 
   navigate = (route, params) =>
@@ -75,7 +92,7 @@ export default class Threads extends React.Component {
           {['All Threads', 'Followed Threads'].map((t, i) => (
             <TouchableOpacity
               key={t}
-              onPress={() => this.setState({ tab: i })}
+              onPress={() => this.setState({ tab: i }, this.refresh)}
               style={[
                 styles.headerTOpacity,
                 tab === i ? { borderColor: appColor } : {}
@@ -97,12 +114,11 @@ export default class Threads extends React.Component {
     );
   };
 
-  renderFLItem = ({ item }) => (
+  renderFLItem = ({ item: id }) => (
     <ThreadCard
       onNavigate={() => {
         this.navigate('Thread', {
-          ...item,
-          threadId: item.id,
+          threadId: id,
           isDark: this.props.route.params.isDark,
           appColor: this.props.route.params.appColor,
           onDone: this.refresh
@@ -110,7 +126,8 @@ export default class Threads extends React.Component {
       }}
       appColor={this.props.route.params.appColor}
       isDark={this.props.route.params.isDark}
-      data={item}
+      id={id}
+      reduxKey={this.state.tab ? 'followed' : 'all'}
     />
   );
 
@@ -122,10 +139,13 @@ export default class Threads extends React.Component {
     this[`${fORa}Page`] = page;
     this.setState({ [`${fORa}LoadingMore`]: true }, () =>
       (tab ? getFollowedThreads : getAllThreads)(discussionId, page).then(r => {
-        this[fORa] = r.results;
-        this.setState({ [`${fORa}LoadingMore`]: false }, () =>
-          this.flatListRef.scrollToOffset({ offset: 0 })
-        );
+        this[fORa] = r.results.map(r => r.id);
+        batch(() => {
+          this.props[tab ? 'setFollowedThreads' : 'setAllThreads'](r.results);
+          this.setState({ [`${fORa}LoadingMore`]: false }, () =>
+            this.flatListRef.scrollToOffset({ offset: 0 })
+          );
+        });
       })
     );
   };
@@ -140,8 +160,11 @@ export default class Threads extends React.Component {
         discussionId,
         this[`${fORa}Page`]
       ).then(r => {
-        this[fORa] = r.results;
-        this.setState({ [`${fORa}Refreshing`]: false });
+        this[fORa] = r.results.map(r => r.id);
+        batch(() => {
+          this.props[tab ? 'setFollowedThreads' : 'setAllThreads'](r.results);
+          this.setState({ [`${fORa}Refreshing`]: false });
+        });
       })
     );
   };
@@ -171,14 +194,14 @@ export default class Threads extends React.Component {
           windowSize={10}
           data={this[tab ? 'followed' : 'all']}
           style={styles.fList}
-          initialNumToRender={1}
+          initialNumToRender={10}
           maxToRenderPerBatch={10}
           onEndReachedThreshold={0.01}
           removeClippedSubviews={true}
           keyboardShouldPersistTaps='handled'
           renderItem={this.renderFLItem}
           ListHeaderComponent={this.renderFLHeader}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={item => item.toString()}
           ref={r => (this.flatListRef = r)}
           ListEmptyComponent={
             <Text style={styles.emptyList}>
@@ -223,6 +246,7 @@ export default class Threads extends React.Component {
         <SafeAreaView style={styles.bottomTOpacitySafeArea}>
           <TouchableOpacity
             onLayout={({ nativeEvent: { layout } }) =>
+              !this.state.createDiscussionHeight &&
               this.setState({ createDiscussionHeight: layout.height + 15 })
             }
             onPress={() =>
@@ -289,3 +313,7 @@ let setStyles = isDark =>
       alignSelf: 'flex-end'
     }
   });
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ setAllThreads, setFollowedThreads }, dispatch);
+
+export default connect(null, mapDispatchToProps)(Threads);
