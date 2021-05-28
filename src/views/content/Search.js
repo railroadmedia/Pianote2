@@ -7,7 +7,8 @@ import {
   ScrollView,
   Dimensions,
   ActivityIndicator,
-  StatusBar
+  StatusBar,
+  StyleSheet
 } from 'react-native';
 import Icon from '../../assets/icons.js';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -20,7 +21,7 @@ import { NetworkContext } from '../../context/NetworkProvider';
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-
+const onTablet = global.onTablet;
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
   return (
@@ -456,3 +457,56 @@ export default class Search extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  modalContainer: {
+    // simple container for modals
+    margin: 0,
+    flex: 1
+  },
+  searchBox: {
+    flex: 1,
+    backgroundColor: '#f3f6f6',
+    borderRadius: 100,
+    flexDirection: 'row'
+  },
+  recentSearches: {
+    marginTop: '2%',
+    flexDirection: 'row',
+    marginBottom: 10,
+    justifyContent: 'space-between'
+  },
+  mainContainer: {
+    backgroundColor: '#00101d',
+    flex: 1
+  },
+  packsContainer: {
+    flex: 1,
+    backgroundColor: '#081826'
+  },
+  childHeaderText: {
+    // used on search, see all, downloads,
+    fontSize: onTablet ? 28 : 20,
+    color: 'white',
+    fontFamily: 'OpenSans-ExtraBold',
+    alignSelf: 'center',
+    textAlign: 'center'
+  },
+  childHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#081826',
+    padding: 10
+  },
+  container: {
+    flex: 1,
+    alignSelf: 'stretch'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  }
+});
