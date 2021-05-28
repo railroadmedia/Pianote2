@@ -14,7 +14,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Pagination from '../commons/Pagination';
 import Post, { closeMenu } from '../commons/Post';
-import NavigationHeader from '../commons/NavigationHeader';
 
 import { connection, getThread } from '../services/forum.service';
 
@@ -39,16 +38,6 @@ export default class Thread extends React.Component {
   }
 
   componentDidMount() {
-    this.props.navigation.setOptions({
-      header: () => (
-        <NavigationHeader
-          {...this.props}
-          title={this.props.route.params.title}
-          onToggleSign={signShown => this.setState({ signShown })}
-          onDoneEditing={() => {}}
-        />
-      )
-    });
     const { threadId } = this.props.route.params;
     Promise.all([getThread(threadId), AsyncStorage.getItem('signShown')]).then(
       ([thread, signShown]) => {
@@ -96,7 +85,6 @@ export default class Thread extends React.Component {
     let { isDark, appColor, loggesInUserId } = this.props.route.params;
     return (
       <Post
-        signShown={this.state.signShown}
         loggesInUserId={loggesInUserId}
         post={item}
         index={index + 1 + 10 * (this.page - 1)}
@@ -210,6 +198,7 @@ export default class Thread extends React.Component {
         <SafeAreaView style={styles.bottomTOpacitySafeArea}>
           <TouchableOpacity
             onLayout={({ nativeEvent: { layout } }) =>
+              !this.state.createPostHeight &&
               this.setState({ createPostHeight: layout.height + 15 })
             }
             onPress={() =>

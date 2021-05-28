@@ -16,6 +16,8 @@ import {
   TouchableOpacity
 } from 'react-native';
 
+import { connect } from 'react-redux';
+
 import AccessLevelAvatar from './AccessLevelAvatar';
 import HTMLRenderer from './HTMLRenderer';
 import { like, likeOn } from '../assets/svgs';
@@ -29,7 +31,7 @@ export function closeMenu() {
   menusToBeClosed = [];
 }
 
-export default class Post extends React.Component {
+class Post extends React.Component {
   constructor(props) {
     super(props);
     const { post, isDark, appColor } = props;
@@ -360,3 +362,5 @@ let setStyles = (isDark, appColor) =>
       borderRightWidth: 1
     }
   });
+const mapStateToProps = ({ threads: { signShown } }) => ({ signShown });
+export default connect(mapStateToProps)(Post);

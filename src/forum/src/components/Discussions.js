@@ -8,6 +8,9 @@ import {
   View
 } from 'react-native';
 
+import { connect, batch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import DiscussionCard from '../commons/DiscussionCard';
 import ThreadCard from '../commons/ThreadCard';
 import Search from '../commons/Search';
@@ -18,8 +21,10 @@ import {
   getFollowedThreads
 } from '../services/forum.service';
 
+import { setDiscussionsThreads } from '../redux/ThreadActions';
+
 let styles;
-export default class Discussions extends React.Component {
+class Discussions extends React.Component {
   page = 1;
   discussions = [];
   followedThreads = [];
@@ -39,26 +44,36 @@ export default class Discussions extends React.Component {
   }
 
   componentDidMount() {
+    let reFocused;
+    this.refreshOnFocusListener = this.props.navigation?.addListener(
+      'focus',
+      () => (reFocused ? this.refresh?.() : (reFocused = true))
+    );
     Promise.all([getDiscussions(), getFollowedThreads()]).then(
       ([discussions, followed]) => {
         this.discussions = discussions.results;
-        this.followedThreads = followed.results;
-
+        this.followedThreads = followed.results.map(r => r.id);
         this.followedThreadsTotal = followed.total_results;
-        this.setState({ loading: false });
+        batch(() => {
+          this.props.setDiscussionsThreads(followed.results);
+          this.setState({ loading: false });
+        });
       }
     );
+  }
+
+  componentWillUnmount() {
+    this.refreshOnFocusListener?.();
   }
 
   navigate = (route, params) =>
     connection(true) && this.props.navigation.navigate(route, params);
 
-  renderFLItem = ({ item }) => (
+  renderFLItem = ({ item: id }) => (
     <ThreadCard
       onNavigate={() => {
         this.navigate('Thread', {
-          ...item,
-          threadId: item.id,
+          threadId: id,
           isDark: this.props.route.params.isDark,
           appColor: this.props.route.params.appColor,
           onDone: this.refresh
@@ -66,7 +81,8 @@ export default class Discussions extends React.Component {
       }}
       appColor={this.props.route.params.appColor}
       isDark={this.props.route.params.isDark}
-      data={item}
+      id={id}
+      reduxKey={'discussions'}
     />
   );
 
@@ -92,8 +108,11 @@ export default class Discussions extends React.Component {
       Promise.all([getDiscussions(), getFollowedThreads()]).then(
         ([discussions, followed]) => {
           this.discussions = discussions.results;
-          this.followedThreads = followed.results;
-          this.setState({ refreshing: false });
+          this.followedThreads = followed.results.map(r => r.id);
+          batch(() => {
+            this.props.setDiscussionsThreads(followed.results);
+            this.setState({ refreshing: false });
+          });
         }
       );
     });
@@ -101,14 +120,16 @@ export default class Discussions extends React.Component {
 
   changePage = page => {
     if (!connection()) return;
-    console.log(page);
     this.page = page;
     this.setState({ loadingMore: true }, () =>
       getFollowedThreads(page).then(r => {
-        this.followedThreads = r.results;
-        this.setState({ loadingMore: false }, () =>
-          this.flatListRef.scrollToOffset({ offset: 0 })
-        );
+        this.followedThreads = r.results.map(r => r.id);
+        batch(() => {
+          this.props.setDiscussionsThreads(r.results);
+          this.setState({ loadingMore: false }, () =>
+            this.flatListRef.scrollToOffset({ offset: 0 })
+          );
+        });
       })
     );
   };
@@ -134,12 +155,12 @@ export default class Discussions extends React.Component {
             windowSize={10}
             data={this.followedThreads}
             style={styles.fList}
-            initialNumToRender={1}
+            initialNumToRender={10}
             maxToRenderPerBatch={10}
             removeClippedSubviews={true}
             keyboardShouldPersistTaps='handled'
             renderItem={this.renderFLItem}
-            keyExtractor={item => item.id.toString()}
+            keyExtractor={item => item.toString()}
             ref={r => (this.flatListRef = r)}
             refreshControl={
               <RefreshControl
@@ -231,3 +252,7 @@ let setStyles = (isDark, appColor) =>
       marginLeft: 15
     }
   });
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ setDiscussionsThreads }, dispatch);
+
+export default connect(null, mapDispatchToProps)(Discussions);

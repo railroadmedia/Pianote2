@@ -1,8 +1,13 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, View, Modal } from 'react-native';
 
+import { connect, batch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import AsyncStorage from '@react-native-community/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { updateThreads, toggleSignShown } from '../redux/ThreadActions';
 
 import {
   connection,
@@ -14,29 +19,27 @@ import {
 import { arrowLeft, lock, moderate, pin } from '../assets/svgs';
 
 let styles;
-export default class NavigationHeader extends React.Component {
+class NavigationHeader extends React.Component {
   state = { showOptions: false };
   constructor(props) {
     super(props);
-    let {
-      name,
-      params: { isDark, appColor, locked, pinned, is_followed }
-    } = this.props.route;
-    if (name.match(/^(Thread)$/))
-      Object.assign(this.state, { locked, pinned, is_followed });
+    let { isDark, appColor } = this.props.route.params;
     styles = setStyles(isDark, appColor);
   }
 
   componentDidMount() {
-    AsyncStorage.getItem('signShown').then(ss =>
-      this.setState({ signShown: !ss })
+    AsyncStorage.getItem('signShown').then(
+      ss => !!ss !== this.props.signShown && this.props.toggleSignShown()
     );
   }
 
   get options() {
     let options = {};
-    if (this.props.route.name === 'Thread') {
-      let { locked, pinned, is_followed, signShown } = this.state;
+    if (this.props.route.name.match(/^(Thread)$/)) {
+      let {
+        signShown,
+        thread: { locked, pinned, is_followed }
+      } = this.props;
       options.toggleSign = {
         text: `${signShown ? 'Hide' : 'Show'} All Signatures`,
         action: this.toggleSign
@@ -70,39 +73,40 @@ export default class NavigationHeader extends React.Component {
     this.setState(({ showOptions }) => ({ showOptions: !showOptions }));
 
   toggleSign = () =>
-    this.setState(
-      ({ signShown }) => ({ signShown: !signShown, showOptions: false }),
-      () => {
-        this.props.onToggleSign?.(this.state.signShown);
-        AsyncStorage.setItem('signShown', this.state.signShown ? '' : '1');
-      }
-    );
+    batch(() => {
+      this.props.toggleSignShown();
+      this.setState({ showOptions: false });
+    });
 
-  toggleLock = () =>
-    connection(true) &&
-    this.setState(
-      ({ locked }) => ({ locked: !locked, showOptions: false }),
-      () =>
-        updateThread(this.props.route.params.id, { pinned: this.state.pinned })
-    );
+  toggleLock = () => {
+    if (!connection(true)) return;
+    let { thread } = this.props;
+    updateThread(thread.id, { locked: !thread.locked });
+    batch(() => {
+      this.props.updateThreads({ ...thread, locked: !thread.locked });
+      this.setState({ showOptions: false });
+    });
+  };
 
-  togglePin = () =>
-    connection(true) &&
-    this.setState(
-      ({ pinned }) => ({ pinned: !pinned, showOptions: false }),
-      () =>
-        updateThread(this.props.route.params.id, { locked: this.state.locked })
-    );
+  togglePin = () => {
+    if (!connection(true)) return;
+    let { thread } = this.props;
+    updateThread(thread.id, { pinned: !thread.pinned });
+    batch(() => {
+      this.props.updateThreads({ ...thread, pinned: !thread.pinned });
+      this.setState({ showOptions: false });
+    });
+  };
 
-  toggleFollow = () =>
-    connection(true) &&
-    this.setState(
-      ({ is_followed }) => ({ is_followed: !is_followed, showOptions: false }),
-      () =>
-        (this.state.is_followed ? followThread : unfollowThread)(
-          this.props.route.params.id
-        )
-    );
+  toggleFollow = () => {
+    if (!connection(true)) return;
+    let { thread } = this.props;
+    (thread.is_followed ? unfollowThread : followThread)(thread.id);
+    batch(() => {
+      this.props.updateThreads({ ...thread, is_followed: !thread.is_followed });
+      this.setState({ showOptions: false });
+    });
+  };
 
   onEdit = () => {
     if (connection(true)) {
@@ -128,9 +132,10 @@ export default class NavigationHeader extends React.Component {
       route: {
         name,
         params: { isDark }
-      }
+      },
+      thread: { locked, pinned } = {}
     } = this.props;
-    let { showOptions, locked, pinned } = this.state;
+    let { showOptions } = this.state;
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.subContainer}>
@@ -244,3 +249,30 @@ let setStyles = (isDark, appColor) =>
       fontFamily: 'OpenSans'
     }
   });
+const mapStateToProps = (
+  { threads },
+  {
+    title,
+    route: {
+      name,
+      params: { threadId }
+    }
+  }
+) => {
+  let thread;
+  if (name.match(/^(Thread)$/))
+    thread =
+      threads?.discussions?.[threadId] ||
+      threads?.all?.[threadId] ||
+      threads?.followed?.[threadId] ||
+      {};
+  return {
+    thread,
+    signShown: name.match(/^(Thread)$/) ? threads.signShown : undefined,
+    title: title || thread?.title
+  };
+};
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ updateThreads, toggleSignShown }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavigationHeader);
