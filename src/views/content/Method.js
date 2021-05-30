@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   RefreshControl,
   Dimensions,
-  ImageBackground
+  ImageBackground,
+  StyleSheet
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Icon from '../../assets/icons.js';
@@ -130,7 +131,7 @@ export default class Method extends React.Component {
 
   render() {
     return (
-      <View style={[styles.mainContainer, { backgroundColor: 'black' }]}>
+      <View style={styles.mainContainer}>
         <NavMenuHeaders
           isMethod={true}
           currentPage={'LESSONS'}
@@ -198,15 +199,13 @@ export default class Method extends React.Component {
                 />
               </View>
               <View
-                style={[
-                  styles.heightButtons,
-                  {
-                    marginBottom: '3%',
-                    width: '100%',
-                    flexDirection: 'row',
-                    alignItems: 'center'
-                  }
-                ]}
+                style={{
+                  height: onTablet ? 45 : 35,
+                  marginBottom: '3%',
+                  width: '100%',
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}
               >
                 <View style={{ flex: 1 }} />
                 <View style={{ width: '50%' }}>
@@ -442,3 +441,27 @@ export default class Method extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    backgroundColor: '#00101d',
+    flex: 1
+  },
+  methodContainer: {
+    flex: 1,
+    backgroundColor: 'black'
+  },
+  gradientContanier: {
+    borderRadius: 0,
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+    height: '100%'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  }
+});

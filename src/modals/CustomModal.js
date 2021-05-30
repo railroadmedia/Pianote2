@@ -7,6 +7,8 @@ import {
   Animated
 } from 'react-native';
 
+const onTablet = global.onTablet;
+
 export default class CustomModal extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -48,8 +50,8 @@ export default class CustomModal extends React.PureComponent {
           <Animated.View
             style={[localStyles.animatedView, { opacity: this.state.opacity }]}
           >
-            <Text style={[styles.modalHeaderText]}>{this.title}</Text>
-            <Text style={[styles.modalBodyText]}>{this.message}</Text>
+            <Text style={[localStyles.modalHeaderText]}>{this.title}</Text>
+            <Text style={[localStyles.modalBodyText]}>{this.message}</Text>
             {this.props.additionalBtn}
           </Animated.View>
         </TouchableOpacity>
@@ -64,6 +66,11 @@ const localStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(0,0,0,.5)'
+  },
+  modalHeaderText: {
+    fontFamily: 'OpenSans-Bold',
+    textAlign: 'center',
+    fontSize: onTablet ? 24 : 18
   },
   title: {
     fontFamily: 'OpenSans-Bold',
@@ -83,5 +90,10 @@ const localStyles = StyleSheet.create({
     borderRadius: 10,
     margin: 5,
     backgroundColor: '#ffffff'
+  },
+  modalBodyText: {
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Regular',
+    fontSize: onTablet ? 16 : 12
   }
 });

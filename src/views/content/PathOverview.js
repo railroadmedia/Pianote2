@@ -7,7 +7,8 @@ import {
   Dimensions,
   ImageBackground,
   StatusBar,
-  FlatList
+  FlatList,
+  StyleSheet
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { Download_V2 } from 'RNDownload';
@@ -305,14 +306,12 @@ export default class PathOverview extends React.Component {
             | {this.state.xp} XP
           </Text>
           <View
-            style={[
-              styles.heightButtons,
-              {
-                width: '100%',
-                flexDirection: 'row',
-                alignItems: 'center'
-              }
-            ]}
+            style={{
+              height: onTablet ? 45 : 35,
+              width: '100%',
+              flexDirection: 'row',
+              alignItems: 'center'
+            }}
           >
             <View
               style={{
@@ -517,12 +516,7 @@ export default class PathOverview extends React.Component {
               >
                 <TouchableOpacity
                   onPress={() => this.toggleLike()}
-                  style={[
-                    styles.centerContent,
-                    {
-                      flex: 1
-                    }
-                  ]}
+                  style={[styles.centerContent, { flex: 1 }]}
                 >
                   <Text
                     style={{
@@ -578,17 +572,8 @@ export default class PathOverview extends React.Component {
                   }}
                 />
                 <TouchableOpacity
-                  onPress={() => {
-                    this.setState({
-                      showRestartCourse: true
-                    });
-                  }}
-                  style={[
-                    styles.centerContent,
-                    {
-                      flex: 1
-                    }
-                  ]}
+                  onPress={() => this.setState({ showRestartCourse: true })}
+                  style={[styles.centerContent, { flex: 1 }]}
                 >
                   <Text
                     style={{
@@ -847,3 +832,22 @@ export default class PathOverview extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  contentPageHeader: {
+    paddingLeft: 10,
+    fontSize: onTablet ? 34 : 26,
+    color: 'white',
+    fontFamily: 'OpenSans-ExtraBold'
+  },
+  mainContainer: {
+    backgroundColor: '#00101d',
+    flex: 1
+  }
+});

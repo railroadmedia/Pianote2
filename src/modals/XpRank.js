@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import ProgressCircle from 'react-native-progress-circle';
 
-const isTablet = global.onTablet;
+const onTablet = global.onTablet;
 const ranks = [
   0,
   100,
@@ -56,15 +56,15 @@ export default class XpRank extends React.Component {
         onBackButtonPress={() => this.props.hideXpRank()}
       >
         <TouchableOpacity
-          style={[styles.centerContent, { margin: 0, flex: 1 }]}
+          style={[localStyles.centerContent, { margin: 0, flex: 1 }]}
           activeOpacity={1}
           onPress={() => this.props.hideXpRank()}
         >
-          <View style={[localStyles.container, styles.centerContent]}>
-            <Text style={[styles.modalHeaderText, localStyles.title]}>
+          <View style={[localStyles.container, localStyles.centerContent]}>
+            <Text style={[localStyles.modalHeaderText, localStyles.title]}>
               Your XP Rank
             </Text>
-            <Text style={[styles.modalBodyText, localStyles.description]}>
+            <Text style={[localStyles.modalBodyText, localStyles.description]}>
               You earn XP by completing lessons,{'\n'}
               commenting on videos and more!
             </Text>
@@ -81,7 +81,7 @@ export default class XpRank extends React.Component {
               </Text>
               <Text style={localStyles.rankText}>{this.props.rank}</Text>
             </ProgressCircle>
-            <Text style={[styles.modalBodyText, localStyles.nextRank]}>
+            <Text style={[localStyles.modalBodyText, localStyles.nextRank]}>
               Next rank: {this.nextRank()}
             </Text>
           </View>
@@ -109,7 +109,7 @@ const localStyles = StyleSheet.create({
   description: {
     paddingHorizontal: 20,
     marginVertical: 10,
-    fontSize: isTablet ? 18 : 14
+    fontSize: onTablet ? 18 : 14
   },
   ProgressCircleContainer: {
     transform: [{ rotate: '315deg' }]
@@ -117,17 +117,33 @@ const localStyles = StyleSheet.create({
   XPtext: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: isTablet ? 34 : 26
+    fontSize: onTablet ? 34 : 26
   },
   rankText: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: isTablet ? 24 : 18
+    fontSize: onTablet ? 24 : 18
   },
   nextRank: {
     color: 'grey',
     paddingHorizontal: 40,
     marginVertical: 10,
-    fontSize: isTablet ? 18 : 14
+    fontSize: onTablet ? 18 : 14
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  modalHeaderText: {
+    fontFamily: 'OpenSans-Bold',
+    textAlign: 'center',
+    fontSize: onTablet ? 24 : 18
+  },
+  modalBodyText: {
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Regular',
+    fontSize: onTablet ? 16 : 12
   }
 });

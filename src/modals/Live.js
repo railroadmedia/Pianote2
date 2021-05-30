@@ -9,7 +9,7 @@ import {
 import FastImage from 'react-native-fast-image';
 import { navigate } from '../../AppNavigator';
 
-const isTablet = global.onTablet;
+const onTablet = global.onTablet;
 
 export default class Live extends React.Component {
   changeType = word => {
@@ -38,12 +38,12 @@ export default class Live extends React.Component {
   render = () => {
     return (
       <TouchableOpacity
-        style={[styles.centerContent, { margin: 0, flex: 1 }]}
+        style={[localStyles.centerContent, { margin: 0, flex: 1 }]}
         onPress={() => this.props.hideLive()}
       >
-        <View style={[styles.container, styles.centerContent]}>
+        <View style={[localStyles.gContainer, localStyles.centerContent]}>
           <View style={localStyles.container}>
-            <View style={[styles.centerContent, { flexDirection: 'row' }]}>
+            <View style={[localStyles.centerContent, { flexDirection: 'row' }]}>
               <FastImage
                 style={{
                   width: 150,
@@ -84,7 +84,7 @@ export default class Live extends React.Component {
                 </Text>
               </View>
             </View>
-            <Text style={[styles.modalBodyText, localStyles.live]}>
+            <Text style={[localStyles.modalBodyText, localStyles.live]}>
               <Text
                 style={{
                   fontFamily: 'OpenSans-Bold',
@@ -98,7 +98,7 @@ export default class Live extends React.Component {
               </Text>{' '}
               just went live. {'\n'}Would you like to join?
             </Text>
-            <Text style={[styles.modalBodyText, localStyles.live]}>
+            <Text style={[localStyles.modalBodyText, localStyles.live]}>
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
@@ -114,11 +114,11 @@ export default class Live extends React.Component {
                 localStyles.watch,
                 { justifyContent: 'center', marginTop: 0 }
               ]}
-              onPress={() => {
-                navigate('LIVE'), this.props.hideLive();
-              }}
+              onPress={(() => navigate('LIVE'), this.props.hideLive())}
             >
-              <Text style={[styles.modalButtonText, localStyles.watchText]}>
+              <Text
+                style={[localStyles.modalButtonText, localStyles.watchText]}
+              >
                 WATCH
               </Text>
             </TouchableOpacity>
@@ -127,7 +127,10 @@ export default class Live extends React.Component {
               onPress={() => this.props.hideLive()}
             >
               <Text
-                style={[styles.modalButtonText, localStyles.cancelButtonText]}
+                style={[
+                  localStyles.modalButtonText,
+                  localStyles.cancelButtonText
+                ]}
               >
                 CANCEL
               </Text>
@@ -144,6 +147,10 @@ const localStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0,0,0,.5)'
   },
+  gContainer: {
+    flex: 1,
+    alignSelf: 'stretch'
+  },
   container: {
     backgroundColor: 'white',
     paddingBottom: 15,
@@ -154,7 +161,7 @@ const localStyles = StyleSheet.create({
   live: {
     marginTop: 15,
     paddingHorizontal: 30,
-    fontSize: isTablet ? 14 : 12
+    fontSize: onTablet ? 14 : 12
   },
   calendarIcon: {
     paddingTop: 7.5,
@@ -168,7 +175,7 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#fb1b2f',
     marginHorizontal: 70,
     justifyContent: 'center',
-    height: isTablet ? 40 : 30
+    height: onTablet ? 40 : 30
   },
   cancelButton: {
     marginTop: 5,
@@ -178,12 +185,28 @@ const localStyles = StyleSheet.create({
     borderColor: '#fb1b2f',
     marginHorizontal: 70,
     justifyContent: 'center',
-    height: isTablet ? 40 : 30
+    height: onTablet ? 40 : 30
   },
   watchText: {
     color: 'white'
   },
   cancelButtonText: {
     color: 'red'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  modalBodyText: {
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Regular',
+    fontSize: onTablet ? 16 : 12
+  },
+  modalButtonText: {
+    textAlign: 'center',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: onTablet ? 16 : 12
   }
 });

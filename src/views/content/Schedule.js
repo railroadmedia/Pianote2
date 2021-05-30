@@ -18,6 +18,7 @@ import NavigationBar from '../../components/NavigationBar.js';
 import { getScheduleContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
+const onTablet = global.onTablet;
 const month = [
   'January',
   'February',
@@ -319,4 +320,21 @@ export default class Schedule extends React.Component {
   }
 }
 
-const localStyles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  contentPageHeader: {
+    paddingLeft: 10,
+    fontSize: onTablet ? 34 : 26,
+    color: 'white',
+    fontFamily: 'OpenSans-ExtraBold'
+  },
+  mainContainer: {
+    backgroundColor: '#00101d',
+    flex: 1
+  }
+});

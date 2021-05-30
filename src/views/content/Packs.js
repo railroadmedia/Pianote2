@@ -6,7 +6,8 @@ import {
   FlatList,
   RefreshControl,
   Dimensions,
-  ImageBackground
+  ImageBackground,
+  StyleSheet
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -138,14 +139,7 @@ class Packs extends React.Component {
             />
           }
           ListEmptyComponent={() => (
-            <View
-              style={[
-                styles.centerContent,
-                {
-                  flex: 1
-                }
-              ]}
-            >
+            <View style={[styles.centerContent, { flex: 1 }]}>
               <ActivityIndicator
                 size={onTablet ? 'large' : 'small'}
                 animating={true}
@@ -198,14 +192,12 @@ class Packs extends React.Component {
                   resizeMode={FastImage.resizeMode.contain}
                 />
                 <View
-                  style={[
-                    styles.heightButtons,
-                    {
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      marginBottom: onTablet ? '5%' : '7.5%'
-                    }
-                  ]}
+                  style={{
+                    height: onTablet ? 45 : 35,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginBottom: onTablet ? '5%' : '7.5%'
+                  }}
                 >
                   <View style={{ flex: 1 }} />
                   <View style={{ width: onTablet ? 200 : '45%' }}>
@@ -317,6 +309,26 @@ class Packs extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  packsContainer: {
+    flex: 1,
+    backgroundColor: '#081826'
+  },
+  contentPageHeader: {
+    paddingLeft: 10,
+    fontSize: onTablet ? 34 : 26,
+    color: 'white',
+    fontFamily: 'OpenSans-ExtraBold'
+  }
+});
+
 const mapStateToProps = state => ({ packsCache: state.packsCache });
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ cacheAndWritePacks }, dispatch);

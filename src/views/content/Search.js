@@ -348,12 +348,7 @@ export default class Search extends React.Component {
                   this.state.searchResults.length > 0) && (
                   <TouchableOpacity
                     onPress={() => this.clearRecent()}
-                    style={[
-                      styles.centerContent,
-                      {
-                        paddingRight: 10
-                      }
-                    ]}
+                    style={[styles.centerContent, { paddingRight: 10 }]}
                   >
                     {!this.state.filtering && (
                       <Text
@@ -413,13 +408,7 @@ export default class Search extends React.Component {
                 )}
               {this.state.isLoadingAll && (
                 <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      flex: 1,
-                      marginTop: 10
-                    }
-                  ]}
+                  style={[styles.centerContent, { flex: 1, marginTop: 10 }]}
                 >
                   <ActivityIndicator
                     size={onTablet ? 'large' : 'small'}

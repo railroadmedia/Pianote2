@@ -5,7 +5,8 @@ import {
   ScrollView,
   Dimensions,
   RefreshControl,
-  ActivityIndicator
+  ActivityIndicator,
+  StyleSheet
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -23,6 +24,7 @@ const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const onTablet = global.onTablet;
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
@@ -164,7 +166,7 @@ class SongCatalog extends React.Component {
             {isiOS && this.state.refreshControl && (
               <ActivityIndicator
                 size='small'
-                style={styles.ActivityIndicator}
+                style={{ padding: 20 }}
                 color={colors.secondBackground}
               />
             )}
@@ -238,6 +240,26 @@ class SongCatalog extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  mainContainer: {
+    backgroundColor: '#00101d',
+    flex: 1
+  },
+  contentPageHeader: {
+    paddingLeft: 10,
+    fontSize: onTablet ? 34 : 26,
+    color: 'white',
+    fontFamily: 'OpenSans-ExtraBold'
+  }
+});
+
 const mapStateToProps = state => ({ songsCache: state.songsCache });
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ cacheAndWriteSongs }, dispatch);

@@ -25,14 +25,16 @@ export default class AddToCalendar extends React.Component {
           <View style={localStyles.container}>
             <Text
               style={[
-                styles.modalHeaderText,
+                localStyles.modalHeaderText,
                 localStyles.addToCalendar,
                 { marginTop: 10 }
               ]}
             >
               Add To Calendar
             </Text>
-            <Text style={[styles.modalBodyText, localStyles.addToCalendar]}>
+            <Text
+              style={[localStyles.modalBodyText, localStyles.addToCalendar]}
+            >
               Add this lesson to your calendar to{'\n'} be notified when it's
               available
             </Text>
@@ -51,7 +53,7 @@ export default class AddToCalendar extends React.Component {
             >
               <Text
                 style={[
-                  styles.modalButtonText,
+                  localStyles.modalButtonText,
                   localStyles.confirmAdditionText
                 ]}
               >
@@ -103,5 +105,20 @@ const localStyles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     alignSelf: 'stretch'
+  },
+  modalHeaderText: {
+    fontFamily: 'OpenSans-Bold',
+    textAlign: 'center',
+    fontSize: onTablet ? 24 : 18
+  },
+  modalBodyText: {
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Regular',
+    fontSize: onTablet ? 16 : 12
+  },
+  modalButtonText: {
+    textAlign: 'center',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: onTablet ? 16 : 12
   }
 });

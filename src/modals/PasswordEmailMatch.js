@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 
+const onTablet = global.onTablet;
+
 export default class PasswordEmailMatch extends React.Component {
   render = () => {
     return (
@@ -16,14 +18,14 @@ export default class PasswordEmailMatch extends React.Component {
         onBackButtonPress={() => this.props.hidePasswordEmailMatch()}
       >
         <TouchableOpacity
-          style={[styles.centerContent, { margin: 0, flex: 1 }]}
+          style={[localStyles.centerContent, { margin: 0, flex: 1 }]}
           onPress={() => this.props.hidePasswordEmailMatch()}
         >
           <View style={localStyles.container}>
             <Text
               numberOfLines={2}
               style={[
-                styles.modalHeaderText,
+                localStyles.modalHeaderText,
                 localStyles.errorMessage,
                 { marginBottom: 5 }
               ]}
@@ -32,7 +34,7 @@ export default class PasswordEmailMatch extends React.Component {
             </Text>
             <Text
               style={[
-                styles.modalBodyText,
+                localStyles.modalBodyText,
                 localStyles.tryAgainText,
                 { marginBottom: 25 }
               ]}
@@ -45,7 +47,7 @@ export default class PasswordEmailMatch extends React.Component {
                 this.props.hidePasswordEmailMatch();
               }}
             >
-              <Text style={[styles.modalButtonText, localStyles.tryAgain]}>
+              <Text style={[localStyles.modalButtonText, localStyles.tryAgain]}>
                 TRY AGAIN
               </Text>
             </TouchableOpacity>
@@ -76,5 +78,26 @@ const localStyles = StyleSheet.create({
   tryAgain: {
     color: '#fb1b2f',
     marginBottom: 15
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  modalHeaderText: {
+    fontFamily: 'OpenSans-Bold',
+    textAlign: 'center',
+    fontSize: onTablet ? 24 : 18
+  },
+  modalBodyText: {
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Regular',
+    fontSize: onTablet ? 16 : 12
+  },
+  modalButtonText: {
+    textAlign: 'center',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: onTablet ? 16 : 12
   }
 });

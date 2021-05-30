@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   RefreshControl,
   Dimensions,
-  ImageBackground
+  ImageBackground,
+  StyleSheet
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Icon from '../../assets/icons.js';
@@ -26,6 +27,7 @@ import { navigate } from '../../../AppNavigator';
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const onTablet = global.onTablet;
 
 export default class Foundations extends React.Component {
   static contextType = NetworkContext;
@@ -61,7 +63,6 @@ export default class Foundations extends React.Component {
   orientationListener = o => {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
-
     if (isiOS) {
       if (onTablet) this.setState({ isLandscape });
     } else {
@@ -125,7 +126,7 @@ export default class Foundations extends React.Component {
 
   render() {
     return (
-      <View style={[styles.mainContainer, { backgroundColor: 'black' }]}>
+      <View style={styles.mainContainer}>
         <NavMenuHeaders
           isMethod={true}
           currentPage={'LESSONS'}
@@ -162,13 +163,7 @@ export default class Foundations extends React.Component {
                 'rgba(20, 20, 20, 0.5)',
                 'rgba(0, 0, 0, 1)'
               ]}
-              style={{
-                borderRadius: 0,
-                position: 'absolute',
-                top: 0,
-                width: '100%',
-                height: '100%'
-              }}
+              style={styles.gradientContanier}
             />
             <View
               style={{
@@ -180,14 +175,7 @@ export default class Foundations extends React.Component {
                 opacity: 1
               }}
             >
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignContent: 'center',
-                  alignItems: 'center',
-                  alignSelf: 'stretch'
-                }}
-              >
+              <View style={styles.centerContent}>
                 <FastImage
                   style={{
                     width: '70%',
@@ -199,17 +187,7 @@ export default class Foundations extends React.Component {
                   resizeMode={FastImage.resizeMode.contain}
                 />
               </View>
-              <View
-                style={[
-                  styles.heightButtons,
-                  {
-                    marginBottom: '3%',
-                    width: '100%',
-                    flexDirection: 'row',
-                    alignItems: 'center'
-                  }
-                ]}
-              >
+              <View style={styles.button}>
                 <View style={{ flex: 1 }} />
                 <View style={{ width: '50%' }}>
                   <LongButton
@@ -325,9 +303,7 @@ export default class Foundations extends React.Component {
                   <View
                     style={[
                       styles.centerContent,
-                      {
-                        width: onTablet ? 100 : 70
-                      }
+                      { width: onTablet ? 100 : 70 }
                     ]}
                   >
                     <Text
@@ -448,3 +424,30 @@ export default class Foundations extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    backgroundColor: 'black',
+    flex: 1
+  },
+  gradientContanier: {
+    borderRadius: 0,
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+    height: '100%'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  button: {
+    marginBottom: '3%',
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: onTablet ? 45 : 35
+  }
+});

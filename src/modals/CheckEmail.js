@@ -18,15 +18,15 @@ export default class CheckEmail extends React.Component {
         onBackButtonPress={() => this.props.hideCheckEmail()}
       >
         <TouchableOpacity
-          style={[styles.centerContent, { margin: 0, flex: 1 }]}
+          style={[localStyles.centerContent, { margin: 0, flex: 1 }]}
           onPress={() => this.props.hideCheckEmail()}
         >
-          <View style={[styles.container, styles.centerContent]}>
+          <View style={[localStyles.container1, localStyles.centerContent]}>
             <View style={localStyles.container}>
-              <Text style={[styles.modalHeaderText, localStyles.title]}>
+              <Text style={[localStyles.modalHeaderText, localStyles.title]}>
                 This email is already {'\n'} connected to an account.
               </Text>
-              <Text style={[styles.modalBodyText, localStyles.title]}>
+              <Text style={[localStyles.modalBodyText, localStyles.title]}>
                 Do you want to log in instead?
               </Text>
               <TouchableOpacity
@@ -36,7 +36,9 @@ export default class CheckEmail extends React.Component {
                   this.props.hideCheckEmail();
                 }}
               >
-                <Text style={[styles.modalButtonText, localStyles.loginText]}>
+                <Text
+                  style={[localStyles.modalButtonText, localStyles.loginText]}
+                >
                   LOG IN
                 </Text>
               </TouchableOpacity>
@@ -46,7 +48,7 @@ export default class CheckEmail extends React.Component {
               >
                 <Text
                   style={[
-                    styles.modalCancelButtonText,
+                    localStyles.modalCancelButtonText,
                     localStyles.tryAgainText
                   ]}
                 >
@@ -95,5 +97,35 @@ const localStyles = StyleSheet.create({
   },
   tryAgainText: {
     color: '#fb1b2f'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  container1: {
+    flex: 1,
+    alignSelf: 'stretch'
+  },
+  modalHeaderText: {
+    fontFamily: 'OpenSans-Bold',
+    textAlign: 'center',
+    fontSize: onTablet ? 24 : 18
+  },
+  modalButtonText: {
+    textAlign: 'center',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: onTablet ? 16 : 12
+  },
+  modalCancelButtonText: {
+    textAlign: 'center',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: onTablet ? 16 : 12
+  },
+  modalBodyText: {
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Regular',
+    fontSize: onTablet ? 16 : 12
   }
 });

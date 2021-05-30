@@ -76,12 +76,18 @@ class ReplyNotification extends React.Component {
           >
             <>
               <View
-                style={[styles.centerContent, localStyles.profileContainer]}
+                style={[
+                  localStyles.centerContent,
+                  localStyles.profileContainer
+                ]}
               >
                 <View style={localStyles.profileContainer2}>
                   {type === 'new content releases' ? (
                     <View
-                      style={[styles.centerContent, localStyles.videoContainer]}
+                      style={[
+                        localStyles.centerContent,
+                        localStyles.videoContainer
+                      ]}
                     >
                       <Icon.FontAwesome
                         size={sizing.infoButtonSize}
@@ -92,7 +98,10 @@ class ReplyNotification extends React.Component {
                   ) : type === 'forum post in followed thread' ||
                     type === 'lesson comment reply' ? (
                     <View
-                      style={[styles.centerContent, localStyles.chatContainer]}
+                      style={[
+                        localStyles.centerContent,
+                        localStyles.chatContainer
+                      ]}
                     >
                       <Chat
                         height={sizing.infoButtonSize}
@@ -102,7 +111,10 @@ class ReplyNotification extends React.Component {
                     </View>
                   ) : (
                     <View
-                      style={[styles.centerContent, localStyles.likeContainer]}
+                      style={[
+                        localStyles.centerContent,
+                        localStyles.likeContainer
+                      ]}
                     >
                       <Icon.AntDesign
                         size={sizing.infoButtonSize}
@@ -135,7 +147,7 @@ class ReplyNotification extends React.Component {
             <>
               <View style={localStyles.removeContainer}>
                 <TouchableOpacity
-                  style={[styles.container, { justifyContent: 'center' }]}
+                  style={[localStyles.gContainer, { justifyContent: 'center' }]}
                   onPress={() => removeNotification(id)}
                 >
                   <View style={localStyles.crossContainer}>
@@ -157,7 +169,7 @@ class ReplyNotification extends React.Component {
               </View>
               <View style={localStyles.muteContainer}>
                 <TouchableOpacity
-                  style={[styles.container, { justifyContent: 'center' }]}
+                  style={[localStyles.gContainer, { justifyContent: 'center' }]}
                   onPress={turnOfffNotifications}
                 >
                   <View style={localStyles.notificationContainer}>
@@ -223,6 +235,10 @@ const localStyles = StyleSheet.create({
     borderRadius: 100,
     zIndex: 5
   },
+  gContainer: {
+    flex: 1,
+    alignSelf: 'stretch'
+  },
   chatContainer: {
     position: 'absolute',
     bottom: -5,
@@ -287,5 +303,11 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: 10
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
   }
 });

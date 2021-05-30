@@ -5,7 +5,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
-  RefreshControl
+  RefreshControl,
+  StyleSheet
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -19,6 +20,7 @@ import { cacheAndWriteMyList } from '../../redux/MyListCacheActions';
 import { ActivityIndicator } from 'react-native';
 import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
+const onTablet = global.onTablet;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
@@ -125,18 +127,11 @@ class MyList extends React.Component {
           {isiOS && this.state.refreshing && (
             <ActivityIndicator
               size='small'
-              style={styles.activityIndicator}
+              style={{ padding: 20 }}
               color={colors.secondBackground}
             />
           )}
-          <Text
-            style={[
-              styles.contentPageHeader,
-              {
-                paddingLeft: 10
-              }
-            ]}
-          >
+          <Text style={[styles.contentPageHeader, { paddingLeft: 10 }]}>
             My List
           </Text>
           <TouchableOpacity
@@ -248,6 +243,57 @@ class MyList extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    backgroundColor: 'black',
+    flex: 1
+  },
+  gradientContanier: {
+    borderRadius: 0,
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+    height: '100%'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  contentPageHeader: {
+    paddingLeft: 10,
+    fontSize: onTablet ? 34 : 26,
+    color: 'white',
+    fontFamily: 'OpenSans-ExtraBold'
+  },
+  mainContainer: {
+    backgroundColor: '#00101d',
+    flex: 1
+  },
+  tabRightContainer: {
+    // container used for my list in progress & on settings
+    width: '100%',
+    borderTopWidth: 0.5,
+    paddingVertical: 10,
+    borderTopColor: '#445f73',
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#445f73',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  tabRightContainerText: {
+    // container used for my list in progress & on settings
+    paddingLeft: onTablet ? 10 : 5,
+    fontSize: onTablet ? 24 : 20,
+    textAlign: 'left',
+    fontFamily: 'RobotoCondensed-Bold',
+    color: '#445f73'
+  }
+});
+
 const mapStateToProps = state => ({ myListCache: state.myListCache });
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ cacheAndWriteMyList }, dispatch);

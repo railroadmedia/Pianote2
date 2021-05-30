@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
 import Icon from '../assets/icons';
 
+const onTablet = global.onTablet;
+
 export default class OverviewComplete extends React.Component {
   changeType = word => {
     word = word.replace(/[- )(]/g, ' ').split(' ');
@@ -25,25 +27,25 @@ export default class OverviewComplete extends React.Component {
         onBackButtonPress={() => this.props.hideOverviewComplete()}
       >
         <BlurView
-          style={[styles.container, styles.centerContent]}
+          style={[localStyles.gContainer, localStyles.centerContent]}
           blurAmount={5}
         >
           <TouchableOpacity
-            style={[styles.centerContent, styles.container]}
+            style={[localStyles.centerContent, localStyles.gContainer]}
             onPress={() => this.props.hideOverviewComplete()}
           >
             <View style={localStyles.container}>
-              <View style={[styles.centerContent]}>
+              <View style={[localStyles.centerContent]}>
                 <Icon.Ionicons
                   name={'ios-trophy'}
                   size={onTablet ? 45 : 35}
                   color={colors.pianoteRed}
                 />
               </View>
-              <View style={[styles.centerContent, { padding: 5 }]}>
+              <View style={[localStyles.centerContent, { padding: 5 }]}>
                 <Text
                   style={[
-                    styles.modalHeaderText,
+                    localStyles.modalHeaderText,
                     { textTransform: 'capitalize' }
                   ]}
                 >
@@ -51,13 +53,13 @@ export default class OverviewComplete extends React.Component {
                   {'\n'}Complete
                 </Text>
               </View>
-              <Text style={[styles.modalBodyText, localStyles.congrats]}>
+              <Text style={[localStyles.modalBodyText, localStyles.congrats]}>
                 Congratulations! You completed
               </Text>
-              <Text style={[styles.modalBodyText, localStyles.title]}>
+              <Text style={[localStyles.modalBodyText, localStyles.title]}>
                 {this.props.title}
               </Text>
-              <Text style={[styles.modalButtonText, localStyles.xp]}>
+              <Text style={[localStyles.modalButtonText, localStyles.xp]}>
                 YOU EARNED {this.props.xp} XP!
               </Text>
             </View>
@@ -80,6 +82,11 @@ const localStyles = StyleSheet.create({
     marginVertical: 5,
     marginHorizontal: 20
   },
+  modalHeaderText: {
+    fontFamily: 'OpenSans-Bold',
+    textAlign: 'center',
+    fontSize: onTablet ? 24 : 18
+  },
   title: {
     marginHorizontal: 20,
     marginBottom: 15,
@@ -87,5 +94,25 @@ const localStyles = StyleSheet.create({
   },
   xp: {
     color: '#fb1b2f'
+  },
+  gContainer: {
+    flex: 1,
+    alignSelf: 'stretch'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  modalButtonText: {
+    textAlign: 'center',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: onTablet ? 16 : 12
+  },
+  modalBodyText: {
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Regular',
+    fontSize: onTablet ? 16 : 12
   }
 });

@@ -5,7 +5,6 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
-  Dimensions,
   SafeAreaView,
   StyleSheet
 } from 'react-native';
@@ -15,17 +14,14 @@ import AssignmentResource from './AssignmentResource.js';
 import downloadService from '../../services/download.service.js';
 import { NetworkContext } from '../../context/NetworkProvider';
 
-const windowDim = Dimensions.get('window');
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 let localStyles;
+const onTablet = global.onTablet;
 
 export default class Assignment extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
     localStyles = setStyles(colors, sizing);
-
     this.state = {
       hideTitles: false,
       showSheets: false,
@@ -78,7 +74,10 @@ export default class Assignment extends React.Component {
                   timeCodes?.map(tc => (
                     <TouchableOpacity
                       onPress={() => this.props.onSeek?.(tc.value)}
-                      style={[styles.centerContent, localStyles.timeCodeBtn]}
+                      style={[
+                        localStyles.centerContent,
+                        localStyles.timeCodeBtn
+                      ]}
                     >
                       <Text style={localStyles.timeCodeBtnText}>
                         SKIP VIDEO TO {formatTimeHHMMSS(tc.value)}
@@ -88,7 +87,7 @@ export default class Assignment extends React.Component {
                 ) : !!timeCodes ? (
                   <TouchableOpacity
                     onPress={() => this.props.onSeek?.(timeCodes)}
-                    style={[styles.centerContent, localStyles.timeCodeBtn]}
+                    style={[localStyles.centerContent, localStyles.timeCodeBtn]}
                   >
                     <Text style={localStyles.timeCodeBtnText}>
                       SKIP VIDEO TO {formatTimeHHMMSS(timeCodes)}
@@ -129,18 +128,14 @@ export default class Assignment extends React.Component {
             {slug && (
               <TouchableOpacity
                 onPress={() => this.setState({ showSoundSlice: true })}
-                style={[
-                  styles.centerContent,
-                  styles.heightButtons,
-                  localStyles.practiceBtn
-                ]}
+                style={[localStyles.centerContent, localStyles.practiceBtn]}
               >
                 <Text style={localStyles.practiceBtnText}>PRACTICE</Text>
               </TouchableOpacity>
             )}
             <TouchableOpacity
               onPress={() => this.props.onCompleteAssignment()}
-              style={[styles.centerContent, localStyles.completeBtn]}
+              style={[localStyles.centerContent, localStyles.completeBtn]}
             >
               <Text style={localStyles.completeBtnText}>
                 {this.props.assignmentProgress === 100
@@ -225,7 +220,8 @@ const setStyles = (appColor, size) =>
     practiceBtnText: {
       color: appColor.pianoteRed,
       fontFamily: 'RobotoCondensed-Bold',
-      fontSize: size.verticalListTitleSmall
+      fontSize: size.verticalListTitleSmall,
+      height: onTablet ? 45 : 35
     },
     completeBtn: {
       backgroundColor: appColor.pianoteRed,
@@ -238,6 +234,12 @@ const setStyles = (appColor, size) =>
       fontFamily: 'RobotoCondensed-Bold',
       fontSize: size.verticalListTitleSmall,
       paddingVertical: 10
+    },
+    centerContent: {
+      justifyContent: 'center',
+      alignContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'stretch'
     }
   });
 

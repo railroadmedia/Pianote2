@@ -21,6 +21,8 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
 import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
+const onTablet = global.onTablet;
+
 class StudentFocusCatalog extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
@@ -140,7 +142,7 @@ class StudentFocusCatalog extends React.Component {
                 {isiOS && this.state.refreshControl && (
                   <ActivityIndicator
                     size='small'
-                    style={styles.activityIndicator}
+                    style={{ padding: 20 }}
                     color={colors.secondBackground}
                   />
                 )}
@@ -177,6 +179,26 @@ class StudentFocusCatalog extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  mainContainer: {
+    backgroundColor: '#00101d',
+    flex: 1
+  },
+  contentPageHeader: {
+    paddingLeft: 10,
+    fontSize: onTablet ? 34 : 26,
+    color: 'white',
+    fontFamily: 'OpenSans-ExtraBold'
+  }
+});
+
 const mapStateToProps = state => ({
   studentFocusCache: state.studentFocusCache
 });

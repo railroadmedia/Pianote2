@@ -1,6 +1,3 @@
-/**
- * VideoPlayer
- */
 import React from 'react';
 import {
   View,
@@ -13,7 +10,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   KeyboardAvoidingView,
-  BackHandler
+  BackHandler,
+  StyleSheet
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
@@ -1713,16 +1711,14 @@ export default class VideoPlayer extends React.Component {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[
-                  styles.heightButtons,
-                  {
-                    backgroundColor: colors.pianoteRed,
-                    borderRadius: 500,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flex: 1
-                  }
-                ]}
+                style={{
+                  height: onTablet ? 45 : 35,
+                  backgroundColor: colors.pianoteRed,
+                  borderRadius: 500,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flex: 1
+                }}
                 onPress={() =>
                   this.state.progress === 100
                     ? this.setState({ showRestartCourse: true })
@@ -2099,3 +2095,17 @@ export default class VideoPlayer extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  modalButtonText: {
+    textAlign: 'center',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: onTablet ? 16 : 12
+  }
+});

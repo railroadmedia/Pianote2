@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   RefreshControl,
   Dimensions,
-  ImageBackground
+  ImageBackground,
+  StyleSheet
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
@@ -219,15 +220,13 @@ export default class MethodLevel extends React.Component {
                 />
               </View>
               <View
-                style={[
-                  styles.heightButtons,
-                  {
-                    marginBottom: 10,
-                    width: '100%',
-                    flexDirection: 'row',
-                    alignItems: 'center'
-                  }
-                ]}
+                style={{
+                  height: onTablet ? 45 : 35,
+                  marginBottom: 10,
+                  width: '100%',
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}
               >
                 <View
                   style={{
@@ -400,3 +399,33 @@ export default class MethodLevel extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    backgroundColor: 'black',
+    flex: 1
+  },
+  gradientContanier: {
+    borderRadius: 0,
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+    height: '100%'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  contentPageHeader: {
+    paddingLeft: 10,
+    fontSize: onTablet ? 34 : 26,
+    color: 'white',
+    fontFamily: 'OpenSans-ExtraBold'
+  },
+  mainContainer: {
+    backgroundColor: '#00101d',
+    flex: 1
+  }
+});

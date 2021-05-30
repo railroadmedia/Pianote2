@@ -6,7 +6,8 @@ import {
   Dimensions,
   TouchableOpacity,
   RefreshControl,
-  StatusBar
+  StatusBar,
+  StyleSheet
 } from 'react-native';
 import Back from '../../assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
@@ -192,3 +193,34 @@ export default class SeeAll extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  packsContainer: {
+    flex: 1,
+    backgroundColor: '#081826'
+  },
+  childHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#081826',
+    padding: 10
+  },
+  childHeaderText: {
+    fontSize: onTablet ? 28 : 20,
+    color: 'white',
+    fontFamily: 'OpenSans-ExtraBold',
+    alignSelf: 'center',
+    textAlign: 'center'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  mainContainer: {
+    backgroundColor: '#00101d',
+    flex: 1
+  }
+});

@@ -33,6 +33,7 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import { goBack } from '../../../AppNavigator';
 import { getLiveContent } from '../../../src/services/GetContent';
 
+const onTablet = global.onTablet;
 const month = [
   'January',
   'February',
@@ -746,3 +747,29 @@ export default class Live extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    backgroundColor: 'black',
+    flex: 1
+  },
+  gradientContanier: {
+    borderRadius: 0,
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+    height: '100%'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  contentPageHeader: {
+    paddingLeft: 10,
+    fontSize: onTablet ? 34 : 26,
+    color: 'white',
+    fontFamily: 'OpenSans-ExtraBold'
+  }
+});

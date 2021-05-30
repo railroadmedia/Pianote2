@@ -24,13 +24,13 @@ export default class RestartCourse extends React.Component {
       >
         <TouchableOpacity
           onPress={() => this.props.hideRestartCourse()}
-          style={[styles.centerContent, { margin: 0, flex: 1 }]}
+          style={[localStyles.centerContent, { margin: 0, flex: 1 }]}
         >
-          <View style={[styles.centerContent, styles.container]}>
+          <View style={[localStyles.centerContent, localStyles.container]}>
             <View style={localStyles.container}>
               <Text
                 style={[
-                  styles.modalHeaderText,
+                  localStyles.modalHeaderText,
                   { textTransform: 'capitalize' }
                 ]}
               >
@@ -42,7 +42,7 @@ export default class RestartCourse extends React.Component {
               </Text>
               <Text
                 style={[
-                  styles.modalBodyText,
+                  localStyles.modalBodyText,
                   localStyles.descriptionText,
                   { textTransform: 'capitalize' }
                 ]}
@@ -55,10 +55,15 @@ export default class RestartCourse extends React.Component {
                 concepts nailed! This will remove the XP you've earned.
               </Text>
               <TouchableOpacity
-                style={[styles.centerContent, localStyles.restartContainer]}
+                style={[
+                  localStyles.centerContent,
+                  localStyles.restartContainer
+                ]}
                 onPress={() => this.props.onRestart()}
               >
-                <Text style={[styles.modalButtonText, localStyles.restartText]}>
+                <Text
+                  style={[localStyles.modalButtonText, localStyles.restartText]}
+                >
                   RESTART {this.changeType(type).toUpperCase()}
                 </Text>
               </TouchableOpacity>
@@ -66,7 +71,9 @@ export default class RestartCourse extends React.Component {
                 style={localStyles.cancelContainer}
                 onPress={() => this.props.hideRestartCourse()}
               >
-                <Text style={[styles.modalButtonText, localStyles.cancelText]}>
+                <Text
+                  style={[localStyles.modalButtonText, localStyles.cancelText]}
+                >
                   CANCEL
                 </Text>
               </TouchableOpacity>
@@ -114,5 +121,30 @@ const localStyles = StyleSheet.create({
   cancelText: {
     color: 'grey',
     marginBottom: 10
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  gContainer: {
+    flex: 1,
+    alignSelf: 'stretch'
+  },
+  modalHeaderText: {
+    fontFamily: 'OpenSans-Bold',
+    textAlign: 'center',
+    fontSize: onTablet ? 24 : 18
+  },
+  modalBodyText: {
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Regular',
+    fontSize: onTablet ? 16 : 12
+  },
+  modalButtonText: {
+    textAlign: 'center',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: onTablet ? 16 : 12
   }
 });

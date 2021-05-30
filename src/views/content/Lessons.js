@@ -9,7 +9,8 @@ import {
   TouchableOpacity,
   Text,
   Image,
-  Modal
+  Modal,
+  StyleSheet
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -397,15 +398,13 @@ class Lessons extends React.Component {
                   />
                 </View>
                 <View
-                  style={[
-                    styles.heightButtons,
-                    {
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      marginBottom: '8.5%',
-                      justifyContent: 'center'
-                    }
-                  ]}
+                  style={{
+                    height: onTablet ? 45 : 35,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginBottom: '8.5%',
+                    justifyContent: 'center'
+                  }}
                 >
                   <View style={{ flex: 1 }} />
                   <View style={{ width: onTablet ? 200 : '45%' }}>
@@ -1021,6 +1020,14 @@ class Lessons extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  methodContainer: {
+    flex: 1,
+    backgroundColor: 'black'
+  }
+});
+
 const mapStateToProps = state => ({ lessonsCache: state.lessonsCache });
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ cacheAndWriteLessons }, dispatch);

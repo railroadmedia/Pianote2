@@ -14,6 +14,7 @@ import ApprovedTeacher from '../assets/img/svgs/approved-teacher.svg';
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const onTablet = global.onTablet;
 
 export default class LessonComplete extends React.Component {
   changeType = word => {
@@ -45,9 +46,9 @@ export default class LessonComplete extends React.Component {
       >
         <TouchableOpacity
           onPress={() => this.props.hideLessonComplete()}
-          style={[styles.centerContent, { margin: 0, flex: 1 }]}
+          style={[localStyles.centerContent, { margin: 0, flex: 1 }]}
         >
-          <View style={[styles.centerContent, styles.container]}>
+          <View style={[localStyles.centerContent, localStyles.gContainer]}>
             <View style={localStyles.container}>
               <Icon.Ionicons
                 name={'ios-trophy'}
@@ -56,7 +57,7 @@ export default class LessonComplete extends React.Component {
               />
               <Text
                 style={[
-                  styles.modalHeaderText,
+                  localStyles.modalHeaderText,
                   localStyles.headerText,
                   { textTransform: 'capitalize' }
                 ]}
@@ -64,7 +65,9 @@ export default class LessonComplete extends React.Component {
                 {this.changeType(type)}
                 {'\n'}Complete
               </Text>
-              <View style={[styles.centerContent, localStyles.imageContainer]}>
+              <View
+                style={[localStyles.centerContent, localStyles.imageContainer]}
+              >
                 <FastImage
                   style={localStyles.image}
                   resizeMode={FastImage.resizeMode.cover}
@@ -76,7 +79,7 @@ export default class LessonComplete extends React.Component {
                 >
                   <View
                     style={[
-                      styles.centerContent,
+                      localStyles.centerContent,
                       localStyles.approvedTeacherContainer
                     ]}
                   />
@@ -87,20 +90,26 @@ export default class LessonComplete extends React.Component {
                   />
                 </FastImage>
               </View>
-              <Text style={[styles.modalBodyText, localStyles.congratsText]}>
+              <Text
+                style={[localStyles.modalBodyText, localStyles.congratsText]}
+              >
                 Congratulations! You completed
               </Text>
-              <Text style={[styles.modalBodyText, localStyles.completeLesson]}>
+              <Text
+                style={[localStyles.modalBodyText, localStyles.completeLesson]}
+              >
                 {completedLessonTitle}
               </Text>
-              <Text style={[styles.modalBodyText, localStyles.youEarnedText]}>
+              <Text
+                style={[localStyles.modalBodyText, localStyles.youEarnedText]}
+              >
                 YOU EARNED {completedLessonXp} XP!
               </Text>
-              <Text style={[styles.modalBodyText, localStyles.upNextText]}>
+              <Text style={[localStyles.modalBodyText, localStyles.upNextText]}>
                 up next:
               </Text>
               <TouchableOpacity
-                style={[styles.centerContent, localStyles.image2Container]}
+                style={[localStyles.centerContent, localStyles.image2Container]}
                 onPress={onGoToNext}
               >
                 <FastImage
@@ -115,7 +124,9 @@ export default class LessonComplete extends React.Component {
                   }}
                 />
               </TouchableOpacity>
-              <Text style={[styles.modalHeaderText, localStyles.videoTitle]}>
+              <Text
+                style={[localStyles.modalHeaderText, localStyles.videoTitle]}
+              >
                 {nextLesson?.title}
               </Text>
             </View>
@@ -130,6 +141,11 @@ const localStyles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,.5)'
+  },
+  modalBodyText: {
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Regular',
+    fontSize: onTablet ? 16 : 12
   },
   container: {
     borderRadius: 10,
@@ -197,5 +213,25 @@ const localStyles = StyleSheet.create({
   videoTitle: {
     paddingHorizontal: 20,
     marginTop: 10
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  gContainer: {
+    flex: 1,
+    alignSelf: 'stretch'
+  },
+  modalHeaderText: {
+    fontFamily: 'OpenSans-Bold',
+    textAlign: 'center',
+    fontSize: onTablet ? 24 : 18
+  },
+  modalBodyText: {
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Regular',
+    fontSize: onTablet ? 16 : 12
   }
 });

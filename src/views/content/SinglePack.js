@@ -9,7 +9,8 @@ import {
   Dimensions,
   ImageBackground,
   StatusBar,
-  Modal
+  Modal,
+  StyleSheet
 } from 'react-native';
 import { Download_V2 } from 'RNDownload';
 import { SafeAreaView } from 'react-navigation';
@@ -209,9 +210,7 @@ export default class SinglePack extends React.Component {
   render() {
     return (
       <SafeAreaView
-        forceInset={{
-          bottom: 'never'
-        }}
+        forceInset={{ bottom: 'never' }}
         style={[styles.container, { backgroundColor: colors.mainBackground }]}
       >
         <StatusBar
@@ -294,15 +293,13 @@ export default class SinglePack extends React.Component {
                   resizeMode={FastImage.resizeMode.contain}
                 />
                 <View
-                  style={[
-                    styles.heightButtons,
-                    {
-                      marginBottom: 10,
-                      width: '100%',
-                      flexDirection: 'row',
-                      alignItems: 'center'
-                    }
-                  ]}
+                  style={{
+                    height: onTablet ? 45 : 35,
+                    marginBottom: 10,
+                    width: '100%',
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                  }}
                 >
                   <View
                     style={{
@@ -694,3 +691,12 @@ export default class SinglePack extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  }
+});

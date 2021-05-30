@@ -1248,7 +1248,10 @@ class ViewLesson extends React.Component {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.heightButtons, localStyles.completeBtn]}
+                style={[
+                  { height: onTablet ? 45 : 35 },
+                  localStyles.completeBtn
+                ]}
                 onPress={() =>
                   this.state.progress === 100
                     ? this.setState({ showRestartCourse: true })
@@ -1439,14 +1442,14 @@ class ViewLesson extends React.Component {
               }}
             >
               <Text
-                style={[
-                  styles.modalButtonText,
-                  {
-                    padding: 15,
-                    fontSize: 15,
-                    color: '#ffffff'
-                  }
-                ]}
+                style={{
+                  textAlign: 'center',
+                  fontFamily: 'RobotoCondensed-Bold',
+                  fontSize: onTablet ? 16 : 12,
+                  padding: 15,
+                  fontSize: 15,
+                  color: '#ffffff'
+                }}
               >
                 RELOAD LESSON
               </Text>

@@ -84,10 +84,10 @@ export default class ContentModal extends React.Component {
         onBackButtonPress={() => this.props.hideContentModal()}
       >
         <TouchableOpacity
-          style={[styles.centerContent, { margin: 0, flex: 1 }]}
+          style={[localStyles.centerContent, { margin: 0, flex: 1 }]}
           onPress={() => this.props.hideContentModal()}
         >
-          <View style={[styles.container, styles.centerContent]}>
+          <View style={[localStyles.gContainer, localStyles.centerContent]}>
             <View style={localStyles.container}>
               <View
                 style={[
@@ -113,11 +113,13 @@ export default class ContentModal extends React.Component {
               <Text numberOfLines={5} style={localStyles.description}>
                 {this.state.description}
               </Text>
-              <View style={[styles.centerContent, { flexDirection: 'row' }]}>
+              <View
+                style={[localStyles.centerContent, { flexDirection: 'row' }]}
+              >
                 <View style={{ flex: 1 }} />
                 {(this.state.bundle_number > 1 ||
                   this.state.lesson_count > 1) && (
-                  <View style={[styles.centerContent, { flex: 1 }]}>
+                  <View style={[localStyles.centerContent, { flex: 1 }]}>
                     <Text style={localStyles.lessonCount}>
                       {this.state.lesson_count > 1
                         ? this.state.lesson_count
@@ -130,7 +132,7 @@ export default class ContentModal extends React.Component {
                   this.state.lesson_count > 1) && (
                   <View style={{ flex: 0.6 }} />
                 )}
-                <View style={[styles.centerContent, { flex: 1 }]}>
+                <View style={[localStyles.centerContent, { flex: 1 }]}>
                   <Text style={localStyles.xp}>{this.state.xp}</Text>
                   <Text style={localStyles.XPtext}>XP</Text>
                 </View>
@@ -295,6 +297,10 @@ const localStyles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
     alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  gContainer: {
+    flex: 1,
     alignSelf: 'stretch'
   }
 });
