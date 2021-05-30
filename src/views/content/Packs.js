@@ -24,6 +24,7 @@ import Orientation from 'react-native-orientation-locker';
 import { cacheAndWritePacks } from '../../redux/PacksCacheActions';
 import { navigate } from '../../../AppNavigator';
 
+const onTablet = global.onTablet;
 let greaterWDim;
 class Packs extends React.Component {
   static contextType = NetworkContext;

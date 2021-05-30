@@ -20,7 +20,7 @@ import { goBack } from '../../../AppNavigator.js';
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-
+const onTablet = global.onTablet;
 const typeDict = {
   'My List': 'MYLIST',
   Packs: 'PACKS',

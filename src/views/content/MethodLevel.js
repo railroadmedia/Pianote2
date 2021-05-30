@@ -29,6 +29,7 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import methodService from '../../services/method.service';
 import { goBack, navigate } from '../../../AppNavigator';
 
+const onTablet = global.onTablet;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
