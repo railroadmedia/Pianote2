@@ -87,7 +87,7 @@ class Post extends React.Component {
             </View>
           </View>
           <Text style={styles.xp}>
-            {new Date(post.published_on).toDateString().substring(4)} #{index}
+            {post.published_on_formatted} #{index}
           </Text>
         </View>
         <HTMLRenderer
