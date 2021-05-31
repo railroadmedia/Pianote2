@@ -86,5 +86,11 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
     color: 'white'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
   }
 });

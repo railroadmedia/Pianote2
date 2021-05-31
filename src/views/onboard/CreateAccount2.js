@@ -21,7 +21,7 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
 import { goBack, navigate } from '../../../AppNavigator';
 
-const isTablet = global.onTablet;
+const onTablet = global.onTablet;
 
 export default class CreateAccount extends React.Component {
   static contextType = NetworkContext;
@@ -124,7 +124,10 @@ export default class CreateAccount extends React.Component {
               />
             </TouchableOpacity>
             <Text
-              style={[styles.modalHeaderText, localStyles.createAccountText]}
+              style={[
+                localStyles.modalHeaderText,
+                localStyles.createAccountText
+              ]}
             >
               Create Account
             </Text>
@@ -243,7 +246,7 @@ export default class CreateAccount extends React.Component {
                     }
                   }}
                   style={[
-                    styles.centerContent,
+                    localStyles.centerContent,
                     localStyles.savePass,
                     {
                       width: onTablet ? '30%' : '50%',
@@ -259,7 +262,7 @@ export default class CreateAccount extends React.Component {
                 >
                   <Text
                     style={[
-                      styles.modalButtonText,
+                      localStyles.modalButtonText,
                       {
                         color:
                           this.state.password.length > 0 &&
@@ -296,7 +299,7 @@ const localStyles = StyleSheet.create({
   },
   createAccountText: {
     color: 'white',
-    fontSize: isTablet ? 36 : 24,
+    fontSize: onTablet ? 36 : 24,
     alignSelf: 'center'
   },
   createPasswordContainer: {
@@ -306,7 +309,7 @@ const localStyles = StyleSheet.create({
   },
   createPasswordText: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: isTablet ? 24 : 16,
+    fontSize: onTablet ? 24 : 16,
     textAlign: 'left',
     color: 'white',
     paddingLeft: 15
@@ -323,7 +326,7 @@ const localStyles = StyleSheet.create({
     color: 'black',
     borderRadius: 100,
     marginHorizontal: 15,
-    fontSize: isTablet ? 20 : 14,
+    fontSize: onTablet ? 20 : 14,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
@@ -346,7 +349,7 @@ const localStyles = StyleSheet.create({
   characters: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'left',
-    fontSize: isTablet ? 18 : 14,
+    fontSize: onTablet ? 18 : 14,
     color: 'white',
     paddingLeft: 15,
     marginBottom: 40
@@ -356,5 +359,35 @@ const localStyles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 50,
     alignSelf: 'center'
+  },
+  modalHeaderText: {
+    fontFamily: 'OpenSans-Bold',
+    textAlign: 'center',
+    fontSize: onTablet ? 24 : 18
+  },
+  modalCancelButtonText: {
+    textAlign: 'center',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: onTablet ? 16 : 12
+  },
+  modalButtonText: {
+    textAlign: 'center',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: onTablet ? 16 : 12
+  },
+  modalBodyText: {
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Regular',
+    fontSize: onTablet ? 16 : 12
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  container: {
+    flex: 1,
+    alignSelf: 'stretch'
   }
 });

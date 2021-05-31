@@ -307,10 +307,12 @@ export default class Login extends React.Component {
             height={'30%'}
             borderRadius={0}
           />
-          <View style={[styles.centerContent, localStyles.aboveWordsContainer]}>
+          <View
+            style={[localStyles.centerContent, localStyles.aboveWordsContainer]}
+          >
             <View
               style={[
-                styles.centerContent,
+                localStyles.centerContent,
                 {
                   width: '100%',
                   zIndex: 3,
@@ -360,7 +362,7 @@ export default class Login extends React.Component {
               elevation: 3
             }}
           >
-            <View style={styles.centerContent}>
+            <View style={localStyles.centerContent}>
               <Image
                 style={{
                   height: onTablet ? 200 : 100,
@@ -526,5 +528,11 @@ const localStyles = StyleSheet.create({
     color: '#ffffff',
     textAlign: 'center',
     fontFamily: 'OpenSans-Bold'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
   }
 });

@@ -91,7 +91,10 @@ export default class CreateAccount extends React.Component {
               />
             </TouchableOpacity>
             <Text
-              style={[styles.modalHeaderText, localStyles.createAccountText]}
+              style={[
+                localStyles.modalHeaderText,
+                localStyles.createAccountText
+              ]}
             >
               Create Account
             </Text>
@@ -128,7 +131,7 @@ export default class CreateAccount extends React.Component {
                   <TouchableOpacity
                     onPress={() => this.verifyEmail()}
                     style={[
-                      styles.centerContent,
+                      localStyles.centerContent,
                       localStyles.verifyContainer,
                       {
                         width: onTablet ? '30%' : '50%',
@@ -141,7 +144,7 @@ export default class CreateAccount extends React.Component {
                   >
                     <Text
                       style={[
-                        styles.modalButtonText,
+                        localStyles.modalButtonText,
                         {
                           color:
                             this.state.email.length > 0
@@ -174,7 +177,7 @@ export default class CreateAccount extends React.Component {
             <Modal
               visible={this.state.showValidateEmail}
               transparent={true}
-              style={[styles.centerContent, { margin: 0, flex: 1 }]}
+              style={[localStyles.centerContent, { margin: 0, flex: 1 }]}
               animation={'slideInUp'}
               animationInTiming={350}
               animationOutTiming={350}
@@ -185,12 +188,16 @@ export default class CreateAccount extends React.Component {
               }
             >
               <TouchableOpacity
-                style={[styles.container, styles.centerContent]}
+                style={[localStyles.gContainer, localStyles.centerContent]}
                 onPress={() => this.setState({ showValidateEmail: false })}
               >
-                <View style={[styles.container, styles.centerContent]}>
+                <View
+                  style={[localStyles.gContainer, localStyles.centerContent]}
+                >
                   <View style={localStyles.containerModal}>
-                    <Text style={[styles.modalHeaderText, localStyles.title]}>
+                    <Text
+                      style={[localStyles.modalHeaderText, localStyles.title]}
+                    >
                       The email must be a valid {'\n'}email address.
                     </Text>
                     <TouchableOpacity
@@ -201,7 +208,7 @@ export default class CreateAccount extends React.Component {
                     >
                       <Text
                         style={[
-                          styles.modalCancelButtonText,
+                          localStyles.modalCancelButtonText,
                           localStyles.tryAgainText
                         ]}
                       >
@@ -300,5 +307,30 @@ const setStyles = (appColor, size) =>
     },
     tryAgainText: {
       color: appColor.pianoteRed
+    },
+    modalHeaderText: {
+      fontFamily: 'OpenSans-Bold',
+      textAlign: 'center',
+      fontSize: onTablet ? 24 : 18
+    },
+    centerContent: {
+      justifyContent: 'center',
+      alignContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'stretch'
+    },
+    gContainer: {
+      flex: 1,
+      alignSelf: 'stretch'
+    },
+    modalCancelButtonText: {
+      textAlign: 'center',
+      fontFamily: 'RobotoCondensed-Bold',
+      fontSize: onTablet ? 16 : 12
+    },
+    modalButtonText: {
+      textAlign: 'center',
+      fontFamily: 'RobotoCondensed-Bold',
+      fontSize: onTablet ? 16 : 12
     }
   });

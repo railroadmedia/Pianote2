@@ -4,7 +4,6 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   Alert,
   StatusBar,
   StyleSheet,
@@ -37,7 +36,7 @@ import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions'
 import { goBack, navigate, reset } from '../../../AppNavigator.js';
 import { setLoggedInUser } from '../../redux/UserActions.js';
 
-const isTablet = global.onTablet;
+const onTablet = global.onTablet;
 let localStyles;
 
 class Settings extends React.Component {
@@ -196,7 +195,7 @@ class Settings extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.mainContainer}>
+      <SafeAreaView style={localStyles.mainContainer}>
         <StatusBar
           backgroundColor={colors.mainBackground}
           barStyle={'light-content'}
@@ -211,14 +210,17 @@ class Settings extends React.Component {
           </TouchableOpacity>
 
           <Text
-            style={[styles.childHeaderText, { color: colors.secondBackground }]}
+            style={[
+              localStyles.childHeaderText,
+              { color: colors.secondBackground }
+            ]}
           >
             Settings
           </Text>
           <View style={{ flex: 1 }} />
         </View>
 
-        <ScrollView style={styles.mainContainer}>
+        <ScrollView style={localStyles.mainContainer}>
           {[
             {
               nav: () => navigate('PROFILESETTINGS'),
@@ -312,7 +314,7 @@ class Settings extends React.Component {
             <TouchableOpacity
               key={item.title}
               style={[
-                styles.centerContent,
+                localStyles.centerContent,
                 localStyles.container,
                 {
                   borderTopWidth: 1,
@@ -323,7 +325,10 @@ class Settings extends React.Component {
             >
               <View style={{ flexDirection: 'row' }}>
                 <View
-                  style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
+                  style={[
+                    localStyles.centerContent,
+                    { width: onTablet ? 70 : 50 }
+                  ]}
                 >
                   {item.icon}
                 </View>
@@ -348,7 +353,7 @@ class Settings extends React.Component {
         <Modal
           visible={this.state.showLogOut}
           transparent={true}
-          style={[styles.centerContent, { margin: 0, flex: 1 }]}
+          style={[localStyles.centerContent, { margin: 0, flex: 1 }]}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -357,31 +362,41 @@ class Settings extends React.Component {
           onBackButtonPress={() => this.setState({ showLogOut: false })}
         >
           <TouchableOpacity
-            style={[styles.centerContent, localStyles.modalContainer]}
+            style={[localStyles.centerContent, localStyles.modalContainer]}
             onPress={() => this.setState({ showLogOut: false })}
           >
-            <View style={[styles.centerContent, styles.container]}>
+            <View style={[localStyles.centerContent, localStyles.gContainer]}>
               <View style={localStyles.container2}>
-                <Text style={[styles.modalHeaderText, localStyles.title]}>
+                <Text style={[localStyles.modalHeaderText, localStyles.title]}>
                   Log Out
                 </Text>
-                <Text style={[styles.modalBodyText, localStyles.description]}>
+                <Text
+                  style={[localStyles.modalBodyText, localStyles.description]}
+                >
                   Are you sure that you want to log out?
                 </Text>
                 <TouchableOpacity
-                  style={[styles.centerContent, localStyles.logoutText]}
+                  style={[localStyles.centerContent, localStyles.logoutText]}
                   onPress={() => this.logOut()}
                 >
-                  <Text style={[styles.modalButtonText, localStyles.logout]}>
+                  <Text
+                    style={[localStyles.modalButtonText, localStyles.logout]}
+                  >
                     LOG OUT
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[styles.centerContent, localStyles.cancelContainter]}
+                  style={[
+                    localStyles.centerContent,
+                    localStyles.cancelContainter
+                  ]}
                   onPress={() => this.setState({ showLogOut: false })}
                 >
                   <Text
-                    style={[styles.modalCancelButtonText, localStyles.cancel]}
+                    style={[
+                      localStyles.modalCancelButtonText,
+                      localStyles.cancel
+                    ]}
                   >
                     CANCEL
                   </Text>
@@ -461,7 +476,7 @@ const setStyles = (isLight, appColor) =>
       backgroundColor: 'rgba(0,0,0,.5)'
     },
     container: {
-      height: isTablet ? 70 : 50,
+      height: onTablet ? 70 : 50,
       width: '100%',
       borderBottomColor: isLight ? '#97AABE' : '#445f73',
       borderBottomWidth: 1,
@@ -474,6 +489,10 @@ const setStyles = (isLight, appColor) =>
       borderRadius: 15,
       margin: 20
     },
+    gContainer: {
+      flex: 1,
+      alignSelf: 'stretch'
+    },
     title: {
       marginTop: 20,
       paddingHorizontal: 20
@@ -482,7 +501,7 @@ const setStyles = (isLight, appColor) =>
       paddingHorizontal: 30,
       marginTop: 10,
       marginBottom: 5,
-      fontSize: isTablet ? 18 : 14
+      fontSize: onTablet ? 18 : 14
     },
     logoutText: {
       backgroundColor: appColor,
@@ -490,12 +509,12 @@ const setStyles = (isLight, appColor) =>
       marginVertical: 15,
       marginHorizontal: 30,
       fontFamily: 'OpenSans-Bold',
-      height: isTablet ? 40 : 30,
+      height: onTablet ? 40 : 30,
       textAlign: 'center'
     },
     logout: {
       color: 'white',
-      fontSize: isTablet ? 18 : 14
+      fontSize: onTablet ? 18 : 14
     },
     cancelContainter: {
       paddingHorizontal: 20,
@@ -503,11 +522,11 @@ const setStyles = (isLight, appColor) =>
     },
     cancel: {
       color: 'grey',
-      fontSize: isTablet ? 16 : 12
+      fontSize: onTablet ? 16 : 12
     },
     settingsText: {
       fontFamily: 'OpenSans-Regular',
-      fontSize: isTablet ? 20 : 16,
+      fontSize: onTablet ? 20 : 16,
       color: isLight ? '#97AABE' : '#445f73'
     },
     header: {
@@ -519,13 +538,51 @@ const setStyles = (isLight, appColor) =>
     appText: {
       marginTop: 10,
       textAlign: 'center',
-      fontSize: isTablet ? 18 : 12
+      fontSize: onTablet ? 18 : 12
     },
     buildText: {
       fontFamily: 'OpenSans-Regular',
       textAlign: 'center',
       color: isLight ? '#97AABE' : '#445f73',
       marginTop: 10,
-      fontSize: isTablet ? 18 : 12
+      fontSize: onTablet ? 18 : 12
+    },
+    mainContainer: {
+      backgroundColor: '#00101d',
+      flex: 1
+    },
+    centerContent: {
+      justifyContent: 'center',
+      alignContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'stretch'
+    },
+    childHeaderText: {
+      // used on search, see all, downloads,
+      fontSize: onTablet ? 28 : 20,
+      color: 'white',
+      fontFamily: 'OpenSans-ExtraBold',
+      alignSelf: 'center',
+      textAlign: 'center'
+    },
+    modalHeaderText: {
+      fontFamily: 'OpenSans-Bold',
+      textAlign: 'center',
+      fontSize: onTablet ? 24 : 18
+    },
+    modalBodyText: {
+      textAlign: 'center',
+      fontFamily: 'OpenSans-Regular',
+      fontSize: onTablet ? 16 : 12
+    },
+    modalButtonText: {
+      textAlign: 'center',
+      fontFamily: 'RobotoCondensed-Bold',
+      fontSize: onTablet ? 16 : 12
+    },
+    modalCancelButtonText: {
+      textAlign: 'center',
+      fontFamily: 'RobotoCondensed-Bold',
+      fontSize: onTablet ? 16 : 12
     }
   });

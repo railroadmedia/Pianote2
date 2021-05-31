@@ -300,22 +300,22 @@ export default class ResetPassword extends React.Component {
                 <TouchableOpacity
                   underlayColor={'transparent'}
                   onPress={() => this.savePassword()}
-                  style={[
-                    styles.centerContent,
-                    {
-                      borderWidth: 2,
-                      borderRadius: 50,
-                      alignSelf: 'center',
-                      borderColor: colors.pianoteRed,
-                      width: onTablet ? '30%' : '50%',
-                      backgroundColor:
-                        this.state.password.length > 0 &&
-                        this.state.confirmPassword.length > 0 &&
-                        this.state.password === this.state.confirmPassword
-                          ? colors.pianoteRed
-                          : 'transparent'
-                    }
-                  ]}
+                  style={{
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                    alignItems: 'center',
+                    borderWidth: 2,
+                    borderRadius: 50,
+                    alignSelf: 'center',
+                    borderColor: colors.pianoteRed,
+                    width: onTablet ? '30%' : '50%',
+                    backgroundColor:
+                      this.state.password.length > 0 &&
+                      this.state.confirmPassword.length > 0 &&
+                      this.state.password === this.state.confirmPassword
+                        ? colors.pianoteRed
+                        : 'transparent'
+                  }}
                 >
                   <Text
                     style={{

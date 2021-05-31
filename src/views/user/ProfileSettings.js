@@ -27,7 +27,7 @@ import {
 import { connect } from 'react-redux';
 import { setLoggedInUser } from '../../redux/UserActions.js';
 
-const isTablet = global.onTablet;
+const onTablet = global.onTablet;
 
 class ProfileSettings extends React.Component {
   static contextType = NetworkContext;
@@ -145,7 +145,7 @@ class ProfileSettings extends React.Component {
   render() {
     return (
       <>
-        <SafeAreaView style={styles.mainContainer}>
+        <SafeAreaView style={localStyles.mainContainer}>
           <StatusBar
             backgroundColor={colors.mainBackground}
             barStyle={'light-content'}
@@ -154,7 +154,7 @@ class ProfileSettings extends React.Component {
             <View style={{ flex: 1 }} />
             <Text
               style={[
-                styles.childHeaderText,
+                localStyles.childHeaderText,
                 { color: colors.secondBackground }
               ]}
             >
@@ -177,7 +177,10 @@ class ProfileSettings extends React.Component {
           {this.state.currentlyView === 'Profile Settings' && (
             <ScrollView style={{ flex: 1 }}>
               <TouchableOpacity
-                style={[styles.centerContent, localStyles.displayContainer]}
+                style={[
+                  localStyles.centerContent,
+                  localStyles.displayContainer
+                ]}
                 onPress={() =>
                   this.setState({
                     currentlyView: 'Display Name'
@@ -192,7 +195,7 @@ class ProfileSettings extends React.Component {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.centerContent, localStyles.profilePhoto]}
+                style={[localStyles.centerContent, localStyles.profilePhoto]}
                 onPress={() => {
                   this.setState({
                     currentlyView: 'Profile Photo'
@@ -209,7 +212,7 @@ class ProfileSettings extends React.Component {
             </ScrollView>
           )}
           {this.state.currentlyView === 'Display Name' && (
-            <ScrollView style={styles.mainContainer}>
+            <ScrollView style={localStyles.mainContainer}>
               <TextInput
                 autoCapitalize={'none'}
                 ref={txt => {
@@ -222,7 +225,7 @@ class ProfileSettings extends React.Component {
                 onSubmitEditing={() => {}}
                 returnKeyType={'go'}
                 style={[
-                  styles.centerContent,
+                  localStyles.centerContent,
                   localStyles.displayContainer,
                   localStyles.textInput
                 ]}
@@ -235,7 +238,9 @@ class ProfileSettings extends React.Component {
           )}
           {this.state.currentlyView === 'Profile Photo' && (
             <ScrollView style={{ flex: 1 }}>
-              <View style={[localStyles.scrollContainer, styles.centerContent]}>
+              <View
+                style={[localStyles.scrollContainer, localStyles.centerContent]}
+              >
                 {this.state.imageURI !== '' && (
                   <View style={{ flex: 1 }}>
                     <FastImage
@@ -272,7 +277,7 @@ class ProfileSettings extends React.Component {
                 {this.state.imageURI === '' && (
                   <TouchableOpacity
                     onPress={() => this.chooseImage()}
-                    style={styles.centerContent}
+                    style={localStyles.centerContent}
                   >
                     <Icon.AntDesign
                       name={'plus'}
@@ -289,7 +294,7 @@ class ProfileSettings extends React.Component {
 
               <TouchableOpacity
                 onPress={() => this.chooseImage()}
-                style={[styles.centerContent, localStyles.imageContainer]}
+                style={[localStyles.centerContent, localStyles.imageContainer]}
               >
                 <Icon.Ionicons
                   size={onTablet ? 50 : 35}
@@ -319,7 +324,7 @@ class ProfileSettings extends React.Component {
               >
                 <Text
                   style={[
-                    styles.modalButtonText,
+                    localStyles.modalButtonText,
                     {
                       padding: 10,
                       fontSize: 15,
@@ -350,7 +355,7 @@ class ProfileSettings extends React.Component {
             >
               <Text
                 style={[
-                  styles.modalButtonText,
+                  localStyles.modalButtonText,
                   {
                     padding: 10,
                     fontSize: 15,
@@ -387,9 +392,7 @@ class ProfileSettings extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.userState.user
-});
+const mapStateToProps = state => ({ user: state.userState.user });
 
 const mapDispatchToProps = dispatch => ({
   setLoggedInUser: user => dispatch(setLoggedInUser(user))
@@ -400,7 +403,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(ProfileSettings);
 const localStyles = StyleSheet.create({
   settingsText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 20 : 16,
+    fontSize: onTablet ? 20 : 16,
     color: '#445f73'
   },
   myProfileSettings: {
@@ -410,14 +413,14 @@ const localStyles = StyleSheet.create({
     padding: 15
   },
   save: {
-    fontSize: isTablet ? 20 : 14,
+    fontSize: onTablet ? 20 : 14,
     fontFamily: 'OpenSans-Bold',
     color: '#fb1b2f',
     textAlign: 'right',
     alignSelf: 'flex-end'
   },
   displayContainer: {
-    height: isTablet ? 70 : 50,
+    height: onTablet ? 70 : 50,
     width: '100%',
     borderBottomColor: '#445f73',
     borderBottomWidth: 1,
@@ -428,7 +431,7 @@ const localStyles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   profilePhoto: {
-    height: isTablet ? 70 : 50,
+    height: onTablet ? 70 : 50,
     width: '100%',
     borderBottomColor: '#445f73',
     borderBottomWidth: 1,
@@ -440,12 +443,12 @@ const localStyles = StyleSheet.create({
     fontFamily: 'OpenSans-Regular',
     paddingHorizontal: 10,
     width: '100%',
-    fontSize: isTablet ? 20 : 16,
+    fontSize: onTablet ? 20 : 16,
     color: '#445f73'
   },
   text: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 18 : 14,
+    fontSize: onTablet ? 18 : 14,
     paddingVertical: '2%',
     paddingHorizontal: 10,
     color: '#445f73'
@@ -455,7 +458,7 @@ const localStyles = StyleSheet.create({
     marginTop: 10
   },
   image: {
-    width: isTablet ? 200 : 150,
+    width: onTablet ? 200 : 150,
     aspectRatio: 1,
     borderRadius: 200,
     marginTop: 25
@@ -469,7 +472,7 @@ const localStyles = StyleSheet.create({
   },
   imageText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 18 : 14,
+    fontSize: onTablet ? 18 : 14,
     paddingVertical: 30,
     paddingHorizontal: 20,
     color: '#445f73',
@@ -477,10 +480,57 @@ const localStyles = StyleSheet.create({
   },
   imageContainer: {
     alignSelf: 'center',
-    height: isTablet ? 90 : 70,
-    width: isTablet ? 90 : 70,
+    height: onTablet ? 90 : 70,
+    width: onTablet ? 90 : 70,
     borderRadius: 500,
     borderColor: '#445f73',
     borderWidth: 2
+  },
+  mainContainer: {
+    backgroundColor: '#00101d',
+    flex: 1
+  },
+  gContainer: {
+    flex: 1,
+    alignSelf: 'stretch'
+  },
+  modalHeaderText: {
+    fontFamily: 'OpenSans-Bold',
+    textAlign: 'center',
+    fontSize: onTablet ? 24 : 18
+  },
+  modalCancelButtonText: {
+    textAlign: 'center',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: onTablet ? 16 : 12
+  },
+  modalButtonText: {
+    textAlign: 'center',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: onTablet ? 16 : 12
+  },
+  modalBodyText: {
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Regular',
+    fontSize: onTablet ? 16 : 12
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  childHeaderText: {
+    // used on search, see all, downloads,
+    fontSize: onTablet ? 28 : 20,
+    color: 'white',
+    fontFamily: 'OpenSans-ExtraBold',
+    alignSelf: 'center',
+    textAlign: 'center'
+  },
+  modalButtonText: {
+    textAlign: 'center',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: onTablet ? 16 : 12
   }
 });

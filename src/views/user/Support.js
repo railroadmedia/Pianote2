@@ -15,7 +15,7 @@ import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';
 import { connect } from 'react-redux';
 
-const isTablet = global.onTablet;
+const onTablet = global.onTablet;
 
 class Support extends React.Component {
   componentDidMount = async () => {
@@ -60,11 +60,11 @@ class Support extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.mainContainer}>
-        <View style={[styles.centerContent, { flex: 0.07 }]}>
+      <SafeAreaView style={localStyles.mainContainer}>
+        <View style={[localStyles.centerContent, { flex: 0.07 }]}>
           <View
             style={[
-              styles.centerContent,
+              localStyles.centerContent,
               {
                 position: 'absolute',
                 left: 0,
@@ -78,11 +78,8 @@ class Support extends React.Component {
             <TouchableOpacity
               onPress={() => goBack()}
               style={[
-                styles.centerContent,
-                {
-                  height: '100%',
-                  width: '100%'
-                }
+                localStyles.centerContent,
+                { height: '100%', width: '100%' }
               ]}
             >
               <Back
@@ -93,7 +90,10 @@ class Support extends React.Component {
             </TouchableOpacity>
           </View>
           <Text
-            style={[styles.childHeaderText, { color: colors.secondBackground }]}
+            style={[
+              localStyles.childHeaderText,
+              { color: colors.secondBackground }
+            ]}
           >
             Support
           </Text>
@@ -102,7 +102,7 @@ class Support extends React.Component {
           <TouchableOpacity
             onPress={() => this.onIntercomPress()}
             style={[
-              styles.centerContent,
+              localStyles.centerContent,
               localStyles.button,
               { marginTop: '30%' }
             ]}
@@ -111,13 +111,13 @@ class Support extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => Linking.openURL('mailto:support@musora.com')}
-            style={[styles.centerContent, localStyles.button]}
+            style={[localStyles.centerContent, localStyles.button]}
           >
             <Text style={localStyles.buttonText}>EMAIL SUPPORT</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => Linking.openURL(`tel:${'18004398921'}`)}
-            style={[styles.centerContent, localStyles.button]}
+            style={[localStyles.centerContent, localStyles.button]}
           >
             <Text style={localStyles.buttonText}>PHONE SUPPORT</Text>
           </TouchableOpacity>
@@ -165,22 +165,40 @@ const localStyles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: isTablet ? 20 : 16,
+    fontSize: onTablet ? 20 : 16,
     color: 'white',
     paddingVertical: 15
   },
   phoneEmailText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 18 : 14,
+    fontSize: onTablet ? 18 : 14,
     color: '#445f73',
     textAlign: 'center',
     padding: 10
   },
   phoneNumberEmailAddress: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 18 : 14,
+    fontSize: onTablet ? 18 : 14,
     textAlign: 'center',
     color: 'white',
     padding: 5
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  mainContainer: {
+    backgroundColor: '#00101d',
+    flex: 1
+  },
+  childHeaderText: {
+    // used on search, see all, downloads,
+    fontSize: onTablet ? 28 : 20,
+    color: 'white',
+    fontFamily: 'OpenSans-ExtraBold',
+    alignSelf: 'center',
+    textAlign: 'center'
   }
 });

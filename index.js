@@ -98,7 +98,6 @@ global.token = '';
 global.onTablet = DeviceInfo.isTablet();
 global.loadedFromNotification = false;
 global.isiOS = Platform.OS === 'ios';
-global.styles = require('Pianote2/src/assets/styles/styles.js');
 global.isPackOnly = false;
 global.fallbackThumb =
   'https://dmmior4id2ysr.cloudfront.net/assets/images/pianote_fallback_thumb.jpg';

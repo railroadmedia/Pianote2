@@ -138,7 +138,7 @@ export default class ForgotPassword extends React.Component {
                     this.forgotPassword();
                   }}
                   style={[
-                    styles.centerContent,
+                    localStyles.centerContent,
                     {
                       borderWidth: 2,
                       borderRadius: 50,
@@ -300,5 +300,11 @@ const localStyles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     alignSelf: 'center'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
   }
 });

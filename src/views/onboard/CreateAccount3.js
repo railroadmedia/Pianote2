@@ -31,7 +31,7 @@ import { isNameUnique, avatarUpload } from '../../services/UserDataAuth';
 var data = new FormData();
 let localStyles;
 
-const isTablet = global.onTablet;
+const onTablet = global.onTablet;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
@@ -44,7 +44,6 @@ export default class CreateAccount3 extends React.Component {
     super(props);
     Orientation.lockToPortrait();
     localStyles = setStyles(colors, sizing);
-
     this.state = {
       page: 1,
       showImage: false,
@@ -228,14 +227,14 @@ export default class CreateAccount3 extends React.Component {
             this.changePage(e);
           }}
         >
-          <View style={styles.centerContent}>
-            <View style={[styles.centerContent, localStyles.container1]}>
+          <View style={localStyles.centerContent}>
+            <View style={[localStyles.centerContent, localStyles.container1]}>
               <TouchableOpacity
                 onPress={() => this.changePage(this.state.pageNum - 1)}
               />
               <Text
                 style={[
-                  styles.modalHeaderText,
+                  localStyles.modalHeaderText,
                   { fontSize: onTablet ? 36 : 24 }
                 ]}
               >
@@ -295,7 +294,7 @@ export default class CreateAccount3 extends React.Component {
                   <TouchableOpacity
                     onPress={() => this.setName()}
                     style={[
-                      styles.centerContent,
+                      localStyles.centerContent,
                       {
                         flex: 1,
                         flexDirection: 'row'
@@ -381,7 +380,7 @@ export default class CreateAccount3 extends React.Component {
                 >
                   <Text
                     style={[
-                      styles.modalButtonText,
+                      localStyles.modalButtonText,
                       {
                         padding: 10,
                         fontSize: 15,
@@ -396,7 +395,7 @@ export default class CreateAccount3 extends React.Component {
               onClose={() => {}}
             />
           </View>
-          <View style={styles.centerContent}>
+          <View style={localStyles.centerContent}>
             <View style={{ flexDirection: 'row' }}>
               <TouchableOpacity
                 style={{ paddingLeft: 15, flex: 1, justifyContent: 'center' }}
@@ -416,7 +415,7 @@ export default class CreateAccount3 extends React.Component {
               </TouchableOpacity>
               <Text
                 style={[
-                  styles.modalHeaderText,
+                  localStyles.modalHeaderText,
                   {
                     fontSize: onTablet ? 36 : 24
                   }
@@ -442,7 +441,7 @@ export default class CreateAccount3 extends React.Component {
                 <View style={localStyles.image}>
                   <TouchableOpacity
                     onPress={() => this.chooseImage()}
-                    style={[styles.centerContent, localStyles.imageButton]}
+                    style={[localStyles.centerContent, localStyles.imageButton]}
                   >
                     {this.state.showImage && (
                       <FastImage
@@ -454,7 +453,7 @@ export default class CreateAccount3 extends React.Component {
                     {this.state.showImage && (
                       <TouchableOpacity
                         onPress={() => this.clearImage()}
-                        style={[styles.centerContent, localStyles.x]}
+                        style={[localStyles.centerContent, localStyles.x]}
                       >
                         <X fill={'white'} height={'50%'} width={'50%'} />
                       </TouchableOpacity>
@@ -500,7 +499,7 @@ export default class CreateAccount3 extends React.Component {
                       });
                     }}
                     style={[
-                      styles.centerContent,
+                      localStyles.centerContent,
                       {
                         flex: 1,
                         flexDirection: 'row'
@@ -608,8 +607,10 @@ export default class CreateAccount3 extends React.Component {
               }}
             >
               <View style={{ flex: 0.3, justifyContent: 'center' }}>
-                <View style={[styles.centerContent, { flexDirection: 'row' }]}>
-                  <View style={[styles.centerContent, localStyles.circle]}>
+                <View
+                  style={[localStyles.centerContent, { flexDirection: 'row' }]}
+                >
+                  <View style={[localStyles.centerContent, localStyles.circle]}>
                     <LearningPaths
                       height={width * 0.1}
                       width={200}
@@ -643,8 +644,10 @@ export default class CreateAccount3 extends React.Component {
               }}
             >
               <View style={{ flex: 0.3, justifyContent: 'center' }}>
-                <View style={[styles.centerContent, { flexDirection: 'row' }]}>
-                  <View style={[styles.centerContent, localStyles.circle]}>
+                <View
+                  style={[localStyles.centerContent, { flexDirection: 'row' }]}
+                >
+                  <View style={[localStyles.centerContent, localStyles.circle]}>
                     <Courses height={width * 0.07} width={200} fill={'white'} />
                   </View>
                 </View>
@@ -680,8 +683,10 @@ export default class CreateAccount3 extends React.Component {
               }}
             >
               <View style={{ flex: 0.3, justifyContent: 'center' }}>
-                <View style={[styles.centerContent, { flexDirection: 'row' }]}>
-                  <View style={[styles.centerContent, localStyles.circle]}>
+                <View
+                  style={[localStyles.centerContent, { flexDirection: 'row' }]}
+                >
+                  <View style={[localStyles.centerContent, localStyles.circle]}>
                     <Songs height={width * 0.085} width={200} fill={'white'} />
                   </View>
                 </View>
@@ -717,8 +722,10 @@ export default class CreateAccount3 extends React.Component {
               }}
             >
               <View style={{ flex: 0.3, justifyContent: 'center' }}>
-                <View style={[styles.centerContent, { flexDirection: 'row' }]}>
-                  <View style={[styles.centerContent, localStyles.circle]}>
+                <View
+                  style={[localStyles.centerContent, { flexDirection: 'row' }]}
+                >
+                  <View style={[localStyles.centerContent, localStyles.circle]}>
                     <Support height={width * 0.1} width={200} fill={'white'} />
                   </View>
                 </View>
@@ -848,7 +855,7 @@ export default class CreateAccount3 extends React.Component {
             />
             <View
               style={[
-                styles.centerContent,
+                localStyles.centerContent,
                 {
                   height: '57%',
                   width: width,
@@ -858,7 +865,7 @@ export default class CreateAccount3 extends React.Component {
             >
               <View
                 style={[
-                  styles.centerContent,
+                  localStyles.centerContent,
                   { flexDirection: 'row', alignItems: 'center' }
                 ]}
               >
@@ -979,7 +986,7 @@ export default class CreateAccount3 extends React.Component {
                 onPress={() => {
                   this.createAccount();
                 }}
-                style={[styles.centerContent, localStyles.getStartedBtn]}
+                style={[localStyles.centerContent, localStyles.getStartedBtn]}
               >
                 <Text
                   style={{
@@ -1003,7 +1010,9 @@ export default class CreateAccount3 extends React.Component {
               }}
               style={localStyles.tryBtn}
             >
-              <Text style={[styles.modalButtonText, localStyles.tryBtnText]}>
+              <Text
+                style={[localStyles.modalButtonText, localStyles.tryBtnText]}
+              >
                 TRY AGAIN
               </Text>
             </TouchableOpacity>
@@ -1033,7 +1042,7 @@ const setStyles = (appColor, size) =>
     },
     addDislayNameText: {
       fontFamily: 'OpenSans-Bold',
-      fontSize: isTablet ? 24 : 16,
+      fontSize: onTablet ? 24 : 16,
       textAlign: 'left',
       width: '100%',
       paddingVertical: 10
@@ -1044,7 +1053,7 @@ const setStyles = (appColor, size) =>
       borderRadius: 100,
       backgroundColor: 'white',
       justifyContent: 'center',
-      paddingLeft: isTablet ? 20 : 10,
+      paddingLeft: onTablet ? 20 : 10,
       flexDirection: 'row',
       borderWidth: 1,
       borderColor: '#c2c2c2'
@@ -1139,7 +1148,7 @@ const setStyles = (appColor, size) =>
     },
     reviewText: {
       fontFamily: 'OpenSans-Regular',
-      fontSize: isTablet ? 20 : 16,
+      fontSize: onTablet ? 20 : 16,
       marginTop: 5
     },
     circle: {
@@ -1171,5 +1180,35 @@ const setStyles = (appColor, size) =>
       height: '100%',
       borderRadius: 30,
       backgroundColor: appColor.pianoteRed
+    },
+    container: {
+      flex: 1,
+      alignSelf: 'stretch'
+    },
+    modalHeaderText: {
+      fontFamily: 'OpenSans-Bold',
+      textAlign: 'center',
+      fontSize: onTablet ? 24 : 18
+    },
+    modalCancelButtonText: {
+      textAlign: 'center',
+      fontFamily: 'RobotoCondensed-Bold',
+      fontSize: onTablet ? 16 : 12
+    },
+    modalButtonText: {
+      textAlign: 'center',
+      fontFamily: 'RobotoCondensed-Bold',
+      fontSize: onTablet ? 16 : 12
+    },
+    modalBodyText: {
+      textAlign: 'center',
+      fontFamily: 'OpenSans-Regular',
+      fontSize: onTablet ? 16 : 12
+    },
+    centerContent: {
+      justifyContent: 'center',
+      alignContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'stretch'
     }
   });

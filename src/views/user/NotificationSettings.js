@@ -18,7 +18,7 @@ import { goBack } from '../../../AppNavigator';
 import { connect } from 'react-redux';
 import { setLoggedInUser } from '../../redux/UserActions';
 
-const isTablet = global.onTablet;
+const onTablet = global.onTablet;
 
 class NotificationSettings extends React.Component {
   static contextType = NetworkContext;
@@ -66,7 +66,7 @@ class NotificationSettings extends React.Component {
         <SafeAreaView
           forceInset={{ top: onTablet ? 'never' : 'always' }}
           style={[
-            styles.mainContainer,
+            localStyles.mainContainer,
             { backgroundColor: colors.thirdBackground }
           ]}
         >
@@ -82,13 +82,13 @@ class NotificationSettings extends React.Component {
                 fill={colors.secondBackground}
               />
             </TouchableOpacity>
-            <Text style={[styles.childHeaderText, localStyles.title]}>
+            <Text style={[localStyles.childHeaderText, localStyles.title]}>
               Notification Settings
             </Text>
             <View style={{ flex: 1 }} />
           </View>
 
-          <ScrollView style={styles.mainContainer}>
+          <ScrollView style={localStyles.mainContainer}>
             <Text style={localStyles.noteTypeText}>Notification Types</Text>
             <View style={localStyles.textContainer}>
               <Text style={localStyles.text}>Weekly community updates</Text>
@@ -184,7 +184,7 @@ class NotificationSettings extends React.Component {
                   });
                 }}
                 style={[
-                  styles.centerContent,
+                  localStyles.centerContent,
                   {
                     backgroundColor:
                       notifications_summary_frequency_minutes == 1
@@ -221,7 +221,7 @@ class NotificationSettings extends React.Component {
                   });
                 }}
                 style={[
-                  styles.centerContent,
+                  localStyles.centerContent,
                   {
                     backgroundColor:
                       notifications_summary_frequency_minutes == 1440
@@ -258,7 +258,7 @@ class NotificationSettings extends React.Component {
                   });
                 }}
                 style={[
-                  styles.centerContent,
+                  localStyles.centerContent,
                   {
                     backgroundColor:
                       notifications_summary_frequency_minutes == 0 ||
@@ -290,7 +290,6 @@ class NotificationSettings extends React.Component {
               </TouchableOpacity>
             </View>
           </ScrollView>
-
           <NavigationBar currentPage={'PROFILE'} pad={true} />
         </SafeAreaView>
         <SafeAreaView
@@ -302,9 +301,7 @@ class NotificationSettings extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.userState.user
-});
+const mapStateToProps = state => ({ user: state.userState.user });
 
 const mapDispatchToProps = dispatch => ({
   setLoggedInUser: user => dispatch(setLoggedInUser(user))
@@ -328,7 +325,7 @@ const localStyles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#081826',
-    padding: isTablet ? 22.5 : 15
+    padding: onTablet ? 22.5 : 15
   },
   title: {
     textAlign: 'center',
@@ -338,13 +335,13 @@ const localStyles = StyleSheet.create({
     paddingLeft: 10,
     width: '100%',
     justifyContent: 'center',
-    fontSize: isTablet ? 18 : 14
+    fontSize: onTablet ? 18 : 14
   },
   noteTypeText: {
     marginTop: 10,
     marginLeft: 10,
     fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 22 : 16,
+    fontSize: onTablet ? 22 : 16,
     color: '#445f73',
     paddingVertical: 5
   },
@@ -356,7 +353,7 @@ const localStyles = StyleSheet.create({
   },
   text: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: isTablet ? 18 : 14,
+    fontSize: onTablet ? 18 : 14,
     color: '#445f73'
   },
   emailNotificationFrequency: {
@@ -369,5 +366,23 @@ const localStyles = StyleSheet.create({
     height: 20,
     borderBottomColor: '#445f73',
     borderBottomWidth: 1
+  },
+  mainContainer: {
+    backgroundColor: '#00101d',
+    flex: 1
+  },
+  childHeaderText: {
+    // used on search, see all, downloads,
+    fontSize: onTablet ? 28 : 20,
+    color: 'white',
+    fontFamily: 'OpenSans-ExtraBold',
+    alignSelf: 'center',
+    textAlign: 'center'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
   }
 });

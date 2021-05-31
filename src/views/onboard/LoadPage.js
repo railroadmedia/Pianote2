@@ -156,19 +156,12 @@ class LoadPage extends React.Component {
 
   render() {
     return (
-      <View
-        style={[
-          styles.centerContent,
-          {
-            flex: 1,
-            alignSelf: 'stretch'
-          }
-        ]}
-      >
+      <View style={{ flex: 1, alignSelf: 'stretch' }}>
         <View
           style={[
-            styles.centerContent,
             {
+              justifyContent: 'center',
+              alignItems: 'center',
               position: 'absolute',
               top: 0,
               left: 0,

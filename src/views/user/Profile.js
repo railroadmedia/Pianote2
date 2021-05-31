@@ -10,7 +10,6 @@ import {
   StyleSheet,
   RefreshControl
 } from 'react-native';
-
 import FastImage from 'react-native-fast-image';
 import Icon from '../../assets/icons.js';
 import Chat from '../../assets/img/svgs/chat.svg';
@@ -30,7 +29,7 @@ import { navigate } from '../../../AppNavigator.js';
 import { setLoggedInUser } from '../../redux/UserActions.js';
 import { connect } from 'react-redux';
 
-const isTablet = global.onTablet;
+const onTablet = global.onTablet;
 let localStyles;
 const messageDict = {
   'lesson comment reply': {
@@ -74,9 +73,7 @@ class Profile extends React.Component {
   page = 1;
   constructor(props) {
     super(props);
-
     localStyles = setStyles(this.props.theme === 'light', colors.pianoteRed);
-
     this.state = {
       notifications: [],
       showXpRank: false,
@@ -247,15 +244,15 @@ class Profile extends React.Component {
       xpRank
     } = this.props.user;
     return (
-      <SafeAreaView style={styles.mainContainer}>
+      <SafeAreaView style={localStyles.mainContainer}>
         <StatusBar
           backgroundColor={colors.mainBackground}
           barStyle={'light-content'}
         />
-        <View style={styles.mainContainer}>
+        <View style={localStyles.mainContainer}>
           <View style={localStyles.headerContainer}>
             <View style={{ flex: 1 }} />
-            <Text style={styles.childHeaderText}>My Profile</Text>
+            <Text style={localStyles.childHeaderText}>My Profile</Text>
             <TouchableOpacity
               style={{ flex: 1 }}
               onPress={() => navigate('SETTINGS')}
@@ -269,7 +266,7 @@ class Profile extends React.Component {
             </TouchableOpacity>
           </View>
           <FlatList
-            style={styles.mainContainer}
+            style={localStyles.mainContainer}
             data={this.state.notifications}
             keyExtractor={(item, index) => index.toString()}
             onEndReached={this.loadMoreNotifications}
@@ -288,7 +285,7 @@ class Profile extends React.Component {
             }
             ListHeaderComponent={() => (
               <>
-                <View style={styles.centerContent}>
+                <View style={localStyles.centerContent}>
                   <View>
                     <TouchableOpacity
                       onPress={() =>
@@ -315,7 +312,10 @@ class Profile extends React.Component {
                     />
                   </View>
                   <Text
-                    style={[localStyles.usernameText, styles.childHeaderText]}
+                    style={[
+                      localStyles.usernameText,
+                      localStyles.childHeaderText
+                    ]}
                   >
                     {display_name}
                   </Text>
@@ -397,7 +397,7 @@ class Profile extends React.Component {
                   {item.type === 'new content releases' ? (
                     <View
                       style={[
-                        styles.centerContent,
+                        localStyles.centerContent,
                         localStyles.iconContainer,
                         { backgroundColor: 'red' }
                       ]}
@@ -412,7 +412,7 @@ class Profile extends React.Component {
                     item.type === 'forum post in followed thread' ? (
                     <View
                       style={[
-                        styles.centerContent,
+                        localStyles.centerContent,
                         localStyles.iconContainer,
                         { backgroundColor: 'orange' }
                       ]}
@@ -426,7 +426,7 @@ class Profile extends React.Component {
                   ) : (
                     <View
                       style={[
-                        styles.centerContent,
+                        localStyles.centerContent,
                         localStyles.iconContainer,
                         { backgroundColor: 'blue' }
                       ]}
@@ -564,7 +564,7 @@ const setStyles = (isLight, appColor) =>
     },
     memberSinceText: {
       fontFamily: 'OpenSans-Regular',
-      fontSize: isTablet ? 16 : 12,
+      fontSize: onTablet ? 16 : 12,
       textAlign: 'center',
       color: isLight ? '#97AABE' : '#445f73'
     },
@@ -582,13 +582,13 @@ const setStyles = (isLight, appColor) =>
     },
     redXpRank: {
       color: appColor,
-      fontSize: isTablet ? 16 : 12,
+      fontSize: onTablet ? 16 : 12,
       fontFamily: 'OpenSans-Bold',
       textAlign: 'center'
     },
     whiteXpRank: {
       color: 'white',
-      fontSize: isTablet ? 26 : 20,
+      fontSize: onTablet ? 26 : 20,
       fontFamily: 'OpenSans-ExtraBold',
       textAlign: 'center'
     },
@@ -601,7 +601,7 @@ const setStyles = (isLight, appColor) =>
     },
     noNotificationText: {
       fontFamily: 'OpenSans-ExtraBold',
-      fontSize: isTablet ? 16 : 12,
+      fontSize: onTablet ? 16 : 12,
       textAlign: 'left',
       paddingLeft: 10,
       color: isLight ? '#00101D' : '#EDEEEF'
@@ -619,8 +619,8 @@ const setStyles = (isLight, appColor) =>
       position: 'absolute',
       bottom: -5,
       right: -5,
-      height: isTablet ? 35 : 25,
-      width: isTablet ? 35 : 25,
+      height: onTablet ? 35 : 25,
+      width: onTablet ? 35 : 25,
       borderRadius: 100,
       zIndex: 5
     },
@@ -630,18 +630,18 @@ const setStyles = (isLight, appColor) =>
     },
     boldNotificationText: {
       fontFamily: 'OpenSans-ExtraBold',
-      fontSize: isTablet ? 16 : 14,
+      fontSize: onTablet ? 16 : 14,
       color: isLight ? '#00101D' : '#EDEEEF'
     },
     messageTypeText: {
       fontFamily: 'OpenSans-Regular',
-      fontSize: isTablet ? 16 : 12,
+      fontSize: onTablet ? 16 : 12,
       color: isLight ? '#00101D' : '#EDEEEF'
     },
     createdAtText: {
       marginTop: 1,
       fontFamily: 'OpenSans-Regular',
-      fontSize: isTablet ? 16 : 12,
+      fontSize: onTablet ? 16 : 12,
       color: isLight ? '#97AABE' : '#445f73'
     },
     threeDotsContainer: {
@@ -661,5 +661,14 @@ const setStyles = (isLight, appColor) =>
       left: 90,
       top: 30,
       zIndex: 2
+    },
+    mainContainer: { backgroundColor: '#00101d', flex: 1 },
+    childHeaderText: {
+      // used on search, see all, downloads,
+      fontSize: onTablet ? 28 : 20,
+      color: 'white',
+      fontFamily: 'OpenSans-ExtraBold',
+      alignSelf: 'center',
+      textAlign: 'center'
     }
   });

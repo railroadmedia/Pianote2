@@ -311,7 +311,7 @@ class LoginCredentials extends React.Component {
                       : null;
                   }}
                   style={[
-                    styles.centerContent,
+                    localStyles.centerContent,
                     {
                       borderWidth: 2,
                       borderRadius: 50,
@@ -487,5 +487,11 @@ const localStyles = StyleSheet.create({
     marginRight: 45,
     fontSize: isTablet ? 20 : 14,
     fontFamily: 'OpenSans-Regular'
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
   }
 });

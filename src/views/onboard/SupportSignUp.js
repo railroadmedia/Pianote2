@@ -21,11 +21,11 @@ export default class SupportSignUp extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.mainContainer}>
+      <SafeAreaView style={localStyles.mainContainer}>
         <View style={{ flex: 0.08 }}>
           <View
             style={[
-              styles.centerContent,
+              localStyles.centerContent,
               {
                 position: 'absolute',
                 left: 10,
@@ -39,7 +39,7 @@ export default class SupportSignUp extends React.Component {
             <TouchableOpacity
               onPress={() => goBack()}
               style={[
-                styles.centerContent,
+                localStyles.centerContent,
                 {
                   height: '100%',
                   width: '100%'
@@ -55,7 +55,10 @@ export default class SupportSignUp extends React.Component {
           </View>
           <View style={{ flex: 0.66 }} />
           <Text
-            style={[styles.childHeaderText, { color: colors.secondBackground }]}
+            style={[
+              localStyles.childHeaderText,
+              { color: colors.secondBackground }
+            ]}
           >
             Support
           </Text>
@@ -65,7 +68,7 @@ export default class SupportSignUp extends React.Component {
           <TouchableOpacity
             onPress={() => this.onIntercomPress()}
             style={[
-              styles.centerContent,
+              localStyles.centerContent,
               localStyles.button,
               { marginTop: '30%' }
             ]}
@@ -74,14 +77,14 @@ export default class SupportSignUp extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => Linking.openURL('mailto:support@musora.com')}
-            style={[styles.centerContent, localStyles.button]}
+            style={[localStyles.centerContent, localStyles.button]}
           >
             <Text style={localStyles.buttonText}>EMAIL SUPPORT</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => Linking.openURL(`tel:${'18004398921'}`)}
-            style={[styles.centerContent, localStyles.button]}
+            style={[localStyles.centerContent, localStyles.button]}
           >
             <Text style={localStyles.buttonText}>PHONE SUPPORT</Text>
           </TouchableOpacity>
@@ -151,6 +154,10 @@ export default class SupportSignUp extends React.Component {
 }
 
 const localStyles = StyleSheet.create({
+  mainContainer: {
+    backgroundColor: '#00101d',
+    flex: 1
+  },
   button: {
     width: '80%',
     borderRadius: 200,
@@ -163,5 +170,19 @@ const localStyles = StyleSheet.create({
     fontSize: onTablet ? 20 : 16,
     color: 'white',
     paddingVertical: 15
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  childHeaderText: {
+    // used on search, see all, downloads,
+    fontSize: onTablet ? 28 : 20,
+    color: 'white',
+    fontFamily: 'OpenSans-ExtraBold',
+    alignSelf: 'center',
+    textAlign: 'center'
   }
 });
