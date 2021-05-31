@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import iframe from '@native-html/iframe-plugin';
 import HTML from 'react-native-render-html';
 import WebView from 'react-native-webview';
@@ -14,7 +14,18 @@ export default class HTMLRenderer extends React.Component {
         source={{ html }}
         tagsStyles={{
           p: customStyle,
+          div: customStyle,
           blockquote: styles.blockquote
+        }}
+        listsPrefixesRenderers={{
+          ol: (_, __, ___, passProps) => (
+            <Text style={customStyle}>
+              {passProps.index + 1}.{`  `}
+            </Text>
+          ),
+          ul: (_, __, ___, passProps) => (
+            <Text style={{ fontWeight: '900', ...customStyle }}>·{`  `}</Text>
+          )
         }}
         renderersProps={{
           iframe: { scalesPageToFit: true }

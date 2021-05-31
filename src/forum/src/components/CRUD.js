@@ -304,6 +304,8 @@ let setStyles = (isDark, appColor) =>
       marginBottom: 15,
       backgroundColor: isDark ? '#002039' : '#E1E6EB',
       borderRadius: 5,
-      color: '#FFFFFF'
+      color: '#FFFFFF',
+      padding: 15,
+      paddingHorizontal: 10
     }
   });
