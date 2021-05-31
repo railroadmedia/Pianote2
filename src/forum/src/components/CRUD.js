@@ -1,12 +1,11 @@
 /**
- * PROPS: isDark, appColor, action, type, posts, title, discussionId, threadId, onDone
+ * PROPS: isDark, appColor, action, type, posts, title, discussionId, threadId
  * action: can be 'create', 'edit', 'reply', 'multiQuote' => used to display header title and button
  * type: can be 'thread', 'post' => used to display header type on header and on delete button and to display title input besides description field
  * posts: use posts[0] for editing a post's text or use it like posts for reply and multiquote displaying
  * title: thread title that can be edited
  * discussionId: for thread creation
  * threadId: for thread update
- * onDone: function to call after crud action is done
  */
 
 import React from 'react';
@@ -16,7 +15,9 @@ import {
   View,
   Text,
   ScrollView,
-  TextInput
+  TextInput,
+  Keyboard,
+  ActivityIndicator
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import {
@@ -39,47 +40,44 @@ import HTMLRenderer from '../commons/HTMLRenderer';
 let styles;
 
 export default class CRUD extends React.Component {
-  richText = React.createRef();
-
   constructor(props) {
     super(props);
     let { isDark, appColor, title } = props.route.params;
     this.state = {
-      title
+      title,
+      loading: false
     };
     styles = setStyles(isDark, appColor);
   }
 
-  handleChange(html) {
-    this.richHTML = html;
-  }
+  changeHTML = html => (this.richHTML = html);
 
   onInsertLink = type => this.linkModal?.toggle(type);
 
   onLinkDone = (title, url, type) => {
     if (url) {
       if (type === 'Link') {
-        this.richText?.current.insertLink(title, url);
+        this.richText?.insertLink(title, url);
       } else if (type === 'Image') {
-        this.richText.current?.insertImage(url);
+        this.richText?.insertImage(url);
       } else {
-        if (url.includes('<iframe')) this.richText.current?.insertHTML(url);
+        if (url.includes('<iframe')) this.richText?.insertHTML(url);
         else if (url.includes('youtube.com'))
-          this.richText.current?.insertHTML(
+          this.richText?.insertHTML(
             `<p><iframe src="https://www.youtube.com/embed/${url.slice(
               url.indexOf('watch?v=') + 8,
               url.length
             )}" width="560" height="314" allowfullscreen="allowfullscreen"></iframe></p>`
           );
         else if (url.includes('vimeo.com'))
-          this.richText.current?.insertHTML(
+          this.richText?.insertHTML(
             `<p><iframe src="https://player.vimeo.com/video/${url.slice(
               url.indexOf('.com/') + 5,
               url.length
             )}" width="425" height="350" allowfullscreen="allowfullscreen"></iframe></p>`
           );
         else
-          this.richText.current?.insertHTML(
+          this.richText?.insertHTML(
             `<video controls="controls" width="300" height="150"><source src=${url} /></video>`
           );
       }
@@ -87,45 +85,44 @@ export default class CRUD extends React.Component {
   };
 
   save = async () => {
-    if (!connection()) return;
-
+    if (!connection(true)) return;
+    Keyboard.dismiss();
+    this.richText?.blurContentEditor();
+    this.setState({ loading: true });
     const {
       action,
       type,
       discussionId,
       threadId,
-      postId,
-      onDone
+      postId
     } = this.props.route.params;
-
-    let html = await this.richText.current?.getContentHtml();
     if (type === 'thread') {
       if (action === 'create') {
-        await createThread(this.state.title, html, discussionId);
+        await createThread(this.state.title, this.richHTML, discussionId);
       } else {
         await updateThread(threadId, { title: this.state.title });
       }
     } else {
       if (action === 'create') {
-        await createPost({ content: html, thread_id: threadId });
+        await createPost({ content: this.richHTML, thread_id: threadId });
       } else if (action === 'edit') {
-        await editPost(postId, html);
+        await editPost(postId, this.richHTML);
       } else {
         await createPost({
-          content: html,
+          content: this.richHTML,
           thread_id: threadId,
           parent_ids: parentIds
         });
       }
     }
     this.props.navigation.goBack();
-    onDone?.();
   };
 
   onDelete = async () => {
-    if (!connection()) return;
-    const { type, threadId, postId, onDone } = this.props.route.params;
-
+    if (!connection(true)) return;
+    Keyboard.dismiss();
+    this.setState({ loading: true });
+    const { type, threadId, postId } = this.props.route.params;
     if (type === 'thread') {
       await deleteThread(threadId);
       this.props.navigation.goBack();
@@ -133,11 +130,10 @@ export default class CRUD extends React.Component {
     } else {
       await deletePost(postId);
     }
-
-    onDone?.();
   };
 
   render() {
+    let { loading } = this.state;
     const { isDark, appColor, action, type, posts } = this.props.route.params;
 
     return (
@@ -155,7 +151,7 @@ export default class CRUD extends React.Component {
               ? 'Reply'
               : 'MultiQuote'}
           </Text>
-          <TouchableOpacity onPress={() => this.save()}>
+          <TouchableOpacity onPress={this.save} disabled={loading}>
             <Text style={styles.actionBtn}>
               {action === 'create'
                 ? 'Create'
@@ -165,69 +161,86 @@ export default class CRUD extends React.Component {
             </Text>
           </TouchableOpacity>
         </View>
-        <ScrollView
-          style={{ flex: 1, margin: 15 }}
-          keyboardShouldPersistTaps='handled'
-          contentInsetAdjustmentBehavior='never'
-        >
-          {action === 'reply' || action === 'multiQuote'
-            ? posts?.map((post, index) => (
-                <HTMLRenderer
-                  key={index}
-                  html={post}
-                  customStyle={{ color: isDark ? '#FFFFFF' : '#00101D' }}
+        <View style={{ flex: 1 }}>
+          <ScrollView
+            style={{ flex: 1, margin: 15 }}
+            keyboardShouldPersistTaps='handled'
+            contentInsetAdjustmentBehavior='never'
+          >
+            {action === 'reply' || action === 'multiQuote'
+              ? posts?.map((post, index) => (
+                  <HTMLRenderer
+                    key={index}
+                    html={post}
+                    customStyle={{ color: isDark ? '#FFFFFF' : '#00101D' }}
+                  />
+                ))
+              : null}
+            {type === 'thread' && (
+              <TextInput
+                style={styles.titleInput}
+                placeholderTextColor={isDark ? '#445F74' : '#00101D'}
+                placeholder='Title'
+                value={this.state.title}
+                onChangeText={title => this.setState({ title })}
+              />
+            )}
+            {!(type === 'thread' && action === 'edit') && (
+              <>
+                <RichToolbar
+                  getEditor={() => this.richText}
+                  style={styles.richBar}
+                  flatContainerStyle={styles.flatStyle}
+                  selectedIconTint={'#2095F2'}
+                  disabledIconTint={'#bfbfbf'}
+                  onPressAddImage={() => this.onInsertLink('Image')}
+                  onInsertLink={() => this.onInsertLink('Link')}
+                  insertVideo={() => this.onInsertLink('Video')}
+                  actions={[
+                    actions.setBold,
+                    actions.setItalic,
+                    actions.setUnderline,
+                    actions.insertBulletsList,
+                    actions.insertOrderedList,
+                    actions.insertLink,
+                    actions.insertImage,
+                    actions.insertVideo
+                  ]}
                 />
-              ))
-            : null}
-          {type === 'thread' && (
-            <TextInput
-              style={styles.titleInput}
-              placeholderTextColor={isDark ? '#445F74' : '#00101D'}
-              placeholder='Title'
-              value={this.state.title}
-              onChangeText={title => this.setState({ title })}
+                <RichEditor
+                  editorStyle={styles.editorStyle}
+                  ref={r => (this.richText = r)}
+                  style={action !== 'edit' ? styles.richTextEditor : null}
+                  placeholder={'Write something'}
+                  initialContentHTML={action === 'edit' ? posts?.[0] : null}
+                  onChange={this.changeHTML}
+                />
+              </>
+            )}
+          </ScrollView>
+          {action === 'edit' && (
+            <TouchableOpacity style={styles.deleteBtn} onPress={this.onDelete}>
+              <Text style={styles.deleteBtnText}>
+                DELETE {type.toUpperCase()}
+              </Text>
+            </TouchableOpacity>
+          )}
+          {loading && (
+            <ActivityIndicator
+              size='large'
+              color={isDark ? 'white' : 'black'}
+              animating={true}
+              style={{
+                backgroundColor: 'rgba(0,0,0,.5)',
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0
+              }}
             />
           )}
-          {!(type === 'thread' && action === 'edit') && (
-            <>
-              <RichToolbar
-                style={styles.richBar}
-                flatContainerStyle={styles.flatStyle}
-                editor={this.richText}
-                selectedIconTint={'#2095F2'}
-                disabledIconTint={'#bfbfbf'}
-                onPressAddImage={() => this.onInsertLink('Image')}
-                onInsertLink={() => this.onInsertLink('Link')}
-                insertVideo={() => this.onInsertLink('Video')}
-                actions={[
-                  actions.setBold,
-                  actions.setItalic,
-                  actions.setUnderline,
-                  actions.insertBulletsList,
-                  actions.insertOrderedList,
-                  actions.insertLink,
-                  actions.insertImage,
-                  actions.insertVideo
-                ]}
-              />
-              <RichEditor
-                editorStyle={styles.editorStyle}
-                ref={this.richText}
-                style={action !== 'edit' ? styles.richTextEditor : null}
-                placeholder={'Write something'}
-                initialContentHTML={action === 'edit' ? posts?.[0] : null}
-                onChange={html => (this.richHTML = html)}
-              />
-            </>
-          )}
-        </ScrollView>
-        {action === 'edit' && (
-          <TouchableOpacity style={styles.deleteBtn} onPress={this.onDelete}>
-            <Text style={styles.deleteBtnText}>
-              DELETE {type.toUpperCase()}
-            </Text>
-          </TouchableOpacity>
-        )}
+        </View>
         <InsertLinkModal
           appColor={appColor}
           isDark={isDark}

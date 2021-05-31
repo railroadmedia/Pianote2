@@ -118,8 +118,7 @@ class NavigationHeader extends React.Component {
             type: 'thread',
             action: 'edit',
             threadId,
-            title,
-            onDone: this.props.onDoneEditing
+            title
           })
       );
     }

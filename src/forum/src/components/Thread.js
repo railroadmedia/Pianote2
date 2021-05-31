@@ -302,8 +302,7 @@ export default class Thread extends React.Component {
                 appColor,
                 action: 'create',
                 type: 'post',
-                threadId,
-                onDone: this.refresh
+                threadId
               })
             }
             style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}

@@ -77,7 +77,6 @@ export default class Search extends React.Component {
               title={'All Forums'}
               route={{ name: 'Search', params: { isDark: true } }}
               onToggleSign={signShown => this.setState({ signShown })}
-              onDoneEditing={() => {}}
             />
             {/* 
             <Header

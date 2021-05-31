@@ -120,8 +120,7 @@ class Threads extends React.Component {
         this.navigate('Thread', {
           threadId: id,
           isDark: this.props.route.params.isDark,
-          appColor: this.props.route.params.appColor,
-          onDone: this.refresh
+          appColor: this.props.route.params.appColor
         });
       }}
       appColor={this.props.route.params.appColor}
@@ -255,8 +254,7 @@ class Threads extends React.Component {
                 appColor,
                 action: 'create',
                 type: 'thread',
-                discussionId,
-                onDone: this.refresh
+                discussionId
               })
             }
             style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}

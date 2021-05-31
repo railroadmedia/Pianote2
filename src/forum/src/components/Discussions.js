@@ -75,8 +75,7 @@ class Discussions extends React.Component {
         this.navigate('Thread', {
           threadId: id,
           isDark: this.props.route.params.isDark,
-          appColor: this.props.route.params.appColor,
-          onDone: this.refresh
+          appColor: this.props.route.params.appColor
         });
       }}
       appColor={this.props.route.params.appColor}

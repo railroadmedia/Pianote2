@@ -15,6 +15,10 @@ export default class HTMLRenderer extends React.Component {
         tagsStyles={{
           p: customStyle,
           div: customStyle,
+          span: customStyle,
+          b: customStyle,
+          i: customStyle,
+          u: customStyle,
           blockquote: styles.blockquote
         }}
         listsPrefixesRenderers={{
@@ -23,7 +27,7 @@ export default class HTMLRenderer extends React.Component {
               {passProps.index + 1}.{`  `}
             </Text>
           ),
-          ul: (_, __, ___, passProps) => (
+          ul: (_, __, ___, ____) => (
             <Text style={{ fontWeight: '900', ...customStyle }}>·{`  `}</Text>
           )
         }}
