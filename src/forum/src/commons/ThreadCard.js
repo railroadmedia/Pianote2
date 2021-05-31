@@ -43,12 +43,14 @@ class ThreadCard extends React.Component {
           accessLevelName={author_access_level}
         />
         <View style={{ paddingHorizontal: 10, flex: 1 }}>
-          <Text style={styles.title}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {!!pinned && (
-              <>{pin({ width: 10, fill: isDark ? 'white' : 'black' })} </>
+              <View style={{ marginRight: 5 }}>
+                {pin({ width: 10, fill: isDark ? 'white' : 'black' })}
+              </View>
             )}
-            {title}
-          </Text>
+            <Text style={styles.title}>{title}</Text>
+          </View>
           <Text style={styles.lastPost}>
             Started On{' '}
             <Text style={{ fontWeight: '700' }}>{published_on_formatted}</Text>{' '}
