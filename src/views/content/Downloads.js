@@ -65,7 +65,8 @@ export default class Downloads extends React.Component {
       });
     } else if (item?.lesson.type === 'learning-path-lesson') {
       navigate('VIEWLESSON', {
-        url: item.lesson.mobile_app_url
+        url: item.lesson.mobile_app_url,
+        id: item.id
       });
     } else {
       navigate('VIEWLESSON', {
