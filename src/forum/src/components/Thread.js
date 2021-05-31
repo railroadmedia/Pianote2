@@ -27,7 +27,6 @@ export default class Thread extends React.Component {
   thread = {};
   state = {
     loading: true,
-    signShown: true,
     createPostHeight: 0,
     loadingMore: false,
     refreshing: false,
@@ -44,12 +43,10 @@ export default class Thread extends React.Component {
 
   componentDidMount() {
     const { threadId } = this.props.route.params;
-    Promise.all([getThread(threadId), AsyncStorage.getItem('signShown')]).then(
-      ([thread, signShown]) => {
-        this.thread = thread;
-        this.setState({ loading: false, signShown: !!signShown });
-      }
-    );
+    getThread(threadId).then(thread => {
+      this.thread = thread;
+      this.setState({ loading: false });
+    });
   }
 
   navigate = (route, params) =>
