@@ -11,11 +11,10 @@ import {
   TextInput
 } from 'react-native';
 
-import AsyncStorage from '@react-native-community/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Pagination from '../commons/Pagination';
-import Post, { closeMenu } from '../commons/Post';
+import Post from '../commons/Post';
 
 import { connection, getThread } from '../services/forum.service';
 

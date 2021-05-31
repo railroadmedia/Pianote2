@@ -14,6 +14,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { connect, batch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import Pagination from '../commons/Pagination';
+import Search from '../commons/Search';
 import ThreadCard from '../commons/ThreadCard';
 
 import { setAllThreads, setFollowedThreads } from '../redux/ThreadActions';
@@ -25,8 +27,6 @@ import {
 } from '../services/forum.service';
 
 import { addThread } from '../assets/svgs';
-import Pagination from '../commons/Pagination';
-import Search from '../commons/Search';
 
 let styles;
 class Threads extends React.Component {
