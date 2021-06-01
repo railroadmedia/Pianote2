@@ -37,8 +37,10 @@ import { goBack, navigate, push } from '../../../AppNavigator';
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-
 let greaterWDim;
+let fullWidth = windowDim.width;
+let fullHeight = windowDim.height;
+
 export default class SinglePack extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {

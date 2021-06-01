@@ -2,9 +2,11 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import Icon from '../../../assets/icons';
 import FastImage from 'react-native-fast-image';
+import { getThread } from '../services/forum.service';
 
 const onTablet = global.onTablet;
 let styles;
+let data = {};
 
 export default class UserInfo extends React.Component {
   constructor(props) {
@@ -12,8 +14,21 @@ export default class UserInfo extends React.Component {
     styles = setStyles(this.props.isDark, this.props.appColor);
   }
 
+  componentDidMount = async () => {
+    let data = await getThread(1, 1);
+    console.log(data);
+    console.log(
+      data.author_display_name,
+      data.like_count,
+      data.author_total_posts,
+      data.author_days_as_member,
+      data.author_xp,
+      data.author_avatar_url,
+      data.author_xp_rank
+    );
+  };
+
   render = () => {
-    let data = this.props.data;
     return (
       <Modal
         transparent={true}

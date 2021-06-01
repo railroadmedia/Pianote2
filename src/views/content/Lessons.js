@@ -1012,7 +1012,7 @@ class Lessons extends React.Component {
             rank: 'MASTER II',
             level: '2.3',
             url:
-              'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+              'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png' //
           }}
         />
         <NavigationBar currentPage={'LESSONS'} isMethod={true} />

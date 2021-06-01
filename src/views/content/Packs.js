@@ -26,6 +26,9 @@ import { navigate } from '../../../AppNavigator';
 
 const onTablet = global.onTablet;
 let greaterWDim;
+let fullWidth = Dimensions.get('window').width;
+let fullHeight = Dimensions.get('window').height;
+
 class Packs extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
