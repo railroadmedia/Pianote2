@@ -5,6 +5,7 @@ import {
   Text,
   SafeAreaView,
   StyleSheet,
+  ActivityIndicator,
   Modal
 } from 'react-native';
 import { search as searchSvg } from '../assets/svgs';
@@ -20,25 +21,29 @@ export default class Search extends React.Component {
     super(props);
     let { isDark } = props;
     styles = setStyles(isDark);
+    this.state = {
+      loadingMore: false,
+      loading: true,
+      refreshing: false,
+      showSearchResults: false
+    };
   }
 
   componentDidMount = () => {};
 
-  toggleSearchResults = text => {
+  toggleSearchResults = async text => {
     /* code for results fetching and modal toggle goes here */
+    let results = await search('piano thread');
+    console.log('result: ', results);
     this.setState({ showSearchResults: true });
   };
 
   navigate = (route, params) =>
     connection(true) && this.props.navigation.navigate(route, params);
 
-  async wait() {
-    await setTimeout(() => this.props.submitEditing(), 225);
-  }
-
   render() {
     let { isDark } = this.props;
-    let { showSearchResults } = this.state;
+    let { loadingMore, showSearchResults, loading, refreshing } = this.state;
     return (
       <View style={styles.inputContainer}>
         <View style={styles.searchIcon}>
@@ -56,8 +61,6 @@ export default class Search extends React.Component {
           placeholder={'Search...'}
           placeholderTextColor={isDark ? '#445F74' : '#97AABE'}
           returnKeyType={'search'}
-          onFocus={() => this.props.onFocus()}
-          onEndEditing={() => this.wait()}
           onSubmitEditing={({ nativeEvent: { text } }) =>
             this.toggleSearchResults(text)
           }
@@ -78,36 +81,6 @@ export default class Search extends React.Component {
               route={{ name: 'Search', params: { isDark: true } }}
               onToggleSign={signShown => this.setState({ signShown })}
             />
-            {/* 
-            <Header
-              backgroundColor={'#00101d'}
-              placement='center'
-              leftComponent={
-                <TouchableOpacity
-                  style={{ paddingHorizontal: 5, paddingVertical: 2 }}
-                  onPress={() => this.setState({ showSearchResults: false })}
-                >
-                  <Back width={20} height={20} fill={'white'} />
-                </TouchableOpacity>
-              }
-              centerComponent={{ text: 'All Forums', style: styles.headerText }}
-              containerStyle={{
-                borderBottomWidth: 0
-              }}
-              rightComponent={
-                <TouchableOpacity
-                  style={{ paddingVertical: 5 }}
-                  onPress={() => {}}
-                >
-                  <Icon.Entypo
-                    size={14}
-                    name={'dots-three-horizontal'}
-                    color={'white'}
-                  />
-                </TouchableOpacity>
-              }
-            />
-             */}
             <View style={styles.inputContainer}>
               <View style={styles.searchIcon}>
                 {searchSvg({
@@ -128,6 +101,73 @@ export default class Search extends React.Component {
                   this.toggleSearchResults(text)
                 }
               />
+              {/* 
+              {loading ? (
+                <ActivityIndicator
+                  size='large'
+                  color={appColor}
+                  animating={true}
+                  style={styles.loading}
+                />
+              ) : (
+                <FlatList
+                  windowSize={10}
+                  data={this.followedThreads}
+                  style={styles.fList}
+                  initialNumToRender={10}
+                  maxToRenderPerBatch={10}
+                  removeClippedSubviews={true}
+                  keyboardShouldPersistTaps='handled'
+                  renderItem={this.renderFLItem}
+                  keyExtractor={item => item.toString()}
+                  ref={r => (this.flatListRef = r)}
+                  refreshControl={
+                    <RefreshControl
+                      colors={[appColor]}
+                      tintColor={appColor}
+                      onRefresh={this.refresh}
+                      refreshing={refreshing}
+                    />
+                  }
+                  ListEmptyComponent={
+                    <Text style={styles.emptyList}>
+                      You don't follow any threads
+                    </Text>
+                  }
+                  ListFooterComponent={
+                    <View
+                      style={{
+                        borderTopWidth: 1,
+                        borderColor: '#445F74',
+                        marginHorizontal: 15,
+                        marginBottom: 10
+                      }}
+                    >
+                      <Pagination
+                        active={this.page}
+                        isDark={isDark}
+                        appColor={appColor}
+                        length={this.followedThreadsTotal}
+                        onChangePage={this.changePage}
+                      />
+                      <ActivityIndicator
+                        size='small'
+                        color={appColor}
+                        animating={loadingMore}
+                        style={{ padding: 15 }}
+                      />
+                    </View>
+                  }
+                  ListHeaderComponent={
+                    <>
+                      {this.discussions.map(item =>
+                        this.renderDiscussion(item)
+                      )}
+                    </>
+                  }
+                />
+              )}
+               */}
             </View>
           </SafeAreaView>
         </Modal>

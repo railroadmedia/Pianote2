@@ -1,17 +1,9 @@
-import {
-  AppRegistry,
-  Dimensions,
-  Platform,
-  Linking,
-  LogBox
-} from 'react-native';
+import { AppRegistry, Platform, Linking, LogBox } from 'react-native';
 import App from './App';
 import { name as appName } from './app.json';
 import DeviceInfo from 'react-native-device-info';
-
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import PushNotification from 'react-native-push-notification';
-
 import {
   localNotification,
   notif,
@@ -82,11 +74,13 @@ PushNotification.configure({
     }
   }
 });
+
 PushNotification.createChannel({
   channelId: 'pianote-app-channel',
   channelName: 'pianote-app-channel',
   channelDescription: 'Pianote app channel'
 });
+
 localNotification();
 
 AppRegistry.registerComponent(appName, () => App);

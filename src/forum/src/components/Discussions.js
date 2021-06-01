@@ -29,14 +29,11 @@ class Discussions extends React.Component {
   discussions = [];
   followedThreads = [];
   followedThreadsTotal = 0;
-
   state = {
     loadingMore: false,
     loading: true,
-    refreshing: false,
-    showNavBar: true
+    refreshing: false
   };
-
   constructor(props) {
     super(props);
     let { isDark, appColor } = props.route.params;
@@ -62,9 +59,7 @@ class Discussions extends React.Component {
     );
   }
 
-  componentWillUnmount() {
-    this.refreshOnFocusListener?.();
-  }
+  componentWillUnmount = () => this.refreshOnFocusListener?.();
 
   navigate = (route, params) =>
     connection(true) && this.props.navigation.navigate(route, params);
@@ -102,7 +97,6 @@ class Discussions extends React.Component {
 
   refresh = () => {
     if (!connection()) return;
-
     this.setState({ refreshing: true }, () => {
       Promise.all([getDiscussions(), getFollowedThreads()]).then(
         ([discussions, followed]) => {
@@ -198,18 +192,13 @@ class Discussions extends React.Component {
             }
             ListHeaderComponent={
               <>
-                <Search
-                  onFocus={() => this.setState({ showNavBar: false })}
-                  submitEditing={() => this.setState({ showNavBar: true })}
-                  isDark={this.props.route.params.isDark}
-                />
+                <Search isDark={this.props.route.params.isDark} />
                 {this.discussions.map(item => this.renderDiscussion(item))}
                 <Text style={styles.sectionTitle}>FOLLOWED THREADS</Text>
               </>
             }
           />
         )}
-
         <BottomNavigator currentPage={'FORUM'} />
       </>
     );
