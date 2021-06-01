@@ -18,7 +18,8 @@ import Pagination from '../commons/Pagination';
 import {
   connection,
   getDiscussions,
-  getFollowedThreads
+  getFollowedThreads,
+  search
 } from '../services/forum.service';
 
 import { setDiscussionsThreads } from '../redux/ThreadActions';
@@ -127,8 +128,10 @@ class Discussions extends React.Component {
     );
   };
 
-  search = text => {
+  search = async text => {
     if (!connection()) return;
+    let results = await search(text);
+    console.log('result: ', results);
   };
 
   render() {
