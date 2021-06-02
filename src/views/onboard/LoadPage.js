@@ -46,8 +46,6 @@ const cache = [
 class LoadPage extends React.Component {
   static contextType = NetworkContext;
   async componentDidMount() {
-    //requestTrackingPermission();
-
     Download_V2.resumeAll()?.then(async () => {
       this.loadCache();
       await SplashScreen.hide();
