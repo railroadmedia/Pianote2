@@ -9,6 +9,7 @@ export default class HTMLRenderer extends React.Component {
     const { html, customStyle } = this.props;
     return (
       <HTML
+        ignoredStyles={['font-family']}
         renderers={{ iframe }}
         WebView={WebView}
         source={{ html: `<div>${html}</div>` }}
