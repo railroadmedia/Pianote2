@@ -27,9 +27,7 @@ export default class CreateAccount extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-
     localStyles = setStyles(colors, sizing);
-
     if (onTablet) Orientation.unlockAllOrientations();
     else Orientation.lockToPortrait();
     this.state = {

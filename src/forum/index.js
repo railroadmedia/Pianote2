@@ -18,9 +18,7 @@ import { setForumService } from './src/services/forum.service';
 import threadsReducer from './src/redux/ThreadReducer';
 
 const store = createStore(combineReducers({ ...threadsReducer }));
-
 const Stack = createStackNavigator();
-
 const timingAnim = {
   animation: 'timing',
   config: { duration: 250, easing: Easing.out(Easing.circle) }

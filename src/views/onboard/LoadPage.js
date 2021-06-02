@@ -1,5 +1,5 @@
 import React from 'react';
-import { Linking, View, Dimensions } from 'react-native';
+import { Linking, View, Dimensions, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { Download_V2 } from 'RNDownload';
 import { bindActionCreators } from 'redux';
@@ -32,7 +32,6 @@ const factorHorizontal =
   windowDim.width < windowDim.height ? width / 375 : height / 812;
 const factorVertical =
   windowDim.width < windowDim.height ? height / 812 : width / 375;
-
 const cache = [
   'cachePacks',
   'cacheSongs',
@@ -43,13 +42,13 @@ const cache = [
   'cacheQuickTips',
   'cacheStudentFocus'
 ];
+
 class LoadPage extends React.Component {
   static contextType = NetworkContext;
   async componentDidMount() {
     Download_V2.resumeAll()?.then(async () => {
       this.loadCache();
       await SplashScreen.hide();
-
       let data = (
         await AsyncStorage.multiGet([
           'loggedIn',
@@ -67,22 +66,16 @@ class LoadPage extends React.Component {
       const { email, resetKey, password, forumUrl } = data;
 
       if (!this.context.isConnected) {
-        if (email && !global.loadedFromNotification) {
+        if (email && !global.loadedFromNotification)
           return navigate('DOWNLOADS');
-        } else {
-          return navigate('LOGIN');
-        }
-        // if no connection and logged in
+        else return navigate('LOGIN');
       } else if (!email && !global.loadedFromNotification) {
-        // if not logged in
         if (resetKey) return reset('RESETPASSWORD', { resetKey, email });
         return reset('LOGIN');
       } else {
-        // get token
         const res = await getToken(email, password);
-        if (res === 500) {
-          return this.context.showNoConnectionAlert();
-        } else if (res.success) {
+        if (res === 500) return this.context.showNoConnectionAlert();
+        else if (res.success) {
           updateFcmToken();
           let userData = await getUserData();
           this.props.setLoggedInUser(userData);
@@ -90,36 +83,23 @@ class LoadPage extends React.Component {
           if (commonService.urlToOpen) {
             return navigationService.decideWhereToRedirect();
           } else if (lessonUrl && commentId) {
-            // if lesson or comment notification go to video
             reset('VIEWLESSON', { url: lessonUrl, commentId });
           } else if (global.loadedFromNotification) {
-            // if going to profile page
             reset('PROFILE');
           } else if (resetKey) {
-            // go to reset pass
             reset('RESETPASSWORD', { resetKey, email });
           } else {
             if (forumUrl) {
-              // if user got a forum related notification
               Linking.openURL(forumUrl);
               await AsyncStorage.removeItem('forumUrl');
             }
-            // if member then check membership type
             if (userData.isPackOlyOwner) {
-              // if pack only, set global variable to true & go to packs
               global.isPackOnly = userData.isPackOlyOwner;
               global.expirationDate = userData.expirationDate;
-              if (!global.notifNavigation) {
-                reset('PACKS');
-              }
+              if (!global.notifNavigation) reset('PACKS');
             } else if (userData.isLifetime || userData.isMember) {
-              // is logged in with valid membership go to lessons
-
-              if (!global.notifNavigation) {
-                reset('LESSONS');
-              }
+              if (!global.notifNavigation) reset('LESSONS');
             } else {
-              // membership expired, go to membership expired
               navigate('MEMBERSHIPEXPIRED', {
                 email: this.state.email,
                 password: this.state.password,
@@ -128,7 +108,6 @@ class LoadPage extends React.Component {
             }
           }
         } else if (!res.success || !email) {
-          // is not logged in
           if (resetKey) return reset('RESETPASSWORD', { resetKey, email });
           return reset('LOGIN');
         }
@@ -154,36 +133,11 @@ class LoadPage extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1, alignSelf: 'stretch' }}>
-        <View
-          style={[
-            {
-              justifyContent: 'center',
-              alignItems: 'center',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              height: '100%',
-              width: '100%',
-              zIndex: 4,
-              elevation: isiOS ? 0 : 4,
-              backgroundColor: 'black'
-            }
-          ]}
-        >
+      <View style={styles.container}>
+        <View style={styles.containerInner}>
           <Pianote
-            height={
-              77.5 *
-              (windowDim.width < windowDim.height
-                ? factorVertical
-                : factorHorizontal)
-            }
-            width={
-              190 *
-              (windowDim.width < windowDim.height
-                ? factorHorizontal
-                : factorVertical)
-            }
+            height={styles.height}
+            width={styles.width}
             fill={colors.pianoteRed}
           />
         </View>
@@ -206,5 +160,27 @@ const mapDispatchToProps = dispatch =>
     },
     dispatch
   );
+
+const styles = StyleSheet.create({
+  container: { flex: 1, alignSelf: 'stretch' },
+  containerInner: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    height: '100%',
+    width: '100%',
+    zIndex: 4,
+    elevation: 4,
+    backgroundColor: 'black'
+  },
+  height:
+    77.5 *
+    (windowDim.width < windowDim.height ? factorVertical : factorHorizontal),
+  width:
+    190 *
+    (windowDim.width < windowDim.height ? factorHorizontal : factorVertical)
+});
 
 export default connect(null, mapDispatchToProps)(LoadPage);

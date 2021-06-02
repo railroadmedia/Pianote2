@@ -196,7 +196,7 @@ class Discussions extends React.Component {
             ListHeaderComponent={
               <>
                 <Search isDark={this.props.route.params.isDark} />
-                {this.discussions.map(item => this.renderDiscussion(item))}
+                {this.discussions?.map(item => this.renderDiscussion(item))}
                 <Text style={styles.sectionTitle}>FOLLOWED THREADS</Text>
               </>
             }
