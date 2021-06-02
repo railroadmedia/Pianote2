@@ -13,7 +13,10 @@ export default class HTMLRenderer extends React.Component {
         renderers={{ iframe }}
         WebView={WebView}
         source={{ html: `<div>${html}</div>` }}
-        tagsStyles={{ div: customStyle }}
+        tagsStyles={{
+          div: customStyle,
+          blockquote: styles.blockquote
+        }}
         listsPrefixesRenderers={{
           ol: (_, __, ___, passProps) => (
             <Text style={customStyle}>
