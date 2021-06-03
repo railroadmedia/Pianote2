@@ -16,7 +16,7 @@ import Post from '../commons/Post';
 
 import { connection, getThread } from '../services/forum.service';
 
-import { post } from '../assets/svgs';
+import { post, multiQuote } from '../assets/svgs';
 
 let styles;
 export default class Thread extends React.Component {
@@ -26,7 +26,8 @@ export default class Thread extends React.Component {
     loading: true,
     createPostHeight: 0,
     loadingMore: false,
-    refreshing: false
+    refreshing: false,
+    multiQuoting: false
   };
 
   constructor(props) {
@@ -56,6 +57,9 @@ export default class Thread extends React.Component {
         index={index + 1 + 10 * (this.page - 1)}
         appColor={appColor}
         isDark={isDark}
+        onMultiQuote={() =>
+          this.setState({ multiQuoting: !!Post.multiQuotes.length })
+        }
       />
     );
   };
@@ -118,7 +122,7 @@ export default class Thread extends React.Component {
   };
 
   render() {
-    let { loading, refreshing, createPostHeight } = this.state;
+    let { loading, refreshing, createPostHeight, multiQuoting } = this.state;
     let { isDark, appColor, threadId } = this.props.route.params;
     return loading ? (
       <ActivityIndicator
@@ -163,16 +167,26 @@ export default class Thread extends React.Component {
             }
             onPress={() =>
               this.navigate('CRUD', {
-                isDark,
-                appColor,
-                action: 'create',
+                action: Post.multiQuotes.length ? 'multiQuote' : 'create',
                 type: 'post',
-                threadId
+                threadId,
+                posts: Post.multiQuotes.map(mq => mq.content)
               })
             }
             style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}
           >
-            {post({ height: 25, width: 25, fill: 'white' })}
+            {(multiQuoting ? multiQuote : post)({
+              height: 25,
+              width: 25,
+              fill: 'white'
+            })}
+            {multiQuoting && (
+              <View style={styles.multiQuoteBadge}>
+                <Text style={{ color: appColor, fontSize: 10 }}>
+                  +{Post.multiQuotes.length}
+                </Text>
+              </View>
+            )}
           </TouchableOpacity>
         </SafeAreaView>
       </>
@@ -204,5 +218,16 @@ let setStyles = isDark =>
       position: 'absolute',
       bottom: 0,
       alignSelf: 'flex-end'
+    },
+    multiQuoteBadge: {
+      aspectRatio: 1,
+      backgroundColor: 'white',
+      overflow: 'hidden',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 99,
+      position: 'absolute',
+      padding: 4,
+      bottom: 0
     }
   });

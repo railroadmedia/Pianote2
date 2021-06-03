@@ -33,6 +33,7 @@ import {
 } from '../services/forum.service';
 
 let styles;
+let multiQuotes = [];
 let openedMenus = [];
 export const closeMenus = menu => {
   openedMenus.map(om => om.setState({ selected: false }));
@@ -86,7 +87,18 @@ class Post extends React.Component {
     });
   };
 
-  multiQuote = () => {};
+  multiQuote = () => {
+    if (openedMenus.length) closeMenus();
+    this.setState(({ selected }) => {
+      if (selected)
+        multiQuotes.splice(
+          multiQuotes.findIndex(mq => mq.id === this.props.post.id),
+          1
+        );
+      else multiQuotes.push(this.props.post);
+      return { selected: !selected };
+    }, this.props.onMultiQuote);
+  };
 
   render() {
     let {
@@ -106,7 +118,7 @@ class Post extends React.Component {
             ...styles.container,
             backgroundColor: selected ? '#002039' : '#081825'
           }}
-          onPress={this.toggleMenu}
+          onPress={multiQuotes.length ? this.multiQuote : this.toggleMenu}
         >
           <View style={styles.header}>
             <View style={styles.userDetails}>
@@ -160,7 +172,7 @@ class Post extends React.Component {
             </View>
           )}
         </TouchableOpacity>
-        {selected && (
+        {selected && !multiQuotes.length && (
           <View
             style={{
               position: 'absolute',
@@ -380,6 +392,8 @@ let setStyles = (isDark, appColor) =>
     }
   });
 const mapStateToProps = ({ threads: { signShown } }) => ({ signShown });
-export default connect(mapStateToProps)(props => (
+let NavigationWrapper = props => (
   <Post {...props} navigation={useNavigation()} />
-));
+);
+NavigationWrapper.multiQuotes = multiQuotes;
+export default connect(mapStateToProps)(NavigationWrapper);
