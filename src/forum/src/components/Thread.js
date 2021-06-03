@@ -10,12 +10,10 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 import Pagination from '../commons/Pagination';
 import Post from '../commons/Post';
-
+import UserInfo from '../components/UserInfo.js';
 import { connection, getThread } from '../services/forum.service';
-
 import { post, multiQuote } from '../assets/svgs';
 
 let styles;
@@ -27,7 +25,8 @@ export default class Thread extends React.Component {
     createPostHeight: 0,
     loadingMore: false,
     refreshing: false,
-    multiQuoting: false
+    multiQuoting: false,
+    showUserInfo: false
   };
 
   constructor(props) {
@@ -37,12 +36,9 @@ export default class Thread extends React.Component {
   }
 
   componentDidMount() {
-    console.log('this');
     const { threadId } = this.props.route.params;
     getThread(threadId).then(thread => {
-      console.log(thread);
       this.thread = thread;
-      console.log(this.thread);
       this.setState({ loading: false });
     });
   }
@@ -190,11 +186,22 @@ export default class Thread extends React.Component {
               </View>
             )}
           </TouchableOpacity>
+          <UserInfo
+            isVisible={true} //this.state.showUserInfo}
+            hideUserInfo={() =>
+              this.setState({ showUserInfo: !this.state.showUserInfo })
+            }
+            isDark={true}
+            appName={'PIANOTE'}
+            appColor={colors.pianoteRed}
+            threadID={1674}
+          />
         </SafeAreaView>
       </>
     );
   }
 }
+
 let setStyles = isDark =>
   StyleSheet.create({
     fList: {
