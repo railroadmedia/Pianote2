@@ -80,8 +80,8 @@ export const updateMessage = function (message) {
 export const deleteMessage = function (id) {
   return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { id });
 };
-export const reportMessage = function (id) {
-  return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { id });
+export const reportPost = function (id) {
+  return this.tryCall(`${this.rootUrl}/forums/api/post/report/${id}`, 'PUT');
 };
 export const addReply = function (reply) {
   return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { reply });
