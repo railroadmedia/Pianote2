@@ -41,9 +41,11 @@ export default class Thread extends React.Component {
   }
 
   componentDidMount() {
+    console.log('this');
     const { threadId } = this.props.route.params;
     getThread(threadId).then(thread => {
       this.thread = thread;
+      console.log(this.thread);
       this.setState({ loading: false });
     });
   }

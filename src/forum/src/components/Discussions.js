@@ -148,6 +148,7 @@ class Discussions extends React.Component {
           <FlatList
             windowSize={10}
             data={this.followedThreads}
+            onLayout={() => console.log(this.followedThreads, 'this')}
             style={styles.fList}
             initialNumToRender={10}
             maxToRenderPerBatch={10}

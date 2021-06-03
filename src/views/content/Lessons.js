@@ -957,7 +957,7 @@ class Lessons extends React.Component {
           addEventToCalendar={() => this.addEventToCalendar()}
         />
         <UserInfo
-          isVisible={true}
+          isVisible={true} //this.state.showUserInfo}
           hideUserInfo={() =>
             this.setState({ showUserInfo: !this.state.showUserInfo })
           }

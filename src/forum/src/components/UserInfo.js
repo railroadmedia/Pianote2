@@ -15,16 +15,19 @@ export default class UserInfo extends React.Component {
   }
 
   componentDidMount = async () => {
-    let data = await getThread(1, 1);
-    console.log(data, 'DATA: ');
+    await getThread(1674).then(thread => {
+      this.thread = thread;
+      console.log(this.thread);
+    });
     console.log(
-      data.author_display_name,
-      data.like_count,
-      data.author_total_posts,
-      data.author_days_as_member,
-      data.author_xp,
-      data.author_avatar_url,
-      data.author_xp_rank
+      'hi:',
+      this.thread.author_display_name,
+      this.thread.like_count,
+      this.thread.author_total_posts,
+      this.thread.author_days_as_member,
+      this.thread.author_xp,
+      this.thread.author_avatar_url,
+      this.thread.author_xp_rank
     );
   };
 
