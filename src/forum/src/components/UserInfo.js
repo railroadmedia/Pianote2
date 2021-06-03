@@ -16,7 +16,7 @@ export default class UserInfo extends React.Component {
 
   componentDidMount = async () => {
     let data = await getThread(1, 1);
-    console.log(data);
+    console.log(data, 'DATA: ');
     console.log(
       data.author_display_name,
       data.like_count,

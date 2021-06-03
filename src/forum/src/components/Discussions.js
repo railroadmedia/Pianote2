@@ -130,8 +130,6 @@ class Discussions extends React.Component {
 
   search = async text => {
     if (!connection()) return;
-    let results = await search(text);
-    console.log('result: ', results);
   };
 
   render() {
