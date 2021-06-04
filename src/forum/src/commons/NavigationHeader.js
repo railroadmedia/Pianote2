@@ -110,7 +110,7 @@ class NavigationHeader extends React.Component {
 
   onEdit = () => {
     if (connection(true)) {
-      let { threadId, title } = this.props.route.params;
+      let { threadId, title } = this.props;
       this.setState(
         () => ({ showOptions: false }),
         () =>
