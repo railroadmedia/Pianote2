@@ -11,6 +11,9 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { connect, batch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import Pagination from '../commons/Pagination';
 import Post from '../commons/Post';
 
@@ -18,13 +21,14 @@ import { connection, getThread } from '../services/forum.service';
 
 import { post, multiQuote } from '../assets/svgs';
 
+import { setPosts } from '../redux/ThreadActions';
+
 let styles;
-export default class Thread extends React.Component {
+class Thread extends React.Component {
   page = 1;
-  thread = {};
   state = {
     loading: true,
-    createPostHeight: 0,
+    postHeight: 0,
     loadingMore: false,
     refreshing: false,
     multiQuoting: false
@@ -39,21 +43,24 @@ export default class Thread extends React.Component {
   componentDidMount() {
     const { threadId } = this.props.route.params;
     getThread(threadId).then(thread => {
-      console.log(thread);
-      this.thread = thread;
-      this.setState({ loading: false });
+      this.post_count = thread.post_count;
+      this.posts = thread.posts.map(p => p.id);
+      batch(() => {
+        this.props.setPosts(thread.posts);
+        this.setState({ loading: false });
+      });
     });
   }
 
   navigate = (route, params) =>
     connection(true) && this.props.navigation.navigate(route, params);
 
-  renderFLItem = ({ item, index }) => {
+  renderFLItem = ({ item: id, index }) => {
     let { isDark, appColor, loggesInUserId } = this.props.route.params;
     return (
       <Post
         loggesInUserId={loggesInUserId}
-        post={item}
+        id={id}
         index={index + 1 + 10 * (this.page - 1)}
         appColor={appColor}
         isDark={isDark}
@@ -81,7 +88,7 @@ export default class Thread extends React.Component {
           active={this.page}
           isDark={isDark}
           appColor={appColor}
-          length={this.thread.post_count}
+          length={this.post_count}
           onChangePage={this.changePage}
         />
         {this.state.loadingMore && (
@@ -101,8 +108,12 @@ export default class Thread extends React.Component {
     let { threadId } = this.props.route.params;
     this.setState({ refreshing: true }, () =>
       getThread(threadId, this.page).then(thread => {
-        this.thread = thread;
-        this.setState({ refreshing: false });
+        this.post_count = thread.post_count;
+        this.posts = thread.posts.map(p => p.id);
+        batch(() => {
+          this.props.setPosts(thread.posts);
+          this.setState({ refreshing: false });
+        });
       })
     );
   };
@@ -113,16 +124,20 @@ export default class Thread extends React.Component {
     this.setState({ loadingMore: true }, () =>
       getThread(threadId, page).then(thread => {
         this.page = page;
-        this.thread = thread;
-        this.setState({ loadingMore: false }, () =>
-          this.flatListRef.scrollToOffset({ offset: 0 })
-        );
+        this.post_count = thread.post_count;
+        this.posts = thread.posts.map(p => p.id);
+        batch(() => {
+          this.props.setPosts(thread.posts);
+          this.setState({ loadingMore: false }, () =>
+            this.flatListRef.scrollToOffset({ offset: 0 })
+          );
+        });
       })
     );
   };
 
   render() {
-    let { loading, refreshing, createPostHeight, multiQuoting } = this.state;
+    let { loading, refreshing, postHeight, multiQuoting } = this.state;
     let { isDark, appColor, threadId } = this.props.route.params;
     return loading ? (
       <ActivityIndicator
@@ -135,7 +150,7 @@ export default class Thread extends React.Component {
       <>
         <FlatList
           windowSize={10}
-          data={this.thread.posts}
+          data={this.posts}
           style={styles.fList}
           initialNumToRender={10}
           maxToRenderPerBatch={10}
@@ -144,12 +159,12 @@ export default class Thread extends React.Component {
           keyboardShouldPersistTaps='handled'
           renderItem={this.renderFLItem}
           ListHeaderComponent={this.renderPagination(20, 0, 1)}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={id => id.toString()}
           ref={r => (this.flatListRef = r)}
           ListEmptyComponent={
             <Text style={styles.emptyList}>{'No posts.'}</Text>
           }
-          ListFooterComponent={this.renderPagination(createPostHeight, 1, 0)}
+          ListFooterComponent={this.renderPagination(postHeight, 1, 0)}
           refreshControl={
             <RefreshControl
               colors={[isDark ? 'white' : 'black']}
@@ -162,15 +177,15 @@ export default class Thread extends React.Component {
         <SafeAreaView style={styles.bottomTOpacitySafeArea}>
           <TouchableOpacity
             onLayout={({ nativeEvent: { layout } }) =>
-              !this.state.createPostHeight &&
-              this.setState({ createPostHeight: layout.height + 15 })
+              !this.state.postHeight &&
+              this.setState({ postHeight: layout.height + 15 })
             }
             onPress={() =>
               this.navigate('CRUD', {
-                action: Post.multiQuotes.length ? 'multiQuote' : 'create',
                 type: 'post',
+                action: 'create',
                 threadId,
-                posts: Post.multiQuotes.map(mq => mq.content)
+                posts: Post.multiQuotes
               })
             }
             style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}
@@ -231,3 +246,8 @@ let setStyles = isDark =>
       bottom: 0
     }
   });
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ setPosts }, dispatch);
+
+export default connect(null, mapDispatchToProps)(Thread);

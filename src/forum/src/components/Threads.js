@@ -250,10 +250,8 @@ class Threads extends React.Component {
             }
             onPress={() =>
               this.navigate('CRUD', {
-                isDark,
-                appColor,
-                action: 'create',
                 type: 'thread',
+                action: 'create',
                 discussionId
               })
             }

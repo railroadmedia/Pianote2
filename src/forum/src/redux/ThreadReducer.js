@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 const threadsReducer = (
   state = { signShown: false },
-  { type, threads, thread }
+  { type, threads, thread, posts, post }
 ) => {
   switch (type) {
     case 'SETDISCUSSIONS':
@@ -20,7 +20,7 @@ const threadsReducer = (
         ...state,
         followed: Object.assign({}, ...threads.map(t => ({ [t.id]: t })))
       };
-    case 'UPDATE':
+    case 'UPDATETHREADS':
       let discussions = {},
         followed = {},
         all = {};
@@ -39,6 +39,13 @@ const threadsReducer = (
         ...state,
         signShown: !state.signShown
       };
+    case 'SETPOSTS':
+      return {
+        ...state,
+        posts: Object.assign({}, ...posts.map(p => ({ [p.id]: p })))
+      };
+    case 'UPDATEPOSTS':
+      return { ...state, posts: { ...state.posts, [post.id]: post } };
     default:
       return state;
   }

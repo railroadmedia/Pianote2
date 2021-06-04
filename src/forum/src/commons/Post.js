@@ -1,9 +1,6 @@
 /**
- * PROPS: post, onEdit, onReplies, onDelete, appColor, isDark
+ * PROPS: post, onDelete, appColor, isDark
  * post: post to be displayed
- * onEdit(): simple navigation to 'Edit' page
- * onDelete(): callback after delete called (for refreshing posts)
- * onReplies(): simple navigation to 'Replies' page
  */
 
 import React from 'react';
@@ -80,10 +77,9 @@ class Post extends React.Component {
   edit = () => {
     closeMenus();
     this.props.navigation.navigate('CRUD', {
-      action: 'edit',
       type: 'post',
-      postId: this.props.post.id,
-      posts: [this.props.post.content]
+      action: 'edit',
+      postId: this.props.post.id
     });
   };
 
@@ -100,6 +96,16 @@ class Post extends React.Component {
     }, this.props.onMultiQuote);
   };
 
+  reply = () => {
+    closeMenus();
+    this.props.navigation.navigate('CRUD', {
+      type: 'post',
+      action: 'create',
+      threadId: this.props.post.thread_id,
+      posts: [this.props.post]
+    });
+  };
+
   render() {
     let {
       isLiked,
@@ -108,7 +114,7 @@ class Post extends React.Component {
       menuTop,
       reportModalVisible
     } = this.state;
-    let { post, appColor, index, isDark, signShown, onReply } = this.props;
+    let { post, appColor, index, isDark, signShown } = this.props;
 
     return (
       <>
@@ -159,7 +165,7 @@ class Post extends React.Component {
             {likeCount > 0 && (
               <Text style={styles.likesNoText}>{likeCount}</Text>
             )}
-            <TouchableOpacity onPress={onReply}>
+            <TouchableOpacity onPress={this.reply}>
               <Text style={styles.replyText}>REPLY</Text>
             </TouchableOpacity>
           </View>
@@ -391,7 +397,10 @@ let setStyles = (isDark, appColor) =>
       paddingVertical: 10
     }
   });
-const mapStateToProps = ({ threads: { signShown } }) => ({ signShown });
+const mapStateToProps = ({ threads: { signShown, posts } }, { id }) => ({
+  signShown,
+  post: posts[id]
+});
 let NavigationWrapper = props => (
   <Post {...props} navigation={useNavigation()} />
 );
