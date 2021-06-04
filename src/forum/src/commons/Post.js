@@ -102,7 +102,7 @@ class Post extends React.Component {
       type: 'post',
       action: 'create',
       threadId: this.props.post.thread_id,
-      posts: [this.props.post]
+      quotes: [this.props.post]
     });
   };
 
@@ -227,25 +227,9 @@ class Post extends React.Component {
             <View style={styles.reportModalContainer}>
               <Text style={styles.reportTitle}>Report Post</Text>
               <Text style={styles.reportMessage}>
-                What's the reason you're reporting this post?
+                Are you sure you want to report this post?
               </Text>
-              <TextInput
-                style={styles.reportInput}
-                placeholderTextColor={isDark ? '#445F74' : '#00101D'}
-                placeholder='Report'
-                onChangeText={text => (this.text = text)}
-              />
               <View style={styles.reportBtnsContainer}>
-                <Pressable
-                  style={{
-                    flex: 1,
-                    borderRightColor: '#545458A6',
-                    borderRightWidth: 1
-                  }}
-                  onPress={() => this.setState({ reportModalVisible: false })}
-                >
-                  <Text style={styles.reportBtnText}>Cancel</Text>
-                </Pressable>
                 <Pressable
                   style={{ flex: 1 }}
                   onPress={() =>
@@ -254,7 +238,7 @@ class Post extends React.Component {
                     )
                   }
                 >
-                  <Text style={styles.reportBtnText}>Ok</Text>
+                  <Text style={styles.reportBtnText}>Report</Text>
                 </Pressable>
               </View>
             </View>
@@ -358,7 +342,6 @@ let setStyles = (isDark, appColor) =>
     reportModalContainer: {
       backgroundColor: isDark ? '#002039' : '#E1E6EB',
       borderRadius: 10,
-      width: '80%',
       maxWidth: 300
     },
     reportTitle: {
@@ -376,14 +359,6 @@ let setStyles = (isDark, appColor) =>
       color: isDark ? '#FFFFFF' : '#000000',
       textAlign: 'center'
     },
-    reportInput: {
-      padding: 5,
-      margin: 15,
-      marginTop: 0,
-      backgroundColor: isDark ? '#000000' : '#FFFFFF',
-      borderRadius: 5,
-      color: isDark ? '#FFFFFF' : '#000000'
-    },
     reportBtnsContainer: {
       flexDirection: 'row',
       borderTopWidth: 1,
@@ -394,7 +369,7 @@ let setStyles = (isDark, appColor) =>
       fontSize: 12,
       color: isDark ? '#FFFFFF' : '#000000',
       textAlign: 'center',
-      paddingVertical: 10
+      paddingVertical: 15
     }
   });
 const mapStateToProps = ({ threads: { signShown, posts } }, { id }) => ({

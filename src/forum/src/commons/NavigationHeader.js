@@ -108,21 +108,17 @@ class NavigationHeader extends React.Component {
     });
   };
 
-  onEdit = () => {
-    if (connection(true)) {
-      let { threadId, title } = this.props;
-      this.setState(
-        () => ({ showOptions: false }),
-        () =>
-          this.navigate('CRUD', {
-            type: 'thread',
-            action: 'edit',
-            threadId,
-            title
-          })
-      );
-    }
-  };
+  onEdit = () =>
+    connection(true) &&
+    this.setState(
+      () => ({ showOptions: false }),
+      () =>
+        this.navigate('CRUD', {
+          type: 'thread',
+          action: 'edit',
+          threadId: this.props.threadId
+        })
+    );
 
   render() {
     let {
@@ -267,6 +263,7 @@ const mapStateToProps = (
       {};
   return {
     thread,
+    threadId,
     signShown: name.match(/^(Thread)$/) ? threads.signShown : undefined,
     title: title || thread?.title
   };

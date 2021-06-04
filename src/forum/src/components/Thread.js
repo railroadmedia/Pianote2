@@ -185,7 +185,7 @@ class Thread extends React.Component {
                 type: 'post',
                 action: 'create',
                 threadId,
-                posts: Post.multiQuotes
+                quotes: Post.multiQuotes
               })
             }
             style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}

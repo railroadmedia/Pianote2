@@ -1,6 +1,6 @@
 /**
  * PROPS: isDark, appColor, action, type, posts, title, discussionId, threadId
- * action: can be 'create', 'edit', 'reply', 'multiQuote' => used to display header title and button
+ * action: can be 'create', 'edit' => used to display header title and button
  * type: can be 'thread', 'post' => used to display header type on header and on delete button and to display title input besides description field
  * posts: use posts[0] for editing a post's text or use it like posts for reply and multiquote displaying
  * title: thread title that can be edited
@@ -19,13 +19,18 @@ import {
   Keyboard,
   ActivityIndicator
 } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
+
+import { connect } from 'react-redux';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   RichEditor,
   RichToolbar,
   actions
 } from 'react-native-pell-rich-editor';
+
 import { InsertLinkModal } from '../commons/InsertLinkModal';
+import HTMLRenderer from '../commons/HTMLRenderer';
+
 import {
   connection,
   createPost,
@@ -35,18 +40,15 @@ import {
   editPost,
   updateThread
 } from '../services/forum.service';
-import HTMLRenderer from '../commons/HTMLRenderer';
 
 let styles;
 
-export default class CRUD extends React.Component {
+class CRUD extends React.Component {
+  state = { loading: false };
+
   constructor(props) {
     super(props);
-    let { isDark, appColor, title } = props.route.params;
-    this.state = {
-      title,
-      loading: false
-    };
+    let { isDark, appColor } = props.route.params;
     styles = setStyles(isDark, appColor);
   }
 
@@ -98,9 +100,9 @@ export default class CRUD extends React.Component {
     } = this.props.route.params;
     if (type === 'thread') {
       if (action === 'create') {
-        await createThread(this.state.title, this.richHTML, discussionId);
+        await createThread(this.title, this.richHTML, discussionId);
       } else {
-        await updateThread(threadId, { title: this.state.title });
+        await updateThread(threadId, { title: this.title });
       }
     } else {
       if (action === 'create') {
@@ -134,8 +136,13 @@ export default class CRUD extends React.Component {
 
   render() {
     let { loading } = this.state;
-    const { isDark, appColor, action, type, posts } = this.props.route.params;
-
+    const {
+      route: {
+        params: { isDark, appColor, action, type, quotes }
+      },
+      post,
+      thread
+    } = this.props;
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
@@ -144,20 +151,20 @@ export default class CRUD extends React.Component {
           </TouchableOpacity>
           <Text style={styles.headerTitle}>
             {action === 'create'
-              ? `Create ${type}`
-              : action === 'edit'
-              ? `Edit ${type}`
-              : action === 'reply'
-              ? 'Reply'
-              : 'MultiQuote'}
+              ? quotes?.length === 1
+                ? 'Reply'
+                : quotes?.length > 1
+                ? 'MultiQuote'
+                : `Create ${type}`
+              : `Edit ${type}`}
           </Text>
           <TouchableOpacity onPress={this.save} disabled={loading}>
             <Text style={styles.actionBtn}>
               {action === 'create'
-                ? 'Create'
-                : action === 'edit'
-                ? 'Save'
-                : 'Reply'}
+                ? quotes?.length
+                  ? 'Reply'
+                  : 'Create'
+                : 'Save'}
             </Text>
           </TouchableOpacity>
         </View>
@@ -167,26 +174,26 @@ export default class CRUD extends React.Component {
             keyboardShouldPersistTaps='handled'
             contentInsetAdjustmentBehavior='never'
           >
-            {action === 'reply' || action === 'multiQuote'
-              ? posts?.map((post, index) => (
-                  <HTMLRenderer
-                    key={index}
-                    html={post}
-                    customStyle={{ color: isDark ? '#FFFFFF' : '#00101D' }}
-                  />
-                ))
-              : null}
+            {quotes?.map((post, index) => (
+              <View style={styles.quoteContainer}>
+                <HTMLRenderer
+                  key={index}
+                  html={`<b>${post.author.display_name}</b>:<br>${post.content}`}
+                  customStyle={{ color: isDark ? '#FFFFFF' : '#00101D' }}
+                />
+              </View>
+            ))}
             {type === 'thread' && (
               <TextInput
                 style={styles.titleInput}
                 placeholderTextColor={isDark ? '#445F74' : '#00101D'}
                 placeholder='Title'
-                value={this.state.title}
-                onChangeText={title => this.setState({ title })}
+                defaultValue={thread?.title || ''}
+                onChangeText={txt => (this.title = txt)}
               />
             )}
             {!(type === 'thread' && action === 'edit') && (
-              <>
+              <View style={{ borderRadius: 6, overflow: 'hidden' }}>
                 <RichToolbar
                   getEditor={() => this.richText}
                   style={styles.richBar}
@@ -210,19 +217,17 @@ export default class CRUD extends React.Component {
                 <RichEditor
                   editorStyle={styles.editorStyle}
                   ref={r => (this.richText = r)}
-                  style={action !== 'edit' ? styles.richTextEditor : null}
+                  style={styles.richTextEditor}
                   placeholder={'Write something'}
-                  initialContentHTML={action === 'edit' ? posts?.[0] : null}
+                  initialContentHTML={action === 'edit' ? post?.content : null}
                   onChange={this.changeHTML}
                 />
-              </>
+              </View>
             )}
           </ScrollView>
           {action === 'edit' && (
             <TouchableOpacity style={styles.deleteBtn} onPress={this.onDelete}>
-              <Text style={styles.deleteBtnText}>
-                DELETE {type.toUpperCase()}
-              </Text>
+              <Text style={styles.deleteBtnText}>DELETE {type}</Text>
             </TouchableOpacity>
           )}
           {loading && (
@@ -259,7 +264,7 @@ let setStyles = (isDark, appColor) =>
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingHorizontal: 15,
-      paddingVertical: 7
+      paddingVertical: 10
     },
     cancelBtn: {
       fontFamily: 'OpenSans',
@@ -272,9 +277,16 @@ let setStyles = (isDark, appColor) =>
       color: appColor
     },
     headerTitle: {
+      textTransform: 'capitalize',
       fontFamily: 'OpenSans-Bold',
       fontSize: 16,
       color: isDark ? '#FFFFFF' : '#000000'
+    },
+    quoteContainer: {
+      backgroundColor: isDark ? '#002039' : '#E1E6EB',
+      marginBottom: 10,
+      borderRadius: 6,
+      padding: 10
     },
     container: {
       flex: 1,
@@ -301,17 +313,19 @@ let setStyles = (isDark, appColor) =>
     },
     deleteBtn: {
       backgroundColor: appColor,
-      borderRadius: 25,
-      minHeight: 50,
+      borderRadius: 99,
       justifyContent: 'center',
-      alignItems: 'center',
-      marginHorizontal: 20
+      alignSelf: 'center',
+      padding: 20,
+      paddingHorizontal: 80,
+      marginBottom: 50
     },
     deleteBtnText: {
       textAlign: 'center',
       fontFamily: 'RobotoCondensed-Bold',
       fontSize: 15,
-      color: '#FFFFFF'
+      color: '#FFFFFF',
+      textTransform: 'uppercase'
     },
     titleInput: {
       marginBottom: 15,
@@ -322,3 +336,18 @@ let setStyles = (isDark, appColor) =>
       paddingHorizontal: 10
     }
   });
+const mapStateToProps = (
+  { threads },
+  {
+    route: {
+      params: { threadId, postId }
+    }
+  }
+) => ({
+  post: threads.posts?.[postId],
+  thread:
+    threads.discussions?.[threadId] ||
+    threads.all?.[threadId] ||
+    threads.followed?.[threadId]
+});
+export default connect(mapStateToProps)(CRUD);
