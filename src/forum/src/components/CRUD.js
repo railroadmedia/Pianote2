@@ -20,7 +20,9 @@ import {
   ActivityIndicator
 } from 'react-native';
 
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   RichEditor,
@@ -41,6 +43,8 @@ import {
   updateThread
 } from '../services/forum.service';
 
+import { updateThreads, updatePosts } from '../redux/ThreadActions';
+
 let styles;
 
 class CRUD extends React.Component {
@@ -51,8 +55,6 @@ class CRUD extends React.Component {
     let { isDark, appColor } = props.route.params;
     styles = setStyles(isDark, appColor);
   }
-
-  changeHTML = html => (this.richHTML = html);
 
   onInsertLink = type => this.linkModal?.toggle(type);
 
@@ -96,25 +98,32 @@ class CRUD extends React.Component {
       type,
       discussionId,
       threadId,
-      postId
+      postId,
+      quotes
     } = this.props.route.params;
     if (type === 'thread') {
       if (action === 'create') {
         await createThread(this.title, this.richHTML, discussionId);
       } else {
+        this.props.updateThreads({ ...this.props.thread, title: this.title });
         await updateThread(threadId, { title: this.title });
       }
     } else {
       if (action === 'create') {
-        await createPost({ content: this.richHTML, thread_id: threadId });
-      } else if (action === 'edit') {
-        await editPost(postId, this.richHTML);
-      } else {
         await createPost({
-          content: this.richHTML,
+          content: `${quotes
+            ?.map(
+              ({ content, author }) =>
+                `<blockquote class="blockquote1"><b>${author.display_name}</b>:<br>${content}</blockquote>`
+            )
+            .join('<br>')
+            .concat('<br>')}${this.richHTML}`,
           thread_id: threadId,
-          parent_ids: parentIds
+          parent_ids: quotes.map(q => q.id)
         });
+      } else {
+        this.props.updatePosts({ ...this.props.post, content: this.richHTML });
+        await editPost(postId, this.richHTML);
       }
     }
     this.props.navigation.goBack();
@@ -125,13 +134,9 @@ class CRUD extends React.Component {
     Keyboard.dismiss();
     this.setState({ loading: true });
     const { type, threadId, postId } = this.props.route.params;
-    if (type === 'thread') {
-      await deleteThread(threadId);
-      this.props.navigation.goBack();
-      this.props.navigation.goBack();
-    } else {
-      await deletePost(postId);
-    }
+    if (type === 'thread') await deleteThread(threadId);
+    else await deletePost(postId);
+    this.props.navigation.goBack();
   };
 
   render() {
@@ -175,11 +180,21 @@ class CRUD extends React.Component {
             contentInsetAdjustmentBehavior='never'
           >
             {quotes?.map((post, index) => (
-              <View style={styles.quoteContainer}>
+              <View style={styles.quoteContainer} key={index}>
                 <HTMLRenderer
-                  key={index}
                   html={`<b>${post.author.display_name}</b>:<br>${post.content}`}
-                  customStyle={{ color: isDark ? '#FFFFFF' : '#00101D' }}
+                  tagsStyles={{
+                    div: { color: isDark ? '#FFFFFF' : '#00101D' },
+                    blockquote: { padding: 10, borderRadius: 5 }
+                  }}
+                  classesStyles={{
+                    'blockquote-even': {
+                      backgroundColor: isDark ? '#002039' : '#00101D'
+                    },
+                    'blockquote-odd': {
+                      backgroundColor: isDark ? '#081825' : '#00101D'
+                    }
+                  }}
                 />
               </View>
             ))}
@@ -219,8 +234,8 @@ class CRUD extends React.Component {
                   ref={r => (this.richText = r)}
                   style={styles.richTextEditor}
                   placeholder={'Write something'}
-                  initialContentHTML={action === 'edit' ? post?.content : null}
-                  onChange={this.changeHTML}
+                  initialContentHTML={post?.content}
+                  onChange={html => (this.richHTML = html)}
                 />
               </View>
             )}
@@ -350,4 +365,6 @@ const mapStateToProps = (
     threads.all?.[threadId] ||
     threads.followed?.[threadId]
 });
-export default connect(mapStateToProps)(CRUD);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ updateThreads, updatePosts }, dispatch);
+export default connect(mapStateToProps, mapDispatchToProps)(CRUD);

@@ -41,6 +41,11 @@ class Thread extends React.Component {
   }
 
   componentDidMount() {
+    let reFocused;
+    this.refreshOnFocusListener = this.props.navigation?.addListener(
+      'focus',
+      () => (reFocused ? this.refresh?.() : (reFocused = true))
+    );
     const { threadId } = this.props.route.params;
     getThread(threadId).then(thread => {
       this.post_count = thread.post_count;
@@ -50,6 +55,10 @@ class Thread extends React.Component {
         this.setState({ loading: false });
       });
     });
+  }
+
+  componentWillUnmount() {
+    this.refreshOnFocusListener?.();
   }
 
   navigate = (route, params) =>

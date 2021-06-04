@@ -6,26 +6,38 @@ import WebView from 'react-native-webview';
 
 export default class HTMLRenderer extends React.Component {
   render() {
-    const { html, customStyle } = this.props;
+    const {
+      html,
+      tagsStyles,
+      classesStyles,
+      olItemStyle,
+      ulItemStyle
+    } = this.props;
+    let quoteIndex = 0;
     return (
       <HTML
         ignoredStyles={['font-family']}
         renderers={{ iframe }}
         WebView={WebView}
-        source={{ html: `<div>${html}</div>` }}
-        tagsStyles={{
-          div: customStyle,
-          blockquote: styles.blockquote
+        source={{
+          html: `<div>${html.replace(
+            /<blockquote/g,
+            () =>
+              ++quoteIndex &&
+              `<blockquote class="blockquote-${
+                quoteIndex % 2 ? 'odd' : 'even'
+              }"`
+          )}</div>`
         }}
+        tagsStyles={tagsStyles}
+        classesStyles={classesStyles}
         listsPrefixesRenderers={{
           ol: (_, __, ___, passProps) => (
-            <Text style={customStyle}>
+            <Text style={olItemStyle}>
               {passProps.index + 1}.{`  `}
             </Text>
           ),
-          ul: (_, __, ___, ____) => (
-            <Text style={{ fontWeight: '900', ...customStyle }}>·{`  `}</Text>
-          )
+          ul: () => <Text style={ulItemStyle}>·{`  `}</Text>
         }}
         renderersProps={{
           iframe: { scalesPageToFit: true }
@@ -34,15 +46,3 @@ export default class HTMLRenderer extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  blockquote: {
-    borderLeftWidth: 5,
-    borderStyle: 'solid',
-    borderLeftColor: '#dfe2e5',
-    padding: 12,
-    paddingBottom: 0,
-    marginTop: 6,
-    marginLeft: 6
-  }
-});

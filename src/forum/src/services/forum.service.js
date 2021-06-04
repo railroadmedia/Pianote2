@@ -74,23 +74,14 @@ export const likePost = function (id) {
 export const disLikePost = function (id) {
   return this.tryCall(`${this.rootUrl}/forums/api/post/unlike/${id}`, 'DELETE');
 };
-export const updateMessage = function (message) {
-  return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { message });
-};
-export const deleteMessage = function (id) {
-  return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { id });
-};
 export const reportPost = function (id) {
   return this.tryCall(`${this.rootUrl}/forums/api/post/report/${id}`, 'PUT');
-};
-export const addReply = function (reply) {
-  return this.tryCall(`${this.rootUrl}/TBD`, 'PUT', { reply });
 };
 export const createPost = function (body) {
   return this.tryCall(`${this.rootUrl}/forums/api/post/store`, 'PUT', body);
 };
 export const editPost = function (id, content) {
-  return this.tryCall(`${this.rootUrl}/post/api/update/${id}`, 'PATCH', {
+  return this.tryCall(`${this.rootUrl}/forums/api/post/update/${id}`, 'PATCH', {
     content
   });
 };

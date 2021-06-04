@@ -149,7 +149,27 @@ class Post extends React.Component {
           </View>
           <HTMLRenderer
             html={post.content}
-            customStyle={{ color: isDark ? '#FFFFFF' : '#00101D' }}
+            tagsStyles={{
+              div: { color: isDark ? 'white' : '#00101D' },
+              blockquote: { padding: 10, borderRadius: 5 }
+            }}
+            olItemStyle={{ color: isDark ? 'white' : '#00101D' }}
+            ulItemStyle={{ color: isDark ? 'white' : '#00101D' }}
+            classesStyles={{
+              'blockquote-even': {
+                backgroundColor: isDark ? '#081825' : '#00101D'
+              },
+              'blockquote-odd': {
+                borderColor: isDark ? '#081825' : '#00101D',
+                borderWidth: 1,
+                backgroundColor: isDark ? '#002039' : '#00101D',
+                elevation: 5,
+                shadowColor: 'black',
+                shadowOffset: { height: 4 },
+                shadowOpacity: 0.4,
+                shadowRadius: 2
+              }
+            }}
           />
           <View style={styles.likeContainer}>
             <TouchableOpacity
@@ -173,7 +193,7 @@ class Post extends React.Component {
             <View style={styles.signatureContainer}>
               <HTMLRenderer
                 html={post.author.signature}
-                customStyle={styles.signature}
+                tagsStyles={{ div: styles.signature }}
               />
             </View>
           )}
