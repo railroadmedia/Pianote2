@@ -8,7 +8,6 @@ import {
   ActivityIndicator,
   View
 } from 'react-native';
-
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Pagination from '../commons/Pagination';
 import Post from '../commons/Post';
@@ -187,14 +186,14 @@ export default class Thread extends React.Component {
             )}
           </TouchableOpacity>
           <UserInfo
-            isVisible={true} //this.state.showUserInfo}
+            isVisible={this.state.showUserInfo}
             hideUserInfo={() =>
               this.setState({ showUserInfo: !this.state.showUserInfo })
             }
             isDark={true}
             appName={'PIANOTE'}
             appColor={colors.pianoteRed}
-            threadID={1674}
+            threadId={1674}
           />
         </SafeAreaView>
       </>

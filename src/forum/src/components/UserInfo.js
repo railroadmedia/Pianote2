@@ -15,18 +15,14 @@ export default class UserInfo extends React.Component {
   }
 
   componentDidMount = async () => {
-    try {
-      let thread = await getThread(1674);
-      let date = new Date(
-        Date.now() - thread?.posts[0]?.author.days_as_member * 86400000
-      );
-      this.setState({
-        author: thread?.posts[0]?.author,
-        date: date.getUTCFullYear()
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    let thread = await getThread(this.props.threadId);
+    let date = new Date(
+      Date.now() - thread?.posts[0]?.author.days_as_member * 86400000
+    );
+    this.setState({
+      author: thread?.posts[0]?.author,
+      date: date.getUTCFullYear()
+    });
   };
 
   render = () => {
