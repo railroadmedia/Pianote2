@@ -29,7 +29,6 @@ import NavMenuHeaders from '../../components/NavMenuHeaders';
 import GradientFeature from '../../components/GradientFeature';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
-import UserInfo from '../../forum/src/components/UserInfo.js';
 import methodService from '../../services/method.service.js';
 import {
   getStartedContent,
@@ -82,7 +81,6 @@ class Lessons extends React.Component {
       refreshing: !lessonsCache,
       refreshControl: true,
       showLive: false,
-      showUserInfo: false,
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width,
       ...this.initialValidData(lessonsCache, true)
@@ -955,65 +953,6 @@ class Lessons extends React.Component {
           isVisible={this.state.addToCalendarModal}
           hideAddToCalendar={() => this.setState({ addToCalendarModal: false })}
           addEventToCalendar={() => this.addEventToCalendar()}
-        />
-        <UserInfo
-          isVisible={true}
-          hideUserInfo={() =>
-            this.setState({ showUserInfo: !this.state.showUserInfo })
-          }
-          isDark={true}
-          appName={'PIANOTE'}
-          appColor={colors.pianoteRed}
-          postDict={{
-            author_access_level: 'piano',
-            author_avatar_url:
-              'https://d2vyvo0tyx8ig5.cloudfront.net/avatars/412470_1610337691197-1610337692-412470.jpg',
-            author_display_name: 'Mark Nicholson',
-            author_id: 412470,
-            category: 'General Piano Discussion',
-            category_id: 1,
-            category_slug: 'general-piano-discussion',
-            created_at: '2021-01-26 02:43:27',
-            deleted_at: null,
-            id: 1886,
-            is_followed: 0,
-            is_read: 0,
-            last_post_id: 36625,
-            last_post_published_on: '2021-03-04 19:04:10',
-            last_post_user_id: 405877,
-            latest_post: {
-              id: 36625,
-              created_at: '2021-03-04 19:04:10',
-              created_at_diff: '2 months ago',
-              author_id: 405877,
-              author_display_name: 'Michael F'
-            },
-            locked: 0,
-            mobile_app_url:
-              'http://staging.pianote.com/forums/api/thread/show/1886',
-            pinned: 0,
-            post_count: 60,
-            published_on: '2021-01-26 02:43:27',
-            published_on_formatted: 'Jan 26, 2021',
-            slug: 'show-us-your-workspaces',
-            state: 'published',
-            title: 'Show Us Your Workspaces!',
-            updated_at: '2021-01-26 02:43:27',
-            version_master_id: null,
-            version_saved_at: null
-          }}
-          data={{
-            totalXP: 12232,
-            totalPosts: 923,
-            daysMember: 723,
-            totalLikes: 123,
-            user: 'kentonpalmer',
-            date: '2019',
-            rank: 'MASTER II',
-            level: '2.3',
-            url:
-              'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-          }}
         />
         <NavigationBar currentPage={'LESSONS'} isMethod={true} />
       </View>

@@ -8,7 +8,6 @@ import {
   ActivityIndicator,
   View
 } from 'react-native';
-
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { connect, batch } from 'react-redux';
@@ -16,9 +15,8 @@ import { bindActionCreators } from 'redux';
 
 import Pagination from '../commons/Pagination';
 import Post from '../commons/Post';
-
+import UserInfo from '../components/UserInfo.js';
 import { connection, getThread } from '../services/forum.service';
-
 import { post, multiQuote } from '../assets/svgs';
 
 import { setPosts } from '../redux/ThreadActions';
@@ -31,7 +29,8 @@ class Thread extends React.Component {
     postHeight: 0,
     loadingMore: false,
     refreshing: false,
-    multiQuoting: false
+    multiQuoting: false,
+    showUserInfo: false
   };
 
   constructor(props) {
@@ -212,11 +211,22 @@ class Thread extends React.Component {
               </View>
             )}
           </TouchableOpacity>
+          <UserInfo
+            isVisible={this.state.showUserInfo}
+            hideUserInfo={() =>
+              this.setState({ showUserInfo: !this.state.showUserInfo })
+            }
+            isDark={true}
+            appName={'PIANOTE'}
+            appColor={colors.pianoteRed}
+            threadId={1674}
+          />
         </SafeAreaView>
       </>
     );
   }
 }
+
 let setStyles = isDark =>
   StyleSheet.create({
     fList: {

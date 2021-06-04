@@ -6,26 +6,23 @@ import { getThread } from '../services/forum.service';
 
 const onTablet = global.onTablet;
 let styles;
-let data = {};
 
 export default class UserInfo extends React.Component {
   constructor(props) {
     super(props);
+    this.state = { author: {}, date: '' };
     styles = setStyles(this.props.isDark, this.props.appColor);
   }
 
   componentDidMount = async () => {
-    let data = await getThread(1, 1);
-    console.log(data, 'DATA: ');
-    console.log(
-      data.author_display_name,
-      data.like_count,
-      data.author_total_posts,
-      data.author_days_as_member,
-      data.author_xp,
-      data.author_avatar_url,
-      data.author_xp_rank
+    let thread = await getThread(this.props.threadId);
+    let date = new Date(
+      Date.now() - thread?.posts[0]?.author.days_as_member * 86400000
     );
+    this.setState({
+      author: thread?.posts[0]?.author,
+      date: date.getUTCFullYear()
+    });
   };
 
   render = () => {
@@ -58,36 +55,43 @@ export default class UserInfo extends React.Component {
                   color={this.props.isDark ? 'white' : 'black'}
                 />
               </TouchableOpacity>
-              <Text style={styles.headerText}>{data.user}</Text>
+              <Text style={styles.headerText}>
+                {this.state.author?.display_name}
+              </Text>
               <FastImage
                 style={styles.profilePicture}
-                source={{
-                  uri:
-                    'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-                }}
+                source={{ uri: this.state.author?.avatar_url }}
                 resizeMode={FastImage.resizeMode.cover}
               />
               <Text style={[styles.headerText, styles.rankText]}>
-                {data.rank}
+                {this.state.author?.xp_rank}
               </Text>
-              <Text style={styles.levelText}>LEVEL {data.level}</Text>
+              <Text style={styles.levelText}>
+                LEVEL {this.state.author?.level_rank}
+              </Text>
               <Text style={styles.memberSinceText}>
-                {this.props.appName} MEMBER SINCE {data.date}
+                {this.props.appName} MEMBER SINCE {this.state.date}
               </Text>
               <View style={styles.statsContainer}>
-                <Text style={styles.numberText}>{data.totalXP}</Text>
+                <Text style={styles.numberText}>{this.state.author?.xp}</Text>
                 <Text style={styles.itemText}>Total XP</Text>
               </View>
               <View style={styles.statsContainer}>
-                <Text style={styles.numberText}>{data.totalPosts}</Text>
+                <Text style={styles.numberText}>
+                  {this.state.author?.total_posts}
+                </Text>
                 <Text style={styles.itemText}>Total posts</Text>
               </View>
               <View style={styles.statsContainer}>
-                <Text style={styles.numberText}>{data.daysMember}</Text>
+                <Text style={styles.numberText}>
+                  {this.state.author?.days_as_member}
+                </Text>
                 <Text style={styles.itemText}>Days as a member</Text>
               </View>
               <View style={styles.statsContainer}>
-                <Text style={styles.numberText}>{data.totalLikes}</Text>
+                <Text style={styles.numberText}>
+                  {this.state.author?.total_post_likes}
+                </Text>
                 <Text style={styles.itemText}>Total post likes</Text>
               </View>
             </View>
