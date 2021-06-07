@@ -4,14 +4,7 @@
  */
 
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Modal,
-  Pressable
-} from 'react-native';
+import { View, Text, StyleSheet, Modal, Pressable } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
@@ -148,6 +141,7 @@ class Post extends React.Component {
             </Text>
           </View>
           <HTMLRenderer
+            appColor={appColor}
             html={post.content}
             tagsStyles={{
               div: { color: isDark ? 'white' : '#00101D' },
@@ -160,14 +154,17 @@ class Post extends React.Component {
                 backgroundColor: isDark ? '#081825' : '#00101D'
               },
               'blockquote-odd': {
-                borderColor: isDark ? '#081825' : '#00101D',
-                borderWidth: 1,
-                backgroundColor: isDark ? '#002039' : '#00101D',
+                backgroundColor: isDark ? '#002039' : '#00101D'
+              },
+              shadow: {
                 elevation: 5,
                 shadowColor: 'black',
                 shadowOffset: { height: 4 },
                 shadowOpacity: 0.4,
-                shadowRadius: 2
+                shadowRadius: 2,
+                borderRadius: 5,
+                borderColor: isDark ? '#081825' : '#00101D',
+                borderWidth: 1
               }
             }}
           />
