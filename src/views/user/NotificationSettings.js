@@ -31,6 +31,7 @@ class NotificationSettings extends React.Component {
       notify_on_lesson_comment_like,
       notify_on_forum_followed_thread_reply,
       notify_on_forum_post_like,
+      notify_on_forum_post_reply,
       notifications_summary_frequency_minutes
     } = datum;
 
@@ -41,6 +42,7 @@ class NotificationSettings extends React.Component {
       notify_on_lesson_comment_like,
       notify_on_forum_followed_thread_reply,
       notify_on_forum_post_like,
+      notify_on_forum_post_reply,
       notifications_summary_frequency_minutes
     });
     const body = {
@@ -59,6 +61,7 @@ class NotificationSettings extends React.Component {
       notify_on_lesson_comment_like,
       notify_on_forum_followed_thread_reply,
       notify_on_forum_post_like,
+      notify_on_forum_post_reply,
       notifications_summary_frequency_minutes
     } = this.props.user;
     return (
@@ -101,7 +104,8 @@ class NotificationSettings extends React.Component {
                     notify_on_lesson_comment_like,
                     notify_on_forum_followed_thread_reply,
                     notify_on_forum_post_like,
-                    notifications_summary_frequency_minutes
+                    notifications_summary_frequency_minutes,
+                    notify_on_forum_post_reply
                   })
                 }
               />
@@ -117,7 +121,8 @@ class NotificationSettings extends React.Component {
                     notify_on_lesson_comment_like,
                     notify_on_forum_followed_thread_reply,
                     notify_on_forum_post_like,
-                    notifications_summary_frequency_minutes
+                    notifications_summary_frequency_minutes,
+                    notify_on_forum_post_reply
                   })
                 }
               />
@@ -133,7 +138,8 @@ class NotificationSettings extends React.Component {
                     notify_weekly_update,
                     notify_on_forum_followed_thread_reply,
                     notify_on_forum_post_like,
-                    notifications_summary_frequency_minutes
+                    notifications_summary_frequency_minutes,
+                    notify_on_forum_post_reply
                   })
                 }
               />
@@ -149,7 +155,25 @@ class NotificationSettings extends React.Component {
                     notify_on_lesson_comment_reply,
                     notify_weekly_update,
                     notify_on_forum_post_like,
-                    notifications_summary_frequency_minutes
+                    notifications_summary_frequency_minutes,
+                    notify_on_forum_post_reply
+                  })
+                }
+              />
+            </View>
+            <View style={localStyles.textContainer}>
+              <Text style={localStyles.text}>Forum post replies</Text>
+              <CustomSwitch
+                isClicked={notify_on_forum_post_reply}
+                onClick={bool =>
+                  this.changeNotificationStatus({
+                    notify_on_forum_post_reply: bool,
+                    notify_on_lesson_comment_like,
+                    notify_on_lesson_comment_reply,
+                    notify_weekly_update,
+                    notify_on_forum_post_like,
+                    notifications_summary_frequency_minutes,
+                    notify_on_forum_followed_thread_reply
                   })
                 }
               />
@@ -165,7 +189,8 @@ class NotificationSettings extends React.Component {
                     notify_on_lesson_comment_like,
                     notify_on_lesson_comment_reply,
                     notify_weekly_update,
-                    notifications_summary_frequency_minutes
+                    notifications_summary_frequency_minutes,
+                    notify_on_forum_post_reply
                   })
                 }
               />
