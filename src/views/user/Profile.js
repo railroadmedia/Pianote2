@@ -53,6 +53,13 @@ const messageDict = {
     type: 'forum post like notifications',
     field: 'notify_on_forum_post_like'
   },
+  'forum post reply': {
+    message: 'replied to your forum post.',
+    new: true,
+    color: 'orange',
+    type: 'forum post like notifications',
+    field: 'notify_on_forum_post_reply'
+  },
   'forum post in followed thread': {
     message: 'post in followed thread.',
     new: false,
@@ -126,7 +133,6 @@ class Profile extends React.Component {
         )} week${timeDelta < 604800 * 2 ? '' : 's'} ago`;
       }
     }
-
     this.setState(state => ({
       notifications: loadMore
         ? state.notifications.concat(notifications.data)
@@ -167,7 +173,8 @@ class Profile extends React.Component {
       notify_on_lesson_comment_reply,
       notify_on_lesson_comment_like,
       notify_on_forum_followed_thread_reply,
-      notify_on_forum_post_like
+      notify_on_forum_post_like,
+      notify_on_forum_post_reply
     } = this.props.user;
     let attributes;
 
@@ -203,6 +210,14 @@ class Profile extends React.Component {
       attributes = {
         notify_on_forum_followed_thread_reply: !notify_on_forum_followed_thread_reply
       };
+    } else if (type === 'forum post reply') {
+      this.props.setLoggedInUser({
+        ...this.props.user,
+        notify_on_forum_post_reply: !notify_on_forum_post_reply
+      });
+      attributes = {
+        notify_on_forum_post_reply: !notify_on_forum_post_reply
+      };
     }
 
     const body = {
@@ -215,6 +230,7 @@ class Profile extends React.Component {
   };
 
   openNotification = notification => {
+    console.log(notification);
     if (notification.type === 'new content releases') {
       navigate('VIEWLESSON', {
         url: notification.content.mobile_app_url
@@ -228,7 +244,6 @@ class Profile extends React.Component {
         url: notification.content.mobile_app_url
       });
     } else {
-      Linking.openURL(notification.url);
     }
   };
 
@@ -275,9 +290,10 @@ class Profile extends React.Component {
               <RefreshControl
                 refreshing={this.state.isLoading}
                 onRefresh={() =>
-                  this.setState({ isLoading: true }, () =>
-                    this.getUserDetails()
-                  )
+                  this.setState({ isLoading: true }, () => {
+                    this.getUserDetails();
+                    this.getNotifications();
+                  })
                 }
                 colors={[colors.pianoteRed]}
                 tintColor={colors.pianoteRed}
@@ -546,6 +562,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(Profile);
 
 const setStyles = (isLight, appColor) =>
   StyleSheet.create({
+    centerContent: {
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
     headerContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
