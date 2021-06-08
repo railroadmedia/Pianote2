@@ -19,7 +19,6 @@ export default class HTMLRenderer extends React.Component {
       appColor
     } = this.props;
     let { expanderVisible, maxQuoteHeight } = this.state;
-    let quoteIndex = 0;
     return (
       <HTML
         key={`${expanderVisible}${maxQuoteHeight}`}
@@ -27,18 +26,17 @@ export default class HTMLRenderer extends React.Component {
         renderers={{ iframe }}
         WebView={WebView}
         source={{
-          html: `<div>${html
-            .replace(
-              /<blockquote/g,
-              () =>
-                `${!quoteIndex ? '<shadow>' : ''}<blockquote class="${
-                  !quoteIndex ? 'blockquote-first' : ''
-                } blockquote-${++quoteIndex % 2 ? 'odd' : 'even'}"`
-            )
-            .replace(
-              /(.*)<\/blockquote>(.*)$/,
-              '$1</blockquote></shadow><expander></expander>$2'
-            )}</div>`
+          html: `<div>${evenOddQuoteClassification(
+            html
+              .replace(
+                '<blockquote',
+                '<shadow><blockquote class="blockquote-first"'
+              )
+              .replace(
+                /(.*)<\/blockquote>(.*)$/,
+                '$1</blockquote></shadow><expander></expander>$2'
+              )
+          )}</div>`
         }}
         tagsStyles={tagsStyles}
         classesStyles={classesStyles}
@@ -117,3 +115,26 @@ export default class HTMLRenderer extends React.Component {
     );
   }
 }
+
+const evenOddQuoteClassification = html => {
+  let i = 1;
+  return html
+    .split('<blockquote')
+    .map(blockquote => {
+      if (blockquote.includes('blockquote') && !blockquote.includes('class'))
+        blockquote += ' class=""';
+      blockquote = blockquote.replace(
+        'class="',
+        `class="${++i % 2 ? 'odd ' : 'even '}`
+      );
+      for (
+        let j = 0;
+        j < (blockquote.match(/<\/blockquote/g) || []).length;
+        j++
+      ) {
+        i--;
+      }
+      return blockquote;
+    })
+    .join('<blockquote');
+};
