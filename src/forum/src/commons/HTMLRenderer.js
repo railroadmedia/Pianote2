@@ -23,7 +23,6 @@ export default class HTMLRenderer extends React.Component {
       <HTML
         key={`${expanderVisible}${maxQuoteHeight}`}
         ignoredStyles={['font-family']}
-        renderers={{ iframe }}
         WebView={WebView}
         source={{
           html: `<div>${evenOddQuoteClassification(
@@ -48,7 +47,14 @@ export default class HTMLRenderer extends React.Component {
           ),
           ul: () => <Text style={ulItemStyle}>·{`  `}</Text>
         }}
-        renderersProps={{ iframe: { scalesPageToFit: true } }}
+        renderersProps={{
+          iframe: {
+            scalesPageToFit: true,
+            webViewProps: {
+              // containerStyle: { width: 300 }
+            }
+          }
+        }}
         renderers={{
           shadow: (_, children, __, { key }) => (
             <View style={classesStyles.shadow} key={key}>
@@ -118,7 +124,8 @@ export default class HTMLRenderer extends React.Component {
               >
                 {expandQuote({ height: 15, width: 15, fill: appColor })}
               </TouchableOpacity>
-            ) : null
+            ) : null,
+          iframe
         }}
       />
     );
