@@ -25,7 +25,7 @@ import {
 let styles;
 let multiQuotes = [];
 let openedMenus = [];
-export const closeMenus = menu => {
+const closeMenus = menu => {
   openedMenus.map(om => om.setState({ selected: false }));
   openedMenus = [];
   if (menu?.state?.selected) openedMenus.push(menu);
@@ -82,10 +82,10 @@ class Post extends React.Component {
     this.setState(({ selected }) => {
       if (selected)
         multiQuotes.splice(
-          multiQuotes.findIndex(mq => mq.id === this.props.post.id),
+          multiQuotes.findIndex(mq => mq.props.post.id === this.props.post.id),
           1
         );
-      else multiQuotes.push(this.props.post);
+      else multiQuotes.push(this);
       return { selected: !selected };
     }, this.props.onMultiQuote);
   };
@@ -412,6 +412,7 @@ let NavigationWrapper = props => (
 NavigationWrapper.multiQuotes = multiQuotes;
 NavigationWrapper.clearQuoting = () => {
   closeMenus();
+  multiQuotes.map(mq => mq.setState({ selected: false }));
   multiQuotes.splice(0, multiQuotes.length);
 };
 export default connect(mapStateToProps)(NavigationWrapper);

@@ -115,7 +115,8 @@ class Thread extends React.Component {
   refresh = () => {
     if (!connection()) return;
     let { threadId } = this.props.route.params;
-    this.setState({ refreshing: true }, () =>
+    Post.clearQuoting();
+    this.setState({ refreshing: true, multiQuoting: false }, () =>
       getThread(threadId, this.page).then(thread => {
         this.post_count = thread.post_count;
         this.posts = thread.posts.map(p => p.id);
@@ -194,7 +195,7 @@ class Thread extends React.Component {
                 type: 'post',
                 action: 'create',
                 threadId,
-                quotes: Post.multiQuotes
+                quotes: Post.multiQuotes.map(mq => mq.props.post)
               })
             }
             style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}
