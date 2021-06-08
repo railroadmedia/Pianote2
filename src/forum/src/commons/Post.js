@@ -34,6 +34,7 @@ class Post extends React.Component {
   constructor(props) {
     super(props);
     const { post, isDark, appColor } = props;
+
     this.state = {
       isLiked: post.is_liked_by_viewer,
       likeCount: post.like_count,
@@ -121,11 +122,12 @@ class Post extends React.Component {
           <View style={styles.header}>
             <View style={styles.userDetails}>
               <AccessLevelAvatar
-                uri={post.author.avatar_url}
+                author={post.author}
                 height={45}
                 appColor={appColor}
+                isDark={isDark}
                 tagHeight={4}
-                accessLevelName={post.author.access_level}
+                showUserInfo={true}
               />
               <View style={{ marginLeft: 5 }}>
                 <Text style={styles.name}>{post.author.display_name}</Text>

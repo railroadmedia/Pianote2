@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import Icon from '../../../assets/icons';
 import FastImage from 'react-native-fast-image';
-import { getThread } from '../services/forum.service';
 
 const onTablet = global.onTablet;
 let styles;
@@ -10,87 +9,71 @@ let styles;
 export default class UserInfo extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { author: {}, date: '' };
-    styles = setStyles(this.props.isDark, this.props.appColor);
+    styles = setStyles(props.isDark, props.appColor);
   }
 
-  componentDidMount = async () => {
-    let thread = await getThread(this.props.threadId);
-    let date = new Date(
-      Date.now() - thread?.posts[0]?.author.days_as_member * 86400000
-    );
-    this.setState({
-      author: thread?.posts[0]?.author,
-      date: date.getUTCFullYear()
-    });
-  };
-
   render = () => {
+    const { author, hideUserInfo, isVisible, isDark } = this.props;
     return (
       <Modal
         transparent={true}
-        visible={this.props.isVisible}
+        visible={isVisible}
         style={{ margin: 0, flex: 1 }}
         animation={'slideInUp'}
         animationInTiming={250}
         animationOutTiming={250}
         coverScreen={true}
         hasBackdrop={true}
-        onBackButtonPress={() => this.props.hideUserInfo()}
+        onBackButtonPress={() => hideUserInfo()}
       >
         <View style={styles.modalContainer} activeOpacity={1}>
           <TouchableOpacity
-            onPress={() => this.props.hideUserInfo()}
+            onPress={() => hideUserInfo()}
             style={{ height: '15%' }}
           />
           <View style={styles.container}>
             <View style={styles.curveTopEdges}>
               <TouchableOpacity
-                onPress={() => this.props.hideUserInfo()}
+                onPress={() => hideUserInfo()}
                 style={styles.xContainer}
               >
                 <Icon.Feather
                   size={onTablet ? 30 : 25}
                   name={'x'}
-                  color={this.props.isDark ? 'white' : 'black'}
+                  color={isDark ? 'white' : 'black'}
                 />
               </TouchableOpacity>
-              <Text style={styles.headerText}>
-                {this.state.author?.display_name}
-              </Text>
+              <Text style={styles.headerText}>{author?.display_name}</Text>
               <FastImage
                 style={styles.profilePicture}
-                source={{ uri: this.state.author?.avatar_url }}
+                source={{ uri: author?.avatar_url }}
                 resizeMode={FastImage.resizeMode.cover}
               />
               <Text style={[styles.headerText, styles.rankText]}>
-                {this.state.author?.xp_rank}
+                {author?.xp_rank}
               </Text>
-              <Text style={styles.levelText}>
-                LEVEL {this.state.author?.level_rank}
-              </Text>
+              <Text style={styles.levelText}>LEVEL {author?.level_rank}</Text>
               <Text style={styles.memberSinceText}>
-                {this.props.appName} MEMBER SINCE {this.state.date}
+                {this.props.appName} MEMBER SINCE{' '}
+                {new Date(
+                  Date.now() - author.days_as_member * 86400000
+                ).getUTCFullYear()}
               </Text>
               <View style={styles.statsContainer}>
-                <Text style={styles.numberText}>{this.state.author?.xp}</Text>
+                <Text style={styles.numberText}>{author?.xp}</Text>
                 <Text style={styles.itemText}>Total XP</Text>
               </View>
               <View style={styles.statsContainer}>
-                <Text style={styles.numberText}>
-                  {this.state.author?.total_posts}
-                </Text>
+                <Text style={styles.numberText}>{author?.total_posts}</Text>
                 <Text style={styles.itemText}>Total posts</Text>
               </View>
               <View style={styles.statsContainer}>
-                <Text style={styles.numberText}>
-                  {this.state.author?.days_as_member}
-                </Text>
+                <Text style={styles.numberText}>{author?.days_as_member}</Text>
                 <Text style={styles.itemText}>Days as a member</Text>
               </View>
               <View style={styles.statsContainer}>
                 <Text style={styles.numberText}>
-                  {this.state.author?.total_post_likes}
+                  {author?.total_post_likes}
                 </Text>
                 <Text style={styles.itemText}>Total post likes</Text>
               </View>
