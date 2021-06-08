@@ -162,9 +162,7 @@ class Post extends React.Component {
                 shadowOffset: { height: 4 },
                 shadowOpacity: 0.4,
                 shadowRadius: 2,
-                borderRadius: 5,
-                borderColor: isDark ? '#081825' : '#00101D',
-                borderWidth: 1
+                borderRadius: 5
               }
             }}
           />

@@ -180,19 +180,30 @@ class CRUD extends React.Component {
             contentInsetAdjustmentBehavior='never'
           >
             {quotes?.map((post, index) => (
-              <View style={styles.quoteContainer} key={index}>
+              <View style={{ marginBottom: 10 }} key={index}>
                 <HTMLRenderer
-                  html={`<b>${post.author.display_name}</b>:<br>${post.content}`}
+                  appColor={appColor}
+                  html={`<blockquote><b>${post.author.display_name}</b>:<br>${post.content}</blockquote>`}
                   tagsStyles={{
-                    div: { color: isDark ? '#FFFFFF' : '#00101D' },
+                    div: { color: isDark ? 'white' : '#00101D' },
                     blockquote: { padding: 10, borderRadius: 5 }
                   }}
+                  olItemStyle={{ color: isDark ? 'white' : '#00101D' }}
+                  ulItemStyle={{ color: isDark ? 'white' : '#00101D' }}
                   classesStyles={{
                     'blockquote-even': {
-                      backgroundColor: isDark ? '#002039' : '#00101D'
+                      backgroundColor: isDark ? '#081825' : '#00101D'
                     },
                     'blockquote-odd': {
-                      backgroundColor: isDark ? '#081825' : '#00101D'
+                      backgroundColor: isDark ? '#002039' : '#00101D'
+                    },
+                    shadow: {
+                      elevation: 5,
+                      shadowColor: 'black',
+                      shadowOffset: { height: 4 },
+                      shadowOpacity: 0.4,
+                      shadowRadius: 2,
+                      borderRadius: 5
                     }
                   }}
                 />
@@ -296,12 +307,6 @@ let setStyles = (isDark, appColor) =>
       fontFamily: 'OpenSans-Bold',
       fontSize: 16,
       color: isDark ? '#FFFFFF' : '#000000'
-    },
-    quoteContainer: {
-      backgroundColor: isDark ? '#002039' : '#E1E6EB',
-      marginBottom: 10,
-      borderRadius: 6,
-      padding: 10
     },
     container: {
       flex: 1,
