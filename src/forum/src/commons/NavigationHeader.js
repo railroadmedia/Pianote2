@@ -44,15 +44,21 @@ class NavigationHeader extends React.Component {
         text: `${signShown ? 'Hide' : 'Show'} All Signatures`,
         action: this.toggleSign
       };
-      options.toggleLock = {
-        text: locked ? 'Unlock' : 'Lock',
-        action: this.toggleLock
-      };
-      options.togglePin = {
-        text: pinned ? 'Unpin' : 'Pin',
-        action: this.togglePin
-      };
-      options.edit = { text: 'Edit', action: this.onEdit };
+      if (this.props.route.params.user.permission_level === 'administrator') {
+        options.toggleLock = {
+          text: locked ? 'Unlock' : 'Lock',
+          action: this.toggleLock
+        };
+        options.togglePin = {
+          text: pinned ? 'Unpin' : 'Pin',
+          action: this.togglePin
+        };
+      }
+      if (
+        this.props.route.params.user.permission_level === 'administrator' ||
+        this.props.route.params.user.id === this.props.thread.author_id
+      )
+        options.edit = { text: 'Edit', action: this.onEdit };
       options.toggleFollow = {
         text: `${is_followed ? 'Unfollow' : 'Follow'} Thread`,
         action: this.toggleFollow

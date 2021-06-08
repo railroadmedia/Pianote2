@@ -108,13 +108,12 @@ class Post extends React.Component {
       reportModalVisible
     } = this.state;
     let { post, appColor, index, isDark, signShown } = this.props;
-
     return (
       <>
         <TouchableOpacity
           activeOpacity={1}
           style={{
-            ...styles.container,
+            marginBottom: 20,
             backgroundColor: selected ? '#002039' : '#081825'
           }}
           onPress={multiQuotes.length ? this.multiQuote : this.toggleMenu}
@@ -140,47 +139,57 @@ class Post extends React.Component {
               {post.published_on_formatted} #{index}
             </Text>
           </View>
-          <HTMLRenderer
-            appColor={appColor}
-            html={post.content}
-            tagsStyles={{
-              div: { color: isDark ? 'white' : '#00101D' },
-              blockquote: { padding: 10, borderRadius: 5 }
-            }}
-            olItemStyle={{ color: isDark ? 'white' : '#00101D' }}
-            ulItemStyle={{ color: isDark ? 'white' : '#00101D' }}
-            classesStyles={{
-              'blockquote-even': {
-                backgroundColor: isDark ? '#081825' : '#00101D'
-              },
-              'blockquote-odd': {
-                backgroundColor: isDark ? '#002039' : '#00101D'
-              },
-              shadow: {
-                elevation: 5,
-                shadowColor: 'black',
-                shadowOffset: { height: 4 },
-                shadowOpacity: 0.4,
-                shadowRadius: 2,
-                borderRadius: 5
-              }
-            }}
-          />
+          <View style={{ paddingHorizontal: 15 }}>
+            <HTMLRenderer
+              appColor={appColor}
+              html={post.content}
+              tagsStyles={{
+                div: { color: isDark ? 'white' : '#00101D' },
+                blockquote: { padding: 10, borderRadius: 5 }
+              }}
+              olItemStyle={{ color: isDark ? 'white' : '#00101D' }}
+              ulItemStyle={{ color: isDark ? 'white' : '#00101D' }}
+              classesStyles={{
+                'blockquote-even': {
+                  backgroundColor: isDark ? '#081825' : '#00101D'
+                },
+                'blockquote-odd': {
+                  backgroundColor: isDark ? '#002039' : '#00101D'
+                },
+                shadow: {
+                  elevation: 5,
+                  shadowColor: 'black',
+                  shadowOffset: { height: 4 },
+                  shadowOpacity: 0.4,
+                  shadowRadius: 2,
+                  borderRadius: 5
+                }
+              }}
+            />
+          </View>
           <View style={styles.likeContainer}>
             <TouchableOpacity
               onPress={this.toggleLike}
-              style={{ padding: 5, marginLeft: -5 }}
+              style={{
+                padding: 15,
+                paddingRight: 7.5,
+                flexDirection: 'row',
+                alignItems: 'center'
+              }}
             >
               {(isLiked ? likeOn : like)({
                 height: 15,
                 width: 15,
                 fill: appColor
               })}
+              {likeCount > 0 && (
+                <Text style={styles.likesNoText}>{likeCount}</Text>
+              )}
             </TouchableOpacity>
-            {likeCount > 0 && (
-              <Text style={styles.likesNoText}>{likeCount}</Text>
-            )}
-            <TouchableOpacity onPress={this.reply}>
+            <TouchableOpacity
+              onPress={this.reply}
+              style={{ padding: 15, paddingLeft: 7.5 }}
+            >
               <Text style={styles.replyText}>REPLY</Text>
             </TouchableOpacity>
           </View>
@@ -209,21 +218,30 @@ class Post extends React.Component {
             }) => !menuTop && this.setState({ menuTop: -height })}
           >
             <View style={styles.selectedMenuContainer}>
-              {['report', 'edit', 'multiQuote'].map((action, i) => (
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  key={i}
-                  onPress={this[action]}
-                  style={{
-                    padding: 10,
-                    paddingHorizontal: 15,
-                    backgroundColor: appColor,
-                    borderLeftWidth: i ? 0.5 : 0
-                  }}
-                >
-                  <Text style={styles.selectedMenuActionText}>{action}</Text>
-                </TouchableOpacity>
-              ))}
+              {[
+                'report',
+                this.props.user.permission_level === 'administrator' ||
+                this.props.user.id === this.props.post.author_id
+                  ? 'edit'
+                  : '',
+                'multiQuote'
+              ].map((action, i) =>
+                action ? (
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    key={i}
+                    onPress={this[action]}
+                    style={{
+                      padding: 10,
+                      paddingHorizontal: 15,
+                      backgroundColor: appColor,
+                      borderLeftWidth: i ? 0.5 : 0
+                    }}
+                  >
+                    <Text style={styles.selectedMenuActionText}>{action}</Text>
+                  </TouchableOpacity>
+                ) : null
+              )}
             </View>
             <View style={styles.triangle} />
           </View>
@@ -266,15 +284,11 @@ class Post extends React.Component {
 
 let setStyles = (isDark, appColor) =>
   StyleSheet.create({
-    container: {
-      padding: 15,
-      marginBottom: 20
-    },
     header: {
+      padding: 15,
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
-      marginBottom: 10
+      justifyContent: 'space-between'
     },
     userDetails: {
       flexDirection: 'row',
@@ -299,8 +313,7 @@ let setStyles = (isDark, appColor) =>
     },
     likeContainer: {
       flexDirection: 'row',
-      alignItems: 'center',
-      marginVertical: 10
+      alignItems: 'center'
     },
     likesNoContainer: {
       padding: 5,
@@ -312,7 +325,7 @@ let setStyles = (isDark, appColor) =>
       fontSize: 11,
       fontFamily: 'OpenSans',
       color: appColor,
-      marginRight: 5
+      paddingLeft: 5
     },
     replyText: {
       color: isDark ? '#445F74' : '#00101D',
@@ -395,4 +408,8 @@ let NavigationWrapper = props => (
   <Post {...props} navigation={useNavigation()} />
 );
 NavigationWrapper.multiQuotes = multiQuotes;
+NavigationWrapper.clearQuoting = () => {
+  closeMenus();
+  multiQuotes.splice(0, multiQuotes.length);
+};
 export default connect(mapStateToProps)(NavigationWrapper);

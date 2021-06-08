@@ -50,46 +50,50 @@ export default class HTMLRenderer extends React.Component {
         }}
         renderersProps={{ iframe: { scalesPageToFit: true } }}
         renderers={{
-          shadow: (_, children) => (
-            <View style={classesStyles.shadow}>{children}</View>
+          shadow: (_, children, __, { key }) => (
+            <View style={classesStyles.shadow} key={key}>
+              {children}
+            </View>
           ),
-          blockquote: (htmlAttribs, children) => {
+          blockquote: (htmlAttribs, children, _, { key }) => {
             let { class: className } = htmlAttribs;
-            if (className?.includes('blockquote'))
-              return (
-                <View
-                  onLayout={({
-                    nativeEvent: {
-                      layout: { height }
-                    }
-                  }) => {
-                    if (
-                      className.includes('first') &&
-                      height > 150 &&
-                      !expanderVisible
-                    )
-                      this.setState({
-                        expanderVisible: true,
-                        maxQuoteHeight: 150
-                      });
-                  }}
-                  style={[
-                    {
-                      padding: 10,
-                      borderRadius: 5,
-                      maxHeight: maxQuoteHeight,
-                      overflow: 'hidden'
-                    },
-                    classesStyles[
-                      className.includes('odd')
-                        ? 'blockquote-odd'
-                        : 'blockquote-even'
-                    ]
-                  ]}
-                >
-                  {children}
-                </View>
-              );
+            return className?.includes('blockquote') ? (
+              <View
+                key={key}
+                onLayout={({
+                  nativeEvent: {
+                    layout: { height }
+                  }
+                }) => {
+                  if (
+                    className.includes('first') &&
+                    height > 150 &&
+                    !expanderVisible
+                  )
+                    this.setState({
+                      expanderVisible: true,
+                      maxQuoteHeight: 150
+                    });
+                }}
+                style={[
+                  {
+                    padding: 10,
+                    borderRadius: 5,
+                    maxHeight: maxQuoteHeight,
+                    overflow: 'hidden'
+                  },
+                  classesStyles[
+                    className.includes('odd')
+                      ? 'blockquote-odd'
+                      : 'blockquote-even'
+                  ]
+                ]}
+              >
+                {children}
+              </View>
+            ) : (
+              children
+            );
           },
           expander: () =>
             expanderVisible ? (
@@ -100,11 +104,16 @@ export default class HTMLRenderer extends React.Component {
                   }))
                 }
                 containerStyle={{
-                  padding: 10,
-                  position: 'absolute',
+                  padding: 20,
+                  paddingTop: 10,
                   alignSelf: 'flex-end',
-                  top: 0,
-                  right: 0
+                  paddingRight: maxQuoteHeight === 150 ? 0 : 20,
+                  paddingLeft: maxQuoteHeight === 150 ? 20 : 0,
+                  transform: [
+                    {
+                      rotate: `${maxQuoteHeight === 150 ? 0 : 180}deg`
+                    }
+                  ]
                 }}
               >
                 {expandQuote({ height: 15, width: 15, fill: appColor })}

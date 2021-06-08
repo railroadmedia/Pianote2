@@ -65,10 +65,10 @@ class Thread extends React.Component {
     connection(true) && this.props.navigation.navigate(route, params);
 
   renderFLItem = ({ item: id, index }) => {
-    let { isDark, appColor, loggesInUserId } = this.props.route.params;
+    let { isDark, appColor, user } = this.props.route.params;
     return (
       <Post
-        loggesInUserId={loggesInUserId}
+        user={user}
         id={id}
         index={index + 1 + 10 * (this.page - 1)}
         appColor={appColor}
