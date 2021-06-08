@@ -36,11 +36,13 @@ class ThreadCard extends React.Component {
         onPress={this.props.onNavigate}
       >
         <AccessLevelAvatar
-          uri={author_avatar_url}
+          author={{
+            avatar_url: author_avatar_url,
+            access_level: author_access_level
+          }}
           height={60}
           appColor={appColor}
           tagHeight={8}
-          accessLevelName={author_access_level}
         />
         <View style={{ paddingHorizontal: 10, flex: 1 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>

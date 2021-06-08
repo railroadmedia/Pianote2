@@ -1,13 +1,18 @@
 import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { coach, team, edge, lifetime } from '../assets/svgs';
+import UserInfo from '../components/UserInfo';
 
 export default class AccessLevelAvatar extends React.Component {
+  state = {
+    showUserInfo: false
+  };
+
   get userBorderColor() {
     let borderColor, userTagIcon;
-    let { appColor } = this.props;
-    switch (this.props.accessLevelName) {
+    let { appColor, author } = this.props;
+    switch (author.access_level) {
       case 'edge': {
         borderColor = appColor;
         userTagIcon = edge;
@@ -37,22 +42,44 @@ export default class AccessLevelAvatar extends React.Component {
   }
 
   render() {
-    let { uri, height, tagHeight } = this.props;
+    let {
+      author,
+      height,
+      tagHeight,
+      showUserInfo,
+      isDark,
+      appColor
+    } = this.props;
     let { borderColor, userTagIcon } = this.userBorderColor;
     return (
-      <View style={{ ...styles.imgContainer, borderColor }}>
-        <Image source={{ uri }} style={{ height, aspectRatio: 1 }} />
-        <View
-          style={{
-            ...styles.userTagContainer,
-            backgroundColor: borderColor,
-            height: tagHeight + 2,
-            lineHeight: tagHeight + 2
-          }}
+      <>
+        <TouchableOpacity
+          style={{ ...styles.imgContainer, borderColor }}
+          onPress={() => showUserInfo && this.setState({ showUserInfo: true })}
         >
-          {userTagIcon?.({ height: tagHeight, fill: 'white' })}
-        </View>
-      </View>
+          <Image
+            source={{ uri: author.avatar_url }}
+            style={{ height, aspectRatio: 1 }}
+          />
+          <View
+            style={{
+              ...styles.userTagContainer,
+              backgroundColor: borderColor,
+              height: tagHeight + 2,
+              lineHeight: tagHeight + 2
+            }}
+          >
+            {userTagIcon?.({ height: tagHeight, fill: 'white' })}
+          </View>
+        </TouchableOpacity>
+        <UserInfo
+          isVisible={this.state.showUserInfo}
+          hideUserInfo={() => this.setState({ showUserInfo: false })}
+          author={author}
+          isDark={isDark}
+          appColor={appColor}
+        />
+      </>
     );
   }
 }
