@@ -108,7 +108,7 @@ class Threads extends React.Component {
             </TouchableOpacity>
           ))}
         </View>
-        <Search isDark={isDark} />
+        <Search isDark={isDark} appColor={appColor} />
       </>
     );
   };

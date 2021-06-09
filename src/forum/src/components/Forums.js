@@ -128,10 +128,6 @@ class Forums extends React.Component {
     );
   };
 
-  search = async text => {
-    if (!connection()) return;
-  };
-
   render() {
     let { loadingMore, loading, refreshing } = this.state;
     let { appColor, BottomNavigator, isDark } = this.props.route.params;
@@ -193,7 +189,7 @@ class Forums extends React.Component {
             }
             ListHeaderComponent={
               <>
-                <Search isDark={this.props.route.params.isDark} />
+                <Search isDark={isDark} appColor={appColor} />
                 {this.forums?.map(item => this.renderForum(item))}
                 <Text style={styles.sectionTitle}>FOLLOWED THREADS</Text>
               </>
