@@ -143,14 +143,13 @@ export default class HTMLRenderer extends React.Component {
 
 const evenOddQuoteClassification = html => {
   let i = 1;
+  html = html.replace(/<blockquote>/g, '<blockquote class="">');
   return html
     .split('<blockquote')
     .map(blockquote => {
-      if (blockquote.includes('blockquote') && !blockquote.includes('class'))
-        blockquote += ' class=""';
       blockquote = blockquote.replace(
         'class="',
-        `class="${++i % 2 ? 'odd ' : 'even '}`
+        `class="${++i % 2 ? 'blockquote-odd ' : 'blockquote-even '}`
       );
       for (
         let j = 0;
