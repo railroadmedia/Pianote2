@@ -195,7 +195,10 @@ class Thread extends React.Component {
                 type: 'post',
                 action: 'create',
                 threadId,
-                quotes: Post.multiQuotes.map(mq => mq.props.post)
+                quotes: Post.multiQuotes.map(({ props: { post } }) => ({
+                  ...post,
+                  content: `<blockquote><b>${post.author.display_name}</b>:<br>${post.content}</blockquote>`
+                }))
               })
             }
             style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}

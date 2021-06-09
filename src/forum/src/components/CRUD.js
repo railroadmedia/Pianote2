@@ -112,18 +112,27 @@ class CRUD extends React.Component {
       if (action === 'create') {
         await createPost({
           content: `${quotes
-            ?.map(
-              ({ content, author }) =>
-                `<blockquote><b>${author.display_name}</b>:<br>${content}</blockquote>`
-            )
+            ?.map(({ content }) => content)
             .join('<br>')
             .concat('<br>')}${this.richHTML}`,
           thread_id: threadId,
           parent_ids: quotes.map(q => q.id)
         });
       } else {
-        this.props.updatePosts({ ...this.props.post, content: this.richHTML });
-        await editPost(postId, this.richHTML);
+        this.props.updatePosts({
+          ...this.props.post,
+          content: `${quotes
+            ?.map(({ content }) => content)
+            .join('<br>')
+            .concat('<br>')}${this.richHTML}`
+        });
+        await editPost(
+          postId,
+          `${quotes
+            ?.map(({ content }) => content)
+            .join('<br>')
+            .concat('<br>')}${this.richHTML}`
+        );
       }
     }
     this.props.navigation.goBack();
@@ -183,7 +192,7 @@ class CRUD extends React.Component {
               <View style={{ marginBottom: 10 }} key={index}>
                 <HTMLRenderer
                   appColor={appColor}
-                  html={`<blockquote><b>${post.author.display_name}</b>:<br>${post.content}</blockquote>`}
+                  html={post.content}
                   tagsStyles={{
                     div: { color: isDark ? 'white' : '#00101D' },
                     blockquote: { padding: 10, borderRadius: 5 }
@@ -354,7 +363,13 @@ const mapStateToProps = (
     }
   }
 ) => ({
-  post: threads.posts?.[postId],
+  post: {
+    ...threads.posts?.[postId],
+    content: threads.posts?.[postId]?.content
+      .split('</blockquote>')
+      .reverse()[0]
+      .replace(/<br>/g, '')
+  },
   thread:
     threads.forums?.[threadId] ||
     threads.all?.[threadId] ||

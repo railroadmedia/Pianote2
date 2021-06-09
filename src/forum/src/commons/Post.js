@@ -70,10 +70,20 @@ class Post extends React.Component {
 
   edit = () => {
     closeMenus();
+    let { post } = this.props;
     this.props.navigation.navigate('CRUD', {
       type: 'post',
       action: 'edit',
-      postId: this.props.post.id
+      postId: post.id,
+      quotes: [
+        {
+          content:
+            post.content
+              .split('</blockquote>')
+              .slice(0, -1)
+              .join('</blockquote>') + '</blockquote>'
+        }
+      ]
     });
   };
 
@@ -92,11 +102,17 @@ class Post extends React.Component {
 
   reply = () => {
     closeMenus();
+    let { post } = this.props;
     this.props.navigation.navigate('CRUD', {
       type: 'post',
       action: 'create',
-      threadId: this.props.post.thread_id,
-      quotes: [this.props.post]
+      threadId: post.thread_id,
+      quotes: [
+        {
+          ...post,
+          content: `<blockquote><b>${post.author.display_name}</b>:<br>${post.content}</blockquote>`
+        }
+      ]
     });
   };
 
