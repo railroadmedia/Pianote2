@@ -114,7 +114,7 @@ class CRUD extends React.Component {
           content: `${quotes
             ?.map(
               ({ content, author }) =>
-                `<blockquote class="blockquote1"><b>${author.display_name}</b>:<br>${content}</blockquote>`
+                `<blockquote><b>${author.display_name}</b>:<br>${content}</blockquote>`
             )
             .join('<br>')
             .concat('<br>')}${this.richHTML}`,
@@ -223,7 +223,7 @@ class CRUD extends React.Component {
                 <RichToolbar
                   getEditor={() => this.richText}
                   style={styles.richBar}
-                  flatContainerStyle={styles.flatStyle}
+                  flatContainerStyle={{ paddingHorizontal: 12 }}
                   selectedIconTint={'#2095F2'}
                   disabledIconTint={'#bfbfbf'}
                   onPressAddImage={() => this.onInsertLink('Image')}
@@ -243,7 +243,7 @@ class CRUD extends React.Component {
                 <RichEditor
                   editorStyle={styles.editorStyle}
                   ref={r => (this.richText = r)}
-                  style={styles.richTextEditor}
+                  style={{ minHeight: 300 }}
                   placeholder={'Write something'}
                   initialContentHTML={post?.content}
                   onChange={html => (this.richHTML = html)}
@@ -312,24 +312,14 @@ let setStyles = (isDark, appColor) =>
       flex: 1,
       backgroundColor: isDark ? '#00101D' : '#F7F9FC'
     },
-    richTextEditor: {
-      minHeight: 300
-    },
     richBar: {
       backgroundColor: '#001424',
       borderColor: isDark ? '#002039' : '#E1E6EB',
       borderWidth: 4
     },
-    flatStyle: {
-      paddingHorizontal: 12
-    },
     editorStyle: {
       backgroundColor: isDark ? '#002039' : '#E1E6EB',
-      color: '#ffffff'
-    },
-    replyEditor: {
-      marginBottom: 15,
-      backgroundColor: isDark ? '#002039' : '#E1E6EB'
+      color: 'white'
     },
     deleteBtn: {
       backgroundColor: appColor,
@@ -338,7 +328,7 @@ let setStyles = (isDark, appColor) =>
       alignSelf: 'center',
       padding: 20,
       paddingHorizontal: 80,
-      marginBottom: 50
+      marginBottom: 15
     },
     deleteBtnText: {
       textAlign: 'center',
