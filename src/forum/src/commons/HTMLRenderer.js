@@ -19,15 +19,12 @@ export default class HTMLRenderer extends React.Component {
       appColor
     } = this.props;
     let { expanderVisible, maxQuoteHeight } = this.state;
-    let videoW = html.split('width="')?.[1]?.split('"')[0];
-    let videoH = html.split('height="')?.[1]?.split('"')[0];
-    if (videoW && videoH) {
-      html = html.replace(/width=".*?"/, 'width="300"');
-      html = html.replace(
-        /height=".*?"/,
-        `height="${(300 * videoH) / videoW}"`
-      );
-    }
+    let lastBlockquote = html.lastIndexOf('</blockquote>');
+    if (lastBlockquote >= 0)
+      html =
+        html.substring(0, lastBlockquote) +
+        '</blockquote></shadow><expander></expander>' +
+        html.substring(lastBlockquote + 13);
     return (
       <HTML
         key={`${expanderVisible}${maxQuoteHeight}`}
@@ -35,15 +32,10 @@ export default class HTMLRenderer extends React.Component {
         WebView={WebView}
         source={{
           html: `<div>${evenOddQuoteClassification(
-            html
-              .replace(
-                '<blockquote',
-                '<shadow><blockquote class="blockquote-first"'
-              )
-              .replace(
-                /(.*)<\/blockquote>(.*)$/,
-                '$1</blockquote></shadow><expander></expander>$2'
-              )
+            html.replace(
+              '<blockquote',
+              '<shadow><blockquote class="blockquote-first"'
+            )
           )}</div>`
         }}
         tagsStyles={tagsStyles}
@@ -134,7 +126,15 @@ export default class HTMLRenderer extends React.Component {
                 {expandQuote({ height: 15, width: 15, fill: appColor })}
               </TouchableOpacity>
             ) : null,
-          iframe
+          iframe: (htmlAttribs, children, convertedCSSStyles, passProps) => {
+            let { width, height } = htmlAttribs;
+            return iframe(
+              { ...htmlAttribs, width: 300, height: (300 * height) / width },
+              children,
+              convertedCSSStyles,
+              passProps
+            );
+          }
         }}
       />
     );
