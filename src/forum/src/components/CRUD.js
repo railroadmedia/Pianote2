@@ -187,6 +187,7 @@ class CRUD extends React.Component {
             style={{ flex: 1, margin: 15 }}
             keyboardShouldPersistTaps='handled'
             contentInsetAdjustmentBehavior='never'
+            showsVerticalScrollIndicator={false}
           >
             {quotes?.map((post, index) => (
               <View style={{ marginBottom: 10 }} key={index}>

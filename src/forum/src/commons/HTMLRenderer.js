@@ -32,10 +32,7 @@ export default class HTMLRenderer extends React.Component {
         WebView={WebView}
         source={{
           html: `<div>${evenOddQuoteClassification(
-            html.replace(
-              '<blockquote',
-              '<shadow><blockquote class="blockquote-first"'
-            )
+            html.replace('<blockquote', '<shadow><blockquote class=""')
           )}</div>`
         }}
         tagsStyles={tagsStyles}
@@ -147,6 +144,8 @@ const evenOddQuoteClassification = html => {
   return html
     .split('<blockquote')
     .map(blockquote => {
+      if (i === 2)
+        blockquote = blockquote.replace('class="', `class="blockquote-first`);
       blockquote = blockquote.replace(
         'class="',
         `class="${++i % 2 ? 'blockquote-odd ' : 'blockquote-even '}`
