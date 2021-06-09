@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import CRUD from './src/components/CRUD';
 import Threads from './src/components/Threads';
 import Thread from './src/components/Thread';
-import Discussions from './src/components/Discussions';
+import Forums from './src/components/Forums';
 import Search from './src/commons/Search.js';
 
 import NavigationHeader from './src/commons/NavigationHeader';
@@ -46,8 +46,8 @@ export default ({
           }}
         >
           <Stack.Screen
-            name='Discussions'
-            component={Discussions}
+            name='Forums'
+            component={Forums}
             options={props => ({
               header: () => <NavigationHeader {...props} title={'Forums'} />
             })}

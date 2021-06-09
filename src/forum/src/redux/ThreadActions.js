@@ -1,6 +1,6 @@
-export const setDiscussionsThreads = threads => ({
+export const setForumsThreads = threads => ({
   threads,
-  type: 'SETDISCUSSIONS'
+  type: 'SETFORUMS'
 });
 
 export const setAllThreads = threads => ({ threads, type: 'SETALL' });

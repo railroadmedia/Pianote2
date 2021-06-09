@@ -42,7 +42,7 @@ class Threads extends React.Component {
     allLoadingMore: false,
     tab: 0,
     loading: true,
-    createDiscussionHeight: 0,
+    createForumHeight: 0,
     followedRefreshing: false,
     allRefreshing: false
   };
@@ -59,21 +59,20 @@ class Threads extends React.Component {
       'focus',
       () => (reFocused ? this.refresh?.() : (reFocused = true))
     );
-    let { discussionId } = this.props.route.params;
-    Promise.all([
-      getAllThreads(discussionId),
-      getFollowedThreads(discussionId)
-    ]).then(([all, followed]) => {
-      this.all = all.results.map(r => r.id);
-      this.followed = followed.results.map(r => r.id);
-      this.followedResultsTotal = followed.total_results;
-      this.allResultsTotal = all.total_results;
-      batch(() => {
-        this.props.setAllThreads(all.results);
-        this.props.setFollowedThreads(followed.results);
-        this.setState({ loading: false });
-      });
-    });
+    let { forumId } = this.props.route.params;
+    Promise.all([getAllThreads(forumId), getFollowedThreads(forumId)]).then(
+      ([all, followed]) => {
+        this.all = all.results.map(r => r.id);
+        this.followed = followed.results.map(r => r.id);
+        this.followedResultsTotal = followed.total_results;
+        this.allResultsTotal = all.total_results;
+        batch(() => {
+          this.props.setAllThreads(all.results);
+          this.props.setFollowedThreads(followed.results);
+          this.setState({ loading: false });
+        });
+      }
+    );
   }
 
   componentWillUnmount() {
@@ -133,11 +132,11 @@ class Threads extends React.Component {
   changePage = page => {
     if (!connection()) return;
     let { tab } = this.state;
-    let { discussionId } = this.props.route.params;
+    let { forumId } = this.props.route.params;
     let fORa = tab ? 'followed' : 'all';
     this[`${fORa}Page`] = page;
     this.setState({ [`${fORa}LoadingMore`]: true }, () =>
-      (tab ? getFollowedThreads : getAllThreads)(discussionId, page).then(r => {
+      (tab ? getFollowedThreads : getAllThreads)(forumId, page).then(r => {
         this[fORa] = r.results.map(r => r.id);
         batch(() => {
           this.props[tab ? 'setFollowedThreads' : 'setAllThreads'](r.results);
@@ -152,11 +151,11 @@ class Threads extends React.Component {
   refresh = () => {
     if (!connection()) return;
     let { tab } = this.state;
-    let { discussionId } = this.props.route.params;
+    let { forumId } = this.props.route.params;
     let fORa = tab ? 'followed' : 'all';
     this.setState({ [`${fORa}Refreshing`]: true }, () =>
       (tab ? getFollowedThreads : getAllThreads)(
-        discussionId,
+        forumId,
         this[`${fORa}Page`]
       ).then(r => {
         this[fORa] = r.results.map(r => r.id);
@@ -174,11 +173,11 @@ class Threads extends React.Component {
       allLoadingMore,
       tab,
       loading,
-      createDiscussionHeight,
+      createForumHeight,
       allRefreshing,
       followedRefreshing
     } = this.state;
-    let { isDark, appColor, discussionId } = this.props.route.params;
+    let { isDark, appColor, forumId } = this.props.route.params;
     return loading ? (
       <ActivityIndicator
         size='large'
@@ -213,7 +212,7 @@ class Threads extends React.Component {
                 borderTopWidth: 1,
                 borderColor: '#445F74',
                 marginHorizontal: 15,
-                marginBottom: createDiscussionHeight
+                marginBottom: createForumHeight
               }}
             >
               <Pagination
@@ -245,14 +244,14 @@ class Threads extends React.Component {
         <SafeAreaView style={styles.bottomTOpacitySafeArea}>
           <TouchableOpacity
             onLayout={({ nativeEvent: { layout } }) =>
-              !this.state.createDiscussionHeight &&
-              this.setState({ createDiscussionHeight: layout.height + 15 })
+              !this.state.createForumHeight &&
+              this.setState({ createForumHeight: layout.height + 15 })
             }
             onPress={() =>
               this.navigate('CRUD', {
                 type: 'thread',
                 action: 'create',
-                discussionId
+                forumId
               })
             }
             style={{ ...styles.bottomTOpacity, backgroundColor: appColor }}

@@ -11,23 +11,23 @@ import {
 import { connect, batch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import DiscussionCard from '../commons/DiscussionCard';
+import ForumCard from '../commons/ForumCard';
 import ThreadCard from '../commons/ThreadCard';
 import Search from '../commons/Search';
 import Pagination from '../commons/Pagination';
 import {
   connection,
-  getDiscussions,
+  getForums,
   getFollowedThreads,
   search
 } from '../services/forum.service';
 
-import { setDiscussionsThreads } from '../redux/ThreadActions';
+import { setForumsThreads } from '../redux/ThreadActions';
 
 let styles;
-class Discussions extends React.Component {
+class Forums extends React.Component {
   page = 1;
-  discussions = [];
+  forums = [];
   followedThreads = [];
   followedThreadsTotal = 0;
   state = {
@@ -47,13 +47,13 @@ class Discussions extends React.Component {
       'focus',
       () => (reFocused ? this.refresh?.() : (reFocused = true))
     );
-    Promise.all([getDiscussions(), getFollowedThreads()]).then(
-      ([discussions, followed]) => {
-        this.discussions = discussions.results;
+    Promise.all([getForums(), getFollowedThreads()]).then(
+      ([forums, followed]) => {
+        this.forums = forums.results;
         this.followedThreads = followed.results.map(r => r.id);
         this.followedThreadsTotal = followed.total_results;
         batch(() => {
-          this.props.setDiscussionsThreads(followed.results);
+          this.props.setForumsThreads(followed.results);
           this.setState({ loading: false });
         });
       }
@@ -77,12 +77,12 @@ class Discussions extends React.Component {
       appColor={this.props.route.params.appColor}
       isDark={this.props.route.params.isDark}
       id={id}
-      reduxKey={'discussions'}
+      reduxKey={'forums'}
     />
   );
 
-  renderDiscussion = item => (
-    <DiscussionCard
+  renderForum = item => (
+    <ForumCard
       key={item.id}
       data={item}
       appColor={this.props.route.params.appColor}
@@ -90,7 +90,7 @@ class Discussions extends React.Component {
       onNavigate={() =>
         this.navigate('Threads', {
           title: item.title,
-          discussionId: item.id
+          forumId: item.id
         })
       }
     />
@@ -99,12 +99,12 @@ class Discussions extends React.Component {
   refresh = () => {
     if (!connection()) return;
     this.setState({ refreshing: true }, () => {
-      Promise.all([getDiscussions(), getFollowedThreads()]).then(
-        ([discussions, followed]) => {
-          this.discussions = discussions.results;
+      Promise.all([getForums(), getFollowedThreads()]).then(
+        ([forums, followed]) => {
+          this.forums = forums.results;
           this.followedThreads = followed.results.map(r => r.id);
           batch(() => {
-            this.props.setDiscussionsThreads(followed.results);
+            this.props.setForumsThreads(followed.results);
             this.setState({ refreshing: false });
           });
         }
@@ -119,7 +119,7 @@ class Discussions extends React.Component {
       getFollowedThreads(page).then(r => {
         this.followedThreads = r.results.map(r => r.id);
         batch(() => {
-          this.props.setDiscussionsThreads(r.results);
+          this.props.setForumsThreads(r.results);
           this.setState({ loadingMore: false }, () =>
             this.flatListRef.scrollToOffset({ offset: 0 })
           );
@@ -194,7 +194,7 @@ class Discussions extends React.Component {
             ListHeaderComponent={
               <>
                 <Search isDark={this.props.route.params.isDark} />
-                {this.discussions?.map(item => this.renderDiscussion(item))}
+                {this.forums?.map(item => this.renderForum(item))}
                 <Text style={styles.sectionTitle}>FOLLOWED THREADS</Text>
               </>
             }
@@ -222,7 +222,7 @@ let setStyles = (isDark, appColor) =>
       fontFamily: 'OpenSans',
       padding: 15
     },
-    createDiscussionIcon: {
+    createForumIcon: {
       position: 'absolute',
       bottom: 60,
       right: 15,
@@ -242,6 +242,6 @@ let setStyles = (isDark, appColor) =>
     }
   });
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ setDiscussionsThreads }, dispatch);
+  bindActionCreators({ setForumsThreads }, dispatch);
 
-export default connect(null, mapDispatchToProps)(Discussions);
+export default connect(null, mapDispatchToProps)(Forums);

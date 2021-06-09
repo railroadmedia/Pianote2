@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { arrowRight, drum } from '../assets/svgs';
 
 let styles;
-export default class DiscussionCard extends React.Component {
+export default class ForumCard extends React.Component {
   constructor(props) {
     super(props);
     let { isDark } = props;

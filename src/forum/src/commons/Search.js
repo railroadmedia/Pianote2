@@ -159,8 +159,8 @@ export default class Search extends React.Component {
                   }
                   ListHeaderComponent={
                     <>
-                      {this.discussions.map(item =>
-                        this.renderDiscussion(item)
+                      {this.forums.map(item =>
+                        this.renderForums(item)
                       )}
                     </>
                   }

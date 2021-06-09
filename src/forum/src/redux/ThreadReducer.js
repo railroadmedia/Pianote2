@@ -5,10 +5,10 @@ const threadsReducer = (
   { type, threads, thread, posts, post }
 ) => {
   switch (type) {
-    case 'SETDISCUSSIONS':
+    case 'SETFORUMS':
       return {
         ...state,
-        discussions: Object.assign({}, ...threads.map(t => ({ [t.id]: t })))
+        forums: Object.assign({}, ...threads.map(t => ({ [t.id]: t })))
       };
     case 'SETALL':
       return {
@@ -21,16 +21,16 @@ const threadsReducer = (
         followed: Object.assign({}, ...threads.map(t => ({ [t.id]: t })))
       };
     case 'UPDATETHREADS':
-      let discussions = {},
+      let forums = {},
         followed = {},
         all = {};
       if (state.all[thread.id]) all = { [thread.id]: thread };
-      if (state.discussions[thread.id]) discussions = { [thread.id]: thread };
+      if (state.forums[thread.id]) forums = { [thread.id]: thread };
       if (state.followed[thread.id]) followed = { [thread.id]: thread };
       return {
         ...state,
         all: { ...state.all, ...all },
-        discussions: { ...state.discussions, ...discussions },
+        forums: { ...state.forums, ...forums },
         followed: { ...state.followed, ...followed }
       };
     case 'TOGGLESIGN':

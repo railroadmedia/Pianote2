@@ -1,10 +1,10 @@
 /**
- * PROPS: isDark, appColor, action, type, posts, title, discussionId, threadId
+ * PROPS: isDark, appColor, action, type, posts, title, forumId, threadId
  * action: can be 'create', 'edit' => used to display header title and button
  * type: can be 'thread', 'post' => used to display header type on header and on delete button and to display title input besides description field
  * posts: use posts[0] for editing a post's text or use it like posts for reply and multiquote displaying
  * title: thread title that can be edited
- * discussionId: for thread creation
+ * forumId: for thread creation
  * threadId: for thread update
  */
 
@@ -96,14 +96,14 @@ class CRUD extends React.Component {
     const {
       action,
       type,
-      discussionId,
+      forumId,
       threadId,
       postId,
       quotes
     } = this.props.route.params;
     if (type === 'thread') {
       if (action === 'create') {
-        await createThread(this.title, this.richHTML, discussionId);
+        await createThread(this.title, this.richHTML, forumId);
       } else {
         this.props.updateThreads({ ...this.props.thread, title: this.title });
         await updateThread(threadId, { title: this.title });
@@ -366,7 +366,7 @@ const mapStateToProps = (
 ) => ({
   post: threads.posts?.[postId],
   thread:
-    threads.discussions?.[threadId] ||
+    threads.forums?.[threadId] ||
     threads.all?.[threadId] ||
     threads.followed?.[threadId]
 });

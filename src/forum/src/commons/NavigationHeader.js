@@ -162,7 +162,7 @@ class NavigationHeader extends React.Component {
               fill: isDark ? 'white' : 'black'
             })}
           </TouchableOpacity>
-          {name.match(/^(Discussions|Threads|Thread)$/) && (
+          {name.match(/^(Forums|Threads|Thread)$/) && (
             <>
               <TouchableOpacity
                 style={{ padding: 15 }}
@@ -263,7 +263,7 @@ const mapStateToProps = (
   let thread;
   if (name.match(/^(Thread)$/))
     thread =
-      threads?.discussions?.[threadId] ||
+      threads?.forums?.[threadId] ||
       threads?.all?.[threadId] ||
       threads?.followed?.[threadId] ||
       {};

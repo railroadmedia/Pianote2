@@ -12,13 +12,13 @@ export const networkContext = function () {
 export const NetworkContext = function () {
   return this.NetworkContext;
 };
-export const getDiscussions = function () {
+export const getForums = function () {
   return this.tryCall(`${this.rootUrl}/forums/api/discussions/index`);
 };
-export const getAllThreads = function (discussionId, page = 1) {
+export const getAllThreads = function (forumId, page = 1) {
   return this.tryCall(
     `${this.rootUrl}/forums/api/thread/index?page=${page}&category_id=${
-      discussionId || ''
+      forumId || ''
     }`
   );
 };
@@ -59,12 +59,12 @@ export const deleteThread = function (id) {
     'DELETE'
   );
 };
-export const getFollowedThreads = function (discussionId, page = 1) {
+export const getFollowedThreads = function (forumId, page = 1) {
   return this.tryCall(
     `${
       this.rootUrl
     }/forums/api/thread/index?page=${page}&followed=1&category_id=${
-      discussionId || ''
+      forumId || ''
     }`
   );
 };
