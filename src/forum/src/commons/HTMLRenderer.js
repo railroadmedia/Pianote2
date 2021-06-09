@@ -10,7 +10,7 @@ export default class HTMLRenderer extends React.Component {
   state = { expanderVisible: false, maxQuoteHeight: undefined };
 
   render() {
-    const {
+    let {
       html,
       tagsStyles,
       classesStyles,
@@ -19,6 +19,15 @@ export default class HTMLRenderer extends React.Component {
       appColor
     } = this.props;
     let { expanderVisible, maxQuoteHeight } = this.state;
+    let videoW = html.split('width="')?.[1]?.split('"')[0];
+    let videoH = html.split('height="')?.[1]?.split('"')[0];
+    if (videoW && videoH) {
+      html = html.replace(/width=".*?"/, 'width="300"');
+      html = html.replace(
+        /height=".*?"/,
+        `height="${(300 * videoH) / videoW}"`
+      );
+    }
     return (
       <HTML
         key={`${expanderVisible}${maxQuoteHeight}`}
