@@ -134,9 +134,6 @@ class Post extends React.Component {
             backgroundColor: selected ? '#002039' : '#081825'
           }}
           onPress={multiQuotes.length ? this.multiQuote : this.toggleMenu}
-          onLayout={object =>
-            this.props.onLayout(object.nativeEvent.layout.height)
-          }
         >
           <View style={styles.header}>
             <View style={styles.userDetails}>

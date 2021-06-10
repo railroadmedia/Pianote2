@@ -39,7 +39,7 @@ class Thread extends React.Component {
     let { isDark, appColor, page } = props.route.params;
     styles = setStyles(isDark, appColor);
     this.page = page || 1;
-    this.itemHeights = [];
+    this.itemsDisplayed = new Set();
   }
 
   componentDidMount() {
@@ -48,22 +48,13 @@ class Thread extends React.Component {
       'focus',
       () => (reFocused ? this.refresh?.() : (reFocused = true))
     );
-    const { threadId, postId } = this.props.route.params;
+    const { threadId } = this.props.route.params;
     getThread(threadId, this.page).then(thread => {
       this.post_count = thread.post_count;
       this.posts = thread.posts.map(p => p.id);
       batch(() => {
         this.props.setPosts(thread.posts);
         this.setState({ loading: false });
-        // if a notification is opened scroll to the given post
-        if (postId) {
-          setTimeout(() => {
-            this.flatListRef.scrollToIndex({
-              animated: true,
-              index: thread.posts.findIndex(f => f.id === postId)
-            });
-          }, 300);
-        }
       });
     });
   }
@@ -76,21 +67,32 @@ class Thread extends React.Component {
     connection(true) && this.props.navigation.navigate(route, params);
 
   renderFLItem = ({ item: id, index }) => {
-    let { isDark, appColor, user } = this.props.route.params;
+    let { isDark, appColor, user, postId } = this.props.route.params;
     return (
-      <Post
-        user={user}
-        id={id}
-        index={index + 1 + 10 * (this.page - 1)}
-        appColor={appColor}
-        isDark={isDark}
-        onMultiQuote={() =>
-          this.setState({ multiQuoting: !!Post.multiQuotes.length })
-        }
-        onLayout={height => {
-          this.itemHeights[index] = height;
+      <View
+        onLayout={() => {
+          this.itemsDisplayed.add(id);
+          // if a notification is opened scroll to the given post
+          if (postId && this.itemsDisplayed.size === this.posts.length)
+            try {
+              this.flatListRef?.scrollToIndex({
+                animated: false,
+                index: this.posts.findIndex(p => p === postId)
+              });
+            } catch (_) {}
         }}
-      />
+      >
+        <Post
+          user={user}
+          id={id}
+          index={index + 1 + 10 * (this.page - 1)}
+          appColor={appColor}
+          isDark={isDark}
+          onMultiQuote={() =>
+            this.setState({ multiQuoting: !!Post.multiQuotes.length })
+          }
+        />
+      </View>
     );
   };
 
@@ -159,12 +161,6 @@ class Thread extends React.Component {
     );
   };
 
-  getItemLayout = (data, index) => {
-    const length = this.itemHeights[index];
-    const offset = this.itemHeights.slice(0, index).reduce((a, c) => a + c, 0);
-    return { length, offset, index };
-  };
-
   render() {
     let { loading, refreshing, postHeight, multiQuoting } = this.state;
     let { isDark, appColor, threadId, postId } = this.props.route.params;
@@ -190,7 +186,6 @@ class Thread extends React.Component {
           ListHeaderComponent={this.renderPagination(20, 0, 1)}
           keyExtractor={id => id.toString()}
           ref={r => (this.flatListRef = r)}
-          getItemLayout={postId && this.getItemLayout}
           ListEmptyComponent={
             <Text style={styles.emptyList}>{'No posts.'}</Text>
           }
