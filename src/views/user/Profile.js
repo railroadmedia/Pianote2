@@ -86,7 +86,8 @@ class Profile extends React.Component {
       notifications: [],
       showXpRank: false,
       showReplyNotification: false,
-      isLoading: false,
+      isLoading: true,
+      refreshing: false,
       animateLoadMore: false,
       clickedNotification: null
     };
@@ -98,7 +99,7 @@ class Profile extends React.Component {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let userDetails = await getUserData();
     this.props.setLoggedInUser(userDetails);
-    this.setState({ isLoading: false });
+    this.setState({ refreshing: false });
   }
 
   async getNotifications(loadMore) {
@@ -140,6 +141,7 @@ class Profile extends React.Component {
         ? state.notifications.concat(notifications.data)
         : notifications.data,
       isLoading: false,
+      refreshing: false,
       animateLoadMore: notifications.data?.length === 0 ? false : true
     }));
   }
@@ -300,9 +302,9 @@ class Profile extends React.Component {
             onEndReachedThreshold={0.01}
             refreshControl={
               <RefreshControl
-                refreshing={this.state.isLoading}
+                refreshing={this.state.refreshing}
                 onRefresh={() =>
-                  this.setState({ isLoading: true }, () => {
+                  this.setState({ refreshing: true }, () => {
                     this.getUserDetails();
                     this.getNotifications();
                   })
