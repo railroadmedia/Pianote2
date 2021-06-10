@@ -40,8 +40,10 @@ class Search extends React.Component {
       onNavigate={() => {
         this.closeModal();
         this.props.navigation.navigate('Thread', {
+          mobile_app_url: item.mobile_app_url,
           threadId: item.thread_id,
-          title: item.thread.title
+          title: item.thread.title,
+          postId: item.id
         });
       }}
       item={item}

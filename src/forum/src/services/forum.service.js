@@ -29,6 +29,9 @@ export const getThread = function (threadId, page = 1) {
     `${this.rootUrl}/forums/api/thread/show/${threadId}?amount=10&page=${page}`
   );
 };
+export const getPostInThread = function (url) {
+  return this.tryCall(url);
+};
 export const search = function (text, page = 1) {
   return this.tryCall(
     `${this.rootUrl}/forums/api/search?amount=10&term=${text}&page=${page}`

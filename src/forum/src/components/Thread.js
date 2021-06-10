@@ -17,7 +17,11 @@ import { bindActionCreators } from 'redux';
 import Pagination from '../commons/Pagination';
 import Post from '../commons/Post';
 
-import { connection, getThread } from '../services/forum.service';
+import {
+  connection,
+  getThread,
+  getPostInThread
+} from '../services/forum.service';
 
 import { post, multiQuote } from '../assets/svgs';
 
@@ -48,8 +52,12 @@ class Thread extends React.Component {
       'focus',
       () => (reFocused ? this.refresh?.() : (reFocused = true))
     );
-    const { threadId } = this.props.route.params;
-    getThread(threadId, this.page).then(thread => {
+    const { threadId, mobile_app_url } = this.props.route.params;
+    (mobile_app_url
+      ? getPostInThread(mobile_app_url)
+      : getThread(threadId, this.page)
+    ).then(thread => {
+      this.page = parseInt(thread.page);
       this.post_count = thread.post_count;
       this.posts = thread.posts.map(p => p.id);
       batch(() => {
