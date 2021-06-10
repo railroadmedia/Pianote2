@@ -17,14 +17,16 @@ export const getForums = function () {
 };
 export const getAllThreads = function (forumId, page = 1) {
   return this.tryCall(
-    `${this.rootUrl}/forums/api/thread/index?page=${page}&category_id=${
+    `${
+      this.rootUrl
+    }/forums/api/thread/index?amount=10&page=${page}&category_id=${
       forumId || ''
     }`
   );
 };
 export const getThread = function (threadId, page = 1) {
   return this.tryCall(
-    `${this.rootUrl}/forums/api/thread/show/${threadId}?page=${page}`
+    `${this.rootUrl}/forums/api/thread/show/${threadId}?amount=10&page=${page}`
   );
 };
 export const search = function (text) {
@@ -63,7 +65,7 @@ export const getFollowedThreads = function (forumId, page = 1) {
   return this.tryCall(
     `${
       this.rootUrl
-    }/forums/api/thread/index?page=${page}&followed=1&category_id=${
+    }/forums/api/thread/index?amount=10&page=${page}&followed=1&category_id=${
       forumId || ''
     }`
   );
