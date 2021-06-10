@@ -59,7 +59,7 @@ export default class SearchCard extends React.Component {
           <Text style={styles.text}>{post_count} Replies</Text>
         </View>
         <View style={styles.centerWithSpacing}>
-          <Text style={{ color: '#FFFFFF' }}>
+          <Text style={styles.content}>
             {content.replace(/<[^>]*>?/gm, '').slice(0, 200) + ' ...'}
           </Text>
 
@@ -104,5 +104,11 @@ let setStyles = isDark =>
       flex: 1,
       flexDirection: 'row',
       alignItems: 'center'
+    },
+    content: {
+      color: isDark ? '#FFFFFF' : '#000000',
+      fontFamily: 'OpenSans',
+      fontSize: 14,
+      maxWidth: '90%'
     }
   });
