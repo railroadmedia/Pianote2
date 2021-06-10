@@ -24,13 +24,12 @@ export const getAllThreads = function (forumId, page = 1) {
     }`
   );
 };
-export const getThread = function (threadId, page = 1) {
+export const getThread = function (threadId, page = 1, postId) {
   return this.tryCall(
-    `${this.rootUrl}/forums/api/thread/show/${threadId}?amount=10&page=${page}`
+    postId
+      ? `${this.rootUrl}/forums/api/jump-to-post/${postId}`
+      : `${this.rootUrl}/forums/api/thread/show/${threadId}?amount=10&page=${page}`
   );
-};
-export const getPostInThread = function (url) {
-  return this.tryCall(url);
 };
 export const search = function (text, page = 1) {
   return this.tryCall(
