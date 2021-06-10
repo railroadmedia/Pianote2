@@ -58,7 +58,9 @@ export default class AccessLevelAvatar extends React.Component {
           onPress={() => showUserInfo && this.setState({ showUserInfo: true })}
         >
           <Image
-            source={{ uri: author.avatar_url }}
+            source={{
+              uri: `https://cdn.musora.com/image/fetch/w_100,fl_lossy,q_auto:eco,c_fill,g_face/${author.avatar_url}`
+            }}
             style={{ height, aspectRatio: 1 }}
           />
           <View
