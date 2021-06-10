@@ -79,14 +79,15 @@ class Thread extends React.Component {
     return (
       <View
         onLayout={() => {
-          this.itemsDisplayed.add(id);
+          this.itemsDisplayed?.add(id);
           // if a notification is opened scroll to the given post
-          if (postId && this.itemsDisplayed.size === this.posts.length)
+          if (postId && this.itemsDisplayed?.size === this.posts.length)
             try {
               this.flatListRef?.scrollToIndex({
                 animated: false,
                 index: this.posts.findIndex(p => p === postId)
               });
+              delete this.itemsDisplayed;
             } catch (_) {}
         }}
       >
