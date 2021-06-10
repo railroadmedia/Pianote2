@@ -145,9 +145,9 @@ class Thread extends React.Component {
   changePage = page => {
     if (!connection()) return;
     let { threadId } = this.props.route.params;
+    this.page = page;
     this.setState({ loadingMore: true }, () =>
       getThread(threadId, page).then(thread => {
-        this.page = page;
         this.post_count = thread.post_count;
         this.posts = thread.posts.map(p => p.id);
         this.flatListRef.scrollToOffset({ offset: 0, animated: false });
