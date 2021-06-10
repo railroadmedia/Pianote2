@@ -18,8 +18,7 @@ import Pagination from '../commons/Pagination';
 import {
   connection,
   getForums,
-  getFollowedThreads,
-  search
+  getFollowedThreads
 } from '../services/forum.service';
 
 import { setForumsThreads } from '../redux/ThreadActions';
@@ -67,13 +66,7 @@ class Forums extends React.Component {
 
   renderFLItem = ({ item: id }) => (
     <ThreadCard
-      onNavigate={() => {
-        this.navigate('Thread', {
-          threadId: id,
-          isDark: this.props.route.params.isDark,
-          appColor: this.props.route.params.appColor
-        });
-      }}
+      onNavigate={() => this.navigate('Thread', { threadId: id })}
       appColor={this.props.route.params.appColor}
       isDark={this.props.route.params.isDark}
       id={id}
@@ -88,10 +81,7 @@ class Forums extends React.Component {
       appColor={this.props.route.params.appColor}
       isDark={this.props.route.params.isDark}
       onNavigate={() =>
-        this.navigate('Threads', {
-          title: item.title,
-          forumId: item.id
-        })
+        this.navigate('Threads', { title: item.title, forumId: item.id })
       }
     />
   );
@@ -118,11 +108,10 @@ class Forums extends React.Component {
     this.setState({ loadingMore: true }, () =>
       getFollowedThreads(page).then(r => {
         this.followedThreads = r.results.map(r => r.id);
+        this.flatListRef.scrollToOffset({ offset: 0, animated: false });
         batch(() => {
           this.props.setForumsThreads(r.results);
-          this.setState({ loadingMore: false }, () =>
-            this.flatListRef.scrollToOffset({ offset: 0 })
-          );
+          this.setState({ loadingMore: false });
         });
       })
     );

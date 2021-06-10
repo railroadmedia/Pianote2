@@ -116,11 +116,7 @@ class Threads extends React.Component {
   renderFLItem = ({ item: id }) => (
     <ThreadCard
       onNavigate={() => {
-        this.navigate('Thread', {
-          threadId: id,
-          isDark: this.props.route.params.isDark,
-          appColor: this.props.route.params.appColor
-        });
+        this.navigate('Thread', { threadId: id });
       }}
       appColor={this.props.route.params.appColor}
       isDark={this.props.route.params.isDark}
@@ -138,11 +134,10 @@ class Threads extends React.Component {
     this.setState({ [`${fORa}LoadingMore`]: true }, () =>
       (tab ? getFollowedThreads : getAllThreads)(forumId, page).then(r => {
         this[fORa] = r.results.map(r => r.id);
+        this.flatListRef.scrollToOffset({ offset: 0, animated: false });
         batch(() => {
           this.props[tab ? 'setFollowedThreads' : 'setAllThreads'](r.results);
-          this.setState({ [`${fORa}LoadingMore`]: false }, () =>
-            this.flatListRef.scrollToOffset({ offset: 0 })
-          );
+          this.setState({ [`${fORa}LoadingMore`]: false });
         });
       })
     );

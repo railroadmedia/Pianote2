@@ -7,54 +7,51 @@ import {
   StyleSheet,
   RefreshControl,
   ActivityIndicator,
+  TouchableOpacity,
   Modal
 } from 'react-native';
-import { search as searchSvg } from '../assets/svgs';
-import { search } from '../services/forum.service';
 
-import AccessLevelAvatar from './AccessLevelAvatar';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+
+import Pagination from './Pagination';
 import SearchCard from './SearchCard';
 
-let styles;
+import { search, connection } from '../services/forum.service';
 
-export default class Search extends React.Component {
+import { search as searchSvg, arrowLeft } from '../assets/svgs';
+
+let styles;
+class Search extends React.Component {
   constructor(props) {
     super(props);
     let { isDark } = props;
     styles = setStyles(isDark);
     this.state = {
       loadingMore: false,
-      loading: false,
+      loading: true,
       refreshing: false,
       showSearchResults: false
     };
   }
 
-  componentDidMount = () => {};
-
-  toggleSearchResults = async text => {
-    console.log(text);
-    /* code for results fetching and modal toggle goes here */
-    search(text).then(searchResult => {
-      console.log('result: ', searchResult);
-      this.searchResults = searchResult.results;
-    });
-  };
-
   renderFLItem = ({ item }) => (
     <SearchCard
+      onNavigate={() => {
+        this.closeModal();
+        this.props.navigation.navigate('Thread', {
+          threadId: item.thread_id,
+          title: item.thread.title
+        });
+      }}
       item={item}
       isDark={this.props.isDark}
       appColor={this.props.appColor}
     />
   );
 
-  navigate = (route, params) =>
-    connection(true) && this.props.navigation.navigate(route, params);
-
-  render() {
-    let { isDark, appColor } = this.props;
-    let { showSearchResults, loading, refreshing } = this.state;
+  renderSearchInput = () => {
+    let { isDark } = this.props;
     return (
       <View style={styles.inputContainer}>
         <View style={styles.searchIcon}>
@@ -65,6 +62,7 @@ export default class Search extends React.Component {
           })}
         </View>
         <TextInput
+          ref={r => (this.textInputRef = r)}
           style={styles.searchInput}
           autoCapitalize={'none'}
           autoCorrect={false}
@@ -72,77 +70,175 @@ export default class Search extends React.Component {
           placeholder={'Search...'}
           placeholderTextColor={isDark ? '#445F74' : '#97AABE'}
           returnKeyType={'search'}
-          onSubmitEditing={({ nativeEvent: { text } }) =>
-            this.toggleSearchResults(text)
-          }
+          onSubmitEditing={({ nativeEvent: { text } }) => {
+            this.textInputRef.clear();
+            if (connection(true) && text)
+              this.setState({ showSearchResults: true, loading: true }, () =>
+                this.searchPosts(text)
+              );
+          }}
         />
+      </View>
+    );
+  };
+
+  changePage = page => {
+    if (!connection(true)) return;
+    this.page = page;
+    this.setState({ loadingMore: true }, this.searchPosts);
+  };
+
+  searchPosts = (text = this.searchText) =>
+    search(text, this.page).then(searchResult => {
+      this.searchResults = searchResult.results;
+      this.searchText = text;
+      this.searchTotal = searchResult.total_results;
+      this.flatListRef?.scrollToOffset({ offset: 0, animated: false });
+      this.setState({ loading: false, loadingMore: false, refreshing: false });
+    });
+
+  closeModal = () =>
+    this.setState({ showSearchResults: false }, () =>
+      ['page', 'searchResults', 'searchText', 'searchTotal'].map(
+        item => delete this[item]
+      )
+    );
+
+  refresh = () => {
+    if (!connection()) return;
+    this.setState({ refreshing: true }, this.searchPosts);
+  };
+
+  render() {
+    let { isDark, appColor } = this.props;
+    let { showSearchResults, loading, refreshing, loadingMore } = this.state;
+    return (
+      <>
+        {this.renderSearchInput()}
         {showSearchResults && (
           <Modal
             animationType={'fade'}
-            onRequestClose={this.toggleSearchResults}
+            onRequestClose={this.closeModal}
             supportedOrientations={['portrait', 'landscape']}
             visible={showSearchResults}
-            transparent={true}
+            transparent={false}
+            style={{ backgroundColor: 'red' }}
           >
-            <FlatList
-              windowSize={10}
-              data={this.searchResults}
-              style={styles.fList}
-              initialNumToRender={10}
-              maxToRenderPerBatch={10}
-              removeClippedSubviews={true}
-              keyboardShouldPersistTaps='handled'
-              renderItem={this.renderFLItem}
-              keyExtractor={item => item.toString()}
-              ref={r => (this.flatListRef = r)}
-              refreshControl={
-                <RefreshControl
-                  colors={[appColor]}
-                  tintColor={appColor}
-                  onRefresh={this.refresh}
-                  refreshing={refreshing}
+            <SafeAreaView style={styles.safeArea}>
+              <TouchableOpacity
+                style={styles.navHeader}
+                onPress={this.closeModal}
+              >
+                {arrowLeft({ height: 20, fill: isDark ? 'white' : 'black' })}
+                <Text style={styles.navHeaderTitle}>All Forums</Text>
+              </TouchableOpacity>
+              {loading ? (
+                <ActivityIndicator
+                  size='large'
+                  color={appColor}
+                  animating={loading}
+                  style={{ flex: 1 }}
                 />
-              }
-              ListEmptyComponent={
-                <Text style={styles.emptyList}>No Results</Text>
-              }
-            />
+              ) : (
+                <FlatList
+                  windowSize={10}
+                  data={this.searchResults}
+                  style={styles.fList}
+                  initialNumToRender={10}
+                  maxToRenderPerBatch={10}
+                  removeClippedSubviews={true}
+                  keyboardShouldPersistTaps='handled'
+                  renderItem={this.renderFLItem}
+                  keyExtractor={item => item.id.toString()}
+                  ref={r => (this.flatListRef = r)}
+                  refreshControl={
+                    <RefreshControl
+                      colors={[appColor]}
+                      tintColor={appColor}
+                      onRefresh={this.refresh}
+                      refreshing={refreshing}
+                    />
+                  }
+                  ListEmptyComponent={
+                    <Text style={styles.emptyList}>No Results</Text>
+                  }
+                  ListHeaderComponent={
+                    <>
+                      {this.renderSearchInput()}
+                      {this.searchText && (
+                        <Text style={styles.resultText}>
+                          Showing results for{' '}
+                          <Text style={{ fontFamily: 'OpenSans-BoldItalic' }}>
+                            "{this.searchText}"
+                          </Text>{' '}
+                          in All Forums
+                        </Text>
+                      )}
+                    </>
+                  }
+                  ListFooterComponent={
+                    !!this.searchTotal && (
+                      <View style={styles.footerContainer}>
+                        <Pagination
+                          active={this.page}
+                          isDark={isDark}
+                          appColor={appColor}
+                          length={this.searchTotal}
+                          onChangePage={this.changePage}
+                        />
+                        <ActivityIndicator
+                          size='small'
+                          color={appColor}
+                          animating={loadingMore}
+                          style={{ padding: 15 }}
+                        />
+                      </View>
+                    )
+                  }
+                />
+              )}
+            </SafeAreaView>
           </Modal>
         )}
-      </View>
+      </>
     );
   }
 }
 
 let setStyles = isDark =>
   StyleSheet.create({
-    bottomTOpacitySafeArea: {
-      position: 'absolute',
-      bottom: 0,
-      alignSelf: 'flex-end'
+    safeArea: { flex: 1, backgroundColor: isDark ? '#00101D' : 'white' },
+    navHeader: {
+      paddingHorizontal: 15,
+      paddingVertical: 20,
+      justifyContent: 'center'
     },
-    modalContainer: {
-      backgroundColor: '#00101d',
-      flex: 1
+    navHeaderTitle: {
+      fontFamily: 'OpenSans',
+      fontSize: 20,
+      fontWeight: '900',
+      color: isDark ? 'white' : 'black',
+      textAlign: 'center',
+      position: 'absolute',
+      alignSelf: 'center'
     },
     headerText: {
       fontFamily: 'OpenSans-ExtraBold',
       fontSize: 20,
       color: isDark ? 'white' : 'black'
     },
+    resultText: {
+      fontFamily: 'OpenSans-Italic',
+      color: isDark ? 'white' : 'black',
+      padding: 15
+    },
     inputContainer: {
       flexDirection: 'row',
       alignItems: 'center',
       marginHorizontal: 15,
-      marginTop: 30,
-      marginBottom: 30,
-      flex: 1
+      marginTop: 30
     },
-    searchIcon: {
-      position: 'absolute',
-      left: 15,
-      zIndex: 2
-    },
+    searchIcon: { position: 'absolute', left: 15, zIndex: 2 },
     searchInput: {
       color: '#000000',
       fontSize: 12,
@@ -153,5 +249,17 @@ let setStyles = isDark =>
       paddingLeft: 40,
       color: isDark ? '#445F74' : '#97AABE',
       backgroundColor: isDark ? '#F7F9FC' : '#E1E6EB'
+    },
+    emptyList: {
+      color: isDark ? '#445F74' : 'black',
+      fontFamily: 'OpenSans',
+      padding: 15
+    },
+    footerContainer: {
+      borderTopWidth: 1,
+      borderColor: '#445F74',
+      marginHorizontal: 15,
+      marginBottom: 10
     }
   });
+export default props => <Search {...props} navigation={useNavigation()} />;

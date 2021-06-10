@@ -136,11 +136,10 @@ class Thread extends React.Component {
         this.page = page;
         this.post_count = thread.post_count;
         this.posts = thread.posts.map(p => p.id);
+        this.flatListRef.scrollToOffset({ offset: 0, animated: false });
         batch(() => {
           this.props.setPosts(thread.posts);
-          this.setState({ loadingMore: false }, () =>
-            this.flatListRef.scrollToOffset({ offset: 0 })
-          );
+          this.setState({ loadingMore: false });
         });
       })
     );

@@ -29,8 +29,10 @@ export const getThread = function (threadId, page = 1) {
     `${this.rootUrl}/forums/api/thread/show/${threadId}?amount=10&page=${page}`
   );
 };
-export const search = function (text) {
-  return this.tryCall(`${this.rootUrl}/forums/api/search?term=${text}`);
+export const search = function (text, page = 1) {
+  return this.tryCall(
+    `${this.rootUrl}/forums/api/search?amount=10&term=${text}&page=${page}`
+  );
 };
 export const followThread = function (id) {
   return this.tryCall(`${this.rootUrl}/forums/api/thread/follow/${id}`, 'PUT');

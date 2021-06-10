@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { arrowRight } from '../assets/svgs';
+
 import AccessLevelAvatar from './AccessLevelAvatar';
 import HTMLRenderer from './HTMLRenderer';
+
+import { arrowRight } from '../assets/svgs';
 
 let styles;
 
@@ -14,7 +16,6 @@ export default class SearchCard extends React.Component {
   }
 
   render() {
-    console.log(this.props.item);
     const {
       item: {
         content,
@@ -30,11 +31,12 @@ export default class SearchCard extends React.Component {
         }
       },
       isDark,
-      appColor
+      appColor,
+      onNavigate
     } = this.props;
 
     return (
-      <TouchableOpacity style={styles.container}>
+      <TouchableOpacity style={styles.container} onPress={onNavigate}>
         <View style={styles.centerWithSpacing}>
           <View style={styles.center}>
             <AccessLevelAvatar

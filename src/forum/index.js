@@ -74,7 +74,9 @@ export default ({
             component={Thread}
             initialParams={params}
             options={props => ({
-              header: () => <NavigationHeader {...props} />
+              header: () => (
+                <NavigationHeader {...props} title={props.route.params.title} />
+              )
             })}
           />
           <Stack.Screen
