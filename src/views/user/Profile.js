@@ -25,9 +25,10 @@ import {
   changeNotificationSettings
 } from '../../services/notification.service';
 import { SafeAreaView } from 'react-navigation';
-import { navigate } from '../../../AppNavigator.js';
+import { navigate, reset } from '../../../AppNavigator.js';
 import { setLoggedInUser } from '../../redux/UserActions.js';
 import { connect } from 'react-redux';
+import commonService from '../../services/common.service.js';
 
 const onTablet = global.onTablet;
 let localStyles;
@@ -105,6 +106,7 @@ class Profile extends React.Component {
     if (loadMore) this.page++;
     else this.page = 1;
     let notifications = await getnotifications(this.page);
+    console.log(notifications);
     for (i in notifications.data) {
       let timeCreated =
         notifications.data[i].created_at?.slice(0, 10) +
@@ -230,10 +232,9 @@ class Profile extends React.Component {
   };
 
   openNotification = notification => {
-    console.log(notification);
     if (notification.type === 'new content releases') {
       navigate('VIEWLESSON', {
-        url: notification.content.mobile_app_url
+        url: notification.content.musora_api_mobile_app_url
       });
     } else if (
       notification.type === 'lesson comment reply' ||
@@ -241,9 +242,20 @@ class Profile extends React.Component {
     ) {
       navigate('VIEWLESSON', {
         comment: notification.comment,
-        url: notification.content.mobile_app_url
+        url: notification.content.musora_api_mobile_app_url
       });
     } else {
+      reset('FORUM', {
+        NetworkContext,
+        tryCall: commonService.tryCall,
+        rootUrl: commonService.rootUrl,
+        isDark: true,
+        BottomNavigator: NavigationBar,
+        appColor: colors.pianoteRed,
+        user: this.props.user,
+        thread: notification.thread,
+        postId: notification.data.postId
+      });
     }
   };
 

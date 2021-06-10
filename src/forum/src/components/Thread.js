@@ -36,8 +36,10 @@ class Thread extends React.Component {
 
   constructor(props) {
     super(props);
-    let { isDark, appColor } = props.route.params;
+    let { isDark, appColor, page } = props.route.params;
     styles = setStyles(isDark, appColor);
+    this.page = page || 1;
+    this.itemHeights = [];
   }
 
   componentDidMount() {
@@ -46,13 +48,22 @@ class Thread extends React.Component {
       'focus',
       () => (reFocused ? this.refresh?.() : (reFocused = true))
     );
-    const { threadId } = this.props.route.params;
-    getThread(threadId).then(thread => {
+    const { threadId, postId } = this.props.route.params;
+    getThread(threadId, this.page).then(thread => {
       this.post_count = thread.post_count;
       this.posts = thread.posts.map(p => p.id);
       batch(() => {
         this.props.setPosts(thread.posts);
         this.setState({ loading: false });
+        // if a notification is opened scroll to the given post
+        if (postId) {
+          setTimeout(() => {
+            this.flatListRef.scrollToIndex({
+              animated: true,
+              index: thread.posts.findIndex(f => f.id === postId)
+            });
+          }, 300);
+        }
       });
     });
   }
@@ -76,6 +87,9 @@ class Thread extends React.Component {
         onMultiQuote={() =>
           this.setState({ multiQuoting: !!Post.multiQuotes.length })
         }
+        onLayout={height => {
+          this.itemHeights[index] = height;
+        }}
       />
     );
   };
@@ -146,9 +160,15 @@ class Thread extends React.Component {
     );
   };
 
+  getItemLayout = (data, index) => {
+    const length = this.itemHeights[index];
+    const offset = this.itemHeights.slice(0, index).reduce((a, c) => a + c, 0);
+    return { length, offset, index };
+  };
+
   render() {
     let { loading, refreshing, postHeight, multiQuoting } = this.state;
-    let { isDark, appColor, threadId } = this.props.route.params;
+    let { isDark, appColor, threadId, postId } = this.props.route.params;
     return loading ? (
       <ActivityIndicator
         size='large'
@@ -171,6 +191,7 @@ class Thread extends React.Component {
           ListHeaderComponent={this.renderPagination(20, 0, 1)}
           keyExtractor={id => id.toString()}
           ref={r => (this.flatListRef = r)}
+          getItemLayout={postId && this.getItemLayout}
           ListEmptyComponent={
             <Text style={styles.emptyList}>{'No posts.'}</Text>
           }
