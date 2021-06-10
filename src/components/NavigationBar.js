@@ -175,7 +175,7 @@ class NavigationBar extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.userState.user
+  user: state.userState?.user
 });
 
 export default connect(mapStateToProps, null)(NavigationBar);

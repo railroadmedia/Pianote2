@@ -36,8 +36,14 @@ class Forums extends React.Component {
   };
   constructor(props) {
     super(props);
-    let { isDark, appColor } = props.route.params;
+    let { isDark, appColor, thread, postId } = props.route.params;
     styles = setStyles(isDark, appColor);
+    if (thread)
+      this.navigate('Thread', {
+        threadId: thread.id,
+        page: thread.page,
+        postId
+      });
   }
 
   componentDidMount() {
