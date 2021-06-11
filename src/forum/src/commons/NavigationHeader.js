@@ -66,7 +66,10 @@ class NavigationHeader extends React.Component {
     }
     options.forumRules = {
       text: 'Forum Rules',
-      action: () => this.navigate('Thread', { forumRules: true })
+      action: () =>
+        this.setState({ showOptions: false }, () =>
+          this.navigate('Thread', { forumRules: true, title: 'Forum Rules' })
+        )
     };
     return options;
   }
