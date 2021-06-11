@@ -56,8 +56,8 @@ export default class SearchCard extends React.Component {
         </Text>
         <Text style={styles.text}>{post_count} Replies</Text>
         <View style={styles.contentContainer}>
-          <Text style={styles.content}>
-            {content.replace(/<[^>]*>?/gm, '').slice(0, 200) + ' ...'}
+          <Text style={styles.content} numberOfLines={3}>
+            {content}
           </Text>
           {arrowRight({ height: 15, fill: isDark ? 'white' : 'black' })}
         </View>
