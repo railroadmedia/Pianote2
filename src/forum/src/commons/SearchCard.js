@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 import AccessLevelAvatar from './AccessLevelAvatar';
-import HTMLRenderer from './HTMLRenderer';
 
 import { arrowRight } from '../assets/svgs';
 
@@ -37,32 +36,29 @@ export default class SearchCard extends React.Component {
 
     return (
       <TouchableOpacity style={styles.container} onPress={onNavigate}>
-        <View style={styles.centerWithSpacing}>
-          <View style={styles.center}>
-            <AccessLevelAvatar
-              author={{
-                avatar_url: author_avatar_url,
-                access_level: author_access_level
-              }}
-              height={45}
-              appColor={appColor}
-              isDark={isDark}
-              tagHeight={4}
-            />
-            <View style={{ marginLeft: 10 }}>
-              <Text style={styles.title}>{title}</Text>
-              <Text style={styles.text}>
-                Started on {published_on_formatted} by {author_display_name}
-              </Text>
-            </View>
-          </View>
-          <Text style={styles.text}>{post_count} Replies</Text>
-        </View>
-        <View style={styles.centerWithSpacing}>
+        <AccessLevelAvatar
+          author={{
+            avatar_url: author_avatar_url,
+            access_level: author_access_level
+          }}
+          height={45}
+          appColor={appColor}
+          isDark={isDark}
+          tagHeight={4}
+          imgContainer
+        />
+        <Text style={styles.title}>
+          {title}
+          {'\n'}
+          <Text style={styles.text}>
+            Started on {published_on_formatted} by {author_display_name}
+          </Text>
+        </Text>
+        <Text style={styles.text}>{post_count} Replies</Text>
+        <View style={styles.contentContainer}>
           <Text style={styles.content}>
             {content.replace(/<[^>]*>?/gm, '').slice(0, 200) + ' ...'}
           </Text>
-
           {arrowRight({ height: 15, fill: isDark ? 'white' : 'black' })}
         </View>
         <Text style={styles.text}>
@@ -78,30 +74,28 @@ let setStyles = isDark =>
   StyleSheet.create({
     container: {
       backgroundColor: isDark ? '#081825' : 'white',
+      marginBottom: 15,
+      flexDirection: 'row',
       padding: 10,
-      marginBottom: 15
+      flexWrap: 'wrap',
+      alignItems: 'center'
     },
     title: {
+      flex: 1,
       fontFamily: 'OpenSans',
       color: isDark ? 'white' : 'black',
       fontSize: 20,
-      fontWeight: '700'
+      fontWeight: '700',
+      paddingHorizontal: 10
     },
     text: {
       fontFamily: 'OpenSans',
       fontWeight: '100',
       color: '#445F74',
-      fontSize: 14,
-      paddingVertical: 5
+      fontSize: 14
     },
-    centerWithSpacing: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      flex: 1
-    },
-    center: {
-      flex: 1,
+    contentContainer: {
+      width: '100%',
       flexDirection: 'row',
       alignItems: 'center'
     },
@@ -109,6 +103,8 @@ let setStyles = isDark =>
       color: isDark ? '#FFFFFF' : '#000000',
       fontFamily: 'OpenSans',
       fontSize: 14,
-      maxWidth: '90%'
+      padding: 10,
+      paddingLeft: 0,
+      flex: 1
     }
   });
