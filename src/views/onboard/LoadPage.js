@@ -22,6 +22,7 @@ import commonService from '../../services/common.service';
 import navigationService from '../../services/navigation.service';
 import { navigate, reset } from '../../../AppNavigator';
 import { setLoggedInUser } from '../../redux/UserActions';
+import NavigationBar from '../../components/NavigationBar';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -90,7 +91,16 @@ class LoadPage extends React.Component {
             reset('RESETPASSWORD', { resetKey, email });
           } else {
             if (forumUrl) {
-              Linking.openURL(forumUrl);
+              reset('FORUM', {
+                NetworkContext,
+                tryCall: commonService.tryCall,
+                rootUrl: commonService.rootUrl,
+                isDark: true,
+                BottomNavigator: NavigationBar,
+                appColor: colors.pianoteRed,
+                mobile_app_url: forumUrl,
+                user: this.props.user
+              });
               await AsyncStorage.removeItem('forumUrl');
             }
             if (userData.isPackOlyOwner) {
@@ -161,6 +171,10 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
+const mapStateToProps = state => ({
+  user: state.userState?.user
+});
+
 const styles = StyleSheet.create({
   container: { flex: 1, alignSelf: 'stretch' },
   containerInner: {
@@ -183,4 +197,4 @@ const styles = StyleSheet.create({
     (windowDim.width < windowDim.height ? factorHorizontal : factorVertical)
 });
 
-export default connect(null, mapDispatchToProps)(LoadPage);
+export default connect(mapStateToProps, mapDispatchToProps)(LoadPage);
