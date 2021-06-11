@@ -266,12 +266,13 @@ const mapStateToProps = (
       threads?.forums?.[threadId] ||
       threads?.all?.[threadId] ||
       threads?.followed?.[threadId] ||
+      threads?.search?.[threadId] ||
       {};
   return {
     thread,
     threadId,
     signShown: name.match(/^(Thread)$/) ? threads.signShown : undefined,
-    title: title || thread?.title
+    title: thread?.title || title
   };
 };
 const mapDispatchToProps = dispatch =>

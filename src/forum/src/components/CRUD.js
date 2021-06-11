@@ -374,7 +374,8 @@ const mapStateToProps = (
   thread:
     threads.forums?.[threadId] ||
     threads.all?.[threadId] ||
-    threads.followed?.[threadId]
+    threads.followed?.[threadId] ||
+    threads.search?.[threadId]
 });
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ updateThreads, updatePosts }, dispatch);

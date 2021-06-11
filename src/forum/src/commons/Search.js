@@ -14,10 +14,15 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
+import { connect, batch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import Pagination from './Pagination';
 import SearchCard from './SearchCard';
 
 import { search, connection } from '../services/forum.service';
+
+import { setSearchThreads } from '../redux/ThreadActions';
 
 import { search as searchSvg, arrowLeft } from '../assets/svgs';
 
@@ -95,7 +100,14 @@ class Search extends React.Component {
       this.searchText = text;
       this.searchTotal = searchResult.total_results;
       this.flatListRef?.scrollToOffset({ offset: 0, animated: false });
-      this.setState({ loading: false, loadingMore: false, refreshing: false });
+      batch(() => {
+        this.props.setSearchThreads(searchResult.results.map(r => r.thread));
+        this.setState({
+          loading: false,
+          loadingMore: false,
+          refreshing: false
+        });
+      });
     });
 
   closeModal = () =>
@@ -263,4 +275,9 @@ let setStyles = isDark =>
       marginBottom: 10
     }
   });
-export default props => <Search {...props} navigation={useNavigation()} />;
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ setSearchThreads }, dispatch);
+export default connect(
+  null,
+  mapDispatchToProps
+)(props => <Search {...props} navigation={useNavigation()} />);

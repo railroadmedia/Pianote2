@@ -15,6 +15,11 @@ const threadsReducer = (
         ...state,
         all: Object.assign({}, ...threads.map(t => ({ [t.id]: t })))
       };
+    case 'SETSEARCH':
+      return {
+        ...state,
+        search: Object.assign({}, ...threads.map(t => ({ [t.id]: t })))
+      };
     case 'SETFOLLOWED':
       return {
         ...state,
@@ -23,15 +28,18 @@ const threadsReducer = (
     case 'UPDATETHREADS':
       let forums = {},
         followed = {},
+        search = {},
         all = {};
-      if (state.all[thread.id]) all = { [thread.id]: thread };
-      if (state.forums[thread.id]) forums = { [thread.id]: thread };
-      if (state.followed[thread.id]) followed = { [thread.id]: thread };
+      if (state.all?.[thread.id]) all = { [thread.id]: thread };
+      if (state.forums?.[thread.id]) forums = { [thread.id]: thread };
+      if (state.followed?.[thread.id]) followed = { [thread.id]: thread };
+      if (state.search?.[thread.id]) search = { [thread.id]: thread };
       return {
         ...state,
         all: { ...state.all, ...all },
         forums: { ...state.forums, ...forums },
-        followed: { ...state.followed, ...followed }
+        followed: { ...state.followed, ...followed },
+        search: { ...state.search, ...search }
       };
     case 'TOGGLESIGN':
       AsyncStorage.setItem('signShown', state.signShown ? '' : '1');

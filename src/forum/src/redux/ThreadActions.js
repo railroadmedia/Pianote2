@@ -5,6 +5,8 @@ export const setForumsThreads = threads => ({
 
 export const setAllThreads = threads => ({ threads, type: 'SETALL' });
 
+export const setSearchThreads = threads => ({ threads, type: 'SETSEARCH' });
+
 export const setFollowedThreads = threads => ({ threads, type: 'SETFOLLOWED' });
 
 export const updateThreads = thread => ({ thread, type: 'UPDATETHREADS' });
