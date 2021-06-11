@@ -59,31 +59,42 @@ class Search extends React.Component {
   renderSearchInput = () => {
     let { isDark } = this.props;
     return (
-      <View style={styles.inputContainer}>
-        <View style={styles.searchIcon}>
-          {searchSvg({
-            height: 15,
-            width: 15,
-            fill: isDark ? '#445F74' : '#97AABE'
-          })}
+      <View style={{ padding: 15 }}>
+        <View style={styles.inputContainer}>
+          <View style={styles.searchIcon}>
+            {searchSvg({
+              height: 15,
+              width: 15,
+              fill: isDark ? '#445F74' : '#97AABE'
+            })}
+          </View>
+          <TextInput
+            ref={r => (this.textInputRef = r)}
+            style={styles.searchInput}
+            autoCapitalize={'none'}
+            autoCorrect={false}
+            spellCheck={false}
+            placeholder={'Search...'}
+            placeholderTextColor={isDark ? '#445F74' : '#97AABE'}
+            returnKeyType={'search'}
+            onSubmitEditing={({ nativeEvent: { text } }) => {
+              this.textInputRef.clear();
+              if (connection(true) && text)
+                this.setState({ showSearchResults: true, loading: true }, () =>
+                  this.searchPosts(text)
+                );
+            }}
+          />
         </View>
-        <TextInput
-          ref={r => (this.textInputRef = r)}
-          style={styles.searchInput}
-          autoCapitalize={'none'}
-          autoCorrect={false}
-          spellCheck={false}
-          placeholder={'Search...'}
-          placeholderTextColor={isDark ? '#445F74' : '#97AABE'}
-          returnKeyType={'search'}
-          onSubmitEditing={({ nativeEvent: { text } }) => {
-            this.textInputRef.clear();
-            if (connection(true) && text)
-              this.setState({ showSearchResults: true, loading: true }, () =>
-                this.searchPosts(text)
-              );
-          }}
-        />
+        {this.searchText && this.state.showSearchResults && (
+          <Text style={styles.resultText}>
+            Showing results for{' '}
+            <Text style={{ fontFamily: 'OpenSans-BoldItalic' }}>
+              "{this.searchText}"
+            </Text>{' '}
+            in All Forums
+          </Text>
+        )}
       </View>
     );
   };
@@ -135,7 +146,6 @@ class Search extends React.Component {
             supportedOrientations={['portrait', 'landscape']}
             visible={showSearchResults}
             transparent={false}
-            style={{ backgroundColor: 'red' }}
           >
             <SafeAreaView style={styles.safeArea}>
               <TouchableOpacity
@@ -175,20 +185,7 @@ class Search extends React.Component {
                   ListEmptyComponent={
                     <Text style={styles.emptyList}>No Results</Text>
                   }
-                  ListHeaderComponent={
-                    <>
-                      {this.renderSearchInput()}
-                      {this.searchText && (
-                        <Text style={styles.resultText}>
-                          Showing results for{' '}
-                          <Text style={{ fontFamily: 'OpenSans-BoldItalic' }}>
-                            "{this.searchText}"
-                          </Text>{' '}
-                          in All Forums
-                        </Text>
-                      )}
-                    </>
-                  }
+                  ListHeaderComponent={<>{this.renderSearchInput()}</>}
                   ListFooterComponent={
                     !!this.searchTotal && (
                       <View style={styles.footerContainer}>
@@ -243,13 +240,11 @@ let setStyles = isDark =>
     resultText: {
       fontFamily: 'OpenSans-Italic',
       color: isDark ? 'white' : 'black',
-      padding: 15
+      paddingVertical: 5
     },
     inputContainer: {
       flexDirection: 'row',
-      alignItems: 'center',
-      marginHorizontal: 15,
-      marginTop: 30
+      alignItems: 'center'
     },
     searchIcon: { position: 'absolute', left: 15, zIndex: 2 },
     searchInput: {
