@@ -67,7 +67,7 @@ export default class Replies extends React.Component {
             <Text style={localStyles.xp}>{reply.user.xp} XP</Text>
           </View>
           <View style={{ flex: 1, paddingLeft: 10 }}>
-            <Text style={localStyles.commentText}>{reply.comment}</Text>
+            <Text style={localStyles.commentText}>{reply.comment.replace(/<[^>]*>?/gm, '')}</Text>
             <Text style={localStyles.userTags}>
               {reply.user['display_name']} | {reply.user.rank} |{' '}
               {this.lastPostTime(reply.created_on)}

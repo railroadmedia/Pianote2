@@ -1,4 +1,4 @@
-import { AppRegistry, Platform, Linking, LogBox } from 'react-native';
+import { AppRegistry, Platform, LogBox } from 'react-native';
 import App from './App';
 import { name as appName } from './app.json';
 import DeviceInfo from 'react-native-device-info';
@@ -10,9 +10,11 @@ import {
   showNotification
 } from './src/services/notification.service';
 import AsyncStorage from '@react-native-community/async-storage';
-import { navigate } from './AppNavigator';
+import { navigate, reset } from './AppNavigator';
 import navigationService from './src/services/navigation.service';
 import commonService from './src/services/common.service';
+import { NetworkContext } from './src/context/NetworkProvider';
+import NavigationBar from './src/components/NavigationBar';
 
 PushNotification.configure({
   onRegister: () => {},
@@ -23,37 +25,33 @@ PushNotification.configure({
     data: { commentId, mobile_app_url, image, type, uri },
     finish,
     userInteraction,
-    foreground,
     title,
     message,
     id
   }) {
     let email = await AsyncStorage.getItem('email');
-    if (type.includes('forum') && userInteraction) {
-      // if the type is forum, link to website forums
-      if (foreground) {
-        Linking.openURL(uri);
-      } else {
-        await AsyncStorage.setItem('forumUrl', uri);
-      }
-    }
 
     if (token || email) {
       // if logged in with token
-      if ((isiOS || (!isiOS && userInteraction)) && !type.includes('forum')) {
+      if (isiOS || (!isiOS && userInteraction)) {
         if (type.includes('aggregated')) {
           global.loadedFromNotification = true;
           navigate('PROFILE');
         } else if (type === 'deeplink') {
           commonService.urlToOpen = uri;
           navigationService.decideWhereToRedirect();
-        } else if (commentId || mobile_app_url) {
+        } else if (type.includes('lesson')) {
           global.notifNavigation = true;
 
           navigate('VIEWLESSON', {
             commentId,
             url: mobile_app_url
           });
+        } else if (type.includes('forum')) {
+          global.notifNavigation = true;
+
+          await AsyncStorage.setItem('forumUrl', mobile_app_url);
+          navigate('LOADPAGE');
         }
       } else {
         showNotification({
