@@ -141,7 +141,7 @@ class NavigationHeader extends React.Component {
     } = this.props;
     let { showOptions } = this.state;
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} edges={['top']}>
         <View style={styles.subContainer}>
           <View style={styles.titleContainer}>
             {!!locked && (
