@@ -6,9 +6,6 @@ export const connection = function (alert) {
   if (this.networkContext.isConnected) return true;
   if (alert) this.networkContext.showNoConnectionAlert();
 };
-export const networkContext = function () {
-  return this.networkContext;
-};
 export const NetworkContext = function () {
   return this.NetworkContext;
 };
