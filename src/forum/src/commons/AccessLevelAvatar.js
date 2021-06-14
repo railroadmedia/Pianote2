@@ -57,6 +57,7 @@ export default class AccessLevelAvatar extends React.Component {
         <TouchableOpacity
           style={{ ...styles.imgContainer, borderColor }}
           onPress={() => showUserInfo && this.setState({ showUserInfo: true })}
+          disallowInterruption={true}
         >
           <Image
             source={{
