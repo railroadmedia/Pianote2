@@ -190,6 +190,7 @@ class Post extends React.Component {
           <View style={styles.likeContainer}>
             <TouchableOpacity
               onPress={this.toggleLike}
+              disallowInterruption={true}
               style={{
                 padding: 15,
                 paddingRight: 7.5,
@@ -208,6 +209,7 @@ class Post extends React.Component {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={this.reply}
+              disallowInterruption={true}
               style={{ padding: 15, paddingLeft: 7.5 }}
             >
               <Text style={styles.replyText}>REPLY</Text>
