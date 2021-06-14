@@ -3,7 +3,7 @@ import { Image, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { coach, team, edge, lifetime } from '../assets/svgs';
-import UserInfo from '../components/UserInfo';
+import UserInfo from './UserInfo';
 
 export default class AccessLevelAvatar extends React.Component {
   state = {
