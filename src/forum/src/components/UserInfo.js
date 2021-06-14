@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
-import Icon from '../../../assets/icons';
-import FastImage from 'react-native-fast-image';
 
-const onTablet = global.onTablet;
+import AccessLevelAvatar from '../commons/AccessLevelAvatar';
+
+import { x } from '../assets/svgs';
+
 let styles;
-
 export default class UserInfo extends React.Component {
   constructor(props) {
     super(props);
@@ -13,70 +13,77 @@ export default class UserInfo extends React.Component {
   }
 
   render = () => {
-    const { author, hideUserInfo, isVisible, isDark } = this.props;
+    const { author, onHideUserInfo, isVisible, isDark, appColor } = this.props;
     return (
       <Modal
         transparent={true}
         visible={isVisible}
-        style={{ margin: 0, flex: 1 }}
-        animation={'slideInUp'}
-        animationInTiming={250}
-        animationOutTiming={250}
-        coverScreen={true}
-        hasBackdrop={true}
-        onBackButtonPress={() => hideUserInfo()}
+        animationType={'slide'}
+        onRequestClose={onHideUserInfo}
+        supportedOrientations={['portrait', 'landscape']}
       >
-        <View style={styles.modalContainer} activeOpacity={1}>
-          <TouchableOpacity
-            onPress={() => hideUserInfo()}
-            style={{ height: '15%' }}
-          />
-          <View style={styles.container}>
-            <View style={styles.curveTopEdges}>
-              <TouchableOpacity
-                onPress={() => hideUserInfo()}
-                style={styles.xContainer}
-              >
-                <Icon.Feather
-                  size={onTablet ? 30 : 25}
-                  name={'x'}
-                  color={isDark ? 'white' : 'black'}
-                />
-              </TouchableOpacity>
-              <Text style={styles.headerText}>{author?.display_name}</Text>
-              <FastImage
-                style={styles.profilePicture}
-                source={{ uri: author?.avatar_url }}
-                resizeMode={FastImage.resizeMode.cover}
-              />
-              <Text style={[styles.headerText, styles.rankText]}>
-                {author?.xp_rank}
-              </Text>
-              <Text style={styles.levelText}>LEVEL {author?.level_rank}</Text>
-              <Text style={styles.memberSinceText}>
-                {this.props.appName} MEMBER SINCE{' '}
+        <View style={styles.background}>
+          <View style={styles.infoContainer}>
+            <TouchableOpacity style={styles.header} onPress={onHideUserInfo}>
+              {x({ width: 50, height: 20, fill: isDark ? 'white' : 'black' })}
+              <Text style={styles.name}>{author?.display_name}</Text>
+            </TouchableOpacity>
+            <AccessLevelAvatar
+              author={author}
+              height={100}
+              appColor={appColor}
+              isDark={isDark}
+              tagHeight={12}
+            />
+            <Text style={styles.rank}>
+              {author?.xp_rank}
+              {'\n'}
+              <Text style={styles.level}>LEVEL {author?.level_rank}</Text>
+              {'\n'}
+              {'\n'}
+              <Text style={styles.yearSince}>
+                MEMBER SINCE{' '}
                 {new Date(
                   Date.now() - author.days_as_member * 86400000
                 ).getUTCFullYear()}
               </Text>
-              <View style={styles.statsContainer}>
-                <Text style={styles.numberText}>{author?.xp}</Text>
-                <Text style={styles.itemText}>Total XP</Text>
-              </View>
-              <View style={styles.statsContainer}>
-                <Text style={styles.numberText}>{author?.total_posts}</Text>
-                <Text style={styles.itemText}>Total posts</Text>
-              </View>
-              <View style={styles.statsContainer}>
-                <Text style={styles.numberText}>{author?.days_as_member}</Text>
-                <Text style={styles.itemText}>Days as a member</Text>
-              </View>
-              <View style={styles.statsContainer}>
-                <Text style={styles.numberText}>
-                  {author?.total_post_likes}
-                </Text>
-                <Text style={styles.itemText}>Total post likes</Text>
-              </View>
+            </Text>
+            <View
+              style={{ width: '100%', flexDirection: 'row', marginTop: 30 }}
+            >
+              {[
+                [
+                  author.xp,
+                  author.total_posts,
+                  author.days_as_member,
+                  author.total_post_likes
+                ],
+                [
+                  'Total XP',
+                  'Totalposts',
+                  'Days as a member',
+                  'Total post likes'
+                ]
+              ].map((array, i) => (
+                <View style={i ? { flex: 1 } : {}}>
+                  {array.map(a => (
+                    <View style={styles.tableRow}>
+                      <Text
+                        style={{
+                          paddingVertical: 10,
+                          paddingLeft: i ? 10 : 15,
+                          color: i ? (isDark ? '#445f73' : 'black') : appColor,
+                          fontSize: 18,
+                          fontFamily: 'OpenSans',
+                          fontWeight: i ? '400' : '700'
+                        }}
+                      >
+                        {a}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              ))}
             </View>
           </View>
         </View>
@@ -87,102 +94,58 @@ export default class UserInfo extends React.Component {
 
 let setStyles = (isDark, appColor) =>
   StyleSheet.create({
-    modalContainer: {
+    background: {
       flex: 1,
-      backgroundColor: 'rgba(0,0,0,.5)',
-      justifyContent: 'flex-end'
+      justifyContent: 'flex-end',
+      backgroundColor: 'rgba(0,0,0,.5)'
     },
-    container: {
-      borderTopRightRadius: onTablet ? 50 : 35,
-      borderTopLeftRadius: onTablet ? 50 : 35,
+    infoContainer: {
+      flex: 0.85,
       backgroundColor: isDark ? '#081826' : '#F7F9FC',
-      height: '85%',
-      elevation: 10
+      borderTopEndRadius: 25,
+      borderTopStartRadius: 25,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      paddingVertical: 30,
+      justifyContent: 'center'
     },
-    headerText: {
-      fontSize: onTablet ? 24 : 18,
-      color: isDark ? 'white' : 'black',
-      fontFamily: 'OpenSans-ExtraBold',
-      alignSelf: 'center',
-      textAlign: 'center'
-    },
-    levelText: {
-      fontSize: onTablet ? 16 : 14,
-      color: isDark ? 'white' : 'black',
-      fontFamily: 'OpenSans-Bold',
-      alignSelf: 'center',
-      textAlign: 'center',
-      marginBottom: 15
-    },
-    centerContent: {
-      justifyContent: 'center',
-      alignContent: 'center',
-      alignItems: 'center',
-      alignSelf: 'stretch'
-    },
-    profilePicture: {
-      height: onTablet ? 150 : 120,
-      aspectRatio: 1,
-      borderRadius: 200,
-      marginTop: onTablet ? 40 : 30,
-      marginBottom: 5,
-      alignSelf: 'center',
-      borderWidth: 2,
-      borderColor: appColor
-    },
-    memberSinceText: {
-      fontFamily: 'OpenSans-Regular',
-      fontSize: onTablet ? 16 : 14,
-      textAlign: 'center',
-      color: isDark ? '#445f73' : 'black',
-      paddingBottom: 20
-    },
-    rankText: {
-      paddingHorizontal: 10,
-      textAlign: 'center',
-      color: appColor,
-      fontSize: onTablet ? 20 : 18,
-      justifyContent: 'center',
-      fontFamily: 'OpenSans-Bold',
-      textAlign: 'center'
-    },
-    itemText: {
-      fontFamily: 'OpenSans-Regular',
-      fontSize: onTablet ? 16 : 14,
-      textAlign: 'center',
-      color: isDark ? '#445f73' : 'black',
-      textAlign: 'left',
-      flex: 0.8
-    },
-    numberText: {
-      flex: 0.2,
-      paddingHorizontal: 10,
-      textAlign: 'center',
-      color: appColor,
-      fontSize: onTablet ? 20 : 18,
-      justifyContent: 'center',
-      fontFamily: 'OpenSans-Bold',
-      textAlign: 'center',
-      textAlign: 'center'
-    },
-    curveTopEdges: {
-      marginTop: 30,
-      height: '10%',
-      width: '100%'
-    },
-    statsContainer: {
-      padding: 10,
+    header: {
+      width: '100%',
       flexDirection: 'row',
       alignItems: 'center',
-      borderBottomColor: isDark ? '#445f73' : 'black',
-      borderBottomWidth: 0.25
+      marginBottom: 30
     },
-    xContainer: {
-      height: '100%',
-      width: '100%',
-      zIndex: 10,
+    name: {
+      fontFamily: 'OpenSans',
+      color: isDark ? 'white' : 'black',
+      fontWeight: '800',
+      fontSize: 20,
       position: 'absolute',
-      left: onTablet ? 20 : 15,
-      zIndex: 10
+      textAlign: 'center',
+      width: '100%'
+    },
+    rank: {
+      width: '100%',
+      textAlign: 'center',
+      marginTop: 5,
+      fontSize: 20,
+      color: appColor,
+      fontFamily: 'RobotoCondensed-Regular',
+      fontWeight: '700'
+    },
+    level: {
+      color: isDark ? 'white' : 'black',
+      fontWeight: '400',
+      fontSize: 16
+    },
+    yearSince: {
+      color: isDark ? '#445f73' : 'black',
+      fontSize: 18,
+      fontWeight: '400',
+      marginTop: 20
+    },
+    tableRow: {
+      borderBottomWidth: 1,
+      borderBottomColor: '#002039'
     }
   });

@@ -61,7 +61,7 @@ export default class AccessLevelAvatar extends React.Component {
         >
           <Image
             source={{
-              uri: `https://cdn.musora.com/image/fetch/w_100,fl_lossy,q_auto:eco,c_fill,g_face/${author.avatar_url}`
+              uri: `https://cdn.musora.com/image/fetch/w_200,fl_lossy,q_auto:eco,c_fill,g_face/${author.avatar_url}`
             }}
             style={{ height, aspectRatio: 1 }}
           />
@@ -78,7 +78,7 @@ export default class AccessLevelAvatar extends React.Component {
         </TouchableOpacity>
         <UserInfo
           isVisible={this.state.showUserInfo}
-          hideUserInfo={() => this.setState({ showUserInfo: false })}
+          onHideUserInfo={() => this.setState({ showUserInfo: false })}
           author={author}
           isDark={isDark}
           appColor={appColor}

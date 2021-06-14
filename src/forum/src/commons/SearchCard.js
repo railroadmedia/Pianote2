@@ -45,7 +45,6 @@ export default class SearchCard extends React.Component {
           appColor={appColor}
           isDark={isDark}
           tagHeight={4}
-          imgContainer
         />
         <Text style={styles.title}>
           {title}
