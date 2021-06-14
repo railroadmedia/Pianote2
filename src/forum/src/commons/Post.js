@@ -47,17 +47,19 @@ class Post extends React.Component {
 
   toggleLike = () => {
     if (!connection(true)) return;
-    let { id } = this.props.post;
-    this.setState(({ isLiked, likeCount }) => {
-      if (isLiked) {
-        likeCount--;
-        disLikePost(id);
-      } else {
-        likeCount++;
-        likePost(id);
-      }
-      return { likeCount, isLiked: !isLiked };
-    });
+    if (this.props.user.id !== this.props.post.author_id) {
+      let { id } = this.props.post;
+      this.setState(({ isLiked, likeCount }) => {
+        if (isLiked) {
+          likeCount--;
+          disLikePost(id);
+        } else {
+          likeCount++;
+          likePost(id);
+        }
+        return { likeCount, isLiked: !isLiked };
+      });
+    }
   };
 
   toggleMenu = () =>
