@@ -99,9 +99,10 @@ export default class HTMLRenderer extends React.Component {
               children
             );
           },
-          expander: () =>
+          expander: (_, __, ___, { key }) =>
             expanderVisible ? (
               <TouchableOpacity
+                key={key}
                 disallowInterruption={true}
                 onPress={() =>
                   this.setState(({ maxQuoteHeight }) => ({
