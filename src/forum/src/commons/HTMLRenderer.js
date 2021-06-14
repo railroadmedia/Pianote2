@@ -102,6 +102,7 @@ export default class HTMLRenderer extends React.Component {
           expander: () =>
             expanderVisible ? (
               <TouchableOpacity
+                disallowInterruption={true}
                 onPress={() =>
                   this.setState(({ maxQuoteHeight }) => ({
                     maxQuoteHeight: maxQuoteHeight === 150 ? undefined : 150
