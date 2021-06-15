@@ -67,12 +67,6 @@ const messageDict = {
     color: 'orange',
     type: 'forum post reply notifications',
     field: 'notify_on_forum_followed_thread_reply'
-  },
-  'new content releases': {
-    message: '',
-    new: false,
-    color: 'red',
-    type: 'new content release notifications'
   }
 };
 
@@ -234,11 +228,7 @@ class Profile extends React.Component {
   };
 
   openNotification = notification => {
-    if (notification.type === 'new content releases') {
-      navigate('VIEWLESSON', {
-        url: notification.content.musora_api_mobile_app_url
-      });
-    } else if (
+    if (
       notification.type === 'lesson comment reply' ||
       notification.type === 'lesson comment liked'
     ) {
@@ -424,22 +414,8 @@ class Profile extends React.Component {
                 onPress={() => this.openNotification(item)}
               >
                 <View style={localStyles.messageContainer}>
-                  {item.type === 'new content releases' ? (
-                    <View
-                      style={[
-                        localStyles.centerContent,
-                        localStyles.iconContainer,
-                        { backgroundColor: 'red' }
-                      ]}
-                    >
-                      <Icon.FontAwesome
-                        size={sizing.infoButtonSize}
-                        color={'white'}
-                        name={'video-camera'}
-                      />
-                    </View>
-                  ) : item.type === 'lesson comment reply' ||
-                    item.type === 'forum post in followed thread' ? (
+                  {item.type === 'lesson comment reply' ||
+                  item.type === 'forum post in followed thread' ? (
                     <View
                       style={[
                         localStyles.centerContent,
@@ -477,12 +453,9 @@ class Profile extends React.Component {
                       marginRight: 10
                     }}
                     source={{
-                      uri:
-                        item.type === 'new content releases'
-                          ? item.content.thumbnail_url
-                          : item.sender
-                          ? item.sender.profile_image_url
-                          : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                      uri: item.sender
+                        ? item.sender.profile_image_url
+                        : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
                     }}
                     resizeMode={FastImage.resizeMode.stretch}
                   />
@@ -497,9 +470,7 @@ class Profile extends React.Component {
                     <Text style={localStyles.boldNotificationText}>
                       {messageDict[item.type].new ? '' : 'NEW - '}
                     </Text>
-                    {item.type === 'new content releases'
-                      ? item.content.display_name
-                      : item.sender?.display_name}
+                    {item.sender?.display_name}
                     <Text style={localStyles.messageTypeText}>
                       {' '}
                       {messageDict[item.type].message}

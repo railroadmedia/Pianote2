@@ -30,12 +30,6 @@ const messageDict = {
     new: false,
     color: 'orange',
     type: 'forum post reply notifications'
-  },
-  'new content releases': {
-    message: '',
-    new: false,
-    color: 'red',
-    type: 'new content release notifications'
   }
 };
 
@@ -82,21 +76,8 @@ class ReplyNotification extends React.Component {
                 ]}
               >
                 <View style={localStyles.profileContainer2}>
-                  {type === 'new content releases' ? (
-                    <View
-                      style={[
-                        localStyles.centerContent,
-                        localStyles.videoContainer
-                      ]}
-                    >
-                      <Icon.FontAwesome
-                        size={sizing.infoButtonSize}
-                        color={'white'}
-                        name={'video-camera'}
-                      />
-                    </View>
-                  ) : type === 'forum post in followed thread' ||
-                    type === 'lesson comment reply' ? (
+                  {type === 'forum post in followed thread' ||
+                  type === 'lesson comment reply' ? (
                     <View
                       style={[
                         localStyles.centerContent,
@@ -126,21 +107,14 @@ class ReplyNotification extends React.Component {
                   <FastImage
                     style={localStyles.image}
                     source={{
-                      uri:
-                        type === 'new content releases'
-                          ? content?.thumbnail_url
-                          : sender?.profile_image_url
+                      uri: sender?.profile_image_url
                     }}
                     resizeMode={FastImage.resizeMode.cover}
                   />
                 </View>
               </View>
               <Text style={localStyles.replyUser}>
-                <Text style={localStyles.user}>
-                  {type == 'new content releases'
-                    ? content?.display_name
-                    : sender?.display_name}
-                </Text>{' '}
+                <Text style={localStyles.user}>{sender?.display_name}</Text>{' '}
                 {messageDict[type]?.message}
               </Text>
             </>
