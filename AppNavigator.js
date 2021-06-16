@@ -3,7 +3,7 @@ import { Dimensions, Easing } from 'react-native';
 import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import Forum from './src/forum/index';
+import Forum from 'react-native-musora-forum';
 
 // content
 import StudentFocusCatalog from './src/views/content/StudentFocusCatalog';
