@@ -4,6 +4,7 @@ import { updateFcmToken } from '../../src/services/notification.service.js';
 export let cache = {};
 export default {
   rootUrl: 'https://staging.pianote.com',
+  urlToOpen: '',
   tryCall: async function (url, method, body) {
     try {
       //
