@@ -104,11 +104,11 @@ class ProfileSettings extends React.Component {
       }
       let url = await response.json();
       if (url.data[0].url) {
-        await commonService.tryCall(
-          `${commonService.rootUrl}/musora-api/profile/update`,
-          'POST',
-          { file: url === '' ? url : url.data[0].url }
-        );
+        await commonService.tryCall({
+          url: `${commonService.rootUrl}/musora-api/profile/update`,
+          method: 'POST',
+          body: { file: url === '' ? url : url.data[0].url }
+        });
         this.props.setLoggedInUser({
           ...this.props.user,
           profile_picture_url: url.data[0].url

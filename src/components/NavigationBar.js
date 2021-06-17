@@ -112,7 +112,7 @@ class NavigationBar extends React.Component {
                   ? this.context.showNoConnectionAlert()
                   : navigate('FORUM', {
                       NetworkContext,
-                      tryCall: commonService.tryCall,
+                      tryCall: commonService.tryCall.bind(commonService),
                       rootUrl: commonService.rootUrl,
                       isDark: true,
                       BottomNavigator: NavigationBar,

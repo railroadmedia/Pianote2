@@ -2,56 +2,56 @@ import commonService from './common.service';
 
 export default {
   getComments: async function (id, sortBy, limit) {
-    let reqUrl = `${commonService.rootUrl}/api/railcontent/comments?content_id=${id}&limit=${limit}`;
+    let url = `${commonService.rootUrl}/api/railcontent/comments?content_id=${id}&limit=${limit}`;
     if (sortBy === 'Popular') {
-      reqUrl += `&sort=-like_count`;
+      url += `&sort=-like_count`;
     } else if (sortBy === 'Newest') {
-      reqUrl += `&sort=-created_on`;
+      url += `&sort=-created_on`;
     } else if (sortBy === 'Oldest') {
-      reqUrl += `&sort=created_on`;
+      url += `&sort=created_on`;
     } else if (sortBy === 'Mine') {
-      reqUrl += `&sort=-mine`;
+      url += `&sort=-mine`;
     }
-    return commonService.tryCall(reqUrl);
+    return commonService.tryCall({ url });
   },
   getComment: async function (commendId) {
-    return commonService.tryCall(
-      `${commonService.rootUrl}/api/railcontent/comment/${commendId}`
-    );
+    return commonService.tryCall({
+      url: `${commonService.rootUrl}/api/railcontent/comment/${commendId}`
+    });
   },
   addComment: async function (commentText, contentId) {
-    return commonService.tryCall(
-      `${commonService.rootUrl}/api/railcontent/comment?comment=${commentText}&content_id=${contentId}`,
-      'PUT'
-    );
+    return commonService.tryCall({
+      url: `${commonService.rootUrl}/api/railcontent/comment?comment=${commentText}&content_id=${contentId}`,
+      method: 'PUT'
+    });
   },
   likeComment: async function (id) {
-    return commonService.tryCall(
-      `${commonService.rootUrl}/api/railcontent/comment-like/${id}`,
-      'PUT'
-    );
+    return commonService.tryCall({
+      url: `${commonService.rootUrl}/api/railcontent/comment-like/${id}`,
+      method: 'PUT'
+    });
   },
   dislikeComment: async function (id) {
-    return commonService.tryCall(
-      `${commonService.rootUrl}/api/railcontent/comment-like/${id}`,
-      'DELETE'
-    );
+    return commonService.tryCall({
+      url: `${commonService.rootUrl}/api/railcontent/comment-like/${id}`,
+      method: 'DELETE'
+    });
   },
   addReplyToComment: async function (replyText, comentId) {
-    return commonService.tryCall(
-      `${commonService.rootUrl}/api/railcontent/comment/reply?comment=${replyText}&parent_id=${comentId}`,
-      'PUT'
-    );
+    return commonService.tryCall({
+      url: `${commonService.rootUrl}/api/railcontent/comment/reply?comment=${replyText}&parent_id=${comentId}`,
+      method: 'PUT'
+    });
   },
   getCommentLikes: async function (commentId) {
-    return commonService.tryCall(
-      `${commonService.rootUrl}/api/railcontent/comment-likes/${commentId}`
-    );
+    return commonService.tryCall({
+      url: `${commonService.rootUrl}/api/railcontent/comment-likes/${commentId}`
+    });
   },
   deleteComment: async function (commentId) {
-    return commonService.tryCall(
-      `${commonService.rootUrl}/api/railcontent/comment/${commentId}`,
-      'DELETE'
-    );
+    return commonService.tryCall({
+      url: `${commonService.rootUrl}/api/railcontent/comment/${commentId}`,
+      method: 'DELETE'
+    });
   }
 };

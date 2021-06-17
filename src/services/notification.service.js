@@ -1,7 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
 import PushNotification from 'react-native-push-notification';
 import commonService from './common.service';
-import {updateUserDetails} from './UserActions';
+import { updateUserDetails } from './UserActions';
 
 export let notif = {};
 
@@ -13,9 +13,9 @@ export const updateFcmToken = () =>
     });
 
 export const showNotification = ({
-  notification: {body, title},
+  notification: { body, title },
   data,
-  messageId,
+  messageId
 }) => {
   PushNotification.localNotification({
     channelId: 'pianote-app-channel',
@@ -30,8 +30,8 @@ export const showNotification = ({
       commentId: data.commentId,
       mobile_app_url: data.mobile_app_url,
       type: data.type,
-      uri: data.uri,
-    },
+      uri: data.uri
+    }
   });
 };
 
@@ -45,29 +45,29 @@ export const localNotification = () => {
 };
 
 export async function getnotifications(page) {
-  return await commonService.tryCall(
-    `${commonService.rootUrl}/api/railnotifications/notifications?limit=10&page=${page}`,
-  );
+  return await commonService.tryCall({
+    url: `${commonService.rootUrl}/api/railnotifications/notifications?limit=10&page=${page}`
+  });
 }
 
 export async function removeNotification(id) {
-  return commonService.tryCall(
-    `${commonService.rootUrl}/api/railnotifications/notification/${id}`,
-    'DELETE',
-  );
+  return commonService.tryCall({
+    url: `${commonService.rootUrl}/api/railnotifications/notification/${id}`,
+    method: 'DELETE'
+  });
 }
 
 export async function getNotificationSettings() {
-  return commonService.tryCall(
-    `${commonService.rootUrl}/api/railnotifications/user-notification-settings`
-  );
+  return commonService.tryCall({
+    url: `${commonService.rootUrl}/api/railnotifications/user-notification-settings`
+  });
 }
 
 export async function changeNotificationSettings(body) {
-  let response = await commonService.tryCall(
-    `${commonService.rootUrl}/usora/api/profile/update`,
-    'POST',
+  let response = await commonService.tryCall({
+    url: `${commonService.rootUrl}/usora/api/profile/update`,
+    method: 'POST',
     body
-  );
+  });
   return response;
 }

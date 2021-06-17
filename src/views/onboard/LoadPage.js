@@ -93,7 +93,7 @@ class LoadPage extends React.Component {
             if (forumUrl) {
               reset('FORUM', {
                 NetworkContext,
-                tryCall: commonService.tryCall,
+                tryCall: commonService.tryCall.bind(commonService),
                 rootUrl: commonService.rootUrl,
                 isDark: true,
                 BottomNavigator: NavigationBar,

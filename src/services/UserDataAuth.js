@@ -34,7 +34,7 @@ export async function getToken(userEmail, userPass, purchases) {
 }
 
 export async function getUserData() {
-  return commonService.tryCall(`${commonService.rootUrl}/api/profile`);
+  return commonService.tryCall({ url: `${commonService.rootUrl}/api/profile` });
 }
 
 export async function avatarUpload(data) {
@@ -48,53 +48,51 @@ export async function avatarUpload(data) {
 }
 
 export async function forgotPass(emailAddress) {
-  return commonService.tryCall(
-    `${commonService.rootUrl}/musora-api/forgot?email=${emailAddress}`,
-    'PUT'
-  );
+  return commonService.tryCall({
+    url: `${commonService.rootUrl}/musora-api/forgot?email=${emailAddress}`,
+    method: 'PUT'
+  });
 }
 
 export async function changePassword(email, pass, token) {
-  return commonService.tryCall(
-    `${commonService.rootUrl}/musora-api/change-password`,
-    'PUT',
-    {
+  return commonService.tryCall({
+    url: `${commonService.rootUrl}/musora-api/change-password`,
+    method: 'PUT',
+    body: {
       pass1: pass,
       user_login: email,
       rp_key: token
     }
-  );
+  });
 }
 
 export async function isNameUnique(name) {
-  return commonService.tryCall(
-    `${commonService.rootUrl}/usora/api/is-display-name-unique?display_name=${name}`
-  );
+  return commonService.tryCall({
+    url: `${commonService.rootUrl}/usora/api/is-display-name-unique?display_name=${name}`
+  });
 }
 
 export async function isEmailUnique(email) {
-  return commonService.tryCall(
-    `${commonService.rootUrl}/usora/api/is-email-unique?email=${email}`
-  );
+  return commonService.tryCall({
+    url: `${commonService.rootUrl}/usora/api/is-email-unique?email=${email}`
+  });
 }
 
 export async function updateName(name) {
-  return commonService.tryCall(
-    `${commonService.rootUrl}/musora-api/profile/update`,
-    'POST',
-    {
-      display_name: name
-    }
-  );
+  return commonService.tryCall({
+    url: `${commonService.rootUrl}/musora-api/profile/update`,
+    method: 'POST',
+    body: { display_name: name }
+  });
 }
 
 export async function logOut() {
   // return profile details
   try {
-    return commonService.tryCall(
-      `${commonService.rootUrl}/usora/api/logout`,
-      'PUT'
-    );
+    return commonService.tryCall({
+      url: `${commonService.rootUrl}/usora/api/logout`,
+      method: 'PUT'
+    });
   } catch (error) {
     return new Error(error);
   }

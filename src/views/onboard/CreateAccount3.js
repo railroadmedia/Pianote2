@@ -181,26 +181,26 @@ export default class CreateAccount3 extends React.Component {
 
           // get data back, put image URL & display name in user details
           url = await response.json();
-          await commonService.tryCall(
-            `${commonService.rootUrl}/musora-api/profile/update`,
-            'POST',
-            {
+          await commonService.tryCall({
+            url: `${commonService.rootUrl}/musora-api/profile/update`,
+            method: 'POST',
+            body: {
               file: url?.data?.[0]?.url,
               display_name: this.state.displayName
             }
-          );
+          });
 
           // send to loadpage to update asyncstorage with new data
           reset('LOADPAGE');
         } else {
-          await commonService.tryCall(
-            `${commonService.rootUrl}/musora-api/profile/update`,
-            'POST',
-            {
+          await commonService.tryCall({
+            url: `${commonService.rootUrl}/musora-api/profile/update`,
+            method: 'POST',
+            body: {
               file: url?.data?.[0]?.url,
               display_name: this.state.displayName
             }
-          );
+          });
 
           // send to loadpage to update asyncstorage with new data
           reset('LOADPAGE');
