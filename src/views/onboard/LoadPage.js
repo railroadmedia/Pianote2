@@ -46,12 +46,9 @@ const cache = [
 class LoadPage extends React.Component {
   static contextType = NetworkContext;
   async componentDidMount() {
-    //requestTrackingPermission();
-
     Download_V2.resumeAll()?.then(async () => {
       this.loadCache();
       await SplashScreen.hide();
-
       let data = (
         await AsyncStorage.multiGet([
           'loggedIn',
@@ -67,8 +64,7 @@ class LoadPage extends React.Component {
       }, {});
       await AsyncStorage.removeItem('resetKey');
       const { email, resetKey, password, forumUrl } = data;
-
-      if (!this.context.isConnected) {
+      if (this.context.isConnected) {
         if (email && !global.loadedFromNotification) {
           return navigate('DOWNLOADS');
         } else {
@@ -83,7 +79,7 @@ class LoadPage extends React.Component {
         // get token
         const res = await getToken(email, password);
         if (res === 500) {
-          return this.context.showNoConnectionAlert();
+          return this.context.isConnected.showNoConnectionAlert();
         } else if (res.success) {
           updateFcmToken();
           let userData = await getUserData();
