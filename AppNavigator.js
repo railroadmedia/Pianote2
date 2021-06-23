@@ -49,6 +49,8 @@ import Support from './src/views/user/Support';
 import Terms from './src/views/user/Terms';
 import NetworkProvider from './src/context/NetworkProvider';
 
+import NavigationBar from './src/components/NavigationBar';
+
 const Stack = createStackNavigator();
 const navigationRef = React.createRef();
 
@@ -167,11 +169,16 @@ export default () => (
         <Stack.Screen name='MYLIST' component={MyList} />
         <Stack.Screen name='SEARCH' component={Search} />
         <Stack.Screen name='PACKS' component={Packs} />
-        <Stack.Screen
-          name='FORUM'
-          component={Forum}
-          options={{ gestureEnabled: false }}
-        />
+        <Stack.Screen name='FORUM' options={{ gestureEnabled: false }}>
+          {props => (
+            <>
+              <Forum {...props} />
+              {currentScene()?.match(/^(FORUM|Forums)$/) && (
+                <NavigationBar currentPage={'FORUM'} />
+              )}
+            </>
+          )}
+        </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   </NetworkProvider>
