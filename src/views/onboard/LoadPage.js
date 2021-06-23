@@ -64,7 +64,7 @@ class LoadPage extends React.Component {
       }, {});
       await AsyncStorage.removeItem('resetKey');
       const { email, resetKey, password, forumUrl } = data;
-      if (this.context.isConnected) {
+      if (!this.context.isConnected) {
         if (email && !global.loadedFromNotification) {
           return navigate('DOWNLOADS');
         } else {
