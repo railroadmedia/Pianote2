@@ -213,7 +213,7 @@ export default class SinglePack extends React.Component {
     return (
       <SafeAreaView
         forceInset={{ bottom: 'never' }}
-        style={[styles.container, { backgroundColor: colors.mainBackground }]}
+        style={{ flex: 1, backgroundColor: colors.mainBackground }}
       >
         <StatusBar
           backgroundColor={colors.mainBackground}
@@ -221,7 +221,7 @@ export default class SinglePack extends React.Component {
         />
         {!this.state.isLoadingAll ? (
           <ScrollView
-            style={{ backgroundColor: colors.mainBackground }}
+            style={{ flex: 1, backgroundColor: colors.mainBackground }}
             showsVerticalScrollIndicator={false}
             contentInsetAdjustmentBehavior={'never'}
             refreshControl={
