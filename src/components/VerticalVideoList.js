@@ -536,7 +536,15 @@ export default class VerticalVideoList extends React.Component {
             <View style={localStyles.filterContainer}>
               <View style={localStyles.titleContainer}>
                 {this.props.showLargeTitle ? (
-                  <Text numberOfLines={1} style={locallargeTitle}>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontSize: sizing.titleViewLesson,
+                      textAlign: 'left',
+                      fontFamily: 'RobotoCondensed-Bold',
+                      color: 'white'
+                    }}
+                  >
                     {this.props.title}
                   </Text>
                 ) : (

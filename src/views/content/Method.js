@@ -444,7 +444,7 @@ export default class Method extends React.Component {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: '#00101d',
+    backgroundColor: 'black',
     flex: 1
   },
   methodContainer: {

@@ -134,13 +134,13 @@ export default class MethodLevel extends React.Component {
   render() {
     return (
       <SafeAreaView
-        style={styles.methodContainer}
+        style={styles.mainContainer}
         forceInset={{ bottom: 'never' }}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
-          style={styles.methodContainer}
+          style={styles.mainContainer}
           refreshControl={
             <RefreshControl
               colors={[colors.pianoteRed]}
@@ -424,9 +424,5 @@ const styles = StyleSheet.create({
     fontSize: onTablet ? 34 : 26,
     color: 'white',
     fontFamily: 'OpenSans-ExtraBold'
-  },
-  mainContainer: {
-    backgroundColor: '#00101d',
-    flex: 1
   }
 });
