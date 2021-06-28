@@ -1,284 +1,255 @@
-/**
- * MyList
- */
 import React from 'react';
 import {
-    View,
-    Text,
-    Animated,
-    ScrollView,
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Dimensions,
+  RefreshControl
 } from 'react-native';
-import Modal from 'react-native-modal';
-import { getContent } from '@musora/services';
-import { ContentModel } from '@musora/models';
-import FastImage from 'react-native-fast-image';
-import List from 'Pianote2/src/assets/img/svgs/myList.svg';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
-import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
-import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import Icon from '../../assets/icons.js';
+import NavigationBar from '../../components/NavigationBar';
+import NavMenuHeaders from '../../components/NavMenuHeaders';
+import VerticalVideoList from '../../components/VerticalVideoList';
+import { getMyListContent } from '../../services/GetContent';
+import { NetworkContext } from '../../context/NetworkProvider';
+import { cacheAndWriteMyList } from '../../redux/MyListCacheActions';
+import { ActivityIndicator } from 'react-native';
+import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
-export default class MyList extends React.Component {
-    static navigationOptions = {header: null};
-    constructor(props) {
-        super(props);
-        this.state = {
-            showModalMenu: false,
-            outVideos: false, // if no more videos to load
-            items: [], // videos loaded
-            page: 0, // current page
-            parentPageNav: 'MY LIST',
-            menu: 'HOME',
-        }
+const windowDim = Dimensions.get('window');
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+
+const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+  const paddingToBottom = 20;
+  return (
+    layoutMeasurement.height + contentOffset.y >=
+    contentSize.height - paddingToBottom
+  );
+};
+
+class MyList extends React.Component {
+  static contextType = NetworkContext;
+  constructor(props) {
+    super(props);
+    let { myListCache } = props;
+    this.state = {
+      allLessons: [],
+      page: 1,
+      isLoadingAll: true,
+      isPaging: false,
+      refreshing: false,
+      ...this.initialValidData(myListCache, false, true)
+    };
+  }
+
+  componentDidMount() {
+    this.getMyList();
+    this.refreshOnFocusListener = refreshOnFocusListener.call(this);
+  }
+
+  componentWillUnmount = () => this.refreshOnFocusListener?.();
+
+  getMyList = async loadMore => {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    let response = await getMyListContent(
+      this.state.page,
+      this.filterQuery,
+      ''
+    );
+    this.metaFilters = response?.meta?.filterOptions;
+    this.props.cacheAndWriteMyList(response);
+    this.setState(this.initialValidData(response, loadMore));
+  };
+
+  initialValidData = (content, loadMore, fromCache) => {
+    try {
+      const newContent = content.data;
+      return {
+        allLessons: loadMore
+          ? this.state?.allLessons?.concat(newContent)
+          : newContent,
+        page: this.state?.page + 1 || 1,
+        isLoadingAll: false,
+        isPaging: false,
+        refreshing: fromCache
+      };
+    } catch (e) {
+      return {};
     }
+  };
 
+  removeFromMyList = contentID => {
+    let { myListCache } = this.props;
+    this.props.cacheAndWriteMyList({
+      ...myListCache,
+      data: myListCache.data.filter(d => d.id !== contentID)
+    });
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    this.setState({
+      allLessons: this.state.allLessons.filter(al => al.id !== contentID)
+    });
+  };
 
-    componentDidMount() {
-        this.getContent()
+  handleScroll = event => {
+    if (isCloseToBottom(event) && !this.state.isPaging) {
+      this.setState({ isPaging: true }, () => this.getMyList(true));
     }
+  };
 
-
-    async getContent() {
-        if(this.state.outVideos == false) { 
-            const { response, error } = await getContent({
-                brand:'pianote',
-                limit: '15',
-                page: this.state.page,
-                sort: '-created_on',
-                statuses: ['published'],
-                included_types:['song'],
-            });
-            
-            if(response.data.data.length == 0) {
-                this.setState({outVideos: true})
-            }
-
-            const newContent = response.data.data.map((data) => {
-                return new ContentModel(data)
-            })
-
-            items = []
-            for(i in newContent) {
-                if(newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('artist'),
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                    })
-                }
-            }
-
-            this.setState({
-                items: [...this.state.items, ...items],
-                page: this.state.page + 1,
-            })
-
-        }
-    }
-
-
-    pressFilters = async () => {
-        await this.setState({
-            filterClicked: !this.state.filterClicked
-        })
-
-        await Animated.timing(
-            this.state.filterSize, {
-                toValue: (this.state.filterClicked) ? 0.25 : 0,
-                duration : 250,
-            }
-        ).start();
-        
-        await Animated.timing(
-            this.state.listSize, {
-            toValue: (this.state.filterClicked) ? 0.35 : 0.6,
-            duration : 250,
-            }
-        ).start();
-    }
-
-
-    render() {
-        return (
-            <View styles={styles.container}>
-                <View key={'contentContainer'}
-                    style={{
-                        height: fullHeight*0.90625 - navHeight,
-                        alignSelf: 'stretch'
-                    }}
-                >
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        contentInsetAdjustmentBehavior={'never'}
-                        style={{flex: 1, backgroundColor: 'white'}}
-                    >
-                        <View key={'backgroundColoring'}
-                            style={{
-                                backgroundColor: 'black',
-                                position: 'absolute',
-                                height: fullHeight,
-                                top: -fullHeight,
-                                left: 0,
-                                right: 0,
-                                zIndex: 10,
-                                elevation: 10,
-                            }}
-                        >
-                        </View>
-                        <View key={'image'}
-                            style={{
-                                height: (onTablet) ? fullHeight*0.425 : fullHeight*0.375,
-                                width: fullWidth,
-                            }}
-                        >
-                            <NavMenuHeaders
-                                pxFromTop={navPxFromTop}
-                                leftHeader={'MY LIST'}
-                                rightHeader={'ALL LESSONS'}
-                                pressLeftHeader={() => {
-                                    this.setState({
-                                        showModalMenu: true,
-                                        parentPage: 'MY LIST',
-                                        menu: 'HOME',
-                                    })
-                                }}
-                                pressRightHeader={() => {
-                                    this.setState({
-                                        showModalMenu: true,
-                                        parentPage: 'ALL LESSONS',
-                                        menu: 'MY LIST',
-                                    })
-                                }}
-                                isHome={false}
-                            />
-                            <View key={'courses'}
-                                style={[
-                                    styles.centerContent, {
-                                    position: 'absolute',
-                                    top: 35*factorVertical,
-                                    left: 0,
-                                    zIndex: 2,
-                                    elevation: 2,
-                                    height: '100%',
-                                    width: '100%',
-                                    
-                                }]}
-                            >
-                                <List
-                                    height={37.5*factorRatio}
-                                    width={37.5*factorRatio}
-                                    fill={'#fb1b2f'}
-                                />
-                                <Text
-                                    style={{
-                                        fontSize: 45*factorRatio,
-                                        fontWeight: '700',
-                                        color: 'white',
-                                        fontFamily: 'RobotoCondensed-Regular',
-                                    }}
-                                >
-                                    MY LIST
-                                </Text>
-                            </View>
-                            <FastImage
-                                style={{
-                                    flex: 1,
-                                    alignSelf: 'stretch',
-                                    backgroundColor: 'black',
-                                }}
-                                source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
-                                resizeMode={FastImage.resizeMode.stretch}
-                            />
-                        </View>
-                        <View style={{height: fullHeight*0.015}}/>
-                        <View key={'addedList'}
-                            style={{
-                                minHeight: fullHeight*0.225,
-                                paddingLeft: fullWidth*0.035,
-                            }}
-                        >
-                            <HorizontalVideoList
-                                Title={'ADDED TO LIST'}
-                                Description={''}
-                                seeAll={() => {
-                                    this.props.navigation.navigate(
-                                        'SEEALL', {data: 'Added to List'}
-                                    )
-                                }}
-                                showArtist={false}
-                                items={this.state.items}
-                                forceSquareThumbs={false}
-                                itemWidth={onTablet ? fullWidth*0.425 : fullWidth*0.42}
-                                itemHeight={onTablet ? fullHeight*0.155 : fullHeight*0.12}
-                            />
-                        </View>
-                        <View key={'progressList'}
-                            style={{
-                                minHeight: fullHeight*0.225,
-                                paddingLeft: fullWidth*0.035,
-                            }}
-                        >
-                            <HorizontalVideoList
-                                Title={'IN PROGRESS'}
-                                Description={''}
-                                seeAll={() => {
-                                    this.props.navigation.navigate(
-                                        'SEEALL', {data: 'In Progress'}
-                                    )
-                                }}
-                                showArtist={false}
-                                items={this.state.items}
-                                forceSquareThumbs={false}
-                                itemWidth={onTablet ? fullWidth*0.425 : fullWidth*0.42}
-                                itemHeight={onTablet ? fullHeight*0.155 : fullHeight*0.12}
-                            />
-                        </View>
-                        <View key={'completedList'}
-                            style={{
-                                minHeight: fullHeight*0.225,
-                                paddingLeft: fullWidth*0.035,
-                            }}
-                        >
-                            <HorizontalVideoList
-                                Title={'COMPLETED'}
-                                Description={''}
-                                seeAll={() => {
-                                    this.props.navigation.navigate(
-                                        'SEEALL', {data: 'In Completed'}
-                                    )
-                                }}
-                                showArtist={false}
-                                items={this.state.items}
-                                forceSquareThumbs={false}
-                                itemWidth={onTablet ? fullWidth*0.425 : fullWidth*0.42}
-                                itemHeight={onTablet ? fullHeight*0.155 : fullHeight*0.12}
-                            />
-                        </View>
-                    </ScrollView>
-                </View>                
-                <NavigationBar
-                    currentPage={'MyList'}
-                />
-                <Modal key={'navMenu'}
-                    isVisible={this.state.showModalMenu}
-                    style={{
-                        margin: 0, 
-                        height: fullHeight,
-                        width: fullWidth,
-                    }}
-                    animation={'slideInUp'}
-                    animationInTiming={250}
-                    animationOutTiming={250}
-                    coverScreen={true}
-                    hasBackdrop={false}
-                >
-                    <NavigationMenu
-                        onClose={(e) => this.setState({showModalMenu: e})}
-                        menu={this.state.menu}
-                        parentPage={this.state.parentPage}
-                    />
-                </Modal>
+  render() {
+    return (
+      <View style={styles.mainContainer}>
+        <NavMenuHeaders currentPage={'MYLIST'} />
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentInsetAdjustmentBehavior={'never'}
+          style={styles.mainContainer}
+          onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
+          refreshControl={
+            <RefreshControl
+              tintColor={'transparent'}
+              colors={[colors.pianoteRed]}
+              onRefresh={() =>
+                this.setState({ refreshing: true, page: 1 }, () =>
+                  this.getMyList()
+                )
+              }
+              refreshing={isiOS ? false : this.state.refreshing}
+            />
+          }
+        >
+          {isiOS && this.state.refreshing && (
+            <ActivityIndicator
+              size='small'
+              style={styles.activityIndicator}
+              color={colors.secondBackground}
+            />
+          )}
+          <Text
+            style={[
+              styles.contentPageHeader,
+              {
+                paddingLeft: 10
+              }
+            ]}
+          >
+            My List
+          </Text>
+          <TouchableOpacity
+            style={[
+              styles.tabRightContainer,
+              {
+                marginTop: 10
+              }
+            ]}
+            onPress={() => {
+              navigate('SEEALL', {
+                title: 'In Progress',
+                parent: 'My List'
+              });
+            }}
+          >
+            <View
+              style={{
+                justifyContent: 'center',
+                paddingVertical: 20,
+                width: width * 0.26 + 10 / 2
+              }}
+            >
+              <Text
+                style={[
+                  styles.tabRightContainerText,
+                  {
+                    position: 'absolute',
+                    paddingLeft: 10,
+                    width: width * 0.56 + 10 / 2
+                  }
+                ]}
+              >
+                In Progress
+              </Text>
             </View>
-        )
-    }
+            <View style={[styles.centerContent, { flex: 0.15 }]}>
+              <Icon.Entypo
+                name={'chevron-thin-right'}
+                size={onTablet ? 30 : 20}
+                color={colors.secondBackground}
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.tabRightContainer}
+            onPress={() => {
+              navigate('SEEALL', {
+                title: 'Completed',
+                parent: 'My List'
+              });
+            }}
+          >
+            <View
+              style={{
+                justifyContent: 'center',
+                paddingVertical: 20,
+                width: width * 0.26 + 10 / 2
+              }}
+            >
+              <Text
+                style={[
+                  styles.tabRightContainerText,
+                  {
+                    position: 'absolute',
+                    paddingLeft: 10,
+                    width: width * 0.56 + 10 / 2
+                  }
+                ]}
+              >
+                Completed
+              </Text>
+            </View>
+            <View style={[styles.centerContent, { flex: 0.15 }]}>
+              <Icon.Entypo
+                name={'chevron-thin-right'}
+                s
+                size={onTablet ? 30 : 20}
+                color={colors.secondBackground}
+              />
+            </View>
+          </TouchableOpacity>
+          <VerticalVideoList
+            title={'ADDED TO MY LIST'}
+            type={'MYLIST'}
+            items={this.state.allLessons}
+            isLoading={this.state.isLoadingAll}
+            isPaging={this.state.isPaging}
+            showFilter={true}
+            showType={false}
+            showArtist={true}
+            showLength={false}
+            showSort={false}
+            filters={this.metaFilters}
+            applyFilters={filters =>
+              new Promise(res =>
+                this.setState({ allLessons: [], page: 1 }, () => {
+                  this.filterQuery = filters;
+                  this.getMyList().then(res);
+                })
+              )
+            }
+            removeItem={contentID => this.removeFromMyList(contentID)}
+            imageWidth={(onTablet ? 0.225 : 0.3) * width}
+          />
+        </ScrollView>
+        <NavigationBar currentPage={'MyList'} />
+      </View>
+    );
+  }
 }
+const mapStateToProps = state => ({ myListCache: state.myListCache });
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ cacheAndWriteMyList }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyList);

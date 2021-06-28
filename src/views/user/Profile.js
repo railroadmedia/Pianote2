@@ -1,531 +1,665 @@
-/**
- * Profile
- */
 import React from 'react';
-import { 
-    View,
-    Text,
-    ScrollView,
-    TouchableOpacity,
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  FlatList,
+  Linking,
+  StatusBar,
+  StyleSheet,
+  RefreshControl
 } from 'react-native';
-import Modal from 'react-native-modal';
+
 import FastImage from 'react-native-fast-image';
-import XpRank from 'Pianote2/src/modals/XpRank.js';
-import ImagePicker from 'react-native-image-picker';
-import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import AsyncStorage from '@react-native-community/async-storage';
-import Settings from 'Pianote2/src/assets/img/svgs/settings.svg';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import ReplyNotification from 'Pianote2/src/modals/ReplyNotification.js';
+import Icon from '../../assets/icons.js';
+import Chat from '../../assets/img/svgs/chat.svg';
+import Settings from '../../assets/img/svgs/settings.svg';
+import XpRank from '../../modals/XpRank.js';
+import { getUserData } from '../../services/UserDataAuth.js';
+import NavigationBar from '../../components/NavigationBar.js';
+import ReplyNotification from '../../modals/ReplyNotification.js';
+import { NetworkContext } from '../../context/NetworkProvider';
+import {
+  getnotifications,
+  removeNotification,
+  changeNotificationSettings
+} from '../../services/notification.service';
+import { SafeAreaView } from 'react-navigation';
+import { navigate } from '../../../AppNavigator.js';
+import { setLoggedInUser } from '../../redux/UserActions.js';
+import { connect } from 'react-redux';
 
-export default class Profile extends React.Component {
-    static navigationOptions = {header: null};
-    constructor(props) {
-        super(props);
-        this.state = {
-            profileImage: '',
-            notifications: [1,2,3,4,5],
-            showXpRank: false,
-            showReplyNotification: false,
-        }
+const isTablet = global.onTablet;
+let localStyles;
+const messageDict = {
+  'lesson comment reply': {
+    message: 'replied to your comment.',
+    new: true,
+    color: 'orange',
+    type: 'comment reply notifications',
+    field: 'notify_on_lesson_comment_reply'
+  },
+  'lesson comment liked': {
+    message: 'liked your comment.',
+    new: true,
+    color: 'blue',
+    type: 'comment like notifications',
+    field: 'notify_on_lesson_comment_like'
+  },
+  'forum post liked': {
+    message: 'liked your forum post.',
+    new: true,
+    color: 'blue',
+    type: 'forum post like notifications',
+    field: 'notify_on_forum_post_like'
+  },
+  'forum post in followed thread': {
+    message: 'post in followed thread.',
+    new: false,
+    color: 'orange',
+    type: 'forum post reply notifications',
+    field: 'notify_on_forum_followed_thread_reply'
+  },
+  'new content releases': {
+    message: '',
+    new: false,
+    color: 'red',
+    type: 'new content release notifications'
+  }
+};
+
+class Profile extends React.Component {
+  static contextType = NetworkContext;
+  page = 1;
+  constructor(props) {
+    super(props);
+
+    localStyles = setStyles(this.props.theme === 'light', colors.pianoteRed);
+
+    this.state = {
+      notifications: [],
+      showXpRank: false,
+      showReplyNotification: false,
+      isLoading: false,
+      animateLoadMore: false,
+      clickedNotification: null
+    };
+  }
+
+  componentDidMount = () => this.getNotifications(false);
+
+  async getUserDetails() {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    let userDetails = await getUserData();
+    this.props.setLoggedInUser(userDetails);
+    this.setState({ isLoading: false });
+  }
+
+  async getNotifications(loadMore) {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    if (loadMore) this.page++;
+    else this.page = 1;
+    let notifications = await getnotifications(this.page);
+    for (i in notifications.data) {
+      let timeCreated =
+        notifications.data[i].created_at?.slice(0, 10) +
+        'T' +
+        notifications.data[i].created_at?.slice(11) +
+        '.000Z';
+      let dateNote = new Date(timeCreated).getTime() / 1000;
+      let dateNow = new Date().getTime() / 1000;
+      let timeDelta = dateNow - dateNote; // in seconds
+
+      if (timeDelta < 3600) {
+        notifications.data[i].created_at = `${(timeDelta / 60).toFixed(
+          0
+        )} minute${timeDelta < 60 * 2 && timeDelta >= 60 ? '' : 's'} ago`;
+      } else if (timeDelta < 86400) {
+        notifications.data[i].created_at = `${(timeDelta / 3600).toFixed(
+          0
+        )} hour${timeDelta < 3600 * 2 ? '' : 's'} ago`;
+      } else if (timeDelta < 604800) {
+        notifications.data[i].created_at = `${(timeDelta / 86400).toFixed(
+          0
+        )} day${timeDelta < 86400 * 2 ? '' : 's'} ago`;
+      } else {
+        notifications.data[i].created_at = `${(timeDelta / 604800).toFixed(
+          0
+        )} week${timeDelta < 604800 * 2 ? '' : 's'} ago`;
+      }
     }
 
+    this.setState(state => ({
+      notifications: loadMore
+        ? state.notifications.concat(notifications.data)
+        : notifications.data,
+      isLoading: false,
+      animateLoadMore: notifications.data?.length === 0 ? false : true
+    }));
+  }
 
-    componentDidMount = async () => {
-        profileImage = await AsyncStorage.getItem('profileURI')
-        await this.setState({profileImage})
+  changeXP = num => {
+    if (num !== '') {
+      num = Number(num);
+      if (num < 10000) {
+        num = num.toString();
+        return num;
+      } else {
+        num = (num / 1000).toFixed(1).toString();
+        num = num + 'k';
+        return num;
+      }
+    }
+  };
+
+  removeNotification = notificationId => {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    this.setState(state => ({
+      notifications: state.notifications.filter(c => c.id !== notificationId),
+      clickedNotification: null,
+      showReplyNotification: false
+    }));
+    removeNotification(notificationId);
+  };
+
+  turnOfffNotifications = async type => {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    this.setState({ showReplyNotification: false, clickedNotification: {} });
+    const {
+      notify_on_lesson_comment_reply,
+      notify_on_lesson_comment_like,
+      notify_on_forum_followed_thread_reply,
+      notify_on_forum_post_like
+    } = this.props.user;
+    let attributes;
+
+    if (type === 'lesson comment reply') {
+      this.props.setLoggedInUser({
+        ...this.props.user,
+        notify_on_lesson_comment_reply: !notify_on_lesson_comment_reply
+      });
+      attributes = {
+        notify_on_lesson_comment_reply: !notify_on_lesson_comment_reply
+      };
+    } else if (type === 'lesson comment liked') {
+      this.props.setLoggedInUser({
+        ...this.props.user,
+        notify_on_lesson_comment_like: !notify_on_lesson_comment_like
+      });
+      attributes = {
+        notify_on_lesson_comment_like: !notify_on_lesson_comment_like
+      };
+    } else if (type === 'forum post liked') {
+      this.props.setLoggedInUser({
+        ...this.props.user,
+        notify_on_forum_post_like: !notify_on_forum_post_like
+      });
+      attributes = {
+        notify_on_forum_post_like: !notify_on_forum_post_like
+      };
+    } else if (type === 'forum post in followed thread') {
+      this.props.setLoggedInUser({
+        ...this.props.user,
+        notify_on_forum_followed_thread_reply: !notify_on_forum_followed_thread_reply
+      });
+      attributes = {
+        notify_on_forum_followed_thread_reply: !notify_on_forum_followed_thread_reply
+      };
     }
 
+    const body = {
+      data: {
+        type: 'user',
+        attributes
+      }
+    };
+    changeNotificationSettings(body);
+  };
 
-    renderNotifications() {
-        return this.state.notifications.map((data, index) => {
-            return (
-                <View
-                    style={{
-                        height: 90*factorRatio,
-                        backgroundColor: 'white',
-                        flexDirection: 'row',
-                    }}
-                >
-                    <View
-                        style={{
-                            flex: 0.275,
-                            flexDirection: 'row',
-                        }}
-                    >
-                        <View style={{flex: 1}}/>
-                        <View>
-                            <View style={{flex: 1}}/>
-                            <View
-                                style={{
-                                    height: fullWidth*0.175,
-                                    width: fullWidth*0.175,
-                                    borderRadius: 150*factorRatio,
-                                    backgroundColor: '#ececec',
-                                }}
-                            >
-                                <View
-                                    style={[
-                                        styles.centerContent, {
-                                        position: 'absolute',
-                                        bottom: 0,
-                                        right: 0,
-                                        height: fullWidth*0.075,
-                                        width: fullWidth*0.075,
-                                        backgroundColor: (
-                                            (index % 2) ? 'orange' : 'blue' 
-                                        ),
-                                        borderRadius: 100*factorRatio,
-                                        zIndex: 5,
-                                    }]}
-                                >
-                                    <Chat
-                                        height={fullWidth*0.05}
-                                        width={fullWidth*0.05}
-                                        fill={'white'}
-                                    />
-                                </View>
-                                <FastImage
-                                    style={{flex: 1, borderRadius: 100}}
-                                    source={{uri: 'https://facebook.github.io/react-native/img/tiny_logo.png'}}
-                                    resizeMode={FastImage.resizeMode.stretch}
-                                />
-                            </View>
-                            <View style={{flex: 1}}/>
-                        </View>
-                        <View style={{flex: 1}}/>
-                    </View>
-                    <View style={{flex: 0.675}}>
-                        <View style={{flex: 1}}>
-                            <View style={{flex: 1}}/>
-                            <Text
-                                style={{
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontSize: 15*factorRatio,
-                                    fontWeight: (Platform.OS == 'ios') ? '700' : 'bold',
-                                }}
-                            ><Text
-                                style={{
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontSize: 15*factorRatio,
-                                    fontWeight: (Platform.OS == 'ios') ? '700' : 'bold',
-                                    color: '#fb1b2f',
-                                }}
-                            >{'NEW - '}</Text>Jordan Leibel<Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 14*factorRatio,
-                                        fontWeight: '400',
-                                    }}
-                                > replied to your comment.</Text>
-                            </Text>
-                            <View style={{height: 5*factorVertical}}/>
-                            <Text
-                                style={{
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontSize: 13*factorRatio,
-                                    fontWeight: '400',
-                                    color: 'grey',
-                                }}
-                            >
-                                Yesterday at 12:19 PM
-                            </Text>  
-                            <View style={{flex: 1}}/>
-                        </View>                          
-                    </View>
-                    <View>
-                        <View style={{flex: 1}}/>
-                        <View style={{flexDirection: 'row'}}>
-                            <View style={{flex: 1}}/>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.setState({showReplyNotification: true})
-                                }}
-                                style={{
-                                    height: 35*factorRatio,
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <EntypoIcon        
-                                    size={20*factorRatio}
-                                    name={'dots-three-horizontal'}
-                                />
-                            </TouchableOpacity>
-                            <View style={{flex: 1}}/>
-                        </View>
-                        <View style={{flex: 1}}/>
-                    </View>
-                </View>
-            )
-        })
+  openNotification = notification => {
+    if (notification.type === 'new content releases') {
+      navigate('VIEWLESSON', {
+        url: notification.content.mobile_app_url
+      });
+    } else if (
+      notification.type === 'lesson comment reply' ||
+      notification.type === 'lesson comment liked'
+    ) {
+      navigate('VIEWLESSON', {
+        comment: notification.comment,
+        url: notification.content.mobile_app_url
+      });
+    } else {
+      Linking.openURL(notification.url);
     }
+  };
 
+  loadMoreNotifications = () =>
+    this.setState({ animateLoadMore: true }, () => this.getNotifications(true));
 
-    async chooseImage() {
-        await ImagePicker.showImagePicker({
-                tintColor: '#147efb',
-                storageOptions: {
-                skipBackup: true,
-                path: 'images',
+  render() {
+    const {
+      profile_picture_url,
+      display_name,
+      created_at,
+      totalXp,
+      xpRank
+    } = this.props.user;
+    return (
+      <SafeAreaView style={styles.mainContainer}>
+        <StatusBar
+          backgroundColor={colors.mainBackground}
+          barStyle={'light-content'}
+        />
+        <View style={styles.mainContainer}>
+          <View style={localStyles.headerContainer}>
+            <View style={{ flex: 1 }} />
+            <Text style={styles.childHeaderText}>My Profile</Text>
+            <TouchableOpacity
+              style={{ flex: 1 }}
+              onPress={() => navigate('SETTINGS')}
+            >
+              <Settings
+                height={onTablet ? 25 : 17.5}
+                width={onTablet ? 25 : 17.5}
+                fill={colors.pianoteRed}
+                style={{ alignSelf: 'flex-end' }}
+              />
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            style={styles.mainContainer}
+            data={this.state.notifications}
+            keyExtractor={(item, index) => index.toString()}
+            onEndReached={this.loadMoreNotifications}
+            onEndReachedThreshold={0.01}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.isLoading}
+                onRefresh={() =>
+                  this.setState({ isLoading: true }, () =>
+                    this.getUserDetails()
+                  )
+                }
+                colors={[colors.pianoteRed]}
+                tintColor={colors.pianoteRed}
+              />
             }
-        }, (response) => {
-            if(response.didCancel) {
-            } else if(response.error) {
-            } else {
-                AsyncStorage.setItem('profileImage', response.data)
-                AsyncStorage.setItem('profileURI', response.uri)
-                this.setState({
-                    imageURI: response.uri,
-                    showImage: true,
-                    profileImage: response.uri,
-                })
-            }
-        })
-        await this.forceUpdate()
-    }
-
-
-    clearImage = async () => {
-        await AsyncStorage.setItem('profileImage', '')
-        await this.setState({
-            imageURI: '', 
-            showImage: false,
-        })
-        await this.forceUpdate()
-    }
-
-
-    render() {
-        return (
-            <View styles={{flex: 1, alignSelf: 'stretch'}}>
-                <View
-                    style={{
-                        height: fullHeight - navHeight,
-                        alignSelf: 'stretch',
-                    }}
-                >
-                    <View key={'contentContainer'}
-                        style={{flex: 1}}
+            ListHeaderComponent={() => (
+              <>
+                <View style={styles.centerContent}>
+                  <View>
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigate('PROFILESETTINGS', {
+                          data: 'Profile Photo'
+                        })
+                      }
+                      style={localStyles.cameraBtn}
                     >
-                        <ScrollView
-                            showsVerticalScrollIndicator={false}
-                            contentInsetAdjustmentBehavior={'never'}
-                            style={{flex: 1, backgroundColor: 'white'}}
-                        >
-                            <View key={'backgroundColoring'}
-                                style={{
-                                    backgroundColor: '#fb1b2f',
-                                    position: 'absolute',
-                                    height: fullHeight,
-                                    top: -fullHeight,
-                                    left: 0,
-                                    right: 0,
-                                    zIndex: 10,
-                                    elevation: 10,
-                                }}
-                            />
-                            <View key={'myProfile'}
-                                style={[
-                                    styles.centerContent, {
-                                    height: (isNotch) ? fullHeight*0.12 : fullHeight*0.1,
-                                    backgroundColor: '#fb1b2f',
-                                    elevation: 0,
-                                }]}
-                            >
-                                <View style={{flex: 0.5}}/>
-                                <View style={{flexDirection: 'row'}}>
-                                    <View style={{flex: 1}}/>
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontWeight: (Platform.OS == 'ios') ? '600' : 'bold',
-                                            fontSize: 18*factorRatio,
-                                            color: 'white',
-                                        }}
-                                    >
-                                        My Profile
-                                    </Text>
-                                    <View style={{flex: 1, flexDirection: 'row'}}>
-                                        <View style={{flex: 0.8}}/>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.props.navigation.navigate('SETTINGS')
-                                            }}
-                                        >
-                                            <Settings
-                                                height={20*factorRatio}
-                                                width={20*factorRatio}
-                                                fill={'white'}
-                                            />
-                                        </TouchableOpacity>
-                                        <View style={{flex: 0.2}}/>
-                                    </View>
-                                </View>
-                                <View style={{flex: 0.25}}/>
-                            </View>
-                            <View key={'profilePicture'}
-                                style={[
-                                    styles.centerContent, {
-                                        backgroundColor: '#fb1b2f',
-                                    height: (isNotch) ? fullHeight*0.35 : fullHeight*0.375,
-                                }]}
-                            >
-                                <View key={'rank'}
-                                    style={{
-                                        position: 'absolute',
-                                        flexDirection: 'row',
-                                        bottom: '7.25%',
-                                        height: '5%',
-                                        width: '100%',
-                                        shadowOffset: { 
-                                            width: 5*factorRatio, 
-                                            height: 5*factorRatio 
-                                        },
-                                        shadowColor: 'black',
-                                        shadowOpacity: 0.1,
-                                        zIndex: 5,
-                                        elevation: 5,
-                                    }}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <View
-                                        style={{
-                                            flexDirection: 'row',
-                                            height: fullHeight*0.0875,
-                                            width: '90%',
-                                            borderRadius: 75*factorRatio,
-                                            backgroundColor: 'white',
-                                            elevation: 5,
-                                        }}
-                                    >
-                                        <View style={{flex: 1}}/>
-                                        <TouchableOpacity
-                                            style={[styles.centerContent, {flex: 10}]}
-                                            onPress={() => {
-                                                this.setState({showXpRank: true})
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'OpenSans-Regular',
-                                                    fontSize: 12.5*factorRatio,
-                                                    fontWeight: (Platform.OS == 'ios') ? '600' : 'bold',
-                                                    textAlign: 'center',
-                                                    color: '#fb1b2f',
-                                                }}
-                                            >
-                                                XP
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'OpenSans-Regular',
-                                                    fontSize: 22.5*factorRatio,
-                                                    fontWeight: (Platform.OS == 'ios') ? '800' : 'bold',
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                11,768
-                                            </Text>
-                                        </TouchableOpacity>
-                                        <View style={{flex: 1}}/>
-                                        <TouchableOpacity
-                                            style={[styles.centerContent, {flex: 10}]}
-                                            onPress={() => {
-                                                this.setState({showXpRank: true})
-                                            }}
-                                        >
-                                            <View
-                                                style={{
-                                                    heiight: '100%',
-                                                    width: '100%'
-                                                }}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        fontFamily: 'OpenSans-Regular',
-                                                        fontSize: 12.5*factorRatio,
-                                                        fontWeight: (Platform.OS == 'ios') ? '600' : 'bold',
-                                                        textAlign: 'center',
-                                                        color: '#fb1b2f',
-                                                    }}
-                                                >
-                                                    RANK
-                                                </Text>
-                                                <Text
-                                                style={{
-                                                    fontFamily: 'OpenSans-Regular',
-                                                    fontSize: 22.5*factorRatio,
-                                                    fontWeight: (Platform.OS == 'ios') ? '800' : 'bold',
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                MAESTRO
-                                            </Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                        <View style={{flex: 1}}/>
-                                    </View>
-                                    <View style={{flex: 1}}/>
-                                </View>
-                                <View key={'imageProfile'}
-                                    style={{
-                                        borderRadius: 250,
-                                        borderWidth: 2*factorRatio,
-                                        borderColor: 'white',
-                                        height: (onTablet) ? 112*factorRatio : 140*factorRatio,
-                                        width: (onTablet) ? 112*factorRatio : 140*factorRatio,
-                                    }}
-                                >
-                                    <View key={'camera'}
-                                        style={{
-                                            position: 'absolute',
-                                            top: -11*factorVertical,
-                                            right: -11*factorVertical,
-                                            height: 32*factorVertical,
-                                            width: 32*factorVertical,
-                                            borderRadius: 100,
-                                            borderWidth: 2,
-                                            borderColor: 'white',
-                                            zIndex: 13,
-                                        }}
-                                    >         
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.chooseImage()
-                                            }}
-                                            style={[
-                                                styles.centerContent, {
-                                                height: '100%',
-                                                width: '100%',
-                                            }]}
-                                        >
-                                            <EntypoIcon
-                                                size={(onTablet) ? 14*factorRatio : 16*factorRatio}
-                                                color={'white'}
-                                                name={'camera'}
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={{flex: 1}}/>
-                                    <View style={{flexDirection: 'row'}}>
-                                        <View style={{flex: 1}}/>
-                                        <FastImage
-                                            style={{
-                                                height: (onTablet) ? 100*factorRatio : 125*factorRatio,
-                                                width: (onTablet) ? 100*factorRatio : 125*factorRatio,
-                                                borderRadius: 250
-                                            }}
-                                            source={{uri: this.state.profileImage}}
-                                            resizeMode={FastImage.resizeMode.stretch}
-                                        />
-                                        <View style={{flex: 1}}/>
-                                    </View>
-                                    <View style={{flex: 1}}/>
-                                </View>
-                                <View style={{height: 10*factorVertical}}/>
-                                <View key={'name'}
-                                    style={[
-                                        styles.centerContent, {
-                                        alignSelf: 'stretch'
-                                    }]}
-                                >
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontSize: 30*factorRatio,
-                                            fontWeight: (Platform.OS == 'ios') ? '700' : 'bold',
-                                            textAlign: 'center',
-                                            color: 'white',
-                                        }}
-                                    >
-                                        Jared Falk
-                                    </Text>
-                                    <View style={{height: 10*factorVertical}}/>
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontSize: 14*factorRatio,
-                                            fontWeight: '400',
-                                            textAlign: 'center',
-                                            color: 'white',
-                                        }}
-                                    >
-                                        @drummer_jared
-                                    </Text>
-                                </View>
-                                <View style={{flex: 1}}/>
-                            </View>   
-                            <View key={'notifications'}
-                                style={{
-                                    height: fullHeight*0.115,
-                                    elevation: 1,
-                                }}
-                            >
-                                <View style={{height: '60%'}}/>
-                                <View style={{flex: 0.5}}/>
-                                <Text
-                                    style={{
-                                        paddingLeft: fullWidth*0.05,
-                                        fontSize: 18*factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontWeight: (Platform.OS == 'ios') ? '800' : 'bold',
-                                        color: '#9b9b9b',
-                                    }}
-                                >
-                                    NOTIFICATIONS
-                                </Text>
-                                <View style={{flex: 1}}/>
-                            </View>
-                            {this.renderNotifications()}
-                        </ScrollView>
-                    </View>
-                    <Modal key={'XpRank'}
-                        isVisible={this.state.showXpRank}
-                        style={[
-                            styles.centerContent, {
-                            margin: 0,
-                            height: fullHeight,
-                            width: fullWidth,
-                        }]}
-                        animation={'slideInUp'}
-                        animationInTiming={250}
-                        animationOutTiming={250}
-                        coverScreen={false}
-                        hasBackdrop={false}
-                    >
-                        <XpRank
-                            hideXpRank={() => {
-                                this.setState({showXpRank: false})
-                            }}
-                        />
-                    </Modal>
-                    <Modal key={'replyNotification'}
-                        isVisible={this.state.showReplyNotification}
-                        style={[
-                            styles.centerContent, {
-                            margin: 0,
-                            height: fullHeight,
-                            width: fullWidth,
-                        }]}
-                        animation={'slideInUp'}
-                        backdropOpacity={0.6}
-                        animationInTiming={250}
-                        animationOutTiming={250}
-                        coverScreen={false}
-                        hasBackdrop={true}
-                    >
-                        <ReplyNotification
-                            hideReplyNotification={() => {
-                                this.setState({showReplyNotification: false})
-                            }}
-                        />
-                    </Modal>                    
-                    <NavigationBar
-                        currentPage={'PROFILE'}
+                      <Icon.Ionicons
+                        size={onTablet ? 24 : 18}
+                        name={'ios-camera'}
+                        color={colors.pianoteRed}
+                      />
+                    </TouchableOpacity>
+                    <FastImage
+                      style={localStyles.profilePicture}
+                      source={{
+                        uri:
+                          profile_picture_url ||
+                          'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                      }}
+                      resizeMode={FastImage.resizeMode.cover}
                     />
+                  </View>
+                  <Text
+                    style={[localStyles.usernameText, styles.childHeaderText]}
+                  >
+                    {display_name}
+                  </Text>
+                  <Text style={localStyles.memberSinceText}>
+                    MEMBER SINCE {created_at?.slice(0, 4)}
+                  </Text>
                 </View>
-            </View>
-        )
-    }
+
+                <View style={localStyles.rankContainer}>
+                  <TouchableOpacity
+                    style={localStyles.center}
+                    onPress={() => this.setState({ showXpRank: true })}
+                  >
+                    <Text style={localStyles.redXpRank}>XP</Text>
+                    <Text style={localStyles.whiteXpRank}>{totalXp}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => this.setState({ showXpRank: true })}
+                    style={localStyles.center}
+                  >
+                    <Text style={localStyles.redXpRank}>RANK</Text>
+                    <Text style={localStyles.whiteXpRank}>{xpRank}</Text>
+                  </TouchableOpacity>
+                </View>
+                <Text
+                  style={[
+                    localStyles.notificationText,
+                    {
+                      fontSize: sizing.verticalListTitleSmall,
+                      paddingVertical: 15,
+                      paddingLeft: 10,
+                      fontFamily: 'OpenSans-ExtraBold',
+                      color: 'white'
+                    }
+                  ]}
+                >
+                  NOTIFICATIONS
+                </Text>
+              </>
+            )}
+            ListEmptyComponent={() =>
+              this.state.isLoading ? (
+                <ActivityIndicator
+                  size={onTablet ? 'large' : 'small'}
+                  animating={true}
+                  color={colors.secondBackground}
+                  style={{ margin: 20 }}
+                />
+              ) : (
+                <Text style={localStyles.noNotificationText}>
+                  No New Notifications...
+                </Text>
+              )
+            }
+            ListFooterComponent={() => (
+              <ActivityIndicator
+                style={{ marginVertical: 20 }}
+                size='small'
+                color={colors.secondBackground}
+                animating={this.state.animateLoadMore}
+                hidesWhenStopped={true}
+              />
+            )}
+            renderItem={({ item, index }) => (
+              <TouchableOpacity
+                style={[
+                  localStyles.notification,
+                  {
+                    paddingLeft: 10,
+                    backgroundColor:
+                      index % 2
+                        ? colors.mainBackground
+                        : colors.notificationColor
+                  }
+                ]}
+                onPress={() => this.openNotification(item)}
+              >
+                <View style={localStyles.messageContainer}>
+                  {item.type === 'new content releases' ? (
+                    <View
+                      style={[
+                        styles.centerContent,
+                        localStyles.iconContainer,
+                        { backgroundColor: 'red' }
+                      ]}
+                    >
+                      <Icon.FontAwesome
+                        size={sizing.infoButtonSize}
+                        color={'white'}
+                        name={'video-camera'}
+                      />
+                    </View>
+                  ) : item.type === 'lesson comment reply' ||
+                    item.type === 'forum post in followed thread' ? (
+                    <View
+                      style={[
+                        styles.centerContent,
+                        localStyles.iconContainer,
+                        { backgroundColor: 'orange' }
+                      ]}
+                    >
+                      <Chat
+                        height={sizing.infoButtonSize}
+                        width={sizing.infoButtonSize}
+                        fill={'white'}
+                      />
+                    </View>
+                  ) : (
+                    <View
+                      style={[
+                        styles.centerContent,
+                        localStyles.iconContainer,
+                        { backgroundColor: 'blue' }
+                      ]}
+                    >
+                      <Icon.AntDesign
+                        size={sizing.infoButtonSize}
+                        color={'white'}
+                        name={'like1'}
+                      />
+                    </View>
+                  )}
+                  <FastImage
+                    style={{
+                      height: onTablet ? 60 : 40,
+                      width: onTablet ? 60 : 40,
+                      paddingVertical: 10,
+                      borderRadius: 100,
+                      marginRight: 10
+                    }}
+                    source={{
+                      uri:
+                        item.type === 'new content releases'
+                          ? item.content.thumbnail_url
+                          : item.sender
+                          ? item.sender.profile_image_url
+                          : 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                    }}
+                    resizeMode={FastImage.resizeMode.stretch}
+                  />
+                </View>
+                <View style={{ flex: 0.975, paddingLeft: 20 }}>
+                  <Text
+                    style={{
+                      fontFamily: 'OpenSans-ExtraBold',
+                      color: 'white'
+                    }}
+                  >
+                    <Text style={localStyles.boldNotificationText}>
+                      {messageDict[item.type].new ? '' : 'NEW - '}
+                    </Text>
+                    {item.type === 'new content releases'
+                      ? item.content.display_name
+                      : item.sender?.display_name}
+                    <Text style={localStyles.messageTypeText}>
+                      {' '}
+                      {messageDict[item.type].message}
+                    </Text>
+                  </Text>
+                  <Text style={localStyles.createdAtText}>
+                    {item.created_at}
+                  </Text>
+                </View>
+                <View style={{ flexDirection: 'row' }}>
+                  <TouchableOpacity
+                    style={localStyles.threeDotsContainer}
+                    onPress={() => {
+                      this.setState({
+                        showReplyNotification: true,
+                        clickedNotification: item
+                      });
+                    }}
+                  >
+                    <Icon.Entypo
+                      size={sizing.infoButtonSize}
+                      name={'dots-three-horizontal'}
+                      color={colors.secondBackground}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+        {this.state.showXpRank && (
+          <XpRank
+            hideXpRank={() => this.setState({ showXpRank: false })}
+            xp={totalXp}
+            rank={xpRank}
+          />
+        )}
+
+        {this.state.showReplyNotification && (
+          <ReplyNotification
+            removeNotification={notificationId =>
+              this.removeNotification(notificationId)
+            }
+            turnOfffNotifications={() =>
+              this.turnOfffNotifications(this.state.clickedNotification?.type)
+            }
+            hideReplyNotification={() => {
+              this.setState({ showReplyNotification: false });
+            }}
+            data={this.state.clickedNotification}
+            notificationStatus={
+              this.props.user[
+                messageDict[this.state.clickedNotification?.type]?.field
+              ]
+            }
+          />
+        )}
+
+        <NavigationBar currentPage={'PROFILE'} pad={true} />
+      </SafeAreaView>
+    );
+  }
 }
+
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+const mapDispatchToProps = dispatch => ({
+  setLoggedInUser: user => dispatch(setLoggedInUser(user))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+
+const setStyles = (isLight, appColor) =>
+  StyleSheet.create({
+    headerContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: 10
+    },
+    profilePicture: {
+      height: 125,
+      aspectRatio: 1,
+      borderRadius: 65,
+      marginTop: 30,
+      marginBottom: 15
+    },
+    usernameText: {
+      paddingBottom: 5
+    },
+    memberSinceText: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: isTablet ? 16 : 12,
+      textAlign: 'center',
+      color: isLight ? '#97AABE' : '#445f73'
+    },
+    rankContainer: {
+      borderTopColor: isLight ? '#97AABE' : '#445f73',
+      borderTopWidth: 1,
+      borderBottomColor: isLight ? '#97AABE' : '#445f73',
+      borderBottomWidth: 1,
+      paddingVertical: 20,
+      backgroundColor: isLight ? '#F7F9FC' : '#00101d',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-around',
+      marginTop: 20
+    },
+    redXpRank: {
+      color: appColor,
+      fontSize: isTablet ? 16 : 12,
+      fontFamily: 'OpenSans-Bold',
+      textAlign: 'center'
+    },
+    whiteXpRank: {
+      color: 'white',
+      fontSize: isTablet ? 26 : 20,
+      fontFamily: 'OpenSans-ExtraBold',
+      textAlign: 'center'
+    },
+    notificationContainer: {
+      elevation: 1
+    },
+    activityContainer: {
+      flex: 1,
+      marginTop: 20
+    },
+    noNotificationText: {
+      fontFamily: 'OpenSans-ExtraBold',
+      fontSize: isTablet ? 16 : 12,
+      textAlign: 'left',
+      paddingLeft: 10,
+      color: isLight ? '#00101D' : '#EDEEEF'
+    },
+    notification: {
+      flexDirection: 'row',
+      paddingVertical: 20
+    },
+    innerNotificationContainer: {
+      paddingLeft: 10,
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+    iconContainer: {
+      position: 'absolute',
+      bottom: -5,
+      right: -5,
+      height: isTablet ? 35 : 25,
+      width: isTablet ? 35 : 25,
+      borderRadius: 100,
+      zIndex: 5
+    },
+    center: {
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    boldNotificationText: {
+      fontFamily: 'OpenSans-ExtraBold',
+      fontSize: isTablet ? 16 : 14,
+      color: isLight ? '#00101D' : '#EDEEEF'
+    },
+    messageTypeText: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: isTablet ? 16 : 12,
+      color: isLight ? '#00101D' : '#EDEEEF'
+    },
+    createdAtText: {
+      marginTop: 1,
+      fontFamily: 'OpenSans-Regular',
+      fontSize: isTablet ? 16 : 12,
+      color: isLight ? '#97AABE' : '#445f73'
+    },
+    threeDotsContainer: {
+      justifyContent: 'center'
+    },
+    cameraBtn: {
+      flex: 0,
+      backgroundColor: isLight ? '#F7F9FC' : '#00101d',
+      borderColor: appColor,
+      borderWidth: 1,
+      height: 35,
+      width: 35,
+      borderRadius: 17,
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'absolute',
+      left: 90,
+      top: 30,
+      zIndex: 2
+    }
+  });

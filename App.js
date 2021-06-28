@@ -1,106 +1,82 @@
-/**
- *  Router
- */
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
-import { Animated } from 'react-native';
+import 'react-native-gesture-handler';
+import React from 'react';
+import { createStore, combineReducers } from 'redux';
+import { Provider } from 'react-redux';
+import { Text, Linking, StatusBar } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+import Orientation from 'react-native-orientation-locker';
+import AppNavigator, { reset } from './AppNavigator';
 
-// content
-import StudentFocusCatalog from './src/views/content/StudentFocusCatalog.js';
-import StudentFocusShow from './src/views/content/StudentFocusShow.js';
-import VideoPlayerSong from './src/views/content/VideoPlayerSong.js';
-import CourseCatalog from './src/views/content/CourseCatalog.js';
-import LearningPaths from './src/views/content/LearningPaths';
-import VideoPlayer from './src/views/content/VideoPlayer.js';
-import SongCatalog from './src/views/content/SongCatalog.js';
-import PathOverview from './src/views/content/PathOverview';
-import SinglePack from './src/views/content/SinglePack.js';
-import Downloads from './src/views/content/Downloads.js';
-import Lessons from './src/views/content/Lessons.js';
-import SeeAll from './src/views/content/SeeAll.js';
-import Course from './src/views/content/Course.js';
-import MyList from './src/views/content/MyList.js';
-import Search from './src/views/content/Search.js';
-import Packs from './src/views/content/Packs.js';
-import Home from './src/views/content/Home.js';
+import packsReducer from './src/redux/PacksCacheReducer';
+import songsReducer from './src/redux/SongsCacheReducer';
+import myListReducer from './src/redux/MyListCacheReducer';
+import coursesReducer from './src/redux/CoursesCacheReducer';
+import lessonsReducer from './src/redux/LessonsCacheReducer';
+import podcastsReducer from './src/redux/PodcastsCacheReducer';
+import quickTipsReducer from './src/redux/QuickTipsCacheReducer';
+import studentFocusReducer from './src/redux/StudentFocusCacheReducer';
+import userReducer from './src/redux/UserReducer';
+import commonService from './src/services/common.service';
 
-// onboard
-import MembershipExpired from './src/views/onboard/MembershipExpired.js';
-import LoginCredentials from './src/views/onboard/LoginCredentials.js';
-import CreateAccount2 from './src/views/onboard/CreateAccount2.js';
-import CreateAccount3 from './src/views/onboard/CreateAccount3.js';
-import ForgotPassword from './src/views/onboard/ForgotPassword.js';
-import NewMembership from './src/views/onboard/NewMembership.js';
-import CreateAccount from './src/views/onboard/CreateAccount.js';
-import SupportSignUp from './src/views/onboard/SupportSignUp.js';
-import WelcomeBack from './src/views/onboard/WelcomeBack.js';
-import GetRestarted from './src/views/onboard/GetRestarted';
-import LoadPage from './src/views/onboard/LoadPage.js';
-import Login from './src/views/onboard/Login.js';
+const store = createStore(
+  combineReducers({
+    ...packsReducer,
+    ...songsReducer,
+    ...myListReducer,
+    ...lessonsReducer,
+    ...coursesReducer,
+    ...podcastsReducer,
+    ...quickTipsReducer,
+    ...studentFocusReducer,
+    userState: userReducer
+  })
+);
 
-// user
-import NotificationSettings from './src/views/user/NotificationSettings.js';
-import PaymentHistory from './src/views/user/PaymentHistory.js';
-import ProfileSettings from './src/views/user/ProfileSettings';
-import PrivacyPolicy from './src/views/user/PrivacyPolicy.js';
-import Settings from './src/views/user/Settings.js';
-import Profile from './src/views/user/Profile.js';
-import Support from './src/views/user/Support.js';
-import Terms from './src/views/user/Terms.js';
+export default class App extends React.Component {
+  constructor(props) {
+    Text.defaultProps = {};
+    Text.defaultProps.maxFontSizeMultiplier = 1;
+    super(props);
+    if (onTablet) Orientation.unlockAllOrientations();
+    else Orientation.lockToPortrait();
+    global.notifNavigation = false;
+  }
 
-const AppNavigator = createStackNavigator({
-    initialRoute: LoadPage,
+  componentDidMount() {
+    Linking.getInitialURL()
+      .then(ev => {
+        if (ev) this.handleOpenURL({ url: ev });
+      })
+      .catch(error => console.log(error));
+    Linking.addEventListener('url', this.handleOpenURL);
+  }
 
-    // user
-    NOTIFICATIONSETTINGS: {screen: NotificationSettings},
-    PROFILESETTINGS: {screen: ProfileSettings},
-    PAYMENTHISTORY: {screen: PaymentHistory},
-    PRIVACYPOLICY: {screen: PrivacyPolicy},
-    SETTINGS: {screen: Settings},
-    PROFILE: {screen: Profile},
-    SUPPORT: {screen: Support},
-    TERMS: {screen: Terms},
+  componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleOpenURL);
+  }
 
-    // content
-    STUDENTFOCUSCATALOG: {screen: StudentFocusCatalog},
-    STUDENTFOCUSSHOW: {screen: StudentFocusShow},
-    VIDEOPLAYERSONG: {screen: VideoPlayerSong},
-    COURSECATALOG: {screen: CourseCatalog},
-    LEARNINGPATHS: {screen: LearningPaths},
-    PATHOVERVIEW: {screen: PathOverview},
-    SONGCATALOG: {screen: SongCatalog},
-    VIDEOPLAYER: {screen: VideoPlayer},
-    SINGLEPACK: {screen: SinglePack},
-    DOWNLOADS: {screen: Downloads},
-    LESSONS: {screen: Lessons},
-    SEEALL: {screen: SeeAll},
-    COURSE: {screen: Course},
-    MYLIST: {screen: MyList},
-    SEARCH: {screen: Search},
-    PACKS: {screen: Packs},
-    HOME: {screen: Home},
+  handleOpenURL = async ({ url }) => {
+    if (url) {
+      if (url.includes('/reset-password')) {
+        let resetKey = url.split('token=')[1].split('&email')[0];
+        let email = url.split('email=')[1];
+        await AsyncStorage.multiSet([
+          ['resetKey', resetKey],
+          ['email', email]
+        ]);
+      } else {
+        commonService.urlToOpen = url;
+      }
+      reset('LOADPAGE');
+    }
+  };
 
-    // onboard
-    MEMBERSHIPEXPIRED: {screen: MembershipExpired},
-    LOGINCREDENTIALS: {screen: LoginCredentials},
-    SUPPORTSIGNUP: {screen: SupportSignUp},
-    FORGOTPASSWORD: {screen: ForgotPassword},
-    CREATEACCOUNT2: {screen: CreateAccount2},
-    CREATEACCOUNT3: {screen: CreateAccount3},
-    NEWMEMBERSHIP: {screen: NewMembership},
-    CREATEACCOUNT: {screen: CreateAccount},
-    GETRESTARTED: {screen: GetRestarted},
-    WELCOMEBACK: {screen: WelcomeBack},
-    LOADPAGE: {screen: LoadPage},
-    LOGIN: {screen: Login},
-},
-{
-    headerMode:'screen',
-    mode:'card',
-    defaultNavigationOptions: {gesturesEnabled: false},
-    transitionConfig: () => (
-        {transitionSpec: {duration: 0, timing: Animated.timing}}
-    )
-});
-
-export default createAppContainer(AppNavigator);
+  render() {
+    return (
+      <Provider store={store}>
+        <StatusBar barStyle='light-content' />
+        <AppNavigator />
+      </Provider>
+    );
+  }
+}

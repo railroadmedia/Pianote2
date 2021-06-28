@@ -1,777 +1,458 @@
-/**
- * Search
- */
 import React from 'react';
-import { 
-    View, 
-    Text,
-    Keyboard,
-    TextInput, 
-    Animated,
-    TouchableWithoutFeedback, 
-    TouchableOpacity,
-    ScrollView,
-    Platform,
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+  ActivityIndicator,
+  StatusBar
 } from 'react-native';
-import { ContentModel } from '@musora/models';
-import { searchContent } from '@musora/services';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import Student from 'Pianote2/src/assets/img/svgs/student.svg';
-import Songs from 'Pianote2/src/assets/img/svgs/headphones.svg';
+import Icon from '../../assets/icons.js';
 import AsyncStorage from '@react-native-community/async-storage';
-import Graduation from 'Pianote2/src/assets/img/svgs/courses.svg';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import LearningPaths from 'Pianote2/src/assets/img/svgs/learningPaths.svg';
-import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
-import FilterIcon from 'Pianote2/src/assets/img/svgs/filters-selected.svg';
+import { SafeAreaView } from 'react-navigation';
+import NavigationBar from '../../components/NavigationBar';
+import VerticalVideoList from '../../components/VerticalVideoList';
+import { searchContent } from '../../services/GetContent';
+import { NetworkContext } from '../../context/NetworkProvider';
+
+const windowDim = Dimensions.get('window');
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+
+const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+  const paddingToBottom = 20;
+  return (
+    layoutMeasurement.height + contentOffset.y >=
+    contentSize.height - paddingToBottom
+  );
+};
 
 export default class Search extends React.Component {
-    static navigationOptions = {header: null};
-    constructor(props) {
-        super(props);
-        this.state = {
-            filterSize: new Animated.Value(fullHeight*0.225),
-            recentSearchResults: [], 
-            searchResults: [],
-            searchEntered: false,
-            outVideos: false,
-            numSearchResults: null,
-            searchTerm: '',
-            filterClicked: false,
-            LearningPath: false,
-            Courses: false,
-            Songs: false,
-            StudentFocus: false,
-            showFilters: false,
-
-        }
-    }  
-
-
-    async componentDidMount() {
-        // get recent searches from memory
-        recentSearchResults = await AsyncStorage.getItem('recentSearches')
-        recentSearchResults = await JSON.parse(recentSearchResults)
-        if(recentSearchResults !== null) {
-            await this.setState({recentSearchResults})
-        }
+  static contextType = NetworkContext;
+  constructor(props) {
+    super(props);
+    this.state = {
+      recentSearchResults: [],
+      searchResults: [],
+      isLoadingAll: false,
+      isPaging: false,
+      filtering: false,
+      searchEntered: false,
+      showCancel: false,
+      noResults: false,
+      numSearchResults: null,
+      page: 1,
+      currentSort: 'newest',
+      searchTerm: ''
+    };
+    const url = props.route?.params?.url;
+    if (url && url.includes('term=')) {
+      let searchedText = url.split('term=')[1];
+      searchedText = searchedText.split('+').join(' ');
+      this.state.searchTerm = searchedText;
+      this.search();
     }
+  }
 
-
-    mapRecentResults() {
-        if(this.state.recentSearchResults.length > 0 &&
-            typeof(this.state.recentSearchResults) !== null) {
-            return this.state.recentSearchResults.map((row, id) => (
-                <View key={id}
-                    style={{
-                        height: fullHeight*0.065,
-                        borderBottomWidth: 1*factorRatio,
-                        borderBottomColor: '#ececec',
-                        borderTopWidth: 1*factorRatio,
-                        borderTopColor: '#ececec',
-                    }}
-                >
-                    <TouchableOpacity
-                        onPress={() => {}}
-                        style={{
-                            justifyContent: 'center',
-                            paddingLeft: fullWidth*0.05,
-                            height: '100%',
-                            width: '100%',
-                        }}
-                    >
-                        <Text 
-                            style={{
-                                color: '#fb1b2f',
-                                fontSize: 18*factorRatio,
-                                fontWeight: '500',
-                                fontFamily: 'OpenSans-Regular',
-                            }}
-                        >
-                            {row[0]}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                )
-            )
-        } else {
-            return (
-                <View key={'noResults'}
-                    style={{
-                        height: fullHeight*0.07,
-                        borderTopWidth: 1*factorRatio,
-                        borderTopColor: '#ececec',
-                    }}
-                >
-                    <View
-                        style={{
-                            justifyContent: 'center',
-                            paddingLeft: fullWidth*0.05,
-                            height: '100%',
-                            width: '100%',
-                        }}
-                    >
-                        <Text 
-                            style={{
-                                fontSize: 20*factorRatio,
-                                fontWeight: '500',
-                                fontFamily: 'OpenSans-Regular',
-                            }}
-                        >
-                            No Recent Searches
-                        </Text>
-                    </View>
-                </View>
-            )
-        }
+  async componentDidMount() {
+    let recentSearchResults = await AsyncStorage.getItem('recentSearches');
+    if (recentSearchResults) {
+      recentSearchResults = await JSON.parse(recentSearchResults);
+      this.setState({ recentSearchResults });
     }
+  }
 
+  mapRecentResults() {
+    if (
+      this.state.recentSearchResults.length > 0 &&
+      typeof this.state.recentSearchResults !== null
+    ) {
+      return this.state.recentSearchResults.map((row, id) => (
+        <View
+          key={id}
+          style={{
+            borderBottomWidth: 0,
+            borderTopWidth: 1.25,
+            borderBottomColor: colors.thirdBackground,
+            borderTopColor: colors.thirdBackground
+          }}
+        >
+          <TouchableOpacity
+            onPress={() =>
+              this.setState(
+                {
+                  searchTerm: row[0],
+                  showCancel: true,
+                  searchResults: []
+                },
+                () => this.search()
+              )
+            }
+            style={{
+              justifyContent: 'center',
+              paddingLeft: 10
+            }}
+          >
+            <Text
+              style={{
+                color: 'white',
+                fontSize: onTablet ? 20 : 14,
+                fontFamily: 'OpenSans-Bold',
+                paddingVertical: 10
+              }}
+            >
+              {row[0]}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      ));
+    } else {
+      return (
+        <View
+          style={{
+            justifyContent: 'center',
+            paddingLeft: 10,
+            borderTopWidth: 0.5,
+            borderTopColor: colors.secondBackground
+          }}
+        >
+          <Text
+            style={{
+              fontSize: onTablet ? 20 : 14,
+              fontFamily: 'OpenSans-Bold',
+              color: 'white',
+              paddingTop: 10
+            }}
+          >
+            No Recent Searches
+          </Text>
+        </View>
+      );
+    }
+  }
 
-    search = async (term) => {
-        // add term to user's recent searches in local storage
-        // if list is 8+ items take oldest one off
-        if(this.state.recentSearchResults.length > 7) {
-            this.state.recentSearchResults.pop(this.state.recentSearchResults.length)
+  search = async () => {
+    if (this.context && !this.context.isConnected)
+      return this.context.showNoConnectionAlert();
+
+    this.setState({ filtering: true });
+
+    let term = this.state.searchTerm;
+    if (term.length > 0) {
+      var isNewTerm = true;
+
+      if (this.state.searchResults === 0) {
+        this.setState({ isLoadingAll: true });
+      }
+
+      for (i in this.state.recentSearchResults) {
+        if (this.state.recentSearchResults[i][0] === term) {
+          isNewTerm = false;
         }
+      }
 
-        await this.state.recentSearchResults.unshift([term, Date.now()])
-        
+      if (isNewTerm) {
+        if (this.state.recentSearchResults.length > 7) {
+          this.state.recentSearchResults.pop(
+            this.state.recentSearchResults.length
+          );
+        }
+        await this.state.recentSearchResults.unshift([term, Date.now()]);
         await AsyncStorage.setItem(
-            'recentSearches', JSON.stringify(this.state.recentSearchResults)
-        )
-
-        await this.setState({
-            recentSearchResults: this.state.recentSearchResults,
-            searchEntered: true,
-        })
-
-        const { response, error } = await searchContent({
-            term: this.state.searchTerm,
-            statuses: ['published'],
-            included_types: ['song'],
-            page: '1',
-            brand: 'pianote',
-            limit: '20',
-            sort: '-created_on',
+          'recentSearches',
+          JSON.stringify(this.state.recentSearchResults)
+        );
+        this.setState({
+          recentSearchResults: this.state.recentSearchResults
         });
+      }
 
-        console.log('Search Error: ', error)
-        console.log('Search Response: ', response)
+      let response = await searchContent(
+        term,
+        this.state.page,
+        this.filterQuery
+      );
+      if (response.data.length === 0) {
+        this.setState({
+          searchEntered: false,
+          isLoadingAll: false,
+          noResults: true,
+          showCancel: true
+        });
+      } else {
+        this.metaFilters = response?.meta?.filterOptions;
+        let newContent = response.data;
 
-        const newContent = response.data.data.map((data) => {
-            return new ContentModel(data)
-        })
-
-        searchResults = []
-        for(i in newContent) {
-            searchResults.push({
-                title: newContent[i].getField('title'),
-                artist: newContent[i].getField('artist'),
-                thumbnail: newContent[i].getData('thumbnail_url'),
-                duration: newContent[i].getData('length'),
-            })
-        }
-
-        await this.setState({searchResults})
+        this.setState({
+          searchResults: [...this.state.searchResults, ...newContent],
+          isLoadingAll: false,
+          filtering: false,
+          isPaging: false,
+          searchEntered: true,
+          noResults: false
+        });
+      }
     }
+  };
 
+  async clearRecent() {
+    await this.setState({ recentSearchResults: [] });
+    await AsyncStorage.setItem(
+      'recentSearches',
+      JSON.stringify(this.state.recentSearchResults)
+    );
+  }
 
-    async clearRecent() {
-        await this.setState({recentSearchResults: []})
-        await AsyncStorage.setItem(
-            'recentSearches', JSON.stringify(this.state.recentSearchResults)
-        )
+  handleScroll = event => {
+    if (isCloseToBottom(event) && !this.state.isPaging) {
+      this.setState(
+        {
+          page: this.state.page + 1,
+          isPaging: true
+        },
+        () => this.search()
+      );
     }
+  };
 
-
-    render() {
-        return (
-            <View styles={styles.container}>
-                <TouchableWithoutFeedback 
-                    onPress={() => Keyboard.dismiss()}
-                    style={{height: fullHeight - navHeight, alignSelf: 'stretch'}}
+  render() {
+    return (
+      <SafeAreaView
+        forceInset={{ bottom: 'never' }}
+        style={styles.packsContainer}
+      >
+        <StatusBar
+          backgroundColor={colors.thirdBackground}
+          barStyle={'light-content'}
+        />
+        <View style={styles.packsContainer}>
+          <View style={[styles.childHeader, styles.centerContent]}>
+            <Text style={styles.childHeaderText}>Search</Text>
+          </View>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ flexGrow: 1 }}
+            contentInsetAdjustmentBehavior={'never'}
+            onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
+            style={styles.mainContainer}
+          >
+            <View
+              style={{
+                marginTop: onTablet ? '3%' : '4%',
+                flexDirection: 'row',
+                paddingLeft: 10
+              }}
+            >
+              <View style={styles.searchBox}>
+                <View
+                  style={[styles.centerContent, { width: onTablet ? 60 : 40 }]}
                 >
-                    <View>
-                        <View style={{height: fullHeight*0.90625 - navHeight}}>
-                            <View style={{height: (Platform.OS == 'android') ?  fullHeight*0.035 : fullHeight*0.055}}/>
-                            <View key={'searchBox'}
-                                style={{
-                                    height: (Platform.OS == 'android') ? fullHeight*0.07 : fullHeight*0.05, 
-                                    flexDirection: 'row',
-                                }}
-                            >
-                                <View style={{flex: 0.05}}/>
-                                <View 
-                                    style={{
-                                        flex: (this.state.searchTerm.length > 0) ? 0.75 : 0.9,
-                                        backgroundColor: '#f3f6f6',
-                                        borderRadius: 60*factorHorizontal,
-                                        flexDirection: 'row',
-                                        paddingLeft: fullWidth*0.02,
-                                    }}
-                                >
-                                    <View style={[styles.centerContent, {width: 40*factorHorizontal}]}>
-                                        <EvilIcons
-                                            name={'search'}
-                                            size={27.5*factorRatio}
-                                            color={(this.props.currentPage == 'SEARCH') ? '#fb1b2f':'grey'}
-                                        />
-                                    </View>
-                                    <TextInput
-                                        ref={(searchTerm) => { this.searchTerm = searchTerm }}
-                                        placeholder={'Search'}
-                                        placeholderTextColor={'grey'}
-                                        onChangeText={(searchTerm) => this.setState({searchTerm})}
-                                        onSubmitEditing={() => this.search(this.state.searchTerm)}
-                                        returnKeyType={'search'}
-                                        style={{
-                                            flex: 0.9,
-                                            color: 'grey',
-                                            justifyContent: 'center',
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontSize: 20*factorRatio,
-                                        }}
-                                    />
-                                </View>
-                                <View 
-                                    style={[
-                                        styles.centerContent, {
-                                        flex: (this.state.searchTerm.length > 0) ? 0.2 : 0.05,
-                                    }]}
-                                >
-                                    {(this.state.searchTerm.length > 0) && (
-                                    <TouchableOpacity
-                                        style={[styles.centerContent, {flex: 1}]}
-                                        onPress={() => {
-                                            this.searchTerm.clear(),
-                                            this.setState({
-                                                searchTerm: '',
-                                                searchResults: [],
-                                                searchEntered: false,
-                                                showFilters: false,
-                                            })
-                                        }}
-                                    >
-                                        <View style={{flex: 1}}/>
-                                        <Text
-                                            style={{
-                                                flex: 2,
-                                                textAlign: 'center',
-                                                fontSize: 14*factorRatio,
-                                                fontWeight: 'bold',
-                                                color: '#fb1b2f',
-                                                fontFamily: 'OpenSans-Regular',
-                                                zIndex: 3,
-                                                elevation: 0,
-                                            }}
-                                        >
-                                            CANCEL
-                                        </Text>
-                                        <View style={{flex: 1}}/>
-                                    </TouchableOpacity>
-                                    )}
-                                </View>
-                            </View>
-                            <View style={{height: fullHeight*0.04}}/>
-                            <View key={'recentSearches'}
-                                style={[
-                                    styles.centerContent, {
-                                    height: fullHeight*0.04,
-                                    flexDirection: 'row',
-                                }]}
-                            >
-                                {!this.state.searchEntered && (
-                                <Text
-                                    style={{
-                                        flex: 0.65,
-                                        paddingLeft: fullWidth*0.05,
-                                        fontWeight: 'bold',
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 20*factorRatio,
-                                    }}
-                                >
-                                    RECENT SEARCHES
-                                </Text>
-                                )}
-                                {!this.state.searchEntered && (
-                                <View
-                                    style={{
-                                        flex: 0.35,
-                                        flexDirection: 'row',
-                                        justifyContent: 'center', 
-                                        alignContent: 'center',
-                                        alignItems: 'center',
-                                        paddingRight: fullWidth*0.05,
-                                    }}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <TouchableOpacity
-                                        onPress={() => this.clearRecent()}
-                                        style={[styles.centerContent, {
-                                            flexDirection: 'row'
-                                        }]}
-                                    >
-                                        <View style={{marginTop: 3.5*factorRatio}}>
-                                            <EntypoIcon 
-                                                name={'cross'}
-                                                size={18*factorRatio}
-                                                color={'grey'}
-                                            />
-                                        </View>
-                                        <Text
-                                            style={{
-                                                fontWeight: 'bold',
-                                                fontSize: 12*factorRatio,
-                                                color: 'grey',
-                                                textAlign: 'right',
-                                                fontFamily: 'OpenSans-Regular',
-                                                marginTop: 3*factorVertical,
-                                            }}
-                                        >
-                                            CLEAR RECENT
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                                )}
-                                {this.state.searchEntered && (
-                                <Text
-                                    style={{
-                                        flex: 0.65,
-                                        paddingLeft: fullWidth*0.05,
-                                        fontWeight: 'bold',
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 20*factorRatio,
-                                    }}
-                                >
-                                    {this.state.numSearchResults} SEARCH RESULT{(this.state.numSearchResults == 1) ? '':'S'}
-                                </Text>
-                                )}
-                                {this.state.searchEntered && (
-                                <View
-                                    style={[
-                                        styles.centerContent, {
-                                        flex: 0.35,
-                                        flexDirection: 'row',
-                                        paddingRight: fullWidth*0.05,
-                                    }]}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.setState({
-                                                showFilters: !this.state.showFilters
-                                            })
-                                        }}
-                                        style={[
-                                            styles.centerContent, {
-                                            flexDirection: 'row',
-                                            height: 40*factorRatio,
-                                            width: 40*factorRatio,
-                                            borderRadius: 200,
-                                        }]}
-                                    >
-                                        <FilterIcon
-                                            fill={(
-                                                this.state.showFilters) ? 'red' : 'white'
-                                            }
-                                            height={40*factorRatio}
-                                            width={40*factorRatio}
-                                        />
-                                        <View
-                                            style={[
-                                                styles.centerContent, {
-                                                position: 'absolute',
-                                                height: 40*factorRatio,
-                                                width: 40*factorRatio,
-                                                borderRadius: 200,
-                                                transform: [{ rotate: '90deg'}],
-                                                zIndex: 4,
-                                                elevation: 0,
-                                            }]}
-                                        >
-                                            <IonIcon 
-                                                size={20*factorRatio}
-                                                name={'md-options'}
-                                                color={(
-                                                    this.state.showFilters
-                                                ) ? 'white' : '#c2c2c2'}
-                                            />
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                                )}
-                            </View>
-                            <View style={{height: fullHeight*0.015}}/>
-                            {this.state.showFilters && (
-                            <Animated.View key={'filterOptions'} 
-                                style={{
-                                    height: this.state.filterSize, 
-                                    width: fullWidth,
-                                    paddingTop: 2.5*factorRatio,
-                                }}
-                            >
-                                <View key={'content'}
-                                    style={{
-                                        flex: 1,
-                                    }}
-                                >
-                                    <View key={'upper'}
-                                        style={{
-                                            flex: 0.5,
-                                            flexDirection: 'row',
-                                            alignSelf: 'stretch',
-                                        }}
-                                    >
-                                        <View key={'level'}
-                                            style={{flex: 1}}
-                                        >
-                                            <View 
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: 'row',
-                                                }}
-                                            >
-                                                <View style={{flex: 1}}/>
-                                                <View
-                                                    style={{
-                                                        height: '100%',
-                                                        width: '93%',
-                                                        alignSelf: 'stretch',
-                                                    }}
-                                                >
-                                                    <View style={{flex: 1}}/>
-                                                    <View
-                                                        style={{
-                                                            height: '80%',
-                                                            width: '100%',
-                                                            borderRadius: 40*factorRatio,
-                                                            alignSelf: 'stretch',
-                                                            backgroundColor: (
-                                                                (this.state.LearningPath) ? '#fb1b2f' : 'black'
-                                                            ),
-                                                        }}
-                                                    >
-                                                        <TouchableOpacity
-                                                            onPress={() => {
-                                                                this.setState({
-                                                                    LearningPath: !this.state.LearningPath
-                                                                })
-                                                            }}
-                                                            style={[
-                                                                styles.centerContent, {
-                                                                height: '100%',
-                                                                width: '100%',
-                                                                flexDirection: 'row',
-                                                            }]}
-                                                        >
-                                                            <LearningPaths
-                                                                height={15*factorRatio}
-                                                                width={15*factorRatio}
-                                                                fill={'white'}
-                                                            />
-                                                            <View style={{width: 5*factorHorizontal}}/>
-                                                            <Text
-                                                                style={{
-                                                                    fontSize: 14*factorRatio,
-                                                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '800',
-                                                                    color: 'white',
-                                                                    fontFamily: 'OpenSans-Regular',
-                                                                }}
-                                                            >
-                                                                LEARNING PATHS
-                                                            </Text>
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                    <View style={{flex: 1}}/>
-                                                </View>
-                                                <View style={{flex: 1}}/>
-                                            </View>
-                                        </View>
-                                        <View key={'instructor'}
-                                            style={{flex: 1}}
-                                        >
-                                            <View 
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: 'row',
-                                                }}
-                                            >
-                                                <View style={{flex: 1}}/>
-                                                <View
-                                                    style={{
-                                                        height: '100%',
-                                                        width: '93%',
-                                                        alignSelf: 'stretch',
-                                                    }}
-                                                >
-                                                    <View style={{flex: 1}}/>
-                                                    <View
-                                                        style={{
-                                                            height: '80%',
-                                                            width: '100%',
-                                                            borderRadius: 35*factorRatio,
-                                                            alignSelf: 'stretch',
-                                                            backgroundColor: (
-                                                                (this.state.Courses) ? '#fb1b2f' : 'black'
-                                                            ),
-                                                        }}
-                                                    >
-                                                        <TouchableOpacity
-                                                            onPress={() => {
-                                                                this.setState({
-                                                                    Courses: !this.state.Courses
-                                                                })
-                                                            }}
-                                                            style={[
-                                                                styles.centerContent, {
-                                                                height: '100%',
-                                                                width: '100%',
-                                                                flexDirection: 'row',
-                                                            }]}
-                                                        >
-                                                            <Graduation
-                                                                height={20*factorRatio}
-                                                                width={20*factorRatio}
-                                                                fill={'white'}
-                                                            />
-                                                            <View style={{width: 5*factorHorizontal}}/>
-                                                            <Text
-                                                                style={{
-                                                                    fontSize: 14*factorRatio,
-                                                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '800',
-                                                                    color: 'white',
-                                                                    fontFamily: 'OpenSans-Regular',
-                                                                }}
-                                                            >
-                                                                COURSES
-                                                            </Text>
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                    <View style={{flex: 1}}/>
-                                                </View>
-                                                <View style={{flex: 1}}/>
-                                            </View>
-                                        </View>
-                                    </View>
-                                    <View key={'lower'}
-                                        style={{
-                                            flex: 0.5,
-                                            flexDirection: 'row',
-                                            alignSelf: 'stretch',
-                                        }}
-                                    >
-                                        <View key={'topic'}
-                                            style={{flex: 1}}
-                                        >
-                                            <View 
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: 'row',
-                                                }}
-                                            >
-                                                <View style={{flex: 1}}/>
-                                                <View
-                                                    style={{
-                                                        height: '100%',
-                                                        width: '93%',
-                                                        alignSelf: 'stretch',
-                                                    }}
-                                                >
-                                                    <View style={{flex: 1}}/>
-                                                    <View
-                                                        style={{
-                                                            height: '80%',
-                                                            width: '100%',
-                                                            borderRadius: 35*factorRatio,
-                                                            alignSelf: 'stretch',
-                                                            backgroundColor: (
-                                                                (this.state.StudentFocus) ? '#fb1b2f' : 'black'
-                                                            ),
-                                                        }}
-                                                    >
-                                                        <TouchableOpacity
-                                                            onPress={() => {
-                                                                this.setState({
-                                                                    StudentFocus: !this.state.StudentFocus
-                                                                })
-                                                            }}
-                                                            style={[
-                                                                styles.centerContent, {
-                                                                height: '100%',
-                                                                width: '100%',
-                                                                flexDirection: 'row',
-                                                            }]}
-                                                        >
-                                                            <Student
-                                                                height={15*factorRatio}
-                                                                width={15*factorRatio}
-                                                                fill={'white'}
-                                                            />
-                                                            <View style={{width: 5*factorHorizontal}}/>
-                                                            <Text
-                                                                style={{
-                                                                    fontSize: 14*factorRatio,
-                                                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '800',
-                                                                    color: 'white',
-                                                                    fontFamily: 'OpenSans-Regular',
-                                                                }}
-                                                            >
-                                                                STUDENT FOCUS
-                                                            </Text>
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                    <View style={{flex: 1}}/>
-                                                </View>
-                                                <View style={{flex: 1}}/>
-                                            </View>
-                                        </View>
-                                        <View key={'progress'}
-                                            style={{flex: 1}}
-                                        >
-                                            <View 
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: 'row',
-                                                }}
-                                            >
-                                                <View style={{flex: 1}}/>
-                                                <View
-                                                    style={{
-                                                        height: '100%',
-                                                        width: '93%',
-                                                        alignSelf: 'stretch',
-                                                    }}
-                                                >
-                                                    <View style={{flex: 1}}/>
-                                                    <View
-                                                        style={{
-                                                            height: '80%',
-                                                            width: '100%',
-                                                            borderRadius: 35*factorRatio,
-                                                            alignSelf: 'stretch',
-                                                            backgroundColor: (
-                                                                (this.state.Songs) ? '#fb1b2f' : 'black'
-                                                            ),
-                                                        }}
-                                                    >
-                                                        <TouchableOpacity
-                                                            onPress={() => {
-                                                                this.setState({
-                                                                    Songs: !this.state.Songs
-                                                                })
-                                                            }}
-                                                            style={[
-                                                                styles.centerContent, {
-                                                                height: '100%',
-                                                                width: '100%',
-                                                                flexDirection: 'row',
-                                                            }]}
-                                                        >
-                                                            <Songs
-                                                                height={17.5*factorRatio}
-                                                                width={17.5*factorRatio}
-                                                                fill={'white'}
-                                                            />
-                                                            <View style={{width: 5*factorHorizontal}}/>
-                                                            <Text
-                                                                style={{
-                                                                    fontSize: 14*factorRatio,
-                                                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '800',
-                                                                    color: 'white',
-                                                                    fontFamily: 'OpenSans-Regular',
-                                                                }}
-                                                            >
-                                                                SONGS
-                                                            </Text>
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                    <View style={{flex: 1}}/>
-                                                </View>
-                                                <View style={{flex: 1}}/>
-                                            </View>
-                                        </View>
-                                    </View>
-                                </View>
-                                <View key={'clear'}
-                                    style={{
-                                        height: fullHeight*0.075,
-                                        backgroundColor: 'white',
-                                    }}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.setState({
-                                                Songs: false,
-                                                StudentFocus: false,
-                                                Courses: false,
-                                                LearningPath: false,
-                                            })
-                                        }}
-                                        style={[
-                                            styles.centerContent, {
-                                            flexDirection: 'row',
-                                        }]}
-                                    >
-                                        <Text
-                                            style={[
-                                                styles.centerContent, {
-                                                fontSize: 14*factorRatio,
-                                                color: 'grey',
-                                                marginRight: 0.5,
-                                                textAlign: 'center',
-                                                fontWeight: (Platform.OS == 'android') ? 'bold' : '800',
-                                                fontFamily: 'OpenSans-Regular',
-                                            }]}
-                                        >
-                                            <Text
-                                                style={[
-                                                    styles.centerContent, {
-                                                    fontSize: 14*factorRatio,
-                                                    color: 'grey',
-                                                    textAlign: 'right',
-                                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '800',
-                                                    fontFamily: 'OpenSans-Regular',
-                                                }]}
-                                            >
-                                                x </Text>
-                                            CLEAR FILTERS 
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <View style={{flex: 1}}/>
-                                </View>
-                            </Animated.View>
-                            )}
-                            
-                            <ScrollView style={{flex: 0.73}}>
-                                {!this.state.searchEntered && (
-                                <View>
-                                    {this.mapRecentResults()}
-                                </View>
-                                )}
-                                
-                                {this.state.searchEntered && (
-                                <VerticalVideoList
-                                    fetchVideos={() => this.getContent()}
-                                    items={this.state.searchResults}
-                                    renderType={'Mapped'}
-                                    outVideos={this.state.outVideos}
-                                    containerWidth={fullWidth}
-                                    containerHeight={(onTablet) ? fullHeight*0.15 : fullHeight*0.09}
-                                    imageHeight={(onTablet) ? fullHeight*0.125 : fullHeight*0.07}
-                                    imageWidth={fullWidth*0.26}
-                                />
-                                )}
-                            </ScrollView>
-                        </View>
-                        <NavigationBar
-                            currentPage={'SEARCH'}
-                        />
-                    </View>
-                </TouchableWithoutFeedback>
+                  <Icon.EvilIcons
+                    name={'search'}
+                    size={onTablet ? 35 : 25}
+                    color={
+                      this.props.currentPage === 'SEARCH'
+                        ? colors.pianoteRed
+                        : 'grey'
+                    }
+                  />
+                </View>
+                <TextInput
+                  ref={searchTerm => (this.searchTerm = searchTerm)}
+                  placeholder={'Type your search...'}
+                  placeholderTextColor={'grey'}
+                  onChangeText={searchTerm => this.setState({ searchTerm })}
+                  returnKeyType={'search'}
+                  style={{
+                    flex: 0.9,
+                    color: 'grey',
+                    paddingVertical: 10,
+                    justifyContent: 'center',
+                    fontFamily: 'OpenSans-Regular',
+                    fontSize: onTablet ? 20 : 16
+                  }}
+                  onSubmitEditing={() => {
+                    this.setState({
+                      showCancel: true,
+                      searchResults: []
+                    }),
+                      this.search(this.state.searchTerm);
+                  }}
+                />
+              </View>
+              <View
+                style={[
+                  styles.centerContent,
+                  {
+                    paddingRight:
+                      this.state.showCancel || this.state.searchTerm.length > 0
+                        ? 0
+                        : 10
+                  }
+                ]}
+              >
+                {(this.state.showCancel ||
+                  this.state.searchTerm.length > 0) && (
+                  <TouchableOpacity
+                    style={{
+                      flex: 1,
+                      paddingHorizontal: 10,
+                      justifyContent: 'center'
+                    }}
+                    onPress={() => {
+                      this.searchTerm.clear();
+                      this.setState({
+                        searchTerm: '',
+                        searchResults: [],
+                        searchEntered: false,
+                        showCancel: false,
+                        noResults: false,
+                        isLoadingAll: false
+                      });
+                    }}
+                  >
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        fontSize: onTablet ? 16 : 12,
+                        color: colors.pianoteRed,
+                        fontFamily: 'OpenSans-Bold'
+                      }}
+                    >
+                      CANCEL
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
-        )
-    }
+            {this.state.searchResults.length === 0 && (
+              <View style={[styles.centerContent, styles.recentSearches]}>
+                {(!this.state.searchEntered ||
+                  this.state.searchResults.length > 0) && (
+                  <Text
+                    style={{
+                      paddingLeft: 10,
+                      fontFamily: 'OpenSans-Bold',
+                      fontSize: onTablet ? 22 : 16,
+                      color: colors.secondBackground
+                    }}
+                  >
+                    RECENT
+                  </Text>
+                )}
+                {(this.state.searchTerm.length > 0 ||
+                  !this.state.searchEntered ||
+                  this.state.searchResults.length > 0) && (
+                  <TouchableOpacity
+                    onPress={() => this.clearRecent()}
+                    style={[
+                      styles.centerContent,
+                      {
+                        paddingRight: 10
+                      }
+                    ]}
+                  >
+                    {!this.state.filtering && (
+                      <Text
+                        style={{
+                          fontSize: onTablet ? 18 : 14,
+                          color: colors.pianoteRed,
+                          textAlign: 'right',
+                          fontFamily: 'OpenSans-Regular'
+                        }}
+                      >
+                        Clear
+                      </Text>
+                    )}
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
+            <View style={{ flex: 1, marginBottom: '2%' }}>
+              {!this.state.searchEntered &&
+                !this.state.isLoadingAll &&
+                !this.state.noResults &&
+                this.mapRecentResults()}
+              {this.state.searchEntered &&
+                !this.state.noResults &&
+                !this.state.isLoadingAll && (
+                  <View
+                    style={{
+                      paddingVertical: 10
+                    }}
+                  >
+                    <VerticalVideoList
+                      items={this.state.searchResults}
+                      isLoading={this.state.isLoadingAll}
+                      title={`${
+                        this.state.searchResults.length + ' '
+                      }SEARCH RESULTS`}
+                      showFilter={false}
+                      isPaging={this.state.isPaging}
+                      showType={true}
+                      showArtist={true}
+                      showSort={false}
+                      showLength={false}
+                      filters={this.metaFilters}
+                      currentSort={this.state.currentSort}
+                      changeSort={sort => this.changeSort(sort)}
+                      imageWidth={(onTablet ? 0.225 : 0.3) * width}
+                      applyFilters={filters =>
+                        new Promise(res =>
+                          this.setState({ searchResults: [], page: 1 }, () => {
+                            this.filterQuery = filters;
+                            this.search().then(res);
+                          })
+                        )
+                      }
+                    />
+                  </View>
+                )}
+              {this.state.isLoadingAll && (
+                <View
+                  style={[
+                    styles.centerContent,
+                    {
+                      flex: 1,
+                      marginTop: 10
+                    }
+                  ]}
+                >
+                  <ActivityIndicator
+                    size={onTablet ? 'large' : 'small'}
+                    animating={true}
+                    color={colors.secondBackground}
+                  />
+                </View>
+              )}
+              {!this.state.isLoadingAll && this.state.noResults && (
+                <View
+                  style={{
+                    flex: 1,
+                    borderTopWidth: 1,
+                    borderTopColor: colors.secondBackground
+                  }}
+                >
+                  <Text
+                    style={{
+                      marginTop: 5,
+                      fontSize: onTablet ? 20 : 16,
+                      fontFamily: 'OpenSans-Bold',
+                      color: 'white',
+                      paddingLeft: 10
+                    }}
+                  >
+                    No Results
+                  </Text>
+                </View>
+              )}
+            </View>
+          </ScrollView>
+        </View>
+        <NavigationBar currentPage={'SEARCH'} />
+      </SafeAreaView>
+    );
+  }
 }

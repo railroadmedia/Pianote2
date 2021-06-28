@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Pianote</string>
+    <string name="default_notification_channel_id">pianote-app-channel</string>
 </resources>

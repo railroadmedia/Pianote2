@@ -1,278 +1,186 @@
-/**
- * Support
- */
 import React from 'react';
-import { 
-    View, 
-    Text, 
-    TouchableOpacity,
-    ScrollView,
-    Platform,
+import {
+  View,
+  Text,
+  Linking,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet
 } from 'react-native';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Back from '../../assets/img/svgs/back.svg';
+import Intercom from 'react-native-intercom';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import DeviceInfo from 'react-native-device-info';
+import { SafeAreaView } from 'react-navigation';
+import { goBack } from '../../../AppNavigator';
+import { connect } from 'react-redux';
 
-export default class Support extends React.Component {
-    static navigationOptions = {header: null};
-    constructor(props) {
-        super(props);
-        this.state = {
-        }
-    }
+const isTablet = global.onTablet;
 
+class Support extends React.Component {
+  componentDidMount = async () => {
+    const { id, email, phone_number, display_name } = this.props.user;
+    await Intercom.registerIdentifiedUser({
+      userId: 'musora_' + id.toString()
+    });
+    await Intercom.updateUser({
+      email: email,
+      phone: phone_number ? phone_number.toString() : '',
+      user_id: 'musora_' + id.toString(),
+      name: display_name,
+      custom_attributes: {
+        app_build_number: '0.0.' + DeviceInfo.getBuildNumber()
+      }
+    });
+    Intercom.addEventListener(
+      Intercom.Notifications.UNREAD_COUNT,
+      this.onUnreadChange
+    );
+    Intercom.addEventListener(
+      Intercom.Notifications.WINDOW_DID_HIDE,
+      this.onUnreadChange
+    );
+    Intercom.handlePushMessage();
+  };
 
-    render() {
-        return (
-            <View styles={{flex: 1, alignSelf: 'stretch'}}>
-                <View
-                    style={{
-                        height: fullHeight - navHeight,
-                        alignSelf: 'stretch',
-                    }}
-                >
-                    <View key={'contentContainer'}
-                        style={{flex: 1}}
-                    >
-                        <View key={'buffer'}
-                            style={{
-                                height: (isNotch) ? 15*factorVertical : 0,
-                            }}
-                        >
-                        </View>
-                        <View key={'header'}
-                            style={[
-                                styles.centerContent, {
-                                flex: 0.1,
-                                borderBottomColor: '#ececec',
-                                borderBottomWidth: 1*factorRatio,
-                            }]}
-                        >
-                            <View key={'goback'}
-                                style={[
-                                    styles.centerContent, {
-                                    position: 'absolute',
-                                    left: 0, 
-                                    bottom: 0*factorRatio,
-                                    height: 50*factorRatio,
-                                    width: 50*factorRatio,
-                                }]}
-                            >
-                                <TouchableOpacity
-                                    onPress={() => this.props.navigation.goBack()}
-                                    style={[
-                                        styles.centerContent, {
-                                        height: '100%',
-                                        width: '100%',
-                                    }]}
-                                >
-                                    <EntypoIcon
-                                        name={'chevron-thin-left'}
-                                        size={22.5*factorRatio}
-                                        color={'black'}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={{flex: 0.66}}/>
-                            <Text
-                                style={{
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontWeight: (Platform.OS == 'ios') ? '600': 'bold',
-                                    fontSize: 20*factorRatio,
-                                }}
-                            >
-                                Support
-                            </Text>
-                            <View style={{flex: 0.33}}/>
-                        </View>
-                        <View key={'info'}
-                            style={{flex: 1}}
-                        >
-                            <View key={'text'}
-                                style={{
-                                    paddingLeft: fullWidth*0.05,
-                                    paddingRight: fullWidth*0.05,
-                                }}
-                            >
-                                <Text 
-                                    style={{
-                                        fontSize: 15.5*factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
-                                    }}
-                                >
-                                    Lorem ipsum dolor sit amet, consecteur aclipsing elit. In facilisis orci felis, ac mollis, tellius dignissim ut. 
-                                </Text>
-                                <View style={{height: 15*factorVertical}}/>
-                                <Text 
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 15.5*factorRatio,
-                                    }}
-                                >
-                                    Lorem ipsum dolor sit amet, consecteur aclipsing elit. In facilisis orci felis, ac mollis, tellius dignissim ut. 
-                                    Lorem ipsum dolor sit amet, consecteur aclipsing elit. In facilisis orci felis, ac mollis, tellius dignissim ut. 
-                                </Text>
-                            </View>
-                            <View style={{height: 15*factorVertical}}/>
-                            <View key={'buttons'}>
-                                <View key={'chatSupport'}
-                                    style={{
-                                        height: fullHeight*0.075,
-                                        width: '100%',
-                                        flexDirection: 'row',
-                                    }}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <TouchableOpacity
-                                        style={[
-                                            styles.centerContent, {
-                                            height: '100%',
-                                            width: '80%',
-                                            borderRadius: 200,
-                                            backgroundColor: '#fb1b2f',
-                                        }]}
-                                    >
-                                        <Text
-                                            style={{
-                                                fontFamily: 'OpenSans-Regular',
-                                                fontSize: 14*factorRatio,
-                                                fontWeight: (Platform.OS == 'ios') ? '800' : 'bold',
-                                                color: 'white',
-                                            }}
-                                        >
-                                            LIVE CHAT SUPPORT
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <View style={{flex: 1}}/>
-                                </View>
-                                <View style={{height: fullHeight*0.01}}/>
-                                <View key={'emailSupport'}
-                                    style={{
-                                        height: fullHeight*0.075,
-                                        width: '100%',
-                                        flexDirection: 'row',
-                                    }}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <TouchableOpacity
-                                        style={[
-                                            styles.centerContent, {
-                                            height: '100%',
-                                            width: '80%',
-                                            borderRadius: 200,
-                                            backgroundColor: '#fb1b2f',
-                                        }]}
-                                    >
-                                        <Text
-                                            style={{
-                                                fontFamily: 'OpenSans-Regular',
-                                                fontSize: 14*factorRatio,
-                                                fontWeight: (Platform.OS == 'ios') ? '800' : 'bold',
-                                                color: 'white',
-                                            }}
-                                        >
-                                            EMAIL SUPPORT
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <View style={{flex: 1}}/>
-                                </View>
-                                <View style={{height: fullHeight*0.01}}/>
-                                <View key={'phoneSupport'}
-                                    style={{
-                                        height: fullHeight*0.075,
-                                        width: '100%',
-                                        flexDirection: 'row',
-                                    }}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <TouchableOpacity
-                                        style={[
-                                            styles.centerContent, {
-                                            height: '100%',
-                                            width: '80%',
-                                            borderRadius: 200,
-                                            backgroundColor: '#fb1b2f',
-                                        }]}
-                                    >
-                                        <Text
-                                            style={{
-                                                fontFamily: 'OpenSans-Regular',
-                                                fontSize: 14*factorRatio,
-                                                fontWeight: (Platform.OS == 'ios') ? '800' : 'bold',
-                                                color: 'white',
-                                            }}
-                                        >
-                                            PHONE SUPPORT
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <View style={{flex: 1}}/>
-                                </View>
-                            </View>
-                            <View style={{height: 15*factorVertical}}/>
-                            <View key={'email'}>
-                                <View style={{height: 25*factorRatio}}/>
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 14*factorRatio,
-                                        fontWeight: '600',
-                                        opacity: 0.8,
-                                        color: 'grey',
-                                        textAlign: 'center',
-                                    }}
-                                >
-                                    EMAIL
-                                </Text>
-                                <View style={{height: 5*factorRatio}}/>
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 13.5*factorRatio,
-                                        textAlign: 'center',
-                                    }}
-                                >
-                                    support@musora.com
-                                </Text>
-                                <View style={{height: 20*factorRatio}}/>
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 14*factorRatio,
-                                        fontWeight: '600',
-                                        opacity: 0.8,
-                                        color: 'grey',
-                                        textAlign: 'center',
-                                    }}
-                                >
-                                    PHONE
-                                </Text>
-                                <View style={{height: 5*factorRatio}}/>
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 13.5*factorRatio,
-                                        textAlign: 'center',
-                                    }}
-                                >
-                                    1-800-439-8921
-                                </Text>
-                                <View style={{height: 5*factorRatio}}/>
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 13.5*factorRatio,
-                                        textAlign: 'center',
-                                    }}
-                                >
-                                    1-604-921-6721
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
-                    <NavigationBar
-                        currentPage={'PROFILE'}
-                    />
-                </View>
-            </View>
-        )
-    }
+  componentWillUnmount() {
+    Intercom.removeEventListener(
+      Intercom.Notifications.UNREAD_COUNT,
+      this.onUnreadChange
+    );
+    Intercom.removeEventListener(
+      Intercom.Notifications.WINDOW_DID_HIDE,
+      this.onUnreadChange
+    );
+  }
+
+  onUnreadChange = event => console.log(event);
+
+  onIntercomPress = () => Intercom.displayMessenger();
+
+  render() {
+    return (
+      <SafeAreaView style={styles.mainContainer}>
+        <View style={[styles.centerContent, { flex: 0.07 }]}>
+          <View
+            style={[
+              styles.centerContent,
+              {
+                position: 'absolute',
+                left: 0,
+                paddingLeft: 10,
+                bottom: 0,
+                height: 50,
+                width: 50
+              }
+            ]}
+          >
+            <TouchableOpacity
+              onPress={() => goBack()}
+              style={[
+                styles.centerContent,
+                {
+                  height: '100%',
+                  width: '100%'
+                }
+              ]}
+            >
+              <Back
+                width={backButtonSize}
+                height={backButtonSize}
+                fill={colors.secondBackground}
+              />
+            </TouchableOpacity>
+          </View>
+          <Text
+            style={[styles.childHeaderText, { color: colors.secondBackground }]}
+          >
+            Support
+          </Text>
+        </View>
+        <ScrollView style={{ flex: 1 }}>
+          <TouchableOpacity
+            onPress={() => this.onIntercomPress()}
+            style={[
+              styles.centerContent,
+              localStyles.button,
+              { marginTop: '30%' }
+            ]}
+          >
+            <Text style={localStyles.buttonText}>LIVE CHAT SUPPORT</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => Linking.openURL('mailto:support@musora.com')}
+            style={[styles.centerContent, localStyles.button]}
+          >
+            <Text style={localStyles.buttonText}>EMAIL SUPPORT</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => Linking.openURL(`tel:${'18004398921'}`)}
+            style={[styles.centerContent, localStyles.button]}
+          >
+            <Text style={localStyles.buttonText}>PHONE SUPPORT</Text>
+          </TouchableOpacity>
+          <Text
+            style={[
+              localStyles.phoneEmailText,
+              {
+                padding: 10,
+                paddingTop: 20
+              }
+            ]}
+          >
+            EMAIL
+          </Text>
+          <Text style={localStyles.phoneNumberEmailAddress}>
+            support@musora.com
+          </Text>
+          <Text style={localStyles.phoneEmailText}>PHONE</Text>
+          <Text style={localStyles.phoneNumberEmailAddress}>
+            1-800-439-8921
+          </Text>
+          <Text style={localStyles.phoneNumberEmailAddress}>
+            1-604-855-7605
+          </Text>
+        </ScrollView>
+        <NavigationBar currentPage={'PROFILE'} pad={true} />
+      </SafeAreaView>
+    );
+  }
 }
+
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+export default connect(mapStateToProps, null)(Support);
+
+const localStyles = StyleSheet.create({
+  button: {
+    width: '80%',
+    borderRadius: 200,
+    backgroundColor: '#fb1b2f',
+    alignSelf: 'center',
+    marginVertical: 5
+  },
+  buttonText: {
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: isTablet ? 20 : 16,
+    color: 'white',
+    paddingVertical: 15
+  },
+  phoneEmailText: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: isTablet ? 18 : 14,
+    color: '#445f73',
+    textAlign: 'center',
+    padding: 10
+  },
+  phoneNumberEmailAddress: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: isTablet ? 18 : 14,
+    textAlign: 'center',
+    color: 'white',
+    padding: 5
+  }
+});

@@ -1,235 +1,163 @@
-/**
- * NavMenuHeaders
-*/
 import React from 'react';
-import { 
-    View,
-    Text,
-    TouchableOpacity,
-} from 'react-native';
-import { withNavigation } from 'react-navigation';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
+import { Text, TouchableOpacity, StatusBar, Modal } from 'react-native';
+import Icon from '../assets/icons';
+import Pianote from '../assets/img/svgs/pianote.svg';
+import NavigationMenu from '../../src/components/NavigationMenu.js';
+import { NetworkContext } from '../context/NetworkProvider';
+import { SafeAreaView } from 'react-navigation';
+import { navigate } from '../../AppNavigator';
 
-class NavMenuHeaders extends React.Component {
-    static navigationOptions = {header: null};
-    constructor(props) {
-        super(props);
-    }
+export default class NavMenuHeaders extends React.Component {
+  static contextType = NetworkContext;
+  constructor(props) {
+    super(props);
+    this.state = { showModalMenu: false };
+  }
 
-    render = () => {
-        return (
-            <View 
-                style={[
-                    styles.centerContent, {
-                    top: this.props.pxFromTop,
-                    position: 'absolute',
-                    flexDirection: 'row',
-                    left: 0,
-                    backgroundColor: 'transparent',
-                    zIndex: 3,
-                    elevation: 3,
-                }]}
-            >
-                {!this.props.isHome && (
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        width: fullWidth,
-                        zIndex: 3,
-                        backgroundColor: 'transparent',
-                        elevation: 3,
-                    }}
-                >
-                    <View
-                        style={{
-                            height: 40*factorHorizontal,
-                            width: 0.33*fullWidth,
-                            backgroundColor: 'transparent',
-                            elevation: 3,
-                        }}
-                    >
-                        <TouchableOpacity
-                            onPress={() => this.props.navigation.navigate('HOME')}
-                            style={[
-                                styles.centerContent, {
-                                height: '100%',
-                                width: '100%',
-                            }]}
-                        >
-                            <View style={{flex: 1}}/>
-                            <Pianote
-                                height={30*factorHorizontal}
-                                width={fullWidth*0.25}
-                                fill={'#fb1b2f'}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                    <TouchableOpacity
-                        onPress={() => this.props.pressLeftHeader()}
-                        style={{flexDirection: 'row'}}
-                    >
-                        <View>
-                            <View style={{flex: 1}}/>
-                            <Text
-                                style={{
-                                    fontSize: 18*factorRatio,
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '900',
-                                    color: 'white',
-                                }}
-                            >
-                                {this.props.leftHeader}{' '}
-                            </Text>
-                            <View style={{flex: 0.2}}/>
-                        </View>
-                        <View>
-                            <View style={{flex: 1}}/>
-                            <EntypoIcon
-                                size={15*factorRatio}
-                                color={'white'}
-                                name={'chevron-thin-down'}
-                            />
-                            <View style={{flex: 0.15}}/>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => this.props.pressRightHeader()}
-                        style={{flexDirection: 'row'}}
-                    >
-                        <View>
-                            <View style={{flex: 1}}/>
-                            <Text
-                                style={{
-                                    fontSize: 14*factorRatio,
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '900',
-                                    color: 'white',
-                                }}
-                            >
-                                {'  '} {this.props.rightHeader}{' '}
-                            </Text>
-                            <View style={{flex: 0.2}}/>
-                        </View>
-                        <View>
-                            <View style={{flex: 1}}/>
-                            <EntypoIcon
-                                size={15*factorRatio}
-                                color={'white'}
-                                name={'chevron-thin-down'}
-                            />
-                            <View style={{flex: 0.15}}/>
-                        </View>
-                    </TouchableOpacity>
-                    <View style={{flex: 1}}/>
-                </View>
-                )}
-                
-                {this.props.isHome && (
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        width: fullWidth,
-                        zIndex: 3,
-                    }}
-                >
-                    <View
-                        style={{
-                            position: 'relative',
-                            left: 0,
-                            bottom: 0,
-                            height: 40*factorHorizontal,
-                            width: 0.33*fullWidth,
-                        }}
-                    >
-                        <TouchableOpacity
-                            onPress={() => this.props.navigation.navigate('HOME')}
-                            style={[
-                                styles.centerContent, {
-                                height: '100%',
-                                width: '100%',
-                            }]}
-                        >
-                            <View style={{flex: 1}}/>
-                            <Pianote
-                                height={30*factorHorizontal}
-                                width={fullWidth*0.25}
-                                fill={'#fb1b2f'}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                    <TouchableOpacity
-                        onPress={() => {
-                            this.props.navigation.navigate('LESSONS')
-                        }}
-                        style={{flexDirection: 'row'}}
-                    >
-                        <View>
-                            <View style={{flex: 1}}/>
-                            <Text
-                                style={{
-                                    fontSize: 16*factorRatio,
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '900',
-                                    color: 'white',
-                                }}
-                            >
-                                LESSONS{' '}
-                            </Text>
-                            <View style={{flex: 0.2}}/>
-                        </View>
-                    </TouchableOpacity>
-                    <View style={{flex: 1}}/>
-                    <TouchableOpacity
-                        onPress={() => {
-                            this.props.navigation.navigate('PACKS')
-                        }}
-                        style={{flexDirection: 'row'}}
-                    >
-                        <View>
-                            <View style={{flex: 1}}/>
-                            <Text
-                                style={{
-                                    fontSize: 16*factorRatio,
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '900',
-                                    color: 'white',
-                                }}
-                            >
-                                PACKS{' '}
-                            </Text>
-                            <View style={{flex: 0.2}}/>
-                        </View>
-                    </TouchableOpacity>
-                    <View style={{flex: 1}}/>
-                    <TouchableOpacity
-                        onPress={() => {
-                            this.props.navigation.navigate('MYLIST')
-                        }}
-                        style={{flexDirection: 'row'}}
-                    >
-                        <View>
-                            <View style={{flex: 1}}/>
-                            <Text
-                                style={{
-                                    fontSize: 16*factorRatio,
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '900',
-                                    color: 'white',
-                                }}
-                            >
-                                MY LIST{' '}
-                            </Text>
-                            <View style={{flex: 0.2}}/>
-                        </View>
-                    </TouchableOpacity>
-                    <View style={{flex: 1}}/>
-                </View>
-                )}
-            </View>
-        )
-    }
+  render = () => {
+    return (
+      <SafeAreaView
+        forceInset={{ top: 'always' }}
+        style={{
+          flexDirection: 'row',
+          backgroundColor: this.props.isMethod
+            ? 'black'
+            : colors.mainBackground,
+          width: '100%',
+          padding: 10,
+          justifyContent: 'space-between'
+        }}
+      >
+        <StatusBar
+          backgroundColor={
+            this.props.isMethod ? 'black' : colors.mainBackground
+          }
+          barStyle={'light-content'}
+        />
+        <TouchableOpacity
+          onPress={() => {
+            !this.context.isConnected
+              ? this.context.showNoConnectionAlert()
+              : navigate(isPackOnly ? 'PACKS' : 'LESSONS');
+          }}
+          style={{
+            height: onTablet ? 45 : 30,
+            width: onTablet ? 135 : 88
+          }}
+        >
+          <Pianote fill={colors.pianoteRed} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.centerContent,
+            {
+              flexDirection: 'row',
+              paddingRight: 10,
+              flex: 1,
+              justifyContent: 'flex-end'
+            }
+          ]}
+          onPress={() => {
+            !this.context.isConnected
+              ? this.context.showNoConnectionAlert()
+              : isPackOnly
+              ? expirationDate
+                ? navigate('MEMBERSHIPEXPIRED')
+                : navigate('NEWMEMBERSHIP', {
+                    data: { type: 'PACKONLY' }
+                  })
+              : this.setState({ showModalMenu: true });
+          }}
+        >
+          <Text
+            numberOfLines={1}
+            style={{
+              fontSize: onTablet ? 20 : 14,
+              fontFamily: 'OpenSans-ExtraBold',
+              color:
+                this.props.currentPage === 'LESSONS' || this.props.isMethod
+                  ? 'white'
+                  : colors.secondBackground
+            }}
+          >
+            LESSONS{' '}
+          </Text>
+          <Icon.Entypo
+            name={'chevron-down'}
+            color={
+              this.props.currentPage === 'LESSONS' || this.props.isMethod
+                ? 'white'
+                : colors.secondBackground
+            }
+            size={onTablet ? 26 : 18}
+            style={{ marginLeft: -2.5 }}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.centerContent, { paddingRight: 10 }]}
+          onPress={() => {
+            !this.context.isConnected
+              ? this.context.showNoConnectionAlert()
+              : navigate('PACKS');
+          }}
+        >
+          <Text
+            numberOfLines={1}
+            style={{
+              fontSize: onTablet ? 20 : 14,
+              fontFamily: 'OpenSans-ExtraBold',
+              color:
+                this.props.currentPage === 'PACKS' || this.props.isMethod
+                  ? 'white'
+                  : colors.secondBackground
+            }}
+          >
+            PACKS{' '}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            !this.context.isConnected
+              ? this.context.showNoConnectionAlert()
+              : navigate('MYLIST');
+          }}
+          style={styles.centerContent}
+        >
+          <Text
+            numberOfLines={1}
+            style={{
+              fontSize: onTablet ? 20 : 14,
+              shadowOpacity: 0.3,
+              fontFamily: 'OpenSans-Regular',
+              fontFamily: 'OpenSans-ExtraBold',
+              color:
+                this.props.currentPage === 'MYLIST' || this.props.isMethod
+                  ? 'white'
+                  : colors.secondBackground
+            }}
+          >
+            MY LIST{' '}
+          </Text>
+        </TouchableOpacity>
+        <Modal
+          visible={this.state.showModalMenu}
+          transparent={true}
+          style={styles.modalContainer}
+          animation={'slideInUp'}
+          animationInTiming={250}
+          animationOutTiming={250}
+          coverScreen={true}
+          hasBackdrop={false}
+          onBackButtonPress={() => this.setState({ showModalMenu: false })}
+        >
+          <NavigationMenu
+            isMethod={this.props.isMethod}
+            onClose={e => this.setState({ showModalMenu: e })}
+            menu={this.state.menu}
+            parentPage={this.props.parentPage}
+          />
+        </Modal>
+      </SafeAreaView>
+    );
+  };
 }
-
-
-export default withNavigation(NavMenuHeaders);

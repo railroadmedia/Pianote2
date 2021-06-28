@@ -1,292 +1,324 @@
-/**
- * Packs
- */
 import React from 'react';
-import { 
-    View,
-    TouchableOpacity,
+import {
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  Dimensions,
+  ImageBackground
 } from 'react-native';
-import Modal from 'react-native-modal';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import FastImage from 'react-native-fast-image';
-import StartIcon from 'Pianote2/src/components/StartIcon.js';
-import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
-import Songs500 from 'Pianote2/src/assets/img/svgs/500SongsLogo.svg';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
-import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
-import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
-import SightReading from 'Pianote2/src/assets/img/svgs/sightReadingLogo.svg';
-import FasterFingers from 'Pianote2/src/assets/img/svgs/fasterFingersLogo.svg';
+import LongButton from '../../components/LongButton';
+import RestartCourse from '../../modals/RestartCourse';
+import NavigationBar from '../../components/NavigationBar';
+import NavMenuHeaders from '../../components/NavMenuHeaders';
+import GradientFeature from '../../components/GradientFeature';
+import { resetProgress } from '../../services/UserActions';
+import packsService from '../../services/packs.service';
+import { NetworkContext } from '../../context/NetworkProvider';
+import Orientation from 'react-native-orientation-locker';
+import { cacheAndWritePacks } from '../../redux/PacksCacheActions';
+import { navigate } from '../../../AppNavigator';
 
-export default class Packs extends React.Component {
-    static navigationOptions = {header: null};
-    constructor(props) {
-        super(props);
-        this.state = {
-            parentPage: 'PACKS',
-            menu: 'HOME',
-            showModalMenu: false,
-            mainImage: null,
-            secondImage: null,
-            thirdImage: null,
-            currentPack: 'FASTER FINGERS'
-        }
+let greaterWDim;
+class Packs extends React.Component {
+  static contextType = NetworkContext;
+  constructor(props) {
+    super(props);
+    let { packsCache } = props;
+    this.state = {
+      packs: [],
+      id: '',
+      headerPackImg: '',
+      headerPackLogo: '',
+      headerPackUrl: '',
+      headerPackNextLessonUrl: '',
+      headerPackCompleted: false,
+      headerPackStarted: false,
+      refreshing: false,
+      showRestartCourse: false,
+      headerPackImg: '',
+      headerPackLogo: '',
+      headerPackUrl: '',
+      headerPackNextLessonUrl: '',
+      isLandscape:
+        Dimensions.get('window').height < Dimensions.get('window').width,
+      ...this.initialValidData(packsCache, true)
+    };
+    greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
+  }
+
+  componentDidMount() {
+    Orientation.addDeviceOrientationListener(this.orientationListener);
+    this.getData();
+  }
+
+  componentWillUnmount = () =>
+    Orientation.removeDeviceOrientationListener(this.orientationListener);
+
+  orientationListener = o => {
+    if (o === 'UNKNOWN') return;
+    let isLandscape = o.indexOf('LAND') >= 0;
+    if (isiOS) {
+      if (onTablet) this.setState({ isLandscape });
+    } else {
+      Orientation.getAutoRotateState(isAutoRotateOn => {
+        if (isAutoRotateOn && onTablet) this.setState({ isLandscape });
+      });
     }
+  };
 
+  async getData() {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    const response = await packsService.allPacks();
+    this.props.cacheAndWritePacks(response);
+    this.setState(this.initialValidData(response));
+  }
 
-    componentDidMount() {
-        this.setState({
-            mainImage: require('Pianote2/src/assets/img/imgs/fasterFingers.png'),
-            secondImage: require('Pianote2/src/assets/img/imgs/sightReading.png'),
-            thirdImage: require('Pianote2/src/assets/img/imgs/500Songs.png'),
-        })
+  initialValidData = (content, fromCache) => {
+    return {
+      packs: content?.myPacks,
+      isLoading: false,
+      refreshing: fromCache,
+      showRestartCourse: false,
+      id: content?.topHeaderPack?.id,
+      headerPackImg: content?.topHeaderPack?.thumbnail,
+      headerPackLogo: content?.topHeaderPack?.pack_logo,
+      headerPackUrl: content?.topHeaderPack?.mobile_app_url,
+      headerPackCompleted: content?.topHeaderPack?.completed,
+      headerPackStarted: content?.topHeaderPack?.started,
+      headerPackNextLessonUrl: content?.topHeaderPack?.next_lesson_url
+    };
+  };
+
+  onRestartPack = async () => {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    await resetProgress(this.state.id);
+    this.setState({ refreshing: true, showRestartCourse: false }, () =>
+      this.getData()
+    );
+  };
+
+  getAspectRatio() {
+    let { isLandscape } = this.state;
+    if (onTablet) {
+      if (isLandscape) return 3;
+      return 2;
     }
+    return 1.2;
+  }
 
-
-    render() {
-        return (
-            <View styles={styles.container}>
-                <View
-                    style={{
-                        height: fullHeight - navHeight,
-                        alignSelf: 'stretch',
-                    }}
-                >
-                    <View key={'contentContainer'}
-                        style={{flex: 1}}
-                    >
-                        <NavMenuHeaders
-                            pxFromTop={navPxFromTop}
-                            leftHeader={'PACKS'}
-                            pressLeftHeader={() => {
-                                this.setState({
-                                    parentPage: 'PACKS',
-                                    menu: 'HOME',
-                                    showModalMenu: true,
-                                })
-                            }}
-                            pressRightHeader={() => {
-                                this.setState({
-                                    parentPage: 'ALL PACKS',
-                                    menu: 'PACKS',
-                                    showModalMenu: true,
-                                })
-                            }}
-                            rightHeader={'ALL PACKS'}
-                            isHome={false}
-                        />
-                        <View key={'focusedPack'}
-                            style={{flex: 1}}
-                        >
-                            <GradientFeature
-                                color={'black'}
-                                opacity={1}
-                                height={'60%'}
-                                borderRadius={0}
-                            />
-                            <View key={'image1'}
-                                style={{
-                                    position: 'absolute',
-                                    bottom: 0,
-                                    zIndex: 2,
-                                    elevation: 2,
-                                    flexDirection: 'row',
-                                }}
-                            >
-                                <View style={{flex: 1}}/>
-                                <FasterFingers
-                                    height={250*factorRatio}
-                                    width={250*factorRatio}
-                                />
-                                <View style={{flex: 1}}/>
-                            </View>    
-                            <FastImage
-                                style={{
-                                    flex: 1, 
-                                    alignSelf: 'stretch', 
-                                    backgroundColor: 'black'
-                                }}
-                                source={this.state.mainImage}
-                                resizeMode={FastImage.resizeMode.cover}
-                            />
-                            <View key={'startMoreInfo'}
-                                style={{
-                                    height: (onTablet) ? fullHeight*0.1 : fullHeight*0.09,
-                                    width: fullWidth,
-                                    zIndex: 3,
-                                    elevation: 3,
-                                    backgroundColor: 'transparent',
-                                    position: 'absolute',
-                                    bottom: 0,
-                                }}
-                            >
-                                <StartIcon
-                                    pxFromTop={0}
-                                    pxFromLeft={fullWidth*0.065}
-                                    buttonHeight={(onTablet) ? fullHeight*0.065 : fullHeight*0.053}
-                                    buttonWidth={fullWidth*0.42}
-                                    pressed={() => {
-                                        this.props.navigation.navigate('VIDEOPLAYER')
-                                    }}
-                                />
-                                <MoreInfoIcon
-                                    pxFromTop={0}
-                                    buttonHeight={(onTablet) ? fullHeight*0.065 : fullHeight*0.053}
-                                    pxFromRight={fullWidth*0.065}
-                                    buttonWidth={fullWidth*0.42}
-                                    pressed={() => {
-                                        this.props.navigation.navigate('SINGLEPACK', 
-                                                {'data' : 'FASTER FINGERS'}
-                                            )
-                                    }}
-                                />
-                            </View>
-                        </View>
-                        <View key={'otherPacks'}
-                            style={[
-                                styles.centerContent, {
-                                height: fullWidth*0.45 + fullWidth*0.05,
-                                paddingLeft: fullWidth*0.015,
-                                paddingRight: fullWidth*0.015,
-                                justifyContent: 'space-around',
-                                alignContent: 'space-around', 
-                                flexDirection: 'row',
-                                zIndex: 10,
-                                elevation: 10,
-                            }]}
-                        >
-                            <View key={'altPack1'}
-                                style={{
-                                    height: fullWidth*0.45,
-                                    width: fullWidth*0.45,
-                                    borderRadius: 12.5*factorRatio,
-                                }}
-                            >
-                                <GradientFeature
-                                    color={'black'}
-                                    opacity={0.85}
-                                    height={'60%'}
-                                    borderRadius={12.5*factorRatio}
-                                />
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.props.navigation.navigate(
-                                            'SINGLEPACK', {'data' : 'SIGHT READING'}
-                                        )
-                                    }}
-                                    style={{
-                                        position: 'absolute',
-                                        height: fullWidth*0.45,
-                                        width: fullWidth*0.45,
-                                        zIndex: 4,
-                                        elevation: 4,
-                                    }}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <View style={{flexDirection: 'row'}}>
-                                        <View style={{flex: 1}}/>
-                                        <SightReading
-                                            height={90*factorRatio}
-                                            width={125*factorRatio}
-                                        />
-                                        <View style={{flex: 1}}/>
-                                    </View>
-                                </TouchableOpacity>
-                                <View
-                                    style={{
-                                        height: '100%',
-                                        width: '100%',
-                                        zIndex: 2,
-                                        elevation: 2,
-                                    }}
-                                >
-                                    <FastImage
-                                        style={{flex: 1, borderRadius: 12.5*factorRatio, backgroundColor: 'black'}}
-                                        source={this.state.secondImage}
-                                        resizeMode={FastImage.resizeMode.cover}
-                                    />
-                                </View>
-                            </View>
-                            <View key={'altPack2'}
-                                style={{
-                                    height: fullWidth*0.45,
-                                    width: fullWidth*0.45,
-                                    borderRadius: 12.5*factorRatio,
-                                }}
-                            >
-                                <GradientFeature
-                                    color={'black'}
-                                    opacity={0.8}
-                                    height={'60%'}
-                                    borderRadius={12.5*factorRatio}
-                                />
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.props.navigation.navigate(
-                                            'SINGLEPACK', {'data' : '500 SONGS'}
-                                        )
-                                    }}
-                                    style={{
-                                        position: 'absolute',
-                                        zIndex: 2,
-                                        elevation: 2,
-                                        height: fullWidth*0.45,
-                                        width: fullWidth*0.45,  
-                                    }}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <View 
-                                        style={{
-                                            flexDirection: 'row',
-                                        }}
-                                    >
-                                        <View style={{flex: 1}}/>
-                                        <Songs500
-                                            height={100*factorRatio}
-                                            width={100*factorRatio}
-                                        />
-                                        <View style={{flex: 1}}/>
-                                    </View>
-                                </TouchableOpacity>
-                                <View
-                                    style={{
-                                        height: '100%',
-                                        width: '100%',
-                                    }}
-                                >
-                                    <FastImage
-                                        style={{flex: 1, borderRadius: 12.5*factorRatio, backgroundColor: 'black'}}
-                                        source={this.state.thirdImage}
-                                        resizeMode={FastImage.resizeMode.cover}
-                                    />
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                    <NavigationBar
-                        currentPage={'PACKS'}
-                    />
-                </View>
-                <Modal key={'navMenu'}
-                    isVisible={this.state.showModalMenu}
-                    style={{
-                        margin: 0, 
-                        height: fullHeight,
-                        width: fullWidth,
-                    }}
-                    animation={'slideInUp'}
-                    animationInTiming={250}
-                    animationOutTiming={250}
-                    coverScreen={true}
-                    hasBackdrop={false}
-                >
-                    <NavigationMenu
-                        onClose={(e) => this.setState({showModalMenu: e})}
-                        menu={this.state.menu}
-                        parentPage={this.state.parentPage}
-                    />
-                </Modal>
+  render() {
+    return (
+      <View style={styles.packsContainer}>
+        <NavMenuHeaders currentPage={'PACKS'} />
+        <FlatList
+          windowSize={10}
+          style={{ flex: 1 }}
+          initialNumToRender={5}
+          maxToRenderPerBatch={10}
+          numColumns={3}
+          removeClippedSubviews={true}
+          keyExtractor={item => item.id}
+          data={this.state.packs}
+          keyboardShouldPersistTaps='handled'
+          refreshControl={
+            <RefreshControl
+              tintColor={'transparent'}
+              colors={[colors.pianoteRed]}
+              onRefresh={() =>
+                this.setState({ refreshing: true }, () => {
+                  this.getData();
+                })
+              }
+              refreshing={isiOS ? false : this.state.refreshing}
+            />
+          }
+          ListEmptyComponent={() => (
+            <View
+              style={[
+                styles.centerContent,
+                {
+                  flex: 1
+                }
+              ]}
+            >
+              <ActivityIndicator
+                size={onTablet ? 'large' : 'small'}
+                animating={true}
+                color={'white'}
+              />
             </View>
-        )
-    }
+          )}
+          ListHeaderComponent={() => (
+            <>
+              {isiOS && this.state.refreshing && (
+                <ActivityIndicator
+                  size='small'
+                  style={{ padding: 20 }}
+                  color={colors.secondBackground}
+                />
+              )}
+              <ImageBackground
+                resizeMode={'cover'}
+                style={{
+                  width: '100%',
+                  aspectRatio: this.getAspectRatio(),
+                  justifyContent: 'flex-end'
+                }}
+                source={{
+                  uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
+                    greaterWDim * 2
+                  )},ar_2,c_fill,g_face/${this.state.headerPackImg}`
+                }}
+              >
+                <GradientFeature
+                  color={'blue'}
+                  opacity={1}
+                  height={'100%'}
+                  borderRadius={0}
+                  zIndex={0}
+                  elevation={0}
+                />
+                <FastImage
+                  style={{
+                    height: greaterWDim / 15,
+                    width: '100%',
+                    zIndex: 6,
+                    marginBottom: onTablet ? '3%' : '4.5%'
+                  }}
+                  source={{
+                    uri: `https://cdn.musora.com/image/fetch/f_png,q_auto:eco,w_${Math.round(
+                      greaterWDim * 2
+                    )}/${this.state.headerPackLogo}`
+                  }}
+                  resizeMode={FastImage.resizeMode.contain}
+                />
+                <View
+                  style={[
+                    styles.heightButtons,
+                    {
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginBottom: onTablet ? '5%' : '7.5%'
+                    }
+                  ]}
+                >
+                  <View style={{ flex: 1 }} />
+                  <View style={{ width: onTablet ? 200 : '45%' }}>
+                    <LongButton
+                      type={
+                        this.state.headerPackCompleted
+                          ? 'RESET'
+                          : !this.state.headerPackStarted
+                          ? 'START'
+                          : 'CONTINUE'
+                      }
+                      pressed={() => {
+                        if (this.state.headerPackCompleted) {
+                          this.setState({ showRestartCourse: true });
+                        } else {
+                          navigate('VIEWLESSON', {
+                            url: this.state.headerPackNextLessonUrl
+                          });
+                        }
+                      }}
+                    />
+                  </View>
+                  <View style={onTablet ? { width: 10 } : { flex: 0.5 }} />
+                  <View style={{ width: onTablet ? 200 : '45%' }}>
+                    <LongButton
+                      type={'MORE INFO'}
+                      pressed={() => {
+                        navigate('SINGLEPACK', {
+                          url: this.state.headerPackUrl
+                        });
+                      }}
+                    />
+                  </View>
+                  <View style={{ flex: 1 }} />
+                </View>
+              </ImageBackground>
+            </>
+          )}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => {
+                navigate('SINGLEPACK', {
+                  url: item.mobile_app_url
+                });
+              }}
+              style={{
+                width: '33%',
+                paddingLeft: 10,
+                paddingTop: 10
+              }}
+            >
+              <FastImage
+                style={{
+                  borderRadius: 10,
+                  width: '100%',
+                  aspectRatio: 0.7
+                }}
+                source={{
+                  uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,c_thumb,w_${
+                    ((greaterWDim / 3) >> 0) * 2
+                  },ar_0.7/${item.thumbnail}`
+                }}
+                resizeMode={FastImage.resizeMode.cover}
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    width: '100%',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    paddingBottom: 10
+                  }}
+                >
+                  <View />
+                  <View style={{ width: '100%' }}>
+                    <FastImage
+                      style={{
+                        width: '90%',
+                        alignSelf: 'center',
+                        height: 2 * (greaterWDim / 50)
+                      }}
+                      source={{
+                        uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
+                          (((0.9 * greaterWDim) / 3) >> 0) * 2
+                        }/${item.pack_logo}`
+                      }}
+                      resizeMode={FastImage.resizeMode.contain}
+                    />
+                  </View>
+                </View>
+              </FastImage>
+            </TouchableOpacity>
+          )}
+        />
+        <NavigationBar currentPage={'PACKS'} />
+        <RestartCourse
+          isVisible={this.state.showRestartCourse}
+          onBackButtonPress={() => this.setState({ showRestartCourse: false })}
+          hideRestartCourse={() => {
+            this.setState({
+              showRestartCourse: false
+            });
+          }}
+          type='pack'
+          onRestart={() => this.onRestartPack()}
+        />
+      </View>
+    );
+  }
 }
+const mapStateToProps = state => ({ packsCache: state.packsCache });
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ cacheAndWritePacks }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Packs);

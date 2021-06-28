@@ -1,610 +1,360 @@
-/**
- * CreateAccount
- */
 import React from 'react';
-import { 
-    View, 
-    Text, 
-    TextInput, 
-    TouchableOpacity,
-    Keyboard,
-    Animated,
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Alert,
+  ScrollView,
+  StyleSheet
 } from 'react-native';
-import Modal from 'react-native-modal';
+import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
-import PasswordMatch from '../../modals/PasswordMatch';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
-import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
-import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
-import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
+import Back from '../../assets/img/svgs/back';
+import GradientFeature from '../../components/GradientFeature.js';
+import PasswordHidden from '../../assets/img/svgs/passwordHidden.svg';
+import PasswordVisible from '../../assets/img/svgs/passwordVisible.svg';
+import { signUp, getUserData } from '../../services/UserDataAuth';
+import { NetworkContext } from '../../context/NetworkProvider';
+import CreateAccountStepCounter from './CreateAccountStepCounter';
+import { goBack, navigate } from '../../../AppNavigator';
 
-var showListener = (Platform.OS == 'ios') ? 'keyboardWillShow' : 'keyboardDidShow'
-var hideListener = (Platform.OS == 'ios') ? 'keyboardWillHide' : 'keyboardDidHide'
+const isTablet = global.onTablet;
 
 export default class CreateAccount extends React.Component {
-    static navigationOptions = {header: null};
-    constructor(props) {
-        super(props);
-        this.state = {
-            pianoteYdelta: new Animated.Value(0.01),
-            forgotYdelta: new Animated.Value(fullHeight*0.075),
-            showCheckEmail: false,
-            showDisplayName: false,
-            showConfirmPassword: false,
-            showPassword: false,
-            step: 2,
-            email: '',
-            password: '',
-            confirmPassword: '',
-        }
-    }
+  static contextType = NetworkContext;
+  constructor(props) {
+    super(props);
+    this.state = {
+      showConfirmPassword: true,
+      showPassword: true,
+      password: '',
+      confirmPassword: '',
+      email: props.route?.params?.email,
+      scrollViewContentFlex: { flex: 1 }
+    };
+  }
 
+  savePassword = async () => {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    if (this.state.password === this.state.confirmPassword) {
+      if (this.state.password.length > 7) {
+        if (this.props.route?.params?.purchase) {
+          let response = await signUp(
+            this.state.email,
+            this.state.password,
+            this.props.route?.params?.purchase,
+            null,
+            this.props.route?.params?.purchase
+          );
+          console.log(response);
+          if (response.meta) {
+            await AsyncStorage.multiSet([
+              ['email', encodeURIComponent(this.state.email)],
+              ['password', encodeURIComponent(this.state.password)]
+            ]);
 
-    componentDidMount() {
-        this.keyboardDidShowListener = Keyboard.addListener(
-            showListener, this._keyboardDidShow
-        )
-        this.keyboardDidHideListener = Keyboard.addListener(
-            hideListener, this._keyboardDidHide
-        )
-    }
-
-
-    componentWillUnmount() {
-        this.keyboardDidShowListener.remove();
-        this.keyboardDidHideListener.remove();
-    }
-  
-
-    _keyboardDidShow = async () => {
-        if(Platform.OS == 'ios') {
-            Animated.parallel([
-                Animated.timing(
-                    this.state.forgotYdelta, {
-                        toValue: fullHeight*0.365,
-                        duration: 250,
-                    }
-                ),
-                Animated.timing(
-                    this.state.pianoteYdelta, {
-                        toValue: fullHeight*0.125,
-                        duration: 250,
-                    }
-                )
-            ]).start()
-        } else {
-            Animated.parallel([
-                Animated.timing(
-                    this.state.forgotYdelta, {
-                        toValue: fullHeight*0,
-                        duration: 250,
-                    }
-                ),
-                Animated.timing(
-                    this.state.pianoteYdelta, {
-                        toValue: fullHeight*0.17,
-                        duration: 250,
-                    }
-                )
-            ]).start()
-        }
-    }
-  
-
-    _keyboardDidHide = async () => {
-        Animated.parallel([
-            Animated.timing(
-                this.state.forgotYdelta, {
-                    toValue: fullHeight*0.075,
-                    duration: 250,
+            let userData = await getUserData();
+            let currentDate = new Date().getTime() / 1000;
+            let userExpDate =
+              new Date(userData.expirationDate).getTime() / 1000;
+            console.log(currentDate, userExpDate);
+            if (userData.isLifetime || currentDate < userExpDate) {
+              navigate('CREATEACCOUNT3', {
+                data: {
+                  email: this.state.email,
+                  password: this.state.password
                 }
-            ),
-            Animated.timing(
-                this.state.pianoteYdelta, {
-                    toValue: 0.01,
-                    duration: 250,
-                }
-            )
-        ]).start()
-    }
-
-
-    login = async () => {
-        const { response, error } = await userLogin({
-            email:this.state.email,
-            password:this.state.password,
-        });
-    
-        if(error) {
-            console.error(error);
-        } else {
-            console.log(response.data.token)
-        }
-    }
-
-
-    savePassword = async () => {
-        if(this.state.password == this.state.confirmPassword) {
-            if(this.state.password.length > 7) {
-                await AsyncStorage.setItem('password', this.state.password)
-                await this.props.navigation.navigate('NEWMEMBERSHIP', {'type':'SIGNUP'})
+              });
+            } else {
+              navigate('MEMBERSHIPEXPIRED', {
+                email: this.state.email,
+                password: this.state.password
+              });
             }
+          } else {
+            let { title, detail } = response.errors[0];
+            Alert.alert(title, detail, [{ text: 'OK' }], {
+              cancelable: false
+            });
+          }
         } else {
-            this.setState({showPasswordMatch: true})
+          navigate('NEWMEMBERSHIP', {
+            data: {
+              type: 'SIGNUP',
+              email: this.state.email,
+              password: this.state.password
+            }
+          });
         }
+      }
     }
+  };
 
-
-    render() {
-        return (
-            <View 
-                styles={[
-                    styles.centerContent, {
-                    flex: 1, 
-                    alignSelf: 'stretch',
-                }]}
+  render() {
+    return (
+      <FastImage
+        style={{ flex: 1 }}
+        resizeMode={FastImage.resizeMode.cover}
+        source={require('../../../src/assets/img/imgs/backgroundHands.png')}
+      >
+        <GradientFeature
+          zIndex={0}
+          opacity={0.5}
+          elevation={0}
+          color={'dark'}
+          height={'100%'}
+          borderRadius={0}
+        />
+        <SafeAreaView style={{ flex: 1 }}>
+          <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={`${isiOS ? 'padding' : ''}`}
+          >
+            <TouchableOpacity
+              onPress={() => goBack()}
+              style={localStyles.createAccountContainer}
             >
-                <GradientFeature
-                    color={'dark'}
-                    opacity={0.5}
-                    height={'100%'}
-                    borderRadius={0}
-                />
-                <Animated.View key={'progress'}
-                    style={{
-                        position: 'absolute',
-                        bottom: this.state.forgotYdelta,
-                        height: fullHeight*0.06,
-                        width: fullWidth,
-                        zIndex: 4,
-                        elevation: 4,
-                        flexDirection: 'row',
-                    }}
-                >
-                    <View style={{flex: 1}}/>
-                    <View
-                        style={{
-                            height: '100%',
-                            width: '92.5%',
-                            borderRadius: 40*factorRatio,
-                            borderWidth: 2*factorRatio,
-                            backgroundColor: 'rgba(23, 24, 25, 0.6)',
-                            flexDirection: 'row',
-                        }}
-                    >
-                        <View key={'step1'}
-                            style={{
-                                flex: 1.1,
-                                height: '100%',
-                                borderTopLeftRadius: 40*factorRatio,
-                                borderBottomLeftRadius: 40*factorRatio,
-                                borderTopRightRadius: (this.state.step == 1) ? 40*factorRatio : 0,
-                                borderBottomRightRadius: (this.state.step == 1) ? 40*factorRatio : 0,
-                                backgroundColor: 'black',
-                                zIndex: 2,
-                                elevation: 2,
-                            }}
-                        >
-                            <View
-                                style={[
-                                    styles.centerContent, {
-                                    flex: 1,
-                                    borderTopRightRadius: (this.state.step == 1) ? 40*factorRatio : 0,
-                                    borderBottomRightRadius: (this.state.step == 1) ? 40*factorRatio : 0,
-                                }]}
-                            >
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 12*factorRatio,
-                                        fontWeight: '400',
-                                        textAlign: 'center',
-                                        color: 'white',
-                                    }}    
-                                >
-                                    Step 1:
-                                </Text>
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 12*factorRatio,
-                                        fontWeight: '600',
-                                        textAlign: 'center',
-                                        color: 'white',
-                                    }}    
-                                >
-                                    EMAIL ADDRESS
-                                </Text>
-                            </View>
-                
-                        </View>
-                        <View key={'step2'}
-                            style={{
-                                flex: 1.1,
-                                borderTopRightRadius: (this.state.step == 1) ? 40*factorRatio : 0,
-                                borderBottomRightRadius: (this.state.step == 1) ? 40*factorRatio : 0,
-                            }}
-                        >
-                            <View
-                                style={[
-                                    styles.centerContent, {
-                                    flex: 1,
-                                    borderTopRightRadius: (this.state.step == 2) ? 40*factorRatio : 0,
-                                    borderBottomRightRadius: (this.state.step == 2) ? 40*factorRatio : 0,
-                                    backgroundColor: (this.state.step > 1) ? 'black' : null,
-                                }]}
-                            >
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 12*factorRatio,
-                                        fontWeight: '400',
-                                        textAlign: 'center',
-                                        color: 'white',
-                                    }}    
-                                >
-                                    Step 2:
-                                </Text>
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 12*factorRatio,
-                                        fontWeight: '600',
-                                        textAlign: 'center',
-                                        color: 'white',
-                                    }}    
-                                >
-                                    SET A PASSWORD
-                                </Text>
-                            </View>
-                   </View>
-                        <View key={'step3'}
-                            style={{
-                                flex: 1,
-                                borderTopRightRadius: (this.state.step == 3) ? 40*factorRatio : 0,
-                                borderBottomRightRadius: (this.state.step == 3) ? 40*factorRatio : 0,
-                            }}
-                        >
-                            <View
-                                style={[
-                                    styles.centerContent, {
-                                    flex: 1,
-                                    borderTopRightRadius: (this.state.step == 3) ? 40*factorRatio : 0,
-                                    borderBottomRightRadius: (this.state.step == 3) ? 40*factorRatio : 0,
-                                    backgroundColor: (this.state.step > 2) ? 'black' : null,
-                                }]}
-                            >
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 12*factorRatio,
-                                        fontWeight: '400',
-                                        textAlign: 'center',
-                                        color: 'white',
-                                    }}    
-                                >
-                                    Step 3:
-                                </Text>
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 12*factorRatio,
-                                        fontWeight: '600',
-                                        textAlign: 'center',
-                                        color: 'white',
-                                    }}    
-                                >
-                                    CHOOSE A PLAN
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={{flex: 1}}/>
-                </Animated.View>
-                <FastImage
-                    style={{
-                        height: fullHeight,
-                        width: fullWidth, 
-                        alignSelf: 'stretch',
-                    }}
-                    source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
-                    resizeMode={FastImage.resizeMode.cover}
-                />
-                
-                <View key={'goBackIcon'}
-                    style={[
-                        styles.centerContent, {
-                        position: 'absolute',
-                        left: 15*factorHorizontal,
-                        top: isNotch ? 40*factorVertical : 30*factorVertical,
-                        height: 50*factorRatio,
-                        width: 50*factorRatio,
-                        zIndex: 10,
-                        elevation: 10,
-                    }]}
-                >
+              <Back
+                width={backButtonSize}
+                height={backButtonSize}
+                fill={'white'}
+              />
+            </TouchableOpacity>
+            <Text
+              style={[styles.modalHeaderText, localStyles.createAccountText]}
+            >
+              Create Account
+            </Text>
+            <View />
+
+            <ScrollView
+              style={{ flex: 1, marginBottom: 40 }}
+              keyboardShouldPersistTaps='handled'
+              contentInsetAdjustmentBehavior='never'
+              contentContainerStyle={this.state.scrollViewContentFlex}
+            >
+              <View style={localStyles.createPasswordContainer}>
+                <Text style={localStyles.createPasswordText}>
+                  Create a password
+                </Text>
+                <View style={localStyles.passInput}>
+                  <TextInput
+                    autoCorrect={false}
+                    onBlur={() =>
+                      this.setState({ scrollViewContentFlex: { flex: 1 } })
+                    }
+                    onFocus={() => this.setState({ scrollViewContentFlex: {} })}
+                    multiline={false}
+                    keyboardAppearance={'dark'}
+                    placeholderTextColor={'grey'}
+                    placeholder={'Password'}
+                    keyboardType={isiOS ? 'email-address' : 'default'}
+                    secureTextEntry={true}
+                    onChangeText={password => this.setState({ password })}
+                    style={localStyles.textinput}
+                  />
+                  {!this.state.showPassword && (
                     <TouchableOpacity
-                        onPress={() => this.props.navigation.goBack()}
-                        style={{
-                            height: '100%',
-                            width: '100%',
-                        }}
+                      style={localStyles.showPassword}
+                      onPress={() =>
+                        this.setState({
+                          showPassword: true
+                        })
+                      }
                     >
-                        <EntypoIcon
-                            name={'chevron-thin-left'}
-                            size={25*factorRatio}
-                            color={'white'}
-                        />
+                      <Text>{this.state.password}</Text>
                     </TouchableOpacity>
-                </View>
-                <View key={'CreateAccount'}
-                    style={[
-                        styles.centerContent, {
-                        position: 'absolute',
-                        top: isNotch ? 40*factorVertical : 30*factorVertical,
-                        width: fullWidth,
-                        zIndex: 5,
-                        elevation: 5,
-                    }]}
-                >
-                    <Text
-                        style={{
-                            fontFamily: 'OpenSans-Regular',
-                            fontSize: 24*factorRatio,
-                            fontWeight: (Platform.OS == 'ios') ? '600' : 'bold',
-                            color: 'white',
-                        }}
-                    >
-                        Create Account
-                    </Text>
-                </View>
-                <Animated.View key={'items'}
-                    style={{
-                        position: 'absolute',
-                        bottom: this.state.pianoteYdelta,
-                        height: fullHeight,
-                        width: fullWidth,
-                        zIndex: 3,
-                        elevation: 3,
+                  )}
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({
+                        showPassword: !this.state.showPassword
+                      });
                     }}
+                    style={localStyles.passwordVisible}
+                  >
+                    {this.state.showPassword ? (
+                      <PasswordHidden />
+                    ) : (
+                      <PasswordVisible />
+                    )}
+                  </TouchableOpacity>
+                </View>
+                <Text
+                  style={[localStyles.createPasswordText, { marginTop: 25 }]}
                 >
-                    <View key={'container'}
-                        style={{
-                            height: fullHeight,
-                            width: fullWidth,
-                            alignItems: 'center',
-                        }}
+                  Confirm password
+                </Text>
+                <View style={localStyles.passInput}>
+                  <TextInput
+                    style={localStyles.textinput}
+                    autoCorrect={false}
+                    onBlur={() =>
+                      this.setState({ scrollViewContentFlex: { flex: 1 } })
+                    }
+                    onFocus={() => this.setState({ scrollViewContentFlex: {} })}
+                    multiline={false}
+                    keyboardAppearance={'dark'}
+                    placeholderTextColor={'grey'}
+                    placeholder={'Confirm Password'}
+                    keyboardType={isiOS ? 'email-address' : 'default'}
+                    secureTextEntry={true}
+                    onChangeText={confirmPassword =>
+                      this.setState({ confirmPassword })
+                    }
+                  />
+                  {!this.state.showConfirmPassword && (
+                    <TouchableOpacity
+                      style={localStyles.showPassword}
+                      onPress={() =>
+                        this.setState({
+                          showConfirmPassword: true
+                        })
+                      }
                     >
-                        <View style={{flex: 0.45,}}/>
-                        <View key={'createPassword'}
-                            style={{
-                                height: 35*factorVertical,
-                                marginBottom: 2*factorVertical,
-                                flexDirection: 'row',
-                                paddingLeft: 20*factorHorizontal,  
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontSize: 19*factorRatio,
-                                    fontWeight: '600',
-                                    textAlign: 'left',
-                                    color: 'white',
-                                }}
-                            >
-                                Create a password
-                            </Text>
-                            <View style={{flex: 1}}/>
-                        </View>
-                        <View key={'pass'}
-                            style={{
-                                height: (Platform.OS == 'android') ? fullHeight*0.07 : fullHeight*0.06,
-                                width: fullWidth*0.9,
-                                borderRadius: 50*factorRatio,
-                                backgroundColor: 'white',
-                                justifyContent: 'center',
-                                paddingLeft: 20*factorHorizontal,
-                                flexDirection: 'row',
-                            }}
-                        >
-                              <TextInput 
-                                autoCorrect={false}
-                                multiline={false}
-                                keyboardAppearance={'dark'}
-                                placeholderTextColor={'grey'}
-                                placeholder={'Password'}
-                                keyboardType={(Platform.OS =='android') ? 'default' : 'email-address'}
-                                secureTextEntry={!this.state.showPassword}
-                                onChangeText={(password) => this.setState({password})}
-                                style={{
-                                    fontSize: 18*factorRatio,
-                                    fontFamily: 'OpenSans-Regular',
-                                    flex: 1,
-                                }}
-                            />
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.setState({showPassword: !this.state.showPassword})
-                                }}
-                                style={[
-                                    styles.centerContent, {
-                                    height: '100%',
-                                    marginRight: 17.5*factorHorizontal,
-                                }]}
-                            >
-                                {!this.state.showPassword && (
-                                <PasswordHidden
-                                    height={22.5*factorRatio}
-                                    width={22.5*factorRatio}
-                                />
-                                )}
-                                {this.state.showPassword && (
-                                <PasswordVisible
-                                    height={22.5*factorRatio}
-                                    width={22.5*factorRatio}
-                                />
-                                )}
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{height: 20*factorVertical}}/>
-                        <View key={'confirmPassword'}
-                            style={{
-                                height: 35*factorVertical,
-                                marginBottom: 2*factorVertical,
-                                flexDirection: 'row',
-                                paddingLeft: 20*factorHorizontal,  
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontSize: 19*factorRatio,
-                                    fontWeight: '600',
-                                    textAlign: 'left',
-                                    color: 'white',
-                                }}
-                            >
-                                Confirm password
-                            </Text>
-                            <View style={{flex: 1}}/>
-                        </View>
-                        <View key={'confirmPass'}
-                            style={{
-                                height: (Platform.OS == 'android') ? fullHeight*0.07 : fullHeight*0.06,
-                                width: fullWidth*0.9,
-                                borderRadius: 50*factorRatio,
-                                backgroundColor: 'white',
-                                justifyContent: 'center',
-                                paddingLeft: 20*factorHorizontal,
-                                flexDirection: 'row',
-                            }}
-                        >
-                              <TextInput 
-                                    autoCorrect={false}
-                                    multiline={false}
-                                    keyboardAppearance={'dark'}
-                                    placeholderTextColor={'grey'}
-                                    placeholder={'Confirm Password'}
-                                    keyboardType={(Platform.OS =='android') ? 'default' : 'email-address'}
-                                    secureTextEntry={!this.state.showConfirmPassword}
-                                    onChangeText={(confirmPassword) => this.setState({confirmPassword})}
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 18*factorRatio,
-                                        flex: 1,
-                                    }}
-                                />
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.setState({showConfirmPassword: !this.state.showConfirmPassword})
-                                }}
-                                style={[
-                                    styles.centerContent, {
-                                    height: '100%',
-                                    marginRight: 10*factorHorizontal,
-                                }]}
-                            >
-                                {!this.state.showPassword && (
-                                <PasswordHidden
-                                    height={22.5*factorRatio}
-                                    width={22.5*factorRatio}
-                                />
-                                )}
-                                {this.state.showPassword && (
-                                <PasswordVisible
-                                    height={22.5*factorRatio}
-                                    width={22.5*factorRatio}
-                                />
-                                )}
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{height: 10*factorVertical}}/>
-                        <View 
-                            style={{
-                                width: fullWidth,
-                                paddingLeft: fullWidth*0.05,
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontFamily: 'OpenSans-Regular',
-                                    textAlign: 'left',
-                                    fontSize: 14*factorRatio,
-                                    color: 'white',
-                                }}
-                            >
-                                Use at least 8 characters
-                            </Text>
-                        </View>
-                        <View style={{height: 50*factorVertical}}/>
-                        <View key={'login'}
-                            style={{
-                                height: fullHeight*0.06,
-                                width: fullWidth*0.4,
-                                borderRadius: 50*factorRatio,
-                                borderColor: '#fb1b2f',
-                                backgroundColor: (
-                                        this.state.password.length > 0 &&
-                                        this.state.confirmPassword.length > 0 &&
-                                        this.state.password == this.state.confirmPassword)
-                                        ?
-                                        '#fb1b2f' : 'transparent',
-                                borderWidth: 2,
-                            }}
-                        >
-                            <TouchableOpacity
-                                onPress={() => this.savePassword()}
-                                style={[
-                                    styles.centerContent, {
-                                    height: '100%',
-                                    width: '100%',
-                                    flexDirection: 'row',
-                                }]}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 18*factorRatio,
-                                        fontWeight: '700',
-                                        fontFamily: 'OpenSans-Regular',
-                                        color: (
-                                            this.state.password.length > 0 &&
-                                            this.state.confirmPassword.length > 0 &&
-                                            this.state.password == this.state.confirmPassword
-                                            ) ? 
-                                                'white' : '#fb1b2f',
-                                    }}                            
-                                >
-                                    NEXT
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </Animated.View>
-                <Modal key={'passwordMatch'}
-                    isVisible={this.state.showPasswordMatch}
-                    style={[
-                        styles.centerContent, {
-                        margin: 0,
-                        height: fullHeight,
-                        width: fullWidth,
-                    }]}
-                    animation={'slideInUp'}
-                    animationInTiming={450}
-                    animationOutTiming={450}
-                    coverScreen={true}
-                    hasBackdrop={true}
+                      <Text>{this.state.confirmPassword}</Text>
+                    </TouchableOpacity>
+                  )}
+                  <TouchableOpacity
+                    style={localStyles.passwordVisible}
+                    onPress={() => {
+                      this.setState({
+                        showConfirmPassword: !this.state.showConfirmPassword
+                      });
+                    }}
+                  >
+                    {this.state.showConfirmPassword ? (
+                      <PasswordHidden />
+                    ) : (
+                      <PasswordVisible />
+                    )}
+                  </TouchableOpacity>
+                </View>
+                <Text style={[localStyles.characters, { marginTop: 10 }]}>
+                  Use at least 8 characters
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (this.state.password === this.state.confirmPassword) {
+                      this.savePassword();
+                    }
+                  }}
+                  style={[
+                    styles.centerContent,
+                    localStyles.savePass,
+                    {
+                      width: onTablet ? '30%' : '50%',
+                      borderColor: colors.pianoteRed,
+                      backgroundColor:
+                        this.state.password.length > 0 &&
+                        this.state.confirmPassword.length > 0 &&
+                        this.state.password === this.state.confirmPassword
+                          ? colors.pianoteRed
+                          : 'transparent'
+                    }
+                  ]}
                 >
-                    <PasswordMatch
-                        hidePasswordMatch={() => {
-                            this.setState({
-                                showPasswordMatch: false
-                            })
-                        }}
-                    />
-                </Modal>    
-            </View>
-        )
-    }
+                  <Text
+                    style={[
+                      styles.modalButtonText,
+                      {
+                        color:
+                          this.state.password.length > 0 &&
+                          this.state.confirmPassword.length > 0 &&
+                          this.state.password === this.state.confirmPassword
+                            ? 'white'
+                            : colors.pianoteRed,
+                        fontFamily: 'RobotoCondensed-Bold',
+                        fontSize: onTablet ? 20 : 14,
+                        textAlign: 'center',
+                        padding: 10
+                      }
+                    ]}
+                  >
+                    NEXT
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <CreateAccountStepCounter step={2} />
+            </ScrollView>
+          </KeyboardAvoidingView>
+        </SafeAreaView>
+      </FastImage>
+    );
+  }
 }
+
+const localStyles = StyleSheet.create({
+  createAccountContainer: {
+    position: 'absolute',
+    left: 15,
+    padding: 5,
+    alignItems: 'center'
+  },
+  createAccountText: {
+    color: 'white',
+    fontSize: isTablet ? 36 : 24,
+    alignSelf: 'center'
+  },
+  createPasswordContainer: {
+    flex: 1,
+    marginTop: 40,
+    justifyContent: 'center'
+  },
+  createPasswordText: {
+    fontFamily: 'OpenSans-Bold',
+    fontSize: isTablet ? 24 : 16,
+    textAlign: 'left',
+    color: 'white',
+    paddingLeft: 15
+  },
+  passInput: {
+    borderRadius: 100,
+    marginTop: 7.5,
+    marginHorizontal: 15,
+    justifyContent: 'center',
+    backgroundColor: 'white'
+  },
+  textinput: {
+    paddingVertical: 15,
+    color: 'black',
+    borderRadius: 100,
+    marginHorizontal: 15,
+    fontSize: isTablet ? 20 : 14,
+    backgroundColor: 'white',
+    fontFamily: 'OpenSans-Regular'
+  },
+  showPassword: {
+    left: 0,
+    right: 50,
+    padding: 15,
+    height: '100%',
+    borderRadius: 100,
+    position: 'absolute',
+    backgroundColor: 'white'
+  },
+  passwordVisible: {
+    right: 0,
+    padding: 15,
+    height: '100%',
+    aspectRatio: 1,
+    position: 'absolute'
+  },
+  characters: {
+    fontFamily: 'OpenSans-Regular',
+    textAlign: 'left',
+    fontSize: isTablet ? 18 : 14,
+    color: 'white',
+    paddingLeft: 15,
+    marginBottom: 40
+  },
+  savePass: {
+    marginBottom: 10,
+    borderWidth: 2,
+    borderRadius: 50,
+    alignSelf: 'center'
+  }
+});

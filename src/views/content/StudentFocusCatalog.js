@@ -1,403 +1,189 @@
-/**
- * StudentFocusCatalog
- */
 import React from 'react';
 import {
-    View,
-    Animated,
-    ScrollView,
-    Text,
-    TouchableOpacity,
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  RefreshControl,
+  ActivityIndicator
 } from 'react-native';
-import Modal from 'react-native-modal';
-import { getContent } from '@musora/services';
-import { ContentModel } from '@musora/models';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import FastImage from 'react-native-fast-image';
-import StudentFocus from 'Pianote2/src/assets/img/svgs/student.svg';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
-import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
-import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
+import {
+  getStartedContent,
+  getStudentFocusTypes
+} from '../../services/GetContent';
+import NavigationBar from '../../components/NavigationBar';
+import NavMenuHeaders from '../../components/NavMenuHeaders';
+import HorizontalVideoList from '../../components/HorizontalVideoList';
+import { NetworkContext } from '../../context/NetworkProvider';
+import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
+import { navigate, refreshOnFocusListener } from '../../../AppNavigator';
 
-export default class StudentFocusCatalog extends React.Component {
-    static navigationOptions = {header: null};
-    constructor(props) {
-        super(props);
-        this.state = {
-            items: [], // videos
-            listSize: new Animated.Value(0.6), // shows hidden filters
-            filterSize: new Animated.Value(0), // shows hidden filters
-            filterClicked: false, // clicked red button center bottom of image
-            levelChosen: false, // filter option
-            instructorChosen: false, // filter option
-            topicChosen: false, // filter option
-            progressChosen: false, // filter option
-            outVideos: false, // if no more videos to load
-            page: 0, // current page
-            parentPage: 'LESSONS',
-            menu: 'STUDENT FOCUS',
-        }
+class StudentFocusCatalog extends React.Component {
+  static contextType = NetworkContext;
+  constructor(props) {
+    super(props);
+    let { studentFocusCache } = props;
+    this.state = {
+      progressStudentFocus: [],
+      studentFocus: [],
+      refreshing: true,
+      refreshControl: false,
+      ...this.initialValidData(studentFocusCache, true)
+    };
+  }
+
+  componentDidMount() {
+    this.getData();
+    this.refreshOnFocusListener = refreshOnFocusListener.call(this);
+  }
+
+  componentWillUnmount = () => this.refreshOnFocusListener?.();
+
+  async getData() {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    let content = await Promise.all([
+      getStartedContent(
+        'quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=podcast',
+        1
+      ),
+      getStudentFocusTypes()
+    ]);
+    this.props.cacheAndWriteStudentFocus({
+      types: content[1],
+      inProgress: content[0]
+    });
+    this.setState(
+      this.initialValidData({
+        types: content[1],
+        inProgress: content[0]
+      })
+    );
+  }
+
+  initialValidData = (content, fromCache) => {
+    try {
+      const newContent = content.inProgress.data;
+      let shows = content.types;
+      shows = Object.keys(shows).map(key => {
+        shows[key].type = key;
+        return shows[key];
+      });
+      return {
+        progressStudentFocus: newContent,
+        studentFocus: shows,
+        refreshing: false,
+        refreshControl: fromCache
+      };
+    } catch (e) {
+      return {};
     }
+  };
 
+  renderFlatListItem = ({ item, index }) => {
+    return (
+      <TouchableOpacity
+        key={index}
+        onPress={() => {
+          navigate('STUDENTFOCUSSHOW', {
+            type: item.type,
+            thumbnailUrl: item.thumbnailUrl
+          });
+        }}
+        style={{
+          width: '50%',
+          marginTop: '3%',
+          paddingLeft: index % 2 === 0 ? 10 : '1%',
+          paddingRight: index % 2 === 0 ? '1%' : 10
+        }}
+      >
+        <FastImage
+          style={{
+            aspectRatio: 1,
+            borderWidth: 0.3,
+            borderColor: colors.pianoteRed,
+            borderRadius: 10
+          }}
+          source={{ uri: item.thumbnailUrl }}
+          resizeMode={FastImage.resizeMode.cover}
+        />
+      </TouchableOpacity>
+    );
+  };
 
-    componentDidMount() {
-        this.getVideos()
-    }
-
-
-    async getVideos() {
-        if(this.state.outVideos == false) {     
-            const { response, error } = await getContent({
-                brand:'pianote',
-                limit: '15',
-                page: this.state.page,
-                sort: '-created_on',
-                statuses: ['published'],
-                included_types:['song'],
-            });
-            
-            if(response.data.data.length == 0) {
-                this.setState({outVideos: true})
-            }
-
-            const newContent = response.data.data.map((data) => {
-                return new ContentModel(data)
-            })
-
-            items = []
-            for(i in newContent) {
-                if(newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('artist'),
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                    })
+  render() {
+    return (
+      <View style={styles.mainContainer}>
+        <NavMenuHeaders currentPage={'LESSONS'} parentPage={'STUDENT FOCUS'} />
+        {!this.state.refreshing ? (
+          <FlatList
+            style={styles.mainContainer}
+            numColumns={2}
+            removeClippedSubviews={true}
+            keyExtractor={item => item.name}
+            data={this.state.studentFocus}
+            keyboardShouldPersistTaps='handled'
+            refreshControl={
+              <RefreshControl
+                tintColor={'transparent'}
+                colors={[colors.secondBackground]}
+                onRefresh={() =>
+                  this.setState({ refreshControl: true }, () => this.getData())
                 }
+                refreshing={isiOS ? false : this.state.refreshControl}
+              />
             }
-
-            this.setState({
-                items: [...this.state.items, ...items],
-                page: this.state.page + 1,
-            })
-
-        }
-    }
-
-
-    pressFilters = async () => {
-        await this.setState({
-            filterClicked: !this.state.filterClicked
-        })
-
-        await Animated.timing(
-            this.state.filterSize, {
-                toValue: (this.state.filterClicked) ? 0.25 : 0,
-                duration : 250,
-            }
-        ).start();
-        
-        await Animated.timing(
-            this.state.listSize, {
-            toValue: (this.state.filterClicked) ? 0.35 : 0.6,
-            duration : 250,
-            }
-        ).start();
-    }
-
-
-    render() {
-        return (
-            <View styles={styles.container}>
-                <View
-                    style={{
-                        height: fullHeight - navHeight,
-                        alignSelf: 'stretch',
-                    }}
-                >
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        contentInsetAdjustmentBehavior={'never'}
-                        style={{flex: 1}}
-                    >
-                        <View key={'backgroundColoring'}
-                            style={{
-                                backgroundColor: 'black',
-                                position: 'absolute',
-                                height: fullHeight,
-                                top: -fullHeight,
-                                left: 0,
-                                right: 0,
-                                zIndex: 10,
-                            }}
-                        />
-                        <View key={'contentContainer'}
-                            style={{
-                                height: (onTablet) ? fullHeight*0.425 : fullHeight*0.375,
-                                width: fullWidth,
-                            }}
-                        >
-                            <View key={'image'}
-                                style={{
-                                    flex: 1,
-                                    elevation: 2,
-                                    backgroundColor: 'black',
-                                }}
-                            >
-                                <NavMenuHeaders
-                                    pxFromTop={navPxFromTop}
-                                    leftHeader={'LESSONS'}
-                                    pressLeftHeader={() => {
-                                        this.setState({
-                                            parentPage: 'LESSONS',
-                                            menu: 'HOME',
-                                            showModalMenu: true,
-                                        })
-                                    }}
-                                    pressRightHeader={() => {
-                                        this.setState({
-                                            parentPage: 'STUDENT FOCUS',
-                                            menu: 'LESSONS',
-                                            showModalMenu: true,
-                                        })
-                                    }}
-                                    rightHeader={'STUDENT FOCUS'}
-                                    isHome={false}
-                                />
-                                <View
-                                    style={[
-                                        styles.centerContent, {
-                                        position: 'absolute',
-                                        width: fullWidth,
-                                        bottom: 40*factorVertical,
-                                        zIndex: 2,
-                                    }]}
-                                >
-                                    <StudentFocus
-                                        height={45*factorRatio}
-                                        width={45*factorRatio}
-                                        fill={'red'}
-                                    />
-                                    <View style={{height: 10*factorVertical}}/>
-                                    <Text
-                                        style={{
-                                            fontSize: 45*factorRatio,
-                                            fontWeight: '700',
-                                            color: 'white',
-                                            fontFamily: 'RobotoCondensed-Regular',
-                                            textAlign: 'center',
-                                        }}
-                                    >
-                                        STUDENT{"\n"}FOCUS
-                                    </Text>
-                                </View>
-                                <FastImage
-                                    style={{flex: 1}}
-                                    source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
-                                    resizeMode={FastImage.resizeMode.stretch}
-                                />
-                            </View>
-                        </View>
-                        <View key={'horizontalSquares'}
-                            style={{
-                                height: fullWidth*0.25,
-                                width: fullWidth,
-                                paddingLeft: 10*factorHorizontal,
-                                paddingRight: 10*factorHorizontal,
-                            }}
-                        >
-                            <View style={{flex: 1}}/>
-                            <View 
-                                style={{
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-around',
-                                    alignContent: 'space-around',
-                                }}
-                            >
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.props.navigation.navigate('STUDENTFOCUSSHOW', 
-                                            {'pack' : 'Bootcamps'}
-                                        )
-                                    }}
-                                >
-                                    <View
-                                        style={{
-                                            height: fullWidth*0.2,
-                                            width: fullWidth*0.2,
-                                            borderRadius: 10*factorRatio,
-                                        }}
-                                    >
-                                        <FastImage
-                                            style={{flex: 1, borderRadius: 10*factorRatio}}
-                                            source={require('Pianote2/src/assets/img/imgs/bootcamps.jpg')}
-                                            resizeMode={FastImage.resizeMode.stretch}
-                                        />   
-                                    </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.props.navigation.navigate(
-                                            'STUDENTFOCUSSHOW', 
-                                            {'pack' : 'Q&A'}
-                                        )
-                                    }}
-                                >
-                                    <View
-                                        style={{
-                                            height: fullWidth*0.2,
-                                            width: fullWidth*0.2,
-                                            borderRadius: 10*factorRatio,
-                                        }}
-                                    >
-                                        <FastImage
-                                            style={{flex: 1, borderRadius: 10*factorRatio}}
-                                            source={require('Pianote2/src/assets/img/imgs/questionAnswer.jpg')}
-                                            resizeMode={FastImage.resizeMode.stretch}
-                                        />   
-                                    </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.props.navigation.navigate(
-                                            'STUDENTFOCUSSHOW', 
-                                            {'pack' : 'Quick Tips'}
-                                        )
-                                    }}
-                                >
-                                    <View
-                                        style={{
-                                            height: fullWidth*0.2,
-                                            width: fullWidth*0.2,
-                                            borderRadius: 10*factorRatio,
-                                        }}
-                                    >
-                                        <FastImage
-                                            style={{flex: 1, borderRadius: 10*factorRatio}}
-                                            source={require('Pianote2/src/assets/img/imgs/quickTips.jpg')}
-                                            resizeMode={FastImage.resizeMode.stretch}
-                                        />   
-                                    </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                     onPress={() => {
-                                        this.props.navigation.navigate(
-                                            'STUDENTFOCUSSHOW', 
-                                            {'pack' : 'Student Review'}
-                                        )
-                                    }}
-                                >
-                                    <View
-                                        style={{
-                                            height: fullWidth*0.2,
-                                            width: fullWidth*0.2,
-                                            borderRadius: 10*factorRatio,
-                                        }}
-                                    >
-                                        <FastImage
-                                            style={{flex: 1, borderRadius: 10*factorRatio}}
-                                            source={require('Pianote2/src/assets/img/imgs/studentReview.jpg')}
-                                            resizeMode={FastImage.resizeMode.stretch}
-                                        />   
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={{flex: 1}}/>
-                        </View>
-                        <View style={{paddingLeft: fullWidth*0.035}}>
-                            <View style={{minHeight: fullHeight*0.225}}>
-                                <HorizontalVideoList
-                                    Title={'BOOTCAMPS'}
-                                    Description={''}
-                                    seeAll={() => {
-                                        this.props.navigation.navigate(
-                                            'STUDENTFOCUSSHOW', 
-                                            {'pack' : 'Bootcamps'}
-                                        )
-                                    }}
-                                    showArtist={false}
-                                    items={this.state.items}
-                                    forceSquareThumbs={false}
-                                    itemWidth={onTablet ? fullWidth*0.425 : fullWidth*0.42}
-                                    itemHeight={onTablet ? fullHeight*0.155 : fullHeight*0.12}
-                                />
-                            </View>
-                            <View style={{minHeight: fullHeight*0.225}}>
-                                <HorizontalVideoList
-                                    Title={'QUESTION & ANSWER'}
-                                    Description={''}
-                                    seeAll={() => {
-                                        this.props.navigation.navigate(
-                                            'STUDENTFOCUSSHOW', 
-                                            {'pack' : 'Q&A'}
-                                        )
-                                    }}
-                                    showArtist={false}
-                                    items={this.state.items}
-                                    forceSquareThumbs={false}
-                                    itemWidth={onTablet ? fullWidth*0.425 : fullWidth*0.42}
-                                    itemHeight={onTablet ? fullHeight*0.155 : fullHeight*0.12}
-                                />
-                            </View>
-                            <View style={{minHeight: fullHeight*0.225}}>
-                                <HorizontalVideoList
-                                    Title={'QUICK TIPS'}
-                                    Description={''}
-                                    seeAll={() => {
-                                        this.props.navigation.navigate(
-                                            'STUDENTFOCUSSHOW', 
-                                            {'pack' : 'Quick Tips'}
-                                        )
-                                    }}
-                                    showArtist={false}
-                                    items={this.state.items}
-                                    forceSquareThumbs={false}
-                                    itemWidth={onTablet ? fullWidth*0.425 : fullWidth*0.42}
-                                    itemHeight={onTablet ? fullHeight*0.155 : fullHeight*0.12}
-                                />
-                            </View>
-                            <View style={{minHeight: fullHeight*0.225}}>
-                                <HorizontalVideoList
-                                    Title={'STUDENT REVIEWS'}
-                                    Description={''}
-                                    seeAll={() => {
-                                        this.props.navigation.navigate(
-                                            'STUDENTFOCUSSHOW', 
-                                            {'pack' : 'Student Review'}
-                                        )
-                                    }}
-                                    showArtist={false}
-                                    items={this.state.items}
-                                    forceSquareThumbs={false}
-                                    itemWidth={onTablet ? fullWidth*0.425 : fullWidth*0.42}
-                                    itemHeight={onTablet ? fullHeight*0.155 : fullHeight*0.12}
-                                />
-                            </View>
-                        </View>
-                    </ScrollView>
-                    <Modal key={'navMenu'}
-                        isVisible={this.state.showModalMenu}
-                        style={{
-                            margin: 0, 
-                            height: fullHeight,
-                            width: fullWidth,
-                        }}
-                        animation={'slideInUp'}
-                        animationInTiming={250}
-                        animationOutTiming={250}
-                        coverScreen={true}
-                        hasBackdrop={false}
-                    >
-                        <NavigationMenu
-                            onClose={(e) => this.setState({showModalMenu: e})}
-                            menu={this.state.menu}
-                            parentPage={this.state.parentPage}
-                        />
-                    </Modal>
-                    <NavigationBar
-                        currentPage={'LESSONS'}
+            ListHeaderComponent={() => (
+              <>
+                {isiOS && this.state.refreshControl && (
+                  <ActivityIndicator
+                    size='small'
+                    style={styles.activityIndicator}
+                    color={colors.secondBackground}
+                  />
+                )}
+                <Text style={styles.contentPageHeader}>Student Focus</Text>
+                {!!this.state.progressStudentFocus.length && (
+                  <View style={styles.mainContainer}>
+                    <HorizontalVideoList
+                      hideFilterButton={true}
+                      Title={'CONTINUE'}
+                      seeAll={() =>
+                        navigate('SEEALL', {
+                          title: 'Continue',
+                          parent: 'Student Focus'
+                        })
+                      }
+                      showType={true}
+                      items={this.state.progressStudentFocus}
                     />
-                </View>
-            </View>
-        )
-    }
+                  </View>
+                )}
+              </>
+            )}
+            renderItem={this.renderFlatListItem}
+          />
+        ) : (
+          <ActivityIndicator
+            size='large'
+            style={{ flex: 1 }}
+            color={colors.secondBackground}
+          />
+        )}
+        <NavigationBar currentPage={''} />
+      </View>
+    );
+  }
 }
+const mapStateToProps = state => ({
+  studentFocusCache: state.studentFocusCache
+});
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ cacheAndWriteStudentFocus }, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(StudentFocusCatalog);

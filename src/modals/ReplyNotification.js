@@ -1,218 +1,291 @@
-/**
- * ReplyNotification
- */
 import React from 'react';
-import { 
-    View, 
-    Text,
-    TouchableOpacity,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { withNavigation } from 'react-navigation';
-import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Chat from '../../src/assets/img/svgs/chat.svg';
+import Icon from '../assets/icons';
+import { connect } from 'react-redux';
+
+const onTablet = global.onTablet;
+const messageDict = {
+  'lesson comment reply': {
+    message: 'replied to your comment.',
+    new: true,
+    color: 'orange',
+    type: 'comment reply notifications'
+  },
+  'lesson comment liked': {
+    message: 'liked your comment.',
+    new: true,
+    color: 'blue',
+    type: 'comment like notifications'
+  },
+  'forum post liked': {
+    message: 'liked your forum post.',
+    new: true,
+    color: 'blue',
+    type: 'forum post like notifications'
+  },
+  'forum post in followed thread': {
+    message: 'post in followed thread.',
+    new: false,
+    color: 'orange',
+    type: 'forum post reply notifications'
+  },
+  'new content releases': {
+    message: '',
+    new: false,
+    color: 'red',
+    type: 'new content release notifications'
+  }
+};
 
 class ReplyNotification extends React.Component {
-    static navigationOptions = {header: null};
-    constructor(props) {
-        super(props);
-        this.state = {
-            rankProgress: 62.5,
-            XP: '11,768',
-            rank: 'MASTERO',
-            user: 'Jordan Leibel',
-        }
-    }
+  render() {
+    const {
+      notificationStatus,
+      hideReplyNotification,
+      turnOfffNotifications,
+      removeNotification,
+      data: { type, content, sender, id }
+    } = this.props;
 
-    
-    render = () => {
-        return (         
-            <View key={'container'}
-                style={{
-                    height: fullHeight, 
-                    width: fullWidth, 
-                    backgroundColor: 'transparent',
-                }}
-            >
-                <View key={'buffTop'}
-                    style={{flex: 1}}
-                >
-                    <TouchableOpacity
-                        onPress={() => this.props.hideReplyNotification()}
-                        style={{
-                            height: '100%',
-                            width: '100%',
-                        }}
+    return (
+      <Modal
+        transparent={true}
+        visible={true}
+        style={styles.modalContainer}
+        animation={'slideInUp'}
+        animationInTiming={250}
+        animationOutTiming={250}
+        coverScreen={true}
+        hasBackdrop={true}
+        onBackButtonPress={hideReplyNotification}
+        onRequestClose={hideReplyNotification}
+        supportedOrientations={['portrait', 'landscape']}
+      >
+        <TouchableOpacity
+          style={localStyles.modalContainer}
+          onPress={hideReplyNotification}
+        >
+          <View
+            style={{
+              width: '100%',
+              justifyContent: 'space-between',
+              backgroundColor: colors.mainBackground
+            }}
+          >
+            <>
+              <View
+                style={[styles.centerContent, localStyles.profileContainer]}
+              >
+                <View style={localStyles.profileContainer2}>
+                  {type === 'new content releases' ? (
+                    <View
+                      style={[styles.centerContent, localStyles.videoContainer]}
                     >
-
-                    </TouchableOpacity>
-                </View>
-                <View key={'content'}
-                    style={{
-                        height: (onTablet) ? fullHeight*0.45 : fullHeight*0.35,
-                        width: '100%',
-                        flexDirection: 'row',
-                    }}
-                >
-                    <View key={'content'}
-                        style={{
-                            height: '100%',
-                            width: '100%',
-                            backgroundColor: 'white',
-                        }}
-                    >
-                        <View style={{height: '2%'}}/>
-                        <View key={'profile'}
-                            style={{
-                                flexDirection: 'row',
-                                height: '30%',
-                            }}
-                        >
-                            <View style={{flex: 1}}/>
-                            <View>
-                                <View style={{flex: 1}}/>
-                                <View 
-                                    style={{
-                                        height: fullWidth*0.165,
-                                        width: fullWidth*0.165,
-                                        borderRadius: 100*factorRatio,
-                                        backgroundColor: 'cyan',
-                                    }}
-                                >
-                                    <View
-                                        style={[
-                                            styles.centerContent, {
-                                            position: 'absolute',
-                                            bottom: '0%',
-                                            right: '0%',
-                                            width: fullWidth*0.065,
-                                            height: fullWidth*0.065,
-                                            borderRadius: 100,
-                                            backgroundColor: '#ff651e',
-                                            zIndex: 3,
-                                        }]}
-                                    >
-                                        <Chat
-                                            height={fullWidth*0.0425}
-                                            width={fullWidth*0.0425}
-                                            fill={'white'}
-                                        />
-                                    </View>
-                                    <FastImage
-                                        style={{flex: 1, borderRadius: 100*factorRatio}}
-                                        source={{uri:'https://facebook.github.io/react-native/img/tiny_logo.png'}}
-                                        resizeMode={FastImage.resizeMode.cover}
-                                    />
-                                </View>
-                                <View style={{flex: 1}}/>
-                            </View>
-                            <View style={{flex: 1}}/>
-                        </View>
-                        <View style={{height: 7.5*factorVertical}}/>
-                        <Text key={'replyUser'}
-                            style={{
-                                fontFamily: 'OpenSans-Regular',
-                                fontSize: 14*factorRatio,
-                                textAlign: 'center',
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontSize: 15*factorRatio,
-                                    fontWeight: '600',
-                                    textAlign: 'center',
-                                }}
-                            >
-                                {this.state.user}
-                            </Text>
-                            {' '}replied to your comment
-                        </Text>
-                        <View style={{flex: 1}}/>
-                        <View key={'remove'}
-                            style={{
-                                height: '18.5%',
-                                width: '100%',
-                                borderTopWidth: 1*factorRatio,
-                                borderTopColor: '#ececec',
-                            }}
-                        >
-                            <TouchableOpacity
-                                style={{
-                                    height: '100%',
-                                    width: '100%',
-                                }}
-                            >
-                                <View style={{flex: 1}}/>
-                                <View 
-                                    style={{
-                                        flexDirection: 'row', 
-                                        alignItems: 'center',
-                                        paddingLeft: fullWidth*0.035,
-                                    }}
-                                >
-                                    <EntypoIcon
-                                        name={'cross'}
-                                        size={26*factorRatio}
-                                    />
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontSize: 17*factorRatio,
-                                        }}    
-                                    >
-                                        Remove this notification
-                                    </Text>
-                                </View>
-                                <View style={{flex: 1}}/>
-                            </TouchableOpacity>
-                        </View>
-                        <View key={'mute'}
-                            style={{
-                                height: '18.5%',
-                                width: '100%',
-                                borderTopWidth: 1*factorRatio,
-                                borderTopColor: '#ececec',
-                            }}
-                        >
-                            <TouchableOpacity
-                                style={{
-                                    height: '100%',
-                                    width: '100%',
-                                }}
-                            >
-                                <View style={{flex: 1}}/>
-                                <View 
-                                    style={{
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        paddingLeft: fullWidth*0.035,
-                                    }}
-                                >
-                                    <IonIcon
-                                        name={'ios-notifications-outline'}
-                                        size={26*factorRatio}
-                                    />
-                                    <View style={{width: 5*factorRatio}}/>
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontSize: 17*factorRatio,
-                                        }}    
-                                    >
-                                        Turn off comment reply notifications
-                                    </Text>
-                                </View>
-                                <View style={{flex: 1}}/>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{height: '10%'}}/>
+                      <Icon.FontAwesome
+                        size={sizing.infoButtonSize}
+                        color={'white'}
+                        name={'video-camera'}
+                      />
                     </View>
-                </View>            
-            </View>
-        )
-    }
+                  ) : type === 'forum post in followed thread' ||
+                    type === 'lesson comment reply' ? (
+                    <View
+                      style={[styles.centerContent, localStyles.chatContainer]}
+                    >
+                      <Chat
+                        height={sizing.infoButtonSize}
+                        width={sizing.infoButtonSize}
+                        fill={'white'}
+                      />
+                    </View>
+                  ) : (
+                    <View
+                      style={[styles.centerContent, localStyles.likeContainer]}
+                    >
+                      <Icon.AntDesign
+                        size={sizing.infoButtonSize}
+                        color={'white'}
+                        name={'like1'}
+                      />
+                    </View>
+                  )}
+                  <FastImage
+                    style={localStyles.image}
+                    source={{
+                      uri:
+                        type === 'new content releases'
+                          ? content?.thumbnail_url
+                          : sender?.profile_image_url
+                    }}
+                    resizeMode={FastImage.resizeMode.cover}
+                  />
+                </View>
+              </View>
+              <Text style={localStyles.replyUser}>
+                <Text style={localStyles.user}>
+                  {type == 'new content releases'
+                    ? content?.display_name
+                    : sender?.display_name}
+                </Text>{' '}
+                {messageDict[type]?.message}
+              </Text>
+            </>
+            <>
+              <View style={localStyles.removeContainer}>
+                <TouchableOpacity
+                  style={[styles.container, { justifyContent: 'center' }]}
+                  onPress={() => removeNotification(id)}
+                >
+                  <View style={localStyles.crossContainer}>
+                    <Icon.Entypo
+                      name={'cross'}
+                      size={sizing.myListButtonSize * 1.2}
+                      color={colors.pianoteRed}
+                    />
+                    <Text
+                      style={[
+                        localStyles.removeText,
+                        { fontSize: sizing.descriptionText }
+                      ]}
+                    >
+                      Remove this notification
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+              <View style={localStyles.muteContainer}>
+                <TouchableOpacity
+                  style={[styles.container, { justifyContent: 'center' }]}
+                  onPress={turnOfffNotifications}
+                >
+                  <View style={localStyles.notificationContainer}>
+                    <Icon.Ionicons
+                      name={'ios-notifications-outline'}
+                      size={sizing.myListButtonSize}
+                      color={colors.pianoteRed}
+                    />
+                    <Text
+                      style={[
+                        localStyles.removeText,
+                        { fontSize: sizing.descriptionText }
+                      ]}
+                    >
+                      Turn {notificationStatus ? 'off' : 'on'}{' '}
+                      {messageDict[type]?.type}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+    );
+  }
 }
 
-export default withNavigation(ReplyNotification);
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+export default connect(mapStateToProps, null)(ReplyNotification);
+
+const localStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
+  profileContainer: {
+    flexDirection: 'row',
+    paddingVertical: 30
+  },
+  container: {
+    width: '100%',
+    flexDirection: 'row',
+    backgroundColor: '#00101d'
+  },
+  profileContainer2: {
+    height: onTablet ? 120 : 80,
+    width: onTablet ? 120 : 80,
+    borderRadius: 100,
+    backgroundColor: '#445f73'
+  },
+  videoContainer: {
+    position: 'absolute',
+    bottom: -5,
+    right: -5,
+    height: onTablet ? 40 : 30,
+    width: onTablet ? 40 : 30,
+    backgroundColor: 'red',
+    borderRadius: 100,
+    zIndex: 5
+  },
+  chatContainer: {
+    position: 'absolute',
+    bottom: -5,
+    right: -5,
+    height: onTablet ? 40 : 30,
+    width: onTablet ? 40 : 30,
+    backgroundColor: 'orange',
+    borderRadius: 100,
+    zIndex: 5
+  },
+  likeContainer: {
+    position: 'absolute',
+    bottom: -5,
+    right: -5,
+    height: onTablet ? 40 : 30,
+    width: onTablet ? 40 : 30,
+    backgroundColor: 'blue',
+    borderRadius: 100,
+    zIndex: 5
+  },
+  image: {
+    flex: 1,
+    borderRadius: 100
+  },
+  replyUser: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: onTablet ? 16 : 12,
+    paddingBottom: 20,
+    textAlign: 'center',
+    color: '#445f73'
+  },
+  user: {
+    fontFamily: 'OpenSans-Bold',
+    fontSize: onTablet ? 16 : 12,
+    textAlign: 'center'
+  },
+  removeText: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: onTablet ? 16 : 12,
+    color: '#445f73',
+    paddingLeft: 10
+  },
+  crossContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%'
+  },
+  removeContainer: {
+    height: onTablet ? 70 : 50,
+    width: '100%',
+    borderTopWidth: 0.5,
+    paddingLeft: 10,
+    borderTopColor: '#445f73'
+  },
+  muteContainer: {
+    height: onTablet ? 70 : 50,
+    width: '100%',
+    borderTopWidth: 0.5,
+    borderTopColor: '#445f73'
+  },
+  notificationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 10
+  }
+});

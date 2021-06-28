@@ -1,113 +1,166 @@
-/**
- * Taskbar for navigation
-*/
 import React from 'react';
-import { 
-    View, 
-    TouchableOpacity,
-} from 'react-native';
-import { withNavigation } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import AsyncStorage from '@react-native-community/async-storage';
-import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
+import Icon from '../assets/icons';
+import { NetworkContext } from '../context/NetworkProvider';
+import { navigate } from '../../AppNavigator';
+import { connect } from 'react-redux';
+
+const onTablet = global.onTablet;
 
 class NavigationBar extends React.Component {
-    static navigationOptions = {header: null};
-    constructor(props) {
-        super(props);
-        this.state = {
-            profileImage: '',
-            onHome: false,
-            onSearch: false,
-            onDownload: false,
-            hasNotch: 0,
-        }
+  static contextType = NetworkContext;
+  constructor(props) {
+    super(props);
+    this.state = {
+      secondaryColor: this.props.isMethod
+        ? colors.pianoteGrey
+        : colors.secondBackground,
+      primaryColor: this.props.isMethod ? colors.pianoteRed : 'white'
+    };
+  }
+
+  profile = () => {
+    if (this.props.user.profile_picture_url) {
+      return (
+        <FastImage
+          style={{
+            flex: 1,
+            borderRadius: 100,
+            backgroundColor: this.props.isMethod
+              ? colors.pianoteGrey
+              : colors.secondBackground
+          }}
+          source={{ uri: this.props.user.profile_picture_url }}
+          resizeMode={FastImage.resizeMode.cover}
+        />
+      );
     }
 
-    componentDidMount = async () => {
-        let profileImage = await AsyncStorage.getItem('profileURI')
-        if(profileImage !== null) {
-            await this.setState({profileImage})
+    return (
+      <Icon.AntDesign
+        name={'user'}
+        color={
+          this.props.currentPage === 'PROFILE'
+            ? 'white'
+            : this.state.secondaryColor
         }
-    }
+        size={onTablet ? 40 : 30}
+      />
+    );
+  };
 
-
-    render = () => {
-        return (
-            <View key={'taskBarContainer'}
-                style={{
-                    backgroundColor: 'white',
-                    height: fullHeight*0.09375,
-                    borderTopColor: '#ececec',
-                    borderTopWidth: 2*factorRatio,
-                }}
+  render = () => {
+    return (
+      <SafeAreaView
+        forceInset={{
+          left: 'never',
+          right: 'never',
+          top: 'never',
+          bottom: this.props.pad ? 'never' : 'always'
+        }}
+        style={{
+          backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground
+        }}
+      >
+        <View style={{ justifyContent: 'center' }}>
+          <View style={localStyles.navContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                !this.context.isConnected
+                  ? this.context.showNoConnectionAlert()
+                  : navigate(isPackOnly ? 'PACKS' : 'LESSONS');
+              }}
             >
-                <View style={{flex: 1}}/>
-                <View key={'icons'}
-                    style={{
-                        alignSelf: 'stretch',
-                        flexDirection: 'row',
-                        paddingRight: 10,
-                        paddingLeft: 10,
-                        justifyContent: 'space-around',
-                        alignContent: 'space-around',
-                    }}
-                >
-                    <TouchableOpacity key={'home'}
-                        onPress={() => this.props.navigation.navigate('HOME')}
-                    >
-                        <SimpleLineIcon
-                            name={'home'}
-                            size={30*factorRatio}
-                            color={(this.props.currentPage == 'HOME') ? '#fb1b2f' : 'grey'}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity key={'search'}
-                        onPress={() => this.props.navigation.navigate('SEARCH')}
-                    >
-                        <EvilIcons
-                            name={'search'}
-                            size={40*factorRatio}
-                            color={(this.props.currentPage == 'SEARCH') ? '#fb1b2f' : 'grey'}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity key={'download'}
-                        onPress={() => this.props.navigation.navigate('DOWNLOADS')}
-                    >
-                        <MaterialIcon
-                            name={'arrow-collapse-down'}
-                            size={30*factorRatio}
-                            color={(this.props.currentPage == 'DOWNLOAD') ? '#fb1b2f':'grey'}
-                        />
-                    </TouchableOpacity>                            
-                    <TouchableOpacity key={'profile'}
-                        onPress={() => this.props.navigation.navigate('PROFILE')}
-                    >
-                        <View 
-                            style={{
-                                width: 37.5*factorRatio,
-                                height: 37.5*factorRatio,
-                                borderRadius: 100,
-                                borderWidth: 2.25*factorRatio,
-                                borderColor: (this.props.currentPage == 'PROFILE') ? '#fb1b2f':'transparent',
-                            }} 
-                        >
-                            <FastImage
-                                style={{flex: 1, borderRadius: 100, backgroundColor: '#ececec'}}
-                                source={{uri: this.state.profileImage}}
-                                resizeMode={FastImage.resizeMode.stretch}
-                            />
-                        </View>
-                        <View style={{height: 2*factorVertical}}/>
-                    </TouchableOpacity>
-                </View>
-                <View style={{flex: 1}}/>
-                <View style={{height: isNotch ? 15 : 0}}/>
-            </View>
-        )
-    }
+              <Icon.SimpleLineIcons
+                name={'home'}
+                size={onTablet ? 35 : 27.5}
+                color={
+                  this.props.currentPage === 'LESSONS'
+                    ? this.state.primaryColor
+                    : this.state.secondaryColor
+                }
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                !this.context.isConnected
+                  ? this.context.showNoConnectionAlert()
+                  : navigate('SEARCH');
+              }}
+            >
+              <Icon.EvilIcons
+                name={'search'}
+                size={onTablet ? 55 : 40}
+                color={
+                  this.props.currentPage === 'SEARCH'
+                    ? this.state.primaryColor
+                    : this.state.secondaryColor
+                }
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigate('DOWNLOADS')}>
+              <Icon.MaterialCommunityIcons
+                name={'arrow-collapse-down'}
+                size={onTablet ? 40 : 30}
+                color={
+                  this.props.currentPage === 'DOWNLOAD'
+                    ? this.state.primaryColor
+                    : this.state.secondaryColor
+                }
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                !this.context.isConnected
+                  ? this.context.showNoConnectionAlert()
+                  : navigate('PROFILE');
+              }}
+            >
+              <View
+                style={[
+                  localStyles.navIconContainer,
+                  this.props.user.profile_picture_url
+                    ? null
+                    : styles.centerContent,
+                  {
+                    borderColor:
+                      this.props.currentPage == 'PROFILE' &&
+                      this.props.user.profile_picture_url
+                        ? 'white'
+                        : 'transparent'
+                  }
+                ]}
+              >
+                {this.profile()}
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  };
 }
 
-export default withNavigation(NavigationBar);
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+export default connect(mapStateToProps, null)(NavigationBar);
+
+const localStyles = StyleSheet.create({
+  navIconContainer: {
+    borderRadius: 100,
+    borderWidth: 2.25,
+    height: onTablet ? 40 : 30,
+    width: onTablet ? 40 : 30
+  },
+  navContainer: {
+    alignSelf: 'stretch',
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignContent: 'space-around'
+  }
+});

@@ -1,420 +1,531 @@
-/**
- * Settings
- */
 import React from 'react';
-import { 
-    View, 
-    Text, 
-    ScrollView, 
-    TouchableOpacity,
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Alert,
+  StatusBar,
+  StyleSheet,
+  Linking,
+  Modal
 } from 'react-native';
-import Modal from 'react-native-modal';
-import LogOut from '../../modals/LogOut.js';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import FeatherIcon from 'react-native-vector-icons/Feather';
-import FontIcon from 'react-native-vector-icons/FontAwesome';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import DeviceInfo from 'react-native-device-info';
+import RNIap from 'react-native-iap';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import AsyncStorage from '@react-native-community/async-storage';
+import Intercom from 'react-native-intercom';
+import Icon from '../../assets/icons.js';
+import Back from '../../assets/img/svgs/back.svg';
+import NavigationBar from '../../components/NavigationBar.js';
+import Loading from '../../components/Loading.js';
+import CustomModal from '../../modals/CustomModal.js';
+import { logOut, restorePurchase } from '../../services/UserDataAuth.js';
+import { SafeAreaView } from 'react-navigation';
+import { NetworkContext } from '../../context/NetworkProvider.js';
+import commonService from '../../services/common.service.js';
+import { cacheAndWriteCourses } from '../../redux/CoursesCacheActions';
+import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
+import { cacheAndWriteMyList } from '../../redux/MyListCacheActions';
+import { cacheAndWritePacks } from '../../redux/PacksCacheActions';
+import { cacheAndWritePodcasts } from '../../redux/PodcastsCacheActions';
+import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
+import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
+import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
+import { goBack, navigate, reset } from '../../../AppNavigator.js';
+import { setLoggedInUser } from '../../redux/UserActions.js';
 
-export default class Settings extends React.Component {
-    static navigationOptions = {header: null};
-    constructor(props) {
-        super(props);
-        this.state = {
-            showLogOut: false,
-        }
+const isTablet = global.onTablet;
+let localStyles;
+
+class Settings extends React.Component {
+  static contextType = NetworkContext;
+  constructor(props) {
+    super(props);
+    localStyles = setStyles(this.props.theme === 'light', colors.pianoteRed);
+    this.state = { showLogOut: false };
+  }
+
+  manageSubscriptions = async () => {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    let { isAppleAppSubscriber, isGoogleAppSubscriber } = this.props.user;
+    if (isiOS) {
+      if (isAppleAppSubscriber) {
+        Alert.alert(
+          'Manage Subscription',
+          'You have an Apple App Store subscription that can only be managed through the Apple I.D. used to purchase it.',
+          [
+            {
+              text: 'View Subscriptions',
+              onPress: () =>
+                Linking.openURL(
+                  'itms-apps://apps.apple.com/account/subscriptions'
+                )
+            }
+          ],
+          {
+            cancelable: false
+          }
+        );
+      } else {
+        Alert.alert(
+          'Manage Subscription',
+          'Sorry! You can only manage your Apple App Store based subscriptions here.',
+          [{ text: 'Got it!' }],
+          {
+            cancelable: false
+          }
+        );
+      }
+    } else {
+      if (isGoogleAppSubscriber) {
+        Alert.alert(
+          'Manage Subscription',
+          'You have a Google Play subscription that can only be managed through the Google Account used to purchase it.',
+          [
+            {
+              text: 'View Subscriptions',
+              onPress: () =>
+                Linking.openURL(
+                  'https://play.google.com/store/account/subscriptions'
+                )
+            }
+          ],
+          {
+            cancelable: false
+          }
+        );
+      } else {
+        Alert.alert(
+          'Manage Subscription',
+          'You can only manage Google Play subscriptions here. Please sign in to Pianote on your original subscription platform to manage your settings.',
+          [{ text: 'Got it!' }],
+          {
+            cancelable: false
+          }
+        );
+      }
     }
+  };
 
+  restorePurchase = async () => {
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    this.loadingRef?.toggleLoading();
+    try {
+      await RNIap.initConnection();
+    } catch (e) {
+      this.loadingRef?.toggleLoading();
+      return this.customModal.toggle(
+        'Connection to app store refused',
+        'Please try again later.'
+      );
+    }
+    try {
+      let purchases = await RNIap.getPurchaseHistory();
+      if (!purchases.length) {
+        this.loadingRef?.toggleLoading();
+        return this.restoreSuccessfull.toggle(
+          'Restore',
+          'All purchases restored'
+        );
+      }
+      if (!isiOS) {
+        purchases = purchases.map(m => {
+          return {
+            purchase_token: m.purchaseToken,
+            package_name: 'com.pianote2',
+            product_id: m.productId
+          };
+        });
+      }
+      let restoreResponse = await restorePurchase(purchases);
+      this.loadingRef?.toggleLoading();
+      if (restoreResponse.title && restoreResponse.message)
+        return this.customModal.toggle(
+          restoreResponse.title,
+          restoreResponse.message
+        );
+      if (restoreResponse.email) {
+        this.loadingRef?.toggleLoading();
+        await logOut();
+        this.props.setLoggedInUser({});
+        this.loadingRef?.toggleLoading();
+        navigate('LOGINCREDENTIALS', {
+          email: restoreResponse.email
+        });
 
-    render() {
-        return (
-            <View styles={{flex: 1, alignSelf: 'stretch'}}>
+        return Alert.alert(
+          'Restore',
+          `This ${
+            isiOS ? 'Apple' : 'Google'
+          } account is already linked to another Pianote account. Please login with that account.`,
+          [{ text: 'OK' }],
+          { cancelable: false }
+        );
+      } else if (restoreResponse.token) {
+        reset('LESSONS');
+      } else if (restoreResponse.shouldCreateAccount) navigate('CREATEACCOUNT');
+    } catch (err) {
+      this.loadingRef?.toggleLoading();
+      this.customModal.toggle(
+        'Something went wrong',
+        'Please try Again later.'
+      );
+    }
+  };
+
+  logOut = () => {
+    [
+      'cacheAndWriteCourses',
+      'cacheAndWriteLessons',
+      'cacheAndWriteMyList',
+      'cacheAndWritePacks',
+      'cacheAndWritePodcasts',
+      'cacheAndWriteQuickTips',
+      'cacheAndWriteSongs',
+      'cacheAndWriteStudentFocus'
+    ].map(redux => this.props[redux]({}));
+    logOut();
+    this.props.setLoggedInUser({});
+    Intercom.logout();
+    AsyncStorage.clear();
+    reset('LOGIN');
+  };
+
+  render() {
+    return (
+      <SafeAreaView style={styles.mainContainer}>
+        <StatusBar
+          backgroundColor={colors.mainBackground}
+          barStyle={'light-content'}
+        />
+        <View style={localStyles.header}>
+          <TouchableOpacity style={{ flex: 1 }} onPress={() => goBack()}>
+            <Back
+              width={backButtonSize}
+              height={backButtonSize}
+              fill={colors.secondBackground}
+            />
+          </TouchableOpacity>
+
+          <Text
+            style={[styles.childHeaderText, { color: colors.secondBackground }]}
+          >
+            Settings
+          </Text>
+          <View style={{ flex: 1 }} />
+        </View>
+
+        <ScrollView style={styles.mainContainer}>
+          {[
+            {
+              nav: () => navigate('PROFILESETTINGS'),
+              title: 'Profile Settings',
+              icon: (
+                <Icon.Feather
+                  name={'user'}
+                  size={onTablet ? 30 : 20}
+                  color={colors.pianoteRed}
+                />
+              )
+            },
+            {
+              nav: () => navigate('NOTIFICATIONSETTINGS'),
+              title: 'Notification Settings',
+              icon: (
+                <Icon.Ionicons
+                  name={'ios-notifications-outline'}
+                  color={colors.pianoteRed}
+                  size={onTablet ? 35 : 27.5}
+                />
+              )
+            },
+            {
+              nav: this.manageSubscriptions,
+              title: 'Manage Subscriptions',
+              icon: (
+                <Icon.AntDesign
+                  name={'folder1'}
+                  size={onTablet ? 30 : 20}
+                  color={colors.pianoteRed}
+                />
+              )
+            },
+            {
+              nav: this.restorePurchase,
+              title: 'Restore Purchases',
+              icon: (
+                <Icon.AntDesign
+                  name={'creditcard'}
+                  size={onTablet ? 30 : 20}
+                  color={colors.pianoteRed}
+                />
+              )
+            },
+            {
+              nav: () => navigate('SUPPORT'),
+              title: 'Support',
+              icon: (
+                <Icon.FontAwesome
+                  name={'support'}
+                  size={onTablet ? 30 : 20}
+                  color={colors.pianoteRed}
+                />
+              )
+            },
+            {
+              nav: () => navigate('TERMS'),
+              title: 'Terms of Use',
+              icon: (
+                <Icon.AntDesign
+                  name={'form'}
+                  size={onTablet ? 30 : 20}
+                  color={colors.pianoteRed}
+                />
+              )
+            },
+            {
+              nav: () => navigate('PRIVACYPOLICY'),
+              title: 'Privacy Policy',
+              icon: (
+                <Icon.FontAwesome
+                  name={'shield'}
+                  color={colors.pianoteRed}
+                  size={onTablet ? 32.5 : 22.5}
+                />
+              )
+            },
+            {
+              nav: () => this.setState({ showLogOut: true }),
+              title: 'Log Out',
+              icon: (
+                <Icon.AntDesign
+                  name={'poweroff'}
+                  color={colors.pianoteRed}
+                  size={onTablet ? 30 : 20}
+                />
+              )
+            }
+          ].map(item => (
+            <TouchableOpacity
+              key={item.title}
+              style={[
+                styles.centerContent,
+                localStyles.container,
+                {
+                  borderTopWidth: 1,
+                  borderTopColor: '#445f73'
+                }
+              ]}
+              onPress={item.nav}
+            >
+              <View style={{ flexDirection: 'row' }}>
                 <View
-                    style={{
-                        height: fullHeight - navHeight,
-                        alignSelf: 'stretch',
-                    }}
+                  style={[styles.centerContent, { width: onTablet ? 70 : 50 }]}
                 >
-                    <View key={'contentContainer'}
-                        style={{flex: 1}}
-                    >
-                        <View key={'buffer'}
-                            style={{
-                                height: (isNotch) ? 15*factorVertical : 0,
-                            }}
-                        >
-                        </View>
-                        <View key={'mySettings'}
-                            style={[
-                                styles.centerContent, {
-                                flex: 0.1,
-                            }]}
-                        >
-                            <View
-                                style={[
-                                    styles.centerContent, {
-                                    position: 'absolute',
-                                    left: 0, 
-                                    bottom: 0*factorRatio,
-                                    height: 50*factorRatio,
-                                    width: 50*factorRatio,
-                                }]}
-                            >
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.props.navigation.goBack()
-                                    }}
-                                    style={[
-                                        styles.centerContent, {
-                                        height: '100%',
-                                        width: '100%',
-                                    }]}
-                                >
-                                    <EntypoIcon
-                                        name={'chevron-thin-left'}
-                                        size={22.5*factorRatio}
-                                        color={'black'}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={{flex: 0.66}}/>
-                            <Text
-                                style={{
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '600',
-                                    fontSize: 21*factorRatio,
-                                }}
-                            >
-                                Settings
-                            </Text>
-                            <View style={{flex: 0.33}}/>
-                        </View>
-                        <View key={'scrollview'}
-                            style={{
-                                flex: 0.95,
-                                borderTopWidth: 1.5*factorRatio,
-                                borderTopColor: '#ececec',
-                            }}
-                        >
-                            <ScrollView>
-                                <TouchableOpacity key={'profileSettings'}
-                                    onPress={() => {
-                                        this.props.navigation.navigate('PROFILESETTINGS')
-                                    }}
-                                    style={[styles.centerContent, {
-                                        height: 50*factorRatio,
-                                        width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
-                                        flexDirection: 'row',
-                                        paddingRight: fullWidth*0.025,
-                                    }]}
-                                >
-                                    <View style={[styles.centerContent, {width: 60*factorHorizontal}]}>
-                                        <FeatherIcon
-                                            name={'user'}
-                                            size={25*factorRatio}
-                                        />
-                                    </View>
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontSize: 18*factorRatio,
-                                            color: '#fb1b2f',
-                                        }}
-                                    >
-                                        Profile Settings
-                                    </Text>
-                                    <View style={{flex: 1}}/>
-                                    <AntIcon
-                                        name={'right'}
-                                        size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
-                                    />
-                                </TouchableOpacity>
-                                <TouchableOpacity key={'notificationSettings'}
-                                    onPress={() => {
-                                        this.props.navigation.navigate('NOTIFICATIONSETTINGS')
-                                    }}
-                                    style={[styles.centerContent, {
-                                        height: 50*factorRatio,
-                                        width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
-                                        flexDirection: 'row',
-                                        paddingRight: fullWidth*0.025,
-                                    }]}
-                                >
-                                    <View style={[styles.centerContent, {width: 60*factorHorizontal}]}>
-                                        <IonIcon
-                                            name={'ios-notifications-outline'}
-                                            size={35*factorRatio}
-                                        />
-                                    </View>
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontSize: 18*factorRatio,
-                                            color: '#fb1b2f',
-                                        }}
-                                    >
-                                        Notification Settings
-                                    </Text>
-                                    <View style={{flex: 1}}/>
-                                    <AntIcon
-                                        name={'right'}
-                                        size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
-                                    />
-                                </TouchableOpacity>
-                                <TouchableOpacity key={'paymentHistory'}
-                                    onPress={() => {
-                                        this.props.navigation.navigate('PAYMENTHISTORY')
-                                    }}
-                                    style={[styles.centerContent, {
-                                        height: 50*factorRatio,
-                                        width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
-                                        flexDirection: 'row',
-                                        paddingRight: fullWidth*0.025,
-                                    }]}
-                                >
-                                    <View style={[styles.centerContent, {width: 60*factorHorizontal}]}>
-                                        <FontIcon
-                                            name={'credit-card'}
-                                            size={24*factorRatio}
-                                        />
-                                    </View>
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontSize: 18*factorRatio,
-                                            color: '#fb1b2f',
-                                        }}
-                                    >
-                                        Payment History
-                                    </Text>
-                                    <View style={{flex: 1}}/>
-                                    <AntIcon
-                                        name={'right'}
-                                        size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
-                                    />
-                                </TouchableOpacity>
-                                <TouchableOpacity key={'manageSubscriptions'}
-                                    style={[styles.centerContent, {
-                                        height: 50*factorRatio,
-                                        width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
-                                        flexDirection: 'row',
-                                        paddingRight: fullWidth*0.025,
-                                    }]}
-                                >
-                                    <View style={[styles.centerContent, {width: 60*factorHorizontal}]}>
-                                        <AntIcon
-                                            name={'folder1'}
-                                            size={25*factorRatio}
-                                        />
-                                    </View>
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontSize: 18*factorRatio,
-                                            color: '#fb1b2f',
-                                        }}
-                                    >
-                                        Manage Subscriptions
-                                    </Text>
-                                    <View style={{flex: 1}}/>
-                                    <AntIcon
-                                        name={'right'}
-                                        size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
-                                    />
-                                </TouchableOpacity>
-                                <TouchableOpacity key={'support'}
-                                    onPress={() => {
-                                        this.props.navigation.navigate('SUPPORT')
-                                    }}
-                                    style={[styles.centerContent, {
-                                        height: 50*factorRatio,
-                                        width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
-                                        flexDirection: 'row',
-                                        paddingRight: fullWidth*0.025,
-                                    }]}
-                                >
-                                    <View style={[styles.centerContent, {width: 60*factorHorizontal}]}>
-                                        <FontIcon
-                                            name={'support'}
-                                            size={25*factorRatio}
-                                        />
-                                    </View>
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontSize: 18*factorRatio,
-                                            color: '#fb1b2f',
-                                        }}
-                                    >
-                                        Support
-                                    </Text>
-                                    <View style={{flex: 1}}/>
-                                    <AntIcon
-                                        name={'right'}
-                                        size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
-                                    />
-                                </TouchableOpacity>
-                                <TouchableOpacity key={'termsOfUse'}
-                                    onPress={() => {
-                                        this.props.navigation.navigate('TERMS')
-                                    }}
-                                    style={[styles.centerContent, {
-                                        height: 50*factorRatio,
-                                        width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
-                                        flexDirection: 'row',
-                                        paddingRight: fullWidth*0.025,
-                                    }]}
-                                >
-                                    <View style={[styles.centerContent, {width: 60*factorHorizontal}]}>
-                                        <AntIcon
-                                            name={'form'}
-                                            size={25*factorRatio}
-                                        />
-                                    </View>
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontSize: 18*factorRatio,
-                                            color: '#fb1b2f',
-                                        }}
-                                    >
-                                        Terms of Use
-                                    </Text>
-                                    <View style={{flex: 1}}/>
-                                    <AntIcon
-                                        name={'right'}
-                                        size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
-                                    />
-                                </TouchableOpacity>
-                                <TouchableOpacity key={'privacyPolicy'}
-                                    onPress={() => {
-                                        this.props.navigation.navigate('SUPPORT')
-                                    }}
-                                    style={[styles.centerContent, {
-                                        height: 50*factorRatio,
-                                        width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
-                                        flexDirection: 'row',
-                                        paddingRight: fullWidth*0.025,
-                                    }]}
-                                >
-                                    <View style={[styles.centerContent, {width: 60*factorHorizontal}]}>
-                                        <FontIcon
-                                            name={'shield'}
-                                            size={27.5*factorRatio}
-                                        />
-                                    </View>
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontSize: 18*factorRatio,
-                                            color: '#fb1b2f',
-                                        }}
-                                    >
-                                        Privacy Policy
-                                    </Text>
-                                    <View style={{flex: 1}}/>
-                                    <AntIcon
-                                        name={'right'}
-                                        size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
-                                    />
-                                </TouchableOpacity>
-                                <TouchableOpacity key={'logOut'}
-                                    onPress={() => {
-                                        this.setState({showLogOut: true})
-                                    }}
-                                    style={[styles.centerContent, {
-                                        height: 50*factorRatio,
-                                        width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
-                                        flexDirection: 'row',
-                                        paddingRight: fullWidth*0.025,
-                                    }]}
-                                >
-                                    <View style={[styles.centerContent, {width: 60*factorHorizontal}]}>
-                                        <AntIcon
-                                            name={'poweroff'}
-                                            size={23.5*factorRatio}
-                                        />
-                                    </View>
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontSize: 18*factorRatio,
-                                            color: '#fb1b2f',
-                                        }}
-                                    >
-                                        Log Out
-                                    </Text>
-                                    <View style={{flex: 1}}/>
-                                    <AntIcon
-                                        name={'right'}
-                                        size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
-                                    />
-                                </TouchableOpacity>
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        textAlign: 'center',
-                                        color: '#b9b9b9',
-                                        marginTop: 10*factorRatio,
-                                        fontSize: 12*factorRatio,
-                                    }}
-                                >
-                                    APP VERSION 1.0.3
-                                </Text>
-                            </ScrollView>
-                        </View>
-                    </View>
-                    <Modal key={'logout'}
-                        isVisible={this.state.showLogOut}
-                        style={[
-                            styles.centerContent, {
-                            margin: 0,
-                            height: fullHeight,
-                            width: fullWidth,
-                        }]}
-                        animation={'slideInUp'}
-                        animationInTiming={250}
-                        animationOutTiming={250}
-                        coverScreen={true}
-                        hasBackdrop={true}
-                    >
-                        <LogOut
-                            hideLogOut={() => {
-                                this.setState({showLogOut: false})
-                            }}
-                        />
-                    </Modal>    
-            
-                    <NavigationBar
-                        currentPage={'PROFILE'}
-                    />
+                  {item.icon}
                 </View>
+                <Text style={localStyles.settingsText}>{item.title}</Text>
+              </View>
+              <Icon.AntDesign
+                name={'right'}
+                size={onTablet ? 30 : 20}
+                color={colors.secondBackground}
+              />
+            </TouchableOpacity>
+          ))}
+          <Text style={[localStyles.settingsText, localStyles.appText]}>
+            APP VERSION {DeviceInfo.getVersion()}
+          </Text>
+          {commonService.rootUrl.includes('staging') && (
+            <Text style={localStyles.buildText}>
+              BUILD NUMBER {DeviceInfo.getBuildNumber()}
+            </Text>
+          )}
+        </ScrollView>
+        <Modal
+          visible={this.state.showLogOut}
+          transparent={true}
+          style={[styles.centerContent, styles.modalContainer]}
+          animation={'slideInUp'}
+          animationInTiming={250}
+          animationOutTiming={250}
+          coverScreen={true}
+          hasBackdrop={true}
+          onBackButtonPress={() => this.setState({ showLogOut: false })}
+        >
+          <TouchableOpacity
+            style={[styles.centerContent, localStyles.modalContainer]}
+            onPress={() => this.setState({ showLogOut: false })}
+          >
+            <View style={[styles.centerContent, styles.container]}>
+              <View style={localStyles.container2}>
+                <Text style={[styles.modalHeaderText, localStyles.title]}>
+                  Log Out
+                </Text>
+                <Text style={[styles.modalBodyText, localStyles.description]}>
+                  Are you sure that you want to log out?
+                </Text>
+                <TouchableOpacity
+                  style={[styles.centerContent, localStyles.logoutText]}
+                  onPress={() => this.logOut()}
+                >
+                  <Text style={[styles.modalButtonText, localStyles.logout]}>
+                    LOG OUT
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.centerContent, localStyles.cancelContainter]}
+                  onPress={() => this.setState({ showLogOut: false })}
+                >
+                  <Text
+                    style={[styles.modalCancelButtonText, localStyles.cancel]}
+                  >
+                    CANCEL
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-        )
-    }
+          </TouchableOpacity>
+        </Modal>
+        <Loading
+          ref={ref => {
+            this.loadingRef = ref;
+          }}
+        />
+        <CustomModal
+          ref={ref => {
+            this.customModal = ref;
+          }}
+        />
+        <CustomModal
+          ref={r => (this.restoreSuccessfull = r)}
+          additionalBtn={
+            <TouchableOpacity
+              onPress={() => this.restoreSuccessfull.toggle()}
+              style={{
+                borderRadius: 50,
+                backgroundColor: colors.pianoteRed
+              }}
+            >
+              <Text
+                style={{
+                  paddingVertical: 10,
+                  marginHorizontal: onTablet ? 50 : 75,
+                  fontSize: 15,
+                  color: '#ffffff',
+                  textAlign: 'center',
+                  fontFamily: 'OpenSans-Bold'
+                }}
+              >
+                OK
+              </Text>
+            </TouchableOpacity>
+          }
+          onClose={() => this.loadingRef?.toggleLoading(false)}
+        />
+        <NavigationBar currentPage={'PROFILE'} pad={true} />
+      </SafeAreaView>
+    );
+  }
 }
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      cacheAndWriteCourses,
+      cacheAndWriteLessons,
+      cacheAndWriteMyList,
+      cacheAndWritePacks,
+      cacheAndWritePodcasts,
+      cacheAndWriteQuickTips,
+      cacheAndWriteSongs,
+      cacheAndWriteStudentFocus,
+      setLoggedInUser: user => dispatch(setLoggedInUser(user))
+    },
+    dispatch
+  );
+
+const mapStateToProps = state => ({
+  user: state.userState.user
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Settings);
+
+const setStyles = (isLight, appColor) =>
+  StyleSheet.create({
+    modalContainer: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,.5)'
+    },
+    container: {
+      height: isTablet ? 70 : 50,
+      width: '100%',
+      borderBottomColor: isLight ? '#97AABE' : '#445f73',
+      borderBottomWidth: 1,
+      flexDirection: 'row',
+      paddingRight: 10,
+      justifyContent: 'space-between'
+    },
+    container2: {
+      backgroundColor: 'white',
+      borderRadius: 15,
+      margin: 20
+    },
+    title: {
+      marginTop: 20,
+      paddingHorizontal: 20
+    },
+    description: {
+      paddingHorizontal: 30,
+      marginTop: 10,
+      marginBottom: 5,
+      fontSize: isTablet ? 18 : 14
+    },
+    logoutText: {
+      backgroundColor: appColor,
+      borderRadius: 40,
+      marginVertical: 15,
+      marginHorizontal: 30,
+      fontFamily: 'OpenSans-Bold',
+      height: isTablet ? 40 : 30,
+      textAlign: 'center'
+    },
+    logout: {
+      color: 'white',
+      fontSize: isTablet ? 18 : 14
+    },
+    cancelContainter: {
+      paddingHorizontal: 20,
+      marginBottom: 15
+    },
+    cancel: {
+      color: 'grey',
+      fontSize: isTablet ? 16 : 12
+    },
+    settingsText: {
+      fontFamily: 'OpenSans-Regular',
+      fontSize: isTablet ? 20 : 16,
+      color: isLight ? '#97AABE' : '#445f73'
+    },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: 15
+    },
+    appText: {
+      marginTop: 10,
+      textAlign: 'center',
+      fontSize: isTablet ? 18 : 12
+    },
+    buildText: {
+      fontFamily: 'OpenSans-Regular',
+      textAlign: 'center',
+      color: isLight ? '#97AABE' : '#445f73',
+      marginTop: 10,
+      fontSize: isTablet ? 18 : 12
+    }
+  });

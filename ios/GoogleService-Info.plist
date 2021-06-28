@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>356109427411-le2d84jitsouu9okvfq1ielci7u1gvlb.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.356109427411-le2d84jitsouu9okvfq1ielci7u1gvlb</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAmZi_67seYjzXfE0ou8vdiwFmRyYiWcH4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>356109427411</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.drumeo.PianoteApp</string>
+	<key>PROJECT_ID</key>
+	<string>pianote-app</string>
+	<key>STORAGE_BUCKET</key>
+	<string>pianote-app.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:356109427411:ios:0e37ffbfba9a6a21222a26</string>
+	<key>DATABASE_URL</key>
+	<string>https://pianote-app.firebaseio.com</string>
+</dict>
+</plist>

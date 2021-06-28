@@ -1,211 +1,142 @@
-/**
- * MembershipExpired
- */
 import React from 'react';
-import { 
-    View, 
-    Text, 
-    StyleSheet,
-    TouchableOpacity,
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
-import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
+import Pianote from '../../assets/img/svgs/pianote.svg';
+import LinearGradient from 'react-native-linear-gradient';
+import { SafeAreaView } from 'react-navigation';
+import AsyncStorage from '@react-native-community/async-storage';
+import { navigate } from '../../../AppNavigator';
+
+const isTablet = global.onTablet;
 
 export default class MembershipExpired extends React.Component {
-    static navigationOptions = {header: null};
-    constructor(props) {
-        super(props);
-        this.state = {
-        }
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: props.route?.params?.email,
+      password: props.route?.params?.password
+    };
+  }
 
+  componentDidMount() {
+    if (!this.state.email)
+      AsyncStorage.multiGet(['email', 'password']).then(r =>
+        this.setState({
+          email: r[0][1],
+          password: r[1][1]
+        })
+      );
+  }
 
-    async changeColor(number) {
-        if(number == 0) {
-            await this.setState({page: 1})
-        } else if(number == 1) {
-            await this.setState({page: 2})
-        } else if(number == 2) {
-            await this.setState({page: 3})
-        } else if(number == 3) {
-            await this.setState({page: 4})
-        } else if(number == 4) {
-            await this.setState({page: 5})
-        }
-
-        await this.forceUpdate()
-    }
-
-
-    render() {
-        return (
-            <View style={[
-                    styles.centerContent, {
-                    height: fullHeight,
-                }]}
-            >
-                <View key={'MembershipExpiredSignup'} 
-                    style={[
-                        styles.centerContent, {
-                        width: fullWidth,
-                        height: fullHeight,
-                    }]}
-                >
-                    <View key={'pianote1'}
-                        style={{
-                            position: 'absolute', 
-                            top: fullHeight*0.03,
-                            zIndex: 2,
-                        }}
-                    >
-                        <Pianote
-                            height={75*factorRatio}
-                            width={125*factorRatio}
-                            fill={'#fb1b2f'}
-                        />
-                    </View>
-                    <GradientFeature
-                        color={'grey'}
-                        opacity={1}
-                        height={'70%'}
-                        borderRadius={0}
-                    />
-                    <View key={'image1'}
-                        style={{
-                            flex: 0.75, 
-                            alignSelf: 'stretch',
-                        }}
-                    >
-                        <FastImage
-                            style={{flex: 1}}
-                            source={require('Pianote2/src/assets/img/imgs/lisa-foundations.png')}
-                            resizeMode={FastImage.resizeMode.cover}
-                        />
-                    </View>
-                    <View key={'buffer1'}
-                        style={{
-                            flex: 0.25,
-                            backgroundColor: 'rgba(23, 26, 26, 1)',
-                            alignSelf: 'stretch',
-                        }}
-                    >
-                    </View>
-                    <View key={'content1'}
-                        style={{
-                            position: 'absolute',
-                            bottom: fullHeight*0.165,
-                            width: fullWidth,
-                            zIndex: 3,
-                        }}
-                    >
-                        <View style={{flex: 1}}/>
-                        <Text
-                            style={{
-                                fontFamily: 'OpenSans-Regular',
-                                fontSize: 28*factorRatio,
-                                paddingLeft: fullWidth*0.15,
-                                paddingRight: fullWidth*0.15,
-                                fontWeight: '800',
-                                textAlign: 'center',
-                                color: 'white',
-                            }}
-                        >
-                            Your Membership {"\n"} Has Expired
-                        </Text>
-                        <View style={{height: 25*factorVertical}}/>
-                        <Text
-                            style={{
-                                fontFamily: 'OpenSans-Regular',
-                                fontSize: 18*factorRatio,
-                                paddingLeft: fullWidth*0.05,
-                                paddingRight: fullWidth*0.05,
-                                textAlign: 'center',
-                                color: 'white',
-                            }}
-                        >
-                            Your account no longer has access to Pianote. Click the button below to renew your membership - or, if you believe this is an error, please contact support@pianote.com
-                        </Text>
-                    </View>
-                    <View key={'content1b'}
-                        style={{
-                            position: 'absolute',
-                            bottom: fullHeight*0.055,
-                            width: fullWidth,
-                            zIndex: 3,
-                        }}
-                    >
-                        <View key={'buttons'}
-                            style={{
-                                height: fullHeight*0.075,
-                                flexDirection: 'row',
-                                paddingLeft: fullWidth*0.02,
-                                paddingRight: fullWidth*0.02,
-                            }}
-                        >
-                            <View 
-                                style={[
-                                    styles.centerContent, {
-                                    flex: 1,
-                                }]}
-                            >
-                                <View 
-                                    style={{
-                                        height: '80%',
-                                        width: '95%',
-                                        borderRadius: 60,
-                                        backgroundColor: '#fb1b2f',
-                                    }}
-                                >
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.props.navigation.navigate('NEWMEMBERSHIP', {'type': false})
-                                        }}
-                                        style={{
-                                            height: '100%',
-                                            width: '100%',
-                                            justifyContent: 'center',
-                                        }}
-                                    >
-                                        <Text
-                                            style={{
-                                                fontFamily: 'OpenSans-Regular',
-                                                fontSize: 18*factorRatio,
-                                                fontWeight: '600',
-                                                textAlign: 'center',
-                                                color: 'white',
-                                            }}
-                                        >
-                                            RENEW MEMBERSHIP
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                </View>
+  render() {
+    return (
+      <FastImage
+        style={{ flex: 1 }}
+        resizeMode={FastImage.resizeMode.cover}
+        source={require('../../../src/assets/img/imgs/lisa-foundations.png')}
+      >
+        <LinearGradient
+          style={localStyles.linearStyle}
+          colors={['transparent', 'black']}
+        />
+        <SafeAreaView style={{ flex: 1 }}>
+          <View style={localStyles.container}>
+            <View style={localStyles.pianoteContainer}>
+              <Pianote fill={colors.pianoteRed} />
             </View>
-        )
-    }
+            <View>
+              <Text style={localStyles.title}>
+                Your Membership {'\n'} Has Expired
+              </Text>
+              <Text style={localStyles.description}>
+                Your account no longer has access to Pianote. Click the button
+                below to renew your membership - or, if you believe this is an
+                error, please contact support@pianote.com
+              </Text>
+              {this.state.email ? (
+                <TouchableOpacity
+                  style={localStyles.buttonContainer}
+                  onPress={() =>
+                    navigate('NEWMEMBERSHIP', {
+                      data: {
+                        type: 'EXPIRED',
+                        email: this.props.route?.params?.email,
+                        password: this.props.route?.params?.password,
+                        token: this.props.route?.params?.token
+                      }
+                    })
+                  }
+                >
+                  <Text style={localStyles.buttonText}>RENEW MEMBERSHIP</Text>
+                </TouchableOpacity>
+              ) : (
+                <ActivityIndicator
+                  size='large'
+                  animating={true}
+                  color={colors.pianoteRed}
+                  style={{}}
+                />
+              )}
+            </View>
+          </View>
+        </SafeAreaView>
+      </FastImage>
+    );
+  }
 }
 
 const localStyles = StyleSheet.create({
-    whiteBordersCircles: {
-        borderColor: 'white',
-        borderWidth: 1.25,
-        borderRadius: 20,
-        position: 'absolute',
-        bottom: 0,
-    },
-    MembershipExpiredSignupButton: {
-        height: 25, 
-        width: '100%',
-        backgroundColor: 'transparent', 
-        borderWidth: 1.25,
-        borderColor: 'white', 
-        borderRadius: 10, 
-    },
+  container: {
+    flex: 1,
+    paddingVertical: '5%',
+    justifyContent: 'space-between'
+  },
+  linearStyle: {
+    bottom: 0,
+    position: 'absolute',
+    justifyContent: 'flex-end',
+    width: '100%',
+    height: '70%'
+  },
+  buttonText: {
+    fontSize: isTablet ? 24 : 16,
+    textAlign: 'center',
+    color: 'white',
+    fontFamily: 'RobotoCondensed-Bold',
+    paddingVertical: 10
+  },
+  pianoteContainer: {
+    alignSelf: 'center',
+    alignItems: 'center',
+    width: isTablet ? '20%' : '30%',
+    aspectRatio: 177 / 53 //svg's viewbox viewBox="0 0 177 53"
+  },
+  title: {
+    fontFamily: 'OpenSans-ExtraBold',
+    fontSize: isTablet ? 32 : 24,
+    padding: 10,
+    textAlign: 'center',
+    color: 'white'
+  },
+  description: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: isTablet ? 22 : 16,
+    paddingBottom: 25,
+    paddingHorizontal: 10,
+    textAlign: 'center',
+    color: 'white'
+  },
+  buttonContainer: {
+    borderRadius: 60,
+    backgroundColor: '#fb1b2f',
+    justifyContent: 'center',
+    marginHorizontal: '5%',
+    marginTop: 10
+  }
 });
-
-
-

@@ -1,223 +1,133 @@
-/**
- * XpRank
- */
 import React from 'react';
-import { 
-    View, 
-    Text,
-    TouchableOpacity,
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+  Modal
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
-import { BlurView } from '@react-native-community/blur';
 import ProgressCircle from 'react-native-progress-circle';
 
-class XpRank extends React.Component {
-    static navigationOptions = {header: null};
-    constructor(props) {
-        super(props);
-        this.state = {
-            rankProgress: 62.5,
-            XP: '11,768',
-            rank: 'MASTERO',
-        }
-    }
+const isTablet = global.onTablet;
+const ranks = [
+  0,
+  100,
+  250,
+  500,
+  1000,
+  2500,
+  10000,
+  25000,
+  100000,
+  250000,
+  500000,
+  1000000,
+  1500000,
+  2000000,
+  2500000,
+  3000000,
+  4000000,
+  5000000,
+  7500000,
+  100000000
+];
 
-    
-    render = () => {
-        return (         
-            <View key={'container'}
-                style={{
-                    height: fullHeight, 
-                    width: fullWidth, 
-                }}
+export default class XpRank extends React.Component {
+  nextRank = () => {
+    return ranks.find(r => this.props.xp < r) || 100000000;
+  };
+
+  rankProgress = () => {
+    return (this.props.xp / this.nextRank()) * 100;
+  };
+
+  render = () => {
+    return (
+      <Modal
+        transparent={true}
+        visible={true}
+        style={styles.modalContainer}
+        animation={'slideInUp'}
+        animationInTiming={250}
+        animationOutTiming={250}
+        coverScreen={true}
+        hasBackdrop={true}
+        onBackButtonPress={() => this.props.hideXpRank()}
+      >
+        <TouchableOpacity
+          style={[styles.centerContent, localStyles.modalContainer]}
+          activeOpacity={1}
+          onPress={() => this.props.hideXpRank()}
+        >
+          <View style={[localStyles.container, styles.centerContent]}>
+            <Text style={[styles.modalHeaderText, localStyles.title]}>
+              Your XP Rank
+            </Text>
+            <Text style={[styles.modalBodyText, localStyles.description]}>
+              You earn XP by completing lessons,{'\n'}
+              commenting on videos and more!
+            </Text>
+            <ProgressCircle
+              percent={this.rankProgress()}
+              radius={(onTablet ? 0.2 : 0.27) * Dimensions.get('window').width}
+              borderWidth={5}
+              shadowColor={'pink'}
+              color={'red'}
+              bgColor={'white'}
             >
-                <BlurView
-                    style={[
-                        styles.centerContent, {
-                        height: fullHeight,
-                        width: fullWidth,
-                        backgroundColor: 'transparent',
-                    }]}
-                    blurType={'xlight'}
-                    blurAmount={(Platform.OS == 'android') ? 1 : 10}
-                />
-               <View
-                    style={{
-                        position: 'absolute',
-                        zIndex: 5,
-                        elevation: 5,
-                        height: '100%',
-                        width: '100%',     
-                    }}
-                >
-                    <View key={'buffTop'}
-                        style={{
-                            flex: 1,
-                        }}
-                    >
-                        <TouchableOpacity
-                            onPress={() => this.props.hideXpRank()}
-                            style={{
-                                height: '100%',
-                                width: '100%',
-                            }}
-                        >
-
-                        </TouchableOpacity>
-                    </View>
-                    <View key={'content'}
-                        style={{
-                            height: (onTablet) ? fullHeight*0.8 : fullHeight*0.625/factorRatio,
-                            width: '100%',
-                            flexDirection: 'row',
-                            elevation: 5,
-                        }}
-                    >
-                        <View key={'buffLeft'}
-                            style={{width: '5%'}}
-                        >
-                            <TouchableOpacity
-                                onPress={() => this.props.hideXpRank()}
-                                style={{
-                                    height: '100%',
-                                    width: '100%',
-                                }}
-                            >
-
-                            </TouchableOpacity>
-                        </View>
-                        <View key={'content'}
-                            style={{
-                                height: '100%',
-                                width: '90%',
-                                borderRadius: 15*factorRatio,
-                                backgroundColor: 'white',
-                                elevation: 10,
-                            }}
-                        >
-                            <View style={{flex: 0.08}}/>
-                            <View key={'yourXpRank'}
-                                style={[styles.centerContent]}
-                            >
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 20*factorRatio,
-                                        fontWeight: (Platform.OS == 'android') ? 'bold' : '600',
-                                        textAlign: 'center',
-                                    }}
-                                >
-                                    Your XP Rank
-                                </Text>
-                            </View>
-                            <View style={{flex: 0.05}}/>
-                            <View key={'gainXP'}>
-                                <View style={{flex: 1}}/>
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 16*factorRatio,
-                                        fontWeight: '300',
-                                        textAlign: 'center',
-                                    }}
-                                >
-                                    You earn XP by completing lessons,{"\n"}
-                                    commenting on videos and more!
-                                </Text>
-                                <View style={{flex: 1}}/>
-                            </View>
-                            <View style={{flex: 0.05}}/>
-                            <View key={'circle'}
-                                style={{flex: 0.7}}
-                            >
-                                <View style={{flex: 1}}/>
-                                <View style={{flexDirection: 'row'}}>
-                                    <View style={{flex: 1}}/>
-                                    <View style={{transform: [{ rotate: '315deg'}]}}>
-                                        <ProgressCircle
-                                            percent={this.state.rankProgress}
-                                            radius={fullWidth*0.27}
-                                            borderWidth={4*factorRatio}
-                                            shadowColor={'pink'}
-                                            color={'red'}
-                                            bgColor={'white'}
-                                        >
-                                            <View
-                                                style={{
-                                                    transform: [{ rotate: '45deg'}]
-                                                }}
-                                            >
-                                                <Text 
-                                                    style={{
-                                                        fontFamily: 'OpenSans-Regular',
-                                                        textAlign: 'center',
-                                                        fontWeight: '700',
-                                                        fontSize: 34*factorRatio,
-                                                    }}
-                                                >
-                                                    {this.state.XP}
-                                                </Text>
-                                                <Text 
-                                                    style={{
-                                                        fontFamily: 'OpenSans-Regular',
-                                                        textAlign: 'center',
-                                                        fontWeight: '700',
-                                                        fontSize: 24*factorRatio,
-                                                    }}
-                                                >
-                                                    {this.state.rank}
-                                                </Text>
-                                            </View>
-                                        </ProgressCircle>
-                                    </View>
-                                    <View style={{flex: 1}}/>
-                                </View>
-                                <View style={{flex: 1}}/>
-                            </View>
-                            <View key={'nextRank'}>
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 16*factorRatio,
-                                        color: 'grey',
-                                        textAlign: 'center',
-                                    }}
-                                >
-                                    Next rank: 20,000
-                                </Text>
-                            </View>
-                        </View>
-                        <View key={'buffRight'}
-                            style={{width: '5%'}}
-                        >
-                            <TouchableOpacity
-                                onPress={() => this.props.hideXpRank()}
-                                style={{
-                                    height: '100%',
-                                    width: '100%',
-                                }}
-                            >
-
-                            </TouchableOpacity>
-                        </View>
-                    </View>            
-                    <View key={'buffBottom'}
-                        style={{flex: 1}}
-                    >
-                        <TouchableOpacity
-                            onPress={() => this.props.hideXpRank()}
-                            style={{
-                                height: '100%',
-                                width: '100%',
-                            }}
-                        >
-
-                        </TouchableOpacity>
-                    </View>
-                </View>                
-            </View>
-        )
-    }
+              <Text style={localStyles.XPtext}>
+                {Number(this.props.xp).toLocaleString()}
+              </Text>
+              <Text style={localStyles.rankText}>{this.props.rank}</Text>
+            </ProgressCircle>
+            <Text style={[styles.modalBodyText, localStyles.nextRank]}>
+              Next rank: {this.nextRank()}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+    );
+  };
 }
 
-export default withNavigation(XpRank);
+const localStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
+  container: {
+    borderRadius: 15,
+    backgroundColor: 'white',
+    marginHorizontal: '10%',
+    elevation: 10
+  },
+  title: {
+    paddingHorizontal: 30,
+    marginTop: 15
+  },
+  description: {
+    paddingHorizontal: 20,
+    marginVertical: 10,
+    fontSize: isTablet ? 18 : 14
+  },
+  ProgressCircleContainer: {
+    transform: [{ rotate: '315deg' }]
+  },
+  XPtext: {
+    fontFamily: 'OpenSans-Bold',
+    textAlign: 'center',
+    fontSize: isTablet ? 34 : 26
+  },
+  rankText: {
+    fontFamily: 'OpenSans-Bold',
+    textAlign: 'center',
+    fontSize: isTablet ? 24 : 18
+  },
+  nextRank: {
+    color: 'grey',
+    paddingHorizontal: 40,
+    marginVertical: 10,
+    fontSize: isTablet ? 18 : 14
+  }
+});

@@ -1,13 +1,13 @@
-const fs = require("fs");
-const path = require("path");
-const opentype = require("opentype.js");
+const fs = require('fs');
+const path = require('path');
+const opentype = require('opentype.js');
 
-const fontFormats = [".ttf", ".otf"];
-const fontsPath = path.join(__dirname, "assets", "fonts");
+const fontFormats = ['.ttf', '.otf'];
+const fontsPath = path.join(__dirname, 'assets', 'fonts');
 const filenames = fs.readdirSync(fontsPath);
 
-filenames.forEach((filename) => {
-  const extension = path.extname(filename)
+filenames.forEach(filename => {
+  const extension = path.extname(filename);
 
   if (!fontFormats.includes(extension)) {
     return;
@@ -15,10 +15,10 @@ filenames.forEach((filename) => {
 
   const fontPath = path.join(fontsPath, filename);
   const font = opentype.loadSync(fontPath);
-  
+
   const newFilename = font.names.postScriptName.en + extension;
   const newFontPath = path.join(fontsPath, newFilename);
-  
+
   const relativeFontPath = path.relative(__dirname, fontPath);
   const relativeNewFontPath = path.relative(__dirname, newFontPath);
 
@@ -26,7 +26,7 @@ filenames.forEach((filename) => {
     console.log(`${relativeFontPath} is already named correctly.`);
   } else {
     fs.renameSync(fontPath, newFontPath);
-    
+
     console.log(`Renamed ${relativeFontPath} to ${relativeNewFontPath}.`);
   }
 });
