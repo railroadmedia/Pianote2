@@ -84,6 +84,7 @@ export default class MethodLevel extends React.Component {
       description: response.description,
       isAddedToList: response.is_added_to_primary_playlist,
       progress: response.progress_percent,
+      level: response.level_number,
       refreshing: false
     });
   };

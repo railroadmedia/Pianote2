@@ -447,7 +447,7 @@ export default class VerticalVideoList extends React.Component {
                       fontFamily: 'OpenSans-Regular'
                     }}
                   >
-                    Level {row.levelNum}.{index + 1}
+                    Level {row.level_rank || index + 1}
                   </Text>
                 )}
                 {this.props.showType && (
