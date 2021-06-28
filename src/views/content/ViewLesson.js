@@ -418,7 +418,9 @@ class ViewLesson extends React.Component {
         </View>
 
         <View style={{ flex: 1, paddingLeft: 10 }}>
-          <Text style={localStyles.commentText}>{item.comment.replace(/<[^>]*>?/gm, '')}</Text>
+          <Text style={localStyles.commentText}>
+            {item.comment.replace(/<[^>]*>?/gm, '')}
+          </Text>
 
           <Text style={localStyles.userTags}>
             {item.user['display_name']} | {item.user.rank} |{' '}
@@ -1211,7 +1213,6 @@ class ViewLesson extends React.Component {
                 <View
                   testID='progress'
                   style={[
-                    styles.progressBarCompleted,
                     localStyles.progress,
                     { width: this.state.progress + '%' }
                   ]}
