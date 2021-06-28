@@ -1211,7 +1211,6 @@ class ViewLesson extends React.Component {
                 <View
                   testID='progress'
                   style={[
-                    styles.progressBarCompleted,
                     localStyles.progress,
                     { width: this.state.progress + '%' }
                   ]}
