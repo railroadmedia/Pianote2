@@ -30,7 +30,8 @@ export const showNotification = ({
       commentId: data.commentId,
       mobile_app_url: data.mobile_app_url,
       type: data.type,
-      uri: data.uri
+      uri: data.uri,
+      threadTitle: data.threadTitle
     }
   });
 };

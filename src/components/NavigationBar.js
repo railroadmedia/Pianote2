@@ -115,7 +115,6 @@ class NavigationBar extends React.Component {
                       tryCall: commonService.tryCall.bind(commonService),
                       rootUrl: commonService.rootUrl,
                       isDark: true,
-                      BottomNavigator: NavigationBar,
                       appColor: colors.pianoteRed,
                       user: this.props.user
                     });

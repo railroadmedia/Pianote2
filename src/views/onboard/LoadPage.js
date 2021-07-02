@@ -22,7 +22,6 @@ import commonService from '../../services/common.service';
 import navigationService from '../../services/navigation.service';
 import { navigate, reset } from '../../../AppNavigator';
 import { setLoggedInUser } from '../../redux/UserActions';
-import NavigationBar from '../../components/NavigationBar';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -55,8 +54,7 @@ class LoadPage extends React.Component {
           'loggedIn',
           'resetKey',
           'email',
-          'password',
-          'forumUrl'
+          'password'
         ])
       ).reduce((i, j) => {
         i[j[0]] = j[1] === 'true' ? true : j[1] === 'false' ? false : j[1];
@@ -64,7 +62,7 @@ class LoadPage extends React.Component {
         return i;
       }, {});
       await AsyncStorage.removeItem('resetKey');
-      const { email, resetKey, password, forumUrl } = data;
+      const { email, resetKey, password } = data;
 
       if (!this.context.isConnected) {
         if (email && !global.loadedFromNotification)
@@ -90,18 +88,19 @@ class LoadPage extends React.Component {
           } else if (resetKey) {
             reset('RESETPASSWORD', { resetKey, email });
           } else {
-            if (forumUrl) {
-              reset('FORUM', {
+            let { params: { postId, threadTitle } = {} } = this.props.route;
+            if (postId) {
+              reset('LESSONS');
+              navigate('FORUM', {
                 NetworkContext,
                 tryCall: commonService.tryCall.bind(commonService),
                 rootUrl: commonService.rootUrl,
                 isDark: true,
-                BottomNavigator: NavigationBar,
                 appColor: colors.pianoteRed,
-                mobile_app_url: forumUrl,
-                user: this.props.user
+                user: this.props.user,
+                postId,
+                threadTitle
               });
-              await AsyncStorage.removeItem('forumUrl');
             }
             if (userData.isPackOlyOwner) {
               global.isPackOnly = userData.isPackOlyOwner;

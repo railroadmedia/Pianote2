@@ -173,9 +173,10 @@ export default () => (
           {props => (
             <>
               <Forum {...props} />
-              {currentScene()?.match(/^(FORUM|Forums)$/) && (
-                <NavigationBar currentPage={'FORUM'} />
-              )}
+              {currentScene()?.match(/^(FORUM|Forums)$/) &&
+                !currentParams().postId && (
+                  <NavigationBar currentPage={'FORUM'} />
+                )}
             </>
           )}
         </Stack.Screen>

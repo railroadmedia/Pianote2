@@ -101,7 +101,6 @@ class Profile extends React.Component {
     if (loadMore) this.page++;
     else this.page = 1;
     let notifications = await getnotifications(this.page);
-    console.log(notifications);
     for (i in notifications.data) {
       let timeCreated =
         notifications.data[i].created_at?.slice(0, 10) +
@@ -237,15 +236,14 @@ class Profile extends React.Component {
         url: notification.content.musora_api_mobile_app_url
       });
     } else {
-      reset('FORUM', {
+      navigate('FORUM', {
         NetworkContext,
         tryCall: commonService.tryCall.bind(commonService),
         rootUrl: commonService.rootUrl,
         isDark: true,
-        BottomNavigator: NavigationBar,
         appColor: colors.pianoteRed,
         user: this.props.user,
-        thread: notification.thread,
+        threadTitle: notification.thread.title,
         postId: notification.data.postId
       });
     }
