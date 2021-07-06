@@ -415,7 +415,7 @@ export default class Foundations extends React.Component {
             progress={this.state.progress}
             type={'FOUNDATIONS'}
             onNextLesson={() =>
-              this.goToLesson(this.state.nextLesson.mobile_app_url)
+              this.goToLesson(this.state.nextLesson.musora_api_mobile_app_url)
             }
           />
         )}
