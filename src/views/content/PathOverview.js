@@ -112,7 +112,7 @@ export default class PathOverview extends React.Component {
       totalLength: res.total_length_in_seconds,
       started: res.started,
       completed: res.completed,
-      nextLesson: res.next_lesson,
+      nextLesson: res.next_lesson || res.current_lesson,
       levelNum: res.level_position + '.' + res.course_position,
       progress: res.progress_percent,
       difficulty: res.difficulty,
