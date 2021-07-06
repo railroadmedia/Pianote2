@@ -7,6 +7,7 @@ import { NetworkContext } from '../context/NetworkProvider';
 import { navigate } from '../../AppNavigator';
 import { connect } from 'react-redux';
 import commonService from '../services/common.service';
+import Forums from '../assets/img/svgs/forums.svg';
 
 const onTablet = global.onTablet;
 
@@ -120,14 +121,10 @@ class NavigationBar extends React.Component {
                     });
               }}
             >
-              <Icon.Ionicons
-                name={'chatbubbles-outline'}
-                size={onTablet ? 40 : 30}
-                color={
-                  this.props.currentPage === 'FORUM'
-                    ? this.state.primaryColor
-                    : this.state.secondaryColor
-                }
+              <Forums
+                height={onTablet ? 40 : 30}
+                width={onTablet ? 40 : 30}
+                fill={'white'}
               />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigate('DOWNLOADS')}>
