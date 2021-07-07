@@ -124,7 +124,11 @@ class NavigationBar extends React.Component {
               <Forums
                 height={onTablet ? 40 : 30}
                 width={onTablet ? 40 : 30}
-                fill={'white'}
+                fill={
+                  this.props.currentPage === 'FORUM'
+                    ? this.state.primaryColor
+                    : this.state.secondaryColor
+                }
               />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigate('DOWNLOADS')}>
