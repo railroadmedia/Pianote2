@@ -88,7 +88,9 @@ class LoadPage extends React.Component {
           } else if (resetKey) {
             reset('RESETPASSWORD', { resetKey, email });
           } else {
-            let { params: { postId, threadTitle } = {} } = this.props.route;
+            let {
+              params: { threadId, postId, threadTitle } = {}
+            } = this.props.route;
             if (postId) {
               reset('LESSONS');
               navigate('FORUM', {
@@ -99,6 +101,7 @@ class LoadPage extends React.Component {
                 appColor: colors.pianoteRed,
                 user: this.props.user,
                 postId,
+                threadId,
                 threadTitle
               });
             }

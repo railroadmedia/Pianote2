@@ -22,7 +22,15 @@ PushNotification.configure({
   popInitialNotification: true,
   permissions: { alert: true, sound: true },
   onNotification: async function ({
-    data: { commentId, mobile_app_url, image, type, uri, threadTitle },
+    data: {
+      commentId,
+      mobile_app_url,
+      image,
+      type,
+      uri,
+      threadTitle,
+      threadId
+    },
     finish,
     userInteraction,
     title,
@@ -50,7 +58,11 @@ PushNotification.configure({
         } else if (type.includes('forum')) {
           global.notifNavigation = true;
 
-          navigate('LOADPAGE', { postId: parseInt(commentId), threadTitle });
+          navigate('LOADPAGE', {
+            postId: parseInt(commentId),
+            threadId: parseInt(threadId),
+            threadTitle
+          });
         }
       } else {
         showNotification({

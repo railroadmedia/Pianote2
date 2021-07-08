@@ -244,7 +244,8 @@ class Profile extends React.Component {
         appColor: colors.pianoteRed,
         user: this.props.user,
         threadTitle: notification.thread.title,
-        postId: notification.data.postId
+        postId: notification.data.postId,
+        threadId: notification.data.threadId
       });
     }
   };
