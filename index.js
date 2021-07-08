@@ -13,8 +13,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { navigate, reset } from './AppNavigator';
 import navigationService from './src/services/navigation.service';
 import commonService from './src/services/common.service';
-import { NetworkContext } from './src/context/NetworkProvider';
-import NavigationBar from './src/components/NavigationBar';
 
 PushNotification.configure({
   onRegister: () => {},
