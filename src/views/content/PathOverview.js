@@ -840,15 +840,5 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     alignSelf: 'stretch'
-  },
-  contentPageHeader: {
-    paddingLeft: 10,
-    fontSize: onTablet ? 34 : 26,
-    color: 'white',
-    fontFamily: 'OpenSans-ExtraBold'
-  },
-  mainContainer: {
-    backgroundColor: '#00101d',
-    flex: 1
   }
 });
