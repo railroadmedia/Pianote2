@@ -30,10 +30,10 @@ export default class Terms extends React.Component {
           <View style={{ flex: 1 }} />
         </View>
         <ScrollView style={localStyles.scrollContainer}>
-          <Text style={[styles.text, localStyles.subtitle]}>
+          <Text style={[localStyles.text, localStyles.subtitle]}>
             Last updated: September 2020
           </Text>
-          <Text style={styles.text}>
+          <Text style={localStyles.text}>
             Welcome to the Musora community! We are excited to help you on your
             musical journey.
             {'\n'}
@@ -63,8 +63,10 @@ export default class Terms extends React.Component {
             (play.google.com/intl/en-us_us/about/play-terms/index.html)
             depending on the type of device you are using.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>Eligibility</Text>
-          <Text style={styles.text}>
+          <Text style={[localStyles.text, localStyles.subtitle]}>
+            Eligibility
+          </Text>
+          <Text style={localStyles.text}>
             To be eligible to subscribe to the Service, you must be at least
             eighteen (18) years old, or above the age of majority in your
             jurisdiction, and fill out the information necessary to create a
@@ -81,7 +83,7 @@ export default class Terms extends React.Component {
             subscription. To request a refund please contact{' '}
             <Text
               style={[
-                styles.text,
+                localStyles.text,
                 { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
@@ -104,7 +106,7 @@ export default class Terms extends React.Component {
             is terminated. To request a refund please contact{' '}
             <Text
               style={[
-                styles.text,
+                localStyles.text,
                 { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
@@ -121,7 +123,7 @@ export default class Terms extends React.Component {
             contact us at{' '}
             <Text
               style={[
-                styles.text,
+                localStyles.text,
                 { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
@@ -129,10 +131,10 @@ export default class Terms extends React.Component {
             </Text>{' '}
             and we are happy to help you out.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>
+          <Text style={[localStyles.text, localStyles.subtitle]}>
             License to User Services
           </Text>
-          <Text style={styles.text}>
+          <Text style={localStyles.text}>
             Upon successful registration, you are granted a personal use license
             subject to the following conditions. You may not:
             {'\n'}
@@ -165,10 +167,10 @@ export default class Terms extends React.Component {
             the video. We reserve all rights to any and all original
             compositions found in the Service.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>
+          <Text style={[localStyles.text, localStyles.subtitle]}>
             User Contributions
           </Text>
-          <Text style={styles.text}>
+          <Text style={localStyles.text}>
             Users who post materials to the Service (e.g. bulletin boards,
             comment feeds, etc.) agree to abide by the following rules: 1) users
             may not post or transmit material that is libelous, defamatory,
@@ -198,10 +200,10 @@ export default class Terms extends React.Component {
             opinions and views of other users, and Musora is not responsible for
             the accuracy of the views and opinions expressed thereon.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>
+          <Text style={[localStyles.text, localStyles.subtitle]}>
             Intellectual Property
           </Text>
-          <Text style={styles.text}>
+          <Text style={localStyles.text}>
             The Service and its original content, features and functionality are
             and will remain the exclusive property of Musora and its licensors.
             The Service is protected by copyright, trademark, and other laws of
@@ -235,7 +237,7 @@ export default class Terms extends React.Component {
             on the Site or in any content in any way, you may notify us at{' '}
             <Text
               style={[
-                styles.text,
+                localStyles.text,
                 { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
@@ -246,10 +248,10 @@ export default class Terms extends React.Component {
             and/or trademark registration information, the location/URL of the
             violation, and any other information you believe is relevant.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>
+          <Text style={[localStyles.text, localStyles.subtitle]}>
             Links To Other Web Sites
           </Text>
-          <Text style={styles.text}>
+          <Text style={localStyles.text}>
             This site may include links to other Internet sites solely as a
             convenience to users. Musora Media does not endorse any such sites
             or the information, material, products or services contained on or
@@ -257,8 +259,10 @@ export default class Terms extends React.Component {
             including information, material, products and services therein,
             solely at your own risk.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>Termination</Text>
-          <Text style={styles.text}>
+          <Text style={[localStyles.text, localStyles.subtitle]}>
+            Termination
+          </Text>
+          <Text style={localStyles.text}>
             We may terminate or suspend your access to the Service immediately,
             without prior notice or liability, under our sole discretion, for
             any reason whatsoever and without limitation, including but not
@@ -270,10 +274,10 @@ export default class Terms extends React.Component {
             limitation, ownership provisions, warranty disclaimers, indemnity
             and limitations of liability.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>
+          <Text style={[localStyles.text, localStyles.subtitle]}>
             Indemnification
           </Text>
-          <Text style={styles.text}>
+          <Text style={localStyles.text}>
             You agree to defend, indemnify and hold harmless Murora and its
             licensee and licensors, and their employees, contractors, agents,
             officers and directors, from and against any and all claims,
@@ -282,10 +286,10 @@ export default class Terms extends React.Component {
             from or arising out of a) your use and access of the Service, or b)
             a breach of these Terms.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>
+          <Text style={[localStyles.text, localStyles.subtitle]}>
             Limitation of Liability
           </Text>
-          <Text style={styles.text}>
+          <Text style={localStyles.text}>
             In no event shall Musora Media, Inc, nor its directors, employees,
             partners, agents, suppliers, or affiliates, be liable for any
             indirect, incidental, special, consequential or punitive damages,
@@ -300,8 +304,10 @@ export default class Terms extends React.Component {
             such damage, and even if a remedy set forth herein is found to have
             failed of its essential purpose.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>Disclaimer</Text>
-          <Text style={styles.text}>
+          <Text style={[localStyles.text, localStyles.subtitle]}>
+            Disclaimer
+          </Text>
+          <Text style={localStyles.text}>
             Your use of the Service is at your sole risk. The Service is
             provided on an "AS IS" and "AS AVAILABLE" basis. The Service is
             provided without warranties of any kind, whether express or implied,
@@ -326,14 +332,18 @@ export default class Terms extends React.Component {
             information, services, tips, recommendations, or materials on the
             Services.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>Exclusions</Text>
-          <Text style={styles.text}>
+          <Text style={[localStyles.text, localStyles.subtitle]}>
+            Exclusions
+          </Text>
+          <Text style={localStyles.text}>
             Some jurisdictions do not allow the exclusion of certain warranties
             or the exclusion or limitation of liability for consequential or
             incidental damages, so the limitations above may not apply to you.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>Governing Law</Text>
-          <Text style={styles.text}>
+          <Text style={[localStyles.text, localStyles.subtitle]}>
+            Governing Law
+          </Text>
+          <Text style={localStyles.text}>
             These Terms shall be governed and construed in accordance with the
             laws of British Columbia and the laws of Canada applicable therein.
             {'\n'}
@@ -346,7 +356,7 @@ export default class Terms extends React.Component {
             Service, and supersede and replace any prior agreements we might
             have had between us regarding the Service.
           </Text>
-          <Text style={styles.text}>
+          <Text style={localStyles.text}>
             We reserve the right, at our sole discretion, to modify or replace
             these Terms at any time. If a revision is material, we will provide
             at least 30 days’ notice prior to any new terms taking effect. What
@@ -361,12 +371,12 @@ export default class Terms extends React.Component {
             do not agree to the new terms, you are no longer authorized to use
             the Service.
           </Text>
-          <Text style={styles.text}>
+          <Text style={localStyles.text}>
             If you have any questions about this Privacy Policy, please contact
             us at{' '}
             <Text
               style={[
-                styles.text,
+                localStyles.text,
                 { textDecorationLine: 'underline', color: 'rgb(0,122,255)' }
               ]}
             >
@@ -406,5 +416,8 @@ const localStyles = StyleSheet.create({
     marginTop: 25,
     fontFamily: 'OpenSans-Bold',
     marginBottom: 0
+  },
+  text: {
+    fontFamily: 'OpenSans'
   }
 });

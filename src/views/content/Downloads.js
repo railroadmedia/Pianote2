@@ -272,15 +272,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#081826',
     padding: 10
-  },
-  container: {
-    flex: 1,
-    alignSelf: 'stretch'
-  },
-  centerContent: {
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'stretch'
   }
 });
