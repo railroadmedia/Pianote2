@@ -1,22 +1,26 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import { isiOS } from '../../AppStyle';
 import commonService from './common.service';
 
-export async function getToken(userEmail, userPass, purchases) {
-  const data = (await AsyncStorage.multiGet(['email', 'password'])).reduce(
-    (i, j) => {
-      i[j[0]] = j[1] === 'true' ? true : j[1] === 'false' ? false : j[1];
-      i[j[0]] = j[1] === 'undefined' ? undefined : j[1];
-      return i;
-    },
-    {}
-  );
-
-  let email = userEmail || data.email;
-  let password = userPass || data.password;
+export async function getToken(
+  userEmail?: string,
+  userPass?: string,
+  purchases?: any
+) {
+  // let data: any;
+  // data = (await AsyncStorage.multiGet(['email', 'password'])).reduce((i, j) => {
+  //   i[j[0]] = j[1] === 'true' ? true : j[1] === 'false' ? false : j[1];
+  //   i[j[0]] = j[1] === 'undefined' ? undefined : j[1];
+  //   return i;
+  // }, {});
+  let e = await AsyncStorage.getItem('email');
+  let p = await AsyncStorage.getItem('password');
+  let email = userEmail || e;
+  let password = userPass || p;
 
   const body = purchases ? { email, password, purchases } : { email, password };
-
-  let response = await fetch(`${commonService.rootUrl}/musora-api/login`, {
+  let response: any;
+  response = await fetch(`${commonService.rootUrl}/musora-api/login`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
@@ -27,7 +31,7 @@ export async function getToken(userEmail, userPass, purchases) {
   } else {
     response = await response.json();
     if (response.success) {
-      token = response.token;
+      commonService.token = response.token;
     }
     return response;
   }
@@ -37,24 +41,28 @@ export async function getUserData() {
   return commonService.tryCall({ url: `${commonService.rootUrl}/api/profile` });
 }
 
-export async function avatarUpload(data) {
+export async function avatarUpload(data: any) {
   try {
     return await fetch(`${commonService.rootUrl}/musora-api/avatar/upload`, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${commonService.token}` },
       body: data
     });
   } catch (error) {}
 }
 
-export async function forgotPass(emailAddress) {
+export async function forgotPass(emailAddress: string) {
   return commonService.tryCall({
     url: `${commonService.rootUrl}/musora-api/forgot?email=${emailAddress}`,
     method: 'PUT'
   });
 }
 
-export async function changePassword(email, pass, token) {
+export async function changePassword(
+  email: string,
+  pass: string,
+  token: string
+) {
   return commonService.tryCall({
     url: `${commonService.rootUrl}/musora-api/change-password`,
     method: 'PUT',
@@ -66,19 +74,19 @@ export async function changePassword(email, pass, token) {
   });
 }
 
-export async function isNameUnique(name) {
+export async function isNameUnique(name: string) {
   return commonService.tryCall({
     url: `${commonService.rootUrl}/usora/api/is-display-name-unique?display_name=${name}`
   });
 }
 
-export async function isEmailUnique(email) {
+export async function isEmailUnique(email: string) {
   return commonService.tryCall({
     url: `${commonService.rootUrl}/usora/api/is-email-unique?email=${email}`
   });
 }
 
-export async function updateName(name) {
+export async function updateName(name: string) {
   return commonService.tryCall({
     url: `${commonService.rootUrl}/musora-api/profile/update`,
     method: 'POST',
@@ -99,11 +107,10 @@ export async function logOut() {
 }
 
 export async function signUp(
-  email,
-  password,
-  purchase,
-  oldToken,
-  selectedPlan
+  email: string,
+  password: string,
+  purchase: any,
+  selectedPlan: any
 ) {
   let platform = '';
   let receiptType = '';
@@ -132,9 +139,9 @@ export async function signUp(
     };
   }
   let headers;
-  if (token) {
+  if (commonService.token) {
     headers = {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${commonService.token}`,
       'Content-Type': 'application/json'
     };
   } else {
@@ -142,7 +149,8 @@ export async function signUp(
   }
 
   try {
-    let response = await fetch(
+    let response: any;
+    response = await fetch(
       `${commonService.rootUrl}/mobile-app/${platform}/verify-receipt-and-process-payment`,
       {
         method: 'POST',
@@ -156,22 +164,22 @@ export async function signUp(
       }
     );
     response = await response.json();
-    token = response?.meta?.auth_code;
+    commonService.token = response?.meta?.auth_code;
     return response;
   } catch (error) {
     return new Error(error);
   }
 }
 
-export async function restorePurchase(purchases) {
+export async function restorePurchase(purchases: any) {
   let platform = isiOS ? 'apple' : 'google';
   try {
-    let response = await fetch(
+    let response: any = await fetch(
       `${commonService.rootUrl}/mobile-app/api/${platform}/restore`,
       {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${commonService.token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(
@@ -180,14 +188,14 @@ export async function restorePurchase(purchases) {
       }
     );
     response = await response.json();
-    token = response?.token;
+    commonService.token = response?.token;
     return response;
   } catch (error) {
     return new Error(error);
   }
 }
 
-export async function validateSignUp(purchases) {
+export async function validateSignUp(purchases: any) {
   let platform = isiOS ? 'apple' : 'google';
   try {
     let response = await fetch(

@@ -37,7 +37,7 @@ PushNotification.configure({
   }) {
     let email = await AsyncStorage.getItem('email');
 
-    if (token || email) {
+    if (commonService.token || email) {
       // if logged in with token
       if (isiOS || (!isiOS && userInteraction)) {
         if (type.includes('aggregated')) {

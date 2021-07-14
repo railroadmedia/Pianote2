@@ -23,11 +23,11 @@ import {
   getToken,
   getUserData,
   restorePurchase
-} from '../../services/UserDataAuth.js';
-import Loading from '../../components/Loading.js';
+} from '../../services/UserDataAuth';
+import Loading from '../../components/Loading';
 import GradientFeature from '../../components/GradientFeature';
-import CustomModal from '../../modals/CustomModal.js';
-import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
+import CustomModal from '../../modals/CustomModal';
+import PasswordEmailMatch from '../../modals/PasswordEmailMatch';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { goBack, navigate, reset } from '../../../AppNavigator';
 import commonService from '../../services/common.service';

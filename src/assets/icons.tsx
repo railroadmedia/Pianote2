@@ -12,26 +12,26 @@ import FeatherI from 'react-native-vector-icons/Feather';
 import EntypoI from 'react-native-vector-icons/Entypo';
 import ZocialI from 'react-native-vector-icons/Zocial';
 import React from 'react';
+import { IconProps } from 'react-native-vector-icons/Icon';
 
-export const MaterialCommunityIcons = props => (
+export const MaterialCommunityIcons = (props: IconProps) => (
   <MaterialCommunityIconsI {...props} />
 );
-const SimpleLineIcons = props => <SimpleLineIconsI {...props} />;
-const MaterialIcons = props => <MaterialIconsI {...props} />;
-const FontAwesome = props => <FontAwesomeI {...props} />;
-const FontAwesome5 = props => <FontAwesome5I {...props} />;
-const Foundation = props => <FoundationI {...props} />;
-const EvilIcons = props => <EvilIconsI {...props} />;
-const AntDesign = props => <AntDesignI {...props} />;
-const Ionicons = props => <IoniconsI {...props} />;
-const Octicons = props => <OcticonsI {...props} />;
-const Feather = props => <FeatherI {...props} />;
-const Entypo = props => <EntypoI {...props} />;
-const Zocial = props => <ZocialI {...props} />;
+const SimpleLineIcons = (props: IconProps) => <SimpleLineIconsI {...props} />;
+const MaterialIcons = (props: IconProps) => <MaterialIconsI {...props} />;
+const FontAwesome = (props: IconProps) => <FontAwesomeI {...props} />;
+const FontAwesome5 = (props: IconProps) => <FontAwesome5I {...props} />;
+const Foundation = (props: IconProps) => <FoundationI {...props} />;
+const EvilIcons = (props: IconProps) => <EvilIconsI {...props} />;
+const AntDesign = (props: IconProps) => <AntDesignI {...props} />;
+const Ionicons = (props: IconProps) => <IoniconsI {...props} />;
+const Octicons = (props: IconProps) => <OcticonsI {...props} />;
+const Feather = (props: IconProps) => <FeatherI {...props} />;
+const Entypo = (props: IconProps) => <EntypoI {...props} />;
+const Zocial = (props: IconProps) => <ZocialI {...props} />;
 
 export default {
   MaterialCommunityIcons,
-  SimpleLineIcons,
   SimpleLineIcons,
   MaterialIcons,
   FontAwesome,

@@ -10,7 +10,7 @@ import {
   StatusBar,
   StyleSheet
 } from 'react-native';
-import Icon from '../../assets/icons.js';
+import Icon from '../../assets/icons';
 import AsyncStorage from '@react-native-community/async-storage';
 import { SafeAreaView } from 'react-navigation';
 import NavigationBar from '../../components/NavigationBar';

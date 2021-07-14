@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import Back from '../../assets/img/svgs/back.svg';
 import Intercom from 'react-native-intercom';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import NavigationBar from 'Pianote2/src/components/NavigationBar';
 import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
 import { goBack } from '../../../AppNavigator';

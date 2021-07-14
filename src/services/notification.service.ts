@@ -1,7 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
+import { isiOS } from '../../AppStyle';
 import PushNotification from 'react-native-push-notification';
 import commonService from './common.service';
-import { updateUserDetails } from './UserActions';
 
 export let notif = {};
 
@@ -9,13 +9,27 @@ export const updateFcmToken = () =>
   messaging()
     .getToken()
     .then(fcmToken => {
-      if (fcmToken) updateUserDetails(null, null, null, fcmToken);
+      if (fcmToken) {
+        let url = `${
+          commonService.rootUrl
+        }/musora-api/profile/update?firebase_token_${
+          isiOS ? 'ios' : 'android'
+        }=${fcmToken}`;
+
+        return commonService.tryCall({ url, method: 'POST' });
+      }
     });
 
 export const showNotification = ({
   notification: { body, title },
   data,
   messageId
+}: {
+  messageId: number;
+  data: any;
+  notification: any;
+  body: string;
+  title: string;
 }) => {
   PushNotification.localNotification({
     channelId: 'pianote-app-channel',
@@ -37,21 +51,21 @@ export const showNotification = ({
 };
 
 export const localNotification = () => {
-  messaging().onMessage(notification => {
+  messaging().onMessage((notification: any) => {
     showNotification(notification);
   });
-  messaging().setBackgroundMessageHandler(async notification => {
+  messaging().setBackgroundMessageHandler(async (notification: any) => {
     showNotification(notification);
   });
 };
 
-export async function getnotifications(page) {
+export async function getnotifications(page: number) {
   return await commonService.tryCall({
     url: `${commonService.rootUrl}/api/railnotifications/notifications?limit=10&page=${page}`
   });
 }
 
-export async function removeNotification(id) {
+export async function removeNotification(id: number) {
   return commonService.tryCall({
     url: `${commonService.rootUrl}/api/railnotifications/notification/${id}`,
     method: 'DELETE'
@@ -64,7 +78,7 @@ export async function getNotificationSettings() {
   });
 }
 
-export async function changeNotificationSettings(body) {
+export async function changeNotificationSettings(body: any) {
   let response = await commonService.tryCall({
     url: `${commonService.rootUrl}/usora/api/profile/update`,
     method: 'POST',

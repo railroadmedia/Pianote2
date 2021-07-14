@@ -11,13 +11,11 @@ import {
   RefreshControl
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import Icon from '../../assets/icons.js';
-import Chat from '../../assets/img/svgs/chat.svg';
-import Settings from '../../assets/img/svgs/settings.svg';
-import XpRank from '../../modals/XpRank.js';
-import { getUserData } from '../../services/UserDataAuth.js';
-import NavigationBar from '../../components/NavigationBar.js';
-import ReplyNotification from '../../modals/ReplyNotification.js';
+import Icon from '../../assets/icons';
+// import XpRank from '../../modals/XpRank';
+import { getUserData } from '../../services/UserDataAuth';
+// import NavigationBar from '../../components/NavigationBar';
+// import ReplyNotification from '../../modals/ReplyNotification';
 import { NetworkContext } from '../../context/NetworkProvider';
 import {
   getnotifications,
@@ -25,14 +23,45 @@ import {
   changeNotificationSettings
 } from '../../services/notification.service';
 import { SafeAreaView } from 'react-navigation';
-import { navigate, reset } from '../../../AppNavigator.js';
-import { setLoggedInUser } from '../../redux/UserActions.js';
+// import { navigate, reset } from '../../../AppNavigator';
 import { connect } from 'react-redux';
-import commonService from '../../services/common.service.js';
+import IUser from '../../model/IUser';
+import { AppDispatch, IAppState } from '../../redux/Store';
+import { setLoggedInUser } from '../../redux/UserActions';
+import {
+  infoButtonSize,
+  mainBackground,
+  notificationColor,
+  secondBackground,
+  pianoteRed,
+  onTablet,
+  verticalListTitleSmall
+} from '../../../AppStyle';
+import INotification from '../../model/INotifications';
+import commonService from '../../services/common.service';
 
-const onTablet = global.onTablet;
-let localStyles;
-const messageDict = {
+interface IUserStateProps {
+  user: IUser;
+}
+
+interface IUserDispatchProps {
+  setLoggedInUser: (user: IUser) => void;
+}
+
+interface IProfileProps extends IUserStateProps, IUserDispatchProps {}
+
+interface IProfileState {
+  notifications: INotification[];
+  showXpRank: boolean;
+  showReplyNotification: boolean;
+  isLoading: boolean;
+  refreshing: boolean;
+  animateLoadMore: boolean;
+  clickedNotification: INotification | null;
+}
+
+let localStyles: any;
+const messageDict: any = {
   'lesson comment reply': {
     message: 'replied to your comment.',
     new: true,
@@ -70,12 +99,12 @@ const messageDict = {
   }
 };
 
-class Profile extends React.Component {
+class Profile extends React.Component<IProfileProps, IProfileState> {
   static contextType = NetworkContext;
-  page = 1;
-  constructor(props) {
+  page: number = 1;
+  constructor(props: IProfileProps) {
     super(props);
-    localStyles = setStyles(this.props.theme === 'light', colors.pianoteRed);
+    localStyles = setStyles(false, pianoteRed);
     this.state = {
       notifications: [],
       showXpRank: false,
@@ -96,12 +125,12 @@ class Profile extends React.Component {
     this.setState({ refreshing: false });
   }
 
-  async getNotifications(loadMore) {
+  async getNotifications(loadMore: boolean) {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     if (loadMore) this.page++;
     else this.page = 1;
     let notifications = await getnotifications(this.page);
-    for (i in notifications.data) {
+    for (let i in notifications.data) {
       let timeCreated =
         notifications.data[i].created_at?.slice(0, 10) +
         'T' +
@@ -139,7 +168,7 @@ class Profile extends React.Component {
     }));
   }
 
-  changeXP = num => {
+  changeXP = (num: number | string) => {
     if (num !== '') {
       num = Number(num);
       if (num < 10000) {
@@ -153,7 +182,7 @@ class Profile extends React.Component {
     }
   };
 
-  removeNotification = notificationId => {
+  removeNotification = (notificationId: number) => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     this.setState(state => ({
       notifications: state.notifications.filter(c => c.id !== notificationId),
@@ -163,9 +192,12 @@ class Profile extends React.Component {
     removeNotification(notificationId);
   };
 
-  turnOfffNotifications = async type => {
+  turnOfffNotifications = async (type: string) => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    this.setState({ showReplyNotification: false, clickedNotification: {} });
+    this.setState({
+      showReplyNotification: false,
+      clickedNotification: {} as INotification
+    });
     const {
       notify_on_lesson_comment_reply,
       notify_on_lesson_comment_like,
@@ -226,27 +258,27 @@ class Profile extends React.Component {
     changeNotificationSettings(body);
   };
 
-  openNotification = notification => {
+  openNotification = (notification: INotification) => {
     if (
       notification.type === 'lesson comment reply' ||
       notification.type === 'lesson comment liked'
     ) {
-      navigate('VIEWLESSON', {
-        comment: notification.comment,
-        url: notification.content.musora_api_mobile_app_url
-      });
+      // navigate('VIEWLESSON', {
+      //   comment: notification.comment,
+      //   url: notification.content.musora_api_mobile_app_url
+      // });
     } else {
-      navigate('FORUM', {
-        NetworkContext,
-        tryCall: commonService.tryCall.bind(commonService),
-        rootUrl: commonService.rootUrl,
-        isDark: true,
-        appColor: colors.pianoteRed,
-        user: this.props.user,
-        threadTitle: notification.thread.title,
-        postId: notification.data.postId,
-        threadId: notification.data.threadId
-      });
+      // navigate('FORUM', {
+      //   NetworkContext,
+      //   tryCall: commonService.tryCall.bind(commonService),
+      //   rootUrl: commonService.rootUrl,
+      //   isDark: true,
+      //   appColor: pianoteRed,
+      //   user: this.props.user,
+      //   threadTitle: notification?.thread?.title,
+      //   postId: notification.data.postId,
+      //   threadId: notification.data.threadId
+      // });
     }
   };
 
@@ -261,25 +293,32 @@ class Profile extends React.Component {
       totalXp,
       xpRank
     } = this.props.user;
+    console.log(this.props.user);
     return (
       <SafeAreaView style={localStyles.mainContainer}>
         <StatusBar
-          backgroundColor={colors.mainBackground}
+          backgroundColor={mainBackground}
           barStyle={'light-content'}
         />
         <View style={localStyles.mainContainer}>
           <View style={localStyles.headerContainer}>
             <View style={{ flex: 1 }} />
-            <Text style={localStyles.childHeaderText}>My Profile</Text>
+            <Text style={[localStyles.childHeaderText, { flex: 1 }]}>
+              My Profile
+            </Text>
             <TouchableOpacity
-              style={{ flex: 1 }}
-              onPress={() => navigate('SETTINGS')}
+              style={{
+                flex: 1,
+                alignItems: 'flex-end'
+              }}
+              onPress={() => {
+                // navigate('SETTINGS');
+              }}
             >
-              <Settings
-                height={onTablet ? 25 : 17.5}
-                width={onTablet ? 25 : 17.5}
-                fill={colors.pianoteRed}
-                style={{ alignSelf: 'flex-end' }}
+              <Icon.Ionicons
+                name='ios-settings-sharp'
+                size={onTablet ? 25 : 18}
+                color={pianoteRed}
               />
             </TouchableOpacity>
           </View>
@@ -295,11 +334,11 @@ class Profile extends React.Component {
                 onRefresh={() =>
                   this.setState({ refreshing: true }, () => {
                     this.getUserDetails();
-                    this.getNotifications();
+                    this.getNotifications(false);
                   })
                 }
-                colors={[colors.pianoteRed]}
-                tintColor={colors.pianoteRed}
+                colors={[pianoteRed]}
+                tintColor={pianoteRed}
               />
             }
             ListHeaderComponent={() => (
@@ -307,17 +346,17 @@ class Profile extends React.Component {
                 <View style={localStyles.centerContent}>
                   <View>
                     <TouchableOpacity
-                      onPress={() =>
-                        navigate('PROFILESETTINGS', {
-                          data: 'Profile Photo'
-                        })
-                      }
+                      onPress={() => {
+                        // navigate('PROFILESETTINGS', {
+                        //   data: 'Profile Photo'
+                        // });
+                      }}
                       style={localStyles.cameraBtn}
                     >
                       <Icon.Ionicons
+                        name='md-camera'
                         size={onTablet ? 24 : 18}
-                        name={'ios-camera'}
-                        color={colors.pianoteRed}
+                        color={pianoteRed}
                       />
                     </TouchableOpacity>
                     <FastImage
@@ -363,7 +402,7 @@ class Profile extends React.Component {
                   style={[
                     localStyles.notificationText,
                     {
-                      fontSize: sizing.verticalListTitleSmall,
+                      fontSize: verticalListTitleSmall,
                       paddingVertical: 15,
                       paddingLeft: 10,
                       fontFamily: 'OpenSans-ExtraBold',
@@ -380,7 +419,7 @@ class Profile extends React.Component {
                 <ActivityIndicator
                   size={onTablet ? 'large' : 'small'}
                   animating={true}
-                  color={colors.secondBackground}
+                  color={secondBackground}
                   style={{ margin: 20 }}
                 />
               ) : (
@@ -393,7 +432,7 @@ class Profile extends React.Component {
               <ActivityIndicator
                 style={{ marginVertical: 20 }}
                 size='small'
-                color={colors.secondBackground}
+                color={secondBackground}
                 animating={this.state.animateLoadMore}
                 hidesWhenStopped={true}
               />
@@ -405,9 +444,7 @@ class Profile extends React.Component {
                   {
                     paddingLeft: 10,
                     backgroundColor:
-                      index % 2
-                        ? colors.mainBackground
-                        : colors.notificationColor
+                      index % 2 ? mainBackground : notificationColor
                   }
                 ]}
                 onPress={() => this.openNotification(item)}
@@ -422,10 +459,10 @@ class Profile extends React.Component {
                         { backgroundColor: 'orange' }
                       ]}
                     >
-                      <Chat
-                        height={sizing.infoButtonSize}
-                        width={sizing.infoButtonSize}
-                        fill={'white'}
+                      <Icon.Ionicons
+                        size={infoButtonSize}
+                        color={'white'}
+                        name={'ios-chatbubble-sharp'}
                       />
                     </View>
                   ) : (
@@ -437,7 +474,7 @@ class Profile extends React.Component {
                       ]}
                     >
                       <Icon.AntDesign
-                        size={sizing.infoButtonSize}
+                        size={infoButtonSize}
                         color={'white'}
                         name={'like1'}
                       />
@@ -490,9 +527,9 @@ class Profile extends React.Component {
                     }}
                   >
                     <Icon.Entypo
-                      size={sizing.infoButtonSize}
+                      size={infoButtonSize}
                       name={'dots-three-horizontal'}
-                      color={colors.secondBackground}
+                      color={secondBackground}
                     />
                   </TouchableOpacity>
                 </View>
@@ -500,15 +537,15 @@ class Profile extends React.Component {
             )}
           />
         </View>
-        {this.state.showXpRank && (
+        {/* {this.state.showXpRank && (
           <XpRank
             hideXpRank={() => this.setState({ showXpRank: false })}
             xp={totalXp}
             rank={xpRank}
           />
-        )}
+        )} */}
 
-        {this.state.showReplyNotification && (
+        {/* {this.state.showReplyNotification && (
           <ReplyNotification
             removeNotification={notificationId =>
               this.removeNotification(notificationId)
@@ -526,25 +563,25 @@ class Profile extends React.Component {
               ]
             }
           />
-        )}
+        )} */}
 
-        <NavigationBar currentPage={'PROFILE'} pad={true} />
+        {/* <NavigationBar currentPage={'PROFILE'} pad={true} /> */}
       </SafeAreaView>
     );
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: IAppState): IUserStateProps => ({
   user: state.userState.user
 });
 
-const mapDispatchToProps = dispatch => ({
-  setLoggedInUser: user => dispatch(setLoggedInUser(user))
+const mapDispatchToProps = (dispatch: AppDispatch): IUserDispatchProps => ({
+  setLoggedInUser: (user: IUser) => dispatch(setLoggedInUser(user))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
 
-const setStyles = (isLight, appColor) =>
+const setStyles = (isLight: boolean, appColor: string) =>
   StyleSheet.create({
     centerContent: {
       alignItems: 'center',

@@ -11,7 +11,7 @@ import {
   StyleSheet
 } from 'react-native';
 import Back from '../../assets/img/svgs/back.svg';
-import Icon from '../../assets/icons.js';
+import Icon from '../../assets/icons';
 import AsyncStorage from '@react-native-community/async-storage';
 import Orientation from 'react-native-orientation-locker';
 import { SafeAreaView } from 'react-navigation';

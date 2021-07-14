@@ -11,11 +11,11 @@ import {
 } from 'react-native';
 import Back from '../../assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
-import NavigationBar from '../../components/NavigationBar.js';
-import VerticalVideoList from '../../components/VerticalVideoList.js';
+import NavigationBar from '../../components/NavigationBar';
+import VerticalVideoList from '../../components/VerticalVideoList';
 import { getMyListContent, getStartedContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
-import { goBack } from '../../../AppNavigator.js';
+import { goBack } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =

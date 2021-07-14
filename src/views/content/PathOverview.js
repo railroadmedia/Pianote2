@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { Download_V2 } from 'RNDownload';
-import Icon from '../../assets/icons.js';
+import Icon from '../../assets/icons';
 import Back from '../../assets/img/svgs/back.svg';
 import Orientation from 'react-native-orientation-locker';
 import LongButton from '../../components/LongButton';

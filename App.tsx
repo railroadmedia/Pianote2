@@ -1,42 +1,19 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { Text, Linking, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Orientation from 'react-native-orientation-locker';
 import AppNavigator, { reset } from './AppNavigator';
-
-import packsReducer from './src/redux/PacksCacheReducer';
-import songsReducer from './src/redux/SongsCacheReducer';
-import myListReducer from './src/redux/MyListCacheReducer';
-import coursesReducer from './src/redux/CoursesCacheReducer';
-import lessonsReducer from './src/redux/LessonsCacheReducer';
-import podcastsReducer from './src/redux/PodcastsCacheReducer';
-import quickTipsReducer from './src/redux/QuickTipsCacheReducer';
-import studentFocusReducer from './src/redux/StudentFocusCacheReducer';
-import userReducer from './src/redux/UserReducer';
 import commonService from './src/services/common.service';
-
-const store = createStore(
-  combineReducers({
-    ...packsReducer,
-    ...songsReducer,
-    ...myListReducer,
-    ...lessonsReducer,
-    ...coursesReducer,
-    ...podcastsReducer,
-    ...quickTipsReducer,
-    ...studentFocusReducer,
-    userState: userReducer
-  })
-);
+import { configureStore } from './src/redux/Store';
 
 export default class App extends React.Component {
   constructor(props) {
+    super(props);
     Text.defaultProps = {};
     Text.defaultProps.maxFontSizeMultiplier = 1;
-    super(props);
+
     if (onTablet) Orientation.unlockAllOrientations();
     else Orientation.lockToPortrait();
     global.notifNavigation = false;
@@ -73,7 +50,7 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <Provider store={store}>
+      <Provider store={configureStore()}>
         <StatusBar barStyle='light-content' />
         <AppNavigator />
       </Provider>

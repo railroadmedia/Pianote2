@@ -29,7 +29,7 @@ import NavMenuHeaders from '../../components/NavMenuHeaders';
 import GradientFeature from '../../components/GradientFeature';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
-import methodService from '../../services/method.service.js';
+import methodService from '../../services/method.service';
 import {
   getStartedContent,
   getLiveContent,

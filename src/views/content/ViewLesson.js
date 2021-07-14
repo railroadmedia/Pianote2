@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 import Video from 'RNVideoEnhanced';
 import FastImage from 'react-native-fast-image';
-import Icon from '../../assets/icons.js';
+import Icon from '../../assets/icons';
 import { Download_V2, offlineContent, DownloadResources } from 'RNDownload';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Replies from '../../components/Replies';

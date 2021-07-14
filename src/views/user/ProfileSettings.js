@@ -10,22 +10,22 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import ImagePicker from 'react-native-image-picker';
-import Icon from '../../assets/icons.js';
+import Icon from '../../assets/icons';
 import Back from '../../assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
-import NavigationBar from '../../components/NavigationBar.js';
+import NavigationBar from '../../components/NavigationBar';
 import CustomModal from '../../modals/CustomModal';
-import commonService from '../../services/common.service.js';
-import { NetworkContext } from '../../context/NetworkProvider.js';
-import Loading from '../../components/Loading.js';
-import { goBack, reset } from '../../../AppNavigator.js';
+import commonService from '../../services/common.service';
+import { NetworkContext } from '../../context/NetworkProvider';
+import Loading from '../../components/Loading';
+import { goBack, reset } from '../../../AppNavigator';
 import {
   isNameUnique,
   updateName,
   avatarUpload
-} from '../../services/UserDataAuth.js';
+} from '../../services/UserDataAuth';
 import { connect } from 'react-redux';
-import { setLoggedInUser } from '../../redux/UserActions.js';
+import { setLoggedInUser } from '../../redux/UserActions';
 
 const onTablet = global.onTablet;
 

@@ -14,12 +14,12 @@ import {
 import { SafeAreaView } from 'react-navigation';
 import RNIap from 'react-native-iap';
 import Pianote from '../../assets/img/svgs/pianote.svg';
-import GradientFeature from '../../components/GradientFeature.js';
+import GradientFeature from '../../components/GradientFeature';
 import { validateSignUp, restorePurchase } from '../../services/UserDataAuth';
 import CustomModal from '../../modals/CustomModal';
 import Loading from '../../components/Loading';
 import Orientation from 'react-native-orientation-locker';
-import { navigate } from '../../../AppNavigator.js';
+import { navigate } from '../../../AppNavigator';
 
 const windowDim = Dimensions.get('window');
 const width =

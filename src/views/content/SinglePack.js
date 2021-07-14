@@ -16,7 +16,7 @@ import { Download_V2 } from 'RNDownload';
 import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import Back from '../../assets/img/svgs/back.svg';
-import Icon from '../../assets/icons.js';
+import Icon from '../../assets/icons';
 import Orientation from 'react-native-orientation-locker';
 import { DownloadResources } from 'RNDownload';
 import LongButton from '../../components/LongButton';

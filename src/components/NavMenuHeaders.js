@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, TouchableOpacity, StatusBar, Modal } from 'react-native';
 import Icon from '../assets/icons';
 import Pianote from '../assets/img/svgs/pianote.svg';
-import NavigationMenu from '../../src/components/NavigationMenu.js';
+import NavigationMenu from '../../src/components/NavigationMenu';
 import { NetworkContext } from '../context/NetworkProvider';
 import { SafeAreaView } from 'react-navigation';
 import { navigate } from '../../AppNavigator';

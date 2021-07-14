@@ -1,21 +1,31 @@
-import { getToken } from '../../src/services/UserDataAuth.js';
-import { updateFcmToken } from '../../src/services/notification.service.js';
+import { getToken } from './UserDataAuth';
+import { updateFcmToken } from './notification.service';
 
 export let cache = {};
 export default {
   rootUrl: 'https://staging.pianote.com',
   urlToOpen: '',
-  tryCall: async function ({ url, method, body }) {
+  token: '',
+  tryCall: async function ({
+    url,
+    method,
+    body
+  }: {
+    url: string;
+    method?: string;
+    body?: any;
+  }) {
     try {
       //
       if (body) body = body ? JSON.stringify(body) : null;
-      let headers = body
+      let headers: HeadersInit;
+      headers = body
         ? {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${this.token}`,
             'Content-Type': 'application/json'
           }
         : {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${this.token}`
           };
 
       // URL calling --> change to https
@@ -42,7 +52,7 @@ export default {
 
         // remake headers w new GLOBAL TOKEN
         let headers = {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${this.token}`,
           'Content-Type': 'application/json'
         };
 

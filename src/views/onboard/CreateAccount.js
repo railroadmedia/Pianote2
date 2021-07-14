@@ -12,9 +12,9 @@ import {
 import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import Back from '../../assets/img/svgs/back';
-import CheckEmail from '../../modals/CheckEmail.js';
-import GradientFeature from '../../components/GradientFeature.js';
-import { NetworkContext } from '../../context/NetworkProvider.js';
+import CheckEmail from '../../modals/CheckEmail';
+import GradientFeature from '../../components/GradientFeature';
+import { NetworkContext } from '../../context/NetworkProvider';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
 import Orientation from 'react-native-orientation-locker';
 import { navigate } from '../../../AppNavigator';

@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import Video from 'RNVideoEnhanced';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
-import NavigationBar from '../../components/NavigationBar.js';
+import NavigationBar from '../../components/NavigationBar';
 import CountDown from '../../components/CountDown';
 import FastImage from 'react-native-fast-image';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
@@ -24,7 +24,7 @@ import {
   removeAllMessages,
   toggleBlockStudent
 } from '../../services/UserActions';
-import Icon from '../../assets/icons.js';
+import Icon from '../../assets/icons';
 import ArrowLeft from '../../assets/img/svgs/arrowLeft';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import AddToCalendar from '../../modals/AddToCalendar';

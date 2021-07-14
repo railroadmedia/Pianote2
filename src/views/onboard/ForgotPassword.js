@@ -16,7 +16,7 @@ import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import Back from '../../assets/img/svgs/back';
 import Pianote from '../../assets/img/svgs/pianote.svg';
-import GradientFeature from '../../../src/components/GradientFeature.js';
+import GradientFeature from '../../../src/components/GradientFeature';
 import { forgotPass } from '../../services/UserDataAuth';
 import CustomModal from '../../modals/CustomModal';
 import Loading from '../../components/Loading';

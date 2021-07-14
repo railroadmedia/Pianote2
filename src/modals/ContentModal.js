@@ -5,7 +5,7 @@ import {
   unlikeContent,
   addToMyList,
   removeFromMyList
-} from '../../src/services/UserActions.js';
+} from '../../src/services/UserActions';
 import FastImage from 'react-native-fast-image';
 import Icon from '../assets/icons';
 import { Download_V2 } from 'RNDownload';

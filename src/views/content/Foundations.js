@@ -10,7 +10,7 @@ import {
   StyleSheet
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import Icon from '../../assets/icons.js';
+import Icon from '../../assets/icons';
 import LinearGradient from 'react-native-linear-gradient';
 import Orientation from 'react-native-orientation-locker';
 import LongButton from '../../components/LongButton';

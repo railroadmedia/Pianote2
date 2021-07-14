@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import AsyncStorage from '@react-native-community/async-storage';
 import Back from '../../assets/img/svgs/back';
-import GradientFeature from '../../components/GradientFeature.js';
+import GradientFeature from '../../components/GradientFeature';
 import PasswordHidden from '../../assets/img/svgs/passwordHidden.svg';
 import PasswordVisible from '../../assets/img/svgs/passwordVisible.svg';
 import { signUp, getUserData } from '../../services/UserDataAuth';

@@ -8,10 +8,10 @@ import {
   SafeAreaView,
   StyleSheet
 } from 'react-native';
-import SoundSlice from '../../components/SoundSlice.js';
-import Icon from '../../assets/icons.js';
-import AssignmentResource from './AssignmentResource.js';
-import downloadService from '../../services/download.service.js';
+import SoundSlice from '../../components/SoundSlice';
+import Icon from '../../assets/icons';
+import AssignmentResource from './AssignmentResource';
+import downloadService from '../../services/download.service';
 import { NetworkContext } from '../../context/NetworkProvider';
 
 let localStyles;

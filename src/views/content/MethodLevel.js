@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
-import Icon from '../../assets/icons.js';
+import Icon from '../../assets/icons';
 import Back from '../../assets/img/svgs/back.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import Orientation from 'react-native-orientation-locker';

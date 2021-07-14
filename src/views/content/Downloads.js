@@ -8,9 +8,9 @@ import {
   StyleSheet
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import NavigationBar from '../../../src/components/NavigationBar.js';
+import NavigationBar from '../../../src/components/NavigationBar';
 import { Download_V2, offlineContent } from 'RNDownload';
-import Icon from '../../assets/icons.js';
+import Icon from '../../assets/icons';
 import { SafeAreaView } from 'react-navigation';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { navigate } from '../../../AppNavigator';

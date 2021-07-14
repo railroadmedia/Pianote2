@@ -10,7 +10,7 @@ import {
 import FastImage from 'react-native-fast-image';
 import { SafeAreaView } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
-import GradientFeature from '../../components/GradientFeature.js';
+import GradientFeature from '../../components/GradientFeature';
 import PasswordHidden from '../../assets/img/svgs/passwordHidden.svg';
 import Back from '../../assets/img/svgs/back';
 import PasswordVisible from '../../assets/img/svgs/passwordVisible.svg';
@@ -18,6 +18,7 @@ import CustomModal from '../../modals/CustomModal';
 import { changePassword } from '../../services/UserDataAuth';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { navigate } from '../../../AppNavigator';
+import commonService from '../../services/common.service';
 
 export default class ResetPassword extends React.Component {
   static contextType = NetworkContext;
@@ -48,7 +49,7 @@ export default class ResetPassword extends React.Component {
       await AsyncStorage.removeItem('resetKey');
       if (res.success) {
         if (res.token) {
-          token = res.token;
+          commonService.token = res.token;
           await AsyncStorage.multiSet([
             ['email', email],
             ['password', this.state.password]

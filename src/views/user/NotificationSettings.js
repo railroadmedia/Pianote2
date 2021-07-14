@@ -8,9 +8,9 @@ import {
   StyleSheet
 } from 'react-native';
 import Back from '../../assets/img/svgs/back.svg';
-import Icon from '../../assets/icons.js';
-import CustomSwitch from '../../components/CustomSwitch.js';
-import NavigationBar from '../../components/NavigationBar.js';
+import Icon from '../../assets/icons';
+import CustomSwitch from '../../components/CustomSwitch';
+import NavigationBar from '../../components/NavigationBar';
 import { changeNotificationSettings } from '../../services/notification.service';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { SafeAreaView } from 'react-navigation';

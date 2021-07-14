@@ -8,13 +8,13 @@ import {
   StyleSheet,
   ActivityIndicator
 } from 'react-native';
-import Icon from '../../assets/icons.js';
+import Icon from '../../assets/icons';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import AddToCalendar from '../../modals/AddToCalendar';
 import { addToMyList, removeFromMyList } from '../../services/UserActions';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import { SafeAreaView } from 'react-navigation';
-import NavigationBar from '../../components/NavigationBar.js';
+import NavigationBar from '../../components/NavigationBar';
 import { getScheduleContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 

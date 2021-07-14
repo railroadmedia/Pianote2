@@ -1,14 +1,22 @@
 import React from 'react';
-import NetInfo from '@react-native-community/netinfo';
+import NetInfo, { NetInfoState } from '@react-native-community/netinfo';
 import { Alert } from 'react-native';
 
-export const NetworkContext = React.createContext({
-  isConnected: true,
-  showNoConnectionAlert: () => {}
-});
+interface Props {}
 
-export default class NetworkProvider extends React.PureComponent {
-  constructor(props) {
+interface State {
+  isConnected: boolean | null;
+  showNoConnectionAlert: () => void;
+}
+
+export const NetworkContext = React.createContext({});
+
+export default class NetworkProvider extends React.PureComponent<Props, State> {
+  showNoConnectionAlert: () => void;
+  alertPresent: boolean = false;
+  unsubscribe: any;
+
+  constructor(props: Props) {
     super(props);
     this.showNoConnectionAlert = () => {
       return Alert.alert(
@@ -25,14 +33,13 @@ export default class NetworkProvider extends React.PureComponent {
     };
   }
 
-  componentDidMount = () =>
-    (this.unsubscribe = NetInfo.addEventListener(
-      this.handleConnectivityChange
-    ));
+  componentDidMount = () => {
+    this.unsubscribe = NetInfo.addEventListener(this.handleConnectivityChange);
+  };
 
   componentWillUnmount = () => this.unsubscribe();
 
-  handleConnectivityChange = state => {
+  handleConnectivityChange = (state: NetInfoState) => {
     this.setState({ isConnected: state.isConnected });
   };
 
