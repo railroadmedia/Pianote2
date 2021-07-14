@@ -173,7 +173,7 @@ class Course extends React.Component {
             )}
             {onTablet ? (
               <HorizontalVideoList
-                isTile={true}
+                showType={true}
                 Title={'COURSES'}
                 seeAll={() =>
                   navigate('SEEALL', {
@@ -208,10 +208,13 @@ class Course extends React.Component {
                 callEndReached={true}
                 reachedEnd={() => {
                   if (!this.state.isPaging) {
-                    (page = page + 1),
-                      this.setState({ isPaging: true }, () =>
-                        this.getAllCourses()
-                      );
+                    this.setState(
+                      {
+                        page: this.state.page + 1,
+                        isPaging: true
+                      },
+                      () => this.getAllCourses()
+                    );
                   }
                 }}
               />
