@@ -13,7 +13,11 @@ import Back from '../../assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
 import NavigationBar from '../../components/NavigationBar.js';
 import VerticalVideoList from '../../components/VerticalVideoList.js';
-import { getMyListContent, getStartedContent } from '../../services/GetContent';
+import {
+  getAllContent,
+  getMyListContent,
+  getStartedContent
+} from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { goBack } from '../../../AppNavigator.js';
 
@@ -74,13 +78,35 @@ export default class SeeAll extends React.Component {
         this.state.title === 'In Progress' ? 'started' : 'completed'
       );
     } else if (this.state.parent === 'Lessons') {
-      response = await getStartedContent('', this.state.page, this.filterQuery);
+      if (this.state.title === 'Continue') {
+        response = await getStartedContent(
+          '',
+          this.state.page,
+          this.filterQuery
+        );
+      } else {
+        response = await getAllContent(
+          '',
+          this.state.currentSort,
+          this.state.page,
+          this.filterQuery
+        );
+      }
     } else if (this.state.parent === 'Courses') {
-      response = await getStartedContent(
-        'course',
-        this.state.page,
-        this.filterQuery
-      );
+      if (this.state.title === 'Continue') {
+        response = await getStartedContent(
+          'course',
+          this.state.page,
+          this.filterQuery
+        );
+      } else {
+        response = await getAllContent(
+          'course',
+          this.state.currentSort,
+          this.state.page,
+          this.filterQuery
+        );
+      }
     } else if (this.state.parent === 'Songs') {
       response = await getStartedContent(
         'song',
