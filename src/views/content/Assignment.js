@@ -38,7 +38,7 @@ export default class Assignment extends React.Component {
           showSheets: true
         })
       );
-    else this.setState({ showSheets: false });
+    else this.setState({ showSheets: true });
   }
 
   render() {
