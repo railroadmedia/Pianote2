@@ -26,6 +26,6 @@
     "emitDecoratorMetadata": true
   },
   "typeRoots": ["node_modules/@types"],
-  "include": ["src", "AppStyle.ts"],
+  "include": ["src", "AppStyle.ts", "AppNavigator.tsx"],
   "exclude": ["node_modules"]
 }

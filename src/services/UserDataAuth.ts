@@ -19,8 +19,7 @@ export async function getToken(
   let password = userPass || p;
 
   const body = purchases ? { email, password, purchases } : { email, password };
-  let response: any;
-  response = await fetch(`${commonService.rootUrl}/musora-api/login`, {
+  let response: any = await fetch(`${commonService.rootUrl}/musora-api/login`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)

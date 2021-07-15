@@ -1,46 +1,81 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import Chat from '../../src/assets/img/svgs/chat.svg';
 import Icon from '../assets/icons';
 import { connect } from 'react-redux';
+import {
+  descriptionText,
+  infoButtonSize,
+  mainBackground,
+  myListButtonSize,
+  onTablet,
+  pianoteRed
+} from 'AppStyle';
+import INotification, {
+  INotificationDisplayData,
+  NotificationTypes
+} from 'src/model/INotifications';
+import { IAppState } from 'src/redux/Store';
+import IUser from 'src/model/IUser';
 
-const onTablet = global.onTablet;
-const messageDict = {
+let messageDict: Record<NotificationTypes, INotificationDisplayData> = {
   'lesson comment reply': {
     message: 'replied to your comment.',
     new: true,
     color: 'orange',
-    type: 'comment reply notifications'
+    type: 'comment reply notifications',
+    field: 'notify_on_lesson_comment_reply'
   },
   'lesson comment liked': {
     message: 'liked your comment.',
     new: true,
     color: 'blue',
-    type: 'comment like notifications'
+    type: 'comment like notifications',
+    field: 'notify_on_lesson_comment_like'
   },
   'forum post liked': {
     message: 'liked your forum post.',
     new: true,
     color: 'blue',
-    type: 'forum post like notifications'
+    type: 'forum post like notifications',
+    field: 'notify_on_forum_post_like'
+  },
+  'forum post reply': {
+    message: 'replied to your forum post.',
+    new: true,
+    color: 'orange',
+    type: 'forum post like notifications',
+    field: 'notify_on_forum_post_reply'
   },
   'forum post in followed thread': {
     message: 'post in followed thread.',
     new: false,
     color: 'orange',
-    type: 'forum post reply notifications'
+    type: 'forum post reply notifications',
+    field: 'notify_on_forum_followed_thread_reply'
   }
 };
 
-class ReplyNotification extends React.Component {
+interface IUserStateProps {
+  user: IUser;
+}
+
+interface ReplyNotificationProps extends IUserStateProps {
+  notificationStatus: boolean;
+  hideReplyNotification: () => void;
+  turnOfffNotifications: () => void;
+  removeNotification: (id: number) => void;
+  data: INotification;
+}
+
+class ReplyNotification extends React.Component<ReplyNotificationProps, {}> {
   render() {
     const {
       notificationStatus,
       hideReplyNotification,
       turnOfffNotifications,
       removeNotification,
-      data: { type, content, sender, id }
+      data: { type, sender, id }
     } = this.props;
 
     return (
@@ -48,12 +83,6 @@ class ReplyNotification extends React.Component {
         transparent={true}
         visible={true}
         style={{ margin: 0, flex: 1 }}
-        animation={'slideInUp'}
-        animationInTiming={250}
-        animationOutTiming={250}
-        coverScreen={true}
-        hasBackdrop={true}
-        onBackButtonPress={hideReplyNotification}
         onRequestClose={hideReplyNotification}
         supportedOrientations={['portrait', 'landscape']}
       >
@@ -65,7 +94,7 @@ class ReplyNotification extends React.Component {
             style={{
               width: '100%',
               justifyContent: 'space-between',
-              backgroundColor: colors.mainBackground
+              backgroundColor: mainBackground
             }}
           >
             <>
@@ -84,10 +113,10 @@ class ReplyNotification extends React.Component {
                         localStyles.chatContainer
                       ]}
                     >
-                      <Chat
-                        height={sizing.infoButtonSize}
-                        width={sizing.infoButtonSize}
-                        fill={'white'}
+                      <Icon.Ionicons
+                        size={infoButtonSize}
+                        color={'white'}
+                        name={'ios-chatbubble-sharp'}
                       />
                     </View>
                   ) : (
@@ -98,7 +127,7 @@ class ReplyNotification extends React.Component {
                       ]}
                     >
                       <Icon.AntDesign
-                        size={sizing.infoButtonSize}
+                        size={infoButtonSize}
                         color={'white'}
                         name={'like1'}
                       />
@@ -127,13 +156,13 @@ class ReplyNotification extends React.Component {
                   <View style={localStyles.crossContainer}>
                     <Icon.Entypo
                       name={'cross'}
-                      size={sizing.myListButtonSize * 1.2}
-                      color={colors.pianoteRed}
+                      size={myListButtonSize * 1.2}
+                      color={pianoteRed}
                     />
                     <Text
                       style={[
                         localStyles.removeText,
-                        { fontSize: sizing.descriptionText }
+                        { fontSize: descriptionText }
                       ]}
                     >
                       Remove this notification
@@ -149,13 +178,13 @@ class ReplyNotification extends React.Component {
                   <View style={localStyles.notificationContainer}>
                     <Icon.Ionicons
                       name={'ios-notifications-outline'}
-                      size={sizing.myListButtonSize}
-                      color={colors.pianoteRed}
+                      size={myListButtonSize}
+                      color={pianoteRed}
                     />
                     <Text
                       style={[
                         localStyles.removeText,
-                        { fontSize: sizing.descriptionText }
+                        { fontSize: descriptionText }
                       ]}
                     >
                       Turn {notificationStatus ? 'off' : 'on'}{' '}
@@ -172,11 +201,11 @@ class ReplyNotification extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: IAppState): IUserStateProps => ({
   user: state.userState.user
 });
 
-export default connect(mapStateToProps, null)(ReplyNotification);
+export default connect(mapStateToProps, {})(ReplyNotification);
 
 const localStyles = StyleSheet.create({
   modalContainer: {

@@ -9,7 +9,10 @@ interface State {
   showNoConnectionAlert: () => void;
 }
 
-export const NetworkContext = React.createContext({});
+export const NetworkContext = React.createContext<State>({
+  isConnected: null,
+  showNoConnectionAlert: () => {}
+});
 
 export default class NetworkProvider extends React.PureComponent<Props, State> {
   showNoConnectionAlert: () => void;

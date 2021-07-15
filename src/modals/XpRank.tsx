@@ -1,3 +1,4 @@
+import { onTablet } from 'AppStyle';
 import React from 'react';
 import {
   View,
@@ -9,7 +10,6 @@ import {
 } from 'react-native';
 import ProgressCircle from 'react-native-progress-circle';
 
-const onTablet = global.onTablet;
 const ranks = [
   0,
   100,
@@ -33,7 +33,13 @@ const ranks = [
   100000000
 ];
 
-export default class XpRank extends React.Component {
+interface XpRankProps {
+  xp: number;
+  rank: string;
+  hideXpRank: () => void;
+}
+
+export default class XpRank extends React.Component<XpRankProps, {}> {
   nextRank = () => {
     return ranks.find(r => this.props.xp < r) || 100000000;
   };
@@ -48,12 +54,8 @@ export default class XpRank extends React.Component {
         transparent={true}
         visible={true}
         style={{ margin: 0, flex: 1 }}
-        animation={'slideInUp'}
-        animationInTiming={250}
-        animationOutTiming={250}
-        coverScreen={true}
-        hasBackdrop={true}
-        onBackButtonPress={() => this.props.hideXpRank()}
+        animationType={'slide'}
+        onRequestClose={() => this.props.hideXpRank()}
       >
         <TouchableOpacity
           style={[localStyles.centerContent, { margin: 0, flex: 1 }]}

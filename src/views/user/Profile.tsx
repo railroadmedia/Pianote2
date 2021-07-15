@@ -12,10 +12,10 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Icon from '../../assets/icons';
-// import XpRank from '../../modals/XpRank';
+import XpRank from '../../modals/XpRank';
 import { getUserData } from '../../services/UserDataAuth';
 // import NavigationBar from '../../components/NavigationBar';
-// import ReplyNotification from '../../modals/ReplyNotification';
+import ReplyNotification from '../../modals/ReplyNotification';
 import { NetworkContext } from '../../context/NetworkProvider';
 import {
   getnotifications,
@@ -37,7 +37,10 @@ import {
   onTablet,
   verticalListTitleSmall
 } from '../../../AppStyle';
-import INotification from '../../model/INotifications';
+import INotification, {
+  INotificationDisplayData,
+  NotificationTypes
+} from '../../model/INotifications';
 import commonService from '../../services/common.service';
 
 interface IUserStateProps {
@@ -57,11 +60,11 @@ interface IProfileState {
   isLoading: boolean;
   refreshing: boolean;
   animateLoadMore: boolean;
-  clickedNotification: INotification | null;
+  clickedNotification: INotification;
 }
 
 let localStyles: any;
-const messageDict: any = {
+let messageDict: Record<NotificationTypes, INotificationDisplayData> = {
   'lesson comment reply': {
     message: 'replied to your comment.',
     new: true,
@@ -112,7 +115,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
       isLoading: true,
       refreshing: false,
       animateLoadMore: false,
-      clickedNotification: null
+      clickedNotification: {} as INotification
     };
   }
 
@@ -186,13 +189,13 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     this.setState(state => ({
       notifications: state.notifications.filter(c => c.id !== notificationId),
-      clickedNotification: null,
+      clickedNotification: {} as INotification,
       showReplyNotification: false
     }));
     removeNotification(notificationId);
   };
 
-  turnOfffNotifications = async (type: string) => {
+  turnOfffNotifications = async (type: NotificationTypes) => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     this.setState({
       showReplyNotification: false,
@@ -537,15 +540,15 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
             )}
           />
         </View>
-        {/* {this.state.showXpRank && (
+        {this.state.showXpRank && (
           <XpRank
             hideXpRank={() => this.setState({ showXpRank: false })}
-            xp={totalXp}
+            xp={parseInt(totalXp)}
             rank={xpRank}
           />
-        )} */}
+        )}
 
-        {/* {this.state.showReplyNotification && (
+        {this.state.showReplyNotification && (
           <ReplyNotification
             removeNotification={notificationId =>
               this.removeNotification(notificationId)
@@ -563,7 +566,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
               ]
             }
           />
-        )} */}
+        )}
 
         {/* <NavigationBar currentPage={'PROFILE'} pad={true} /> */}
       </SafeAreaView>

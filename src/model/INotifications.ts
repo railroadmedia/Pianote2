@@ -15,6 +15,19 @@ export enum NotificationTypes {
   forum_post_in_followed_thread = 'forum post in followed thread'
 }
 
+export interface INotificationDisplayData {
+  message: string;
+  new: boolean;
+  color: 'orange' | 'blue';
+  type: string;
+  field:
+    | 'notify_on_lesson_comment_reply'
+    | 'notify_on_lesson_comment_like'
+    | 'notify_on_forum_post_like'
+    | 'notify_on_forum_post_reply'
+    | 'notify_on_forum_followed_thread_reply';
+}
+
 export default interface INotification {
   id: number;
   type: NotificationTypes;
