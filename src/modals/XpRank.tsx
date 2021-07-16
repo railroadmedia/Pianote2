@@ -1,5 +1,4 @@
-import { onTablet } from 'AppStyle';
-import React from 'react';
+import React, { FunctionComponent, useMemo } from 'react';
 import {
   View,
   Text,
@@ -9,6 +8,7 @@ import {
   Modal
 } from 'react-native';
 import ProgressCircle from 'react-native-progress-circle';
+import { onTablet } from '../../AppStyle';
 
 const ranks = [
   0,
@@ -39,59 +39,57 @@ interface XpRankProps {
   hideXpRank: () => void;
 }
 
-export default class XpRank extends React.Component<XpRankProps, {}> {
-  nextRank = () => {
-    return ranks.find(r => this.props.xp < r) || 100000000;
-  };
+const XpRank: FunctionComponent<XpRankProps> = ({ xp, rank, hideXpRank }) => {
+  const nextRank = useMemo(() => {
+    return ranks.find(r => xp < r) || 100000000;
+  }, [xp]);
 
-  rankProgress = () => {
-    return (this.props.xp / this.nextRank()) * 100;
-  };
+  const rankProgress = useMemo(() => {
+    return (xp / nextRank) * 100;
+  }, [xp, nextRank]);
 
-  render = () => {
-    return (
-      <Modal
-        transparent={true}
-        visible={true}
-        style={{ margin: 0, flex: 1 }}
-        animationType={'slide'}
-        onRequestClose={() => this.props.hideXpRank()}
+  return (
+    <Modal
+      transparent={true}
+      visible={true}
+      style={{ margin: 0, flex: 1 }}
+      animationType={'slide'}
+      onRequestClose={() => hideXpRank()}
+    >
+      <TouchableOpacity
+        style={[localStyles.centerContent, { margin: 0, flex: 1 }]}
+        activeOpacity={1}
+        onPress={() => hideXpRank()}
       >
-        <TouchableOpacity
-          style={[localStyles.centerContent, { margin: 0, flex: 1 }]}
-          activeOpacity={1}
-          onPress={() => this.props.hideXpRank()}
-        >
-          <View style={[localStyles.container, localStyles.centerContent]}>
-            <Text style={[localStyles.modalHeaderText, localStyles.title]}>
-              Your XP Rank
-            </Text>
-            <Text style={[localStyles.modalBodyText, localStyles.description]}>
-              You earn XP by completing lessons,{'\n'}
-              commenting on videos and more!
-            </Text>
-            <ProgressCircle
-              percent={this.rankProgress()}
-              radius={(onTablet ? 0.2 : 0.27) * Dimensions.get('window').width}
-              borderWidth={5}
-              shadowColor={'pink'}
-              color={'red'}
-              bgColor={'white'}
-            >
-              <Text style={localStyles.XPtext}>
-                {Number(this.props.xp).toLocaleString()}
-              </Text>
-              <Text style={localStyles.rankText}>{this.props.rank}</Text>
-            </ProgressCircle>
-            <Text style={[localStyles.modalBodyText, localStyles.nextRank]}>
-              Next rank: {this.nextRank()}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </Modal>
-    );
-  };
-}
+        <View style={[localStyles.container, localStyles.centerContent]}>
+          <Text style={[localStyles.modalHeaderText, localStyles.title]}>
+            Your XP Rank
+          </Text>
+          <Text style={[localStyles.modalBodyText, localStyles.description]}>
+            You earn XP by completing lessons,{'\n'}
+            commenting on videos and more!
+          </Text>
+          <ProgressCircle
+            percent={rankProgress}
+            radius={(onTablet ? 0.2 : 0.27) * Dimensions.get('window').width}
+            borderWidth={5}
+            shadowColor={'pink'}
+            color={'red'}
+            bgColor={'white'}
+          >
+            <Text style={localStyles.XPtext}>{xp}</Text>
+            <Text style={localStyles.rankText}>{rank}</Text>
+          </ProgressCircle>
+          <Text style={[localStyles.modalBodyText, localStyles.nextRank]}>
+            Next rank: {nextRank}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    </Modal>
+  );
+};
+
+export default XpRank;
 
 const localStyles = StyleSheet.create({
   modalContainer: {
@@ -145,7 +143,7 @@ const localStyles = StyleSheet.create({
   },
   modalBodyText: {
     textAlign: 'center',
-    fontFamily: 'OpenSans-Regular',
+    fontFamily: 'OpenSans',
     fontSize: onTablet ? 16 : 12
   }
 });

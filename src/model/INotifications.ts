@@ -1,6 +1,6 @@
 import IComment from './IComment';
 
-interface INotificationUser {
+export interface INotificationUser {
   id: number;
   email: string;
   display_name: string;

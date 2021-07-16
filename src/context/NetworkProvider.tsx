@@ -2,24 +2,27 @@ import React from 'react';
 import NetInfo, { NetInfoState } from '@react-native-community/netinfo';
 import { Alert } from 'react-native';
 
-interface Props {}
+interface NetworkProps {}
 
-interface State {
+export interface NetworkState {
   isConnected: boolean | null;
   showNoConnectionAlert: () => void;
 }
 
-export const NetworkContext = React.createContext<State>({
+export const NetworkContext = React.createContext<NetworkState>({
   isConnected: null,
   showNoConnectionAlert: () => {}
 });
 
-export default class NetworkProvider extends React.PureComponent<Props, State> {
+export default class NetworkProvider extends React.PureComponent<
+  NetworkProps,
+  NetworkState
+> {
   showNoConnectionAlert: () => void;
   alertPresent: boolean = false;
   unsubscribe: any;
 
-  constructor(props: Props) {
+  constructor(props: NetworkProps) {
     super(props);
     this.showNoConnectionAlert = () => {
       return Alert.alert(

@@ -1,22 +1,22 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import Icon from '../assets/icons';
 import { connect } from 'react-redux';
+
+import Icon from '../assets/icons';
 import {
-  descriptionText,
   infoButtonSize,
   mainBackground,
   myListButtonSize,
   onTablet,
   pianoteRed
-} from 'AppStyle';
+} from '../../AppStyle';
 import INotification, {
   INotificationDisplayData,
   NotificationTypes
-} from 'src/model/INotifications';
-import { IAppState } from 'src/redux/Store';
-import IUser from 'src/model/IUser';
+} from '../model/INotifications';
+import { IAppState } from '../redux/Store';
+import IUser from '../model/IUser';
 
 let messageDict: Record<NotificationTypes, INotificationDisplayData> = {
   'lesson comment reply': {
@@ -68,138 +68,112 @@ interface ReplyNotificationProps extends IUserStateProps {
   data: INotification;
 }
 
-class ReplyNotification extends React.Component<ReplyNotificationProps, {}> {
-  render() {
-    const {
-      notificationStatus,
-      hideReplyNotification,
-      turnOfffNotifications,
-      removeNotification,
-      data: { type, sender, id }
-    } = this.props;
-
-    return (
-      <Modal
-        transparent={true}
-        visible={true}
-        style={{ margin: 0, flex: 1 }}
-        onRequestClose={hideReplyNotification}
-        supportedOrientations={['portrait', 'landscape']}
+const ReplyNotification: FunctionComponent<ReplyNotificationProps> = ({
+  notificationStatus,
+  hideReplyNotification,
+  turnOfffNotifications,
+  removeNotification,
+  data: { type, sender, id }
+}) => {
+  return (
+    <Modal
+      transparent={true}
+      visible={true}
+      onRequestClose={hideReplyNotification}
+      supportedOrientations={['portrait', 'landscape']}
+    >
+      <TouchableOpacity
+        style={localStyles.modalContainer}
+        onPress={hideReplyNotification}
       >
-        <TouchableOpacity
-          style={{ margin: 0, flex: 1 }}
-          onPress={hideReplyNotification}
-        >
-          <View
-            style={{
-              width: '100%',
-              justifyContent: 'space-between',
-              backgroundColor: mainBackground
-            }}
-          >
-            <>
-              <View
-                style={[
-                  localStyles.centerContent,
-                  localStyles.profileContainer
-                ]}
-              >
-                <View style={localStyles.profileContainer2}>
-                  {type === 'forum post in followed thread' ||
-                  type === 'lesson comment reply' ? (
-                    <View
-                      style={[
-                        localStyles.centerContent,
-                        localStyles.chatContainer
-                      ]}
-                    >
-                      <Icon.Ionicons
-                        size={infoButtonSize}
-                        color={'white'}
-                        name={'ios-chatbubble-sharp'}
-                      />
-                    </View>
-                  ) : (
-                    <View
-                      style={[
-                        localStyles.centerContent,
-                        localStyles.likeContainer
-                      ]}
-                    >
-                      <Icon.AntDesign
-                        size={infoButtonSize}
-                        color={'white'}
-                        name={'like1'}
-                      />
-                    </View>
-                  )}
-                  <FastImage
-                    style={localStyles.image}
-                    source={{
-                      uri: sender?.profile_image_url
-                    }}
-                    resizeMode={FastImage.resizeMode.cover}
-                  />
-                </View>
-              </View>
-              <Text style={localStyles.replyUser}>
-                <Text style={localStyles.user}>{sender?.display_name}</Text>{' '}
-                {messageDict[type]?.message}
-              </Text>
-            </>
-            <>
-              <View style={localStyles.removeContainer}>
-                <TouchableOpacity
-                  style={[localStyles.gContainer, { justifyContent: 'center' }]}
-                  onPress={() => removeNotification(id)}
-                >
-                  <View style={localStyles.crossContainer}>
-                    <Icon.Entypo
-                      name={'cross'}
-                      size={myListButtonSize * 1.2}
-                      color={pianoteRed}
-                    />
-                    <Text
-                      style={[
-                        localStyles.removeText,
-                        { fontSize: descriptionText }
-                      ]}
-                    >
-                      Remove this notification
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <View style={localStyles.muteContainer}>
-                <TouchableOpacity
-                  style={[localStyles.gContainer, { justifyContent: 'center' }]}
-                  onPress={turnOfffNotifications}
-                >
-                  <View style={localStyles.notificationContainer}>
+        <View style={localStyles.modalContent}>
+          <>
+            <View
+              style={[localStyles.centerContent, localStyles.profileContainer]}
+            >
+              <View style={localStyles.profileContainer2}>
+                {type === 'forum post in followed thread' ||
+                type === 'lesson comment reply' ? (
+                  <View
+                    style={[
+                      localStyles.centerContent,
+                      localStyles.chatContainer
+                    ]}
+                  >
                     <Icon.Ionicons
-                      name={'ios-notifications-outline'}
-                      size={myListButtonSize}
-                      color={pianoteRed}
+                      size={infoButtonSize}
+                      color={'white'}
+                      name={'ios-chatbubble-sharp'}
                     />
-                    <Text
-                      style={[
-                        localStyles.removeText,
-                        { fontSize: descriptionText }
-                      ]}
-                    >
-                      Turn {notificationStatus ? 'off' : 'on'}{' '}
-                      {messageDict[type]?.type}
-                    </Text>
                   </View>
-                </TouchableOpacity>
+                ) : (
+                  <View
+                    style={[
+                      localStyles.centerContent,
+                      localStyles.likeContainer
+                    ]}
+                  >
+                    <Icon.AntDesign
+                      size={infoButtonSize}
+                      color={'white'}
+                      name={'like1'}
+                    />
+                  </View>
+                )}
+                <FastImage
+                  style={localStyles.image}
+                  source={{ uri: sender?.profile_image_url }}
+                  resizeMode={FastImage.resizeMode.cover}
+                />
               </View>
-            </>
-          </View>
-        </TouchableOpacity>
-      </Modal>
-    );
-  }
-}
+            </View>
+            <Text style={localStyles.replyUser}>
+              <Text style={localStyles.user}>{sender?.display_name}</Text>{' '}
+              {messageDict[type]?.message}
+            </Text>
+          </>
+          <>
+            <View style={localStyles.removeContainer}>
+              <TouchableOpacity
+                style={localStyles.gContainer}
+                onPress={() => removeNotification(id)}
+              >
+                <View style={localStyles.crossContainer}>
+                  <Icon.Entypo
+                    name={'cross'}
+                    size={myListButtonSize * 1.2}
+                    color={pianoteRed}
+                  />
+                  <Text style={localStyles.removeText}>
+                    Remove this notification
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View style={localStyles.muteContainer}>
+              <TouchableOpacity
+                style={localStyles.gContainer}
+                onPress={turnOfffNotifications}
+              >
+                <View style={localStyles.notificationContainer}>
+                  <Icon.Ionicons
+                    name={'ios-notifications-outline'}
+                    size={myListButtonSize}
+                    color={pianoteRed}
+                  />
+                  <Text style={localStyles.removeText}>
+                    Turn {notificationStatus ? 'off' : 'on'}{' '}
+                    {messageDict[type]?.type}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </>
+        </View>
+      </TouchableOpacity>
+    </Modal>
+  );
+};
 
 const mapStateToProps = (state: IAppState): IUserStateProps => ({
   user: state.userState.user
@@ -213,14 +187,14 @@ const localStyles = StyleSheet.create({
     justifyContent: 'flex-end',
     backgroundColor: 'rgba(0,0,0,.5)'
   },
+  modalContent: {
+    width: '100%',
+    justifyContent: 'space-between',
+    backgroundColor: mainBackground
+  },
   profileContainer: {
     flexDirection: 'row',
     paddingVertical: 30
-  },
-  container: {
-    width: '100%',
-    flexDirection: 'row',
-    backgroundColor: '#00101d'
   },
   profileContainer2: {
     height: onTablet ? 120 : 80,
@@ -228,19 +202,10 @@ const localStyles = StyleSheet.create({
     borderRadius: 100,
     backgroundColor: '#445f73'
   },
-  videoContainer: {
-    position: 'absolute',
-    bottom: -5,
-    right: -5,
-    height: onTablet ? 40 : 30,
-    width: onTablet ? 40 : 30,
-    backgroundColor: 'red',
-    borderRadius: 100,
-    zIndex: 5
-  },
   gContainer: {
     flex: 1,
-    alignSelf: 'stretch'
+    alignSelf: 'stretch',
+    justifyContent: 'center'
   },
   chatContainer: {
     position: 'absolute',
