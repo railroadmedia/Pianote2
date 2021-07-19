@@ -3,7 +3,7 @@ import { updateFcmToken } from '../../src/services/notification.service.js';
 
 export let cache = {};
 export default {
-  rootUrl: 'https://www.pianote.com',
+  rootUrl: 'https://staging.pianote.com',
   urlToOpen: '',
   tryCall: async function ({ url, method, body }) {
     try {
@@ -23,7 +23,6 @@ export default {
       if (!url.includes('https')) {
         newUrl = url.replace('http', 'https');
       }
-
       // make call
       let response = await fetch(newUrl, {
         body,

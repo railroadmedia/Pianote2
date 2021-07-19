@@ -89,10 +89,59 @@ class LoadPage extends React.Component {
             reset('RESETPASSWORD', { resetKey, email });
           } else {
             let {
-              params: { threadId, postId, threadTitle } = {}
+              params: { threadId, postId, threadTitle, categoryId, type } = {}
             } = this.props.route;
+            if (userData.isPackOlyOwner) reset('PACKS');
+            else reset('LESSONS');
+            if (type === 'Forums') {
+              return navigate('FORUM', {
+                NetworkContext,
+                tryCall: commonService.tryCall.bind(commonService),
+                rootUrl: commonService.rootUrl,
+                isDark: true,
+                appColor: colors.pianoteRed,
+                user: this.props.user
+              });
+            }
+
+            if (type === 'Forum Rules') {
+              return navigate('FORUM', {
+                NetworkContext,
+                tryCall: commonService.tryCall.bind(commonService),
+                rootUrl: commonService.rootUrl,
+                isDark: true,
+                appColor: colors.pianoteRed,
+                user: this.props.user,
+                postId,
+                threadId,
+                threadTitle
+              });
+            }
+            if (type === 'Thread') {
+              return navigate('FORUM', {
+                NetworkContext,
+                tryCall: commonService.tryCall.bind(commonService),
+                rootUrl: commonService.rootUrl,
+                isDark: true,
+                appColor: colors.pianoteRed,
+                user: this.props.user,
+                categoryId,
+                threadTitle
+              });
+            }
+            if (type === 'Threads') {
+              return navigate('FORUM', {
+                NetworkContext,
+                tryCall: commonService.tryCall.bind(commonService),
+                rootUrl: commonService.rootUrl,
+                isDark: true,
+                appColor: colors.pianoteRed,
+                user: this.props.user,
+                threadId,
+                threadTitle
+              });
+            }
             if (postId) {
-              reset('LESSONS');
               navigate('FORUM', {
                 NetworkContext,
                 tryCall: commonService.tryCall.bind(commonService),

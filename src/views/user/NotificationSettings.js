@@ -145,7 +145,9 @@ class NotificationSettings extends React.Component {
               />
             </View>
             <View style={localStyles.textContainer}>
-              <Text style={localStyles.text}>Forum post replies</Text>
+              <Text style={localStyles.text}>
+                Forum post in followed thread
+              </Text>
               <CustomSwitch
                 isClicked={notify_on_forum_followed_thread_reply}
                 onClick={bool =>

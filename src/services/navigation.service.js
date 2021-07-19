@@ -1,6 +1,5 @@
 // NavigationService.js
-
-import { navigate } from '../../AppNavigator';
+import { navigate, reset } from '../../AppNavigator';
 import commonService from './common.service';
 
 function decideWhereToRedirect() {
@@ -186,6 +185,61 @@ function decideWhereToRedirect() {
           '/musora-api' +
           url.substr(url.indexOf('/members'))
       });
+  }
+  if (url.includes('forums')) {
+    global.notifNavigation = true;
+    if (url.endsWith('forums')) {
+      return reset('LOADPAGE', { type: 'Forums' });
+    }
+    if (url.endsWith('forums/pianote/1/thread/1')) {
+      return reset('LOADPAGE', {
+        type: 'Forum Rules',
+        postId: 1,
+        threadId: 1,
+        threadTitle: 'Forum Rules'
+      });
+    }
+    if (url.split('/').length - 1 === 7) {
+      const categoryId = url.substr(url.lastIndexOf('/') + 1);
+      const threadTitle = url.substring(
+        url.split('/', 6).join('/').length + 1,
+        url.split('/', 7).join('/').length
+      );
+      return reset('LOADPAGE', {
+        type: 'Thread',
+        categoryId,
+        threadTitle
+      });
+    }
+    if (url.includes('post')) {
+      const threadId = parseInt(
+        url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('?'))
+      );
+      const threadTitle = url.substring(
+        url.split('/', 7).join('/').length + 1,
+        url.split('/', 8).join('/').length
+      );
+      const postId = parseInt(url.substr(url.indexOf('post') + 4));
+      return reset('LOADPAGE', {
+        type: 'Threads',
+        postId,
+        threadId,
+        threadTitle
+      });
+    }
+    if (url.split('/').length - 1 === 8) {
+      const threadId = url.substr(url.lastIndexOf('/') + 1);
+      const threadTitle = url.substring(
+        url.split('/', 7).join('/').length + 1,
+        url.split('/', 8).join('/').length
+      );
+
+      return reset('LOADPAGE', {
+        type: 'Threads',
+        threadId,
+        threadTitle
+      });
+    }
   }
 }
 

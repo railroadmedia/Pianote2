@@ -51,6 +51,7 @@
             <data android:scheme="https" android:host="www.pianote.com" android:pathPrefix="/members/boot-camps"/>
             <data android:scheme="https" android:host="www.pianote.com" android:pathPrefix="/members/profile"/>
             <data android:scheme="https" android:host="www.pianote.com" android:pathPrefix="/members/search"/>
+            <data android:scheme="https" android:host="www.pianote.com" android:pathPrefix="/members/forums"/>
 
             <data android:scheme="https" android:host="staging.pianote.com" android:pathPrefix="/reset-password"/>
             <data android:scheme="https" android:host="staging.pianote.com" android:pathPrefix="/members/all"/>
@@ -67,6 +68,8 @@
             <data android:scheme="https" android:host="staging.pianote.com" android:pathPrefix="/members/boot-camps"/>
             <data android:scheme="https" android:host="staging.pianote.com" android:pathPrefix="/members/profile"/>
             <data android:scheme="https" android:host="staging.pianote.com" android:pathPrefix="/members/search"/>
+            <data android:scheme="https" android:host="staging.pianote.com" android:pathPrefix="/members/forums"/>
+
 
         </intent-filter>
       </activity>
